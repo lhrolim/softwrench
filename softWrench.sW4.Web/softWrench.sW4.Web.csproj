@@ -502,6 +502,7 @@
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
     <Content Include="Content\Scripts\client\components\combobox.js" />
     <Content Include="Content\Scripts\client\responsive.js" />
+    <Content Include="Content\Scripts\client\services\user_service.js" />
     <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
     <Content Include="Content\Scripts\client\each.js" />
     <Content Include="Content\Scripts\client\about.js" />

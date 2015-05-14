@@ -23,7 +23,6 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly IContextLookuper _contextLookuper;
         private readonly DataController _dataController;
         private readonly ExcelUtil _excelUtil;
-        private AssetRamControlWhereClauseProvider _assetRamControlWhereClauseProvider;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ExcelController));
 
@@ -31,7 +30,6 @@ namespace softWrench.sW4.Web.Controllers {
             _contextLookuper = contextLookuper;
             _dataController = dataController;
             _excelUtil = excelUtil;
-            _assetRamControlWhereClauseProvider = assetRamControlWhereClauseProvider;
         }
 
         public FileContentResult Export(string application, [FromUri]ApplicationMetadataSchemaKey key,
@@ -52,9 +50,6 @@ namespace softWrench.sW4.Web.Controllers {
               .Application(application)
               .ApplyPolicies(key, user, ClientPlatform.Web);
 
-            if (application.Equals("asset") && applicationMetadata.Schema.EqualsIc("exportallthecolumns")) {
-                searchDTO = AddRegionWhereClause(searchDTO);
-            }
 
             var dataResponse = _dataController.Get(application, new DataRequestAdapter {
                 Key = key,
@@ -71,14 +66,6 @@ namespace softWrench.sW4.Web.Controllers {
             return result;
         }
 
-        private PaginatedSearchRequestDto AddRegionWhereClause(PaginatedSearchRequestDto searchDto) {
-            if (searchDto.Context.MetadataId == null) {
-                return searchDto;
-            }
-            searchDto.WhereClause +=
-                _assetRamControlWhereClauseProvider.AssetWhereClauseForRegion(searchDto.Context.MetadataId);
-            return searchDto;
-        }
 
         public string GetFileName(string application, string schemaId) {
             if (application != "asset") {

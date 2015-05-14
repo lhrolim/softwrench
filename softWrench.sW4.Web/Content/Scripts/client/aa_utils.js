@@ -158,6 +158,15 @@ var isArrayNullOrEmpty = function (arr) {
     return nullOrUndef(arr) || arr.length == 0;
 };
 
+var isObjectEmpty = function(ob) {
+    for (var prop in ob) {
+        if (ob.hasOwnProperty(prop)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 String.format = function () {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {

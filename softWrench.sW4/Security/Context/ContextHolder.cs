@@ -22,7 +22,18 @@ namespace softWrench.sW4.Security.Context {
 
         public string Module { get; set; }
 
-        public IDictionary<string, string> MetadataParameters { get; set; } 
+        private IDictionary<string, string> _parameters;
+
+
+        public IDictionary<string, string> MetadataParameters {
+            get {
+                if (_parameters == null) {
+                    _parameters = new Dictionary<string, string>();
+                }
+                return _parameters;
+            }
+            set { _parameters = value; }
+        }
 
 
         public Boolean PrintMode { get; set; }

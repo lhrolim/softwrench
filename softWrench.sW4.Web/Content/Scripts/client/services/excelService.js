@@ -3,10 +3,29 @@
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
 
-
 app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
-    i18NService,
+    i18NService,userService,
     redirectService, searchService, contextService, fileService, alertService) {
+
+    function needsRegionSelection(mode) {
+        if (mode != "assetlistreport") {
+            return false;
+        }
+        var isInAllAccessModules = contextService.InModule(["tom", "itom", "purchase", "assetcontrol"]);
+        if (isInAllAccessModules) {
+            return true;
+        }
+        
+
+        var isXitc = contextService.InModule(["xitc"]);
+        return isXitc && userService.InGroup("C-HLC-WW-AR-WW");
+    }
+
+    function regionSelectionRequired(searchData,region) {
+        var hasSearchInUrl = sessionStorage.swGlobalRedirectURL && sessionStorage.swGlobalRedirectURL.indexOf("searchValues")!=-1;
+        return isObjectEmpty(searchData) && !region && !hasSearchInUrl;
+    }
+
 
     return {
         showModalExportToExcel: function (fn, schema, searchData, searchSort, searchOperator, paginationData) {
@@ -38,12 +57,9 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                         label: i18NService.get18nValue('_exportotoexcel.export', 'Export'),
                         className: "btn-primary",
                         callback: function (result) {
-
-
-
                             if (result) {
                                 var exportModeSelected = $('input[name=exportMode]:checked', '#infos').val();
-                                if (exportModeSelected == "assetlistreport") {
+                                if (needsRegionSelection(exportModeSelected)) {
                                     //HAP-944
                                     handleAssetListReportRegionFilter(fn);
                                     return;
@@ -103,9 +119,15 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                             label: i18NService.get18nValue('_exportotoexcel.export', 'Export'),
                             className: "btn-primary",
                             callback: function (result) {
+
                                 if (result) {
                                     var region = $('input[name=region]:checked', '#region').val();
-                                    finalCbk(schema, searchData, searchSort, searchOperator, paginationData, 'assetlistreport', "region={0}".format(region));
+                                    if (regionSelectionRequired(searchData, region)) {
+                                        alertService.alert("Please select either a Region or a filter on the grid");
+                                        return;
+                                    }
+                                    var metadataParameter = region ? "region={0}".format(region) : null;
+                                    finalCbk(schema, searchData, searchSort, searchOperator, paginationData, 'assetlistreport', metadataParameter);
                                 }
                             }
                         },

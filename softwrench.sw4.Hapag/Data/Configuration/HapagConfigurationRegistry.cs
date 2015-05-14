@@ -45,9 +45,12 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             CreatePurchaseWhereClauses();
 
             CreateAssetCtrlRamWhereClauses();
+            CreateAssetCtrlWhereClauses();
             CreateReportWhereClauses();
 
         }
+
+        
 
         private void CreateOfferingWhereClause() {
             _wcFacade.Register("offering", qc.OfferingITCDashboard(), MetadataId(dc.ActionRequiredForOpenRequestsOffering));
@@ -116,12 +119,12 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
         private void CreateTomAndITomWhereClauses() {
             //chang queries already registered in CreateChangeWhereClauses
-            //Business logic: Allowed to see every Asset and Ticket assigned to Hapag-Lloyd, independent of the security concept.
+            //Business logic: Allowed to see every Asset (except asset list reports) and Ticket assigned to Hapag-Lloyd, independent of the security concept.
             //dashsboards
             _wcFacade.Register("servicerequest", qc.SrITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenRequests, fr.Tom, fr.Itom));
             _wcFacade.Register("incident", qc.IncidentITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenIncidents, fr.Tom, fr.Itom));
             _wcFacade.Register("imac", qc.ImacsForTomITOM(), ForModules(fr.Tom));
-
+            _wcFacade.Register("asset", "@assetControlWhereClauseProvider.AssetWhereClauseIfRegionSelected", ForModules(fr.Tom,fr.Itom));
         }
 
 
@@ -155,6 +158,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
         private void CreatePurchaseWhereClauses() {
             _wcFacade.Register("servicerequest", qc.PurchaseSR, ForModule(fr.Purchase));
             _wcFacade.Register("incident", qc.PurchaseIncident, ForModule(fr.Purchase));
+            _wcFacade.Register("asset", "@assetControlWhereClauseProvider.AssetWhereClauseIfRegionSelected", ForModules(fr.Purchase));
         }
 
         private void CreateAssetCtrlRamWhereClauses() {
@@ -162,7 +166,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
         }
 
         private void CreateAssetCtrlWhereClauses() {
-            _wcFacade.Register("asset", "@assetControlWhereClauseProvider.AssetWhereClause", ForModule(fr.AssetControl));
+            _wcFacade.Register("asset", "@assetControlWhereClauseProvider.AssetWhereClauseIfRegionSelected", ForModule(fr.AssetControl));
         }
 
 

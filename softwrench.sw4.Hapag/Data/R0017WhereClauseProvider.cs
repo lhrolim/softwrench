@@ -9,6 +9,7 @@ using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
@@ -168,7 +169,22 @@ namespace softwrench.sw4.Hapag.Data {
             //            var groupedLocations = locations.GroupedLocations;
             if (ctx.IsInModule(FunctionalRole.XItc)) {
                 if (user.IsWWUser()) {
-                    var hlagGroupedLocations = _locationManager.FindAllLocations().ToArray();
+                    HlagGroupedLocation[] hlagGroupedLocations;
+                    if (ctx.MetadataParameters.ContainsKey("region")) {
+                        //HAP-994
+                        var parentRegion = ctx.MetadataParameters["region"];
+                        Log.DebugFormat("Region {0} was previously selected", parentRegion);
+                        try {
+                            hlagGroupedLocations =
+                                _locationManager.FindLocationsOfParentLocation(new PersonGroup { Name = parentRegion })
+                                    .ToArray();
+                        } catch (Exception) {
+                            Log.WarnFormat("region {0} not found, applying default", parentRegion);
+                            hlagGroupedLocations = _locationManager.FindAllLocations().ToArray();
+                        }
+                    } else {
+                        hlagGroupedLocations = _locationManager.FindAllLocations().ToArray();
+                    }
                     Log.DebugFormat("found {0} location entries for R0017", hlagGroupedLocations.Length);
                     return hlagGroupedLocations;
                 }
