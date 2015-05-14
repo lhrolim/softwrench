@@ -16,11 +16,11 @@
                 redirectService.redirectToAction(title, controller, action, parameters);
             };
 
-            scope.loadApplication = function (applicationName, schemaId, id) {
+            scope.loadApplication = function (applicationName, schemaId, mode, id) {
                 var parameters = {
                     Id: id
                 }
-                redirectService.goToApplicationView(applicationName, schemaId, null, null, parameters, null);
+                redirectService.goToApplicationView(applicationName, schemaId, mode, null, parameters, null);
             };
 
             scope.myProfile = function () {
@@ -30,7 +30,7 @@
                 };
                 contextService.insertIntoContext("crud_context", crudContext);
                 var id = contextService.getUserData().maximoPersonId;
-                this.loadApplication('Person', 'detail', id);
+                this.loadApplication('Person', 'detail', 'input', id);
             }
 
             scope.i18N = function (key, defaultValue, paramArray) {

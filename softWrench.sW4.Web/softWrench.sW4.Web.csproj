@@ -300,7 +300,6 @@
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
-    <Compile Include="Models\MyProfile\MyProfileModel.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
@@ -627,7 +626,6 @@
     <Content Include="Content\Scripts\client\crud\home.js" />
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
     <Content Include="Content\Scripts\client\crud\messagehandler.js" />
-    <Content Include="Content\Scripts\client\adminresources\myProfile.js" />
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.de.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.es.js" />
@@ -1258,7 +1256,6 @@
     <Content Include="Content\Controller\EntityMetadataBuilder.html" />
     <Content Include="Views\Generic\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Content\Controller\MyProfile.html" />
     <Content Include="Content\Controller\EntityMetadataEditor.html" />
     <Content Include="Views\Configuration\Index.cshtml" />
     <Content Include="Views\SignIn\Index_old.cshtml" />

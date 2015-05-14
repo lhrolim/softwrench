@@ -26,15 +26,15 @@
         </schema>
         
         <schema id="detail" stereotype="detail" title="Person Detail">
-          <field attribute="personuid" label="Person ID" hidden="true"/>
-          <field attribute="personid" label="Username" requiredexpression="true"/>
+          <field attribute="personuid" label="Person ID" showexpression="false"/>
+          <field attribute="personid" label="Username" requiredexpression="true" showexpression="true"/>
           <field attribute="#password" label="Password" requiredexpression="true"/>
           <field attribute="#retypepassword" label="Retype Password" requiredexpression="true"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
           <field attribute="locationorg" label="Org ID"/>
           <field attribute="locationsite" label="Site ID"/>
-          <field attribute="storeroom" label="Storeroom"/>
+          <field attribute="location" label="Location"/>
           <field attribute="department" label="Department"/>
           <field attribute="langcode" label="Language"/>
           <field attribute="#isactive" label="Active">

@@ -54,17 +54,17 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return new GenericResponseResult<UserListDto>(new UserListDto { Users = users, Roles = roles, Profiles = profiles });
         }
 
-        [HttpGet]
-        [SPFRedirect(URL = "MyProfile", Title = "Profile Details")]
-        public GenericResponseResult<MyProfileModel> MyProfile() {
-            var user = SecurityFacade.CurrentUser();
-            var restrictions = GetRestrictions(user);
-            var canViewRestrictions = CanViewRestrictions(user);
-            var canChangeLanguage = CanChangeLanguage(user);
+        //[HttpGet]
+        //[SPFRedirect(URL = "MyProfile", Title = "Profile Details")]
+        //public GenericResponseResult<MyProfileModel> MyProfile() {
+        //    var user = SecurityFacade.CurrentUser();
+        //    var restrictions = GetRestrictions(user);
+        //    var canViewRestrictions = CanViewRestrictions(user);
+        //    var canChangeLanguage = CanChangeLanguage(user);
 
-            var myProfile = new MyProfileModel(user, restrictions, canViewRestrictions, canChangeLanguage);
-            return new GenericResponseResult<MyProfileModel>(myProfile);
-        }
+        //    var myProfile = new MyProfileModel(user, restrictions, canViewRestrictions, canChangeLanguage);
+        //    return new GenericResponseResult<MyProfileModel>(myProfile);
+        //}
 
         private static bool CanChangeLanguage(InMemoryUser user) {
             return user.PersonGroups.All(f => HlagLocationUtil.IsEndUser(f.PersonGroup) || !HlagLocationUtil.ContainsProfilesGroup(f.PersonGroup));
