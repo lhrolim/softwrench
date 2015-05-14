@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
         }
 
-        public static User GetUserFromMaximoByUserName([NotNull] string userName, int? id) {
+        public static User GetUserFromMaximoByUserName([NotNull] string userName, int? swId) {
             if (userName == null) throw new ArgumentNullException("userName");
             User user = null;
             var dto = new SearchRequestDto {
@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             }
             var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
             user = userFromMaximo.FirstOrDefault();
-            user.Id = id;
+            user.Id = swId;
             return user;
         }
 

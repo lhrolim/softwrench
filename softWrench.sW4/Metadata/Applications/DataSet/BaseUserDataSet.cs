@@ -142,7 +142,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             personJson.Add("personid", json.GetValue("#personid"));
             personJson.Add("personuid", json.GetValue("#personuid"));
 
-            var id = personJson.Value<string>("personuid");
+            var id = personJson.Value<string>("personid");
             var operationWrapper = new OperationWrapper(personAppliction, entityMetadata, operation, personJson, id);
             _maxEngine.Execute(operationWrapper);
         }

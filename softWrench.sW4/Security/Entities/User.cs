@@ -181,7 +181,7 @@ namespace softWrench.sW4.Security.Entities {
             user.Id = (int?)jObject["id"];
             user.UserName = (String)jObject["username"];
             user.MaximoPersonId = (String)jObject["maximopersonid"];
-            user.IsActive = (bool)jObject["isactive"];
+            user.IsActive = jObject["isactive"] == null || (bool)jObject["isactive"];
             var inputPassword = (String)jObject["password"];
             if (inputPassword != null) {
                 user.Password = AuthUtils.GetSha1HashData(inputPassword);

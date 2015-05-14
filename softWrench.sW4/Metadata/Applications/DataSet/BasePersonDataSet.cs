@@ -35,13 +35,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return _maxConnectorEngine;
         }
 
-        protected ISWDBHibernateDAO SWDAO() {
-            if (_dao == null) {
-                _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
-            }
-            return _dao;
-        }
-
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             // get is active for each of the users
             var result = base.GetList(application, searchDto);
@@ -50,6 +43,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             foreach (var record in result.ResultObject)
             {
                 var swuser = swusers.Where(user => user.MaximoPersonId == record.GetAttribute("personid").ToString());
+                if (!swuser.Any())
+                {
+                    continue;
+                }
                 record.Attributes.Add("#isactive", swuser.First().IsActive);
             }
             return result;

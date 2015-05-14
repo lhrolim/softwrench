@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <entities>
-    <entity name="localPerson" parententity="person" idAttribute="personuid" useridAttribute="personid" >
+    <entity name="localPerson" parententity="person" idAttribute="personid">
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePersonCrudConnector" />
       </connectorParameters>
@@ -12,6 +12,7 @@
     <application name="person" title="Person" entity="localPerson">
       <properties>
         <property key="list.defaultorderby" value="personid asc"/>
+        <property key="detail.navigationbuttons.disabled" value="true"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="list" title="Person List">
