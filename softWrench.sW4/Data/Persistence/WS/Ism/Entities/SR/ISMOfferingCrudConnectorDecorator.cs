@@ -27,7 +27,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
         }
 
 
-
+        protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
+       string entityName, Boolean update, string schemaId) {
+            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update, schemaId);
+            problem.CustomerID = "HLC-00";
+            return problem;
+        }
 
         protected override void HandleLongDescription(ServiceIncident webServiceObject, CrudOperationData entity, ApplicationMetadata metadata, bool update) {
             var problem = webServiceObject.Problem;
