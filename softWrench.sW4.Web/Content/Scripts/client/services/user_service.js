@@ -12,7 +12,7 @@ app.factory('userService', function (contextService) {
             if (roleArray == null) {
                 return true;
             }
-            var user = this.getUserData();
+            var user = contextService.getUserData();
             var userroles = user.roles;
             var result = false;
             $.each(roleArray, function (key, value) {
@@ -30,10 +30,8 @@ app.factory('userService', function (contextService) {
             if (group == null) {
                 return true;
             }
-            var user = this.getUserData();
+            var user = contextService.getUserData();
             var personGroups = user.personGroups;
-            var result = false;
-
             for (var i = 0; i < personGroups.length; i++) {
                 var userGroup = personGroups[i];
                 if (userGroup.personGroup.name == groupName) {
