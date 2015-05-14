@@ -35,16 +35,21 @@
           <field attribute="wonum" hidden="true" label="Task"/>
           <field attribute="status" readonly="true" label="Current Status"/>
           <!--          <optionfield providerattribute="availablestatus" attribute="newstatus" label="New Status" requiredexpression="true"/>-->
-          <association label="New Status" target="newstatus" hideDescription="true" labelfield="synstatus.description">
+          <association label="New Status" target="newstatus" hideDescription="true" labelfield="synstatus.description" requiredexpression="true">
             <dataprovider postfilterfunction="FilterAvailableStatus"/>
             <renderer type="combo"/>
           </association>
-          <field attribute="statusdate" requiredexpression="true" label="Status Date">
-            <renderer type="datetime" params="dateformat=MM/dd/yyyy hh:mm"/>
+          <field attribute="#newstatusdate" requiredexpression="true" label="Status Date">
+            <renderer type="datetime"/>
           </field>
           <field attribute="memo" label="Memo">
             <renderer type="textarea"/>
           </field>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
 

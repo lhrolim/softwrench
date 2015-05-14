@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;
@@ -16,10 +18,17 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
     class WorActivityDataSet : MaximoApplicationDataSet {
 
-        private IContextLookuper _contextLookuper;
+        private readonly IContextLookuper _contextLookuper;
 
         public WorActivityDataSet(IContextLookuper contextLookuper) {
             _contextLookuper = contextLookuper;
+        }
+
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = base.GetApplicationDetail(application, user, request);
+            //default=@now is not working for edition, and we cannot pick it from maximo side
+            result.ResultObject.SetAttribute("#newstatusdate", DateTime.Now);
+            return result;
         }
 
 

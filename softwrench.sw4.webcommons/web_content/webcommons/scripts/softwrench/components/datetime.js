@@ -34,7 +34,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             $timeout(function () {
 
                 if (scope.fieldMetadata != undefined) {
-                    var value = formatService.formatDate(ngModel.$modelValue, attrs.dateFormat);
+                    var value = formatService.formatDate(ngModel.$modelValue, dateFormat);
                     ngModel.$setViewValue(value);
                     element.val(value);
                     if (datamap != undefined && scope.fieldMetadata != undefined) {
