@@ -16,16 +16,37 @@
           <field attribute="taskid" label="Task" />
           <field attribute="description" label="Summary"/>
           <field attribute="estdur" label="Estimated Duration" />
-
           <field attribute="status" label="Status"/>
           <field attribute="owner" label="Owner" />
           <field attribute="ownergroup" label="Owner Group" />
+          <section resourcepath="/Content/Templates/otb/WotaskchangeStatus.html"/>
           <commandbars>
             <commandgroup position="compositionbottom">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
         </schema>
+
+        <schema id="editstatusschema">
+          <properties>
+            <property key="detail.titleid" value="wonum"/>
+          </properties>
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wonum" hidden="true" label="WoNum"/>
+          <field attribute="status" readonly="true" label="Current Status"/>
+          <!--          <optionfield providerattribute="availablestatus" attribute="newstatus" label="New Status" requiredexpression="true"/>-->
+          <association label="New Status" target="newstatus" hideDescription="true" labelfield="synstatus.description">
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
+            <renderer type="combo"/>
+          </association>
+          <field attribute="statusdate" requiredexpression="true" label="Status Date">
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="memo">
+            <renderer type="textArea"/>
+          </field>
+        </schema>
+
 
         <detail stereotype="compositiondetail">
           <field attribute="description" label="Summary:" requiredexpression="true"/>
