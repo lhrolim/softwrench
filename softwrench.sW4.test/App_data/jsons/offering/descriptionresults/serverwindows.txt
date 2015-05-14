@@ -8,6 +8,8 @@ Memory:   2GB
 Disk Size for applicationen (in addition to the basic installation on partition C):   111GB
 Disk (E:):   120GB
 Host Name:   KFDCtest
+OS:   Windows Server 2008 Standard Edition
+IIS:   Yes
 Disaster Recovery Category:   Test system - not relevant for disaster recovery
 =====================================================================
 Location in network

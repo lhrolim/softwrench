@@ -1036,6 +1036,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field label="Host Name" attribute="hostname" required="true" tooltip="Please enter the requested name for the server KFDC**** (without KFDC). Please enter four characters. The first two characters should be letters that describe the purpose of the server (e.g. LY for Lync, BI for Business Intelligence, etc.) followed by two numbers.">
               <renderer type="default" params="prepend=KFDC;maxlength=4"/>
             </field>
+
+
             <section id="specificdata"/>
             <optionfield label="Disaster Recovery Category" attribute="kfallcat" tooltip="If you are requesting a production system (mode of operation/LPAR type: production), please choose a disaster recovery category.">
               <option label="Test system - not relevant for disaster recovery" value="none"/>
@@ -1044,6 +1046,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="4" value="4"/>
             </optionfield>
           </section>
+
 
           <section orientation="vertical" id="networklocationdata">
             <header label="Location in network"/>
