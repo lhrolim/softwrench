@@ -168,7 +168,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             message = message + " (Bin: " + binnum + ")";
         }
         return alertService.confirm(null, null, function () {
-            returnTransformation(event, datamap);
             parameters.continue();
         }, message);
     };
