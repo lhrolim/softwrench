@@ -1976,7 +1976,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="woactivity" idAttribute="workorderid">
+    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum">
       <attributes>
         <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="decimal" required="true" />
@@ -2208,6 +2208,10 @@
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
       </relationships>
       <connectorParameters>

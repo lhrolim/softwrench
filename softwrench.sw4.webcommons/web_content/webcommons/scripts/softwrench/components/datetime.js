@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('dateTime', function ($timeout, formatService) {
+app.directive('dateTime', function ($timeout, formatService, expressionService) {
 
     function parseBooleanValue(attrValue) {
         return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
@@ -17,7 +17,7 @@ app.directive('dateTime', function ($timeout, formatService) {
 
 
             if (!ngModel) {
-//                console.log('no model, returning');
+                //                console.log('no model, returning');
                 return;
             }
 
@@ -28,17 +28,17 @@ app.directive('dateTime', function ($timeout, formatService) {
             var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
             var isReadOnly = attrs.readonly == undefined ? false : (attrs.readonly);
-
+            var datamap = scope.datamap;
             datetimeclassHandler(istimeOnly);
 
             $timeout(function () {
 
                 if (scope.fieldMetadata != undefined) {
-                    var value = formatService.formatDate(ngModel.$modelValue, attrs.dateFormat);
+                    var value = formatService.formatDate(ngModel.$modelValue, dateFormat);
                     ngModel.$setViewValue(value);
                     element.val(value);
-                    if (scope.datamap != undefined && scope.fieldMetadata != undefined) {
-                        scope.datamap[scope.fieldMetadata.attribute] = value;
+                    if (datamap != undefined && scope.fieldMetadata != undefined) {
+                        datamap[scope.fieldMetadata.attribute] = value;
                     }
                     ngModel.$render();
                 }
@@ -46,6 +46,14 @@ app.directive('dateTime', function ($timeout, formatService) {
             });
 
             if (dateFormat != '' && dateFormat != undefined) {
+
+                var allowfuture = parseBooleanValue(attrs.allowFuture);
+                var allowpast = parseBooleanValue(attrs.allowPast);
+                var startDate = allowpast ? -Infinity : '+0d';
+                var endDate = allowfuture ? Infinity : '+0d';
+                var minStartDateExpression = attrs.minDateexpression;
+
+
                 if (showTime) {
                     var futureOnly = (attrs.futureOnly != undefined && attrs.futureOnly.toLowerCase() == "true");
                     //                attrs.startDate = futureOnly ? '+0d' : -Infinity;
@@ -53,6 +61,20 @@ app.directive('dateTime', function ($timeout, formatService) {
                     //if the date format starts with dd --> we don´t have the AM/PM thing, which is just an american thing where the dates starts with months
                     if (showMeridian == undefined) {
                         showMeridian = dateFormat.startsWith('MM');
+                    }
+
+
+                    if (minStartDateExpression != null && minStartDateExpression != "") {
+                        startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                        startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
+                        var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+                        scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
+                            if (newVal != oldVal) {
+                                startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                                startDate = formatService.formatDate(startDate, attrs.dateFormat);
+                                element.data('datetimepicker').startDate = Date.parse(startDate);
+                            }
+                        });
                     }
 
                     element.datetimepicker({
@@ -66,13 +88,22 @@ app.directive('dateTime', function ($timeout, formatService) {
                         startView: istimeOnly ? 1 : 2,
                         maxView: istimeOnly ? 1 : 3,
                         readonly: isReadOnly
-                });
+                    });
                 }
                 else {
-                    var allowpast = parseBooleanValue(attrs.allowPast);
-                    var allowfuture = parseBooleanValue(attrs.allowFuture);
-                    var startDate = allowpast ? -Infinity : '+0d';
-                    var endDate = allowfuture ? Infinity : '+0d';
+
+                    if (minStartDateExpression != null && minStartDateExpression != "") {
+                        startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                        variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+                        scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
+                            if (newVal != oldVal) {
+                                startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                                //recreating component
+                                element.data('datepicker').startDate = Date.parse(startDate);
+                            }
+                        });
+                    }
+
                     element.datepicker({
                         startDate: startDate,
                         endDate: endDate,

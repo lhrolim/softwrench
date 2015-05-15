@@ -28,6 +28,18 @@ namespace softWrench.sW4.Security.Context {
 
         public bool OfflineMode { get; set; }
 
+        private IDictionary<string, object> _parameters;
+
+        public IDictionary<string, object> MetadataParameters {
+            get {
+                if (_parameters == null) {
+                    _parameters = new Dictionary<string, object>();
+                }
+                return _parameters;
+            }
+            set { _parameters = value; }
+        }
+
         public ApplicationLookupContext ApplicationLookupContext { get; set; }
 
         public ConditionMatch ProfileMatches(int? storedProfile) {
