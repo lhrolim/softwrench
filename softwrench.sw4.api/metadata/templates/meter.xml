@@ -29,7 +29,7 @@
             <renderer type="checkbox" params="editable=true"/>
           </field>
           <field attribute="rollover" hidden="true"/>
-          <association labelfield="person_.displayname" target="#inspector" label="Inspector" requiredexpression="true">
+          <association labelfield="person_.displayname" valuefield="personid" target="#inspector" label="Inspector" requiredexpression="true">
             <renderer type="lookup" params="editable=true"/>
           </association>
           <commandbars>
@@ -65,8 +65,8 @@
           </field>
           <field attribute="rollover" hidden="true"/>
             
-          <association labelfield="person_.displayname" target="#inspector" label="Inspector" requiredexpression="true">
-            <renderer type="lookup" params="editable=true"/>
+          <association labelfield="person_.displayname" target="#inspector" valuefield="personid" label="Inspector" requiredexpression="true">
+            <renderer type="lookup"  params="editable=true"/>
           </association>
           <commandbars>
             <commandgroup position="compositionbottom">

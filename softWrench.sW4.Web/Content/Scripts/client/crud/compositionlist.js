@@ -249,13 +249,15 @@ app.directive('compositionList', function (contextService, formatService) {
                 return false;
             }
 
-            $scope.showLookupModal = function (fieldMetadata) {
+            $scope.showLookupModal = function (fieldMetadata,item) {
                 var code = '';
 //                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
 //                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
 //                }
                 $scope.schema = $scope.compositionlistschema;
+                $scope.datamap = item;
                 $scope.lookupObj.element = $element;
+                $scope.lookupObj.item = item;
                 cmplookup.updateLookupObject($scope, fieldMetadata, code);
             };
 

@@ -44,8 +44,8 @@
                     <input type="checkbox"
                            name="compositionlistschema.properties['list.selectionstyle']"
                            value="{{option.value}}"
-                           ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                           ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                           ng-checked="isCheckboxSelected(option,column.associationKey)"
+                           ng-click="toogleCheckboxSelection(option,column.associationKey)">
                 </td>
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
@@ -61,20 +61,19 @@
                                     <div class="col-lg-12">
                                         <div class="input-group">
                                             <input type="text" placeholder="{{column.label}}" class="form-control"
-                                                   ng-model="lookupAssociationsCode[column.attribute]"
+                                                   ng-model="compositionitem[column.attribute]"
                                                    ng-change="lookupCodeChange(column)"
                                                    ng-blur="lookupCodeBlur(column)"
-                                                   ng-enter="showLookupModal(column)"
+                                                   ng-enter="showLookupModal(column,compositionitem)"
                                                    rel="tooltip" data-original-title="Enter {{column.label}} id to lookup " />
-                                            <span class="input-group-addon last" ng-click="showLookupModal(column)"
+                                            <span class="input-group-addon last" ng-click="showLookupModal(column,compositionitem)"
                                                   rel="tooltip" data-original-title="Open the lookup popup">
-                                                <i class="glyphicon glyphicon-search" ng-enabled="isSelectEnabled(column)"
-                                                   style="cursor: pointer"></i>
+                                                <i class="glyphicon glyphicon-search" style="cursor: pointer"></i>
                                             </span>
                                             <div></div><!--stop addon from moving on hover-->
                                         </div>
                                     </div>
-                                    <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
+                                    <input type="hidden" ng-model="datamap[column.target]" />
                                 </div>
                             </ng-switch>
                         </div>
@@ -91,14 +90,14 @@
                                 </div>
                                 <div ng-switch-when="datetime">
                                     <div id="datetimepicker" class="input-group" data-datepicker="true" ng-if="column.rendererParameters['editable'] == 'true'">
-                                        <input type="text" ng-model="compositionitem[fieldMetadata.attribute]"
+                                        <input type="text" ng-model="compositionitem[column.attribute]"
                                                data-date-time
-                                               data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
-                                               data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                                               data-date-format="{{fieldMetadata.rendererParameters['format']}}"
-                                               data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
-                                               data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
-                                               data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                                               data-show-time="{{column.rendererParameters['showtime']}}"
+                                               data-show-date="{{column.rendererParameters['showdate']}}"
+                                               data-date-format="{{column.rendererParameters['format']}}"
+                                               data-show-meridian="{{column.rendererParameters['showmeridian']}}"
+                                               data-allow-past="{{column.rendererParameters['allowpast']}}"
+                                               data-allow-future="{{column.rendererParameters['allowfuture']}}"
                                                class="form-control">
                                         <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
                                             <i class="datetime-class"></i>
@@ -112,16 +111,16 @@
                                 <div ng-switch-default>
 
                                     <div ng-if="column.rendererParameters['editable'] == 'true'"
-                                         ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
-                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
-                                        <input type="{{getInputType(fieldMetadata)}}"
-                                               ng-model="compositionitem[fieldMetadata.attribute]" class="hidden-phone form-control"
-                                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                               placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
-                                               ng-init="initField(fieldMetadata)"
-                                               dynamic-name="fieldMetadata.attribute" />
-                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                                         ng-class="{'input-group': column.rendererParameters['prepend'] || column.rendererParameters['append'] }">
+                                        <span class="input-group-addon" ng-if="column.rendererParameters['prepend']!=null">{{column.rendererParameters['prepend']}}</span>
+                                        <input type="{{getInputType(column)}}"
+                                               ng-model="compositionitem[column.attribute]" class="hidden-phone form-control"
+                                               data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
+                                               maxlength="{{column.rendererParameters['maxlength']}}"
+                                               placeholder="{{column.rendererParameters['placeholder']}}"
+                                               ng-init="initField(column)"
+                                               dynamic-name="column.attribute" />
+                                        <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
 
                                     <a ng-if="column.rendererParameters['editable'] != 'true'">
