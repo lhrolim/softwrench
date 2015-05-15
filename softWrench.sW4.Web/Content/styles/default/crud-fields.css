@@ -4,9 +4,9 @@
     margin-left: 0;
 }
 
-fieldset.hasheader {
-    clear: both;
-}
+    fieldset.hasheader {
+        clear: both;
+    }
 
 .form-horizontal .form-group {
     margin-right: 0;
@@ -22,6 +22,14 @@ fieldset.hasheader {
     padding-right: 30px;
 }
 /*start end bootstrap styles*/
+
+/*.fieldset-inside-section {
+    margin-bottom: 0;
+}*/
+
+.form-group.haschildren {
+    margin-bottom: 0;
+}
 
 input:focus, select:focus, textarea:focus {
     outline: none;
