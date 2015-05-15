@@ -42,10 +42,10 @@
           </field>
           
           <composition relationship="phone" label="Phone Numbers" inline="false" >
-            <collectionproperties allowcreation="false" allowupdate="true"/>
+            <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
           <composition relationship="email" label="Email Addresses" inline="false">
-            <collectionproperties allowcreation="false" allowupdate="true"/>
+            <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
         </schema>
       </schemas>
