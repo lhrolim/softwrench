@@ -201,6 +201,32 @@ app.directive('inputdetailtoolbar', function (contextService) {
     };
 });
 
+app.directive('crudbodydetailtoolbar', function (contextService) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
+        require: '^crudBody',
+        scope: {
+            /*only appliable for compositions, otherwise this will be null*/
+            schema: '=',
+            mode: '@',
+            position: '@',
+            datamap: '=',
+        },
+
+        link: function (scope, element, attrs, ctrl) {
+            scope.ctrlfns = {};
+            for (var fn in ctrl) {
+                scope.ctrlfns[fn] = ctrl[fn];
+            }
+        },
+
+        controller: sharedController
+
+    };
+});
+
 app.directive('outputdetailtoolbar', function (contextService) {
     return {
         restrict: 'E',

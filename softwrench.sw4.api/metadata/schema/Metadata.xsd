@@ -885,6 +885,7 @@
           <enumeration value="gridrows"></enumeration>
           <enumeration value="compositiontop"></enumeration>
           <enumeration value="detailform"></enumeration>
+          <enumeration value="actions"></enumeration>
           <enumeration value="compositionbottom"></enumeration>
         </restriction>
       </simpleType>
