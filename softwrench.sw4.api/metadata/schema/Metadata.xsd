@@ -708,6 +708,8 @@
           <enumeration value="confirm"></enumeration>
           <enumeration value="cancel"></enumeration>
           <enumeration value="delete"></enumeration>
+          <enumeration value="modal"></enumeration>
+          <enumeration value="redirection"></enumeration>
         </restriction>
       </simpleType>
     </attribute>

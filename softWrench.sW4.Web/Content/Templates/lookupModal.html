@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <button type="button" class="close" aria-hidden="true" ng-click="hideLookupModal()">&times;</button>
+                    <button type="button" class="close" aria-hidden="true" ng-click="hideLookupModal(lookupObj.fieldMetadata.target)">&times;</button>
                     <h4 class="modal-title">{{i18N('general.select','Select')}} {{lookupObj.fieldMetadata.label}}</h4>
                 </div>
                 <div class="context clearfix">
@@ -156,7 +156,7 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="hideLookupModal()">{{i18N('general.cancel','Cancel')}}</button>
+                <button type="button" class="btn btn-default" ng-click="hideLookupModal(lookupObj.fieldMetadata.target)">{{i18N('general.cancel','Cancel')}}</button>
             </div>
         </div>
     </div>

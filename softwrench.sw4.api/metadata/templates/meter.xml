@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+
+  <entities>
+    
+  </entities>
+
+  <applications>
+    <application name="assetmeter" title="Asset Meter" entity="assetmeter">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <schema id="composition" stereotype="compositionlist" title="Asset Meter Readings">
+          <field label="Meter" attribute="metername"/>
+          <field label="Meter Type" attribute="meter_.metertype"/>
+          <field label="Last Reading" attribute="lastreading"/>
+          <field label="Last Reading Date" attribute="lastreadingdate">
+            <renderer type="datetime"/>
+          </field>
+          <field label="New Reading" attribute="#newreading" requiredexpression="true">
+            <renderer type="default" params="editable=true"/>
+          </field>
+          <field label="New Reading Date" attribute="#newreadingdate" requiredexpression="true">
+            <renderer type="datetime" params="editable=true"/>
+          </field>
+          <field label="Rollover" attribute="disabledrollover" enableexpression="false">
+            <renderer type="checkbox" params="editable=true"/>
+          </field>
+          <field attribute="rollover" hidden="true"/>
+          <association labelfield="person_.displayname" target="#inspector" label="Inspector" requiredexpression="true">
+            <renderer type="lookup" params="editable=true"/>
+          </association>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="additem"/>
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="locationmeter" title="Location Meter" entity="locationmeter">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <schema id="composition" stereotype="compositionlist" title="Location Meter Readings">
+          <field label="Meter" attribute="metername"/>
+          <field label="Meter Type" attribute="meter_.metertype"/>
+          <field label="Last Reading" attribute="lastreading"/>
+          <field label="Last Reading Date" attribute="lastreadingdate">
+            <renderer type="datetime"/>
+          </field>
+          <field label="New Reading" attribute="#newreading" requiredexpression="true">
+            <renderer type="default" params="editable=true"/>
+          </field>
+          <field label="New Reading Date" attribute="#newreadingdate" requiredexpression="true">
+            <renderer type="datetime" params="editable=true"/>
+          </field>
+          <field label="Rollover" attribute="disabledrollover" enableexpression="false">
+            <renderer type="checkbox" params="editable=true"/>
+          </field>
+          <field attribute="rollover" hidden="true"/>
+            
+          <association labelfield="person_.displayname" target="#inspector" label="Inspector" requiredexpression="true">
+            <renderer type="lookup" params="editable=true"/>
+          </association>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="additem"/>
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+
+  </applications>
+
+
+
+
+</metadata>

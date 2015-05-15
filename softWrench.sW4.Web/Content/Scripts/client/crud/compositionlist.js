@@ -175,7 +175,9 @@ app.directive('compositionList', function (contextService, formatService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventService, iconService) {
+            expressionService, $timeout, modalService, redirectService, eventService, iconService, cmplookup) {
+
+            $scope.lookupObj = {};
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -214,7 +216,7 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
 
-                $injector.invoke(BaseController, this, {
+                $injector.invoke(BaseList, this, {
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
@@ -235,6 +237,10 @@ app.directive('compositionList', function (contextService, formatService) {
                 return safeCSSselector(name);
             };
 
+            $scope.haslookupModal = function (schema) {
+                return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
+            }
+
             $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
                 if (collectionproperties.hideExistingData == true) {
                     var idFieldName = compositionlistschema.idFieldName;
@@ -242,6 +248,16 @@ app.directive('compositionList', function (contextService, formatService) {
                 }
                 return false;
             }
+
+            $scope.showLookupModal = function (fieldMetadata) {
+                var code = '';
+//                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
+//                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+//                }
+                $scope.schema = $scope.compositionlistschema;
+                $scope.lookupObj.element = $element;
+                cmplookup.updateLookupObject($scope, fieldMetadata, code);
+            };
 
             $scope.compositionProvider = function () {
                 var localCommands = {};

@@ -119,9 +119,9 @@ app.directive('lookupModal', function (contextService) {
 
             });
 
-            $scope.hideLookupModal = function () {
+            $scope.hideLookupModal = function (target) {
                 $scope.modalCanceled = true;
-                var modals = $('[data-class="lookupModal"]');
+                var modals = $('[data-attribute="{0}"]'.format(target));
                 modals.modal('hide');
             };
 
