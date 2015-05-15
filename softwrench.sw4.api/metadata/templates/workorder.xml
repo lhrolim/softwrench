@@ -291,7 +291,9 @@
           </section>
           <commandbars>
             <commandgroup position="actions">
-              <command id="readmeters" icon="fa-tachometer"/>
+              <container label="Actions" id="actioncontainer" icon="fa-gear">
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"/>
+              </container>
             </commandgroup>
             
           </commandbars>
