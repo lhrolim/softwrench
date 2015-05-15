@@ -141,7 +141,7 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
                 //default ==> should be client specific
                 return showTime ? "mm/dd/yyyy hh:mm" : "mm/dd/yyyy";
             } else {
-                dateFormat = dateFormat.replace('mm', 'ii');
+//                dateFormat = dateFormat.replace('mm', 'ii');
                 dateFormat = dateFormat.replace('MM', 'mm');
                 dateFormat = dateFormat.replace('HH', 'hh');
                 if (!showTime) {
