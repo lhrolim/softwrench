@@ -425,7 +425,7 @@ app.directive('crudBody', function (contextService) {
                         if (data.type != 'BlankApplicationResponse') {
                             $scope.datamap = data.resultObject;
                         }
-                        if (data.id) {
+                        if (data.id && $scope.datamap.fields) {
                             //updating the id, useful when it´s a creation and we need to update value return from the server side
                             $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
                         }
