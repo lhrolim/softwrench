@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -307,11 +307,11 @@
           </section>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-gear">
-                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings" nextSchemaId="readings" stereotype="modal"/>
+             <container label="Actions" id="actioncontainer" icon="fa-bolt" nextSchemaId="readings" stereotype="modal">
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  />
               </container>
             </commandgroup>
-
+            
           </commandbars>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
