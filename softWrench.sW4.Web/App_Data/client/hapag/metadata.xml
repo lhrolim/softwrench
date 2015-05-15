@@ -28,7 +28,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
     </entity>
 
-    <entity name="offering" idAttribute="ticketid" parententity="sr" whereclause="(offering.classificationid is null or offering.classificationid not like '8151%') and (offering.TEMPLATEID = 'HLCDEO')">
+    <entity name="offering" idAttribute="ticketid" parententity="sr" whereclause="(offering.classificationid is null or offering.classificationid not like '8151%') and (offering.TEMPLATEID like 'HLCDEO%')">
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.HapagServiceRequestCrudConnector" />
       </connectorParameters>
@@ -36,7 +36,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="SR" idAttribute="ticketid" whereclause="((sr.classificationid is null or sr.classificationid not like '8151%') and (SR.TEMPLATEID is null or 
-            (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO','HLCDEO') )))">
+            (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO') and SR.TEMPLATE not like 'HLCDEO%' )))">
       <attributes>
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagaffectedperson" type="varchar" required="false" query="ref:affectedpersoncustom"/>
@@ -983,19 +983,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <reference id="servicelabel"/>
 
-            <field label="Requested production date" attribute="startdate" required="true" tooltip="Please enter the requested date for the start of the production system. Please note that the preparation of the system takes three business days.">
+            <field label="Gewünschter Produktionstermin" attribute="startdate" required="true"
+                   tooltip="Tragen Sie hier den gewünschten Produktionsstart des Systems ein. Bitte beachten Sie dass für den Aufbau 3 Werktage benötigt werden.">
               <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate"/>
             </field>
-            <field label="Planned production end date" attribute="enddate" required="true" tooltip="In case the server should operate for a limited time only, you can specify the end date of operation here.">
+            <field label="Geplantes Produktionsende" attribute="enddate" required="true" tooltip="Sofern der Server nur temporär betrieben werden soll können Sie hier bereits das Produktionsende festlegen.">
               <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate"/>
             </field>
-            <optionfield label="Mode of Operation / LPAR-Type" attribute="lpartype" tooltip="Please choose if the system is a production system (7x24 or 5x12) or a test system (5x12).">
-              <option label="Production 7x24" value="prod247"/>
-              <option label="Production 5x12" value="prod125"/>
+            <optionfield label="Betriebsart / LPAR-Typ" attribute="lpartype" tooltip="Wählen Sie hier, ob es sich um ein produktives System (7x24 oder 5x12) oder ein Testsystem (5x12) handelt." required="true">
+              <option label="Produktion 7x24" value="prod247"/>
+              <option label="Produktion 5x12" value="prod125"/>
               <option label="Test 5x12" value="test125"/>
             </optionfield>
 
-            <optionfield label="CPU" attribute="cpu" tooltip="Please choose the requested number of CPUs.">
+            <optionfield label="CPU" attribute="cpu" tooltip="Wählen Sie hier die gewünschte Anzahl vCPUs aus." required="true">
               <renderer type="COMBO" params="append=vCPU"/>
               <option label="1" value="1"/>
               <option label="2" value="2"/>
@@ -1007,7 +1008,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="8" value="8"/>
             </optionfield>
 
-            <optionfield label="Memory" attribute="memory" tooltip="Please choose the requested amount of memory. The maximal amount is 16GB. More memory is possible but cannot be created with the factory approach.">
+            <optionfield label="Memory" attribute="memory" tooltip="Wie viel Speicherplatz wird voraussichtlich für Applikationen auf Partition C benötigt werden?Standardgröße für Disk C ist: XXX GB. Der hier angegebenen Speicher wird zusätzlich dazu bereitgestellt." required="true">
               <renderer type="COMBO" params="append=GB"/>
               <option label="1" value="1"/>
               <option label="2" value="2"/>
@@ -1027,20 +1028,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="16" value="16"/>
             </optionfield>
 
-            <field label="Disk Size for applicationen (in addition to the basic installation on partition C)" attribute="disksizec" tooltip="How much disk space do you anticipate will be needed for applications on partition C? The default disk size is XXX GB. The value you choose here will be provided in addition to the default disk size.">
+            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec" required="true" tooltip="Bitte deinieren Sie die gewünschte Größe der Partition E">
               <renderer type="default" params="append=GB"/>
             </field>
-            <field label="Disk (E:)" attribute="disksizee" tooltip="Please specify the requested disk size for partition E.">
+            <field label="Disk (E:)" attribute="disksizee" required="true" tooltip="Bitte deinieren Sie die gewünschte Größe der Partition E">
               <renderer type="default" params="append=GB"/>
             </field>
-            <field label="Host Name" attribute="hostname" required="true" tooltip="Please enter the requested name for the server KFDC**** (without KFDC). Please enter four characters. The first two characters should be letters that describe the purpose of the server (e.g. LY for Lync, BI for Business Intelligence, etc.) followed by two numbers.">
+            <field label="Host Name" attribute="hostname" required="true" tooltip="Tragen Sie hier den gewünschten Names für den Server KFDC**** ein (ohne KFDC). Hierfür stehen Ihnen 4 Zeichen zur Verfügung.  Die ersten beiden sollte Buchstaben sein welche den Zweck des Servers beschreiben (Beispielsweise LY für Lync, BI für Business Intelligence etc.) darauf sollten 2 Zahlen folgen.">
               <renderer type="default" params="prepend=KFDC;maxlength=4"/>
             </field>
 
 
             <section id="specificdata"/>
-            <optionfield label="Disaster Recovery Category" attribute="kfallcat" tooltip="If you are requesting a production system (mode of operation/LPAR type: production), please choose a disaster recovery category.">
-              <option label="Test system - not relevant for disaster recovery" value="none"/>
+            <optionfield label="K-Fall Kategorie" required="true" attribute="kfallcat" tooltip="Falls es sich um ein Produktivsystem handelt (Betriebsart / LPAR-Typ: Produktion) wählen Sie hier eine K-Fall Kategorie aus.">
+              <option label="Testsystem - nicht K-Fall relevant" value="none"/>
               <option label="2" value="2"/>
               <option label="3" value="3"/>
               <option label="4" value="4"/>
@@ -1049,20 +1050,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
           <section orientation="vertical" id="networklocationdata">
-            <header label="Location in network"/>
-            <optionfield label="Should the server be reachable from the Internet?" attribute="hasinternet" required="true">
+            <header label="Platzierung im Netzwerk"/>
+            <optionfield label="Soll der Server aus dem Internet erreichbar sein?" attribute="hasinternet" required="true">
               <renderer type="RADIO" />
-              <option label="Yes" value="yes"/>
-              <option label="No" value="No"/>
+              <option label="Ja" value="Ja"/>
+              <option label="Nein" value="Nein"/>
             </optionfield>
 
             <section resourcepath="/Content/templates/hapag/embeddedofferingpdf.html" showexpression="@hasinternet!=null"/>
-            <field attribute="networkvlan" label="Location in network (VLAN):" showexpression="@hasinternet!=null"/>
-            <field attribute="comments" label="Additional comments:" default="If you have general comments please note them here?" showexpression="@hasinternet!=null">
+            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null" required="true"/>
+         
+            <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." tooltip="Platz für zusätzliche Angaben / Wünsche.Bitte beachten Sie: Sonderwünsche sind nicht Teil des Factory-Ansatzen und können möglicherweise nicht im vereinarten Zeitraum umgesetzt werden." showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>
 
-            <field attribute="explanation" label="Information: the following services are included in the factory approach."  showexpression="@hasinternet!=null" readonly="true" qualifier="nodescription">
+            <field attribute="explanation" label="Information: Folgende Leistungen sind im Factory-Ansatz enthalten:"  showexpression="@hasinternet!=null" readonly="true" qualifier="nodescription">
               <renderer type="textarea" params="color=red"/>
             </field>
 
@@ -1077,12 +1079,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="servicename" value="Windows"/>
           </properties>
           <section id="specificdata">
-            <optionfield label="OS" attribute="os" tooltip="Please choose an operating system.">
+            <optionfield label="OS" attribute="os" tooltip="Wählen Sie hier das gewünschte Betriebssystem." required="true">
               <option label="Windows Server 2008 Standard Edition" value="2008se"/>
               <option label="Windows Server 2008 Enterprise Edition" value="2008ee"/>
               <option label="Windows Server 2012 Standard Edition" value="2012se"/>
             </optionfield>
-            <optionfield label="IIS" attribute="iis" tooltip="Please choose if the Microsoft IIS Web Server role should be installed.">
+            <optionfield label="IIS" attribute="iis" tooltip="Wählen Sie hier ob die Microsoft IIS Serverrolle installiert werden soll." required="true">
               <option label="Yes" value="yes"/>
               <option label="No" value="no"/>
             </optionfield>
@@ -1118,7 +1120,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="detail.cancel.lbl" value="Close"/>
           </properties>
         </schema>
-        
+
         <schema id="dashboardList">
           <field attribute="reportdate" label="Creation Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>

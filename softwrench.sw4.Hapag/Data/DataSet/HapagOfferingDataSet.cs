@@ -25,12 +25,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 
         private const string Explanation =
-@"- TSM Backup / Restore (depending on production/test system)
-- basic monitoring (TEC, SRM)
-- IBM Management SW (e.g. TSCM, TAD4D, …)
-- security settings (GSD331)
-- the new server is added as firewall object with basic default rules and is included in existing group
-- integration in QRadar (SIEM) according to default specification";
+@"- TSM Backup / Restore (in Abhängigkeit von Produktions-/Testsystem)
+- Basis-Monitoring (TEC, SRM)
+- IBM Management SW (z.B. TSCM, TAD4D, …)
+- Standardapplikationen: Antivirus (Sophos), Security Updates (WSUS)
+- Security Settings (GSD331)
+- Aufnahme des neuen Servers als Firewall-Objekt mit den Basis-Standardregeln und Aufnahme in bestehende Gruppe
+- Einbindung in QRadar (SIEM) nach den Standardvorgaben";
 
         protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var result = base.GetList(application, searchDto);
