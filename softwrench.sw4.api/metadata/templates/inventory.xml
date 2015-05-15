@@ -1004,7 +1004,7 @@
               </field>
               <field attribute="assetnum" label="Asset" readonly="true">
                 <renderer type="default" params="inputsize=medium" />
-              </field
+              </field>
               <!--<association label="Location" target="tostoreloc" labelfield="location_.description" dependantfields="siteid"  readonly="true">
                 <renderer type="lookup" params="inputsize=medium"/>
               </association>-->
