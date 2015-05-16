@@ -84,15 +84,16 @@ app.directive('lookupModal', function (contextService) {
             };
             $scope.lookupModalSelect = function (option) {
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
-
                 $scope.selectedOption = option;
-
-                $scope.datamap[fieldMetadata.target] = option.value;
-                $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
-                $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
-
+                if ($scope.lookupObj.item) {
+                    //if using inside lists
+                    $scope.lookupObj.item[fieldMetadata.target] = option.value;
+                } else {
+                    $scope.datamap[fieldMetadata.target] = option.value;
+                    $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
+                    $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
+                }
                 associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
-
                 $element.modal('hide');
             };
 

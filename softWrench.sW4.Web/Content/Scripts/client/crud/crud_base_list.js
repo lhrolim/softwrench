@@ -19,6 +19,10 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return i18NService.getI18nOptionField(option, fieldMetadata, schema);
     };
 
+    $scope.i18N = function (key, defaultValue, paramArray) {
+        return i18NService.get18nValue(key, defaultValue, paramArray);
+    };
+
     $scope.isColumnEditable = function (column) {
         return column.rendererParameters['editable'] == "true";
     };

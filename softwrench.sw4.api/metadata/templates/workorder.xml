@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -9,9 +9,10 @@
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
-    
+
     <template path="@glcomponents.xml"/>
     <template path="@failurecode.xml"/>
+    <template path="@meter.xml"/>
 
     <!--Applications required, temporarily for mobile, remove later-->
     <template path="@location.xml"/>
@@ -70,6 +71,15 @@
         <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
+
+        <relationship to="locationmeter" collection="true" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+        </relationship>
+
+        <relationship to="assetmeter" collection="true" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
@@ -109,7 +119,7 @@
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
-        
+
         <schema id="wonumlookup" title="item" stereotype="list">
           <field attribute="wonum"/>
           <field attribute="workorderid"/>
@@ -146,13 +156,13 @@
           <section id="realfields"/>
         </schema>
 
-        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">          
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          
+
           <field attribute="wonum" label="WO No:" readonly="true">
             <renderer type="default" params="inputsize=small" />
           </field>
@@ -183,7 +193,7 @@
           </field>
           <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
             <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;inputsize=medium" />
-          </association>         
+          </association>
           <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <renderer type="lookup" />
@@ -214,7 +224,7 @@
               <renderer type="lookup" params="inputsize=medium" />
             </association>
           </section>
-          
+
           <section>
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <!-- Adding target start finish date-->
@@ -240,7 +250,7 @@
           <section id="compositions"/>
         </schema>
 
-        <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
+        <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web">
           <section id="siteidsection">
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
               <!-- removed default='@usersite' from the above association label-->
@@ -258,7 +268,7 @@
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
+        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true">
               <renderer type="default" params="inputsize=small" />
@@ -268,7 +278,7 @@
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </section>
-          
+
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
@@ -288,7 +298,21 @@
             <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
+<!--            <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">-->
+<!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
+<!--            </composition>-->
+<!--            <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">-->
+<!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
+<!--            </composition>-->
           </section>
+          <commandbars>
+            <commandgroup position="actions">
+             <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
+              </container>
+            </commandgroup>
+            
+          </commandbars>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
@@ -299,6 +323,17 @@
           <field attribute="status" label="Status" qualifier="featured"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
+
+        <schema id="readings" title="Enter Meter Readings" platform="web">
+          <field attribute="assetnum" hidden="true"></field>
+          <field attribute="location" hidden="true"></field>
+          <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">
+            <collectionproperties allowcreation="false" listschema="composition"/>
+          </composition>
+          <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">
+            <collectionproperties allowcreation="false" listschema="composition"/>
+          </composition>
+        </schema>
 
         <detail platform="mobile" title="Work Orders">
           <field attribute="workorderid" hidden="true"/>
