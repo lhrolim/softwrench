@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService) {
     /// <summary>
     /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
     /// 
@@ -35,8 +35,10 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                         log.trace('lazy loading tab {0}'.format(tabId));
                         $rootScope.$broadcast('sw_lazyloadtab', tabId);
                     });
+
                 });
             }, 0, false);
+
         }
     };
 });
@@ -164,6 +166,14 @@ app.directive('crudBody', function (contextService) {
                 }
             };
 
+            $scope.hasAnyFieldOnMainTab = function (schema) {
+                return schemaService.hasAnyFieldOnMainTab(schema);
+            }
+
+            $scope.shouldShowTitle = function () {
+                return $scope.ismodal == "false";
+            }
+
             $scope.getTitle = function () {
                 var schema = $scope.schema;
                 var datamap = $scope.datamap;
@@ -171,6 +181,10 @@ app.directive('crudBody', function (contextService) {
                     return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
                 }
                 var titleId = schema.idDisplayable;
+                if (titleId == null) {
+                    return schema.title;
+                }
+
                 var result = titleId + " " + datamap.fields[schema.userIdFieldName];
                 if (datamap.fields.description != null) {
                     result += " Summary: " + datamap.fields.description;
@@ -203,10 +217,16 @@ app.directive('crudBody', function (contextService) {
 
             }
 
-            $scope.disableNavigationButtons = function (schema) {
+            $scope.showNavigationButtons = function (schema) {
                 var property = schema.properties['detail.navigationbuttons.disabled'];
-                return property == "true";
+                return "true" != property && $scope.ismodal == "false";
             };
+
+            $scope.disableNavigationButton = function (direction) {
+                var value = contextService.fetchFromContext("crud_context", true);
+                return direction == 1 ? value.detail_previous : value.detail_next;
+            }
+
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
                 var id = $scope.datamap.fields[idFieldName];
@@ -250,10 +270,7 @@ app.directive('crudBody', function (contextService) {
 
             };
 
-            $scope.disableNavigationButton = function (direction) {
-                var value = contextService.fetchFromContext("crud_context", true);
-                return direction == 1 ? value.detail_previous : value.detail_next;
-            }
+
 
 
             $scope.delete = function () {

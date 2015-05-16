@@ -60,7 +60,11 @@
     }
 
     $scope.executeService = function (command) {
+        var log =$log.get("gridtoolBar#executeService");
         $('.no-touch [rel=tooltip]').tooltip('hide');
+       
+
+        
         if (command.service == "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {

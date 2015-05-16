@@ -298,17 +298,17 @@
             <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">
-              <collectionproperties allowcreation="false" listschema="composition"/>
-            </composition>
-            <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">
-              <collectionproperties allowcreation="false" listschema="composition"/>
-            </composition>
+<!--            <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">-->
+<!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
+<!--            </composition>-->
+<!--            <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">-->
+<!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
+<!--            </composition>-->
           </section>
           <commandbars>
             <commandgroup position="actions">
-             <container label="Actions" id="actioncontainer" icon="fa-bolt" nextSchemaId="readings" stereotype="modal">
-                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  />
+             <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
               </container>
             </commandgroup>
             
@@ -324,7 +324,9 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
 
-        <schema id="readings">
+        <schema id="readings" title="Enter Meter Readings">
+          <field attribute="assetnum" hidden="true"></field>
+          <field attribute="location" hidden="true"></field>
           <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">
             <collectionproperties allowcreation="false" listschema="composition"/>
           </composition>

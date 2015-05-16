@@ -104,6 +104,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             previousschema: '=',
             previousdata: '=',
             inline: '@',
+            ismodal:'@',
             tabid: '@'
         },
         link: function (scope, element, attrs) {
@@ -121,7 +122,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                 }
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
-                element.append("<composition-list title='{{tabLabel}}'" +
+                element.append("<composition-list title='{{tabLabel}}' ismodal='{{ismodal}}'" +
                     "compositionschemadefinition='compositionschemadefinition'" +
                     "relationship='{{relationship}}'" +
                     "compositiondata='compositiondata'" +
@@ -170,7 +171,8 @@ app.directive('compositionList', function (contextService, formatService) {
             previousschema: '=',
             previousdata: '=',
             parentschema: '=',
-            mode: '@'
+            mode: '@',
+            ismodal:'@'
         },
 
         controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
@@ -549,6 +551,10 @@ app.directive('compositionList', function (contextService, formatService) {
 
             /*API Methods*/
             this.showExpansionCommands = function () {
+                if ($scope.ismodal == "false") {
+                    return true;
+                }
+
                 // if schema is not present, then it should default back normal expansion commands
                 if ($scope.compositionlistschema.properties != null) {
                     //this is fix for GRIC-98. Don't remove it

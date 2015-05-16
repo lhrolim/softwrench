@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('commandService', function (i18NService, $injector, expressionService, contextService, $log) {
+app.factory('commandService', function (i18NService, $injector, expressionService, contextService,schemaService,modalService,applicationService, $log) {
 
 
 
@@ -50,6 +50,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
         },
 
         doCommand: function (scope, command) {
+            var log = $log.getInstance("commandService#doCommand");
             var clientFunction = command.method;
             if (typeof (clientFunction) === 'function') {
                 clientFunction();
@@ -59,9 +60,37 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
                 clientFunction = command.id;
             }
             if (command.service == undefined) {
+
+                if ("modal".equalIc(command.stereotype) && !command.service) {
+                    if (!command.nextSchemaId) {
+                        log.warn("missing nextschemaId for command {0} declaration".format(command.id));
+                        return;
+                    }
+                    var modalclass = 'modalsmall';
+                    if (command.parameters && command.parameters['modalclass']) {
+                        modalclass = command.parameters['modalclass'];
+                    }
+                    
+                    log.debug("executing modal default implementation for command {0}".format(command.id));
+                    var ob = schemaService.parseAppAndSchema(command.nextSchemaId);
+                    var application = ob.application;
+                    if (!application) {
+                        application = scope.schema.applicationName;
+                    }
+                    var id = schemaService.getId(scope.datamap, scope.schema);
+                    applicationService.getApplicationDataPromise(application, ob.schemaId, { id: id }).then(function (result) {
+                        var title = result.data.schema.title;
+                        modalService.show(result.data.schema, result.data.resultObject.fields, { title: title, cssclass: modalclass }, function (modalData) {
+
+                        });
+                    });
+
+                    return;
+                }
+
                 return;
             }
-            var log = $log.getInstance("commandService#doCommand");
+            
             var service = $injector.get(command.service);
             if (service == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
