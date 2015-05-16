@@ -324,7 +324,7 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
 
-        <schema id="readings" title="Enter Meter Readings">
+        <schema id="readings" title="Enter Meter Readings" platform="web">
           <field attribute="assetnum" hidden="true"></field>
           <field attribute="location" hidden="true"></field>
           <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">
