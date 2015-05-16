@@ -104,7 +104,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             previousschema: '=',
             previousdata: '=',
             inline: '@',
-            ismodal:'@',
+            ismodal: '@',
             tabid: '@'
         },
         link: function (scope, element, attrs) {
@@ -155,7 +155,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
     }
 });
 
-app.directive('compositionList', function (contextService, formatService) {
+app.directive('compositionList', function (contextService, formatService, schemaService) {
 
     return {
         restrict: 'E',
@@ -172,7 +172,7 @@ app.directive('compositionList', function (contextService, formatService) {
             previousdata: '=',
             parentschema: '=',
             mode: '@',
-            ismodal:'@'
+            ismodal: '@'
         },
 
         controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
@@ -251,11 +251,11 @@ app.directive('compositionList', function (contextService, formatService) {
                 return false;
             }
 
-            $scope.showLookupModal = function (fieldMetadata,item) {
+            $scope.showLookupModal = function (fieldMetadata, item) {
                 var code = '';
-//                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
-//                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-//                }
+                //                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
+                //                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                //                }
                 $scope.schema = $scope.compositionlistschema;
                 $scope.datamap = item;
                 $scope.lookupObj.element = $element;
@@ -337,7 +337,7 @@ app.directive('compositionList', function (contextService, formatService) {
 
             $scope.edit = function (datamap) {
                 if ($scope.compositionlistschema.properties && "modal" == $scope.compositionlistschema.properties["list.click.popup"]) {
-                    modalService.show($scope.compositiondetailschema, datamap,{}, $scope.save);
+                    modalService.show($scope.compositiondetailschema, datamap, {}, $scope.save);
                 } else {
                     //TODO: switch to edit
                     $scope.newDetail = true;
@@ -507,7 +507,7 @@ app.directive('compositionList', function (contextService, formatService) {
                     return;
                 }
 
-                var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
+                var alwaysrefresh = schemaService.isPropertyTrue($scope.compositiondetailschema, 'compositions.alwaysrefresh');
                 if (alwaysrefresh) {
                     //this will disable success message, since we know we´ll need to refresh the screen
                     contextService.insertIntoContext("refreshscreen", true, true);

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('commandService', function (i18NService, $injector, expressionService, contextService,schemaService,modalService,applicationService, $log) {
+app.factory('commandService', function (i18NService, $injector, expressionService, contextService,schemaService,modalService,applicationService, $log,alertService) {
 
 
 
@@ -62,6 +62,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             if (command.service == undefined) {
 
                 if ("modal".equalIc(command.stereotype) && !command.service) {
+                    //TODO: move this whole thing to modal_service.js extracting a bit
                     if (!command.nextSchemaId) {
                         log.warn("missing nextschemaId for command {0} declaration".format(command.id));
                         return;
@@ -80,8 +81,14 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
                     var id = schemaService.getId(scope.datamap, scope.schema);
                     applicationService.getApplicationDataPromise(application, ob.schemaId, { id: id }).then(function (result) {
                         var title = result.data.schema.title;
+                        if (result.data.extraParameters['exception']) {
+                            alertService.alert(result.data.extraParameters['exception']);
+                            return;
+                        }
+                        
                         modalService.show(result.data.schema, result.data.resultObject.fields, { title: title, cssclass: modalclass }, function (modalData) {
-
+                            //TODO: implement this part properly
+                            modalService.hide();
                         });
                     });
 

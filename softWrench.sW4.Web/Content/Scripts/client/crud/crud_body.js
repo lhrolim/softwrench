@@ -25,8 +25,12 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
             var log = $log.getInstance('tabsrendered');
             log.debug("finished rendering tabs of detail screen");
             $timeout(function () {
+                var firstTabId = null;
                 $('.compositiondetailtab li>a').each(function () {
                     var $this = $(this);
+                    if (firstTabId == null) {
+                        firstTabId = $(this).data('tabid');
+                    }
                     $this.click(function (e) {
                         e.preventDefault();
                         $this.tab('show');
@@ -37,6 +41,8 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                     });
 
                 });
+                $rootScope.$broadcast("sw_alltabsloaded", firstTabId);
+
             }, 0, false);
 
         }
@@ -84,6 +90,14 @@ app.directive('crudBody', function (contextService) {
             submitService, redirectService,
             associationService, contextService, alertService,
             validationService, schemaService, $timeout, eventService, $log, expressionService) {
+
+            $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                var hasMainTab = schemaService.hasAnyFieldOnMainTab($scope.schema);
+                if (!hasMainTab) {
+                    //if main tab is absent (schema with just compositions) redirect to first tab
+                    redirectService.redirectToTab(firstTabId);
+                }
+            });
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -308,8 +322,11 @@ app.directive('crudBody', function (contextService) {
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
-                    $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
-                    return;
+                    if ($scope.$parent.$parent.originalsavefn) {
+                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
+                        return;
+                    }
+
                 }
                 var selecteditem = parameters.selecteditem;
                 //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 

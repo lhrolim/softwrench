@@ -41,21 +41,28 @@ app.factory('schemaService', function (fieldService) {
             return datamap[schema.idFieldName];
         },
 
-        hasAnyFieldOnMainTab:function(schema) {
+        hasAnyFieldOnMainTab: function (schema) {
             schema.jscache = schema.jscache || {};
             if (schema.jscache.hasAnyFieldOnMainTab) {
                 return schema.jscache.hasAnyFieldOnMainTab;
             }
-            var fields = fieldService.nonTabFields(schema.displayables,false);
-            var result =fields.length > 0;
+            var fields = fieldService.nonTabFields(schema.displayables, false);
+            var result = fields.length > 0;
             schema.jscache.hasAnyFieldOnMainTab = result;
             return result;
+        },
+
+        isPropertyTrue: function (schema, propertyName) {
+            if (!schema) {
+                return false;
+            }
+            return schema.properties && "true" == schema.properties[propertyName];
         },
 
         buildApplicationKey: function (schema) {
             var basekey = schema.applicationName + "." + schema.schemaId;
             if (schema.mode && schema.mode != "none") {
-                basekey += "." +schema.mode;
+                basekey += "." + schema.mode;
             }
             return basekey;
         },
