@@ -42,8 +42,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="metadata\southern\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="metadata\southern\readme.txt" />
+    <Content Include="web_content\southern\images\header.jpg" />
     <Content Include="web_content\southern\images\logo-byline.png" />
     <Content Include="web_content\southern\images\logo-main.png" />
+    <Content Include="web_content\southern\images\signin.jpg" />
     <Content Include="web_content\southern\styles\branding.css" />
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +61,6 @@
     <Folder Include="classes\com\cts\southern\connector\" />
     <Folder Include="classes\com\cts\southern\dataset\" />
     <Folder Include="classes\com\cts\southern\migration\" />
-    <Folder Include="metadata\southern\" />
     <Folder Include="web_content\southern\htmls\" />
     <Folder Include="web_content\southern\scripts\" />
   </ItemGroup>
