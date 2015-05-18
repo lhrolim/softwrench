@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService) {
     /// <summary>
     /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
     /// 
@@ -25,8 +25,12 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
             var log = $log.getInstance('tabsrendered');
             log.debug("finished rendering tabs of detail screen");
             $timeout(function () {
+                var firstTabId = null;
                 $('.compositiondetailtab li>a').each(function () {
                     var $this = $(this);
+                    if (firstTabId == null) {
+                        firstTabId = $(this).data('tabid');
+                    }
                     $this.click(function (e) {
                         e.preventDefault();
                         $this.tab('show');
@@ -35,8 +39,12 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                         log.trace('lazy loading tab {0}'.format(tabId));
                         $rootScope.$broadcast('sw_lazyloadtab', tabId);
                     });
+
                 });
+                $rootScope.$broadcast("sw_alltabsloaded", firstTabId);
+
             }, 0, false);
+
         }
     };
 });
@@ -82,6 +90,14 @@ app.directive('crudBody', function (contextService) {
             submitService, redirectService,
             associationService, contextService, alertService,
             validationService, schemaService, $timeout, eventService, $log, expressionService) {
+
+            $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                var hasMainTab = schemaService.hasAnyFieldOnMainTab($scope.schema);
+                if (!hasMainTab) {
+                    //if main tab is absent (schema with just compositions) redirect to first tab
+                    redirectService.redirectToTab(firstTabId);
+                }
+            });
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -164,6 +180,14 @@ app.directive('crudBody', function (contextService) {
                 }
             };
 
+            $scope.hasAnyFieldOnMainTab = function (schema) {
+                return schemaService.hasAnyFieldOnMainTab(schema);
+            }
+
+            $scope.shouldShowTitle = function () {
+                return $scope.ismodal == "false";
+            }
+
             $scope.getTitle = function () {
                 var schema = $scope.schema;
                 var datamap = $scope.datamap;
@@ -171,6 +195,10 @@ app.directive('crudBody', function (contextService) {
                     return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
                 }
                 var titleId = schema.idDisplayable;
+                if (titleId == null) {
+                    return schema.title;
+                }
+
                 var result = titleId + " " + datamap.fields[schema.userIdFieldName];
                 if (datamap.fields.description != null) {
                     result += " Summary: " + datamap.fields.description;
@@ -203,10 +231,16 @@ app.directive('crudBody', function (contextService) {
 
             }
 
-            $scope.disableNavigationButtons = function (schema) {
+            $scope.showNavigationButtons = function (schema) {
                 var property = schema.properties['detail.navigationbuttons.disabled'];
-                return property == "true";
+                return "true" != property && $scope.ismodal == "false";
             };
+
+            $scope.disableNavigationButton = function (direction) {
+                var value = contextService.fetchFromContext("crud_context", true);
+                return direction == 1 ? value.detail_previous : value.detail_next;
+            }
+
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
                 var id = $scope.datamap.fields[idFieldName];
@@ -250,10 +284,7 @@ app.directive('crudBody', function (contextService) {
 
             };
 
-            $scope.disableNavigationButton = function (direction) {
-                var value = contextService.fetchFromContext("crud_context", true);
-                return direction == 1 ? value.detail_previous : value.detail_next;
-            }
+
 
 
             $scope.delete = function () {
@@ -291,8 +322,11 @@ app.directive('crudBody', function (contextService) {
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
-                    $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
-                    return;
+                    if ($scope.$parent.$parent.originalsavefn) {
+                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
+                        return;
+                    }
+
                 }
                 var selecteditem = parameters.selecteditem;
                 //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 

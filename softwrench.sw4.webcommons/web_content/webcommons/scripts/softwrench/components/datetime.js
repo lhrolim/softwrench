@@ -24,6 +24,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             var showTime = parseBooleanValue(attrs.showTime);
             var showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.dateFormat, showTime);
+            var angularDateFormat = formatService.adjustDateFormatForAngular(attrs.dateFormat, showTime);
             attrs.language = (userLanguage != '') ? userLanguage : "en-US";
             var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
@@ -34,7 +35,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             $timeout(function () {
 
                 if (scope.fieldMetadata != undefined) {
-                    var value = formatService.formatDate(ngModel.$modelValue, dateFormat);
+                    var value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
                     ngModel.$setViewValue(value);
                     element.val(value);
                     if (datamap != undefined && scope.fieldMetadata != undefined) {

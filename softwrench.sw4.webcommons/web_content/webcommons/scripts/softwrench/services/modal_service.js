@@ -4,11 +4,15 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
 
     return {
 
-        hide: function () {
+        hide: function (modalId) {
+            /// <summary>
+            /// 
+            /// </summary>
             if ($rootScope.showingModal) {
                 $rootScope.$broadcast('sw.modal.hide');
             }
         },
+
 
 
         /// <summary>

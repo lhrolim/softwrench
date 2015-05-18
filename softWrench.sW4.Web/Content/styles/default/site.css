@@ -87,6 +87,22 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     }
 }
 
+.modalsmall {
+    width: 700px;
+}
+
+.modalmedium {
+    width: 1000px;
+}
+
+.modallarge {
+    width: 1300px;
+}
+
+.readingsmodal {
+    width: 1500px;
+}
+
 /************************ 
     Config
  ************************/
