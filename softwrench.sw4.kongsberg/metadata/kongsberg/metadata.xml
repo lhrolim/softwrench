@@ -1045,7 +1045,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="solution" />
-        <connectorParameter key="integration_interface" value="SWSOLUTIONS" />
+        <connectorParameter key="integration_interface" value="SWSOLUTION" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseSolutionCrudConnector" />
       </connectorParameters>
     </entity>
