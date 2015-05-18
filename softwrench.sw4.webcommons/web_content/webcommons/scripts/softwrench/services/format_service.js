@@ -139,10 +139,10 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
         adjustDateFormatForPicker: function (dateFormat, showTime) {
             if (dateFormat == undefined || dateFormat == '') {
                 //default ==> should be client specific
-                return showTime ? "mm/dd/yyyy hh:mm" : "mm/dd/yyyy";
+                return showTime ? "MM/dd/yyyy hh:mm" : "MM/dd/yyyy";
             } else {
 //                dateFormat = dateFormat.replace('mm', 'ii');
-                dateFormat = dateFormat.replace('MM', 'mm');
+//                dateFormat = dateFormat.replace('MM', 'mm');
                 dateFormat = dateFormat.replace('HH', 'hh');
                 if (!showTime) {
                     //the format and the showtime flag are somehow conflitant, let´s adjust the format
