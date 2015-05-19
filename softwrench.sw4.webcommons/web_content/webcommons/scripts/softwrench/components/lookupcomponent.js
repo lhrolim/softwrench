@@ -1,9 +1,9 @@
 var app = angular.module('sw_layout');
 
-app.factory('cmplookup', function ($rootScope, $timeout, $log, associationService,focusService) {
+app.factory('cmplookup', function ($rootScope, $timeout, $log, associationService) {
 
-    var showModal = function (element) {
-        var modals = $('[data-class="lookupModal"]', element);
+    var showModal = function (target,element) {
+        var modals = $('[data-attribute="{0}"]'.format(target), element);
         modals.draggable();
         modals.modal('show');
     };
@@ -76,7 +76,9 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
             }
 
             associationService.updateDependentAssociationValues(scope, scope.datamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
-            focusService.resetFocusToCurrent(scope.schema, fieldMetadata.attribute);
+            //to avoid circular dependency
+            scope.$emit("sw_resetFocusToCurrent", scope.schema, fieldMetadata.attribute);
+//            focusService.resetFocusToCurrent(scope.schema, fieldMetadata.attribute);
         },
 
         handleMultipleLookupOptionsFn: function (result, lookupObj, scope, datamap) {
@@ -100,7 +102,7 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
             lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
             //TODO: this should come from the server side
             lookupObj.modalPaginationData.paginationOptions = [10, 30, 100];
-            showModal(lookupObj.element);
+            showModal(lookupObj.fieldMetadata.target,lookupObj.element);
             return false;
         },
 

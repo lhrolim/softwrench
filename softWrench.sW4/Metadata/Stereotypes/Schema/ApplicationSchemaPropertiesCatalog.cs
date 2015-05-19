@@ -141,5 +141,9 @@
         /// The string to use as the title id (first part of crud_body.html title) 
         /// </summary>
         public static string DetailTitleId = "detail.titleid";
+        /// <summary>
+        /// If true all options fields of this schema will be rendered with no initial selection
+        /// </summary>
+        public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
     }
 }

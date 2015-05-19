@@ -54,14 +54,14 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsNotNull(new1.Properties.FirstOrDefault(p => p.Key == ApplicationSchemaPropertiesCatalog.ListClickMode));
 
             var displayables = new1.Displayables;
-            Assert.AreEqual(8, displayables.Count);
+            Assert.AreEqual(9, displayables.Count);
             
             CheckAttributeName(displayables, 1, "wonum");
             CheckAttributeName(displayables, 2, "status");
             CheckAttributeName(displayables, 3, "owner");
-            CheckAttributeName(displayables, 4, "location");
-            CheckAttributeName(displayables, 5, "siteid");
-            CheckAttributeName(displayables, 6, "woclass");
+            CheckAttributeName(displayables, 5, "location");
+            CheckAttributeName(displayables, 6, "siteid");
+            CheckAttributeName(displayables, 7, "woclass");
 
         }
 

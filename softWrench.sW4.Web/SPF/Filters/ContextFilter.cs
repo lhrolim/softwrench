@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using cts.commons.portable.Util;
 using log4net;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Security.Context;
@@ -27,20 +28,25 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
         private const string PrintMode = "printmode";
+        private const string ScanMode = "scanmode";
         private const string OfflineMode = "offlinemode";
+        private const string CurrentMetadataParameterKey = "currentmetadataparameter";
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
 
             var currentModule = RequestUtil.GetValue(actionContext.Request, CurrentModuleKey);
             var currentMetadataId = RequestUtil.GetValue(actionContext.Request, CurrentMetadataKey);
             var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
+            var scanMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, ScanMode));
             var offlineMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, OfflineMode));
+            var currentMetadataParameter = RequestUtil.GetValue(actionContext.Request, CurrentMetadataParameterKey);
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
-			var instance = ContextLookuper.GetInstance();
-            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx,PrintMode = printMode,OfflineMode = offlineMode}, true);
+            var instance = ContextLookuper.GetInstance();
+            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, PrintMode = printMode, ScanMode = scanMode, OfflineMode = offlineMode, MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter) }, true);
+
             base.OnActionExecuting(actionContext);
         }
 

@@ -8,6 +8,7 @@
         <attribute name="wocount" type="int" query="@woBatchWhereClauseProvider.WoCountQuery"/>
       </attributes>
     </entity>
+    
 
   </entities>
 
@@ -39,6 +40,36 @@
           <properties>
             <property key="associationstoprefetch" value="#none"/>
           </properties>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="AuditEntry" name="audit" title="Audit Trail">
+      <schemas>
+        <schema id="auditList" stereotype="list">
+          <field attribute="id" label="Audit Id"/>
+          <field attribute="action" label="Action"/>
+          <field attribute="refapplication" label="Application"/>
+          <field attribute="refid" label="Record Id"/>
+          <field attribute="createdby" label="Created By"/>
+          <field attribute="createddate" label="Audit Date"/>
+        </schema>
+          
+        <schema id="auditDetail" stereotype="detail">
+          <field attribute="action" label="Action" readonly="true"/>
+          <field attribute="refapplication" label="Application" readonly="true"/>
+          <field attribute="refid" label="Record Id" readonly="true"/>
+          <field attribute="createdby" label="Created By" readonly="true"/>
+          <field attribute="createddate" label="Audit Date" readonly="true"/>
+          <!--<section showexpression="@canCreateBoth">
+            <optionfield attribute="policy" label="Policy">
+              <option label="Personal" value="personal"/>
+              <option label="Shared" value="shared"/>
+            </optionfield>
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
+              <renderer type="checkbox"/>
+            </optionfield>
+          </section>-->
         </schema>
       </schemas>
     </application>
@@ -186,11 +217,45 @@
       </schemas>
     </application>
 
-    <application name="ProblemItens" entity="BatchItemProblem" title="Batch Problems">
+    <application name="ProblemItems" entity="BatchItemProblem" title="Batch Problems">
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <field attribute="itemid" label="Item Id"/>
           <field attribute="errormessage" label="Error Message"/>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
+      <schemas>
+        <schema id="list" stereotype="list" title="Softwrench Error Detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="recordtype" label="Error Type"/>
+          <field attribute="recordid" label="Record ID"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="createddate" label="Error Date"/>
+          <field attribute="createdby" label="Created By"/>
+          <field attribute="assignee" label="Assignee"/>
+          <field attribute="priority" label="Priority"/>
+          <field attribute="status" label="Status"/>
+        </schema>
+    
+        <schema id="detail" stereotype="detail" mode="input" title="Softwrench Error Detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="recordtype" label="Error Type" readonly="true"/>
+          <field attribute="recordid" label="Record ID" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="data" hidden="true"/>
+          <field attribute="#dataasstring" label="Data">
+            <renderer type="textarea"/>
+          </field>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="submit" label="Submit" position="&lt;cancel"/>
+              <command id="resolve" label="Resolve" position="&lt;cancel"/>
+              <command id="cancel" label="Cancel" stereotype="cancel"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>

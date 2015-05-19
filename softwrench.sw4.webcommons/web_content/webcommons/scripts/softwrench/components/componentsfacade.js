@@ -74,17 +74,14 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             //not working with: richtext, lookup (works with direct call)
             if (rendererType == 'autocompleteclient') {
                 cmpAutocompleteClient.focus(displayable);
-            }else if (rendererType == "lookup") {
-                //TODO:    
-            } else if (rendererType == "combo") {
+            } else if (rendererType == "combo" || rendererType == "lookup") {
                 var selector = '[data-field="' + associationKey + '"]';
                 $(selector).focus();
             }
-
             else {
                 //default case
-                var selector = '[data-field="' + attribute + '"]';
-                $(selector).find('input,textarea,select').focus();
+                selector = '[data-field="' + attribute + '"]';
+                $(selector).focus();
             }
 
             log.debug('change focus to {0}'.format(attribute));

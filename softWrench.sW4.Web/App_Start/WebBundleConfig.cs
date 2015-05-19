@@ -64,6 +64,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/other/textAngular-sanitize.js",
                 "~/Content/Scripts/vendor/other/textAngular-min.js",
+                "~/Content/Scripts/vendor/other/textAngular-setup.js",
                 "~/Content/Scripts/vendor/other/jquery.scannerdetection.js",
                 "~/Content/Scripts/vendor/other/angular-fileUpload.js"));
 

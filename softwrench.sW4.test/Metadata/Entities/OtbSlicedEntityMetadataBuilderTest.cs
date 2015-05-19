@@ -43,7 +43,6 @@ namespace softwrench.sW4.test.Metadata.Entities {
             //assert that the relationships are not being duplicated
             Assert.AreEqual(1, from.GetNumberOfItems("solution_.solution"));
         }
-
-      
+        
     }
 }

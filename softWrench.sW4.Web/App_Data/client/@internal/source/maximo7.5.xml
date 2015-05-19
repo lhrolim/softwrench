@@ -415,6 +415,7 @@
         </relationship>
         <relationship to="site">
           <relationshipAttribute from="assetsiteid" to="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
         </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
@@ -594,18 +595,18 @@
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="failurecode" type="varchar" required="false" />
         <attribute name="manufacturer" type="varchar" required="false" />
-        <attribute name="purchaseprice" type="decimal" required="true" />
-        <attribute name="replacecost" type="decimal" required="true" />
+        <attribute name="purchaseprice" type="double" required="true" />
+        <attribute name="replacecost" type="double" required="true" />
         <attribute name="installdate" type="datetime" required="false" />
         <attribute name="warrantyexpdate" type="datetime" required="false" />
-        <attribute name="totalcost" type="decimal" required="true" />
-        <attribute name="ytdcost" type="decimal" required="true" />
-        <attribute name="budgetcost" type="decimal" required="true" />
+        <attribute name="totalcost" type="double" required="true" />
+        <attribute name="ytdcost" type="double" required="true" />
+        <attribute name="budgetcost" type="double" required="true" />
         <attribute name="calnum" type="varchar" required="false" />
         <attribute name="isrunning" type="smallint" required="true" />
         <attribute name="itemnum" type="varchar" required="false" />
-        <attribute name="unchargedcost" type="decimal" required="true" />
-        <attribute name="totunchargedcost" type="decimal" required="true" />
+        <attribute name="unchargedcost" type="double" required="true" />
+        <attribute name="totunchargedcost" type="double" required="true" />
         <attribute name="totdowntime" type="float" required="true" />
         <attribute name="statusdate" type="datetime" required="false" />
         <attribute name="changedate" type="datetime" required="true" />
@@ -625,7 +626,7 @@
         <attribute name="eq23" type="datetime" required="false" />
         <attribute name="eq24" type="decimal" required="false" />
         <attribute name="priority" type="int" required="false" />
-        <attribute name="invcost" type="decimal" required="true" />
+        <attribute name="invcost" type="double" required="true" />
         <attribute name="glaccount" type="varchar" required="false" />
         <attribute name="rotsuspacct" type="varchar" required="false" />
         <attribute name="children" type="smallint" required="true" />
@@ -657,8 +658,8 @@
         <attribute name="toolcontrolaccount" type="varchar" required="false" />
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="direction" type="varchar" required="false" />
-        <attribute name="startmeasure" type="decimal" required="false" />
-        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="startmeasure" type="double" required="false" />
+        <attribute name="endmeasure" type="double" required="false" />
         <attribute name="islinear" type="smallint" required="true" />
         <attribute name="enddescription" type="varchar" required="false" />
         <attribute name="startdescription" type="varchar" required="false" />
@@ -744,7 +745,9 @@
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="integration_interface" value="MXSW3Asset" />
+        <connectorParameter key="dbtable" value="asset" />
+        <connectorParameter key="integration_interface" value="SWASSET" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseAssetCrudConnector" />
       </connectorParameters>
     </entity>
 
@@ -1973,7 +1976,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="woactivity" idAttribute="workorderid">
+    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum">
       <attributes>
         <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="decimal" required="true" />
@@ -2205,6 +2208,10 @@
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
       </relationships>
       <connectorParameters>
@@ -3692,7 +3699,7 @@
         <connectorParameter key="dbtable" value="invlot" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="invreserve" idAttribute="requestnum">
       <attributes>
         <attribute name="requestnum" type="varchar" required="true" />
@@ -3744,7 +3751,7 @@
         <connectorParameter key="integration_interface" value="SWINVRES" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="classstructure" idAttribute="classstructureid">
       <attributes>
         <attribute name="classstructureid" type="varchar" required="true" />
@@ -3804,7 +3811,7 @@
         <attribute name="tkserviceaddressid" type="bigint" required="true" />
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="langcode" type="varchar" required="true" />
-        <attribute name="rowstamp" type="timestamp" required="true" />       
+        <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
       <relationships>
         <relationship to="serviceaddress">
@@ -3862,7 +3869,7 @@
         <connectorParameter key="dbtable" value="woserviceaddress" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="serviceaddress" idAttribute="serviceaddressid">
       <attributes>
         <attribute name="addresscode" type="varchar" required="true" />
@@ -3943,7 +3950,7 @@
         <connectorParameter key="dbtable" value="maxvars" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="labtrans" idAttribute="labtransid">
       <attributes>
         <attribute name="transdate" type="datetime" required="true" />
@@ -4052,5 +4059,204 @@
         <connectorParameter key="dbtable" value="glcomponents" />
       </connectorParameters>
     </entity>
+
+    <entity name="meter" idAttribute="meterid">
+      <attributes>
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="metertype" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="domainid" type="varchar" required="false" />
+        <attribute name="meterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="meter" />
+      </connectorParameters>
+    </entity>
+
+
+    <entity name="meterreading" idAttribute="meterreadingid">
+      <attributes>
+        <attribute name="meterreadingid" type="bigint" required="true" />
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="readingsource" type="varchar" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="delta" type="decimal" required="false" />
+        <attribute name="reading" type="decimal" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="readingdate" type="datetime" required="true" />
+        <attribute name="inspector" type="varchar" required="true" />
+        <attribute name="rolldownsource" type="varchar" required="false" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="rolldownid" type="bigint" required="false" />
+        <attribute name="modified" type="smallint" required="true" />
+        <attribute name="inheritedfromasset" type="varchar" required="false" />
+        <attribute name="locmeterreadingid" type="float" required="false" />
+        <attribute name="matusetransid" type="bigint" required="false" />
+        <attribute name="assetid" type="bigint" required="true" />
+        <attribute name="didrollover" type="smallint" required="true" />
+        <attribute name="reason" type="varchar" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="startfeaturelabel" type="varchar" required="false" />
+        <attribute name="endfeaturelabel" type="varchar" required="false" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="meterreading" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="assetmeter" idAttribute="assetmeterid">
+      <attributes>
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="avgcalcmethod" type="varchar" required="false" />
+        <attribute name="slidingwindowsize" type="int" required="false" />
+        <attribute name="rolldownsource" type="varchar" required="false" />
+        <attribute name="sincelastrepair" type="decimal" required="true" />
+        <attribute name="sincelastoverhaul" type="decimal" required="true" />
+        <attribute name="sincelastinspect" type="decimal" required="true" />
+        <attribute name="sinceinstall" type="decimal" required="true" />
+        <attribute name="lifetodate" type="decimal" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="remarks" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lastreadingdate" type="datetime" required="false" />
+        <attribute name="lastreading" type="varchar" required="false" />
+        <attribute name="pointnum" type="varchar" required="false" />
+        <attribute name="average" type="decimal" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="lastreadinginspctr" type="varchar" required="false" />
+        <attribute name="assetmeterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="sequence" type="smallint" required="false" />
+        <attribute name="endfeature" type="varchar" required="false" />
+        <attribute name="startfeature" type="varchar" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="startfeatureid" type="bigint" required="false" />
+        <attribute name="endfeatureid" type="bigint" required="false" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="linearassetmeterid" type="int" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="disabledrollover" type="boolean" query="'false'" />
+      </attributes>
+      <relationships>
+        <relationship to="meter">
+          <relationshipAttribute from="metername" to="metername" primary="true"/>
+        </relationship>
+         <relationship to="person" ignoreprimary="true">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+        
+      </relationships>
+      
+      
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetmeter" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="locationmeter" idAttribute="locationmeterid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="avgcalcmethod" type="varchar" required="false" />
+        <attribute name="slidingwindowsize" type="int" required="false" />
+        <attribute name="sincelastrepair" type="decimal" required="true" />
+        <attribute name="sincelastoverhaul" type="decimal" required="true" />
+        <attribute name="sincelastinspect" type="decimal" required="true" />
+        <attribute name="sinceinstall" type="decimal" required="true" />
+        <attribute name="lifetodate" type="decimal" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="remarks" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lastreadingdate" type="datetime" required="false" />
+        <attribute name="lastreading" type="varchar" required="false" />
+        <attribute name="pointnum" type="varchar" required="false" />
+        <attribute name="average" type="decimal" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="lastreadinginspctr" type="varchar" required="false" />
+        <attribute name="locationmeterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="sequence" type="smallint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="disabledrollover" type="boolean" query="'false'" />
+      </attributes>
+      <relationships>
+        <relationship to="meter">
+          <relationshipAttribute from="metername" to="metername" primary="true"/>
+        </relationship>
+        <relationship to="person" ignoreprimary="true">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locationmeter" />
+      </connectorParameters>
+      
+      
+      
+    </entity>
+
   </entities>
 </metadata>

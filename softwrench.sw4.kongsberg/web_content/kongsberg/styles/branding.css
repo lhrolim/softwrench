@@ -10,12 +10,12 @@
         background-color: rgba(1, 45, 68, 0.50);
     }
 
-        .page-signin .form-signin .logo {
+        .page-signin .form-signin .logo.main img {
             content: url(../images/logo-main-mobile.png);
         }
 
 @media all and (min-width: 768px) {
-    .page-signin .form-signin .logo {
+    .page-signin .form-signin .logo.main img {
         content: url(../images/logo-main.png);
     }
 }

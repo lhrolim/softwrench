@@ -1,15 +1,15 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 app.factory('fieldService', function ($injector, $log, expressionService, eventService) {
 
-    var isFieldHidden = function (datamap, application, fieldMetadata) {
+    var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
         if (fieldMetadata.jscache.isHidden != undefined) {
             return fieldMetadata.jscache.isHidden;
         }
         var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" &&
-              (fieldMetadata.attribute == application.idFieldName && application.stereotype == "Detail"
-              && application.mode == "input" && !fieldMetadata.isReadOnly));
+              (fieldMetadata.attribute == schema.idFieldName && schema.stereotype == "Detail"
+              && schema.mode == "input" && !fieldMetadata.isReadOnly));
         var isTabComposition = fieldMetadata.type == "ApplicationCompositionDefinition" && !fieldMetadata.inline;
         if (baseHidden || isTabComposition) {
             fieldMetadata.jscache.isHidden = true;
@@ -17,7 +17,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
         } else if (fieldMetadata.type == "ApplicationSection" && fieldMetadata.resourcepath == null &&
             (fieldMetadata.displayables.length == 0 ||
              $.grep(fieldMetadata.displayables, function (e) {
-                  return !isFieldHidden(datamap, application, e);
+                  return !isFieldHidden(datamap, schema, e);
         }).length == 0)) {
 
             //            fieldMetadata.jscache.isHidden = true;
@@ -25,24 +25,11 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
         }
         //the opposite of the expression: showexpression --> hidden
         var result = !expressionService.evaluate(fieldMetadata.showExpression, datamap);
-        if (application.stereotype == "List") {
+        if (schema.stereotype == "List") {
             //list schemas can be safely cached since if the header is visible the rest would be as well
             fieldMetadata.jscache.isHidden = result;
         }
         return !expressionService.evaluate(fieldMetadata.showExpression, datamap);
-    };
-
-    var isFieldReadOnly = function (datamap, application, fieldMetadata) {
-
-        //test the metadata read-only property
-        var isReadOnly = fieldMetadata.isReadOnly;
-
-        //check if field is diable via other means
-        if (!isReadOnly) {
-            //TODO: test the current enabled/read-only status of the field
-        }
-
-        return isReadOnly
     };
 
 
@@ -52,17 +39,30 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
         },
 
         isFieldReadOnly: function (datamap, application, fieldMetadata) {
-            return isFieldReadOnly(datamap, application, fieldMetadata);
+            //test the metadata read-only property
+            var isReadOnly = fieldMetadata.isReadOnly;
+
+            //check if field is diable via other means
+            if (isReadOnly) {
+                return true;
+            }
+            if (fieldMetadata.enableExpression == null) {
+                return false;
+            }
+            return !expressionService.evaluate(fieldMetadata.enableExpression, datamap);
         },
 
-        nonTabFields: function (displayables) {
+        nonTabFields: function (displayables, includeHiddens) {
+            includeHiddens = includeHiddens == undefined ? true : includeHiddens;
             var result = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
                 var type = displayable.type;
                 var isTabComposition = this.isTabComposition(displayable);
                 if (!isTabComposition && type != "ApplicationTabDefinition") {
-                    result.push(displayable);
+                    if (includeHiddens || !displayable.isHidden) {
+                        result.push(displayable);
+                    }
                 }
             }
             return result;
@@ -197,7 +197,8 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             schema.jscache = schema.jscache || {};
             var results = this.getLinearDisplayables(schema);
             for (var i = 0; i < results.length; i++) {
-                if (results[i].attribute == attribute) {
+                var result = results[i];
+                if (result.associationKey == attribute || result.target == attribute || result.attribute == attribute) {
                     return i;
                 }
             }
@@ -220,7 +221,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
                 var displayable = displayables[i];
                 if (displayable.displayables) {
                     //at this point displayable is a section, calling recursively
-                    result.concat(this.getLinearDisplayables(displayable));
+                    result = result.concat(this.getLinearDisplayables(displayable));
                 } else {
                     result.push(displayable);
                 }
@@ -229,19 +230,19 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return result;
         },
 
-        
+
 
         getNextVisibleDisplayableIdx: function (datamap, schema, key) {
 
             //all fields, regardless of sections
             var displayables = this.getLinearDisplayables(schema);
-            var fieldIdx = this.getDisplayableIdxByKey(schema,key);
+            var fieldIdx = this.getDisplayableIdxByKey(schema, key);
             if (fieldIdx == -1 || fieldIdx == displayables.length) {
                 //no such field, or last field
                 return -1;
             }
 
-            for (var i = fieldIdx +1; i < displayables.length; i++) {
+            for (var i = fieldIdx + 1; i < displayables.length; i++) {
                 //is this the current field?
                 var fieldMetadata = displayables[i];
 

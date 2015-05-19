@@ -44,10 +44,14 @@
                 border-bottom-right-radius: 3px;
             }
 
-    .detail-header .buttons .btn {
-        margin-top: 10px;
-        width: 32%;
+    .detail-header .buttons {
+        margin-right: 4px;
     }
+
+        .detail-header .buttons .btn {
+            margin-top: 10px;
+            width: 32%;
+        }
 
 @media all and (min-width: 480px) {
     .detail-header .buttons .btn {

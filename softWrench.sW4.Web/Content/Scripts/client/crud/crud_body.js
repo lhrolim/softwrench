@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService) {
     /// <summary>
     /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
     /// 
@@ -25,8 +25,12 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
             var log = $log.getInstance('tabsrendered');
             log.debug("finished rendering tabs of detail screen");
             $timeout(function () {
+                var firstTabId = null;
                 $('.compositiondetailtab li>a').each(function () {
                     var $this = $(this);
+                    if (firstTabId == null) {
+                        firstTabId = $(this).data('tabid');
+                    }
                     $this.click(function (e) {
                         e.preventDefault();
                         $this.tab('show');
@@ -35,8 +39,12 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                         log.trace('lazy loading tab {0}'.format(tabId));
                         $rootScope.$broadcast('sw_lazyloadtab', tabId);
                     });
+
                 });
+                $rootScope.$broadcast("sw_alltabsloaded", firstTabId);
+
             }, 0, false);
+
         }
     };
 });
@@ -81,7 +89,25 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService, $log, expressionService) {
+            validationService, schemaService, $timeout, eventService, $log, expressionService,focusService) {
+
+            $(document).on("sw_autocompleteselected", function(event, key) {
+                focusService.resetFocusToCurrent($scope.schema, key);
+            });
+
+
+            $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                var hasMainTab = schemaService.hasAnyFieldOnMainTab($scope.schema);
+                if (!hasMainTab) {
+                    //if main tab is absent (schema with just compositions) redirect to first tab
+                    redirectService.redirectToTab(firstTabId);
+                }
+                $timeout(function () {
+                    //time for the components to be rendered
+                    focusService.setFocusToFirstNonFilled($scope.schema, $scope.datamap);
+                }, 1000, false);
+
+            });
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -127,13 +153,7 @@ app.directive('crudBody', function (contextService) {
                 //make sure we are seeing the top of the detail page 
                 log.debug('scroll to top');
                 window.scrollTo(0, 0);
-
                 //SWWEB-960 - set focus to the first input, on new creations
-                if (!$scope.isEditDetail($scope.datamap,$scope.schema)) {
-                    log.debug('set input focus');
-                    $('#crudInputMainFields').find('input,textarea,select').filter(':visible:first').focus();
-                }
-
                 log.debug('finish');
             });
 
@@ -164,6 +184,14 @@ app.directive('crudBody', function (contextService) {
                 }
             };
 
+            $scope.hasAnyFieldOnMainTab = function (schema) {
+                return schemaService.hasAnyFieldOnMainTab(schema);
+            }
+
+            $scope.shouldShowTitle = function () {
+                return $scope.ismodal == "false";
+            }
+
             $scope.getTitle = function () {
                 var schema = $scope.schema;
                 var datamap = $scope.datamap;
@@ -171,6 +199,10 @@ app.directive('crudBody', function (contextService) {
                     return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
                 }
                 var titleId = schema.idDisplayable;
+                if (titleId == null) {
+                    return schema.title;
+                }
+
                 var result = titleId + " " + datamap.fields[schema.userIdFieldName];
                 if (datamap.fields.description != null) {
                     result += " Summary: " + datamap.fields.description;
@@ -195,7 +227,7 @@ app.directive('crudBody', function (contextService) {
                     if (data.type == 'ActionRedirectResponse') {
                         //we´ll not do a crud action on this case, so totally different workflow needed
                         redirectService.redirectToAction(null, data.controller, data.action, data.parameters);
-                    } else {
+                    } else if (data.type != 'BlankApplicationResponse') {
                         var nextSchema = data.schema;
                         $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                     }
@@ -203,10 +235,16 @@ app.directive('crudBody', function (contextService) {
 
             }
 
-            $scope.disableNavigationButtons = function (schema) {
+            $scope.showNavigationButtons = function (schema) {
                 var property = schema.properties['detail.navigationbuttons.disabled'];
-                return property == "true";
+                return "true" != property && $scope.ismodal == "false";
             };
+
+            $scope.disableNavigationButton = function (direction) {
+                var value = contextService.fetchFromContext("crud_context", true);
+                return direction == 1 ? value.detail_previous : value.detail_next;
+            }
+
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
                 var id = $scope.datamap.fields[idFieldName];
@@ -250,10 +288,7 @@ app.directive('crudBody', function (contextService) {
 
             };
 
-            $scope.disableNavigationButton = function (direction) {
-                var value = contextService.fetchFromContext("crud_context", true);
-                return direction == 1 ? value.detail_previous : value.detail_next;
-            }
+
 
 
             $scope.delete = function () {
@@ -291,8 +326,11 @@ app.directive('crudBody', function (contextService) {
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
-                    $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
-                    return;
+                    if ($scope.$parent.$parent.originalsavefn) {
+                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
+                        return;
+                    }
+
                 }
                 var selecteditem = parameters.selecteditem;
                 //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
@@ -316,7 +354,7 @@ app.directive('crudBody', function (contextService) {
 
                 var eventParameters = {
                     originaldatamap: originalDatamap.fields,
-                    'continue':function () {
+                    'continue': function () {
                         $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
                     }
                 };
@@ -328,7 +366,7 @@ app.directive('crudBody', function (contextService) {
                     return;
                 }
 
-                $scope.validateSubmission(selecteditem, parameters, transformedFields,schemaToSave);
+                $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
             };
 
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields, schemaToSave) {
@@ -350,13 +388,13 @@ app.directive('crudBody', function (contextService) {
                 }
 
                 var eventParameters = {
-                    originaldatamap : originalDatamap.fields,
+                    originaldatamap: originalDatamap.fields,
                     'continue': function () {
-                        $scope.submitToServer(selecteditem, parameters, transformedFields,schemaToSave);
+                        $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
                     }
                 }
 
-                var eventResult = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields,eventParameters);
+                var eventResult = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
                 if (eventResult == false) {
                     //this means that the custom postvalidator should call the continue method
                     log.debug('waiting on custom postvalidator to invoke the continue function');
@@ -422,8 +460,14 @@ app.directive('crudBody', function (contextService) {
 
                 command(urlToUse, jsonString)
                     .success(function (data) {
-                        //datamap should always be updated
-                        $scope.datamap = data.resultObject;
+                        if (data.type != 'BlankApplicationResponse') {
+                            $scope.datamap = data.resultObject;
+                        }
+                        if (data.id && $scope.datamap.fields) {
+                            //updating the id, useful when it´s a creation and we need to update value return from the server side
+                            $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
+                        }
+
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
                         }

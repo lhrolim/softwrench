@@ -289,7 +289,8 @@ app.controller('DashboardController', [
 
 
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
-            if (oldValue != newValue && $scope.resultObject.crudSubTemplate.indexOf("/Shared/dashboard/templates/Dashboard.html") != -1) {
+            if (oldValue != newValue && $scope.resultObject.crudSubTemplate != null &&
+                $scope.resultObject.crudSubTemplate.indexOf("/Shared/dashboard/templates/Dashboard.html") != -1) {
                 $scope.doInit();
             }
         });

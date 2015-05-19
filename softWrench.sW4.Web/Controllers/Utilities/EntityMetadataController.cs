@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Linq;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;

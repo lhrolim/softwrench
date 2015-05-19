@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NHibernate.Cfg.Loquacious;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;

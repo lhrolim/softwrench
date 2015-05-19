@@ -77,6 +77,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         public class SearchEntityResult {
             public IList<Dictionary<string, object>> ResultList;
             public long? MaxRowstampReturned;
+            public string IdFieldName;
         }
 
 
@@ -114,7 +115,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
             return new SearchEntityResult {
                 MaxRowstampReturned = maxRowstamp == 0 ? null : maxRowstamp,
-                ResultList = list
+                ResultList = list,
+                IdFieldName = entityMetadata.IdFieldName
             };
 
 

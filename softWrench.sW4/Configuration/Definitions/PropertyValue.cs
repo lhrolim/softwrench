@@ -5,6 +5,7 @@ using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using System;
+using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
 namespace softWrench.sW4.Configuration.Definitions {
 

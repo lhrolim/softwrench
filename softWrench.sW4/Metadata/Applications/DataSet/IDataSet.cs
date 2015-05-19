@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -25,7 +26,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
         ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
         IDictionary<string, BaseAssociationUpdateResult> BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
-        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
+//        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
         TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation);
 
         GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,

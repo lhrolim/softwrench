@@ -3,12 +3,12 @@
         var started = function (config) {
             config.headers['offlineMode'] = true;
             var log = $log.getInstance('sw4.ajaxint#started');
-            log.trace("url: {0} | current module:{1} | current metadata:{2} "
-               .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
+            log.debug("url: {0} ".format(config.url));
         };
 
         var endedok = function (response) {
-            //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
+            var log = $log.getInstance('sw4.ajaxint#endedok');
+            log.debug("status :{0}, url: {1} ".format(response.status, response.config.url));
         };
 
         var endederror = function (rejection) {
@@ -26,6 +26,7 @@
                 return config || $q.when(config);
             },
 
+
             // optional method
             'response': function (response) {
                 endedok(response);
@@ -40,7 +41,7 @@
         };
     });
 
-  
+
 }]);
 
 

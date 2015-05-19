@@ -16,3 +16,12 @@ function mergeObjects(src, destination) {
     return destination;
 
 }
+
+var isObjectEmpty = function (ob) {
+    for (var prop in ob) {
+        if (ob.hasOwnProperty(prop)) {
+            return false;
+        }
+    }
+    return true;
+}

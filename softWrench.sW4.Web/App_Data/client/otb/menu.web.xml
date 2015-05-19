@@ -10,7 +10,11 @@
   <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
     <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
     <application id="NWO" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
-<!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
+    <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
+  </container>
+  <container title="Solutions" icon="fa fa-book" role="solution" id="solution">
+    <application id="SOL" title="Solution Grid" ref="solution" schema="list" tooltip="Click to view solution"/>
+    <application id="SOLNEW" title="New Solution" ref="solution" schema="newdetail" tooltip="Click to Create a New Solution"/>
   </container>
   <container title="Changes" role="changes" id="change" icon="fa fa-random" >
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>

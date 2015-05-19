@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using cts.commons.portable.Util;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
@@ -17,6 +20,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         public string Type { get { return typeof(ApplicationCommand).Name; } }
 
         public List<string> ScopeParameters { get; set; }
+
+        public IDictionary<string, object> Parameters { get; set; }
 
         private readonly string _role;
         private readonly string _showExpression;
@@ -43,6 +48,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             _nextSchemaId = nextSchemaId;
             if (scopeParameters != null) {
                 ScopeParameters = new List<string>(scopeParameters.Split(','));
+                Parameters = PropertyUtil.ConvertToDictionary(scopeParameters,false);
             }
             Position = defaultPosition;
             Icon = icon;
@@ -81,6 +87,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             get { return _nextSchemaId; }
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public ApplicationCommandStereotype Stereotype {
             get { return _stereotype; }
         }

@@ -6,6 +6,7 @@ using log4net.Core;
 using log4net.Repository;
 using log4net.Repository.Hierarchy;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.log4net;
 using softWrench.sW4.SPF;
 using System;

@@ -12,8 +12,7 @@ using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Offline {
-
-    class RowStampUtil {
+    public class RowStampUtil {
 
         public const string RowstampColumnName = "rowstamp";
 
@@ -81,10 +80,10 @@ namespace softWrench.sW4.Data.Offline {
 
         private static string TimestampAttributeType() {
             if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
-                return "int";
+                return "bigint";
             }
             if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
-                return "int";
+                return "bigint";
             }
             throw new NotImplementedException("not implemented for oracle database yet");
         }

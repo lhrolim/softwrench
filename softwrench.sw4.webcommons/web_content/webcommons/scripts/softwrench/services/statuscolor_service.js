@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('statuscolorService', function ($rootScope, contextService) {
+﻿modules.webcommons.factory('statuscolorService', function ($rootScope, contextService) {
 
     var fallbackFunction = function (status, applicationname) {
 

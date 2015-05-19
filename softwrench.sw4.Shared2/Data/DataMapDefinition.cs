@@ -7,6 +7,9 @@ namespace softwrench.sW4.Shared2.Data {
         public string Application { get; set; }
         public long? Approwstamp { get; set; }
 
+        public string Id { get; set; }
+
+
         public DataMapDefinition() { }
 
         public DataMapDefinition(string application, IDictionary<string, object> fields)

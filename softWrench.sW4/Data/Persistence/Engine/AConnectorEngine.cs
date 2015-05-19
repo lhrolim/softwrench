@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Persistence.Sync;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Data.Sync;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;
@@ -17,8 +13,8 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
     public abstract class AConnectorEngine : IConnectorEngine {
-        public abstract SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
-            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
+//        public abstract SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
+//            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
 
         public abstract TargetResult Execute(OperationWrapper operationWrapper);
 

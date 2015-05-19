@@ -21,10 +21,10 @@ namespace softWrench.sW4.Metadata.Applications {
             var securedSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
             foreach (var applicationSchema in schemas) {
-                if (applicationSchema.Value.IsWebPlatform()) {
+                if (applicationSchema.Value.IsWebPlatform() || applicationSchema.Value.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
                     continue;
                 }
-                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile,null);
+                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile, null);
                 securedSchemas.Add(securedMetadata.Schema.GetSchemaKey(), securedMetadata.Schema);
             }
 
@@ -35,7 +35,7 @@ namespace softWrench.sW4.Metadata.Applications {
                 originalMetadata.Entity,
                 originalMetadata.IdFieldName,
                 originalMetadata.UserIdFieldName,
-                originalMetadata.Parameters, securedSchemas,originalMetadata.DisplayableComponents,
+                originalMetadata.Parameters, securedSchemas, originalMetadata.DisplayableComponents,
                 originalMetadata.Service,
                 originalMetadata.Notifications);
         }
@@ -45,6 +45,8 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
         public static bool IsMobileSupported(this CompleteApplicationMetadataDefinition metadata) {
+
+
             if (metadata.Parameters.ContainsKey(ApplicationMetadataConstants.MobileDisabled)) {
                 return false;
             }

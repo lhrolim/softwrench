@@ -44,7 +44,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
             //Handle Commlogs
-            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+//            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);

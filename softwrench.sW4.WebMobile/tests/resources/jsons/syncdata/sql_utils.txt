@@ -1,0 +1,1 @@
+﻿insert INTO DataEntry (application,remoteid,rowstamp,id) values ('workorder','100','1231','100')

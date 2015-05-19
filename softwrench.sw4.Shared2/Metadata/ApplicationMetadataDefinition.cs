@@ -13,11 +13,12 @@ namespace softwrench.sW4.Shared2.Metadata {
         public string IdFieldName { get; set; }
         public virtual ApplicationSchemaDefinition Schema { get; set; }
         public string Service { get; set; }
+        public bool AuditEnabled { get; set; }
 
         public ApplicationMetadataDefinition() { }
 
         public ApplicationMetadataDefinition(Guid? id, string name, string title, string entity,
-             string idFieldName, ApplicationSchemaDefinition schema, string service) {
+             string idFieldName, ApplicationSchemaDefinition schema, string service, bool auditEnabled) {
             if (name == null) throw new ArgumentNullException("name");
             if (title == null) throw new ArgumentNullException("title");
             if (entity == null) throw new ArgumentNullException("entity");
@@ -35,7 +36,8 @@ namespace softwrench.sW4.Shared2.Metadata {
             Schema = schema;
             Schema.IdFieldName = idFieldName;
             Service = service;
-        }
+            AuditEnabled = auditEnabled;
+             }
 
 
 

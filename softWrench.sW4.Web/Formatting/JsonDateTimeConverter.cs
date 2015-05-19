@@ -17,11 +17,9 @@ namespace softWrench.sW4.Web.Formatting {
                 if (user.TimezoneOffset != null) {
                     userOffsetVal = user.TimezoneOffset.Value;
                 }
-                if (userOffsetVal != 0) {
-                    var userOffset = TimeSpan.FromMinutes(userOffsetVal * -1);
-                    datetime = new DateTimeOffset(((DateTime)value).FromMaximoToUser(user), userOffset)
-                        .ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
-                }
+                var userOffset = TimeSpan.FromMinutes(userOffsetVal * -1);
+                datetime = new DateTimeOffset(((DateTime)value).FromMaximoToUser(user), userOffset)
+                    .ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
             }
             writer.WriteValue(datetime);
         }

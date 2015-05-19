@@ -23,13 +23,28 @@
     /* COMBOBOX PUBLIC CLASS DEFINITION
      * ================================ */
     var Combobox = function (element, options) {
+        this.loading = true;
         this.options = $.extend({}, $.fn.combobox.defaults, options);
+
+        this.islookup = false;
+        if ($(element).hasClass('lookup')) {
+            this.islookup = true;
+            this.options.template = '';
+        }
+
         this.options.pageSize = this.options.pageSize || 30000;
         this.$source = $(element);
         this.$container = this.setup();
-        this.$element = this.$container.find('input[type=text]');
-        this.$target = this.$container.find('input[type=hidden]');
-        this.$button = this.$container.find('.dropdown-toggle');
+
+        if (!this.islookup) {
+            this.$element = this.$container.find('input[type=text]');
+            this.$target = this.$container.find('input[type=hidden]');
+            this.$button = this.$container.find('.dropdown-toggle');
+        } else {
+            this.$element = this.$source.prev().find('input[type=text]');
+            this.$target = this.$source.prev().find('input[type=hidden]');
+        }
+
         this.$menu = $(this.options.menu).appendTo('body');
         this.matcher = this.options.matcher || this.matcher;
         this.sorter = this.options.sorter || this.sorter;
@@ -39,6 +54,7 @@
         this.refresh();
         this.transferAttributes();
         this.listen();
+        this.loading = false;
     };
 
     Combobox.prototype = {
@@ -108,6 +124,7 @@
         this.$element.attr('title', this.$source.attr('title'));
         this.$element.attr('class', this.$source.attr('class'));
         this.$element.attr('tabindex', this.$source.attr('tabindex'));
+
         this.$source.removeAttr('tabindex');
         if (this.$source.attr('disabled') !== undefined) {
             this.disable();
@@ -115,6 +132,7 @@
     }
 
     , select: function () {
+
         var val = this.$menu.find('.active').attr('data-value');
         this.$element.val(this.updater(val)).trigger('change');
         this.$target.val(this.map[val]).trigger('change');
@@ -169,6 +187,7 @@
         $('.dropdown-menu').on('mousedown', $.proxy(this.scrollSafety, this));
         $('.dropdown-menu').on('scroll', $.proxy(this.paginate, this));
         this.shown = true;
+        $(document).trigger("sw_autocompleteselected", this.$source.data("associationkey"));
         return this;
     }
 
@@ -209,6 +228,7 @@
             if (this.idxShown == undefined) {
                 this.idxShown = [];
             }
+
             return this.process(this.source, initialPage);
         }
     }
@@ -223,7 +243,6 @@
             pageLimit = items.length;
         }
 
-
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var idxNotPresent = this.currentPage == 0 || this.idxShown.indexOf(i) == -1;
@@ -237,20 +256,25 @@
 
         if (!foundItems.length) {
             if (initialPage == 0) {
-                //if we´re not on current page, let´s avoid calling hide whenever the scroll reaches the end
+
+                //don't refresh (clear the input), instead highlight in red
+                //this.refresh();
+                this.$element.addClass('not-found');
+
+                //if we're not on current page, let's avoid calling hide whenever the scroll reaches the end
                 this.$target.val(this.previousTarget);
                 this.$source.val(this.previousTarget);
                 // this.$element.val(this.previousTarget);
-                this.refresh();
+
                 if (this.shown) {
                     return this.hide();
                 }
                 return this;
-
             }
             return this;
+        } else {
+            this.$element.removeClass('not-found');
         }
-
 
         var appendItems = initialPage != 0;
         this.render(foundItems.slice(0, foundItems.length), appendItems);
@@ -345,18 +369,18 @@
             return;
         }
         this.idxShown = [];
-        if (this.$container.hasClass('combobox-selected')) {
-            this.clearTarget();
-            this.triggerChange();
-            this.clearElement();
+        //if (this.$container.hasClass('combobox-selected')) {
+        //    this.clearTarget();
+        //    this.triggerChange();
+        //    this.clearElement();
+        //} else {
+        if (this.shown) {
+            this.hide();
         } else {
-            if (this.shown) {
-                this.hide();
-            } else {
-                //don't clear the contents, just show the whole list
-                this.lookup(null, null, {lookupall: true});
-            }
+            //don't clear the contents, just show the whole list
+            this.lookup(null, null, { lookupall: true });
         }
+        //}
     },
 
         scrollSafety: function (e) {
@@ -374,8 +398,13 @@
         },
 
         clearElement: function () {
-            //don't autofocus via the combobox, removed .focus()
+            //don't autofocus until the combobox loads
             this.$element.val('');
+            //            if (this.loading) {
+            ////                this.$element.val('');
+            //            } else {
+            //                .focus();
+            //            }
         }
 
     , clearTarget: function () {
@@ -426,9 +455,11 @@
             .on('mouseenter', 'li', $.proxy(this.mouseenter, this))
             .on('mouseleave', 'li', $.proxy(this.mouseleave, this));;
 
-        this.$button
-            //clear the contents then display the dropdown
-            .on('click', $.proxy(this.toggle, this));
+        if (!this.islookup) {
+            this.$button
+                //clear the contents then display the dropdown
+                .on('click', $.proxy(this.toggle, this));
+        }
     }
 
     , eventSupported: function (eventName) {
@@ -493,15 +524,14 @@
                 if (this.$element.val() == '') {
                     this.clearTarget();
                     this.triggerChange();
-
                 }
                 break;
             case 9: // tab
             case 13: // enter
-                if (!this.shown) { return; }
                 this.select();
-                break;
-
+                e.stopPropagation();
+                e.preventDefault();
+                return;
             case 27: // escape
                 if (!this.shown) { return; }
                 this.hide();
@@ -528,7 +558,12 @@
 
     , focus: function (e) {
         this.focused = true;
-    }
+    },
+
+        setFocus: function (e) {
+            this.$element.focus();
+            this.focused = true;
+        }
 
     , blur: function (e) {
         var that = this;
@@ -546,7 +581,7 @@
         e.stopPropagation();
         e.preventDefault();
         this.select();
-        this.$element.focus();
+        //        this.$element.focus();
     }
 
     , mouseenter: function (e) {

@@ -1,25 +1,31 @@
-﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, routeService, menuModelService, metadataModelService) {
+﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, routeService, menuModelService, metadataModelService,configurationService) {
     return {
 
         syncData: function (currentServerVersion) {
 
-            var defer = $q.defer();
-
             var httpPromise = $http.get(routeService.downloadMetadataURL(currentServerVersion));
-            
+
             httpPromise.then(function (metadatasResult) {
                 var serverMenu = JSON.parse(metadatasResult.data.menuJson);
-                var serverMetadata = JSON.parse(metadatasResult.data.metadatasJSON);
+                var topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
+                var statusColorJson = JSON.parse(metadatasResult.data.statusColorsJSON);
+                var associationMetadatasJson = JSON.parse(metadatasResult.data.associationMetadatasJson);
+                var compositionMetadatasJson = JSON.parse(metadatasResult.data.compositionMetadatasJson);
+
                 var menuPromise = menuModelService.updateMenu(serverMenu);
-                var metadataPromise = metadataModelService.updateMetadata(serverMetadata);
-                return $q.all([menuPromise, metadataPromise]).then(function(results) {
-                    defer.resolve();
+                var topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
+                var associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);
+                var compositionPromise = metadataModelService.updateCompositionMetadata(compositionMetadatasJson);
+                //TODO: server return a whole list of configs
+                var configServicePromise = configurationService.saveConfigs([{ key: 'statuscolor', value: statusColorJson }]);
+                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, configServicePromise]).then(function (results) {
+                    $q.when();
                 });
             }).catch(function (errordata) {
-                defer.reject();
+                $q.reject();
             });
 
-            return defer.promise;
+            return httpPromise;
         }
     }
- });
+});

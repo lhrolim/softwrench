@@ -12,22 +12,18 @@ softwrench.controller('HomeController', function ($scope, synchronizationFacade,
             showDelay: 10
         });
         var promise = synchronizationFacade.fullSync();
-        promise.then(function(message) {
-                //$ionicPopup.alert({
-                //    title: message,
-                //    template: message
-                //});
-            })
-            .catch(function(message) {
-
-                $ionicPopup.alert(
-                {
-                    title: "Error Synchronizing Data",
-                    template: message
-                });
-            }).finally(function(message) {
-                $ionicLoading.hide();
+        promise.then(function (message) {
+            $ionicPopup.alert({
+                title: "Synchronization Suceeded",
+                template: message
             });
+        }).catch(function () {
+            $ionicPopup.alert({
+                title: "Error Synchronizing Data",
+            });
+        }).finally(function (message) {
+            $ionicLoading.hide();
+        });
 
 
     }

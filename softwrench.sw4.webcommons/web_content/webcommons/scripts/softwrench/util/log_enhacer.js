@@ -73,6 +73,9 @@ function enhanceAngularLog($log, contextService) {
     $log.enabledContexts = [];
 
 
+    $log.get = function (context) {
+        return this.getInstance(context);
+    };
 
     $log.getInstance = function (context) {
         return {

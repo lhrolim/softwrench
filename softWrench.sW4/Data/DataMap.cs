@@ -25,6 +25,17 @@ namespace softWrench.sW4.Data {
             }
         }
 
+
+        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, string idFieldName)
+            : base(application, fields) {
+            HandleRowStamps(fields);
+            object rowstampObject;
+            if (fields.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
+                Approwstamp = (long)rowstampObject;
+            }
+            Id = fields[idFieldName].ToString();
+        }
+
         private void HandleRowStamps(IDictionary<string, object> fields) {
             //TODO: handle associations correctly on entitymetadataslicer, rowstamps should not be here!
             var rowstampFields = new Dictionary<string, object>();
@@ -52,7 +63,9 @@ namespace softWrench.sW4.Data {
                 attributes[pair.Key] = value;
             }
             //true: avoid double rows interation for rowstamp handling
-            return new DataMap(applicationMetadata.Name, attributes, null, true);
+            return new DataMap(applicationMetadata.Name, attributes, null, true) {
+                Id = attributes[applicationMetadata.Schema.IdFieldName].ToString()
+            };
         }
 
 

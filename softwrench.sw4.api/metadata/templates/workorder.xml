@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -9,12 +9,19 @@
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
+
     <template path="@glcomponents.xml"/>
     <template path="@failurecode.xml"/>
+    <template path="@meter.xml"/>
+
+    <!--Applications required, temporarily for mobile, remove later-->
+    <template path="@location.xml"/>
+    <template path="@worktype.xml"/>
+    <template path="@synstatus.xml"/>
   </templates>
 
   <entities>
-    <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
+    <entity name="workorder" idAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <relationships>
         <relationship to="failurelistonly" qualifier="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
@@ -39,6 +46,7 @@
         </relationship>
         <relationship to="site">
           <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
         </relationship>
         <relationship to="worktype" qualifier="changecategory">
           <relationshipAttribute from="worktype" to="worktype" primary="true"/>
@@ -63,6 +71,15 @@
         <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
+
+        <relationship to="locationmeter" collection="true" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+        </relationship>
+
+        <relationship to="assetmeter" collection="true" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
@@ -102,7 +119,7 @@
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
-        
+
         <schema id="wonumlookup" title="item" stereotype="list">
           <field attribute="wonum"/>
           <field attribute="workorderid"/>
@@ -139,119 +156,109 @@
           <section id="realfields"/>
         </schema>
 
-
-
-
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
-
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
-          <section id ="siteidsection"/>
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <field attribute="wonum" label="WO No:" readonly="true"/>
-          <!--COMSW-2-->
+
+          <field attribute="wonum" label="WO No:" readonly="true">
+            <renderer type="default" params="inputsize=small" />
+          </field>
+          <section id ="siteidsection"/>
+          <field attribute="description" label="Summary:"/>
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
           <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
-            <renderer type="autocompleteclient"/>
-          </optionfield>
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
-            <renderer type="lookup"/>
-          </association>
           <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
-            <!--renderer type="lookup"/-->
+            <renderer type="autocompleteclient" params="inputsize=medium" />
           </association>
           <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterProblemCodes"/>
+          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true">
+            <renderer type="lookup" params="inputsize=medium" />
+            <dataprovider prefilterfunction="FilterProblemCodes" />
           </association>
-          <field label="Job Plan:" attribute="jpnum" readonly="true" />
+          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+            <renderer type="autocompleteclient" params="inputsize=medium" />
+          </optionfield>
+          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
+            <renderer type="lookup" params="inputsize=medium" />
+          </association>
+          <field label="Job Plan:" attribute="jpnum" readonly="true">
+            <renderer type="default" params="inputsize=medium" />
+          </field>
+          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;inputsize=medium" />
+          </association>
           <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            <renderer type="lookup" />
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
-          </association>
-          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
-          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          
-          <!--COMSW-2 Fix For Priority Selection-->
-          <!--<field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-          </field>-->
-          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
-            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
-          </association>
 
-
-          <!-- Adding target start finish date-->
-          <field attribute="targstartdate" hidden="true"/>
-          <field attribute="targcompdate" hidden="true"/>
-          <field attribute="actstart" hidden="true"/>
-          <field attribute="actfinish" hidden="true"/>
-
-          <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=targstartdate;">
-            <header label="Target Start Date:" displacement="sameline"/>
+          <section>
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+              <renderer type="lookup" params="inputsize=medium" />
+              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+            </association>
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+              <renderer type="lookup" params="inputsize=medium" />
+              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+            </association>
+            <field label="Reported By:" attribute="reportedby" default="@username" readonly="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium" />
+            </field>
+            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+              <renderer type="lookup" params="inputsize=medium" />
+            </association>
           </section>
 
-          <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=targcompdate;">
-            <header label="Target Finish Date:" displacement="sameline"/>
+          <section>
+            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <!-- Adding target start finish date-->
+            <field attribute="targstartdate" hidden="true"/>
+            <field attribute="targcompdate" hidden="true"/>
+            <field attribute="actstart" hidden="true"/>
+            <field attribute="actfinish" hidden="true"/>
+
+            <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=targstartdate;">
+              <header label="Target Start Date:" displacement="sameline"/>
+            </section>
+            <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=targcompdate;">
+              <header label="Target Finish Date:" displacement="sameline"/>
+            </section>
+            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=actstart;">
+              <header label="Actual Start Date:" displacement="sameline"/>
+            </section>
+            <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=actfinish;">
+              <header label="Actual Finish Date:" displacement="sameline"/>
+            </section>
           </section>
-
-          <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
-
-          
-
-          <!-- Code added from gric metadata.xml SWWEB 173-->
-          <section id="attachmentsection" />
-           
-          <!--					<section id="matusetranssection"/>-->
-          <!--					<section id="labtranssection"/>-->
+          <section id="attachmentsection"/>
           <section id="compositions"/>
         </schema>
 
-        <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
+        <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web">
           <section id="siteidsection">
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
               <!-- removed default='@usersite' from the above association label-->
-              <renderer type="lookup"/>
+              <renderer type="lookup" params="inputsize=small" />
             </association>
-            <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+            <field label="Status:" attribute="status" readonly="true" default="WAPPR">
+              <renderer type="default" params="inputsize=small" />
+            </field>
           </section>
           <!--SSWEB 173-->
           <section id="attachmentsection">
@@ -261,15 +268,17 @@
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
+        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web">
           <section id="siteidsection">
-            <field label="Site:" attribute="siteid" readonly="true"/>
+            <field label="Site:" attribute="siteid" readonly="true">
+              <renderer type="default" params="inputsize=small" />
+            </field>
             <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
-              <renderer type="lookup"/>
+              <renderer type="lookup" params="inputsize=small"/>
             </association>
           </section>
-          
+
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
@@ -289,7 +298,21 @@
             <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
+<!--            <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">-->
+<!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
+<!--            </composition>-->
+<!--            <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">-->
+<!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
+<!--            </composition>-->
           </section>
+          <commandbars>
+            <commandgroup position="actions">
+             <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
+              </container>
+            </commandgroup>
+            
+          </commandbars>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
@@ -300,6 +323,17 @@
           <field attribute="status" label="Status" qualifier="featured"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
+
+        <schema id="readings" title="Enter Meter Readings" platform="web">
+          <field attribute="assetnum" hidden="true"></field>
+          <field attribute="location" hidden="true"></field>
+          <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">
+            <collectionproperties allowcreation="false" listschema="composition"/>
+          </composition>
+          <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">
+            <collectionproperties allowcreation="false" listschema="composition"/>
+          </composition>
+        </schema>
 
         <detail platform="mobile" title="Work Orders">
           <field attribute="workorderid" hidden="true"/>

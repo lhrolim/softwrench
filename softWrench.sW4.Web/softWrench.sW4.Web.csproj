@@ -262,6 +262,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.0\20150205_SWWEB_889.cs" />
+    <Compile Include="DB_Migration\4.0\20150417_PAE_001.cs" />
     <Compile Include="DB_Migration\4.2.0\20150422_SWWEB_1163.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
@@ -344,14 +346,6 @@
     <Content Include="App_Data\Client\%40internal\target\maximo7.5.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\entegra\menu.mobile.xml" />
-    <Content Include="App_Data\Client\entegra\menu.web.xml" />
-    <Content Include="App_Data\Client\entegra\properties.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\Client\entegra\metadata.xml">
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\hapag\deploy.xml">
       <SubType>Designer</SubType>
@@ -418,6 +412,7 @@
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
+    <Content Include="Content\Images\changestatus_whitebg.gif" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
@@ -436,9 +431,6 @@
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
-    <Content Include="Content\Images\southern\branding.png" />
-    <Content Include="Content\Images\southern\logo-byline.png" />
-    <Content Include="Content\Images\southern\logo-main.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -458,6 +450,7 @@
     <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
     <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
+    <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -468,7 +461,6 @@
     <Compile Include="Controllers\HapagHomeController.cs" />
     <Compile Include="Common\MockingUtils.cs" />
     <Compile Include="Controllers\MyProfile\MyProfileController.cs" />
-    <Compile Include="Controllers\Mobile\MobileController.cs" />
     <Compile Include="Controllers\Routing\NextSchemaRouter.cs" />
     <Compile Include="Controllers\Routing\SuccessMessageHandler.cs" />
     <Compile Include="Controllers\SchedulerSetup\SchedulerController.cs" />
@@ -547,6 +539,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
     <Content Include="Content\styles\default\xeditable.css" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
@@ -604,6 +597,7 @@
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\header.css" />
     <Content Include="Content\styles\default\jscrollpane.css" />
+    <Content Include="Content\styles\default\media\max-width.css" />
     <Content Include="Content\styles\default\media\screen.css" />
     <Content Include="Content\styles\default\modal.css" />
     <Content Include="Content\styles\default\page-admin.css" />
@@ -659,7 +653,6 @@
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
@@ -689,6 +682,7 @@
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
     <Content Include="Content\Templates\menu\adminmenu.html" />
+    <Content Include="Content\Templates\otb\WotaskchangeStatus.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
@@ -721,9 +715,6 @@
     </Content>
     <Content Include="Dependencies\softWrench.sW4.Controls.ActiveX.dll" />
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
-    <Content Include="App_Data\Client\entegra\deploy.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="IBM.Data.DB2.dll" />
@@ -1279,6 +1270,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
+    <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
   </ItemGroup>
@@ -1316,6 +1308,10 @@
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.audit\softwrench.sw4.audit.csproj">
+      <Project>{a5e4cb59-33c1-4072-8d97-2cee10c4f964}</Project>
+      <Name>softwrench.sw4.audit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
       <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
       <Name>softwrench.sW4.batches</Name>
@@ -1344,9 +1340,29 @@
       <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
       <Name>softwrench.sw4.manchester</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
+      <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
+      <Name>softwrench.sw4.offlineserver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.pae\softwrench.sw4.pae.csproj">
+      <Project>{8248b6ce-335f-4611-89d2-1a79da5192c2}</Project>
+      <Name>softwrench.sw4.pae</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.southern\softwrench.sw4.southern.csproj">
+      <Project>{9a8c761c-3b9e-4c2c-af3d-a3676010919b}</Project>
+      <Name>softwrench.sw4.southern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
+      <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
+      <Name>softwrench.sw4.swgas</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>

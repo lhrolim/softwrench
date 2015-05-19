@@ -16,7 +16,7 @@ namespace softWrench.sW4.Metadata.Stereotypes.Schema {
         protected override IDictionary<string, string> DefaultValues() {
             return new Dictionary<string, string>()
             {
-                {NextSchemaId, "list"},
+//                {NextSchemaId, "detail"},
                 {ApplicationSchemaPropertiesCatalog.WindowPopupTitleStrategy, "nameandid"},
                 {ApplicationSchemaPropertiesCatalog.ShowPrintCommandStrategy, "editonly"},
             };

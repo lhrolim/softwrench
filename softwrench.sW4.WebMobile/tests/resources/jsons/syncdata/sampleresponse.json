@@ -1,0 +1,924 @@
+﻿{
+    "topApplicationData": [
+        {
+            "deletedRecordIds": [
+                "100",
+                "101"
+            ],
+            "upperLimitRowstamp": null,
+            "applicationName": "workorder",
+            "lowerLimitRowstamp": null,
+            "isEmpty": false,
+            "newdataMaps": [
+                {
+                    "application": "workorder",
+                    "approwstamp": 23649423,
+                    "id": "2865",
+                    "fields": {
+                        "wonum": "1372",
+                        "status": "INPRG",
+                        "description": "Testing OTB - KITs",
+                        "workorderid": "2865",
+                        "siteid": "BEDFORD",
+                        "orgid": "EAGLENA",
+                        "woclass": "WORKORDER",
+                        "hasfollowupwork": "0",
+                        "origrecordid": "",
+                        "origrecordclass": "",
+                        "reportdate": "4/22/2015 1:19:00 PM",
+                        "changeby": "SWADMIN",
+                        "owner": "AMAN",
+                        "wopriority": "3",
+                        "location": "BPM3100",
+                        "assetnum": "13143",
+                        "failurecode": "BOILERS",
+                        "worktype": "EMCAL",
+                        "glaccount": "6600-300-300",
+                        "rowstamp": 23649423,
+                        "location_.description": "#1 Liquid Packaging Line",
+                        "asset_.description": "Chain Wash Assembly",
+                        "failurecode_.description": "Boiler Failures",
+                        "worktype_.wtypedesc": "Calibration",
+                        "chartofaccounts_.accountname": "Maint+Central+Labor",
+                        "synstatus_.description": "In Progress",
+                        "longdescription_.ldtext": "<p>RCE</p>",
+                        "longdescription_.longdescriptionid": "2900",
+                        "longdescription_.rowstamp": 23647961
+                    }
+                },
+                {
+                    "application": "workorder",
+                    "approwstamp": 23167554,
+                    "id": "2756",
+                    "fields": {
+                        "wonum": "1363",
+                        "status": "INPRG",
+                        "description": "Door lock broken,
+                        IA front
+                        door", "workorderid"
+                        : "2756",
+                        "siteid": "LASVEGAS",
+                        "orgid": "EAGLENA",
+                        "woclass": "WORKORDER",
+                        "hasfollowupwork": "0",
+                        "origrecordid": "",
+                        "origrecordclass": "",
+                        "reportdate": "4/1/2015 2:17:00 PM",
+                        "changeby": "SWADMIN",
+                        "owner": "BARRY",
+                        "wopriority": "1",
+                        "location": "",
+                        "assetnum": "",
+                        "failurecode": "",
+                        "worktype": "EM",
+                        "glaccount": "",
+                        "rowstamp": 23167554,
+                        "location_.description": "",
+                        "asset_.description": "",
+                        "failurecode_.description": "",
+                        "worktype_.wtypedesc": "Emergency Maintenance",
+                        "chartofaccounts_.accountname": "",
+                        "synstatus_.description": "In Progress",
+                        "longdescription_.ldtext": "<p>changesa</p>",
+                        "longdescription_.longdescriptionid": "2824",
+                        "longdescription_.rowstamp": 23085196
+                    }
+                },
+                {
+                    "application": "workorder",
+                    "approwstamp": 21592358,
+                    "id": "2744",
+                    "fields": {
+                        "wonum": "1350",
+                        "status": "INPRG",
+                        "description": "TEST ACTUAL",
+                        "workorderid": "2744",
+                        "siteid": "BEDFORD",
+                        "orgid": "EAGLENA",
+                        "woclass": "WORKORDER",
+                        "hasfollowupwork": "0",
+                        "origrecordid": "",
+                        "origrecordclass": "",
+                        "reportdate": "2/27/2015 8:17:00 AM",
+                        "changeby": "SWADMIN",
+                        "owner": "",
+                        "wopriority": "",
+                        "location": "",
+                        "assetnum": "",
+                        "failurecode": "",
+                        "worktype": "",
+                        "glaccount": "",
+                        "rowstamp": 21592358,
+                        "location_.description": "",
+                        "asset_.description": "",
+                        "failurecode_.description": "",
+                        "worktype_.wtypedesc": "",
+                        "chartofaccounts_.accountname": "",
+                        "synstatus_.description": "In Progress",
+                        "longdescription_.ldtext": "",
+                        "longdescription_.longdescriptionid": "",
+                        "longdescription_.rowstamp": null
+                    }
+                },
+                {
+                    "application": "workorder",
+                    "approwstamp": 21823268,
+                    "id": "2731",
+                    "fields": {
+                        "wonum": "1338",
+                        "status": "INPRG",
+                        "description": "DEAD ANIMAL PICKUP",
+                        "workorderid": "2731",
+                        "siteid": "BEDFORD",
+                        "orgid": "EAGLENA",
+                        "woclass": "WORKORDER",
+                        "hasfollowupwork": "0",
+                        "origrecordid": "",
+                        "origrecordclass": "",
+                        "reportdate": "2/18/2015 3:35:00 PM",
+                        "changeby": "SWADMIN",
+                        "owner": "",
+                        "wopriority": "",
+                        "location": "",
+                        "assetnum": "",
+                        "failurecode": "",
+                        "worktype": "",
+                        "glaccount": "",
+                        "rowstamp": 21823268,
+                        "location_.description": "",
+                        "asset_.description": "",
+                        "failurecode_.description": "",
+                        "worktype_.wtypedesc": "",
+                        "chartofaccounts_.accountname": "",
+                        "synstatus_.description": "In Progress",
+                        "longdescription_.ldtext": "<p>DEAD ANIMAL PICKU</p>",
+                        "longdescription_.longdescriptionid": "2660",
+                        "longdescription_.rowstamp": 18774815
+                    }
+                },
+                {
+                    "application": "workorder",
+                    "approwstamp": 21176198,
+                    "id": "2675",
+                    "fields": {
+                        "wonum": "1283",
+                        "status": "INPRG",
+                        "description": "Test",
+                        "workorderid": "2675",
+                        "siteid": "BEDFORD",
+                        "orgid": "EAGLENA",
+                        "woclass": "WORKORDER",
+                        "hasfollowupwork": "0",
+                        "origrecordid": "",
+                        "origrecordclass": "",
+                        "reportdate": "2/3/2015 11:06:00 AM",
+                        "changeby": "SWADMIN",
+                        "owner": "",
+                        "wopriority": "",
+                        "location": "",
+                        "assetnum": "",
+                        "failurecode": "",
+                        "worktype": "",
+                        "glaccount": "",
+                        "rowstamp": 21176198,
+                        "location_.description": "",
+                        "asset_.description": "",
+                        "failurecode_.description": "",
+                        "worktype_.wtypedesc": "",
+                        "chartofaccounts_.accountname": "",
+                        "synstatus_.description": "In Progress",
+                        "longdescription_.ldtext": "<p>Test WO Inventory.</p>",
+                        "longdescription_.longdescriptionid": "2562",
+                        "longdescription_.rowstamp": 17693662
+                    }
+                }
+            ],
+            "updatedDataMaps": [ ],
+            "metadata": null
+        }
+    ],
+    "compositionData": [
+        {
+            "deletedRecordIds": [ ],
+            "upperLimitRowstamp": null,
+            "applicationName": "attachment_",
+            "lowerLimitRowstamp": null,
+            "isEmpty": false,
+            "newdataMaps": [
+                {
+                    "application": "attachment_",
+                    "approwstamp": null,
+                    "id": "1305",
+                    "fields": {
+                        "doclinksid": 1305,
+                        "ownerid": 2865,
+                        "docinfoid": 1187,
+                        "document": "LIGHTHOUSE",
+                        "docinfo_.description": "C:\\DOCLINKS\\ATTACHMENTS\\Lighthouse1430235357640.jpg",
+                        "createdate": "2015-04-28T08:35:56"
+                    }
+                },
+                {
+                    "application": "attachment_",
+                    "approwstamp": null,
+                    "id": "1300",
+                    "fields": {
+                        "doclinksid": 1300,
+                        "ownerid": 2865,
+                        "docinfoid": 1182,
+                        "document": "TESTING ATTACHMENT TAB IN CHROME",
+                        "docinfo_.description": "C:\\DOCLINKS\\ATTACHMENTS\\Change Details Form1429737860004.docx",
+                        "createdate": "2015-04-22T14:24:19"
+                    }
+                },
+                {
+                    "application": "attachment_",
+                    "approwstamp": null,
+                    "id": "1299",
+                    "fields": {
+                        "doclinksid": 1299,
+                        "ownerid": 2865,
+                        "docinfoid": 1181,
+                        "document": "TESTING ATTACHMENT TAB",
+                        "docinfo_.description": "C:\\DOCLINKS\\ATTACHMENTS\\Automated testing meeting with Julia 11429737817320.docx",
+                        "createdate": "2015-04-22T14:23:36"
+                    }
+                },
+                {
+                    "application": "attachment_",
+                    "approwstamp": null,
+                    "id": "1298",
+                    "fields": {
+                        "doclinksid": 1298,
+                        "ownerid": 2865,
+                        "docinfoid": 1180,
+                        "document": "ADD PO LINES.DOCX",
+                        "docinfo_.description": "C:\\DOCLINKS\\ATTACHMENTS\\Add PO Lines1429734125046.docx",
+                        "createdate": "2015-04-22T13:22:04"
+                    }
+                },
+                {
+                    "application": "attachment_",
+                    "approwstamp": null,
+                    "id": "1291",
+                    "fields": {
+                        "doclinksid": 1291,
+                        "ownerid": 2756,
+                        "docinfoid": 1173,
+                        "document": "TEST",
+                        "docinfo_.description": "C:\\DOCLINKS\\ATTACHMENTS\\f66d2d83b3f7695e212d34f0fc1ff4791429649226234.jpg",
+                        "createdate": "2015-04-21T13:47:01"
+                    }
+                }
+            ],
+            "updatedDataMaps": null,
+            "metadata": null
+        },
+        {
+            "deletedRecordIds": [ ],
+            "upperLimitRowstamp": null,
+            "applicationName": "matusetrans_",
+            "lowerLimitRowstamp": null,
+            "newdataMaps": [
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101958",
+                    "fields": {
+                        "matusetransid": 101958,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1372",
+                        "description": "Valve,
+                        Needle- 1/4
+                        In", "transdate"
+                        : "2015-04-28T09:01:29",
+                        "lotnum": null,
+                        "binnum": "A-5-7",
+                        "unitcost": 2.5,
+                        "linetype": "ITEM",
+                        "itemnum": "0-7205",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 5,
+                        "qtyrequested": 3,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101956",
+                    "fields": {
+                        "matusetransid": 101956,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1372",
+                        "description": "Elbow,
+                        Street- 1
+                        -1/8 In
+                        X 90
+                        Deg", "transdate"
+                        : "2015-04-22T13:38:02",
+                        "lotnum": null,
+                        "binnum": "D-9-4",
+                        "unitcost": 10.82,
+                        "linetype": "ITEM",
+                        "itemnum": "0-0031",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 6,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6000-300-000"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101819",
+                    "fields": {
+                        "matusetransid": 101819,
+                        "orgid": "EAGLENA",
+                        "siteid": "LASVEGAS",
+                        "refwo": "1363",
+                        "description": "light bulb",
+                        "transdate": "2015-04-01T14:21:41",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 100,
+                        "linetype": "MATERIAL",
+                        "itemnum": null,
+                        "storeloc": null,
+                        "conditioncode": null,
+                        "curbal": 0,
+                        "qtyrequested": 50,
+                        "gldebitacct": "6800-900-620"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101815",
+                    "fields": {
+                        "matusetransid": 101815,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1350",
+                        "description": "11R22.5-D Drive Tire",
+                        "transdate": "2015-03-30T08:50:35",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 127.8,
+                        "linetype": "ITEM",
+                        "itemnum": "11R22.5-D",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": "USED",
+                        "curbal": 10,
+                        "qtyrequested": 2,
+                        "gldebitacct": "6600-300-200"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101814",
+                    "fields": {
+                        "matusetransid": 101814,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1350",
+                        "description": "11R22.5-D Drive Tire",
+                        "transdate": "2015-03-30T08:49:46",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 426,
+                        "linetype": "ITEM",
+                        "itemnum": "11R22.5-D",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": "NEW",
+                        "curbal": 37,
+                        "qtyrequested": 4,
+                        "gldebitacct": "6600-300-200"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101813",
+                    "fields": {
+                        "matusetransid": 101813,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1350",
+                        "description": "11R22.5-D Drive Tire",
+                        "transdate": "2015-03-30T07:58:22",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 426,
+                        "linetype": "ITEM",
+                        "itemnum": "11R22.5-D",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": "NEW",
+                        "curbal": 38,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101791",
+                    "fields": {
+                        "matusetransid": 101791,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1350",
+                        "description": "Clamp- Carton Machine",
+                        "transdate": "2015-03-24T11:09:41",
+                        "lotnum": null,
+                        "binnum": "A-3-4",
+                        "unitcost": 1.49,
+                        "linetype": "ITEM",
+                        "itemnum": "251105",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 3,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101784",
+                    "fields": {
+                        "matusetransid": 101784,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1350",
+                        "description": "AC Spark Plug",
+                        "transdate": "2015-03-24T10:54:41",
+                        "lotnum": null,
+                        "binnum": "A-5-6",
+                        "unitcost": 3.99,
+                        "linetype": "ITEM",
+                        "itemnum": "11406",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 6,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101783",
+                    "fields": {
+                        "matusetransid": 101783,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1283",
+                        "description": "11R22.5-D Drive Tire",
+                        "transdate": "2015-03-24T10:47:58",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 426,
+                        "linetype": "ITEM",
+                        "itemnum": "11R22.5-D",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": "NEW",
+                        "curbal": 39,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101780",
+                    "fields": {
+                        "matusetransid": 101780,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1350",
+                        "description": "11R22.5-D Drive Tire",
+                        "transdate": "2015-03-24T10:41:39",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 426,
+                        "linetype": "ITEM",
+                        "itemnum": "11R22.5-D",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": "NEW",
+                        "curbal": 40,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101779",
+                    "fields": {
+                        "matusetransid": 101779,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1283",
+                        "description": "Clamp- Carton Machine",
+                        "transdate": "2015-03-24T10:23:12",
+                        "lotnum": null,
+                        "binnum": "A-3-4",
+                        "unitcost": 1.49,
+                        "linetype": "ITEM",
+                        "itemnum": "251105",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 4,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101778",
+                    "fields": {
+                        "matusetransid": 101778,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1283",
+                        "description": "AC Spark Plug",
+                        "transdate": "2015-03-24T10:21:22",
+                        "lotnum": null,
+                        "binnum": "A-5-6",
+                        "unitcost": 3.99,
+                        "linetype": "ITEM",
+                        "itemnum": "11406",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 7,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101620",
+                    "fields": {
+                        "matusetransid": 101620,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1283",
+                        "description": "100V,
+                        SR11,
+                        KSBB Capacitor",
+                        "transdate": "2015-02-03T11:12:00",
+                        "lotnum": null,
+                        "binnum": null,
+                        "unitcost": 0.89,
+                        "linetype": "ITEM",
+                        "itemnum": "CAPACITOR100",
+                        "storeloc": "PKG",
+                        "conditioncode": null,
+                        "curbal": 10,
+                        "qtyrequested": 1,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "matusetrans_",
+                    "approwstamp": null,
+                    "id": "101618",
+                    "fields": {
+                        "matusetransid": 101618,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "refwo": "1283",
+                        "description": "2\" Wilco Washer - Marb212 plated",
+                        "transdate": "2015-02-03T11:08:53",
+                        "lotnum": null,
+                        "binnum": "AB1",
+                        "unitcost": 0,
+                        "linetype": "ITEM",
+                        "itemnum": "KB27815",
+                        "storeloc": "CENTRAL",
+                        "conditioncode": null,
+                        "curbal": 10,
+                        "qtyrequested": 1,
+                        "gldebitacct": null
+                    }
+                }
+            ],
+            "updatedDataMaps": null,
+            "metadata": null
+        },
+        {
+            "deletedRecordIds": [ ],
+            "upperLimitRowstamp": null,
+            "applicationName": "worklog_",
+            "lowerLimitRowstamp": null,
+            "newdataMaps": [
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1635",
+                    "fields": {
+                        "description": "Tests",
+                        "worklogdesc_.ldtext": "<p>qwtnvcre</p>",
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1635
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1630",
+                    "fields": {
+                        "description": "Whatever everywhere",
+                        "worklogdesc_.ldtext": "<p>Turned off water at main which blocks water to entire building.  Will have to wait one week for replacement parts.</p>",
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1630
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1613",
+                    "fields": {
+                        "description": "Test",
+                        "worklogdesc_.ldtext": "Do Re Mi,
+                        ABC,
+                        123a", "logtype"
+                        : "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1613
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1500",
+                    "fields": {
+                        "description": "Test 111",
+                        "worklogdesc_.ldtext": null,
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1500
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1498",
+                    "fields": {
+                        "description": "RR",
+                        "worklogdesc_.ldtext": null,
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1498
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1497",
+                    "fields": {
+                        "description": "Dead Animal",
+                        "worklogdesc_.ldtext": "Dead",
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1497
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1491",
+                    "fields": {
+                        "description": "TEST 3",
+                        "worklogdesc_.ldtext": null,
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1491
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1490",
+                    "fields": {
+                        "description": "Test",
+                        "worklogdesc_.ldtext": null,
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 0,
+                        "worklogid": 1490
+                    }
+                },
+                {
+                    "application": "worklog_",
+                    "approwstamp": null,
+                    "id": "1489",
+                    "fields": {
+                        "description": "TEST",
+                        "worklogdesc_.ldtext": null,
+                        "logtype": "CLIENTNOTE",
+                        "clientviewable": 1,
+                        "worklogid": 1489
+                    }
+                }
+            ],
+            "updatedDataMaps": null,
+            "metadata": null
+        },
+        {
+            "deletedRecordIds": [ ],
+            "upperLimitRowstamp": null,
+            "applicationName": "labtrans_",
+            "lowerLimitRowstamp": null,
+            "newdataMaps": [
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100456",
+                    "fields": {
+                        "labtransid": 100456,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "BARRY",
+                        "transtype": "WORK",
+                        "refwo": "1372",
+                        "enterby": "SWADMIN",
+                        "payrate": 0,
+                        "craft": "MECH",
+                        "startdate": "2015-04-09T00:00:00",
+                        "starttime": "1970-01-01T10:35:00",
+                        "finishdate": "2015-04-24T00:00:00",
+                        "finishtime": "1970-01-01T14:50:00",
+                        "regularhrs": 12,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100455",
+                    "fields": {
+                        "labtransid": 100455,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "ALLEN",
+                        "transtype": "WORK",
+                        "refwo": "1372",
+                        "enterby": "SWADMIN",
+                        "payrate": 21.5,
+                        "craft": "PIPE",
+                        "startdate": "2015-04-22T00:00:00",
+                        "starttime": "1970-01-01T06:00:00",
+                        "finishdate": "2015-04-22T00:00:00",
+                        "finishtime": "1970-01-01T08:00:00",
+                        "regularhrs": 2,
+                        "gldebitacct": "6000-300-000"
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100401",
+                    "fields": {
+                        "labtransid": 100401,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "BARRY",
+                        "transtype": "WORK",
+                        "refwo": "1350",
+                        "enterby": "SWADMIN",
+                        "payrate": 0,
+                        "craft": "MECH",
+                        "startdate": "2015-03-26T00:00:00",
+                        "starttime": null,
+                        "finishdate": null,
+                        "finishtime": null,
+                        "regularhrs": 8,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100396",
+                    "fields": {
+                        "labtransid": 100396,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "CLINTON",
+                        "transtype": "WORK",
+                        "refwo": "1338",
+                        "enterby": "SWADMIN",
+                        "payrate": 28.5,
+                        "craft": "CATERING",
+                        "startdate": "2015-02-18T00:00:00",
+                        "starttime": "1970-01-01T15:00:00",
+                        "finishdate": null,
+                        "finishtime": null,
+                        "regularhrs": 8,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100395",
+                    "fields": {
+                        "labtransid": 100395,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "CALCOTT",
+                        "transtype": "WORK",
+                        "refwo": "1338",
+                        "enterby": "SWADMIN",
+                        "payrate": 28.5,
+                        "craft": "HR",
+                        "startdate": "2015-02-23T00:00:00",
+                        "starttime": null,
+                        "finishdate": null,
+                        "finishtime": null,
+                        "regularhrs": 8,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100391",
+                    "fields": {
+                        "labtransid": 100391,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "ROWLANDS",
+                        "transtype": "WORK",
+                        "refwo": "1338",
+                        "enterby": "MAXADMIN",
+                        "payrate": 100,
+                        "craft": "EMAIL",
+                        "startdate": "2015-02-20T00:00:00",
+                        "starttime": null,
+                        "finishdate": null,
+                        "finishtime": null,
+                        "regularhrs": 0,
+                        "gldebitacct": null
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100369",
+                    "fields": {
+                        "labtransid": 100369,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "BETHUNE",
+                        "transtype": "WORK",
+                        "refwo": "1283",
+                        "enterby": "SWADMIN",
+                        "payrate": 0,
+                        "craft": "OPSSYST",
+                        "startdate": "2015-02-02T00:00:00",
+                        "starttime": null,
+                        "finishdate": null,
+                        "finishtime": null,
+                        "regularhrs": 10,
+                        "gldebitacct": "6600-300-300"
+                    }
+                },
+                {
+                    "application": "labtrans_",
+                    "approwstamp": null,
+                    "id": "100368",
+                    "fields": {
+                        "labtransid": 100368,
+                        "orgid": "EAGLENA",
+                        "siteid": "BEDFORD",
+                        "laborcode": "CALCOTT",
+                        "transtype": "WORK",
+                        "refwo": "1283",
+                        "enterby": "SWADMIN",
+                        "payrate": 28.5,
+                        "craft": "HR",
+                        "startdate": "2015-02-04T00:00:00",
+                        "starttime": null,
+                        "finishdate": null,
+                        "finishtime": null,
+                        "regularhrs": 8,
+                        "gldebitacct": "6600-300-300"
+                    }
+                }
+            ],
+            "updatedDataMaps": null,
+            "metadata": null
+        }
+    ]
+}

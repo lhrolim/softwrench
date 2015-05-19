@@ -2,6 +2,6 @@
 {
     public enum ApplicationCommandStereotype
     {
-        Print,Confirm,Cancel
+        Print, Confirm, Cancel, Modal,Delete, Redirection
     }
 }

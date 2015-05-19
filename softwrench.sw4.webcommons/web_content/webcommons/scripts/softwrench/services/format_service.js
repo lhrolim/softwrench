@@ -72,7 +72,7 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
                     return fn(parameters);
                 }
             }
-            
+
             var dateFormat;
             if (field.rendererType == "datetime" || field.rendererType == 'date' || field.rendererType == 'time' || field.rendererParameters['formatter'] == "datetime") {
                 if (value != null) {
@@ -136,13 +136,30 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
             return doFormatDate(value, dateFormat, true);
         },
 
-        adjustDateFormatForPicker: function (dateFormat, showTime) {
+        adjustDateFormatForAngular: function (dateFormat, showTime) {
             if (dateFormat == undefined || dateFormat == '') {
                 //default ==> should be client specific
-                return showTime ? "MM-dd-yyyy hh:ii" : "MM-dd-yyyy";
+                return showTime ? "MM/dd/yyyy hh:mm" : "MM/dd/yyyy";
             } else {
-                dateFormat = dateFormat.replace('mm', 'ii');
+                return dateFormat.trim();
+            }
+        },
+
+
+        adjustDateFormatForPicker: function (dateFormat, showTime) {
+            /// <summary>
+            ///  Bootstrap picker uses mm for month, and ii for minutes.
+            ///  Angular, however, uses MM for month and hh mm for minutes.
+            /// </summary>
+            /// <param name="dateFormat"></param>
+            /// <param name="showTime"></param>
+            /// <returns type=""></returns>
+            if (dateFormat == undefined || dateFormat == '') {
+                //default ==> should be client specific
+                return showTime ? "mm/dd/yyyy hh:ii" : "mm/dd/yyyy";
+            } else {
                 dateFormat = dateFormat.replace('MM', 'mm');
+                dateFormat = dateFormat.replace(':mm', ':ii');
                 dateFormat = dateFormat.replace('HH', 'hh');
                 if (!showTime) {
                     //the format and the showtime flag are somehow conflitant, let´s adjust the format
@@ -152,7 +169,7 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
             }
         },
 
-        doContentStringConversion: function(datamap) {
+        doContentStringConversion: function (datamap) {
             for (var record in datamap) {
                 datamap[record] = datamap[record] == null ? null : datamap[record].toString();
             }

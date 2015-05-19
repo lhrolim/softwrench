@@ -24,7 +24,7 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
             var element = $("select[data-associationkey='" + displayable.associationKey + "']");
             var combobox = $(element).data('combobox');
             if (combobox != undefined) {
-                combobox.focus();
+                combobox.setFocus();
             }
         },
 
