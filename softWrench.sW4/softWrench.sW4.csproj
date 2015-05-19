@@ -147,13 +147,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
-    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
-    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
-    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
-    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
