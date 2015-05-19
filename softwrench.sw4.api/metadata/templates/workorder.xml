@@ -275,7 +275,7 @@
             </field>
             <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
-              <renderer type="lookup" params="inputsize=small"/>
+              <renderer type="lookup" params="inputsize=small;avoidautofocus=true"/>
             </association>
           </section>
 

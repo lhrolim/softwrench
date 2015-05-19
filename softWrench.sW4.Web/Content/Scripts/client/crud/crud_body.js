@@ -104,7 +104,7 @@ app.directive('crudBody', function (contextService) {
                 }
                 $timeout(function () {
                     //time for the components to be rendered
-                    focusService.setFocusToFirstNonFilled($scope.schema, $scope.datamap);
+                    focusService.setFocusToFirstField($scope.schema, $scope.datamap);
                 }, 1000, false);
 
             });

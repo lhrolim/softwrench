@@ -7,11 +7,35 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
 
     return {
 
+        getFirstFocusableFieldIdx: function (schema, datamap, acceptFilled) {
+            var realdatamap = datamap.fields ? datamap.fields : datamap;
+
+            var displayables = fieldService.getLinearDisplayables(schema);
+            for (var i = 0; i < displayables.length; i++) {
+                var displayable = displayables[i];
+                if (displayable.attribute) {
+                    if (!fieldService.isFieldHidden(realdatamap, schema, displayable) && !fieldService.isFieldReadOnly(realdatamap, schema, displayable)) {
+                        if ("true" == displayable.rendererParameters['avoidautofocus']) {
+                            continue;
+                        }
+
+                        if (!acceptFilled && realdatamap[displayable.attribute] == null) {
+                            return i;
+                        } else if (acceptFilled) {
+                            return i;
+                        }
+                    }
+                }
+            }
+            return -1;
+        },
 
 
-        setFocusToFirstNonFilled: function (schema, datamap) {
+        setFocusToFirstField: function (schema, datamap) {
             var log = $log.get("focusService#setFocusToFirstNonFilled");
-            var idx = schemaService.getFirstVisibleEditableNonFilledFieldIdx(schema, datamap);
+            var isEditing = schemaService.getId(datamap, schema);
+            var idx = this.getFirstFocusableFieldIdx(schema, datamap, isEditing);
+
             if (idx != -1) {
                 this.setFocusOnIdx(schema, datamap, idx, { reset: true });
             }
@@ -48,7 +72,7 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
         /// the second for location, cause the asset to remain in focus
         /// </summary>
         /// <param name="triggerFieldName"></param>
-        moveFocus: function (datamap,schema,attribute,params) {
+        moveFocus: function (datamap, schema, attribute, params) {
 
             var log = $log.get("focusService#moveFocus");
             log.debug("moving focus to item next to {0}".format(attribute));
@@ -58,7 +82,7 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
                 return;
             }
 
-            this.setFocusOnIdx(schema, datamap, nextFieldIdx,params);
+            this.setFocusOnIdx(schema, datamap, nextFieldIdx, params);
 
         }
 
