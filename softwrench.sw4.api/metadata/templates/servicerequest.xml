@@ -119,34 +119,18 @@
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-
-          <field attribute="targetstart" hidden="true"/>
-          <field attribute="targetfinish" hidden="true"/>
-          <field attribute="actualstart" hidden="true"/>
-          <field attribute="actualfinish" hidden="true"/>
-          
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
-
-          
-          
+          <field attribute="targetstart" label="Target Finish Date:">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
+          <field attribute="targetfinish" label="Target Finish Date:">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
+          <field attribute="actualstart" label="Actual Start Date:">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
+          <field attribute="actualfinish" label="Actual Finish Date:">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
           <!--COMSW 24 required field for population purposes-->

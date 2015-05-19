@@ -601,11 +601,11 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 }
 
                 if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
-                    cssclass += 'hasheader';
+                    cssclass += ' hasheader';
                 } 
                 
                 if (fieldMetadata.displayables != null) {
-                    cssclass += 'haschildren';
+                    cssclass += ' haschildren';
                 }
 
                 if (fieldMetadata.rendererParameters != null) {

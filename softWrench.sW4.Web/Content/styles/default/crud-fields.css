@@ -23,10 +23,6 @@
 }
 /*start end bootstrap styles*/
 
-/*.fieldset-inside-section {
-    margin-bottom: 0;
-}*/
-
 .form-group.haschildren {
     margin-bottom: 0;
 }
@@ -49,14 +45,6 @@ input:focus, select:focus, textarea:focus {
     padding: 6px 4px;
     border-top-left-radius: 3px !important;
     border-bottom-left-radius: 3px !important;
-}
-
-#datetimepicker > .input-group-addon {
-    padding: 4px;
-}
-
-.datepicker-dropdown {
-    /*z-index: 1000 !important;*/
 }
 
 #crudbodyform .combobox-container {
@@ -132,16 +120,14 @@ textarea .readonly {
 }
 
 .ui-spinner-input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    width: 96%;
+    width: 100%;
 }
 
 .ui-spinner-button {
-    width: 4%;
+    width: 1%;
     height: 50%;
     font-size: .5em;
-    padding: 0;
+    padding: 0px 13px 0 12px;
     margin: 0;
     text-align: center;
     position: absolute;
@@ -149,12 +135,8 @@ textarea .readonly {
     display: block;
     overflow: hidden;
     right: 0;
-    background: #F5F5FA;
+    background: #eee;
     border: 1px solid #ccc;
-}
-
-.ui-spinner a.ui-spinner-button {
-    border-left: none;
 }
 
 .ui-spinner .ui-icon {

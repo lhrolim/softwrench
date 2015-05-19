@@ -153,8 +153,6 @@ app.directive('crudBody', function (contextService) {
                 //make sure we are seeing the top of the detail page 
                 log.debug('scroll to top');
                 window.scrollTo(0, 0);
-                //SWWEB-960 - set focus to the first input, on new creations
-                log.debug('finish');
             });
 
             $scope.setActiveTab = function (tabId) {

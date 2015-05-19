@@ -228,25 +228,23 @@
           <section>
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <!-- Adding target start finish date-->
-            <field attribute="targstartdate" hidden="true"/>
-            <field attribute="targcompdate" hidden="true"/>
-            <field attribute="actstart" hidden="true"/>
-            <field attribute="actfinish" hidden="true"/>
-
-            <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=targstartdate;">
-              <header label="Target Start Date:" displacement="sameline"/>
-            </section>
-            <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=targcompdate;">
-              <header label="Target Finish Date:" displacement="sameline"/>
-            </section>
-            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=actstart;">
-              <header label="Actual Start Date:" displacement="sameline"/>
-            </section>
-            <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=actfinish;">
-              <header label="Actual Finish Date:" displacement="sameline"/>
-            </section>
+            <field attribute="targstartdate" label="Target Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+            </field>
+            <field attribute="targcompdate" label="Target Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+            </field>
+            <field attribute="actstart" label="Actual Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+            </field>
+            <field attribute="actfinish" label="Actual Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+            </field>
           </section>
-          <section id="attachmentsection"/>
+          <section>
+            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+            <section id="attachmentsection"/>
+          </section>
           <section id="compositions"/>
         </schema>
 

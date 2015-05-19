@@ -147,26 +147,18 @@
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
+          <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
+          <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
+          <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>
+          <field attribute="actualfinish" label="Actual Start Date:" attributeToServer="#notusedattribute">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+          </field>          
           <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
           <field attribute="statusdate" hidden="true" />
         </schema>
