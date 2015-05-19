@@ -63,6 +63,30 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             }
         },
 
+        focus: function (displayable) {
+            var log = $log.getInstance('cmpfacade#focus');
+
+            var attribute = displayable.attribute;
+            var associationKey = displayable.associationKey;
+            var rendererType = displayable.rendererType;
+            //TODO: test will all render types
+            //works with: default, autocompleteclient
+            //not working with: richtext, lookup (works with direct call)
+            if (rendererType == 'autocompleteclient') {
+                cmpAutocompleteClient.focus(displayable);
+            } else if (rendererType == "combo" || rendererType == "lookup") {
+                var selector = '[data-field="' + associationKey + '"]';
+                $(selector).focus();
+            }
+            else {
+                //default case
+                selector = '[data-field="' + attribute + '"]';
+                $(selector).focus();
+            }
+
+            log.debug('change focus to {0}'.format(attribute));
+        },
+
         refresh: function (displayable, scope, fromDigestAndRefresh) {
             var attribute = displayable.attribute;
 

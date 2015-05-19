@@ -67,6 +67,23 @@ app.factory('schemaService', function (fieldService) {
             return basekey;
         },
 
+        getFirstVisibleEditableNonFilledFieldIdx: function (schema, datamap) {
+            var realdatamap = datamap.fields ? datamap.fields : datamap;
+
+            var displayables = fieldService.getLinearDisplayables(schema);
+            for (var i = 0; i < displayables.length; i++) {
+                var displayable = displayables[i];
+                if (displayable.attribute ) {
+                    if (!fieldService.isFieldHidden(realdatamap, schema, displayable) && !fieldService.isFieldReadOnly(realdatamap, schema, displayable)) {
+                        if (realdatamap[displayable.attribute] == null) {
+                            return i;
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
 
     };
 

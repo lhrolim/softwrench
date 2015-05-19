@@ -131,7 +131,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
 
         },
 
-        controller: function ($scope, $http, $element, $injector, $timeout,
+        controller: function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup) {
@@ -152,6 +152,11 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 });
                 return title;
             };
+
+            $scope.setForm = function (form) {
+                $scope.crudform = form;
+            };
+
 
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
@@ -205,7 +210,6 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
                     $scope.configureFieldChangeEvents();
-
                     $scope.configureDirtyWatcher();
                 }
                 $('.datetimereadonly').datepicker("remove");
