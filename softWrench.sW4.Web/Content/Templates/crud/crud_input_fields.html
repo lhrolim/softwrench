@@ -33,18 +33,30 @@
                        data-date-format="{{fieldMetadata.rendererParameters['format']}}"
                        data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
                        class="form-control datetimereadonly"
-                       value="{{getFormattedValue(fieldMetadata.attribute,fieldMetadata,datamap)}}"
-                       ng-readonly="true" readonly>
+                       value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" ng-readonly="true" readonly>
                 <label ng-switch-when="label" class="control-label"
                        ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">
                     {{datamap[fieldMetadata.attribute]}}
                 </label>                
+
+                <textarea ng-switch-when="textarea"
+                          ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120" rows="10" wrap="hard"
+                          data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                          maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                          ng-readonly="true"
+                          ng-enabled="isModifiableEnabled(fieldMetadata)"
+                          ng-init="bindEvalExpression(fieldMetadata)"
+                          data-id="{{fieldMetadata.attribute}}"
+                          ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
+
                 <input type="text"
                        class="form-control"
                        ng-readonly="true"
                        ng-switch-default
                        ng-init="initField(fieldMetadata)"
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" />
+
+
             </div>
             <!--SM - 09-24 - SWWEB-441 Change column class
             ng-class="getValueColumnClass(fieldMetadata)"-->
@@ -53,6 +65,9 @@
                  ng-switch on="fieldMetadata.rendererType"
                  ng-class="getInputClass(fieldMetadata)">
                 <div ng-switch-when="combo" class="sw-combobox-container">
+
+                    <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
+                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
                     <select class="hidden-phone form-control combobox"
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
@@ -60,6 +75,9 @@
                             ng-init="initField(fieldMetadata)">
                         <option value=""></option>
                     </select>
+                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                </div>
+
                 </div>
                 <div ng-switch-when="checkbox">
                     <table ng-if="fieldMetadata.type == 'OptionField'" style="min-width: 200px;">
@@ -154,8 +172,7 @@
                     <input type="hidden" id="{{'autocomplete_' + fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
                 </div>
                 <div ng-switch-when="lookup" class="row">
-                    <div ng-switch on="fieldMetadata.hideDescription">
-                        <div ng-switch-when=false class="col-lg-3">
+                    <div ng-class="{'col-lg-12': fieldMetadata.hideDescription==true || fieldMetadata.hideDescription==null ,'col-lg-3': fieldMetadata.hideDescription ==false }">
                             <div class="input-group">
                                 <input type="text" placeholder="{{fieldMetadata.label}}" class="form-control"
                                        ng-model="lookupAssociationsCode[fieldMetadata.attribute]"
@@ -172,24 +189,6 @@
                                 <div></div><!--stop addon from moving on hover-->
                             </div>
                         </div>
-                        <div ng-switch-when=true class="col-lg-12">
-                            <div class="input-group">
-                                <input type="text" placeholder="{{fieldMetadata.label}}" class="form-control"
-                                       ng-model="lookupAssociationsCode[fieldMetadata.attribute]"
-                                       ng-change="lookupCodeChange(fieldMetadata)"
-                                       ng-blur="lookupCodeBlur(fieldMetadata)"
-                                       ng-enabled="isSelectEnabled(fieldMetadata)"
-                                       ng-enter="showLookupModal(fieldMetadata)"
-                                       rel="tooltip" data-original-title="Enter {{fieldMetadata.label}} id to lookup " />
-                                <span class="input-group-addon last" ng-click="showLookupModal(fieldMetadata)"
-                                      rel="tooltip" data-original-title="Open the lookup popup" ng-enabled="isSelectEnabled(fieldMetadata)">
-                                    <i class="glyphicon glyphicon-search" ng-enabled="isSelectEnabled(fieldMetadata)"
-                                       ng-style="{cursor: isSelectEnabled(fieldMetadata)?'pointer':'auto' }"></i>
-                                </span>
-                                <div></div><!--stop addon from moving on hover-->
-                            </div>
-                        </div>
-                    </div>
                     <div ng-if="fieldMetadata.hideDescription != true" class="col-lg-9">
                         <input type="text" placeholder="{{getLookUpDescriptionLabel(fieldMetadata)}}" class="form-control" disabled
                                ng-model="lookupAssociationsDescription[fieldMetadata.attribute]" />
@@ -391,6 +390,9 @@
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
                                 <div ng-switch-default>
+                                    
+                                    <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
+                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
                                     <input type="{{getInputType(fieldMetadata)}}"
                                            ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
                                            ng-enabled="isModifiableEnabled(fieldMetadata)"
@@ -399,6 +401,8 @@
                                            placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
                                            ng-init="initField(fieldMetadata)"
                                            dynamic-name="fieldMetadata.attribute" />
+                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

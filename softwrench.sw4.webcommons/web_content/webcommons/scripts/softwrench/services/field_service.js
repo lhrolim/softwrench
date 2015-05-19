@@ -38,14 +38,17 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
-        nonTabFields: function (displayables) {
+        nonTabFields: function (displayables, includeHiddens) {
+            includeHiddens = includeHiddens == undefined ? true : includeHiddens;
             var result = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
                 var type = displayable.type;
                 var isTabComposition = this.isTabComposition(displayable);
                 if (!isTabComposition && type != "ApplicationTabDefinition") {
-                    result.push(displayable);
+                    if (includeHiddens || !displayable.isHidden) {
+                        result.push(displayable);
+                    }
                 }
             }
             return result;
@@ -66,14 +69,14 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
                     if (displayables[key].evalExpression != null) {
                         expressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
                         datamap[target] = expressionResult;
-                    } else if(displayables[key].defaultExpression != null) {
+                    } else if (displayables[key].defaultExpression != null) {
                         expressionResult = expressionService.evaluate(displayables[key].defaultExpression, datamap, scope);
                         datamap[target] = expressionResult;
                     }
                     if (expressionResult == null && value.defaultValue != null) {
                         //TODO: extract a service here, to be able to use @user, @person, @date, etc...
                         datamap[target] = value.defaultValue;
-                   }
+                    }
                 }
             });
             return datamap;

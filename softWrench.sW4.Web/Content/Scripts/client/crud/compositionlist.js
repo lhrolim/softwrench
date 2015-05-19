@@ -104,6 +104,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             previousschema: '=',
             previousdata: '=',
             inline: '@',
+            ismodal: '@',
             tabid: '@'
         },
         link: function (scope, element, attrs) {
@@ -121,7 +122,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                 }
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
-                element.append("<composition-list title='{{tabLabel}}'" +
+                element.append("<composition-list title='{{tabLabel}}' ismodal='{{ismodal}}'" +
                     "compositionschemadefinition='compositionschemadefinition'" +
                     "relationship='{{relationship}}'" +
                     "compositiondata='compositiondata'" +
@@ -154,7 +155,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
     }
 });
 
-app.directive('compositionList', function (contextService, formatService) {
+app.directive('compositionList', function (contextService, formatService, schemaService) {
 
     return {
         restrict: 'E',
@@ -170,12 +171,15 @@ app.directive('compositionList', function (contextService, formatService) {
             previousschema: '=',
             previousdata: '=',
             parentschema: '=',
-            mode: '@'
+            mode: '@',
+            ismodal: '@'
         },
 
         controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventService, iconService) {
+            expressionService, $timeout, modalService, redirectService, eventService, iconService, cmplookup) {
+
+            $scope.lookupObj = {};
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -214,7 +218,7 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
 
-                $injector.invoke(BaseController, this, {
+                $injector.invoke(BaseList, this, {
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
@@ -235,6 +239,10 @@ app.directive('compositionList', function (contextService, formatService) {
                 return safeCSSselector(name);
             };
 
+            $scope.haslookupModal = function (schema) {
+                return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
+            }
+
             $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
                 if (collectionproperties.hideExistingData == true) {
                     var idFieldName = compositionlistschema.idFieldName;
@@ -242,6 +250,18 @@ app.directive('compositionList', function (contextService, formatService) {
                 }
                 return false;
             }
+
+            $scope.showLookupModal = function (fieldMetadata, item) {
+                var code = '';
+                //                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
+                //                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                //                }
+                $scope.schema = $scope.compositionlistschema;
+                $scope.datamap = item;
+                $scope.lookupObj.element = $element;
+                $scope.lookupObj.item = item;
+                cmplookup.updateLookupObject($scope, fieldMetadata, code);
+            };
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
@@ -317,7 +337,7 @@ app.directive('compositionList', function (contextService, formatService) {
 
             $scope.edit = function (datamap) {
                 if ($scope.compositionlistschema.properties && "modal" == $scope.compositionlistschema.properties["list.click.popup"]) {
-                    modalService.show($scope.compositiondetailschema, datamap,{}, $scope.save);
+                    modalService.show($scope.compositiondetailschema, datamap, {}, $scope.save);
                 } else {
                     //TODO: switch to edit
                     $scope.newDetail = true;
@@ -487,7 +507,7 @@ app.directive('compositionList', function (contextService, formatService) {
                     return;
                 }
 
-                var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
+                var alwaysrefresh = schemaService.isPropertyTrue($scope.compositiondetailschema, 'compositions.alwaysrefresh');
                 if (alwaysrefresh) {
                     //this will disable success message, since we know we´ll need to refresh the screen
                     contextService.insertIntoContext("refreshscreen", true, true);
@@ -531,6 +551,10 @@ app.directive('compositionList', function (contextService, formatService) {
 
             /*API Methods*/
             this.showExpansionCommands = function () {
+                if ($scope.ismodal == "false") {
+                    return true;
+                }
+
                 // if schema is not present, then it should default back normal expansion commands
                 if ($scope.compositionlistschema.properties != null) {
                     //this is fix for GRIC-98. Don't remove it

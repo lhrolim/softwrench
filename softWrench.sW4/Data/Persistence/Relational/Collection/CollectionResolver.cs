@@ -206,7 +206,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             SearchRequestDto searchRequestDto) {
             var searchValues = new HashSet<string>();
             var attributeHolders = parameter.EntitiesList;
-            foreach (var entity in attributeHolders) {
+            var enumerable = attributeHolders as AttributeHolder[] ?? attributeHolders.ToArray();
+            var hasMainEntity = enumerable.Any();
+            foreach (var entity in enumerable) {
                 var key = matchingResultWrapper.FetchKey(entity);
                 var searchValue = SearchUtils.GetSearchValue(lookupAttribute, entity);
                 if (!String.IsNullOrWhiteSpace(searchValue) && lookupAttribute.To != null) {
@@ -216,6 +218,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
             if (searchValues.Any()) {
                 searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
+            } else if (hasMainEntity && lookupAttribute.Primary){
+                //if nothing was provided, it should return nothing, instead of all the values --> 
+                //if the main entity had a null on a primary element of the composition, nothing should be seen
+                searchRequestDto.AppendSearchEntry(lookupAttribute.To, new[]{"-1231231312"});
             }
         }
 

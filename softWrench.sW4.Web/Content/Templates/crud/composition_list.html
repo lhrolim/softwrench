@@ -1,6 +1,6 @@
 <div>
-    <div class="context clearfix" data-class="commandbar" style="background: none; border-bottom: none" ng-show="!inline">
-        
+    <div class="context clearfix" data-class="commandbar" style="background: none; border-bottom: none" ng-show="!inline && ismodal=='false'">
+
         <compositiontoolbar position="compositiontop"
                             schema="compositionlistschema"
                             parentschema="parentschema"
@@ -44,8 +44,8 @@
                     <input type="checkbox"
                            name="compositionlistschema.properties['list.selectionstyle']"
                            value="{{option.value}}"
-                           ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                           ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                           ng-checked="isCheckboxSelected(option,column.associationKey)"
+                           ng-click="toogleCheckboxSelection(option,column.associationKey)">
                 </td>
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
@@ -54,6 +54,29 @@
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isFieldHidden(compositionlistschema,column)">
                     <ng-switch on="column.type">
+
+                        <div ng-switch-when="ApplicationAssociationDefinition">
+                            <ng-switch on="column.rendererType">
+                                <div ng-switch-when="lookup" class="row">
+                                    <div class="col-lg-12">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="{{column.label}}" class="form-control"
+                                                   ng-model="compositionitem[column.attribute]"
+                                                   ng-change="lookupCodeChange(column)"
+                                                   ng-blur="lookupCodeBlur(column)"
+                                                   ng-enter="showLookupModal(column,compositionitem)"
+                                                   rel="tooltip" data-original-title="Enter {{column.label}} id to lookup " />
+                                            <span class="input-group-addon last" ng-click="showLookupModal(column,compositionitem)"
+                                                  rel="tooltip" data-original-title="Open the lookup popup">
+                                                <i class="glyphicon glyphicon-search" style="cursor: pointer"></i>
+                                            </span>
+                                            <div></div><!--stop addon from moving on hover-->
+                                        </div>
+                                    </div>
+                                    <input type="hidden" ng-model="datamap[column.target]" />
+                                </div>
+                            </ng-switch>
+                        </div>
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
                         </div>
@@ -66,15 +89,48 @@
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
                                 </div>
                                 <div ng-switch-when="datetime">
-                                    <a>
+                                    <div id="datetimepicker" class="input-group" data-datepicker="true" ng-if="column.rendererParameters['editable'] == 'true'">
+                                        <input type="text" ng-model="compositionitem[column.attribute]"
+                                               data-date-time
+                                               data-show-time="{{column.rendererParameters['showtime']}}"
+                                               data-show-date="{{column.rendererParameters['showdate']}}"
+                                               data-date-format="{{column.rendererParameters['format']}}"
+                                               data-show-meridian="{{column.rendererParameters['showmeridian']}}"
+                                               data-allow-past="{{column.rendererParameters['allowpast']}}"
+                                               data-allow-future="{{column.rendererParameters['allowfuture']}}"
+                                               class="form-control">
+                                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                                            <i class="datetime-class"></i>
+                                        </span>
+                                    </div>
+                                    <a ng-if="column.rendererParameters['editable'] != 'true'">
+                                        {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
+                                    </a>
+
+                                </div>
+                                <div ng-switch-default>
+
+                                    <div ng-if="column.rendererParameters['editable'] == 'true'"
+                                         ng-class="{'input-group': column.rendererParameters['prepend'] || column.rendererParameters['append'] }">
+                                        <span class="input-group-addon" ng-if="column.rendererParameters['prepend']!=null">{{column.rendererParameters['prepend']}}</span>
+                                        <input type="{{getInputType(column)}}"
+                                               ng-model="compositionitem[column.attribute]" class="hidden-phone form-control"
+                                               data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
+                                               maxlength="{{column.rendererParameters['maxlength']}}"
+                                               placeholder="{{column.rendererParameters['placeholder']}}"
+                                               ng-init="initField(column)"
+                                               dynamic-name="column.attribute" />
+                                        <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
+                                    </div>
+
+                                    <a ng-if="column.rendererParameters['editable'] != 'true'">
                                         {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
                                     </a>
                                 </div>
-                                <a ng-switch-default>
-                                    {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
-                                </a>
                             </ng-switch>
                         </div>
+
+
                     </ng-switch>
                 </td>
             </tr>
@@ -140,7 +196,7 @@
     </div>
 
     <div ng-if="newDetail" style="margin-top: 10px">
-        <form name="compositionform" >
+        <form name="compositionform">
             <div ng-init="setForm(compositionform)"></div>
             <new-item-input displayables="compositiondetailschema.displayables"
                             elementid="inputComposition"
@@ -153,4 +209,15 @@
                             previousschema="parentschema" />
         </form>
     </div>
+    
+    <div ng-if="haslookupModal(compositionlistschema)">
+        <lookup-modal-wrapper lookup-obj="lookupObj"
+                              lookup-associations-code="lookupAssociationsCode"
+                              lookup-associations-description="lookupAssociationsDescription"
+                              association-options="associationOptions"
+                              schema="compositionlistschema"
+                              datamap="compositiondata">
+        </lookup-modal-wrapper>
+    </div>
+
 </div>

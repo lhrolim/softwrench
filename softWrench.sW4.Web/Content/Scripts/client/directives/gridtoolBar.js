@@ -60,7 +60,11 @@
     }
 
     $scope.executeService = function (command) {
+        var log =$log.get("gridtoolBar#executeService");
         $('.no-touch [rel=tooltip]').tooltip('hide');
+       
+
+        
         if (command.service == "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {
@@ -181,6 +185,32 @@ app.directive('inputdetailtoolbar', function (contextService) {
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
         require: '^crudInput',
+        scope: {
+            /*only appliable for compositions, otherwise this will be null*/
+            schema: '=',
+            mode: '@',
+            position: '@',
+            datamap: '=',
+        },
+
+        link: function (scope, element, attrs, ctrl) {
+            scope.ctrlfns = {};
+            for (var fn in ctrl) {
+                scope.ctrlfns[fn] = ctrl[fn];
+            }
+        },
+
+        controller: sharedController
+
+    };
+});
+
+app.directive('crudbodydetailtoolbar', function (contextService) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
+        require: '^crudBody',
         scope: {
             /*only appliable for compositions, otherwise this will be null*/
             schema: '=',

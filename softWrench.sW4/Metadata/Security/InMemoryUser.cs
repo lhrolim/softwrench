@@ -241,6 +241,11 @@ namespace softWrench.sW4.Metadata.Security {
 
             return _roles.Any(r => r.Name.EqualsIc(role));
         }
+
+        public bool IsInGroup(string groupName) {
+            return _personGroups.Any(g => g.GroupName.Equals(groupName));
+        }
+
         [JsonIgnore]
         public IIdentity Identity { get; private set; }
 

@@ -11,9 +11,9 @@
     <form id="crudbodyform"
           name="crudbodyform"
           class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
-        <div ng-init="setForm(crudbodyform)"/>
+        <div ng-init="setForm(crudbodyform)" />
         <ng-switch on="hasTabs(schema)">
-            <div ng-if="isEditDetail(datamap,schema)">
+            <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
                 <div class="ticketid_spacer"></div>
                 <div class="well well-sm ticketid">
                     <h5>{{getTitle()}}</h5>
@@ -23,10 +23,10 @@
             <div ng-switch-when="true" class="hiddenonprint detail-body">
                 <div class="detail-header clearfix">
                     <ul class="nav nav-tabs compositiondetailtab hapag-composition">
-                        <li class="active">
+                        <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
                             <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
                         </li>
-                        <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
+                        <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered >
                             <a ng-switch-when="ApplicationCompositionDefinition"
                                ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)">
                                 <i class="{{getTabIcon(tab)}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
@@ -39,18 +39,26 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="buttons" ng-if="isNotHapagTest()" ng-show="!disableNavigationButtons(schema)">
+
+
+
+                    <div class="buttons" ng-show="showNavigationButtons(schema)">
                         <button type="button" class="btn btn-primary" ng-click="toConfirmBack(previousdata,previousschema)" rel="tooltip" data-original-title="Back to Grid"><i class="fa fa-table"></i></button>
                         <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" ng-disabled="!disableNavigationButton(0)" data-original-title="Previous"><i class="fa fa-arrow-down"></i></button>
                         <button type="button" class="btn btn-primary" ng-click="crawl(1)" rel="tooltip" ng-disabled="!disableNavigationButton(1)" data-original-title="Next"><i class="fa fa-arrow-up"></i></button>
                     </div>
+
+                    <div class="buttons">
+                        <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions" />
+                    </div>
+
                 </div>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="main">
+                    <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="main">
                         <ng-switch on="schema.mode">
                             <!--<div ng-if="isNotHapagTest()">
-                                    <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
-                                </div>-->
+                    <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
+                </div>-->
                             <div ng-switch-when="input">
                                 <crud-input-wrapper ismodal="{{ismodal}}"
                                                     extraparameters="extraparameters"
@@ -76,7 +84,7 @@
                             </div>
                         </ng-switch>
                     </div>
-                    <div class="tab-pane" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
+                    <div class="tab-pane" ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
                         <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
                             <div ng-switch-when="true" class="hiddenonprint">
                                 <composition-list-wrapper parentschema="schema"
@@ -84,7 +92,8 @@
                                                           cancelfn="cancel(data,schema)"
                                                           previousschema="previousschema" previousdata="previousdata"
                                                           metadata="tab"
-                                                          tabid="{{tab.tabId}}" />
+                                                          tabid="{{tab.tabId}}"
+                                                          ismodal="{{ismodal}}" />
                             </div>
                             <div ng-switch-when="false">
                             </div>

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService) {
+app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService,applicationService) {
     var buildApplicationURLForBrowser = function (applicationName, parameters) {
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
@@ -24,33 +24,11 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
 
 
-    var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData) {
-        if (parameters === undefined || parameters == null) {
-            parameters = {};
-        }
-        parameters.key = {
-            schemaId: schemaId,
-            mode: mode,
-            platform: platform()
-        };
 
-
-        if (parameters.popupmode == "browser") {
-            return buildApplicationURLForBrowser(applicationName, parameters);
-        }
-        if (title != null && title.trim() != "") {
-            parameters.title = title;
-        }
-        if (jsonData == undefined) {
-            return url("/api/data/" + applicationName + "?" + $.param(parameters));
-        } else {
-            parameters.application = applicationName;
-            return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
-        }
-    };
 
 
     return {
+
 
         getActionUrl: function (controller, action, parameters) {
             return restService.getActionUrl(controller, action, parameters);
@@ -90,7 +68,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         },
 
         getApplicationUrl: function (applicationName, schemaId, mode, title, parameters) {
-            return getApplicationUrl(applicationName, schemaId, mode, title, parameters);
+            return applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters);
         },
 
 
@@ -163,7 +141,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
-            var redirectURL = getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
+            var redirectURL = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
             var popupMode = parameters.popupmode;
             if (popupMode == "report") {
                 //does not popup any window for incident detail report

@@ -168,7 +168,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             message = message + " (Bin: " + binnum + ")";
         }
         return alertService.confirm(null, null, function () {
-            returnTransformation(event, datamap);
             parameters.continue();
         }, message);
     };
@@ -317,6 +316,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         };
                         returnConfirmation(null, transformedData, {
                             continue: function () {
+                                // TODO: update so that mock client validation is not necessary
+                                sessionStorage.mockclientvalidation = true;
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {
                                         sessionStorage.mockclientvalidation = false;
@@ -381,6 +382,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         };
                         returnConfirmation(null, transformedData, {
                             continue: function () {
+                                // TODO: update so that mock client validation is not necessary
+                                sessionStorage.mockclientvalidation = true;
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {
                                         sessionStorage.mockclientvalidation = false;

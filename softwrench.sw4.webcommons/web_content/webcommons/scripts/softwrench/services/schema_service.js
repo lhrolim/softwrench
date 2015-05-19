@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('schemaService', function () {
+app.factory('schemaService', function (fieldService) {
 
 
 
@@ -8,11 +8,11 @@ app.factory('schemaService', function () {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="schemaKey"></param>
-        /// <returns type="">an object with the following
-        /// app: the application name (not null)
-        /// schemaId: the schema Id (or null)
-        /// mode: the mode of itar (or null)
+        /// <param name="schemaKey">a string representing a full schema, with or without reference to the application</param>
+        /// <returns type="">an object with the following properties
+        /// app: the application name (could be null)
+        /// schemaId: the schema Id (can´t be null)
+        /// mode: the mode of the schema(or null)
         /// 
         /// </returns>
         parseAppAndSchema: function (schemaKey) {
@@ -34,10 +34,35 @@ app.factory('schemaService', function () {
             return { app: application, schemaId: schemaId, mode: mode };
         },
 
+        getId: function (datamap, schema) {
+            if (datamap.fields) {
+                return datamap.fields[schema.idFieldName];
+            }
+            return datamap[schema.idFieldName];
+        },
+
+        hasAnyFieldOnMainTab: function (schema) {
+            schema.jscache = schema.jscache || {};
+            if (schema.jscache.hasAnyFieldOnMainTab) {
+                return schema.jscache.hasAnyFieldOnMainTab;
+            }
+            var fields = fieldService.nonTabFields(schema.displayables, false);
+            var result = fields.length > 0;
+            schema.jscache.hasAnyFieldOnMainTab = result;
+            return result;
+        },
+
+        isPropertyTrue: function (schema, propertyName) {
+            if (!schema) {
+                return false;
+            }
+            return schema.properties && "true" == schema.properties[propertyName];
+        },
+
         buildApplicationKey: function (schema) {
             var basekey = schema.applicationName + "." + schema.schemaId;
             if (schema.mode && schema.mode != "none") {
-                basekey += "." +schema.mode;
+                basekey += "." + schema.mode;
             }
             return basekey;
         },

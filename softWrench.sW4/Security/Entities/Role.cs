@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using cts.commons.portable.Util;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Util;
 using System;
 
@@ -7,7 +8,7 @@ namespace softWrench.sW4.Security.Entities {
     public class Role {
         public const string RoleByName = "from Role where Name =?";
         public static string RoleByNames = "from Role where Name in (:p0)";
-            
+
 
         public const string SysAdmin = "sysadmin";
         public const string ClientAdmin = "clientadmin";
@@ -27,18 +28,18 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string Description { get; set; }
 
-        [Property(Column = "deletable",TypeType = typeof(BooleanToIntUserType))]
+        [Property(Column = "deletable", TypeType = typeof(BooleanToIntUserType))]
         public virtual Boolean Deletable { get; set; }
 
         [ManyToOne(Column = "rolegroup_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
         public virtual RoleGroup RoleGroup { get; set; }
 
-        
+
         [Property(Column = "isactive", TypeType = typeof(BooleanToIntUserType))]
         public virtual Boolean Active { get; set; }
 
         protected bool Equals(Role other) {
-            return string.Equals(Name, other.Name);
+            return Name.EqualsIc(other.Name);
         }
 
         public override bool Equals(object obj) {

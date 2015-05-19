@@ -66,16 +66,23 @@
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
+        
         <schema id ="adetail" title="PO Receipt Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
           <field attribute="description" hidden="true"/>
           <section id ="compositions"/>
         </schema>
+        
         <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
           <section id="siteidsection">
-            <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true"/>
-            <field label="Site:" attribute="siteid" readonly="true"/>
+            <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true">
+              <renderer type="default" params="inputsize=medium"/>
+            </field>
+            <field label="Site:" attribute="siteid" readonly="true">
+              <renderer type="default" params="inputsize=medium"/>
+            </field>
           </section>
+          
           <section id ="compositions">
             <composition relationship="matrectrans" label="Material Receipts">
               <collectionproperties hideexistingdata="false" allowcreation="false" allowupdate="false"/>
