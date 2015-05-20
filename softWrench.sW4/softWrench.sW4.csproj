@@ -155,7 +155,6 @@
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Metadata\Applications\DataSet\BasePersonDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseUserDataSet.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseAssetCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\LocationHandler.cs" />
