@@ -742,7 +742,6 @@
     <Content Include="Content\Controller\Faq.html" />
     <Content Include="Content\Controller\Role.html" />
     <Content Include="Content\Controller\UserProfile.html" />
-    <Content Include="Content\Controller\User.html" />
     <Content Include="Content\Controller\Scheduler.html" />
     <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
     <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
