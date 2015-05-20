@@ -27,6 +27,12 @@
     margin-bottom: 0;
 }
 
+/*SWWEB-1186*/
+fieldset.newrow {
+    clear: both;
+}
+/*SWWEB-1186*/
+
 input:focus, select:focus, textarea:focus {
     outline: none;
 }
