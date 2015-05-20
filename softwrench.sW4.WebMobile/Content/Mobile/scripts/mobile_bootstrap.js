@@ -11,7 +11,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 
 
-.run(function ($ionicPlatform, swdbDAO, loginService, contextService, menuModelService, metadataModelService, $state) {
+.run(function ($ionicPlatform, swdbDAO,$log, loginService, contextService, menuModelService, metadataModelService, $state,routeService) {
 
     initContext();
 
@@ -26,26 +26,25 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 
         var isCookieAuthenticated = loginService.checkCookieCredentials();
-        if (isCookieAuthenticated) {
-            $state.go('main.home');
-            return;
-        }
-        $state.go('login');
+        routeService.loadInitialState(isCookieAuthenticated);
     });
 
 
 
     function initContext() {
+        var log = $log.get("bootstrap#initContext");
         swdbDAO.init();
         menuModelService.initAndCacheFromDB();
         metadataModelService.initAndCacheFromDB();
         swdbDAO.findAll("Settings").success(function (settings) {
             if (settings.length == 0) {
+                log.info('creating infos for the first time');
                 var ob = entities.Settings;
                 swdbDAO.save(new ob()).success(function () {
                     contextService.insertIntoContext("settings", settings);
                 });
             } else {
+                log.info('loading settings');
                 contextService.insertIntoContext("settings", settings[0]);
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
@@ -55,9 +54,10 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
     }
 
     function initCordovaPlugins() {
-
+        var log = $log.get("bootstrap#initCordovaPlugins");
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
+        log.info("init cordova plugins");
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
@@ -70,6 +70,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
+
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
@@ -128,7 +129,16 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
         }
     })
 
-    
+    .state('main.cruddetail', {
+        url: "/cruddetail",
+        views: {
+            'main': {
+                templateUrl: "Content/Mobile/templates/cruddetail.html",
+                controller: 'CrudDetailController'
+            }
+        }
+    })
+
 
 
     // if none of the above states are matched, use this as the fallback

@@ -1,6 +1,4 @@
-var app = angular.module('sw_layout');
-
-app.factory('fieldService', function ($injector, $log, expressionService, eventService) {
+﻿modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);

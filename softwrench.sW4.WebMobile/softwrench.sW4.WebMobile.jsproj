@@ -110,6 +110,7 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Content\Mobile\scripts\controllers\cruddetail.js" />
     <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
@@ -119,10 +120,12 @@
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\offlineSchemaService.js" />
+    <Content Include="Content\Mobile\scripts\services\routes\routesService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
     <Content Include="Content\Mobile\styles\list.css" />
+    <Content Include="Content\Mobile\templates\cruddetail.html" />
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.min.css" />
@@ -173,7 +176,6 @@
     <Content Include="Content\Mobile\scripts\mobile_bootstrap.js" />
     <Content Include="Content\Mobile\scripts\services\db\swdbDAO.js" />
     <Content Include="Content\Mobile\scripts\services\login\loginService.js" />
-    <Content Include="Content\Mobile\scripts\services\routesService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\associationDataSynchronizationService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\metadataSynchronizationService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\dataSynchronizationService.js" />

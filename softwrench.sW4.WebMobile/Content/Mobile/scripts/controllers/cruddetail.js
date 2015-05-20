@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService) {
+﻿softwrench.controller('CrudDetailController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService) {
 
     $scope.noMoreItemsAvailable = false;
 
@@ -32,10 +32,6 @@
 
     $scope.getStatusColor = function (item) {
         return statuscolorService.getColor(item["status"], crudContextService.currentApplicationName());
-    }
-
-    $scope.openDetail = function (item) {
-        crudContextService.loadDetail(item);
     }
 
     $scope.getStatusText = function (item) {

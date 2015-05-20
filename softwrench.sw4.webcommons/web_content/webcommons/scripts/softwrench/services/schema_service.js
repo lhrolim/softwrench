@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('schemaService', function (fieldService) {
+﻿modules.webcommons.factory('schemaService', function (fieldService) {
 
 
 
@@ -57,6 +55,14 @@ app.factory('schemaService', function (fieldService) {
                 return false;
             }
             return schema.properties && "true" == schema.properties[propertyName];
+        },
+
+        getProperty: function (schema, propertyName) {
+            if (!schema) {
+                return false;
+            }
+            schema.properties = schema.properties || {};
+            return schema.properties[propertyName];
         },
 
         buildApplicationKey: function (schema) {

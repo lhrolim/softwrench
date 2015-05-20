@@ -4,25 +4,26 @@
 modules.webcommons.run(['$log', 'contextService', enhanceAngularLog]);
 
 function ltEnabledLevel(currLevel, enabledLevel) {
+    if (!enabledLevel) {
+        return true;
+    }
+
     if (enabledLevel == "none") {
         return true;
     }
-    if (enabledLevel == "trace") {
+    if (enabledLevel.equalsIc("trace")) {
         return false;
     }
-    if (enabledLevel == "debug") {
+    if (enabledLevel.equalsIc("debug")) {
         return currLevel.equalsAny('trace');
     }
-    if (enabledLevel == "debug") {
-        return currLevel.equalsAny('trace');
-    }
-    if (enabledLevel == "info") {
+    if (enabledLevel.equalsIc("info")) {
         return currLevel.equalsAny('trace', 'debug');
     }
-    if (enabledLevel == "warn") {
+    if (enabledLevel.equalsIc("warn")) {
         return currLevel.equalsAny('trace', 'debug', 'info');
     }
-    if (enabledLevel == "error") {
+    if (enabledLevel.equalsIc("error")) {
         return currLevel.equalsAny('trace', 'debug', 'info', 'error');
     }
     return true;

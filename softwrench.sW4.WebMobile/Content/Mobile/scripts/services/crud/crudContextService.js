@@ -1,4 +1,4 @@
-﻿mobileServices.factory('crudContextService', function ($q, $state,swdbDAO, metadataModelService, offlineSchemaService) {
+﻿mobileServices.factory('crudContextService', function ($q, $state, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService) {
 
     var internalListContext = {
         lastPageLoaded: 1
@@ -17,6 +17,23 @@
         previousItemId: null,
         nextItemId: null,
 
+    }
+
+    if (isRippleEmulator()) {
+        var savedCrudContext = contextService.getFromContext("crudcontext");
+        if (savedCrudContext) {
+            crudContext = JSON.parse(savedCrudContext);
+        }
+    }
+
+
+    function loadDetailSchema() {
+        var detailSchemaId = "detail";
+        var overridenSchema = schemaService.getProperty(crudContext.currentListSchema, "list.click.schema");
+        if (overridenSchema) {
+            detailSchemaId = overridenSchema;
+        }
+        return offlineSchemaService.locateSchema(crudContext.currentApplication, detailSchemaId);
     }
 
     return {
@@ -48,6 +65,13 @@
             });
         },
 
+        loadDetail: function (item) {
+            if (!crudContext.currentDetailSchema) {
+                crudContext.currentDetailSchema = loadDetailSchema();
+            }
+            routeService.go("main.cruddetail");
+        },
+
         loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
             crudContext.currentTitle = applicationTitle;
             var application = metadataModelService.getApplicationByName(applicationName);
@@ -55,7 +79,10 @@
             crudContext.currentApplicationName = applicationName;
             crudContext.currentApplication = application;
             crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
-            
+
+
+            crudContext.currentDetailSchema = loadDetailSchema();
+
 
             swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(applicationName), { pagesize: 10, pagenumber: 1 })
                 .success(function (results) {
@@ -64,8 +91,9 @@
                     for (var i = 0; i < results.length; i++) {
                         crudContext.itemlist.push(results[i].datamap);
                     }
+                    routeService.go("main.crudlist");
+                    contextService.insertIntoContext("crudcontext", crudContext);
                 });
-            $state.go("main.crudlist");
         }
     }
 
