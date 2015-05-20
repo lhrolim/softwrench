@@ -41,7 +41,8 @@ namespace softWrench.sW4.Security.Services {
 
         public static User GetUserByUsername(string username)
         {
-            return SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username);
+            User user = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username) ?? new User();
+            return user;
         }
 
         public static IEnumerable<User> GetUsersByUsername(List<string> usernames)

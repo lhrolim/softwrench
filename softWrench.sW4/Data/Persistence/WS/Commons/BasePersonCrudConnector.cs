@@ -35,5 +35,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             base.BeforeUpdate(maximoTemplateData);
         }
+
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var person = maximoTemplateData.IntegrationObject;
+            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+        }
     }
 }

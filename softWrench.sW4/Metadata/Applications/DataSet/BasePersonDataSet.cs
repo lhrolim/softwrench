@@ -68,7 +68,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             }
             // get isactive for person from swdb
-            User swUser = SecurityFacade.GetInstance().FetchUser(dataMap.Value("personid"));
+            User swUser = new User();
+            if (dataMap.GetAttribute("personid") != null)
+            {
+                swUser = SecurityFacade.GetInstance().FetchUser(dataMap.Value("personid"));
+            }
             var isActive = swUser.IsActive ? "1" : "0";
             dataMap.SetAttribute("#isactive", isActive);
 

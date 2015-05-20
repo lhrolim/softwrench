@@ -48,6 +48,23 @@
             <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
         </schema>
+
+        <schema id="newPersonDetail" stereotype="detail" title="New User" mode="input">
+          <field attribute="personuid" label="Person ID" showexpression="false" default="-1"/>
+          <field attribute="#personid" label="Username" requiredexpression="true" readonly="false" attributeToServer="personid"/>
+          <field attribute="#password" label="Password" requiredexpression="true"/>
+          <field attribute="#retypepassword" label="Retype Password" requiredexpression="true"/>
+          <field attribute="firstname" label="First Name" requiredexpression="true"/>
+          <field attribute="lastname" label="Last Name" requiredexpression="true"/>
+          <field attribute="locationorg" label="Org ID"/>
+          <field attribute="locationsite" label="Site ID"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="department" label="Department"/>
+          <field attribute="langcode" label="Language"/>
+          <field attribute="#isactive" label="Active">
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
       </schemas>
     </application>
   </applications>
