@@ -311,7 +311,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 $timeout(function () {
                     //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                     scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
-                }, 0, false);
+                }, 300, false);
                 
                 return false;
             }
