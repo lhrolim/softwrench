@@ -112,7 +112,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 scope.lookupAssociationsCode = {};
                 scope.lookupAssociationsDescription = {};
 
-                if (scope.ismodal =="true") {
+                if (scope.ismodal == "true") {
                     scope.$on('sw.modal.show', function (event, modaldata) {
                         scope.lookupAssociationsCode = {};
                         scope.lookupAssociationsDescription = {};
@@ -122,7 +122,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
 
             eventService.onload(scope, scope.schema, scope.datamap);
 
-            scope.getInputType=function(fieldMetadata) {
+            scope.getInputType = function (fieldMetadata) {
                 if (fieldMetadata.rendererType == "email") {
                     return "email";
                 }
@@ -134,7 +134,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
         controller: function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup, layoutservice) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
             $scope.handlerTitleInputFile = function (cssclassaux) {
@@ -362,14 +362,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 }
                 $scope.datamap[datamapKey] = model;
             };
-            $scope.initCheckbox = function(fieldMetadata) {
+            $scope.initCheckbox = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
                 $scope.datamap[fieldMetadata.attribute] = $scope.datamap[fieldMetadata.attribute] != null ? $scope.datamap[fieldMetadata.attribute].toString() : "0";
             }
 
             /* LOOKUP functions */
 
-            $scope.showLookupModal = function(fieldMetadata) {
+            $scope.showLookupModal = function (fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
@@ -386,7 +386,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
                 if (fieldMetadata.rendererParameters['schema'] != undefined) {
                     var service = fieldMetadata.rendererParameters['onsave'];
-                    var savefn = function() {};
+                    var savefn = function () { };
                     if (service != null) {
                         var servicepart = service.split('.');
                         savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
@@ -395,14 +395,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     var modaldatamap = null;
 
                     var onloadservice = fieldMetadata.rendererParameters['onload'];
-                    var onloadfn = function() {};
+                    var onloadfn = function () { };
                     if (onloadservice != null) {
                         var onloadservicepart = onloadservice.split('.');
                         onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
                         modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                     }
 
-                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function(selecteditem) {
+                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function (selecteditem) {
                         savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
                     }, null, datamap, schema);
 
@@ -415,7 +415,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 if (allowFreeText == "true") {
                     var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                     $scope.datamap[fieldMetadata.target] = code;
-                } 
+                }
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
@@ -429,7 +429,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     if (code == null || code == '') {
                         $scope.datamap[fieldMetadata.target] = null;
                     } else if (allowFreeText != "true") {
-                        $scope.showLookupModal(fieldMetadata);    
+                        $scope.showLookupModal(fieldMetadata);
                     }
                 }
             };
@@ -503,7 +503,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     var optionfield = optionsFields[i];
                     if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
-                        if (values != null && values.length>0) {
+                        if (values != null && values.length > 0) {
                             $scope.datamap[optionfield.target] = values[0].value;
                         }
                     }
@@ -588,137 +588,17 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return result;
             }
             $scope.getFieldClass = function (fieldMetadata) {
-                var cssclass = "";
-
-                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
-                    cssclass += fieldMetadata.rendererParameters['fieldclass'];
-                } else {
-                    if (fieldMetadata.schema != null &&
-                    fieldMetadata.schema.rendererParameters != null &&
-                    fieldMetadata.schema.rendererParameters['fieldclass'] != null) {
-                        cssclass += fieldMetadata.schema.rendererParameters['fieldclass'];
-                    }
-                }
-
-                if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
-                    cssclass += ' hasheader';
-                }
-                
-                if (fieldMetadata.displayables != null) {
-                    cssclass += ' haschildren';
-                }
-
-                if (fieldMetadata.rendererParameters != null) {
-                    //make sure the fieldset is the correct width
-                    switch (fieldMetadata.rendererParameters['inputsize']) {
-                        case 'xsmall':
-                            cssclass += ' col-xs-12 col-sm-6 col-md-3';
-                            break;
-                        case 'small':
-                            cssclass += ' col-xs-12 col-sm-6 col-md-4';
-                            break;
-                        case 'medium':
-                            cssclass += ' col-xs-12 col-sm-6';
-                            break;
-                        default:
-                            cssclass += ' col-xs-12 newrow';
-                    }
-                }
-                cssclass += ' row';
-
-                return cssclass;
+                return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
             }
             $scope.getLabelClass = function (fieldMetadata) {
-                var cssclass = "";
-
-                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['labelclass'] != null) {
-                    cssclass += fieldMetadata.rendererParameters['labelclass'];
-                } else {
-                    if (fieldMetadata.schema != null &&
-                    fieldMetadata.schema.rendererParameters != null &&
-                    fieldMetadata.schema.rendererParameters['labelclass'] != null) {
-                        cssclass += fieldMetadata.schema.rendererParameters['labelclass'];
-                    }
-                }
-
-                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    cssclass = null;
-                    return cssclass;
-                }
-
-                var returnClass = '';
-
-                if ($scope.hasSameLineLabel(fieldMetadata)) {
-                    switch (fieldMetadata.rendererParameters['inputsize']) {
-                        case 'xsmall':
-                            returnClass += 'col-sm-8';
-                            break;
-                        case 'small':
-                            returnClass += 'col-sm-6';
-                            break;
-                        case 'medium':
-                            returnClass += 'col-sm-6 col-md-4';
-                            break;
-                        default:
-                            returnClass += 'col-sm-3 col-md-2';
-                    }
-                } else {
-                    returnClass += 'col-xs-12';
-                }
-
-                //fix SWWEB-732, blank lable adding extra space
-                if (returnClass == 'col-xs-12' && fieldMetadata.label === null) {
-                    returnClass = cssclass + ' ' + returnClass + ' ng-hide';
-                }
-
-                return cssclass + ' ' + returnClass;
+                return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
             }
 
             $scope.getInputClass = function (fieldMetadata) {
-                var cssclass = "";
-
-                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['inputclass'] != null) {
-                    cssclass += fieldMetadata.rendererParameters['inputclass'];
-                } else {
-                    if (fieldMetadata.schema != null &&
-                    fieldMetadata.schema.rendererParameters != null &&
-                    fieldMetadata.schema.rendererParameters['inputclass'] != null) {
-                        cssclass += fieldMetadata.schema.rendererParameters['inputclass'];
-                    }
-                }
-
-                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    cssclass += ' col-md-12';
-                    return cssclass;
-                }
-
-                //cssclass += $scope.hasSameLineLabel(fieldMetadata) ? ' col-sm-9 col-md-10' : ' col-xs-12';
-
-                //cssclass += ' ' + fieldMetadata.rendererParameters['inputsize']
-
-
-                if ($scope.hasSameLineLabel(fieldMetadata)) {
-                    switch (fieldMetadata.rendererParameters['inputsize']) {
-                        case 'xsmall':
-                            cssclass += ' col-sm-4';
-                            break;
-                        case 'small':
-                            cssclass += ' col-sm-6';
-                            break;
-                        case 'medium':
-                            cssclass += ' col-sm-6 col-md-8';
-                            break;
-                        default:
-                            cssclass += ' col-sm-9 col-md-10';
-                    }
-                } else {
-                    cssclass +=  ' col-xs-12';
-                }
-
-                return cssclass;
+                return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
             }
 
-           
+
 
 
 
@@ -733,12 +613,12 @@ app.directive('crudInputFields', function (contextService, eventService) {
             // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
             ////
             $scope.isLabelVisible = function (fieldMetadata, legendEvaluationMode) {
-                if (!$scope.isVerticalOrientation()) {
-                    return false;
-                }
+                //                if (!$scope.isVerticalOrientation()) {
+                //                    return false;
+                //                }
                 var header = fieldMetadata.header;
                 if (!header) {
-                    return !legendEvaluationMode;
+                    return !legendEvaluationMode && fieldMetadata.label;
                 }
                 var isVisible = expressionService.evaluate(header.showExpression, $scope.datamap);
                 var isFieldSet = header.parameters != null && "true" == header.parameters['fieldset'];
@@ -752,11 +632,11 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
             $scope.hasSameLineLabel = function (fieldMetadata) {
-                return ($scope.isVerticalOrientation()) &&
-                (
-                (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
-                (fieldMetadata.header == null)
-                );
+
+
+                return (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
+                (fieldMetadata.header == null);
+
             };
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
@@ -827,7 +707,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return null;
             };
 
-            $scope.initRichtextField = function(fieldMetadata) {
+            $scope.initRichtextField = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
                 var decodedHtml = content;
 
