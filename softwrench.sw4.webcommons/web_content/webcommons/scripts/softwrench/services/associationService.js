@@ -310,8 +310,10 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 log.debug('No associated dependants for {0}'.format(triggerFieldName));
                 $timeout(function () {
                     //this timeout is required because there´s already a digest going on, so this emit would throw an exception
+                    //had to put a bigger timeout so that the watches doesn´t get evaluated.
+                    //TODO: investigate it
                     scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
-                }, 0, false);
+                }, 300, false);
                 
                 return false;
             }
