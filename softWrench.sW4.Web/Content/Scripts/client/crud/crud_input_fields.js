@@ -602,7 +602,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
 
                 if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
                     cssclass += ' hasheader';
-                } 
+                }
                 
                 if (fieldMetadata.displayables != null) {
                     cssclass += ' haschildren';
@@ -621,7 +621,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                             cssclass += ' col-xs-12 col-sm-6';
                             break;
                         default:
-                            cssclass += ' col-xs-12';
+                            cssclass += ' col-xs-12 newrow';
                     }
                 }
                 cssclass += ' row';
