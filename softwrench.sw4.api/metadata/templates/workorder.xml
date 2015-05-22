@@ -235,7 +235,7 @@
               </field>
             </section>
             <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-              <renderer type="lookup"  params="inputsize=medium"/>
+              <renderer type="lookup" params="inputsize=medium" />
             </association>
           </section>
 
@@ -270,10 +270,10 @@
           <section id="siteidsection">
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
               <!-- removed default='@usersite' from the above association label-->
-              <renderer type="lookup" params="inputsize=small" />
+              <renderer type="lookup" />
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR">
-              <renderer type="default" params="inputsize=small" />
+              <renderer type="default" />
             </field>
           </section>
           <!--SSWEB 173-->

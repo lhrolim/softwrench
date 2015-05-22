@@ -597,11 +597,6 @@ app.directive('crudInputFields', function (contextService, eventService) {
             $scope.getInputClass = function (fieldMetadata) {
                 return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
             }
-
-
-
-
-
             $scope.showLabelTooltip = function (fieldMetadata) {
                 if (fieldMetadata.label !== fieldMetadata.toolTip) {
                     return 'tooltip';
