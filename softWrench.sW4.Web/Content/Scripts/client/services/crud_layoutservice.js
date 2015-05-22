@@ -23,27 +23,27 @@ app.factory('layoutservice', function (fieldService) {
     function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, verticalOrientation, inputSize) {
         var maxColumns = 0;
 
+        //use the provided inputSize, else calculate the number of columns
         if (inputSize) {
             maxColumns = inputSize;
         } else {
             maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
         }
 
-        var classes = ' col-xs-12 ';
+        //use full-width fields on xsmall screen
+        var classes = ' col-xs-12';
 
-        switch (maxColumns) {
-            case 1:
-                classes += 'newrow';
-                break;
-            case 2:
-                classes += 'col-sm-6';
-                break;
-            case 3:
-                classes += 'col-sm-6 col-md-4';
-                break;
-            case 4:
-                classes += 'col-sm-6 col-md-3';
-                break;
+        if (maxColumns == 1) {
+            //don't add any other column class for full-width fields
+
+            //make sure full-width field appear on a newline (FF bug fix)
+            classes += ' newrow';
+        } else {
+            //add the small screen columns
+            classes += ' col-sm-6';
+
+            //calculate the medium screen columns
+            classes += ' col-md-' + 12 / maxColumns;
         }
 
         return classes;
@@ -52,28 +52,25 @@ app.factory('layoutservice', function (fieldService) {
     function getDefaultColumnClassesForLabel(datamap, schema, displayables, verticalOrientation, inputSize) {
         var maxColumns = 0;
 
+        //use the provided inputSize, else calculate the number of columns
         if (inputSize) {
             maxColumns = inputSize;
         } else {
             maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
         }
 
-        var classes = ' col-xs-12 ';
+        //use full-width fields on xsmall screen, label above the input
+        var classes = ' col-xs-12';
 
-        switch (maxColumns) {
-            case 1:
-                classes += 'col-sm-3 col-md-2';
-                break;
-            case 2:
-                classes += 'col-sm-6 col-md-4';
-                break;
-            case 3:
-                classes += 'col-sm-6';
-                break;
-            case 4:
-                classes += 'col-sm-6 col-md-8';
-                break;
+        //calculate the small screen columns
+        if (maxColumns == 1) {
+            classes += ' col-sm-3';
+        } else {
+            classes += ' col-sm-6';
         }
+
+        //calculate the medium screen columns
+        classes += ' col-md-' + 2 * maxColumns;
 
         return classes;
     };
@@ -81,28 +78,25 @@ app.factory('layoutservice', function (fieldService) {
     function getDefaultColumnClassesForInput(datamap, schema, displayables, verticalOrientation, inputSize) {
         var maxColumns = 0;
 
+        //use the provided inputSize, else calculate the number of columns
         if (inputSize) {
             maxColumns = inputSize;
         } else {
             maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
         }
 
-        var classes = ' col-xs-12 ';
+        //use full-width fields on xsmall screen, input below the label
+        var classes = ' col-xs-12';
 
-        switch (maxColumns) {
-            case 1:
-                classes += 'col-sm-9 col-md-10';
-                break;
-            case 2:
-                classes += 'col-sm-6 col-md-8';
-                break;
-            case 3:
-                classes += 'col-sm-6';
-                break;
-            case 4:
-                classes += 'col-sm-6 col-md-4';
-                break;
+        //calculate the small screen columns
+        if (maxColumns == 1) {
+            classes += ' col-sm-9';
+        } else {
+            classes += ' col-sm-6';
         }
+
+        //calculate the medium screen columns
+        classes += ' col-md-' + (12 - (2 * maxColumns));
 
         return classes;
     };
