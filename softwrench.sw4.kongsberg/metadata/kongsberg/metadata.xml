@@ -1483,7 +1483,7 @@
                 <event type="afterchange" service="solutionService" method="setsolutiondata"/>
               </association>
               <optionfield attribute="pmcosolstatus" label="Solution Status:">
-                <renderer type="combo" params="inputsize=medium" />
+                <renderer type="combo" params="inputsize=medium;optionfield.donotusefirstoptionasdefault=true" />
                 <option label="Under Consideration" value="CONSIDER" />
                 <option label="Solution Failed" value="FAIL" />
                 <option label="Solution Successful" value="SUCCESS" />

@@ -50,6 +50,13 @@
             return !expressionService.evaluate(fieldMetadata.enableExpression, datamap);
         },
 
+        isPropertyTrue: function (field, propertyName) {
+            if (!field) {
+                return false;
+            }
+            return field.rendererParameters && "true" == field.rendererParameters[propertyName];
+        },
+
         nonTabFields: function (displayables, includeHiddens) {
             includeHiddens = includeHiddens == undefined ? true : includeHiddens;
             var result = [];

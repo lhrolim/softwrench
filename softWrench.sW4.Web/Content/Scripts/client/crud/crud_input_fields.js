@@ -490,6 +490,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
             };
 
             $scope.configureOptionFields = function () {
+                var log =$log.get("crud_input_fields#configureOptions");
                 //TODO: check field parameter as well, with top priority before schema
                 if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] == "true") {
                     return;
@@ -501,6 +502,12 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 var optionsFields = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField']);
                 for (var i = 0; i < optionsFields.length; i++) {
                     var optionfield = optionsFields[i];
+
+                    if (fieldService.isPropertyTrue(optionfield, "optionfield.donotusefirstoptionasdefault")) {
+                        log.debug("ignoring first value of field {0}".format(optionfield.associationKey));
+                        continue;
+                    }
+
                     if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
                         if (values != null && values.length>0) {
