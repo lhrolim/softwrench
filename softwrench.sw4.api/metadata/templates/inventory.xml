@@ -706,15 +706,18 @@
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
-            <association label="Work Order" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
+            <association label="Work Order" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="location,assetnum" requiredexpression="(@location=='' || @location==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>
             </association>
-            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
+            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
             </association>
-            <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
+            <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid" extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
               <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
             </association>
             <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
               <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />

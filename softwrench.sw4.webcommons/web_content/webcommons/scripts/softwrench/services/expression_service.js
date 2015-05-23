@@ -298,7 +298,7 @@
             key (original reference in metadata) with an expression we can evaluate   */
             if (variables != null) {
                 $.each(variables, function (key, value) {
-                        expression = expression.replace(key, value);
+                    expression = expression.replace(new RegExp(key, 'g'), value);
                 });
             }
 
