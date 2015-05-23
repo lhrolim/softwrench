@@ -147,18 +147,22 @@
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
-          <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <field attribute="actualfinish" label="Actual Start Date:" attributeToServer="#notusedattribute">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>          
+          <section orientation="horizontal">
+            <field attribute="targetstart" label="Target Start Date:" >
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field attribute="targetfinish" label="Target Finish Date:" >
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field attribute="actualfinish" label="Actual Start Date:" attributeToServer="#notusedattribute">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+          </section>
           <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
           <field attribute="statusdate" hidden="true" />
         </schema>
@@ -256,7 +260,7 @@
           </composition-->
         </detail>
 
-        
+
       </schemas>
 
     </application>

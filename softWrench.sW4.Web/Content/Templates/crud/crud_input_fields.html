@@ -6,19 +6,18 @@
                   ng-show="!isFieldHidden(schema,fieldMetadata)"
                   rel="input-form-repeat"
                   bodyrendered
-                  ng-class="{'col-horizontal-orientation' : !isVerticalOrientation(), 'fieldset-inside-section' : insidelabellesssection=='true'}"
-                  ng-style="horizontalWidth">
+                  >
             <label class="control-label"
                    rel="{{showLabelTooltip(fieldMetadata)}}"
                    data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                   ng-show="isLabelVisible(fieldMetadata,false)"
+                   ng-if="isLabelVisible(fieldMetadata,false)"
                    ng-style="getLabelStyle(fieldMetadata)"
                    ng-class="getLabelClass(fieldMetadata)">
                 <span ng-show="isFieldRequired(fieldMetadata.requiredExpression)" class="requiredfieldmark">* </span>
                 <!--this will bring either label or header in case of section-->
                 {{i18NLabel(fieldMetadata)}}
             </label>
-            <legend ng-show="isLabelVisible(fieldMetadata,true)"
+            <legend ng-if="isLabelVisible(fieldMetadata,true)"
                     rel="tooltip"
                     data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                     class="legend-label">

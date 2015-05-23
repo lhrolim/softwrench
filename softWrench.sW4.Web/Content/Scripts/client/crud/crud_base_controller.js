@@ -84,7 +84,7 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
             //workaround because compositions are appending "" as default label values, but we dont want it!
             return false;
         }
-        return fieldMetadata.label !=null || (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop');
+        return fieldMetadata.label != null || (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop');
     };
 
     $scope.isVerticalOrientation = function () {
@@ -103,6 +103,7 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         return null;
     };
 
-    
+
+
 
 }

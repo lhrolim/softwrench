@@ -445,10 +445,7 @@
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
     <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
-    <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
-    <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
-    <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
-    <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
+    <Content Include="Content\Scripts\client\services\crud_layoutservice.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />

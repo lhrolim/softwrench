@@ -116,6 +116,7 @@ namespace softWrench.sW4.Web {
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application").Include(
                 "~/Content/Scripts/client/crud/*.js",
+                "~/Content/Scripts/client/services/*.js",
                 "~/Content/Scripts/client/*.js",
                 "~/Content/Scripts/client/adminresources/*.js",
                 "~/Content/Scripts/client/directives/*.js",
