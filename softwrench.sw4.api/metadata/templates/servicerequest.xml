@@ -111,7 +111,9 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+          <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
+            <renderer type="lookup" params="columnlabel=Name;"/>
+          </association>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
             <renderer type="lookup" params="columnlabel=Name"/>
           </association>

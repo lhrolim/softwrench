@@ -40,6 +40,9 @@
         <relationship to ="person" qualifier="onbehalfofperson">
           <relationshipAttribute from="onbehalfof" to ="personid" primary="true"/>
         </relationship>
+        <relationship to="person" qualifier="reportedbyperson">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+        </relationship>
         <relationship to="woactivity" collection="true">
           <relationshipAttribute from="wonum" to="parent" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
@@ -227,9 +230,9 @@
               </association>
             </section>
             <section orientation="horizontal">
-              <field label="Reported By:" attribute="reportedby" default="@username" readonly="true">
-                <renderer type="default"  />
-              </field>
+              <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
+                <renderer type="lookup" params="columnlabel=Name;"/>
+              </association>
               <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
               </field>
