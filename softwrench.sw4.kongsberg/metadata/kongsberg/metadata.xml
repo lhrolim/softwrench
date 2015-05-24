@@ -1217,7 +1217,9 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportdate" label="Report Date">
+            <renderer type="datetime"/>
+          </field>
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
@@ -1247,7 +1249,9 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportdate" label="Report Date">
+            <renderer type="datetime"/>
+          </field>
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
@@ -1277,7 +1281,9 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportdate" label="Report Date">
+            <renderer type="datetime"/>
+          </field>
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
@@ -1402,7 +1408,7 @@
           <section>
             <header displacement="ontop" label="Key Dates" params="fieldset=true"/>
             <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+              <renderer type="datetime" params="inputsize=small"/>
             </field>
           </section>
           <field label="Target Start:" attribute="targetstart" readonly="true">
@@ -1892,7 +1898,7 @@
             <renderer type="default" params="width=16%" />
           </field>
           <field label="Reported Date" attribute="reportdate">
-            <renderer type ="default" params="width=16%"/>
+            <renderer type ="datetime" params="width=16%"/>
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type ="default" params="width=16%"/>
