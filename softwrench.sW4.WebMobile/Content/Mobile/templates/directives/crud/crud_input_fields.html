@@ -1,0 +1,11 @@
+﻿<fieldset ng-repeat="field in getDisplayables()" ng-show="!isFieldHidden(field)">
+
+
+    <label class="item item-input">
+        <span class="input-label">{{field.label}}</span>
+        <ng-switch on="field.type">
+            <input ng-switch-default type="text" ng-model="datamap[field.attribute]" >
+        </ng-switch>
+
+    </label>
+</fieldset>

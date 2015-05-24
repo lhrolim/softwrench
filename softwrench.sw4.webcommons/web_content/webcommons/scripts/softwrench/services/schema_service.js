@@ -39,6 +39,10 @@
             return datamap[schema.idFieldName];
         },
 
+        nonTabFields:function(schema) {
+            return fieldService.nonTabFields(schema.displayables, true);
+        },
+
         hasAnyFieldOnMainTab: function (schema) {
             if (!schema) {
                 return false;

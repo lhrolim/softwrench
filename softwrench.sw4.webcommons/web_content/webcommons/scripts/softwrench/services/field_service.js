@@ -58,6 +58,12 @@
         },
 
         nonTabFields: function (displayables, includeHiddens) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="displayables"></param>
+            /// <param name="includeHiddens">whether hidden fields should be included or not</param>
+            /// <returns type=""></returns>
             includeHiddens = includeHiddens == undefined ? true : includeHiddens;
             var result = [];
             for (var i = 0; i < displayables.length; i++) {

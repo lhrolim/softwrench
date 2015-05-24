@@ -50,8 +50,20 @@
             return crudContext.currentListSchema;
         },
 
+        currentDetailSchema: function () {
+            return crudContext.currentDetailSchema;
+        },
+
+        currentDetailItem: function () {
+            return crudContext.currentDetailItem;
+        },
+
         itemlist: function () {
             return crudContext.itemlist;
+        },
+
+        mainDisplayables:function() {
+            return schemaService.nonTabFields(crudContext.currentDetailSchema);
         },
 
         loadMorePromise: function () {
@@ -69,6 +81,7 @@
             if (!crudContext.currentDetailSchema) {
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
+            crudContext.currentDetailItem = item;
             routeService.go("main.cruddetail");
         },
 

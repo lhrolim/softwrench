@@ -69,8 +69,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 })
 
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $logProvider) {
 
+    $logProvider.debugEnabled(true);
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
@@ -133,8 +134,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
         url: "/cruddetail",
         views: {
             'main': {
-                templateUrl: "Content/Mobile/templates/cruddetail.html",
-                controller: 'CrudDetailController'
+                templateUrl: "Content/Mobile/templates/crud_input.html",
+                controller: 'CrudInputController'
             }
         }
     })
