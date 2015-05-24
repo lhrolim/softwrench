@@ -478,6 +478,11 @@ nav.hapag-topbar {
     margin-bottom: 10px;
 }
 
+.dashboarddetailtab {
+    background-color: #BBD7FA;
+    margin-bottom: 10px;
+}
+
 .combobox-aux {
     background-image: url('../../Images/icon-combobox.png');
 }

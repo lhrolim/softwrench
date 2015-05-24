@@ -12,10 +12,12 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 
@@ -87,7 +89,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 .Cast<IAssociationOption>()
                 .ToList();
 
-            var names = MetadataProvider.Applications().Select(a => a.ApplicationName);
+            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web,user);
+            var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
+            var names = securedMetadatas.Select(a => a.ApplicationName);
             IList<IAssociationOption> applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList();
 
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {

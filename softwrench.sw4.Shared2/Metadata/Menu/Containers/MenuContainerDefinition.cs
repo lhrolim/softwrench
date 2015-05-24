@@ -20,6 +20,11 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
         /// </summary>
         public bool HasMainAction { get; set; }
 
+        /// <summary>
+        /// Represents a single application this menu container refers to, if this is the case, or null in case the container points to several distinct applications
+        /// </summary>
+        public string ApplicationContainer { get; set; }
+
         public MenuContainerDefinition() { }
 
         public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, IEnumerable<MenuBaseDefinition> leafs)
@@ -27,9 +32,24 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             Module = module;
             var menuBaseDefinitions = leafs as MenuBaseDefinition[] ?? leafs.ToArray();
             Leafs = menuBaseDefinitions;
+
+            var allApplicationsTheSame = true;
             foreach (var leaf in menuBaseDefinitions) {
                 if (leaf.Module == null) {
                     leaf.Module = module;
+                }
+                if (leaf.Role == null) {
+                    //if the item is defining no role, let´s use the parent role
+                    leaf.Role = role;
+                    leaf.RoleDefinedByParent = true;
+                }
+                if (leaf is ApplicationMenuItemDefinition && allApplicationsTheSame) {
+                    if (ApplicationContainer != null && ApplicationContainer != ((ApplicationMenuItemDefinition)leaf).Application) {
+                        //no consensus
+                        allApplicationsTheSame = false;
+                        ApplicationContainer = null;
+                    }
+                    ApplicationContainer = ((ApplicationMenuItemDefinition)leaf).Application;
                 }
             }
             Action = action;
@@ -55,6 +75,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
                 return _cachedExplodedLeafs;
             }
         }
+
+
 
         public void AddLeaf(MenuBaseDefinition leaf) {
             if (Leafs == null) {

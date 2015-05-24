@@ -7,12 +7,14 @@ using System.Runtime.CompilerServices;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using log4net;
+using softwrench.sw4.api.classes.user;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Properties;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Validator;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -45,6 +47,10 @@ namespace softWrench.sW4.Metadata {
         private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _applicationMetadata;
         private static IDictionary<string, CommandBarDefinition> _commandBars;
 
+        /// <summary>
+        /// Holds, for each application a corresponding role name that have been used on the menu to filter it (ex: application=servicerequest, but role was sr)
+        /// </summary>
+        public static IDictionary<string, string> ApplicationRoleAlias = new Dictionary<string, string>();
 
         private static IDictionary<ClientPlatform, MenuDefinition> _menus;
         private static readonly IDictionary<SlicedEntityMetadataKey, SlicedEntityMetadata> SlicedEntityMetadataCache = new Dictionary<SlicedEntityMetadataKey, SlicedEntityMetadata>();
@@ -92,6 +98,7 @@ namespace softWrench.sW4.Metadata {
 
                 _menus = new MenuXmlInitializer().Initialize();
                 FillFields();
+                FillRoleAlias();
                 FinishedParsing = true;
                 new MetadataXmlTargetInitializer().Validate();
                 BuildSlicedMetadataCache();
@@ -101,6 +108,23 @@ namespace softWrench.sW4.Metadata {
             } finally {
                 _metadataXmlInitializer = null;
                 _swdbmetadataXmlInitializer = null;
+            }
+        }
+
+        private static void FillRoleAlias() {
+
+            foreach (var leaf in _menus[ClientPlatform.Web].Leafs) {
+                if (leaf is MenuContainerDefinition) {
+                    var container = (MenuContainerDefinition)leaf;
+                    if (container.ApplicationContainer != null && container.Role != null &&
+                        container.ApplicationContainer != container.Role) {
+                        if (!ApplicationRoleAlias.ContainsKey(container.ApplicationContainer)) {
+                            ApplicationRoleAlias.Add(container.ApplicationContainer, container.Role);
+                        }
+
+                    }
+
+                }
             }
         }
 
@@ -270,7 +294,26 @@ namespace softWrench.sW4.Metadata {
 
         public static bool isMobileEnabled() {
             return _menus.ContainsKey(ClientPlatform.Mobile);
+        }
 
+
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform, ISWUser user) {
+            var watch = Stopwatch.StartNew();
+            var result = new HashSet<CompleteApplicationMetadataDefinition>();
+            var menu = Menu(platform);
+            var leafs = menu.ExplodedLeafs;
+            foreach (var menuBaseDefinition in leafs) {
+                if (menuBaseDefinition is ApplicationMenuItemDefinition) {
+                    var application = Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application);
+                    if (user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role))) {
+                        result.Add(application);
+                    }
+                }
+            }
+
+            Log.DebugFormat("fetching top level apps took: {0} ", LoggingUtil.MsDelta(watch));
+            //TODO: add hidden menu items
+            return result;
         }
 
         [NotNull]
@@ -353,6 +396,7 @@ namespace softWrench.sW4.Metadata {
 
         public static void StubReset() {
             FinishedParsing = false;
+            ApplicationRoleAlias.Clear();
             //TODO: create some sort of clear cache event, for distributing responsabilities in an easier way
             InitializeMetadata();
             DynamicProxyUtil.ClearCache();

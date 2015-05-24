@@ -162,7 +162,7 @@ app.controller('DashboardController', [
 
         $scope.$on('dash_finishloading', function (event, dashboardid) {
             $timeout(function () {
-                $('.compositiondetailtab li>a').each(function () {
+                $('.dashboarddetailtab li>a').each(function () {
                     var $this = $(this);
                     $this.click(function (e) {
                         e.preventDefault();

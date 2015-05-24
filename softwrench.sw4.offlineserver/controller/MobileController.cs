@@ -59,7 +59,7 @@ namespace softwrench.sw4.offlineserver.controller {
         public MobileMetadataDownloadResponseDefinition DownloadMetadatas() {
             var watch = Stopwatch.StartNew();
             var user = SecurityFacade.CurrentUser();
-            var topLevel = OffLineMetadataProvider.FetchTopLevelApps();
+            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user);
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
             var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
 

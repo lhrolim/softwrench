@@ -12,7 +12,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     public class DashboardBasePanel : IBaseAuditEntity {
 
         public static string ByUser(string panelType) {
-            return "from {0} where (userid is null or userid = ?) or (userprofile is null or userprofiles like ?)".Fmt(panelType);
+            return "from {0} where (userid is null or userid = ?) or (userprofiles is null or userprofiles like ?)".Fmt(panelType);
         }
 
         public static string ByUserNoProfile(string panelType) {
@@ -30,6 +30,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Property]
         public virtual String Title { get; set; }
 
+        private bool _visible = true;
 
         [ComponentProperty]
         public virtual DashboardFilter Filter { get; set; }
@@ -41,6 +42,12 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Property]
         public int? CreatedBy { get; set; }
 
-
+        /// <summary>
+        /// Transient property that can make the panel invisible due to a presence of a role blocking it, for instance, or some other business logic
+        /// </summary>
+        public bool Visible {
+            get { return _visible; }
+            set { _visible = value; }
+        }
     }
 }

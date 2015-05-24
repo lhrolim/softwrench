@@ -3,44 +3,78 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using cts.commons.simpleinjector;
+using log4net;
+using log4net.Core;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata;
 
 namespace softwrench.sw4.dashboard.classes.controller {
     public class UserDashboardManager : ISingletonComponent {
 
         private readonly SWDBHibernateDAO _dao;
 
+        private static ILog Log = LogManager.GetLogger(typeof(UserDashboardManager));
+
         public UserDashboardManager(SWDBHibernateDAO dao) {
             _dao = dao;
+            Log.Debug("init log");
         }
+
+
+
 
         public IEnumerable<Dashboard> LoadUserDashboars(ISWUser currentUser) {
 
             var profiles = currentUser.ProfileIds;
-            var query = string.Format(Dashboard.ByUser, currentUser.UserId, "");
-
             var enumerable = profiles as int?[] ?? profiles.ToArray();
+            IEnumerable<Dashboard> loadedUserDashboars;
             if (enumerable.Any()) {
                 var sb = BuildUserProfileColumn(enumerable);
-                query = string.Format(Dashboard.ByUser, currentUser.UserId, sb);
+                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUser, currentUser.UserId, sb.ToString());
+            } else {
+                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUserNoProfile, currentUser.UserId);
             }
-            
-            return _dao.FindByQuery<Dashboard>(query, null);
+            return FilterViewableWidgetsByUser(loadedUserDashboars, currentUser);
+        }
+
+        private IEnumerable<Dashboard> FilterViewableWidgetsByUser(IEnumerable<Dashboard> loadedUserDashboards, ISWUser currentUser) {
+            var filterViewableWidgetsByUser = loadedUserDashboards as Dashboard[] ?? loadedUserDashboards.ToArray();
+            foreach (var dashboard in filterViewableWidgetsByUser) {
+                foreach (var panelRelationship in dashboard.PanelsSet) {
+                    FilterPanelBasedOnRole(currentUser, panelRelationship.Panel);
+                }
+            }
+            return filterViewableWidgetsByUser;
+        }
+
+        private static void FilterPanelBasedOnRole(ISWUser currentUser, DashboardBasePanel panel) {
+            if (!(panel is DashboardGridPanel)) {
+                return;
+            }
+
+            var gridPanel = (DashboardGridPanel)panel;
+            var overridenRole = MetadataProvider.ApplicationRoleAlias.ContainsKey(gridPanel.Application)
+                ? MetadataProvider.ApplicationRoleAlias[gridPanel.Application]
+                : null;
+            if (!currentUser.IsInRole(gridPanel.Application) && (overridenRole != null && !currentUser.IsInRole(overridenRole))) {
+                Log.DebugFormat("making panel {0} invisible due to abscence of role for application {1}", gridPanel.Alias,
+                    gridPanel.Application);
+                gridPanel.Visible = false;
+            }
         }
 
         private static StringBuilder BuildUserProfileColumn(int?[] enumerable) {
-            var sb = new StringBuilder("");
+            var sb = new StringBuilder("%");
             foreach (var profile in enumerable) {
-                //sb.Append(";").Append(profile).Append(";");
-                sb.Append("or (userprofiles like '%");
-                sb.Append(profile); 
-                sb.Append("%') ");
+                sb.Append(";").Append(profile).Append(";");
             }
-
+            sb.Append("%");
             return sb;
         }
+
+
 
         public IEnumerable<DashboardBasePanel> LoadUserPanels(ISWUser currentUser, string panelType) {
             var profiles = currentUser.ProfileIds;
@@ -55,12 +89,18 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     throw new NotSupportedException("graphics are not yet implemented");
                     break;
             }
-
+            IEnumerable<DashboardBasePanel> result;
             if (enumerable.Any()) {
                 var sb = BuildUserProfileColumn(enumerable);
-                return _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUser(entityName), currentUser.UserId, sb.ToString());
+                var dashboardBasePanels = _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUser(entityName), currentUser.UserId, sb.ToString());
+                result = dashboardBasePanels;
+            } else {
+                result = _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUserNoProfile(entityName), currentUser.UserId);
             }
-            return _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUserNoProfile(entityName), currentUser.UserId);
+            foreach (var panel in result) {
+                FilterPanelBasedOnRole(currentUser, panel);
+            }
+            return result.Where(f=> f.Visible);
         }
     }
 }

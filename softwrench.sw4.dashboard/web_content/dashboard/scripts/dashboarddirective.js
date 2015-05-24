@@ -44,14 +44,25 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
                     return null;
                 }
                 var colNum = parseInt(scope.dashboard.layout.split(',')[row]);
-                var suffix = 12 / colNum;
+                var visibleColumns = 0;
+                for (var i = 0; i < colNum; i++) {
+                    if (this.isPanelVisible(row, i)) {
+                        visibleColumns++;
+                    }
+                }
+
+                var suffix = 12 / visibleColumns;
                 return "col-sm-" + suffix;
 
             }
 
             scope.getPanelDataFromMatrix = function (row, column) {
                 return dashboardAuxService.locatePanelFromMatrix(scope.dashboard, row, column);
-            } 
+            }
+
+            scope.isPanelVisible = function (row, column) {
+                return this.getPanelDataFromMatrix(row,column).panel.visible != false;
+            }
         },
     }
 

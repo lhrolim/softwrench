@@ -37,7 +37,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
-            var topLevelApps = GetTopLevelAppsToCollect(request);
+            var topLevelApps = GetTopLevelAppsToCollect(request,user);
 
 
             var result = new SynchronizationResultDto();
@@ -108,20 +108,20 @@ namespace softwrench.sw4.offlineserver.services {
 
         }
 
-        private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request) {
+        private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request,InMemoryUser user) {
             if (request.ApplicationName == null) {
                 //no application in special was requested, lets return them all.
-                return OffLineMetadataProvider.FetchTopLevelApps();
+                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user);
             }
             if (request.ReturnNewApps) {
                 if (request.ClientCurrentTopLevelApps != null) {
                     var result = new HashSet<CompleteApplicationMetadataDefinition>();
-                    var otherApps = OffLineMetadataProvider.FetchTopLevelApps().Where(a => !request.ClientCurrentTopLevelApps.Contains(a.ApplicationName));
+                    var otherApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).Where(a => !request.ClientCurrentTopLevelApps.Contains(a.ApplicationName));
                     result.AddAll(otherApps);
                     result.Add(MetadataProvider.Application(request.ApplicationName));
                     return result;
                 }
-                return OffLineMetadataProvider.FetchTopLevelApps();
+                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
             }
 
 

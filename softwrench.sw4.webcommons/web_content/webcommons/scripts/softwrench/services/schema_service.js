@@ -40,6 +40,10 @@
         },
 
         hasAnyFieldOnMainTab: function (schema) {
+            if (!schema) {
+                return false;
+            }
+
             schema.jscache = schema.jscache || {};
             if (schema.jscache.hasAnyFieldOnMainTab) {
                 return schema.jscache.hasAnyFieldOnMainTab;

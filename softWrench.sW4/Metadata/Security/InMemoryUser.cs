@@ -199,7 +199,7 @@ namespace softWrench.sW4.Metadata.Security {
             if (unsecureMenu.Leafs != null) {
                 foreach (var leaf in unsecureMenu.Leafs) {
                     if (!Login.Equals("swadmin") && leaf.Role != null &&
-                        (Roles == null || !Roles.Any(r => r.Active && r.Name == leaf.Role))) {
+                        (Roles == null || leaf.IsRestrictedByRole(this))) {
                         Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}", leaf.Id, Login, leaf.Role);
                         continue;
                     }
@@ -226,12 +226,17 @@ namespace softWrench.sW4.Metadata.Security {
             return menuDefinition;
         }
 
+
+
         public ICollection<UserProfile> Profiles {
             get { return _profiles; }
         }
 
         public bool IsInRole(string role) {
             if (IsSwAdmin() && ApplicationConfiguration.IsLocal()) {
+                return true;
+            }
+            if (String.IsNullOrEmpty(role)) {
                 return true;
             }
 

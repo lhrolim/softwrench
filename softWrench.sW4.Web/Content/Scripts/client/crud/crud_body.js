@@ -97,6 +97,10 @@ app.directive('crudBody', function (contextService) {
 
 
             $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                if (!$scope.schema) {
+                    return;
+                }
+
                 var hasMainTab = schemaService.hasAnyFieldOnMainTab($scope.schema);
                 if (!hasMainTab) {
                     //if main tab is absent (schema with just compositions) redirect to first tab
