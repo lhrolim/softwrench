@@ -16,5 +16,7 @@ namespace softwrench.sw4.api.classes.user {
 
         IDictionary<string, object> Genericproperties { get; set; }
 
+        bool IsSwAdmin();
+
     }
 }

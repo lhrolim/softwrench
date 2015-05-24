@@ -30,9 +30,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var profiles = currentUser.ProfileIds;
             var enumerable = profiles as int?[] ?? profiles.ToArray();
             IEnumerable<Dashboard> loadedUserDashboars;
-            if (enumerable.Any()) {
-                var sb = BuildUserProfileColumn(enumerable);
-                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUser, currentUser.UserId, sb.ToString());
+            if (currentUser.IsSwAdmin()) {
+                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.SwAdminQuery);
+            } else if (enumerable.Any() && !currentUser.IsSwAdmin()) {
+                //sw admin can always see everything
+                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUser(currentUser.ProfileIds), currentUser.UserId);
             } else {
                 loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUserNoProfile, currentUser.UserId);
             }
@@ -65,14 +67,6 @@ namespace softwrench.sw4.dashboard.classes.controller {
             }
         }
 
-        private static StringBuilder BuildUserProfileColumn(int?[] enumerable) {
-            var sb = new StringBuilder("%");
-            foreach (var profile in enumerable) {
-                sb.Append(";").Append(profile).Append(";");
-            }
-            sb.Append("%");
-            return sb;
-        }
 
 
 
@@ -90,9 +84,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     break;
             }
             IEnumerable<DashboardBasePanel> result;
-            if (enumerable.Any()) {
-                var sb = BuildUserProfileColumn(enumerable);
-                var dashboardBasePanels = _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUser(entityName), currentUser.UserId, sb.ToString());
+            if (currentUser.IsSwAdmin()) {
+                result = _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.SwAdminQuery(entityName));
+            } else if (enumerable.Any()) {
+                var dashboardBasePanels = _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUser(entityName, enumerable), currentUser.UserId);
                 result = dashboardBasePanels;
             } else {
                 result = _dao.FindByQuery<DashboardBasePanel>(DashboardBasePanel.ByUserNoProfile(entityName), currentUser.UserId);
@@ -100,7 +95,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             foreach (var panel in result) {
                 FilterPanelBasedOnRole(currentUser, panel);
             }
-            return result.Where(f=> f.Visible);
+            return result.Where(f => f.Visible);
         }
     }
 }
