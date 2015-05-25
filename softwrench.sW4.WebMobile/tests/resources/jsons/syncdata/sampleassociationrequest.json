@@ -1,0 +1,15 @@
+﻿{
+    "associationmap": {
+        "asset": {
+            "maximorowstamp": "12500",
+            "whereclausehash": "hashoflatestappliedwhereclause",
+            "syncschemahash": "baadfasdfasdfa"
+        },
+
+        "problem": {
+            "maximorowstamp": "12000",
+            "whereclausehash": "hashoflatestappliedwhereclause",
+            "syncschemahash": "baadfasdfasdfa"
+        }
+    }
+}

@@ -1,11 +1,9 @@
-﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, routeService, menuModelService, metadataModelService,configurationService) {
+﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, restService, menuModelService, metadataModelService, configurationService) {
     return {
 
         syncData: function (currentServerVersion) {
 
-            var httpPromise = $http.get(routeService.downloadMetadataURL(currentServerVersion));
-
-            httpPromise.then(function (metadatasResult) {
+            return restService.getPromise("Mobile", "DownloadMetadatas", {}).then(function (metadatasResult) {
                 var serverMenu = JSON.parse(metadatasResult.data.menuJson);
                 var topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
                 var statusColorJson = JSON.parse(metadatasResult.data.statusColorsJSON);
@@ -25,7 +23,6 @@
                 $q.reject();
             });
 
-            return httpPromise;
         }
     }
 });

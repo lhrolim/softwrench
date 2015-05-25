@@ -111,7 +111,7 @@
     <Compile Include="Metadata\MenuParsingTest.cs" />
     <Compile Include="Metadata\CustomizationTest.cs" />
     <Compile Include="Metadata\SyncSchemaTest.cs" />
-    <Compile Include="offline\SynchronizationManagerTest.cs" />
+    <Compile Include="offline\ClientStateJsonConverterTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

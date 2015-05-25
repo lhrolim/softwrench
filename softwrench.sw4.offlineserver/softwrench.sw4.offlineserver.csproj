@@ -50,12 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controller\MobileController.cs" />
+    <Compile Include="dto\association\AssociationSynchronizationResultDto.cs" />
+    <Compile Include="dto\association\ClientAssociationCacheEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="dto\SynchronizationApplicationResultData.cs" />
     <Compile Include="services\OffLineCollectionResolver.cs" />
     <Compile Include="services\SynchronizationManager.cs" />
     <Compile Include="dto\SynchronizationRequestDto.cs" />
     <Compile Include="dto\SynchronizationResultDto.cs" />
+    <Compile Include="services\util\ClientStateJsonConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
