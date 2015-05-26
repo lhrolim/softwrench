@@ -1,6 +1,13 @@
-﻿<div style="height: 450px" ng-cloak>
+﻿<div style="height: 450px" ng-cloak ng-if="datamap['hasinternet']">
     Anhand de Entscheidungsmatrix können Sie das VLAN für Ihren gewünschten Server bestimmen. Bei Fragen wenden Sie sich bitte an die verantwortlichen IBM Architekten.
-    <object data="../Offering/pdf?optionSelected={{datamap['hasinternet']}}" type="application/pdf" width="100%" height="90%">
+    
+    <object data="../Offering/pdf?optionSelected=Ja" type="application/pdf" width="100%" height="90%" ng-show="datamap['hasinternet'] == 'Ja'">
+        <p>
+            It appears you don't have a PDF plugin for this browser. Please check the corresponding FAQ entry.
+        </p>
+    </object>
+    
+    <object data="../Offering/pdf?optionSelected=Nein" type="application/pdf" width="100%" height="90%" ng-show="datamap['hasinternet'] == 'Nein'">
         <p>
             It appears you don't have a PDF plugin for this browser. Please check the corresponding FAQ entry.
         </p>
