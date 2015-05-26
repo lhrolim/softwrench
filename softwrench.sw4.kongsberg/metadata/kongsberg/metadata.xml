@@ -1494,7 +1494,7 @@
                 <option label="Solution Failed" value="FAIL" />
                 <option label="Solution Successful" value="SUCCESS" />
               </optionfield>
-              <field attribute="selfservsolaccess" label="Slef-Service Access?">
+              <field attribute="selfservsolaccess" label="Self-Service Access?">
                 <renderer type="checkbox" params="inputsize=medium" />
               </field>
               <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
