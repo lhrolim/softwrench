@@ -13,7 +13,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";
         internal const string TemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\{0}";
-        internal const string TestTemplatesInternalPath = "\\templates\\{0}";
+        internal const string TestTemplatesInternalPath = "\\Client\\@internal\\templates\\{0}";
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestMetadataPath = "\\Client\\{0}\\";
