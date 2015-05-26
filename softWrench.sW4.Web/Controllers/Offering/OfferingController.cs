@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using softWrench.sW4.Metadata;
@@ -26,7 +27,7 @@ namespace softWrench.sW4.Web.Controllers.Offering {
                 return null;
             }
             var fileEntries = Directory.GetFiles(path);
-            var pdf = fileEntries.FirstOrDefault(f => f.EndsWith(translatedName.ToLower() + ".pdf"));
+            var pdf = fileEntries.FirstOrDefault(f => f.EndsWith(translatedName + ".pdf",StringComparison.OrdinalIgnoreCase));
             if (pdf==null) {
                 return null;
             }

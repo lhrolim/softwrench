@@ -10,7 +10,7 @@
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="faqfspath" value="C:\faqAttachments\" />
-  <property key="offeringpdfpath" value="C:\ServiceIt\Config\OfferingAttachment\Server" />
+  <property key="offeringpdfpath" value="C:\OfferingAttachment\Server" />
   <property key="i18nrequired" value="true" />
   <property key="list.paginationsize" value="100"/>
   <property key="list.paginationoptions" value="10,30,100"/>
