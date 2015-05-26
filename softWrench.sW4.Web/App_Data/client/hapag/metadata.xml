@@ -36,7 +36,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="SR" idAttribute="ticketid" whereclause="((sr.classificationid is null or sr.classificationid not like '8151%') and (SR.TEMPLATEID is null or 
-            (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO') and SR.TEMPLATE not like 'HLCDEO%' )))">
+            (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO') and SR.TEMPLATEID not like 'HLCDEO%' )))">
       <attributes>
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagaffectedperson" type="varchar" required="false" query="ref:affectedpersoncustom"/>
