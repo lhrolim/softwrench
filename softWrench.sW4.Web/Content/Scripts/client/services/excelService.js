@@ -100,17 +100,14 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                         "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-EUROPE'  /> "
                             + "Region Europe" +
                         "</label><br>" +
-                         "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-EUROPE' /> "
-                            + "Region Europe" +
-                        "</label><br>" +
-                          "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-ASIA'  /> "
+                       "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-ASIA'  /> "
                             + "Region Asia" +
-                        "</label><br>" +
-                          "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-HQ'  /> "
-                            + "Region HeadQuarters" +
                         "</label><br>" +
                         "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-GSC'  /> "
                             + "Region GSC" +
+                        "</label><br>" +
+                          "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-HQ'  /> "
+                            + "Region HeadQuarters" +
                         "</label><br>" +
                         "</form>",
                     title: selectRegionText,
