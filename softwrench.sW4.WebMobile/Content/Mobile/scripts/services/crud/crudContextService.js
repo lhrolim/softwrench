@@ -1,4 +1,4 @@
-﻿mobileServices.factory('crudContextService', function ($q, $state, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService) {
+﻿mobileServices.factory('crudContextService', function ($q, $state,$log, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService) {
 
     var internalListContext = {
         lastPageLoaded: 1
@@ -20,10 +20,12 @@
     }
 
     if (isRippleEmulator()) {
+        //this is used for F5 (refresh) upon development mode, so that we can return to the page we were before quickier
         var savedCrudContext = contextService.getFromContext("crudcontext");
         if (savedCrudContext) {
             crudContext = JSON.parse(savedCrudContext);
         }
+        $log.get("crudContextService#factory").debug("restoring state of crudcontext");
     }
 
 
@@ -82,6 +84,7 @@
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
             crudContext.currentDetailItem = item;
+            contextService.insertIntoContext("crudcontext", crudContext);
             routeService.go("main.cruddetail");
         },
 

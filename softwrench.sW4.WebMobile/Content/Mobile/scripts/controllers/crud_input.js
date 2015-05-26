@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, crudContextService, fieldService, schemaService, offlineSchemaService, statuscolorService) {
+﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, crudContextService, fieldService, offlineAssociationService) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
@@ -13,6 +13,10 @@
 
     $scope.isFieldHidden = function (fieldMetadata) {
         return fieldService.isFieldHidden(crudContextService.currentDetailItem(), crudContextService.currentDetailSchema(), fieldMetadata);
+    }
+
+    $scope.associationSearch = function (queryparameters) {
+        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema, queryparameters.identifier, queryparameters.query);
     }
 
     $rootScope.$on('$stateChangeSuccess',

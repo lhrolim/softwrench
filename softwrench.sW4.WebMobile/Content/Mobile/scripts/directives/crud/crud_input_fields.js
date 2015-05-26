@@ -40,7 +40,7 @@
         }
     }
 });
-softwrench.directive('crudInputFields', function (fieldService, crudContextService) {
+softwrench.directive('crudInputFields', function ($log,fieldService, crudContextService) {
 
     return {
         restrict: 'E',
@@ -57,7 +57,6 @@ softwrench.directive('crudInputFields', function (fieldService, crudContextServi
         },
 
         controller: function ($scope) {
-            
 
             $scope.getDisplayables = function () {
                 return $scope.displayables;

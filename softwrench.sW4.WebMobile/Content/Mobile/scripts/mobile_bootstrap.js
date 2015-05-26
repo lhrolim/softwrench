@@ -7,7 +7,7 @@
 
 
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services']);
-var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
+var softwrench = angular.module('softwrench', ['ionic','ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
 
 
 

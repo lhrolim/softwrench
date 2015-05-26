@@ -129,7 +129,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
 
-            persistence.debug = "true" == sessionStorage["sqldebug"];
+            persistence.debug = "true" == sessionStorage["logsql"];
             persistence.schemaSync();
 
         },

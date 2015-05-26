@@ -121,6 +121,7 @@
     <Content Include="Content\Mobile\scripts\services\db\DataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
+    <Content Include="Content\Mobile\scripts\services\metadata\offlineAssociationService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\offlineSchemaService.js" />
     <Content Include="Content\Mobile\scripts\services\routes\routesService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
@@ -131,6 +132,7 @@
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Mobile\templates\directives\crud\crud_input_fields.html" />
     <Content Include="Content\Vendor\css\ionautocomplete.css" />
+    <Content Include="Content\Vendor\downloadedvendor\ionautocomplete.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\css\ionic.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\css\ionic.min.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\fonts\ionicons.eot" />
@@ -148,7 +150,6 @@
     <Content Include="Content\Vendor\scripts\angular-sanitize.js" />
     <Content Include="Content\Vendor\scripts\angular-ui-router.js" />
     <Content Include="Content\Vendor\scripts\angular.js" />
-    <Content Include="Content\Vendor\scripts\ionautocomplete.js" />
     <Content Include="Content\Vendor\scripts\jquery.js" />
     <Content Include="Content\Vendor\scripts\moment.js" />
     <Content Include="Content\Vendor\scripts\ng-cordova.js" />
