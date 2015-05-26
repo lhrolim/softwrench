@@ -366,15 +366,11 @@
           <field attribute="reportdate" label="Reported On" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
           <field attribute="owner" label="Owner"  readonly="true"/>
-          <field attribute="status"  hidden="true" default="WAPPR"/>
-          <field attribute="synstatus_.maxvalue" hidden="true"/>
-          <field attribute="synstatus_.description" label="Status" readonly="true" requiredexpression="true">
-            <lookup sourceApplication="synonymdomain" sourceField="value" sourceDisplay="description,value" targetField="status" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="domainid" literal="WOSTATUS" />
-              </lookupFilters>
-            </lookup>
-          </field>
+
+          <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
 
           <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
 

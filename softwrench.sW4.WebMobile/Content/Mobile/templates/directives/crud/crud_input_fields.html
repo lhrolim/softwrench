@@ -3,7 +3,11 @@
 
     <label class="item item-input">
         <span class="input-label">{{field.label}}</span>
-        <ng-switch on="field.type">
+        <ng-switch on="(field.type == 'ApplicationAssociationDefinition') || (field.type == 'OptionField')">
+            {{field.type}}
+            <div ng-switch-when="true">
+                
+            </div>
             <input ng-switch-default type="text" ng-model="datamap[field.attribute]" >
         </ng-switch>
 

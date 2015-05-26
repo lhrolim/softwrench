@@ -47,11 +47,6 @@ namespace softWrench.sW4.Metadata.Validator {
             return assembly.GetManifestResourceStream(resourceName);
         }
 
-        public static Stream GetTemplateStreamFromAPI(string resource) {
-            var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
-            var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", resource);
-            return assembly.GetManifestResourceStream(resourceName);
-        }
 
 
 
@@ -107,15 +102,15 @@ namespace softWrench.sW4.Metadata.Validator {
                 return DoGetStream(realPath);
             }
 
-            if (templatePath.StartsWith("@")) {
-                var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
-                var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", templatePath.Substring(1));
-                var stream = assembly.GetManifestResourceStream(resourceName);
-                if (stream == null) {
-                    return null;
-                }
-                return new StreamReader(stream);
-            }
+//            if (templatePath.StartsWith("@")) {
+//                var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
+//                var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", templatePath.Substring(1));
+//                var stream = assembly.GetManifestResourceStream(resourceName);
+//                if (stream == null) {
+//                    return null;
+//                }
+//                return new StreamReader(stream);
+//            }
             return DoGetStream(realPath);
         }
 
