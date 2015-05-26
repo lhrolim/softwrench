@@ -27,6 +27,19 @@
     margin-bottom: 0;
 }
 
+.form-group.sidebyside {
+    clear: none;
+    padding: 0 15px;
+}
+
+fieldset .form-group.sidebyside:first-child {
+    padding-left: 0;
+}
+
+fieldset .form-group.sidebyside:last-child {
+    padding-right: 0;
+}
+
 /*SWWEB-1186*/
 fieldset.newrow {
     clear: both;

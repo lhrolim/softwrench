@@ -217,43 +217,43 @@
             <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
           </association>
 
-          <section>
-            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <section orientation="horizontal">
-              <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-                <renderer type="lookup"  />
-                <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
-              </association>
-              <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-                <renderer type="lookup"  />
-                <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+          <section orientation="horizontal">
+            <section>
+              <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+              <renderer type="default" params="inputsize=small;childinputsize=medium" />
+              <section orientation="horizontal">
+                <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+                  <renderer type="lookup"  />
+                  <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+                </association>
+                <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+                  <renderer type="lookup"  />
+                  <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+                </association>
+              </section>
+              <section orientation="horizontal">
+                <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
+                  <renderer type="lookup" params="columnlabel=Name;"/>
+                </association>
+                <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
+                </field>
+              </section>
+              <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+                <renderer type="lookup" params="inputsize=medium" />
               </association>
             </section>
-            <section orientation="horizontal">
-              <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
-                <renderer type="lookup" params="columnlabel=Name;"/>
-              </association>
-              <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
-              </field>
-            </section>
-            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-              <renderer type="lookup" params="inputsize=medium" />
-            </association>
-          </section>
 
-          <section>
-            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-            <!-- Adding target start finish date-->
             <section orientation="horizontal">
+              <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+              <renderer type="default" params="inputsize=small;childinputsize=medium" />
+              <!-- Adding target start finish date-->
               <field attribute="targstartdate" label="Target Start Date:">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
               </field>
               <field attribute="targcompdate" label="Target Finish Date:">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
               </field>
-            </section>
-            <section orientation="horizontal">
               <field attribute="actstart" label="Actual Start Date:">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
               </field>
@@ -262,6 +262,7 @@
               </field>
             </section>
           </section>
+          
           <section>
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
             <section id="attachmentsection"/>

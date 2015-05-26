@@ -104,8 +104,19 @@ app.factory('layoutservice', function (fieldService) {
     function convertInputSizeToColumnCount(fieldMetadata) {
         var columnCount = null;
 
-        if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['inputsize'] != null) {
-            switch (fieldMetadata.rendererParameters['inputsize']) {
+        if (fieldMetadata.rendererParameters != null) {
+            var inputsize = '';
+
+            if (fieldMetadata.rendererParameters['childinputsize'] != null) {
+                inputsize = fieldMetadata.rendererParameters['childinputsize'];
+
+            } else if (fieldMetadata.rendererParameters['inputsize'] != null) {
+                inputsize = fieldMetadata.rendererParameters['inputsize'];
+            } else {
+                inputsize = 'large';
+            }
+
+            switch (inputsize) {
                 case 'xsmall':
                     columnCount = 4;
                     break;
@@ -139,10 +150,19 @@ app.factory('layoutservice', function (fieldService) {
                 }
             }
 
+            //if section has inputsize render parameter
+            if (fieldMetadata.type == "ApplicationSection") {
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.inputsize != null) {
+                    cssclass += ' sidebyside';
+                }                
+            }
+
+            //add class if section has header
             if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
                 cssclass += ' hasheader';
             }
 
+            //add class if section has children
             if (fieldMetadata.displayables != null) {
                 cssclass += ' haschildren';
             }
@@ -181,6 +201,8 @@ app.factory('layoutservice', function (fieldService) {
             var columnCount = convertInputSizeToColumnCount(fieldMetadata);
 
             if (this.hasSameLineLabel(fieldMetadata)) {
+
+                //TODO: get parent displable rendererParameters and pass to getDefaultColumnClassesForInput
                 cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, isVerticalOrientation, columnCount);
             } else {
                 cssclass += ' col-xs-12';
@@ -210,6 +232,8 @@ app.factory('layoutservice', function (fieldService) {
             var columnCount = convertInputSizeToColumnCount(fieldMetadata);
 
             if (this.hasSameLineLabel(fieldMetadata)) {
+
+                //TODO: get parent displable rendererParameters and pass to getDefaultColumnClassesForLabel
                 returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, isVerticalOrientation, columnCount);
             } else {
                 returnClass += 'col-xs-12';
