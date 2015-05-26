@@ -14,7 +14,7 @@ app.factory('formatService', function ($filter, i18NService) {
         if (forceConversion) {
             //this would be needed for applying the time formats
             var date = Date.parse(value);
-            if (isNaN(date)) {
+            if (date== null || isNaN(date)) {
                 return $filter('date')(value, dateFormat);
             } else {
                 return $filter('date')(date, dateFormat);
