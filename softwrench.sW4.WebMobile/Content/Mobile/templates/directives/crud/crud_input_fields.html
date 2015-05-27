@@ -1,11 +1,14 @@
 ﻿<fieldset ng-repeat="field in getDisplayables()" ng-show="!isFieldHidden(field)">
 
-
     <label class="item item-input">
         <span class="input-label">{{field.label}}</span>
         <ng-switch on="(field.type == 'ApplicationAssociationDefinition') || (field.type == 'OptionField')">
             <div ng-switch-when="true">
-                <ion-autocomplete ng-model="datamap[field.target]" identifier="{{field.associationKey}}" items-method="associationSearch(queryparameters)" item-value-key="remoteid" item-method-value-key="datamap.description" item-view-value-key="datamap.description" />                
+                <ion-autocomplete ng-model="datamap[field.target]"
+                                  identifier="{{field.associationKey}}"
+                                  items-method="associationSearch(queryparameters)"
+                                  item-value-key="{{getAssociationValueField(field)}}"
+                                  item-view-value-key="{{getAssociationLabelField(field)}}" />                
             </div>
             <input ng-switch-default type="text" ng-model="datamap[field.attribute]"  >
         </ng-switch>

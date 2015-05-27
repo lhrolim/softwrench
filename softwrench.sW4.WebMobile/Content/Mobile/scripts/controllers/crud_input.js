@@ -16,7 +16,15 @@
     }
 
     $scope.associationSearch = function (queryparameters) {
-        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema, queryparameters.identifier, queryparameters.query);
+        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
+    }
+
+    $scope.getAssociationLabelField=function(fieldMetadata) {
+        return 'datamap.' + fieldMetadata.labelFields[0];
+    }
+
+    $scope.getAssociationValueField = function (fieldMetadata) {
+        return 'datamap.' + fieldMetadata.valueField;
     }
 
     $rootScope.$on('$stateChangeSuccess',
