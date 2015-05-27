@@ -88,7 +88,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
 
                     if (minStartDateExpression != null && minStartDateExpression != "") {
                         startDate = expressionService.evaluate(minStartDateExpression, datamap);
-                        startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
+                        startDate = formatService.formatDate(startDate, attrs.dateFormat);
                         variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
                         scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
                             if (newVal != oldVal) {
@@ -117,11 +117,12 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                     
                     if (minStartDateExpression != null && minStartDateExpression!="") {
                         startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                        startDate = formatService.formatDate(startDate, attrs.dateFormat);
                         var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
                         scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
                             if (newVal != oldVal) {
                                 startDate = expressionService.evaluate(minStartDateExpression, datamap);
-                                //recreating component
+                                startDate = formatService.formatDate(startDate, attrs.dateFormat);
                                 element.data('datepicker').startDate = Date.parse(startDate);
                             }
                         });
