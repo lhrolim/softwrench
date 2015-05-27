@@ -1,4 +1,4 @@
-﻿modules.webcommons.factory('schemaService', function (fieldService) {
+﻿modules.webcommons.factory('schemaService', function (fieldService, expressionService) {
 
 
 
@@ -39,7 +39,7 @@
             return datamap[schema.idFieldName];
         },
 
-        nonTabFields:function(schema) {
+        nonTabFields: function (schema) {
             return fieldService.nonTabFields(schema.displayables, true);
         },
 
@@ -81,7 +81,34 @@
             return basekey;
         },
 
-     
+        getTitle: function (schema, datamap,smallDevices) {
+            var fields = datamap.fields ? datamap.fields : datamap;
+
+            if (schema.properties['detail.titleexpression'] != null) {
+                return expressionService.evaluate(schema.properties['detail.titleexpression'], fields);
+            }
+            var titleId = schema.idDisplayable;
+            if (titleId == null) {
+                return schema.title;
+            }
+            var result;
+            if (smallDevices) {
+                result = fields[schema.userIdFieldName];
+            } else {
+                result = titleId + " " + fields[schema.userIdFieldName];
+            }
+            if (fields.description != null) {
+                if (smallDevices) {
+                    result += ": " + fields.description;
+                } else {
+                    result += " Summary: " + fields.description;
+                }
+                
+            }
+            return result;
+        }
+
+
 
 
     };

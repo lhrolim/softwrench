@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, crudContextService, fieldService, offlineAssociationService) {
+﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope,schemaService, crudContextService, fieldService, offlineAssociationService) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
@@ -27,9 +27,14 @@
         return 'datamap.' + fieldMetadata.valueField;
     }
 
+    $scope.detailSummary = function() {
+        return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap,true);
+    }
+
     $rootScope.$on('$stateChangeSuccess',
         function (event, toState, toParams, fromState, fromParams) {
             if (toState.name == "main.cruddetail") {
+                //needs to refresh the displayables and datamap everytime the detail page is loaded.
                 init();
             }
         });

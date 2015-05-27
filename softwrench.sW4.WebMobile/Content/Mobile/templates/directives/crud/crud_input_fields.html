@@ -1,4 +1,4 @@
-﻿<fieldset ng-repeat="field in getDisplayables()" ng-show="!isFieldHidden(field)">
+﻿<div ng-repeat="field in getDisplayables()" ng-show="!isFieldHidden(field)">
 
     <label class="item item-input">
         <span class="input-label">{{field.label}}</span>
@@ -10,8 +10,8 @@
                                   item-value-key="{{getAssociationValueField(field)}}"
                                   item-view-value-key="{{getAssociationLabelField(field)}}" />                
             </div>
-            <input ng-switch-default type="text" ng-model="datamap[field.attribute]"  >
+            <input ng-switch-default type="text" ng-model="datamap[field.attribute]">
         </ng-switch>
 
     </label>
-</fieldset>
+</div>
