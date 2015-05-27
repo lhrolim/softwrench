@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, crudContextService, fieldService, offlineAssociationService) {
+﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope,schemaService, crudContextService, fieldService, offlineAssociationService) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
@@ -16,12 +16,36 @@
     }
 
     $scope.associationSearch = function (queryparameters) {
-        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema, queryparameters.identifier, queryparameters.query);
+        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
+    }
+
+    $scope.getAssociationLabelField=function(fieldMetadata) {
+        return 'datamap.' + fieldMetadata.labelFields[0];
+    }
+
+    $scope.getAssociationValueField = function (fieldMetadata) {
+        return 'datamap.' + fieldMetadata.valueField;
+    }
+
+    $scope.detailSummary = function() {
+        return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap,true);
+    }
+
+    $scope.navigateNext = function () {
+        crudContextService.navigateNext().then(function() {
+            $scope.datamap = crudContextService.currentDetailItem();
+        });
+    }
+
+    $scope.navigatePrevious = function () {
+        crudContextService.navigatePrevious();
+        $scope.datamap = crudContextService.currentDetailItem();
     }
 
     $rootScope.$on('$stateChangeSuccess',
         function (event, toState, toParams, fromState, fromParams) {
             if (toState.name == "main.cruddetail") {
+                //needs to refresh the displayables and datamap everytime the detail page is loaded.
                 init();
             }
         });

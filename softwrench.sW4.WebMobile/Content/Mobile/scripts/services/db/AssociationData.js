@@ -47,8 +47,6 @@ entities.AssociationCache = persistence.define('AssociationCache', {
 });
 
 
-entities.AssociationData.AutoCompleteQuery = "select remoteId,datamap from AssociationData where application = '{0}'";
-
 ///
 /// Inserts or updates associationData based upon the uniqueness of the entries
 ///

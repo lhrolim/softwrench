@@ -401,7 +401,6 @@
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
-          <association label="Status" target="status" labelfield="synstatus.description" />
           <composition relationship="worklog" label="Work Logs" />
           <composition relationship="matusetrans" label="Materials" />
           <composition relationship="labtrans" label="Labor">
