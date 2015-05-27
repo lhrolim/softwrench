@@ -137,7 +137,7 @@ app.factory('layoutservice', function (fieldService) {
 
     return {
 
-        getFieldClass: function (fieldMetadata, datamap, schema, displayables, isVerticalOrientation) {
+        getFieldClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
@@ -168,7 +168,7 @@ app.factory('layoutservice', function (fieldService) {
             }
 
             var columnCount = convertInputSizeToColumnCount(fieldMetadata);
-            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, isVerticalOrientation, columnCount);
+            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params.isVerticalOrientation, columnCount);
 
             cssclass += ' row';
 
@@ -176,7 +176,7 @@ app.factory('layoutservice', function (fieldService) {
         },
 
 
-        getInputClass: function (fieldMetadata, datamap, schema, displayables, isVerticalOrientation) {
+        getInputClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.type == 'ApplicationSection') {
@@ -203,7 +203,7 @@ app.factory('layoutservice', function (fieldService) {
             if (this.hasSameLineLabel(fieldMetadata)) {
 
                 //TODO: get parent displable rendererParameters and pass to getDefaultColumnClassesForInput
-                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, isVerticalOrientation, columnCount);
+                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, params.isVerticalOrientation, columnCount);
             } else {
                 cssclass += ' col-xs-12';
             }
@@ -211,7 +211,7 @@ app.factory('layoutservice', function (fieldService) {
             return cssclass;
         },
 
-        getLabelClass: function (fieldMetadata, datamap, schema, displayables, isVerticalOrientation) {
+        getLabelClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['labelclass'] != null) {
@@ -234,7 +234,7 @@ app.factory('layoutservice', function (fieldService) {
             if (this.hasSameLineLabel(fieldMetadata)) {
 
                 //TODO: get parent displable rendererParameters and pass to getDefaultColumnClassesForLabel
-                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, isVerticalOrientation, columnCount);
+                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, params.isVerticalOrientation, columnCount);
             } else {
                 returnClass += 'col-xs-12';
             }

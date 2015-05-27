@@ -347,6 +347,34 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\asset.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\attachments.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\commlogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\incident.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\inventory.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\item.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labor.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\location.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\longdescription.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\materials.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\meter.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\purchasing.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worktype.xml" />
     <Content Include="App_Data\Client\hapag\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -380,99 +408,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\asset.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\attachments.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\chartofaccounts.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\commlogs.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\failurecode.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\incident.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\inventory.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\item.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\labor.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\labtrans.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\location.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\longdescription.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\materials.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\meter.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\purchasing.xml" />
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\receiving.xml" />
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\relatedrecords.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\servicerequest.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\solution.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\synstatus.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\woactivity.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\wochange.xml" />
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\worklogs.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\workorder.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App_Data\Client\%40internal\templates\worktype.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <Content Include="App_Data\Client\tva\deploy.xml" />
     <Content Include="App_Data\Client\%40internal\target\tvamaximo_target.xml">
       <SubType>Designer</SubType>
