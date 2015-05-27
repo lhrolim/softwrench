@@ -377,23 +377,7 @@
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>
-          <field attribute="location" hidden="true"/>
-
-          <field attribute="location_.description" label="Location" >
-            <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,location" targetField="location" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="siteid" targetField="siteid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="assetnum" hidden="true"/>
-          <field attribute="asset_.description" label="Asset" >
-            <lookup sourceApplication="asset" sourceField="assetnum" sourceDisplay="description,assetnum" targetField="assetnum" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="siteid" targetField="siteid" />
-              </lookupFilters>
-            </lookup>
-          </field>
+          
 
           <association label="Location" target="location" labelfield="location.description" />
 
@@ -407,34 +391,6 @@
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
           <composition relationship="attachment" label="Attachments" />
-          <!--<field attribute="longdescription_.ldtext" label="Long Description" name="description_longdescription"/>-->
-          <!--          <composition attribute="longdescription" >-->
-          <!--            <field attribute="longdescription.ldtext" label="Long Description" name="description_longdescription"/>-->
-          <!--          </composition>-->
-          <field attribute="failurecode" hidden="true"/>
-          <field attribute="failurecode_.description" label="Failure Class" >
-            <lookup sourceApplication="failurecode" sourceField="failurecode" sourceDisplay="description,failurecode" targetField="failurecode" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="worktype" hidden="true"/>
-          <field attribute="worktype_.wtypedesc" label="Work Type" >
-            <lookup sourceApplication="worktype" sourceField="worktype" sourceDisplay="wtypedesc,worktype" targetField="worktype" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="glaccount" hidden="true"/>
-          <field attribute="chartofaccounts_.accountname" label="GL Account" >
-            <lookup sourceApplication="chartofaccounts" sourceField="glaccount" sourceDisplay="accountname,glaccount" targetField="glaccount" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
           <field attribute="description" label="Description"  />
           <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
         </detail>
