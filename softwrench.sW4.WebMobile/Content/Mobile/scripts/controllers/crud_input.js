@@ -31,6 +31,17 @@
         return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap,true);
     }
 
+    $scope.navigateNext = function () {
+        crudContextService.navigateNext().then(function() {
+            $scope.datamap = crudContextService.currentDetailItem();
+        });
+    }
+
+    $scope.navigatePrevious = function () {
+        crudContextService.navigatePrevious();
+        $scope.datamap = crudContextService.currentDetailItem();
+    }
+
     $rootScope.$on('$stateChangeSuccess',
         function (event, toState, toParams, fromState, fromParams) {
             if (toState.name == "main.cruddetail") {

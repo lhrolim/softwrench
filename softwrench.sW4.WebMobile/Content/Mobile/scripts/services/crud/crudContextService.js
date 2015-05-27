@@ -1,4 +1,5 @@
-﻿mobileServices.factory('crudContextService', function ($q, $state,$log, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService) {
+﻿mobileServices.factory('crudContextService', function ($q, $state, $log, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService) {
+    'use strict';
 
     var internalListContext = {
         lastPageLoaded: 1
@@ -14,8 +15,8 @@
 
         currentDetailItem: null,
         currentDetailSchema: null,
-        previousItemId: null,
-        nextItemId: null,
+        previousItem: null,
+        nextItem: null,
 
     }
 
@@ -24,6 +25,7 @@
         var savedCrudContext = contextService.getFromContext("crudcontext");
         if (savedCrudContext) {
             crudContext = JSON.parse(savedCrudContext);
+            setPreviousAndNextItems(savedCrudContext.currentDetailItem);
         }
         $log.get("crudContextService#factory").debug("restoring state of crudcontext");
     }
@@ -36,6 +38,26 @@
             detailSchemaId = overridenSchema;
         }
         return offlineSchemaService.locateSchema(crudContext.currentApplication, detailSchemaId);
+    }
+
+    function setPreviousAndNextItems(item) {
+        if (!item) {
+            return;
+        }
+        var itemlist = crudContext.itemlist;
+        var idx = itemlist.indexOf(item);
+        if (idx == 0) {
+            crudContext.previousItem = null;
+        } else {
+            crudContext.previousItem = itemlist[idx - 1];
+        }
+        if (idx >= itemlist.length - 2) {
+            crudContext.nextItem = null;
+        } else {
+            crudContext.nextItem = itemlist[idx + 1];
+        }
+            
+        
     }
 
     return {
@@ -64,7 +86,7 @@
             return crudContext.itemlist;
         },
 
-        mainDisplayables:function() {
+        mainDisplayables: function () {
             return schemaService.nonTabFields(crudContext.currentDetailSchema);
         },
 
@@ -79,11 +101,38 @@
             });
         },
 
+
+        navigatePrevious: function () {
+            if (!crudContext.previousItem) {
+                routeService.go("main.crudlist");
+            } else {
+                this.loadDetail(crudContext.previousItem);
+            }
+
+        },
+
+        navigateNext: function () {
+            var outer = this;
+            if (!crudContext.nextItem) {
+                return this.loadMorePromise().then(function (results) {
+                    if (!results) {
+                        //end has reached;
+                        return;
+                    }
+                    setPreviousAndNextItems(crudContext.currentDetailItem);
+                    outer.loadDetail(crudContext.nextItem);
+                });
+            }
+            this.loadDetail(crudContext.nextItem);
+            return $q.when();
+        },
+
         loadDetail: function (item) {
             if (!crudContext.currentDetailSchema) {
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
             crudContext.currentDetailItem = item;
+            setPreviousAndNextItems(item);
             contextService.insertIntoContext("crudcontext", crudContext);
             routeService.go("main.cruddetail");
         },
