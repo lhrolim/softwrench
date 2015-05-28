@@ -279,6 +279,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
         },
 
         submitReturnConfirmation: function (event, datamap, parameters) {
+            returnTransformation(event, datamap);
             return returnConfirmation(event, datamap, parameters);
         },
 
