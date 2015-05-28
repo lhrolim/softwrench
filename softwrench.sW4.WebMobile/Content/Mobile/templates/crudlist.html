@@ -18,7 +18,7 @@
                       item="item">
 
 
-                <div class="row">
+                <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
                         <button class="button button-status" ng-style="{background:getStatusColor(item),color:getTextColor(item)}">{{getStatusText(item)}}</button>
                     </div>

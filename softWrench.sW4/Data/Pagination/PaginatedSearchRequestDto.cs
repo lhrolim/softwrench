@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 using softWrench.sW4.Data.Persistence.WS.Mea;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Search;
@@ -89,7 +90,12 @@ namespace softWrench.sW4.Data.Pagination {
                 _pagesToShow.Add(new PageToShow(i == pageNumber, i));
             }
             CompositionsToFetch = new List<string>();
-            PaginationOptions = paginationOptions;
+            if (paginationOptions.Count == 1 && paginationOptions.First() == 0) {
+                //TODO: fix on client side
+                PaginationOptions = DefaultPaginationOptions;
+            } else {
+                PaginationOptions = paginationOptions;
+            }
         }
 
         private int CalculatePageCount(int totalCount) {
@@ -137,6 +143,6 @@ namespace softWrench.sW4.Data.Pagination {
             return (PaginatedSearchRequestDto)MemberwiseClone();
         }
 
-      
+
     }
 }

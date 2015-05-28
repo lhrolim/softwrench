@@ -1,6 +1,4 @@
-var app = angular.module('sw_layout');
-
-app.factory('fieldService', function ($injector, $log, expressionService, eventService) {
+﻿modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -52,7 +50,20 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return !expressionService.evaluate(fieldMetadata.enableExpression, datamap);
         },
 
+        isPropertyTrue: function (field, propertyName) {
+            if (!field) {
+                return false;
+            }
+            return field.rendererParameters && "true" == field.rendererParameters[propertyName];
+        },
+
         nonTabFields: function (displayables, includeHiddens) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="displayables"></param>
+            /// <param name="includeHiddens">whether hidden fields should be included or not</param>
+            /// <returns type=""></returns>
             includeHiddens = includeHiddens == undefined ? true : includeHiddens;
             var result = [];
             for (var i = 0; i < displayables.length; i++) {

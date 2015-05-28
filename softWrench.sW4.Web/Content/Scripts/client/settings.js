@@ -25,6 +25,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 data: ace.edit("editor").getValue()
             })
                 .success(function () {
+                    sessionStorage.removeItem("swGlobalRedirectURL");
                     $window.location.href = url("/stub/reset");
                 });
 

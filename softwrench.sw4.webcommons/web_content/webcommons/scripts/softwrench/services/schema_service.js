@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('schemaService', function (fieldService) {
+﻿modules.webcommons.factory('schemaService', function (fieldService, expressionService) {
 
 
 
@@ -41,7 +39,15 @@ app.factory('schemaService', function (fieldService) {
             return datamap[schema.idFieldName];
         },
 
+        nonTabFields: function (schema) {
+            return fieldService.nonTabFields(schema.displayables, true);
+        },
+
         hasAnyFieldOnMainTab: function (schema) {
+            if (!schema) {
+                return false;
+            }
+
             schema.jscache = schema.jscache || {};
             if (schema.jscache.hasAnyFieldOnMainTab) {
                 return schema.jscache.hasAnyFieldOnMainTab;
@@ -59,6 +65,14 @@ app.factory('schemaService', function (fieldService) {
             return schema.properties && "true" == schema.properties[propertyName];
         },
 
+        getProperty: function (schema, propertyName) {
+            if (!schema) {
+                return false;
+            }
+            schema.properties = schema.properties || {};
+            return schema.properties[propertyName];
+        },
+
         buildApplicationKey: function (schema) {
             var basekey = schema.applicationName + "." + schema.schemaId;
             if (schema.mode && schema.mode != "none") {
@@ -67,7 +81,34 @@ app.factory('schemaService', function (fieldService) {
             return basekey;
         },
 
-     
+        getTitle: function (schema, datamap,smallDevices) {
+            var fields = datamap.fields ? datamap.fields : datamap;
+
+            if (schema.properties['detail.titleexpression'] != null) {
+                return expressionService.evaluate(schema.properties['detail.titleexpression'], fields);
+            }
+            var titleId = schema.idDisplayable;
+            if (titleId == null) {
+                return schema.title;
+            }
+            var result;
+            if (smallDevices) {
+                result = fields[schema.userIdFieldName];
+            } else {
+                result = titleId + " " + fields[schema.userIdFieldName];
+            }
+            if (fields.description != null) {
+                if (smallDevices) {
+                    result += ": " + fields.description;
+                } else {
+                    result += " Summary: " + fields.description;
+                }
+                
+            }
+            return result;
+        }
+
+
 
 
     };

@@ -21,7 +21,7 @@
                         items: resultItems
                     }
                     var end = new Date().getTime();
-                    log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length,(end-start)));
+                    log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length, (end - start)));
                     deferred.resolve(rowstampMap);
                 });
             return deferred.promise;
@@ -41,6 +41,29 @@
                     var end = new Date().getTime();
                     log.debug("generated rowstampmap for compositions. Ellapsed {0} ms".format(end - start));
                     deferred.resolve(resultItems);
+                });
+            return deferred.promise;
+        },
+
+        generateAssociationRowstampMap: function (app) {
+            var log = $log.get("rowstampService#generateAssociationRowstampMap");
+            var deferred = $q.defer();
+            var start = new Date().getTime();
+            //either for query for a single app, or for all of them
+            //TODO: use AssociationCache in the future
+            var query = app ? entities.AssociationData.maxRowstampQueries.fmt(app) : entities.AssociationData.maxRowstampQueries;
+            swdbDAO.findByQuery('AssociationData', null, { fullquery: query })
+                .then(function (queryResults) {
+                    var result = {};
+                    var associationmap = {};
+                    for (var i = 0; i < queryResults.length; i++) {
+                        var item = queryResults[i];
+                        associationmap[item.application] = { "maximorowstamp": item.rowstamp }
+                    }
+                    var end = new Date().getTime();
+                    log.debug("generated rowstampmap for associations. Ellapsed {0} ms".format(end - start));
+                    result.associationmap = associationmap;
+                    deferred.resolve(result);
                 });
             return deferred.promise;
         }

@@ -97,6 +97,10 @@ app.directive('crudBody', function (contextService) {
 
 
             $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                if (!$scope.schema) {
+                    return;
+                }
+
                 var hasMainTab = schemaService.hasAnyFieldOnMainTab($scope.schema);
                 if (!hasMainTab) {
                     //if main tab is absent (schema with just compositions) redirect to first tab
@@ -191,21 +195,7 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.getTitle = function () {
-                var schema = $scope.schema;
-                var datamap = $scope.datamap;
-                if (schema.properties['detail.titleexpression'] != null) {
-                    return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
-                }
-                var titleId = schema.idDisplayable;
-                if (titleId == null) {
-                    return schema.title;
-                }
-
-                var result = titleId + " " + datamap.fields[schema.userIdFieldName];
-                if (datamap.fields.description != null) {
-                    result += " Summary: " + datamap.fields.description;
-                }
-                return result;
+                return schemaService.getTitle($scope.schema, $scope.datamap);
             }
 
             $scope.isNotHapagTest = function () {

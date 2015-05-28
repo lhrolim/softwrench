@@ -86,7 +86,7 @@
             //return this.retrieveFromContext('environment') == "dev";
 
             //return true if the environment begins with dev
-            return this.retrieveFromContext('environment').indexOf('dev') == 0
+            return this.retrieveFromContext('environment').indexOf('dev') == 0;
         },
 
         client: function () {

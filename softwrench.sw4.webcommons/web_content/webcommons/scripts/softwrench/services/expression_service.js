@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
+﻿modules.webcommons.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
 
 
     var compiledDatamapRegex = /(\@\#?)(\w+(\.?\w?)*)/g;

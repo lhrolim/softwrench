@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
@@ -15,6 +16,8 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -37,7 +40,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
-            var topLevelApps = GetTopLevelAppsToCollect(request);
+            var topLevelApps = GetTopLevelAppsToCollect(request, user);
 
 
             var result = new SynchronizationResultDto();
@@ -51,6 +54,54 @@ namespace softwrench.sw4.offlineserver.services {
 
 
             return result;
+        }
+
+        public AssociationSynchronizationResultDto GetAssociationData(InMemoryUser currentUser, JObject rowstampMap, string applicationToFetch = null) {
+            var watch = Stopwatch.StartNew();
+            IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch =
+                new List<CompleteApplicationMetadataDefinition>();
+            if (applicationToFetch == null) {
+                //let´s bring all the associations
+                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser);
+            } else {
+                var app = MetadataProvider.Application(applicationToFetch);
+                applicationsToFetch = new List<CompleteApplicationMetadataDefinition>() { app };
+            }
+            var dict = ClientStateJsonConverter.GetAssociationRowstampDict(rowstampMap);
+            return DoGetAssociationData(applicationsToFetch, dict, currentUser);
+        }
+
+        private AssociationSynchronizationResultDto DoGetAssociationData(IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch, IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user) {
+            var completeApplicationMetadataDefinitions = applicationsToFetch as CompleteApplicationMetadataDefinition[] ?? applicationsToFetch.ToArray();
+
+            var tasks = new Task[completeApplicationMetadataDefinitions.Count()];
+            var i = 0;
+            var results = new AssociationSynchronizationResultDto();
+            var watch = Stopwatch.StartNew();
+            foreach (var association in completeApplicationMetadataDefinitions) {
+
+                //this will return sync schema
+                var userAppMetadata = association.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
+
+                var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
+                var association1 = association;
+
+                Rowstamps rowstamp = null;
+                if (rowstampMap.ContainsKey(association.ApplicationName)) {
+                    var currentRowStamp = rowstampMap[association.ApplicationName].MaxRowstamp;
+                    rowstamp = new Rowstamps(currentRowStamp, null);
+                }
+
+                tasks[i++] = Task.Factory.NewThread(() => {
+                    var datamaps = FetchData(entityMetadata, userAppMetadata, rowstamp);
+                    results.AssociationData.Add(association1.ApplicationName, datamaps);
+                });
+
+            }
+            Task.WaitAll(tasks);
+            Log.DebugFormat("SYNC:Finished handling all associations. Ellapsed {0}", LoggingUtil.MsDelta(watch));
+
+            return results;
         }
 
         private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
@@ -68,6 +119,7 @@ namespace softwrench.sw4.offlineserver.services {
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
+
         }
 
         /// <summary>
@@ -83,15 +135,14 @@ namespace softwrench.sw4.offlineserver.services {
         /// <param name="appResultData"></param>
         /// <param name="result"></param>
         /// <param name="rowstampMap"></param>
-        private void HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap)
-        {
-            var watch =Stopwatch.StartNew();
-            
-            var compositionMap = GetCompositionRowstampsDict(rowstampMap);
+        private void HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap) {
+            var watch = Stopwatch.StartNew();
+
+            var compositionMap = ClientStateJsonConverter.GetCompositionRowstampsDict(rowstampMap);
 
             var parameters = new OffLineCollectionResolver.OfflineCollectionResolverParameters(topLevelApp, appResultData.AllData, compositionMap, appResultData.NewdataMaps, appResultData.AlreadyExistingDatamaps);
             var compositionData = _resolver.ResolveCollections(parameters);
-            
+
 
 
             foreach (var compositionDict in compositionData) {
@@ -108,20 +159,20 @@ namespace softwrench.sw4.offlineserver.services {
 
         }
 
-        private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request) {
+        private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
             if (request.ApplicationName == null) {
                 //no application in special was requested, lets return them all.
-                return OffLineMetadataProvider.FetchTopLevelApps();
+                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
             }
             if (request.ReturnNewApps) {
                 if (request.ClientCurrentTopLevelApps != null) {
                     var result = new HashSet<CompleteApplicationMetadataDefinition>();
-                    var otherApps = OffLineMetadataProvider.FetchTopLevelApps().Where(a => !request.ClientCurrentTopLevelApps.Contains(a.ApplicationName));
+                    var otherApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).Where(a => !request.ClientCurrentTopLevelApps.Contains(a.ApplicationName));
                     result.AddAll(otherApps);
                     result.Add(MetadataProvider.Application(request.ApplicationName));
                     return result;
                 }
-                return OffLineMetadataProvider.FetchTopLevelApps();
+                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
             }
 
 
@@ -144,7 +195,7 @@ namespace softwrench.sw4.offlineserver.services {
                 result.NewdataMaps = topLevelAppData;
                 return result;
             }
-            var idRowstampDict = ConvertJSONToDict(rowstampMap);
+            var idRowstampDict = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
             foreach (var dataMap in topLevelAppData) {
                 var id = dataMap.Id;
                 if (!idRowstampDict.ContainsKey(id)) {
@@ -169,37 +220,13 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-        public static IDictionary<string, string> ConvertJSONToDict(JObject rowstampMap) {
-            if (rowstampMap == null || !rowstampMap.HasValues) {
-                return new Dictionary<string, string>();
-            }
-            var result = new Dictionary<string, string>();
-            dynamic obj = rowstampMap;
-            //Loop over the array
-            foreach (dynamic row in obj.items) {
-                var id = row.id;
-                var rowstamp = row.rowstamp;
-                result.Add(id.Value, rowstamp.Value);
-            }
-            return result;
-        }
 
-        public static IDictionary<string, long?> GetCompositionRowstampsDict(JObject rowstampMap) {
-            if (rowstampMap == null || !rowstampMap.HasValues) {
-                return new Dictionary<string, long?>();
-            }
-            var result = new Dictionary<string, long?>();
-            dynamic obj = rowstampMap;
-            //Loop over the array
-            foreach (dynamic row in obj.compositionmap) {
-                var application = row.Name;
-                result.Add(application, Int64.Parse(row.Value.Value));
-            }
-            return result;
-        }
 
-        private List<DataMap> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata) {
-            var enumerable = _repository.GetSynchronizationData(entityMetadata, new Rowstamps());
+        private List<DataMap> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata, Rowstamps rowstamps = null) {
+            if (rowstamps == null) {
+                rowstamps = new Rowstamps();
+            }
+            var enumerable = _repository.GetSynchronizationData(entityMetadata, rowstamps);
             if (!enumerable.Any()) {
                 return new List<DataMap>();
             }
@@ -210,6 +237,7 @@ namespace softwrench.sw4.offlineserver.services {
             }
             return dataMaps;
         }
+
 
 
     }

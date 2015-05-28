@@ -6,7 +6,8 @@
 
     <!-- softwrench.sW4.WebMobile references -->
     <link href="css/index.css" rel="stylesheet" />
-    <link href="Content/Vendor/downloadedvendor/ionic-v1.0.0-rc.3/css/ionic.min.css" rel="stylesheet">
+    <link href="Content/Vendor/downloadedvendor/ionic-v1.0.0/css/ionic.min.css" rel="stylesheet">
+    <link href="Content/Vendor/css/ionautocomplete.css" rel="stylesheet">
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <!--For some reason Ripple doesnt like enclosed <script/> tags-->
@@ -20,9 +21,12 @@
     <script src="Content/Vendor/scripts/angular-ui-router.js"></script>
     <script src="Content/Vendor/scripts/angular-sanitize.js"></script>
     <script src="Content/Vendor/scripts/angular-animate.js"></script>
-    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0-rc.3/js/ionic.min.js"></script>
-    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0-rc.3/js/ionic-angular.min.js"></script>
+    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0/js/ionic.min.js"></script>
+    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0/js/ionic-angular.js"></script>
     
+    <script src="Content/Vendor/downloadedvendor/ionautocomplete.js"></script>
+    
+
 
     <script src="Content/Vendor/scripts/ng-cordova.js"></script>
     <script src="Content/Vendor/scripts/persistence.js"></script>
@@ -44,6 +48,10 @@
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/object_util.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/schema_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/field_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/event_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/expression_service.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/rest_service.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
@@ -52,6 +60,7 @@
 
     
     <!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_input.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/controllers/crudlist.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/controllers/homecontroller.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/controllers/logincontroller.js"></script>
@@ -60,20 +69,23 @@
         <script type="text/javascript" src="Content/Mobile/scripts/services/configuration/configurationService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudContextService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineCompositionService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/db/AssociationData.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/db/CompositionDataEntry.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/db/DataEntry.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/db/swdbDAO.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/login/loginService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/menu/menuModelService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/metadataModelService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineAssociationService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineSchemaService.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/routesService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/routes/routesService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/associationDataSynchronizationService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/batchService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/dataSynchronizationService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/metadataSynchronizationService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/rowstampService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationFacade.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_input_fields.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileajaxinterceptor.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileutils.js"></script>
         <!-- end auto template tags -->

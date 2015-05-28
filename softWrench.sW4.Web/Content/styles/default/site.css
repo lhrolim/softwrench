@@ -150,6 +150,8 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     margin-top: -15px !important;
 }
 
+
+
 .col-horizontal-orientation {
     float: left;
     margin-right: 0px !important;
@@ -159,7 +161,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 }
 
     .col-horizontal-orientation:first-child {
-        padding-left: 0px;
+        text-align: : left;
     }
 
     .col-horizontal-orientation:last-child {
@@ -220,6 +222,12 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 
     .container.desktop .listgrid-thead {
         position: fixed;
+    }
+}
+
+@media all and (max-width: 992px) {
+    .singlelinelabel {
+        text-align: left !important;
     }
 }
 

@@ -101,18 +101,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
             entities.Batch.hasMany('items', entities.BatchItem, 'batch');
 
-
-
-            //this entity stores the Data which will be used as support of the main entities.
-            //It cannot be created locally. Hence Synchronization should use rowstamp caching capabilities by default
-            entities.AssociationData = persistence.define('AssociationData', {
-                application: 'TEXT',
-                label: 'TEXT',
-                value: 'TEXT',
-                projectionfields: 'JSON',
-            });
-
-
             entities.WhereClause = persistence.define("WhereClause", {
                 ///
                 /// This should get populated only if, there are multiple whereclauses present for a given association.
@@ -127,40 +115,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
 
 
-            entities.AssociationCache = persistence.define('AssociationCache', {
-                ///Holds an object that for each application will have properties that will help the framework to understaand how to proceed upon synchronization:
-                /// <ul>
-                ///     <li>maximorowstamp --> the rowstamp of the last data fetched from maximo of this application</li>
-                ///     <li>whereclausehash--> the md5 hash of the latest applied whereclause used to pick this data, or null, if none present
-                ///             The framework will compare to see if the wc has changed, invalidating the entire cache in that case.</li>
-                ///     <li>syncschemahash --> the hash of the sync schema used for last synchronization. It could have changed due to a presence of a new projection field, for instance</li>
-                /// </ul>
-                ///ex:
-                /// {
-                ///    location:{
-                ///       maximorowstamp: 1000
-                ///       whereclausehash:'abasacvsava'
-                ///       syncschemahash:'asadfasdfasdfasdfasdfadsfasdfasdfamlmlmlsdafsadfassfdafa'
-                ///    }
-                /// 
-                ///
+            
 
-                ///    asset:{
-                ///       maximorowstamp: 12500
-                ///       whereclausehash:'hashoflatestappliedwhereclause'
-                ///       syncschemahash:baadfasdfasdfa
-                ///    }
-                //        .
-                //        .
-                //        .
-                // }
-                data: "JSON"
-            });
-
-            entities.DataEntry.index(['application', 'remoteid'], { unique: true });
-
-            entities.AssociationData.index(['application', 'value']);
-
+           
             entities.Menu = persistence.define('Menu', {
                 data: "JSON"
             });
@@ -172,7 +129,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
 
-            persistence.debug = "true" == sessionStorage["sqldebug"];
+            persistence.debug = "true" == sessionStorage["logsql"];
             persistence.schemaSync();
 
         },

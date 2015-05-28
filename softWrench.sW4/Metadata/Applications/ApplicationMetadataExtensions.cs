@@ -1,6 +1,7 @@
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using JetBrains.Annotations;
+using softWrench.sW4.Metadata.Applications.Association;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -16,7 +17,7 @@ namespace softWrench.sW4.Metadata.Applications {
 
         [NotNull]
         public static ApplicationMetadata ApplyPolicies([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user,
-            ClientPlatform platform, string schemaFieldsToDisplay=null) {
+            ClientPlatform platform, string schemaFieldsToDisplay = null) {
             if (application == null) throw new ArgumentNullException("application");
             if (user == null) throw new ArgumentNullException("user");
 
@@ -25,7 +26,7 @@ namespace softWrench.sW4.Metadata.Applications {
 
         public static ApplicationMetadata ApplyPoliciesWeb([NotNull] this CompleteApplicationMetadataDefinition application,
             ApplicationMetadataSchemaKey schemaKey) {
-            return new ApplicationMetadataPolicyApplier(application, schemaKey, SecurityFacade.CurrentUser(), ClientPlatform.Web,null).Apply();
+            return new ApplicationMetadataPolicyApplier(application, schemaKey, SecurityFacade.CurrentUser(), ClientPlatform.Web, null).Apply();
         }
 
         [NotNull]
@@ -33,9 +34,15 @@ namespace softWrench.sW4.Metadata.Applications {
             if (application == null) throw new ArgumentNullException("application");
             ApplicationSchemaDefinition resultingSchema;
             if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
-                if (metadataSchemaKey.SchemaId.EqualsAny("list","detail")) {
+                if (metadataSchemaKey.SchemaId.EqualsAny(ApplicationMetadataConstants.List, ApplicationMetadataConstants.Detail)) {
                     //let´s give these default schema names a stereotype search fallback and return them case they are uniquely found
                     return SearchByStereotype(application, metadataSchemaKey, ref resultingSchema);
+                } if (metadataSchemaKey.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
+                    //using list for now
+                    var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List));
+                    //                    var instance = ApplicationAssociationSchemaSyncFactory.GetInstance(application);
+                    application.Schemas().Add(metadataSchemaKey, instance);
+                    return instance;
                 }
                 throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
             }
@@ -59,7 +66,7 @@ namespace softWrench.sW4.Metadata.Applications {
 
         public static ApplicationSchemaDefinition SearchByStereotype(CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey metadataSchemaKey, ref ApplicationSchemaDefinition resultSchema) {
             try {
-                resultSchema = application.Schemas().Values.Single(schema => schema.Stereotype.ToString().ToUpper() == metadataSchemaKey.SchemaId.ToUpper());
+                resultSchema = application.Schemas().Values.Single(schema => schema.Stereotype.ToString().EqualsIc(metadataSchemaKey.SchemaId));
             } catch (Exception) {
                 // More than one schema found of the specified type
                 throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));

@@ -6,13 +6,14 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
 
     [JoinedSubclass(NameType = typeof(DashboardGridPanel), Lazy = false, ExtendsType = typeof(DashboardBasePanel)
         , Table = "DASH_GRIDPANEL")]
-//    [Class(Table = "DASH_GRIDPANEL", Lazy = false)]
+    //    [Class(Table = "DASH_GRIDPANEL", Lazy = false)]
     public class DashboardGridPanel : DashboardBasePanel {
+      
 
         [Key(-1, Column = "GPID")]
         public virtual int? GpId { get; set; }
 
-   
+
         [Property]
         public virtual String Application { get; set; }
 
@@ -32,11 +33,6 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Property(Column = "_limit")]
         public virtual int? Limit { get; set; }
 
-
-
-
-
-
-
+      
     }
 }

@@ -42,6 +42,10 @@ String.prototype.equalsAny = String.prototype.f = function () {
     return false;
 };
 
+String.prototype.equalsIc = String.prototype.f = function () {
+    return arguments[0].isEqual(this, true);
+};
+
 
 String.prototype.nullOrEmpty = String.prototype.f = function () {
     var s = this;

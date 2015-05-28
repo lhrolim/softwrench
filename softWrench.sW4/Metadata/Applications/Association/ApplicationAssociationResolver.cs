@@ -192,8 +192,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private static ProjectionResult BuildProjections(SearchRequestDto searchRequestDto, ApplicationAssociationDefinition association) {
 
             var entityAssociation = association.EntityAssociation;
-            var primaryAttribute = entityAssociation.PrimaryAttribute();
-            var valueField = association.ValueField == null ? primaryAttribute.To : association.ValueField;
+            var valueField = association.ValueField;
             if (entityAssociation.Reverse) {
                 valueField = entityAssociation.ReverseLookupAttribute;
             }

@@ -158,6 +158,7 @@
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PaeAssetCrudConnector.cs" />
+    <Compile Include="Metadata\Applications\Association\ApplicationAssociationSyncSchemaFactory.cs" />
     <Compile Include="Metadata\Applications\Classification\ClassificationDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />

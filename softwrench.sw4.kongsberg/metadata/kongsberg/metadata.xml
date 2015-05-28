@@ -1217,7 +1217,9 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportdate" label="Report Date">
+            <renderer type="datetime"/>
+          </field>
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
@@ -1247,7 +1249,9 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportdate" label="Report Date">
+            <renderer type="datetime"/>
+          </field>
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
@@ -1277,7 +1281,9 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportdate" label="Report Date">
+            <renderer type="datetime"/>
+          </field>
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
@@ -1299,7 +1305,7 @@
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id="srsection" />
-          <field attribute="ticketid" label="Reference ID:" readonly="true"/>
+          <field attribute="ticketid" label="Reference ID:" readonly="true" hidden="true"/>
           <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           <field attribute="actlabcost" hidden="true" />
@@ -1402,7 +1408,7 @@
           <section>
             <header displacement="ontop" label="Key Dates" params="fieldset=true"/>
             <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+              <renderer type="datetime" params="inputsize=small"/>
             </field>
           </section>
           <field label="Target Start:" attribute="targetstart" readonly="true">
@@ -1483,12 +1489,12 @@
                 <event type="afterchange" service="solutionService" method="setsolutiondata"/>
               </association>
               <optionfield attribute="pmcosolstatus" label="Solution Status:">
-                <renderer type="combo" params="inputsize=medium" />
+                <renderer type="combo" params="inputsize=medium;optionfield.donotusefirstoptionasdefault=true" />
                 <option label="Under Consideration" value="CONSIDER" />
                 <option label="Solution Failed" value="FAIL" />
                 <option label="Solution Successful" value="SUCCESS" />
               </optionfield>
-              <field attribute="selfservsolaccess" label="Slef-Service Access?">
+              <field attribute="selfservsolaccess" label="Self-Service Access?">
                 <renderer type="checkbox" params="inputsize=medium" />
               </field>
               <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
@@ -1892,7 +1898,7 @@
             <renderer type="default" params="width=16%" />
           </field>
           <field label="Reported Date" attribute="reportdate">
-            <renderer type ="default" params="width=16%"/>
+            <renderer type ="datetime" params="width=16%"/>
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type ="default" params="width=16%"/>

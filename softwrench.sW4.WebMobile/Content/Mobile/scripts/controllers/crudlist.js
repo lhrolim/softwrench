@@ -34,6 +34,10 @@
         return statuscolorService.getColor(item["status"], crudContextService.currentApplicationName());
     }
 
+    $scope.openDetail = function (item) {
+        crudContextService.loadDetail(item);
+    }
+
     $scope.getStatusText = function (item) {
         return item["status"].charAt(0);
     }

@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="worklog" title="Work Logs"  entity="worklog" id="00000000-0000-0000-0000-000000000008">
+      <properties>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="mobile.fetchlimit" value="300"/>
+        <property key="list.schema.mode" value="input"/>
+        <property key ="icon.composition.tab" value="fa fa-comment-o"/>
+      </properties>
+      <schemas>
+        <schema id="list"  stereotype="compositionlist">
+          <field attribute="worklogid" hidden="true" />
+          <field attribute="recordkey" label="Record Key" hidden="true" />
+          <field attribute="class" label="Class" hidden="true" />
+          <field attribute="createby" label="Created By" />
+          <field attribute="createdate" label="Date" hidden="true"/>
+          <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field attribute="synonymdomain_.description" label="Log Type"/>
+          <field attribute="description" label="Summary" qualifier="title"/>
+        </schema>
+
+        <detail stereotype="compositiondetail">
+          <field attribute="description" label="Summary:" requiredexpression="true" />
+          <field attribute="worklogdesc_.ldtext" label="Details:" >
+          <renderer type="richtext"/>
+          </field>
+          <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE">
+            <option label="Appointment Note" value="APPTNOTE"/>
+            <option label="Client Note" value="CLIENTNOTE"/>
+            <option label="Update" value="UPDATE"/>
+            <option label="Work" value="WORK"/>
+          </optionfield>
+          <optionfield attribute="clientviewable" label="Client Viewable:" default="0">
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
+        </detail>
+      </schemas>
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>
