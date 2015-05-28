@@ -752,8 +752,6 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="asset" />
-        <connectorParameter key="integration_interface" value="SWASSET" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseAssetCrudConnector" />
       </connectorParameters>
     </entity>
 
