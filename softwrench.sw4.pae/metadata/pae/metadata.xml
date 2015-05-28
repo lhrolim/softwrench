@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <entities>
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
+    <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
       <attributes>
         <attribute name="assetid" type="bigint" required="true"/>
         <attribute name="locinfo" type="varchar" required="false" />
@@ -11,6 +11,10 @@
         <attribute name="proptype" type="varchar" required="false" />
         <attribute name="propmanuf" type="varchar" required="false" />
         <attribute name="description" type="varchar" required="true"/>
+        <attribute name="invdate" type="datetime" required="true"/>
+        <attribute name="invpostdate" type="datetime" required="true"/>
+        <attribute name="invpostdateby" type="varchar" required="true"/>
+        <attribute name="invposttype" type="varchar" required="true"/>
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="assettype">
@@ -20,6 +24,10 @@
             <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
           </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWASSET" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.PaeAssetCrudConnector"/>
+      </connectorParameters>
     </entity>
   </entities>
 
@@ -37,7 +45,7 @@
       </schemas>
     </application>
 
-    <application name="asset" title="Asset" entity="asset" audit="true">
+    <application name="asset" title="Asset" entity="paeasset" audit="true">
       <schemas>
         <list>
           <field attribute="assetid" hidden="true"/>
@@ -49,6 +57,12 @@
           <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
         </list>
         <detail>
+          <field attribute="plustsoldamt" hidden="true"/>
+          <field attribute="plusttotalmprevenue" hidden="true"/>
+          <field attribute="taxpercent" hidden="true"/>
+
+          <field attribute="priority" hidden="true"/>
+          <field attribute="totdowntime" hidden="true"/>
           <field attribute="purchaseprice" hidden="true"/>
           <field attribute="replacecost" hidden="true"/>
           <field attribute="totalcost" hidden="true"/>
