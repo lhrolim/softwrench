@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// Path where the files are stored in the maximo´s server fs, must be removed from the url path
         /// </summary>
         private string _baseMaximoPath;
-        
+
         public void HandleAttachments(object maximoObj, string attachmentData, string attachmentPath, ApplicationMetadata applicationMetadata) {
 
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)) {
@@ -50,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
                 CommonCode(maximoObj, docLink, user, attachmentPath, attachmentData);
                 HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
-                
+
             }
         }
 
@@ -143,7 +143,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     if (id.Equals(attachmentId)) {
 
                         var fileBytes = w.GetRealValue(attachment, "DOCUMENTDATA") as byte[];
-                        var fileName = w.GetRealValue(attachment, "DESCRIPTION") as String;
+                        var fileName = BuildFileName(w.GetRealValue(attachment, "URLNAME") as String);
 
                         return Tuple.Create(fileBytes, fileName);
                     }
@@ -151,6 +151,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
 
             return null;
+        }
+
+        public static string BuildFileName(string urlName) {
+            //HAP-1041
+            var idx = urlName.LastIndexOf("/", StringComparison.Ordinal);
+            if (idx == -1) {
+                idx = urlName.LastIndexOf("\\", StringComparison.Ordinal);
+            }
+            if (idx == -1) {
+                Log.WarnFormat("couldn´t locate filename out of url property {0}", urlName);
+                return null;
+            }
+            return urlName.Substring(idx + 1);
         }
 
         public string GetFileUrl(String docInfoURL) {
@@ -202,6 +215,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
-     
+
     }
 }

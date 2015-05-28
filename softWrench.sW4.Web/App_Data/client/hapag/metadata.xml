@@ -3467,7 +3467,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" hidden="true" attribute="document"/>
-          <section id="document" attribute="docinfo_.description" resourcepath="/Content/Templates/downloadattachment.html"
+          <field label="Document" hidden="true" attribute="docinfo_.urlname"/>
+          <section id="document" attribute="urldescription" resourcepath="/Content/Templates/downloadattachment.html"
 									  parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=ws">
             <header label="Document" displacement="sameline"/>
           </section>

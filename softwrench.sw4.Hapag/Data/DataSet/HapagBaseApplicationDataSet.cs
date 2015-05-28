@@ -1,8 +1,12 @@
 ﻿using System.Text;
+using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Security;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -51,6 +55,28 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
                 return maxDAO;
             }
+        }
+
+        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
+            InMemoryUser user, DetailRequest request) {
+            var result = base.GetApplicationDetail(application, user, request);
+            var ob = result.ResultObject;
+            if (ob != null) {
+                var attachments = ob.GetAttribute("attachment_");
+                if (attachments != null) {
+                    foreach (var att in (IEnumerable<Dictionary<string, object>>)attachments) {
+                        var urlDescription = AttachmentHandler.BuildFileName(att["docinfo_.urlname"] as string);
+                        if (urlDescription == null) {
+                            //keep description
+                            att["urldescription"] = att["description"];
+                        } else {
+                            att["urldescription"] = urlDescription;
+                        }
+
+                    }
+                }
+            }
+            return result;
         }
 
         public virtual IEnumerable<IAssociationOption> GetHlagAllLocations(OptionFieldProviderParameters parameters) {
@@ -172,13 +198,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             //            dto.AppendWhereClauseFormat(@"ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) ) " +
             //                                        "or (imac.classificationid = '81515700' and imac.description = 'Decommission of {0}')", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
 
-//            var applicationsToIterate = _applications.Where(a => !a.EqualsIc(originalClass));
+            //            var applicationsToIterate = _applications.Where(a => !a.EqualsIc(originalClass));
             var sb = new StringBuilder();
-            if (ticketId is ICollection){
+            if (ticketId is ICollection) {
                 ticketId = String.Join("','", ticketId.As<List<String>>());
                 sb.AppendFormat("((worklog.recordkey in ('{0}') ) AND ( worklog.class = '{1}' )) ", ticketId,
                     originalClass);
-                foreach (var application in _applications){
+                foreach (var application in _applications) {
                     sb.AppendFormat(@"
                 or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
                 from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')",
@@ -187,10 +213,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 dto.ExtraLeftJoinSection =
                     "left join relatedrecord rr on (rr.RECORDKEY = worklog.RECORDKEY and worklog.CLASS = rr.CLASS and rr.RELATEDRECKEY in ('{0}'))".Fmt(ticketId);
                 dto.AppendProjectionField(new ProjectionField("relatedrecordkey", "rr.RELATEDRECKEY"));
-            } else{
+            } else {
                 sb.AppendFormat("((worklog.recordkey = '{0}' ) AND ( worklog.class = '{1}' )) ", ticketId,
                     originalClass);
-                foreach (var application in _applications){
+                foreach (var application in _applications) {
                     sb.AppendFormat(@"
                 or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
                 from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')",

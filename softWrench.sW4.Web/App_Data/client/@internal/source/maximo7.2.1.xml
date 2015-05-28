@@ -78,7 +78,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<attribute name="urlparam5" type="varchar" required="false" />
 				<attribute name="urltype" type="varchar" required="true" />
 				<attribute name="usedefaultfilepath" type="integer" required="true" />
-			</attributes>
+				<attribute name="urldescription" type="varchar" query="" />
+      </attributes>
 			<connectorParameters>
 				<connectorParameter key="dbtable" value="DOCINFO" />
 			</connectorParameters>
