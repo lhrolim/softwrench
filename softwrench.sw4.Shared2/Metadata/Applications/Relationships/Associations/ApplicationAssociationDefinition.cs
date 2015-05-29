@@ -165,7 +165,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public string ValueField {
             get {
                 if (_valueField == null && !_valueFieldSet) {
-                    _valueField = EntityAssociation.PrimaryAttribute().To;
+                    var primaryAttribute = EntityAssociation.PrimaryAttribute();
+                    if (primaryAttribute != null) {
+                        //TODO: this should not be allowed
+                        _valueField = primaryAttribute.To;
+                    }
                     _valueFieldSet = true;
                 }
                 return _valueField;

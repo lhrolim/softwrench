@@ -1,8 +1,19 @@
-﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope,schemaService, crudContextService, fieldService, offlineAssociationService) {
+﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
         $scope.datamap = crudContextService.currentDetailItem();
+    }
+
+    $ionicPopover.fromTemplateUrl('Content/Mobile/templates/compositionmenu.html', {
+        scope: $scope,
+    }).then(function (popover) {
+        $scope.compositionpopover = popover;
+    });
+
+
+    $scope.expandCompositions = function ($event) {
+        $scope.compositionpopover.show($event);
     }
 
 
@@ -19,7 +30,7 @@
         return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
     }
 
-    $scope.getAssociationLabelField=function(fieldMetadata) {
+    $scope.getAssociationLabelField = function (fieldMetadata) {
         return 'datamap.' + fieldMetadata.labelFields[0];
     }
 
@@ -27,12 +38,12 @@
         return 'datamap.' + fieldMetadata.valueField;
     }
 
-    $scope.detailSummary = function() {
-        return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap,true);
+    $scope.detailSummary = function () {
+        return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap, true);
     }
 
     $scope.navigateNext = function () {
-        crudContextService.navigateNext().then(function() {
+        crudContextService.navigateNext().then(function () {
             $scope.datamap = crudContextService.currentDetailItem();
         });
     }

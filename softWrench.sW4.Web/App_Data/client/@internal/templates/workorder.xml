@@ -324,14 +324,14 @@
             <!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
             <!--            </composition>-->
           </section>
-          <commandbars>
-            <!--<commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
-              </container>
-            </commandgroup>-->
-
-          </commandbars>
+<!--          <commandbars>-->
+<!--            <commandgroup position="actions">-->
+<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+<!--                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>-->
+<!--              </container>-->
+<!--            </commandgroup>-->
+<!---->
+<!--          </commandbars>-->
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>

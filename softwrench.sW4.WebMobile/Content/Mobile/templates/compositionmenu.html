@@ -1,0 +1,9 @@
+﻿<ion-popover-view>
+    <ion-content>
+        <div class="list">
+            <a class="item {{getCompositionIcons(composition)}}" ng-repeat="composition in compositionMenus()" ng-click="openComposition(composition)" target="_blank">
+                {{getCompositionTitle()}}
+            </a>
+        </div>
+    </ion-content>
+</ion-popover-view>

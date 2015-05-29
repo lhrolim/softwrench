@@ -128,6 +128,7 @@
     <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
     <Content Include="Content\Mobile\styles\list.css" />
+    <Content Include="Content\Mobile\templates\compositionmenu.html" />
     <Content Include="Content\Mobile\templates\crud_input.html" />
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Mobile\templates\directives\crud\crud_input_fields.html" />
