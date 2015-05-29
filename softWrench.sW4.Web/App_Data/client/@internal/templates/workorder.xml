@@ -325,11 +325,11 @@
             <!--            </composition>-->
           </section>
           <commandbars>
-            <commandgroup position="actions">
+            <!--<commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
               </container>
-            </commandgroup>
+            </commandgroup>-->
 
           </commandbars>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
