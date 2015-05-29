@@ -112,7 +112,7 @@ namespace softWrench.sW4.Data.Search {
 
             sb.Append(listDto.SearchParams).Replace("#", "");
             var searchParameters = listDto.GetParameters();
-            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
+            var parameters = getParametersOnTheRightOrder(searchParameters, listDto);
             var j = 0;
 
             foreach (var parameter in parameters) {
@@ -186,6 +186,22 @@ namespace softWrench.sW4.Data.Search {
             sb.Replace("&&", " AND ");
             sb.Replace("||,", " OR ");
             return sb.ToString();
+        }
+
+        private static IEnumerable<string> getParametersOnTheRightOrder(IDictionary<string, SearchParameter> searchParameters, SearchRequestDto listDto) {
+            var baseList = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
+            var result = new List<string>();
+            var i = 0;
+            foreach (var param in baseList) {
+                if (searchParameters.ContainsKey(i + param)) {
+                    //if there are multiple parameters for the same column (ex: a fixed whereclause + a grid filter status&&status --> status&&1status)
+                    result.Add(i+param);
+                } else {
+                    result.Add(param);
+                }
+                i++;
+            }
+            return result;
         }
 
         public static IDictionary<String, object> GetParameters(SearchRequestDto listDto) {
