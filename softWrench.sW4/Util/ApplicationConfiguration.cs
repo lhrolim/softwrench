@@ -318,10 +318,10 @@ namespace softWrench.sW4.Util {
                 return new ConnectionStringSettings("maximo", url, provider);
             } else {
                 if (IsLocal() && IsDev()) {
-                    var swdbConnectionString = ConfigurationManager.ConnectionStrings["swdb"];
-                    if (swdbConnectionString == null) {
-                        swdbConnectionString = new ConnectionStringSettings("swdb", "Server=localhost;Database=swdb;Uid=sw;Pwd=sw;", "MySql.Data.MySqlClient");
-                    }
+                    //                    var swdbConnectionString = ConfigurationManager.ConnectionStrings["swdb_hapag"];
+                    //                    if (swdbConnectionString == null) {
+                    var swdbConnectionString = new ConnectionStringSettings("swdb", "Server=localhost;Database=swdbhapag;Uid=sw;Pwd=sw;", "MySql.Data.MySqlClient");
+                    //                    }
                     return swdbConnectionString;
                 }
                 var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true);
