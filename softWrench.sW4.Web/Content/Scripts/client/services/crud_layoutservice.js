@@ -2,8 +2,7 @@
 
 app.factory('layoutservice', function (fieldService) {
     function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
-        var maxColumns = 0;
-        maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
+        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
         //use full-width fields on xsmall screen
         var classes = ' col-xs-12';
@@ -25,8 +24,7 @@ app.factory('layoutservice', function (fieldService) {
     };
 
     function getDefaultColumnClassesForLabel(datamap, schema, displayables, params) {
-        var maxColumns = 0;
-        maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
+        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
         var childColumns = 1;
         if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
@@ -34,7 +32,6 @@ app.factory('layoutservice', function (fieldService) {
             //TODO: allow for large, medium or small inputsizes
             childColumns = 2;
         }
-
 
         //use full-width fields on xsmall screen, label above the input
         var classes = ' col-xs-12';
@@ -55,8 +52,7 @@ app.factory('layoutservice', function (fieldService) {
     };
 
     function getDefaultColumnClassesForInput(datamap, schema, displayables, params) {
-        var maxColumns = 0;
-        maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
+        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
         var childColumns = 1;
         if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
@@ -117,8 +113,11 @@ app.factory('layoutservice', function (fieldService) {
         var maxColumns = null;
 
         if (params.sectionparameters != null && params.sectionparameters.childinputsize != null) {
-            //maxColumns = convertInputSizeToColumnCount(params.sectionparameters.childinputsize);
-            maxColumns = 1;
+            if (params.sectionparameters.inputsize != null) {
+                maxColumns = 1;
+            } else {
+                maxColumns = convertInputSizeToColumnCount(params.sectionparameters.childinputsize);
+            }
         } else if (params.columnCount) {
             maxColumns = params.columnCount;
         } else {
@@ -150,7 +149,6 @@ app.factory('layoutservice', function (fieldService) {
 
 
     return {
-
         getFieldClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
