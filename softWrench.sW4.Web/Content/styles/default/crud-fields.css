@@ -253,7 +253,7 @@ input[type=search] {
 
 /*SM - SWWEB-732*/
 .form-group.samelinepickers {
-    margin-bottom: 0;
+    /*margin-bottom: 0;*/
 }
 /*SM - SWWEB-732*/
 
