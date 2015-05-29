@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('changeservice', function ($http, redirectService, formatService, fieldService) {
+app.factory('changeservice', function ($http, redirectService, formatService, fieldService,alertService) {
 
     return {
 
@@ -22,6 +22,13 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
             var isSr = wonum == null || wonum == "-666" || column.attribute == 'hlagchangeticketid';
             var application = isSr ? 'servicerequest' : 'change';
             var id = isSr ? datamap['hlagchangeticketid'] : wonum;
+            if (id == null) {
+                if (isSr) {
+                    alertService.alert("No Service Request is related to this entry. Cannot open Service Request details");
+                    return;
+                }
+                
+            }
             var parameters = { id: id, popupmode: 'browser' };
             redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
         },
