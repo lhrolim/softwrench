@@ -1,34 +1,9 @@
 ﻿var app = angular.module('sw_layout');
 
-
-
-
 app.factory('layoutservice', function (fieldService) {
-
-    function getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation) {
-        if (verticalOrientation) {
-            return 1;
-        }
-
-        var countColumns = fieldService.countVisibleDisplayables(datamap, schema, displayables);
-
-        //ensure that no more than 4 inputs are placed on one row
-        if (countColumns > 4) {
-            countColumns = 4;
-        }
-
-        return countColumns
-    };
-
-    function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, verticalOrientation, inputSize) {
+    function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
         var maxColumns = 0;
-
-        //use the provided inputSize, else calculate the number of columns
-        if (inputSize) {
-            maxColumns = inputSize;
-        } else {
-            maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
-        }
+        maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
         //use full-width fields on xsmall screen
         var classes = ' col-xs-12';
@@ -49,40 +24,44 @@ app.factory('layoutservice', function (fieldService) {
         return classes;
     };
 
-    function getDefaultColumnClassesForLabel(datamap, schema, displayables, verticalOrientation, inputSize) {
+    function getDefaultColumnClassesForLabel(datamap, schema, displayables, params) {
         var maxColumns = 0;
+        maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
-        //use the provided inputSize, else calculate the number of columns
-        if (inputSize) {
-            maxColumns = inputSize;
-        } else {
-            maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
+        var childColumns = 1;
+        if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
+
+            //TODO: allow for large, medium or small inputsizes
+            childColumns = 2;
         }
+
 
         //use full-width fields on xsmall screen, label above the input
         var classes = ' col-xs-12';
 
         //calculate the small screen columns
         if (maxColumns == 1) {
-            classes += ' col-sm-3';
+            //classes += ' col-sm-3';
+            classes += ' col-sm-' + 3 * childColumns;
         } else {
-            classes += ' col-sm-6';
+            //classes += ' col-sm-6';
+            classes += ' col-sm-' + 6 * childColumns;
         }
 
         //calculate the medium screen columns
-        classes += ' col-md-' + 2 * maxColumns;
+        classes += ' col-md-' + 2 * maxColumns * childColumns;
 
         return classes;
     };
 
-    function getDefaultColumnClassesForInput(datamap, schema, displayables, verticalOrientation, inputSize) {
+    function getDefaultColumnClassesForInput(datamap, schema, displayables, params) {
         var maxColumns = 0;
+        maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
-        //use the provided inputSize, else calculate the number of columns
-        if (inputSize) {
-            maxColumns = inputSize;
-        } else {
-            maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
+        var childColumns = 1;
+        if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
+            //TODO: allow for large, medium or small inputsizes
+            childColumns = 2;
         }
 
         //use full-width fields on xsmall screen, input below the label
@@ -90,50 +69,85 @@ app.factory('layoutservice', function (fieldService) {
 
         //calculate the small screen columns
         if (maxColumns == 1) {
-            classes += ' col-sm-9';
+            //classes += ' col-sm-9';
+            classes += ' col-sm-' + 9 * childColumns;
         } else {
-            classes += ' col-sm-6';
+            //classes += ' col-sm-6';
+            classes += ' col-sm-' + 6 * childColumns;
         }
 
         //calculate the medium screen columns
-        classes += ' col-md-' + (12 - (2 * maxColumns));
+        classes += ' col-md-' + (12 - (2 * maxColumns * childColumns));
 
         return classes;
     };
 
-    function convertInputSizeToColumnCount(fieldMetadata) {
+    function getDefaultMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation) {
+        if (verticalOrientation) {
+            return 1;
+        }
+
+        var countColumns = fieldService.countVisibleDisplayables(datamap, schema, displayables);
+
+        //ensure that no more than 4 inputs are placed on one row
+        if (countColumns > 4) {
+            countColumns = 4;
+        }
+
+        return countColumns
+    };
+
+    function getFieldColumnCount(fieldMetadata) {
         var columnCount = null;
 
         if (fieldMetadata.rendererParameters != null) {
-            var inputsize = '';
+            var inputSize = '';
 
-            if (fieldMetadata.rendererParameters['childinputsize'] != null) {
-                inputsize = fieldMetadata.rendererParameters['childinputsize'];
+            if (fieldMetadata.rendererParameters['inputsize'] != null) {
+                inputSize = fieldMetadata.rendererParameters['inputsize'];
+            } 
 
-            } else if (fieldMetadata.rendererParameters['inputsize'] != null) {
-                inputsize = fieldMetadata.rendererParameters['inputsize'];
-            } else {
-                inputsize = 'large';
-            }
-
-            switch (inputsize) {
-                case 'xsmall':
-                    columnCount = 4;
-                    break;
-                case 'small':
-                    columnCount = 3;
-                    break;
-                case 'medium':
-                    columnCount = 2;
-                    break;
-                case 'large':
-                    columnCount = 1;
-                    break;
-            }
+            columnCount = convertInputSizeToColumnCount(inputSize)
         }
 
         return columnCount;
     };
+
+    function CalculateMaxNumberOfColumns(datamap, schema, displayables, params) {
+        var maxColumns = null;
+
+        if (params.sectionparameters != null && params.sectionparameters.childinputsize != null) {
+            //maxColumns = convertInputSizeToColumnCount(params.sectionparameters.childinputsize);
+            maxColumns = 1;
+        } else if (params.columnCount) {
+            maxColumns = params.columnCount;
+        } else {
+            maxColumns = getDefaultMaxNumberOfColumns(datamap, schema, displayables, params.isVerticalOrientation);
+        }
+
+        return maxColumns;
+    };
+
+    function convertInputSizeToColumnCount(inputSize) {
+        var columnCount = null;
+
+        switch (inputSize) {
+            case 'xsmall':
+                columnCount = 4;
+                break;
+            case 'small':
+                columnCount = 3;
+                break;
+            case 'medium':
+                columnCount = 2;
+                break;
+            default:
+                columnCount = 1;
+        }
+
+        return columnCount;
+    };
+
 
     return {
 
@@ -167,14 +181,13 @@ app.factory('layoutservice', function (fieldService) {
                 cssclass += ' haschildren';
             }
 
-            var columnCount = convertInputSizeToColumnCount(fieldMetadata);
-            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params.isVerticalOrientation, columnCount);
+            params.columnCount = getFieldColumnCount(fieldMetadata);
 
+            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params);
             cssclass += ' row';
 
             return cssclass;
         },
-
 
         getInputClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
@@ -198,12 +211,10 @@ app.factory('layoutservice', function (fieldService) {
                 return cssclass;
             }
 
-            var columnCount = convertInputSizeToColumnCount(fieldMetadata);
+            params.columnCount = getFieldColumnCount(fieldMetadata);
 
             if (this.hasSameLineLabel(fieldMetadata)) {
-
-                //TODO: get parent displable rendererParameters and pass to getDefaultColumnClassesForInput
-                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, params.isVerticalOrientation, columnCount);
+                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, params);
             } else {
                 cssclass += ' col-xs-12';
             }
@@ -229,12 +240,10 @@ app.factory('layoutservice', function (fieldService) {
             }
 
             var returnClass = '';
-            var columnCount = convertInputSizeToColumnCount(fieldMetadata);
+            params.columnCount = getFieldColumnCount(fieldMetadata);
 
             if (this.hasSameLineLabel(fieldMetadata)) {
-
-                //TODO: get parent displable rendererParameters and pass to getDefaultColumnClassesForLabel
-                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, params.isVerticalOrientation, columnCount);
+                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, params);
             } else {
                 returnClass += 'col-xs-12';
             }
