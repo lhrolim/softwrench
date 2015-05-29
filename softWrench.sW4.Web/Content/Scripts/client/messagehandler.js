@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('messagesection', function (contextService,$timeout) {
+app.directive('messagesection', function (contextService,$timeout,logoutService) {
     return {
         restrict: 'E',
         templateUrl: contextService.getResourceUrl('Content/Templates/message_section.html'),
@@ -60,7 +60,12 @@ app.directive('messagesection', function (contextService,$timeout) {
                 hideSuccessMessage();
             });
 
-            $scope.$on('sw_ajaxerror', function (event, errordata) {
+            $scope.$on('sw_ajaxerror', function (event, errordata, status) {
+                if (status == 403) {
+                    logoutService.logout();
+                    return;
+                }
+
                 if ($scope.errorMsg) {
                     return;
                 }

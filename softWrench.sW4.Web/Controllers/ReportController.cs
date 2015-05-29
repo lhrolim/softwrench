@@ -18,8 +18,10 @@ using System.Text;
 using softWrench.sW4.Data.Search;
 using System.Text.RegularExpressions;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
+    [ApplicationAuthorize]
     public class ReportController : Controller {
 
         private readonly DataController _dataController;

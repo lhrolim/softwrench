@@ -283,6 +283,7 @@
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\MyProfile\MyProfileModel.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
+    <Compile Include="Security\ApplicationAuthorizeAttribute.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
     <Compile Include="SPF\Filters\ContextFilter.cs" />

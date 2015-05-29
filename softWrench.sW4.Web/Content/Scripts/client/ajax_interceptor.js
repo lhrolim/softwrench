@@ -4,7 +4,7 @@ app.config(['$httpProvider', function ($httpProvider) {
 
     var logName = "sw4.ajaxint";
 
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log) {
+    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log,logoutService) {
         var activeRequests = 0;
         var started = function (config) {
             lockCommandBars();
@@ -63,6 +63,8 @@ app.config(['$httpProvider', function ($httpProvider) {
         var endederror = function (rejection) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
             $('[rel=tooltip]').tooltip('hide');
+            
+
             if (rejection.status == 401) {
                 window.location = url('');
                 return;
@@ -71,7 +73,8 @@ app.config(['$httpProvider', function ($httpProvider) {
             unLockCommandBars();
             unLockTabs();
             if (activeRequests == 0) {
-                $rootScope.$broadcast('sw_ajaxerror', rejection.data);
+                $rootScope.$broadcast('sw_ajaxerror', rejection.data,rejection.status);
+              
             }
         };
 

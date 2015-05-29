@@ -12,10 +12,11 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.Faq;
+using softWrench.sW4.Web.Security;
 using softWrench.sW4.Web.SPF;
 
 namespace softWrench.sW4.Web.Controllers {
-    [System.Web.Http.Authorize]
+    [ApplicationAuthorize]
     [SPFRedirect(URL = "Faq", Title = "FAQs")]
     // kept for reference
     public class FaqApiController : ApiController {

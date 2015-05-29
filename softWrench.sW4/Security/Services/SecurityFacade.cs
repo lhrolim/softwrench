@@ -136,6 +136,10 @@ namespace softWrench.sW4.Security.Services {
             }
 
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
+            if (currLogin == "") {
+                throw new UnauthorizedAccessException();
+            }
+
             if (!fetchFromDB || currLogin == null || _users.ContainsKey(currLogin)) {
                 return _users[currLogin];
             }

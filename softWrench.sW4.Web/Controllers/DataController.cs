@@ -20,6 +20,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Controllers.Routing;
+using softWrench.sW4.Web.Security;
 using softWrench.sW4.Web.SPF;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ using System.Diagnostics;
 
 namespace softWrench.sW4.Web.Controllers {
 
-    [Authorize]
+    [ApplicationAuthorize]
     [SPFRedirect(URL = "Application")]
     [SWControllerConfiguration]
     public class DataController : ApiController {

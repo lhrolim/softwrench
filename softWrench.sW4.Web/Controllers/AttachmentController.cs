@@ -1,25 +1,11 @@
 ﻿using System;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Commons;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications.DataSet;
-using softwrench.sW4.Shared2.Metadata;
-using softWrench.sW4.Util;
-using softWrench.sW4.Security.Services;
-using System.Web.Http;
-using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Metadata.Applications.DataSet;
-using Newtonsoft.Json.Linq;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Data.API;
 
 namespace softWrench.sW4.Web.Controllers {
 
+    [Authorize]
     public class AttachmentController : FileDownloadController {
 
         private readonly AttachmentHandler _attachmentHandler = new AttachmentHandler();

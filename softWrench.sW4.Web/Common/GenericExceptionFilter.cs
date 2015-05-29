@@ -18,14 +18,28 @@ namespace softWrench.sW4.Web.Common {
 
         public override void OnException(HttpActionExecutedContext context) {
             var e = context.Exception;
+            HttpResponseMessage errorResponse;
+            if (e is UnauthorizedAccessException) {
+                errorResponse = context.Request.CreateResponse(HttpStatusCode.Forbidden);
+                Log.Warn(e);
+                throw new HttpResponseException(errorResponse);
+            }
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
-            var errorResponse = context.Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorDto(rootException));
+            errorResponse = context.Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorDto(rootException));
             throw new HttpResponseException(errorResponse);
         }
 
         public void OnException(ExceptionContext filterContext) {
             var e = filterContext.Exception;
+            if (e is UnauthorizedAccessException) {
+                filterContext.ExceptionHandled = true;
+                filterContext.HttpContext.Response.Clear();
+                filterContext.HttpContext.Response.StatusCode = 403;
+                filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+                return;
+            }
+
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
             //            var errorResponse = filterContext.HttpContext.Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorDto(rootException));

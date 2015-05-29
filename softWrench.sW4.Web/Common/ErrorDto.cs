@@ -24,7 +24,7 @@ namespace softWrench.sW4.Web.Common {
 
         private static string GetErrorMessage(Exception rootException) {
             const string errorNested = "nested exception is: psdi.util.MXApplicationException:";
-            return rootException.Message.Replace(errorNested, "");
+            return rootException == null ? null : rootException.Message.Replace(errorNested, "");
         }
     }
 }

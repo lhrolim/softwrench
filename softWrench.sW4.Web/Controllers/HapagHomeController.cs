@@ -18,12 +18,13 @@ using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Hapag;
 using System.Collections.Generic;
 using System.Web.Http;
+using softWrench.sW4.Web.Security;
 using softWrench.sW4.Web.SPF;
 using c = softwrench.sw4.Hapag.Data.HapagDashBoardsConstants;
 
 namespace softWrench.sW4.Web.Controllers {
 
-    [System.Web.Mvc.Authorize]
+    [ApplicationAuthorize]
     [SPFRedirect(URL = "Application", CrudSubTemplate = "/Templates/hapag/HapagHome.html")]
     [SWControllerConfiguration]
     public class HapagHomeController : ApiController {

@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Util;
+using softWrench.sW4.Web.Security;
 using softWrench.sW4.Web.Util;
 using softwrench.sw4.Shared2.Util;
 
@@ -32,6 +33,7 @@ namespace softWrench.sW4.Web.Controllers {
             _excelUtil = excelUtil;
         }
 
+        [ApplicationAuthorize]
         public FileContentResult Export(string application, [FromUri]ApplicationMetadataSchemaKey key,
             [FromUri] PaginatedSearchRequestDto searchDTO, string module) {
 
