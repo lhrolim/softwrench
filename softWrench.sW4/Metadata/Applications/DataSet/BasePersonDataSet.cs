@@ -87,9 +87,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             // Save the updated sw user record
             var username = json.GetValue("personid").ToString();
-            User user = UserManager.GetUserByUsername(username);
-            user.Password = AuthUtils.GetSha1HashData(json.GetValue("#password").ToString());
             var isactive = json.GetValue("#isactive").ToString() == "1";
+            User user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
+            user.Password = AuthUtils.GetSha1HashData(json.GetValue("#password").ToString());
             user.IsActive = isactive;
             UserManager.SaveUser(user);
 

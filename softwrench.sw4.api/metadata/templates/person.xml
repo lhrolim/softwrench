@@ -40,6 +40,7 @@
           <field attribute="#isactive" label="Active">
             <renderer type="checkbox"/>
           </field>
+          <section resourcepath=""/>
           
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
