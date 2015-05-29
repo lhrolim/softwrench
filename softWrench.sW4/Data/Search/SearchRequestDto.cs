@@ -118,8 +118,7 @@ namespace softWrench.sW4.Data.Search {
             var searchParameters = GetParameters();
             var parameters = Regex.Split(SearchParams, SearchUtils.SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
 
-            foreach (var parameterSt in parameters)
-            {
+            foreach (var parameterSt in parameters) {
 
                 var parameter = searchParameters[parameterSt];
 
@@ -153,8 +152,20 @@ namespace softWrench.sW4.Data.Search {
 
             unionDTO.SearchParams = sb.ToString();
             unionDTO.SearchValues = SearchValues;
+            HandleUnionZeroedValueCases(unionDTO);
         }
 
+        private void HandleUnionZeroedValueCases(SearchRequestDto unionDto) {
+            unionDto.GetParameters();
+            foreach (var entry in unionDto.ValuesDictionary) {
+                if (entry.Key.Contains("zeroed")) {
+                    //HAP-1026 difficult bug to solve generically --> if attribute is zeroed, like will fix the issue and keep it working.
+                    entry.Value.Value = "%" + entry.Value.Value + "%";
+                    entry.Value.SearchOperator = SearchOperator.CONTAINS;
+                }
+            }
+
+        }
 
 
         public SearchRequestDto AppendSearchEntry(string searchParam, string searchValue) {

@@ -52,14 +52,14 @@ namespace softWrench.sW4.Data.Search {
             return searchOperator;
         }
 
-        public SearchOperator SearchOperator { get; private set; }
+        public SearchOperator SearchOperator { get; internal set; }
 
         /// <summary>
         /// if true this indicates a FilterSearch, that would need to be case-insensitive handled
         /// </summary>
         public bool FilterSearch { get; set; }
 
-        public object Value { get; private set; }
+        public object Value { get; internal set; }
         public bool IsList { get { return SearchOperator == SearchOperator.OR; } }
 
         public bool IsNumber { get; set; }
