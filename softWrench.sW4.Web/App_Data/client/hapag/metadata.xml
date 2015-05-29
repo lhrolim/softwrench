@@ -72,6 +72,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="numberdaysopen" type="varchar" required="false" query="ref:numberofdaysopen"/>
         <attribute name="hlagreportedby" type="varchar" required="false" query="ref:reportedbycustom"/>
         <attribute name="inouttime" type="varchar" required="false" query="CASE WHEN !@internalpriority=1 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=2 THEN 'INTIME' WHEN !@internalpriority=1 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >2 THEN 'OUTTIME' WHEN !@internalpriority=2 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=4  THEN 'INTIME' WHEN !@internalpriority=2 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >4 THEN 'OUTTIME' WHEN !@internalpriority=3 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=6  THEN 'INTIME' WHEN !@internalpriority=3 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >6 THEN 'OUTTIME' WHEN !@internalpriority=4 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=8  THEN 'INTIME' WHEN !@internalpriority=4 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >8 THEN 'OUTTIME' END" />
+        <attribute name="closeddate" type="varchar" required="false" query="CASE WHEN !@status = 'CLOSED' then !@statusdate ELSE null END" />
+        
+        
       </attributes>
       <relationships>
         <relationship to="worklog" qualifier="lastworklog">
@@ -606,7 +609,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
           <field attribute="statusdate" hidden="true" />
-          <field label="Closed Date" attribute="#closeddate">
+          <field label="Closed Date" attribute="closeddate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
           <field attribute="ownergroup" label="Owner Group"/>

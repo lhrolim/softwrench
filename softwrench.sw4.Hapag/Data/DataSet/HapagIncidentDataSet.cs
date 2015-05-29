@@ -137,7 +137,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var resultObject = dbDetail.ResultObject;
 
             if (application.Schema.Mode == SchemaMode.output) {
-                HandleClosedDate(resultObject, application);
+                HandleClosedDate(resultObject);
             }
             return dbDetail;
         }
@@ -155,7 +155,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return dbList;
         }
 
-        private void HandleClosedDate(DataMap resultObject, ApplicationMetadata application) {
+        private static void HandleClosedDate(AttributeHolder resultObject) {
             var status = resultObject.GetAttribute("status");
             var statusDate = resultObject.GetAttribute("statusdate");
             if ("CLOSED".Equals(status)) {
@@ -198,6 +198,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 try {
                     attributeHolder.Attributes["#currentdatetime"] = DateTime.Now;
                     attributeHolder.Attributes[SITEID] = attributeHolder.Attributes[SITEID].ToString().Split('-').Last().Substring(0, 3);
+                    HandleClosedDate(attributeHolder);
                 } catch (ArgumentOutOfRangeException ae) {
                 }
             }
