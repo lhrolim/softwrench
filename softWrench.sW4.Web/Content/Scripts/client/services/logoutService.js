@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('logoutService', function (contextService,i18NService) {
+app.factory('logoutService', function (contextService, i18NService, $window) {
 
     return {
 
