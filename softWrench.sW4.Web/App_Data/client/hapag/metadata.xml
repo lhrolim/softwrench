@@ -1059,7 +1059,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <section resourcepath="/Content/templates/hapag/embeddedofferingpdf.html" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null" required="true"/>
-         
+
             <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." tooltip="Platz für zusätzliche Angaben / Wünsche.Bitte beachten Sie: Sonderwünsche sind nicht Teil des Factory-Ansatzen und können möglicherweise nicht im vereinarten Zeitraum umgesetzt werden." showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>
@@ -1662,9 +1662,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="hlagpluspcustomer" label="Site ID">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
-          <field attribute="hlagreportedby" label="Reported By">
-            <renderer type="default" params="minwidth=100px;maxwidth=100px" />
-          </field>
+
+          <section id="reportedby"/>
+
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=100px;width=100px" />
           </field>
@@ -1685,6 +1685,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="default" params="width=75px;wordwrap=break-word" />
             </field>
           </section>
+          <section id="reportedby">
+            <field attribute="hlagreportedby" label="Reported By">
+              <renderer type="default" params="minwidth=100px;maxwidth=100px" />
+            </field>
+          </section>
         </schema>
 
         <!--used on view all of approvals-->
@@ -1695,6 +1700,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </field>
             <field attribute="hlagchangeticketid" label="SR ID" hidden="true">
               <renderer type="default" params="minwidth=80px;maxwidth=80px" />
+            </field>
+          </section>
+
+          <section id="reportedby">
+            <field attribute="dashapprovals_.approvergroup" label="Approver Group">
+              <renderer type="default" params="minwidth=100px;maxwidth=100px" />
             </field>
           </section>
           <section id="extrafields">
@@ -1718,7 +1729,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="default" params="minwidth=80px;maxwidth=80px" />
             </field>
           </section>
-
+          <section id="reportedby">
+            <field attribute="hlagreportedby" label="Reported By">
+              <renderer type="default" params="minwidth=100px;maxwidth=100px" />
+            </field>
+          </section>
           <properties>
             <property key="list.click.service" value="changeservice.opendetail"/>
           </properties>
