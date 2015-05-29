@@ -168,6 +168,7 @@
         </schema>
 
         <detail mode="input" title="Incident Details">
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
