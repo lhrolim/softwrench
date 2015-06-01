@@ -88,8 +88,7 @@
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
-
-
+        
         <schema id="adetail" title="Change Detail" abstract="true" stereotype="detail" platform="web">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
