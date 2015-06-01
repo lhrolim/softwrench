@@ -16,6 +16,10 @@
         $scope.compositionpopover.show($event);
     }
 
+    $scope.$on("sw_compositionselected", function () {
+        $scope.compositionpopover.hide();
+    });
+
     $scope.title = function () {
         return crudContextService.currentTitle();
     }

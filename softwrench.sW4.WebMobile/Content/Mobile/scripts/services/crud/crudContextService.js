@@ -1,4 +1,7 @@
-﻿mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService,tabsService) {
+﻿var constants = constants || {};
+
+
+mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metadataModelService, offlineSchemaService, offlineCompositionService, schemaService, contextService, routeService, tabsService) {
     'use strict';
 
     var internalListContext = {
@@ -13,12 +16,22 @@
         currentListSchema: null,
         itemlist: null,
 
-        
+
         currentDetailItem: null,
         currentDetailSchema: null,
 
         //composition
-        currentTab:"main",
+        composition: {
+            currentTab: null,
+            currentListSchema: null,
+            itemlist: null,
+
+            currentDetailItem: null,
+            currentDetailSchema: null,
+
+
+        },
+        
 
         previousItem: null,
         nextItem: null,
@@ -61,8 +74,6 @@
         } else {
             crudContext.nextItem = itemlist[idx + 1];
         }
-            
-        
     }
 
     return {
@@ -95,9 +106,37 @@
             return schemaService.nonTabFields(crudContext.currentDetailSchema);
         },
 
-        currentCompositionsToShow : function() {
+        currentCompositionsToShow: function () {
             var detailSchema = crudContext.currentDetailSchema;
-            return tabsService.tabsDisplayables(detailSchema);
+            var allDisplayables = tabsService.tabsDisplayables(detailSchema);
+            return allDisplayables;
+        },
+
+        isOnMainTab: function () {
+            return crudContext.composition.currentTab == null;
+        },
+
+        loadTab: function (tab) {
+            if (tab == null) {
+                //let´s return to the main tab
+                crudContext.composition.currentTab = null;
+                return routeService.go("main.cruddetail.maininput");
+            }
+            
+
+            if (tab.type != "ApplicationCompositionDefinition") {
+                //tabs do not need to load from the database since the data is already contained on the main datamap
+                crudContext.composition.currentTab = tab;
+                return routeService.go("main.cruddetail.compositionlist");
+            }
+
+            return offlineCompositionService.loadComposition(crudContext.currentDetailItem, tab).then(function(compositionItems) {
+                crudContext.composition.currentTab = tab;
+                crudContext.composition.itemlist = compositionItems;
+                crudContext.composition.currentListSchema = tab.schema.schemas.list;
+            });
+
+            
         },
 
         loadMorePromise: function () {
@@ -164,6 +203,7 @@
                     internalListContext.lastPageLoaded = 1;
                     crudContext.itemlist = [];
                     for (var i = 0; i < results.length; i++) {
+                        results[i].datamap[constants.localIdKey] = results[i].id;
                         crudContext.itemlist.push(results[i].datamap);
                     }
                     routeService.go("main.crudlist");

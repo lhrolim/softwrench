@@ -111,6 +111,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Content\Mobile\scripts\controllers\compositionMenuController.js" />
+    <Content Include="Content\Mobile\scripts\controllers\crud_composition_list.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_input.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_detail.js" />
     <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
@@ -129,6 +130,7 @@
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
+    <Content Include="Content\Mobile\scripts\utils\mobileconstants.js" />
     <Content Include="Content\Mobile\styles\detail.css" />
     <Content Include="Content\Mobile\styles\list.css" />
     <Content Include="Content\Mobile\templates\compositionmenu.html" />

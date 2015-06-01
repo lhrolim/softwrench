@@ -17,6 +17,7 @@
         go:function(stateName) {
             $state.go(stateName);
             contextService.insertIntoContext("currentstate", stateName);
+
         },
 
         loadInitialState:function(cookieAuthenticated) {

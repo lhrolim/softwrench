@@ -1,7 +1,14 @@
-﻿mobileServices.factory('offlineCompositionService', function ($log) {
+﻿mobileServices.factory('offlineCompositionService', function ($log, swdbDAO) {
+
+    'use strict';
 
     return {
 
+        /// <summary>
+        ///  Generates the queries to update the composition entries after a synchronization has been performed.
+        /// </summary>
+        /// <param name="compositionDataReturned">The composition data returned from the server, a dictionary of multiple applications (worklogs,attachments, etc)</param>
+        /// <returns type="Array">An array of queries to be executed for updating the compositionEntries</returns>
         generateSyncQueryArrays: function (compositionDataReturned) {
 
             var log = $log.get("compositionService#generateSyncQueryArrays");
@@ -33,6 +40,47 @@
                 queryArray.push(entities.CompositionDataEntry.syncdeletionQuery.format(idsToDelete));
             }
             return queryArray;
+        },
+
+        loadComposition: function (mainDatamap, displayable) {
+            if (!displayable) {
+                throw new Error("field displayable is required");
+            }
+            //TODO: cache...
+            var log = $log.get("offlineCompositionService#loadComposition");
+            var localId = mainDatamap[constants.localIdKey];
+            var baseQuery = "application = '{0}' and ( (".format(displayable.associationKey);
+            var entityDeclarationAttributes = displayable.entityAssociation.attributes;
+
+            for (var i = 0; i < entityDeclarationAttributes.length; i++) {
+                var attribute = entityDeclarationAttributes[i];
+                var fromValue;
+                if (attribute.literal) {
+                    //siteid = 'SOMETHING'
+                    fromValue = attribute.literal;
+                } else {
+                    //siteid = siteid
+                    fromValue = mainDatamap[attribute.from];
+                }
+                baseQuery += ' datamap like \'%"{0}":"{1}"%\' '.format(attribute.to, fromValue);
+                if (i != entityDeclarationAttributes.length - 1) {
+                    baseQuery += " and ";
+                }
+            }
+            baseQuery += ")";
+            baseQuery += " or ( parentId = '{0}') )".format(localId);
+            log.debug("fetching composition {0} using query {1}".format(displayable.associationKey, baseQuery));
+            return swdbDAO.findByQuery("CompositionDataEntry", baseQuery, { projectionFields: ["remoteId", "datamap"] }).then(function (results) {
+                var resultCompositions = [];
+                mainDatamap[displayable.associationKey] = mainDatamap[displayable.associationKey] || [];
+                for (i=0; i< results.length;i++) {
+                    resultCompositions.push(results[i].datamap);
+                }
+                // put any locally created compositions on top of the list
+                resultCompositions = resultCompositions.concat(mainDatamap[displayable.associationKey]);
+                return resultCompositions;
+            });
+
         }
 
 
