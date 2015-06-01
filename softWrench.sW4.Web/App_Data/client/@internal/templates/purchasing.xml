@@ -151,55 +151,53 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
         </list>
 
-        <schema id ="editdetail" title="PO Details"  stereotype="detail">
+        <schema id="adetail" title="PO Details" abstract="true" stereotype="detail">
+          <field attribute="ponum" label="PO #:" readonly="true">
+            <renderer type="default" params="inputsize=medium" />
+          </field>
 
-          <field attribute="ponum" label="PO #:" readonly="true"/>
-          <field attribute="description" label="Description:">
-            <renderer type="richtext"/>
-          </field>
-          <field attribute="siteid" hidden="true" />
-
-          <association label="Type:" target="type" labelfield="potype_.description">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="priority" label="Priority:">
-            <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
-          </field>
-          <field attribute="orderdate" label="Date:" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
-          </field>
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <section id="requireddate" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=requireddate;">
-            <header label="Required Date:" displacement="sameline"/>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="PO Details" params="fieldset=true" />
+            <field attribute="description" label="Description:">
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="siteid" hidden="true" />
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=medium" />
+              <association label="Type:" target="type" labelfield="potype_.description">
+                <renderer type="lookup"/>
+              </association>
+              <field attribute="priority" label="Priority:">
+                <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
+              </field>
+              <field attribute="companies_.phone" label="Phone:"/>
+            </section>
           </section>
-          <!--<association label="Currency:" target="currencycode" labelfield="currency_.description">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Vendor:" target="vendor" labelfield="companies_.name" extraprojectionvalues="phone">
-            <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
-          </association>-->
-          <field attribute="companies_.phone" label="Phone:"/>
-
-          <composition relationship="poline" label="PO Lines" >
-            <collectionproperties allowupdate="true" allowcreation="true"/>
-          </composition>
+          
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="orderdate" label="Reported Date:" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field attribute="targetstart" label="Required Date:" attributeToServer="#notusedattribute">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+          </section>
+          
+          <section id="compositions"/>
+        </schema>
+        
+        <schema parentschema="adetail" id="newdetail" title="New PO" >
         </schema>
 
-        <!--<schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
-          <section id="siteidsection">
-            <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true"/>
-            <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="statussection">
-            <association label="Status:" target="status" labelfield="postatus.description" requiredexpression="true">
-              <renderer type="combo" />
-            </association>
-          </section>
+        <schema parentschema="adetail" id="editdetail" title="PO Details">
           <section id="compositions">
-            <composition relationship="poline" label="PO Lines" ></composition>
+            <composition relationship="poline" label="PO Lines" >
+              <collectionproperties allowupdate="true" allowcreation="true"/>
+            </composition>
           </section>
-        </schema>-->
+        </schema>
       </schemas>
     </application>
 
@@ -211,11 +209,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <schemas>
 
         <schema id="list" stereotype="compositionlist">
-          <!--<properties>
-            -->
+          <!--<properties>-->
           <!--<property key="list.click.popup" value="modal"/>-->
-          <!--
-          </properties>-->
+          <!--</properties>-->
 
           <field attribute="ponum" label="PO No" readonly="true">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=12%" />
@@ -316,105 +312,61 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
         </list>
 
-        <schema id="detail" stereotype="detail" mode="input" title="Purchase Request Details">
-          <!--field attribute="prnum" label="PR No:" readonly="true"/-->
-          <!--SWWEB 192: Reported Priority Field-->
-          <field attribute="description" label="Summary" hidden="true">
-            <renderer type="default"/>
 
-          </field>
-          <field attribute="prnum" label="PR No:" hidden="true">
-            <renderer type="default"/>
-          </field>
-          <field attribute="priority" label="Priority:" requiredexpression="true">
-            <renderer type="numericinput" params="min=0;max=9;decimals=0" />
-          </field>
-          <!--SWWEB 194: Add Supervisor Field-->
-          <field attribute="supervisor" label="Supervisor:">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB 195: Add Pretax Total Field is a precalculated field on the Maximo Side-->
+        <schema id="adetail" title="Purchase Request Details" abstract="true" stereotype="detail">
 
-          <!--SWWEB 196: Add Total Tax Field-->
-          <field attribute="totaltax1" label="Total Tax:">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB-197: Add Total Cost Field-->
-          <field attribute="totalcost" label="Total Cost:" requiredexpression="true" >
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB 199: Add Currency Type Field-->
-          <field attribute="currencycode" label="Currency:" requiredexpression="true">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB 202: Add No Vendor Checkbox-->
-          <optionfield attribute="novendor" label="No Vendor? :" requiredexpression="true" >
-            <renderer type="radio"/>
-            <option label="No" value="FALSE"/>
-            <option label="Yes" value="TRUE"/>
-          </optionfield>
-          <!--SWWEB 200: Add Total Base Cost Field is a precalculated field on the Maximo Side-->
-          <!--SWWEB 201: Add Vendor field -->
-          <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
-            <renderer type="lookup"/>
-          </association>
-          <!--SWWEB 202: Add Vendor Contract field-->
-          <association label="Vendor Contract:" target="contractrefnum" labelfield="contract_.description" >
-            <renderer type="lookup"/>
-          </association>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="description" label="Summary" hidden="true" />
+            <field attribute="prnum" label="PR No:" hidden="true" />
+            <field attribute="priority" label="Priority:" requiredexpression="true" default="0">
+              <renderer type="numericinput" params="min=0;max=9;decimals=0" />
+            </field>
+            <field attribute="totaltax1" label="Total Tax:" />
+            <field attribute="totalcost" label="Total Cost:" default="0" requiredexpression="true" />
+            <field attribute="currencycode" label="Currency:" requiredexpression="true" />
+          </section>
 
-
-          <composition relationship="prline" label="PR Lines" ></composition>
-          <!--composition relationship="prterm" label="Terms and Conditions"></composition-->
-          <commandbars>
-            <commandgroup position="detailform">
-              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                       showexpression="@status=='NEW'" successmessage="Purchase Request Deleted" position="left"/>
-            </commandgroup>
-          </commandbars>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="supervisor" label="Supervisor:" />
+          </section>
+          
+          <section>
+            <header displacement="ontop" label="Vendow Info" params="fieldset=true" />
+            <optionfield attribute="novendor" label="No Vendor? :"  requiredexpression="true" >
+              <renderer type="radio"/>
+              <option label="No" value="FALSE"/>
+              <option label="Yes" value="TRUE"/>
+            </optionfield>
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=medium" />
+              <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
+                <renderer type="lookup"/>
+              </association>
+              <association label="Vendor Contract:" target="contractrefnum" labelfield="contract_.description" >
+                <renderer type="lookup"/>
+              </association>
+            </section>
+          </section>
+          
+          <section id="compositions" />
         </schema>
-
-
-        <schema id="newdetail" stereotype="detail" mode="input" title="Purchase Request Details">
-          <!--SWWEB 192: Add Reported Priority Field-->
-          <field attribute="priority" label="Priority:" requiredexpression="true" default="0">
-            <renderer type="numericinput" params="min=0;max=9;decimals=0" />
-          </field>
-          <!--SWWEB 194: Add Supervisor Field-->
-          <field attribute="supervisor" label="Supervisor:">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB 195: Add Pretax Total Field is a precalculated field on the Maximo Side-->
-          <!--SWWEB 196: Add Total Tax Field-->
-          <field attribute="totaltax1" label="Total Tax:">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB-197: Add Total Cost Field-->
-          <field attribute="totalcost" label="Total Cost:" default="0" requiredexpression="true">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB 199: Add Currency Type Field-->
-          <field attribute="currencycode" label="Currency:" default="USD" requiredexpression="true">
-            <renderer type="default"/>
-          </field>
-          <!--SWWEB 202: Add No Vendor Checkbox-->
-          <optionfield attribute="novendor" label="No Vendor? :"  requiredexpression="true" >
-            <renderer type="radio"/>
-            <option label="No" value="FALSE"/>
-            <option label="Yes" value="TRUE"/>
-          </optionfield>
-          <!--SWWEB 200: Add Total Base Cost Field is a precalculated field on the Maximo Side-->
-          <!--SWWEB 201: Add Vendor field -->
-          <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
-            <renderer type="lookup"/>
-          </association>
-          <!--SWWEB 202: Add Vendor Contract field-->
-          <association label="Vendor Contract:" target="contractrefnum" labelfield="contract_.description" enableexpression="@novendor=='FALSE'">
-            <renderer type="lookup"/>
-          </association>
-
-
-          <composition relationship="prline" label="PR Lines" ></composition>
+        
+        <schema parentschema="adetail" id="detail" stereotype="detail" mode="input" title="Purchase Request Details">
+          <section id="compositions">
+            <composition relationship="prline" label="PR Lines" ></composition>
+            <commandbars>
+              <commandgroup position="detailform">
+                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                         showexpression="@status=='NEW'" successmessage="Purchase Request Deleted" position="left"/>
+              </commandgroup>
+            </commandbars>
+          </section>
+        </schema>
+          
+        <schema parentschema="adetail" id="newdetail" stereotype="detail" mode="input" title="New Purchase Request">
 
         </schema>
       </schemas>

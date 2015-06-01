@@ -75,12 +75,11 @@
         
         <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
           <section id="siteidsection">
-            <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true">
-              <renderer type="default" params="inputsize=medium"/>
-            </field>
-            <field label="Site:" attribute="siteid" readonly="true">
-              <renderer type="default" params="inputsize=medium"/>
-            </field>
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=medium" />
+              <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true" />
+              <field label="Site:" attribute="siteid" readonly="true" />
+            </section>
           </section>
           
           <section id ="compositions">
