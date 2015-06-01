@@ -1,0 +1,28 @@
+﻿<ion-view>
+
+    <ion-list class="has-header">
+
+        <ion-item ng-repeat="item in list()"
+                  item="item">
+
+
+            <div class="row" ng-click="openDetail(item)">
+                <div class="col-25">
+                    <button class="button button-status" ng-style="{background:getStatusColor(item),color:getTextColor(item)}">{{getStatusText(item)}}</button>
+                </div>
+                <div class="col-75">
+                    <ul>
+                        <li>{{itemTitle(item)}} {{itemFeatured(item)}}</li>
+                        <li>{{itemSubTitle(item)}}</li>
+                        <li>{{itemExcerpt(item)}}</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </ion-item>
+
+    </ion-list>
+
+
+</ion-view>

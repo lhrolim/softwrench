@@ -1,4 +1,4 @@
-﻿mobileServices.factory('crudContextService', function ($q, $state, $log, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService) {
+﻿mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metadataModelService, offlineSchemaService, schemaService, contextService, routeService,tabsService) {
     'use strict';
 
     var internalListContext = {
@@ -13,8 +13,13 @@
         currentListSchema: null,
         itemlist: null,
 
+        
         currentDetailItem: null,
         currentDetailSchema: null,
+
+        //composition
+        currentTab:"main",
+
         previousItem: null,
         nextItem: null,
 
@@ -90,6 +95,11 @@
             return schemaService.nonTabFields(crudContext.currentDetailSchema);
         },
 
+        currentCompositionsToShow : function() {
+            var detailSchema = crudContext.currentDetailSchema;
+            return tabsService.tabsDisplayables(detailSchema);
+        },
+
         loadMorePromise: function () {
 
             return swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(crudContext.currentApplicationName), { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
@@ -134,7 +144,7 @@
             crudContext.currentDetailItem = item;
             setPreviousAndNextItems(item);
             contextService.insertIntoContext("crudcontext", crudContext);
-            routeService.go("main.cruddetail");
+            routeService.go("main.cruddetail.maininput");
         },
 
         loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {

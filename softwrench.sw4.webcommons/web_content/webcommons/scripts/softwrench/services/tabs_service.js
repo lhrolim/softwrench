@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('tabsService', function (fieldService,i18NService) {
+﻿modules.webcommons.factory('tabsService', function (fieldService, i18NService) {
 
     var nonInlineCompositionsDict = function (schema) {
         if (schema.nonInlineCompositionsDict != undefined) {

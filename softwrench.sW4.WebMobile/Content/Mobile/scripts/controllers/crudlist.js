@@ -22,7 +22,7 @@
 
     $scope.itemFeatured = function (item) {
         var listSchema = crudContextService.currentListSchema();
-        return item[offlineSchemaService.locateAttributeByQualifier(listSchema, "subtitle")];
+        return item[offlineSchemaService.locateAttributeByQualifier(listSchema, "featured")];
     }
 
     $scope.itemExcerpt = function (item) {

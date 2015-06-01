@@ -7,15 +7,15 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="list.schema.mode" value="input"/>
-        <property key ="icon.composition.tab" value="fa fa-comment-o"/>
+        <property key ="icon.composition.tab" value="fa fa-comment-o ion-ios-chatbubble-outline"/>
       </properties>
       <schemas>
         <schema id="list"  stereotype="compositionlist">
           <field attribute="worklogid" hidden="true" />
           <field attribute="recordkey" label="Record Key" hidden="true" />
           <field attribute="class" label="Class" hidden="true" />
-          <field attribute="createby" label="Created By" />
           <field attribute="createdate" label="Date" hidden="true"/>
+          <field attribute="createby" label="Created By" />
           <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>

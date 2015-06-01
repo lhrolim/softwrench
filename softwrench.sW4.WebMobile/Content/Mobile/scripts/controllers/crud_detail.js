@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover) {
+﻿softwrench.controller('CrudDetailController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
@@ -10,6 +10,15 @@
     }).then(function (popover) {
         $scope.compositionpopover = popover;
     });
+
+
+    $scope.expandCompositions = function ($event) {
+        $scope.compositionpopover.show($event);
+    }
+
+    $scope.title = function () {
+        return crudContextService.currentTitle();
+    }
 
     $scope.isFieldHidden = function (fieldMetadata) {
         return fieldService.isFieldHidden(crudContextService.currentDetailItem(), crudContextService.currentDetailSchema(), fieldMetadata);
@@ -29,6 +38,17 @@
 
     $scope.detailSummary = function () {
         return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap, true);
+    }
+
+    $scope.navigateNext = function () {
+        crudContextService.navigateNext().then(function () {
+            $scope.datamap = crudContextService.currentDetailItem();
+        });
+    }
+
+    $scope.navigatePrevious = function () {
+        crudContextService.navigatePrevious();
+        $scope.datamap = crudContextService.currentDetailItem();
     }
 
     $rootScope.$on('$stateChangeSuccess',

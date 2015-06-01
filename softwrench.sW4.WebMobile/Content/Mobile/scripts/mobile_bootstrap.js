@@ -7,11 +7,11 @@
 
 
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services']);
-var softwrench = angular.module('softwrench', ['ionic','ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
+var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
 
 
 
-.run(function ($ionicPlatform, swdbDAO,$log, loginService, contextService, menuModelService, metadataModelService, $state,routeService) {
+.run(function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService) {
 
     initContext();
 
@@ -83,7 +83,6 @@ var softwrench = angular.module('softwrench', ['ionic','ion-autocomplete', 'ngCo
             templateUrl: 'Content/Mobile/templates/login.html',
             controller: 'LoginController'
         })
-
         .state('settings', {
             url: '/settings',
             templateUrl: 'Content/Mobile/templates/settings.html',
@@ -91,14 +90,12 @@ var softwrench = angular.module('softwrench', ['ionic','ion-autocomplete', 'ngCo
         })
 
         // setup an abstract state for the tabs directive
-          .state('main', {
-              url: "/main",
-              templateUrl: "Content/Mobile/templates/main.html",
-              //abstract: true,
-              controller: 'MainController'
-          })
-
-
+        .state('main', {
+            url: "/main",
+            templateUrl: "Content/Mobile/templates/main.html",
+            //abstract: true,
+            controller: 'MainController'
+        })
         .state('main.home', {
             url: '/home',
             views: {
@@ -108,37 +105,61 @@ var softwrench = angular.module('softwrench', ['ionic','ion-autocomplete', 'ngCo
                 }
             }
         })
-
-
-       .state('main.settings', {
-           url: '/settings',
-           views: {
-               'main': {
-                   templateUrl: 'Content/Mobile/templates/settings.html',
-                   controller: 'SettingsController'
-               }
-           }
-       })
-
-    .state('main.crudlist', {
-        url: "/crudlist",
-        views: {
-            'main': {
-                templateUrl: "Content/Mobile/templates/crudlist.html",
-                controller: 'CrudListController'
+        .state('main.settings', {
+            url: '/settings',
+            views: {
+                'main': {
+                    templateUrl: 'Content/Mobile/templates/settings.html',
+                    controller: 'SettingsController'
+                }
             }
-        }
-    })
-
-    .state('main.cruddetail', {
-        url: "/cruddetail",
-        views: {
-            'main': {
-                templateUrl: "Content/Mobile/templates/crud_input.html",
-                controller: 'CrudInputController'
+        })
+        .state('main.crudlist', {
+            url: "/crudlist",
+            views: {
+                'main': {
+                    templateUrl: "Content/Mobile/templates/crudlist.html",
+                    controller: 'CrudListController'
+                }
             }
-        }
-    })
+        })
+        .state('main.cruddetail', {
+            url: "/cruddetail",
+            views: {
+                'main': {
+                    templateUrl: "Content/Mobile/templates/crud_detail.html",
+                    controller: 'CrudDetailController'
+                },
+
+            }
+        })
+        .state('main.cruddetail.maininput', {
+            url: "/crudinput",
+            views: {
+                'body': {
+                    templateUrl: "Content/Mobile/templates/crud_input.html",
+                    controller: 'CrudInputController'
+                }
+            }
+        })
+        .state('main.cruddetail.compositionlist', {
+            url: "/crudcompositionlist",
+            views: {
+                'body': {
+                    templateUrl: "Content/Mobile/templates/crud_composition_list.html",
+                    controller: 'CrudCompositionListController'
+                }
+            }
+        })
+        .state('main.cruddetail.compositioninput', {
+            url: "/crudcompositiondetail",
+            views: {
+                'body': {
+                    templateUrl: "Content/Mobile/templates/crud_composition_detail.html",
+                    controller: 'CrudCompositionDetailController'
+                }
+            }
+        });
 
 
 

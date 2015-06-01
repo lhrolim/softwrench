@@ -10,7 +10,7 @@
                                   item-value-key="{{getAssociationValueField(field)}}"
                                   item-view-value-key="{{getAssociationLabelField(field)}}" />                
             </div>
-            <input ng-switch-default type="text" ng-model="datamap[field.attribute]">
+            <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly">
         </ng-switch>
 
     </label>
