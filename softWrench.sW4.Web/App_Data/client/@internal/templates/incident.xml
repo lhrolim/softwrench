@@ -102,60 +102,77 @@
           </properties>
         </list>
 
-        <schema stereotype="detail" id="newdetail" mode="input" title="New Incident">
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
-          <field attribute="ticketid" label="Incident Number:" readonly="true"/>
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="textarea"/>
-          </field>
-          <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
-          </field>
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-          </association>
-          <field label="Site Id:" attribute="siteid"  hidden="true"/>
-          <field attribute ="orgid" hidden ="true"/>
-          <field attribute ="class" hidden ="true"/>
-          <association label ="Priority" target="internalpriority" labelfield="numericdomain_.description">
-            <renderer type="lookup"/>
-          </association>
-          <!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
-          <!--            <renderer type="lookup"/>-->
-          <!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
+
           <section orientation="horizontal">
-            <field attribute="targetstart" label="Target Start Date:" >
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
-            </field>
-            <field attribute="targetfinish" label="Target Finish Date:" >
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
-            </field>
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true" />
+            <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
           </section>
+
+          <section>
+            <header displacement="ontop" label="Incident Details" params="fieldset=true" />
+            <field attribute="description" label="Summary:"/>
+            <field label="Details:" attribute="longdescription_.ldtext">
+              <renderer type="textarea"/>
+            </field>
+            <field attribute="statusdate" hidden="true" />
+            <field attribute ="orgid" hidden ="true"/>
+            <field attribute ="class" hidden ="true"/>
+
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=medium" />
+              <field label="Site Id:" attribute="siteid"  readonly="true"/>
+              <association label="Location:" target="location" labelfield="location_.description" >
+                <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              </association>
+              <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                <dataprovider prefilterfunction="FilterAssets"/>
+                <event type="afterchange" service="srService" method="afterChangeAsset"/>
+              </association>
+              <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+                <renderer type="autocompleteclient" />
+              </optionfield>
+              <optionfield label="Priority:" attribute="internalpriority" default="1">
+                <renderer type="radio"/>
+                <option label="Critical" value="1"/>
+                <option label="High" value="2"/>
+                <option label="Medium" value="3"/>
+                <option label="Low" value="4"/>
+                <option label="Planning" value="5"/>
+              </optionfield>
+            </section>
+          </section>
+
           <section orientation="horizontal">
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
+              <renderer type="lookup"/>
+            </association>
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeowner"/>
+            </association>
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+              <renderer type="lookup"/>
+            </association>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
             <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
@@ -163,111 +180,49 @@
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
           </section>
-          <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
-          <field attribute="statusdate" hidden="true" />
+          
+          <section>
+            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <section id="attachmentsection" />
+          </section>
+
+          <section id="compositions"/>
         </schema>
-
-        <detail mode="input" title="Incident Details">
-          <field attribute="actlabcost" default="0" hidden="true"/>
-          <field attribute="actlabhrs" default="0" hidden="true" />
-          <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
-          <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true"/>
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="textarea"/>
-          </field>
-          <!-- Code added from gric metadata.xml SWWEB 173-->
-          <section id="attachmentsection" />
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" default="@username" enableexpression="@ownergroup==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-          </association>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-          <field label="Site Id:" attribute="siteid"  readonly="true"/>
-          <field attribute ="orgid" hidden ="true"/>
-          <field attribute ="class" hidden="true"/>
-          <optionfield label="Priority:" attribute="internalpriority" default="1">
-            <renderer type="radio"/>
-            <option label="Critical" value="1"/>
-            <option label="High" value="2"/>
-            <option label="Medium" value="3"/>
-            <option label="Low" value="4"/>
-            <option label="Planning" value="5"/>
-          </optionfield>
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
-          <field label="Status:" attribute="status" readonly="true" />
-          <tab label="Solution" id="solution">
-
-            <field attribute="solution" hidden="true"/>
-            <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
-            </association>
-            <field attribute="solution_.description" label="Description:" readonly="true"/>
-            <field attribute="symptom_.ldtext" label="Symptom:">
-              <renderer type="richtext"/>
+        
+        <schema stereotype="detail" parentschema="adetail" id="newdetail" mode="input" title="New Incident">
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
             </field>
-            <field attribute="cause_.ldtext" label="Cause:" >
-              <renderer type="richtext"/>
-            </field>
-            <field attribute="resolution_.ldtext" label="Resolution:" >
-              <renderer type ="richtext"/>
-            </field>
-          </tab>
-          <composition relationship="attachment" label="Attachments">
-            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
-          </composition>
-          <!--composition relationship="solution" label="Solution">
-            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
-          </composition-->
-        </detail>
-
-
+          </section>
+        </schema>
+        
+        <schema parentschema="adetail" id="detail" title="Incident Details">
+          <section id="compositions">
+            <tab label="Solution" id="solution">
+              <field attribute="solution" hidden="true"/>
+              <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
+                <renderer type="lookup"/>
+                <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+              </association>
+              <field attribute="solution_.description" label="Description:" readonly="true"/>
+              <field attribute="symptom_.ldtext" label="Symptom:">
+                <renderer type="richtext"/>
+              </field>
+              <field attribute="cause_.ldtext" label="Cause:" >
+                <renderer type="richtext"/>
+              </field>
+              <field attribute="resolution_.ldtext" label="Resolution:" >
+                <renderer type ="richtext"/>
+              </field>
+            </tab>
+            <composition relationship="attachment" label="Attachments">
+              <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+            </composition>
+          </section>
+        </schema>
       </schemas>
-
     </application>
-
   </applications>
-
-
-
-
 </metadata>
