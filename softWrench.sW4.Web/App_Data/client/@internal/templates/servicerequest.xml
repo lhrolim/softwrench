@@ -74,41 +74,43 @@
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketid" label="SR No:" readonly="true"/>
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-            </field>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:" requiredexpression="true"/>
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
             <field label="Details:" attribute="longdescription_.ldtext">
               <renderer type="richtext"/>
             </field>
           </section>
-                
-          <section id ="siteidsection"/>
-          
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
-          <field attribute="class" label="" hidden="true"/>
-          <field attribute="actlabcost" hidden="true" />
-          <field attribute="actlabhrs" hidden="true"/>
-          <field attribute="siteid" hidden="true" />
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="createby" hidden="true"/>
 
-          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
-          <section id="statussection"/>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
-            <renderer type="autocompleteclient" />
-          </optionfield>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <section id ="siteidsection"/>
+
+            <field attribute="ticketuid" label="SR No:" hidden="true"/>
+            <field attribute="class" label="" hidden="true"/>
+            <field attribute="actlabcost" hidden="true" />
+            <field attribute="actlabhrs" hidden="true"/>
+            <field attribute="siteid" hidden="true" />
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="createby" hidden="true"/>
+
+            <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            </association>
+            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            </association>
+            <section id="statussection"/>
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+          </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
@@ -145,9 +147,13 @@
             <field attribute="actualfinish" label="Actual Finish Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
+            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
           </section>
           <section>
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
             <section id="attachmentsection" />
           </section>
           
