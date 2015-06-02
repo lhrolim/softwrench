@@ -440,6 +440,7 @@
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
+    <Content Include="Content\Scripts\client\adminresources\profile.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
@@ -752,6 +753,7 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
     <Content Include="Content\Shared\readme.txt" />
+    <Content Include="Content\Templates\otb\profiles.html" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

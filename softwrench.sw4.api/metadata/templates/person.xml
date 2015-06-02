@@ -40,7 +40,10 @@
           <field attribute="#isactive" label="Active">
             <renderer type="checkbox"/>
           </field>
-          <section resourcepath=""/>
+
+          <section resourcepath="/Content/Templates/otb/profiles.html">
+            <header displacement="ontop" label="Profiles" showexpression="true"/>
+          </section>
           
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>

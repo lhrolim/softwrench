@@ -75,6 +75,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
             var isActive = swUser.IsActive ? "1" : "0";
             dataMap.SetAttribute("#isactive", isActive);
+            dataMap.SetAttribute("#profiles", swUser.Profiles);
+            List<UserProfile> availableprofiles = UserProfileManager.FetchAllProfiles(true).ToList();
+            foreach (UserProfile profile in swUser.Profiles)
+            {
+                availableprofiles.Remove(profile);
+            }
+            dataMap.SetAttribute("#availableprofiles", availableprofiles);
 
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
