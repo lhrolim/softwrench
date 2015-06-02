@@ -24,6 +24,18 @@
         return crudContextService.currentTitle();
     }
 
+    $scope.loadMainTab = function() {
+        crudContextService.loadTab(null);
+    }
+
+    $scope.tabTitle = function() {
+        return crudContextService.tabTitle();
+    }
+
+    $scope.isOnMainTab = function () {
+        return crudContextService.isOnMainTab();
+    }
+
 
     $scope.detailSummary = function () {
         return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap, true);
@@ -44,6 +56,8 @@
               if (toState.name.startsWith("main.cruddetail")) {
                   //needs to refresh the displayables and datamap everytime the detail page is loaded.
                   init();
+              } else {
+                  crudContextService.leavingDetail();
               }
           });
 

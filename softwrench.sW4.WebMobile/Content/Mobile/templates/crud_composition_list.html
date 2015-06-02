@@ -1,25 +1,23 @@
 ﻿<div class="list">
-    <ion-list class="has-header">
+    <ion-list class="has-header" ng-show="!empty()">
 
-        <ion-item ng-repeat="item in list()"
-                  item="item">
-
-
-            <div class="row" ng-click="openDetail(item)">
-                <div class="col-25">
-                    <button class="button button-status" ng-style="{background:getStatusColor(item),color:getTextColor(item)}">{{getStatusText(item)}}</button>
-                </div>
-                <div class="col-75">
+        <ion-item ng-repeat="item in list()" item="item">
+            <div class="row" ng-click="openCompositionDetail(item)">
+                <div class="col">
                     <ul>
-                        <li>{{itemTitle(item)}} {{itemFeatured(item)}}</li>
-                        <li>{{itemSubTitle(item)}}</li>
-                        <li>{{itemExcerpt(item)}}</li>
+                        <li ng-repeat="field in visibleFields()">{{fieldLabel(item,field)}}</li>
                     </ul>
                 </div>
             </div>
-
-
         </ion-item>
-
     </ion-list>
+
+    <div ng-show="empty()">
+        <h5 class="text-center">No records to display</h5>
+    </div>
+    
+    
+    
+
+
 </div>

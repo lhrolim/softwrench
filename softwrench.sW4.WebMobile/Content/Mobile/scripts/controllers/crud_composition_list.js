@@ -1,26 +1,27 @@
 ﻿softwrench.controller('CrudCompositionListController',
-    function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover){
+    function ($log, $scope, $rootScope, crudContextService, fieldService) {
+
+        'use strict';
 
 
-   
-    $scope.isFieldHidden = function (fieldMetadata) {
-        return fieldService.isFieldHidden(crudContextService.currentDetailItem(), crudContextService.currentDetailSchema(), fieldMetadata);
+        $scope.empty = function () {
+            return crudContextService.compositionList().length==0;
+        }
+
+        $scope.list = function () {
+            return crudContextService.compositionList();
+        }
+
+        $scope.fieldLabel = function (item,field) {
+            return field.label + ":" + item[field.attribute];
+        }
+
+        $scope.visibleFields = function () {
+            var schema = crudContextService.compositionListSchema();
+            return fieldService.getVisibleDisplayables({}, schema);
+        }
+
+
+
     }
-
-    $scope.associationSearch = function (queryparameters) {
-        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
-    }
-
-    $scope.getAssociationLabelField = function (fieldMetadata) {
-        return 'datamap.' + fieldMetadata.labelFields[0];
-    }
-
-    $scope.getAssociationValueField = function (fieldMetadata) {
-        return 'datamap.' + fieldMetadata.valueField;
-    }
-
-  
-
-
-}
 );
