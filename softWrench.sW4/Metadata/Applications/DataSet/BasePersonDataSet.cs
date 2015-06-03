@@ -96,8 +96,20 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var username = json.GetValue("personid").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
             User user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
-            user.Password = AuthUtils.GetSha1HashData(json.GetValue("#password").ToString());
+
+            JToken password;
+            json.TryGetValue("#password", out password);
+            if (password != null)
+            {
+                var passwordString = password.ToString();
+                user.Password = AuthUtils.GetSha1HashData(passwordString);
+            }
             user.IsActive = isactive;
+
+            // Handle the profiles
+            // Deserialize profiles from json
+            // Set user.profiles to new profiles
+
             UserManager.SaveUser(user);
 
             return Engine().Execute(operationWrapper);

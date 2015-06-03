@@ -24,23 +24,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             EmailAddressHandler.HandleEmailAddress(crudData, person);
             PhoneNumberHandler.HandlePhoneNumbers(crudData, person);
 
-            //HandleSWUser((CrudOperationData)maximoTemplateData.OperationData);
-
             base.BeforeUpdate(maximoTemplateData);
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var person = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-        }
-
-        private void HandleSWUser(CrudOperationData crudData) {
-            var username = crudData.GetAttribute("personid");
-            var profiles = crudData.GetUnMappedAttribute("#profiles");
-            
-            User user = UserManager.GetUserByUsername(username.ToString());
-            user.Profiles = profiles;
-            SWDB.SWDBHibernateDAO.GetInstance().Save(user);
         }
     }
 }
