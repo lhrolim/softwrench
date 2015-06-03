@@ -62,6 +62,8 @@ app.factory('compositionService', function ($log, $http, submitService) {
             return [];
         },
 
+        
+
         /*
         * this method will hit the server to fetch associated composition data on a second request making the detail screens faster
         *

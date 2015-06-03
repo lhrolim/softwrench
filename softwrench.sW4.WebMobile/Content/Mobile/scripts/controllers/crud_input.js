@@ -7,9 +7,7 @@
         $scope.compositionpopover = popover;
     });
 
-    $scope.isFieldHidden = function (fieldMetadata) {
-        return fieldService.isFieldHidden(crudContextService.currentDetailItem(), crudContextService.currentDetailSchema(), fieldMetadata);
-    }
+  
 
     $scope.associationSearch = function (queryparameters) {
         return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
@@ -23,6 +21,9 @@
         return 'datamap.' + fieldMetadata.valueField;
     }
 
+    $scope.isFieldHidden = function (fieldMetadata) {
+        return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
+    }
   
 
 

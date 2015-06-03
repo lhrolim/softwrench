@@ -17,8 +17,12 @@
         }
 
         $scope.visibleFields = function () {
-            var schema = crudContextService.compositionListSchema();
+            var schema = crudContextService.getCompositionListSchema();
             return fieldService.getVisibleDisplayables({}, schema);
+        }
+
+        $scope.loadCompositionDetail = function(item) {
+            crudContextService.loadCompositionDetail(item);
         }
 
 

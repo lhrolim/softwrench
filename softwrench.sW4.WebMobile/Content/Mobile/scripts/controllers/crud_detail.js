@@ -2,6 +2,7 @@
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
+        $scope.schema= crudContextService.currentDetailSchema();
         $scope.datamap = crudContextService.currentDetailItem();
     }
 

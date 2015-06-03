@@ -42,6 +42,13 @@
             return queryArray;
         },
 
+        allowsUpdate: function (item, compositionListSchema) {
+            //only items not yet synced with the server
+            //TODO: someday allow synced compositions as well
+            return item[compositionListSchema.idFieldName] == null;
+        },
+
+
         loadComposition: function (mainDatamap, displayable) {
             if (!displayable) {
                 throw new Error("field displayable is required");

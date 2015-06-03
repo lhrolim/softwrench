@@ -111,10 +111,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Content\Mobile\scripts\controllers\compositionMenuController.js" />
+    <Content Include="Content\Mobile\scripts\controllers\crud_composition_detail.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_composition_list.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_input.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_detail.js" />
     <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
+    <Content Include="Content\Mobile\scripts\directives\crud\crud_output_fields.js" />
     <Content Include="Content\Mobile\scripts\directives\crud\crud_input_fields.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
@@ -139,6 +141,7 @@
     <Content Include="Content\Mobile\templates\crud_detail.html" />
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Mobile\templates\crud_input.html" />
+    <Content Include="Content\Mobile\templates\directives\crud\crud_output_fields.html" />
     <Content Include="Content\Mobile\templates\directives\crud\crud_input_fields.html" />
     <Content Include="Content\Vendor\css\ionautocomplete.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionautocomplete.js" />

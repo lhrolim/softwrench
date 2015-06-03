@@ -40,23 +40,19 @@
         }
     }
 });
-
-
-
-softwrench.directive('crudInputFields', function ($log,fieldService, crudContextService) {
+softwrench.directive('crudOutputFields', function ($log,fieldService, crudContextService) {
 
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/Content/Mobile/templates/directives/crud/crud_input_fields.html',
+        templateUrl: '/Content/Mobile/templates/directives/crud/crud_output_fields.html',
         scope: {
-            schema: '=',
-            datamap: '=',
             displayables: '=',
+            datamap:'=',
         },
 
         link: function (scope, element, attrs) {
-            scope.name = 'crud_input_fields';
+            scope.name = 'crud_output_fields';
 
         },
 
@@ -66,7 +62,9 @@ softwrench.directive('crudInputFields', function ($log,fieldService, crudContext
                 return $scope.displayables;
             }
 
-         
+            $scope.isFieldHidden = function (fieldMetadata) {
+                return fieldService.isFieldHidden(crudContextService.currentDetailItem(), crudContextService.currentDetailSchema(), fieldMetadata);
+            }
 
 
         }

@@ -1,0 +1,7 @@
+﻿<div ng-repeat="field in getDisplayables()" ng-show="!isFieldHidden(field)">
+
+    <label class="item item-input">
+        <span class="input-label">{{field.label}}</span>
+        <label>{{datamap[field.attribute]}}</label>
+    </label>
+</div>

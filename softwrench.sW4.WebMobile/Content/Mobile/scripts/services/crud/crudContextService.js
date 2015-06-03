@@ -150,16 +150,35 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
                 crudContext.composition.currentTab = tab;
                 crudContext.composition.itemlist = compositionItems;
                 crudContext.composition.currentListSchema = tab.schema.schemas.list;
+                crudContext.composition.currentDetailSchema = tab.schema.schemas.detail;
+                contextService.insertIntoContext("crudcontext", crudContext);
                 return routeService.go("main.cruddetail.compositionlist");
             });
         },
+
+        loadCompositionDetail:function(item) {
+            crudContext.composition.currentDetailItem = item;
+            contextService.insertIntoContext("crudcontext", crudContext);
+            return routeService.go("main.cruddetail.compositiondetail");
+        },
+
+
+      
 
         compositionList: function () {
             return crudContext.composition.itemlist;
         },
 
-        compositionListSchema: function () {
+        getCompositionListSchema: function () {
             return crudContext.composition.currentListSchema;
+        },
+
+        getCompositionDetailSchema: function () {
+            return crudContext.composition.currentDetailSchema;
+        },
+
+        getCompositionDetailItem: function () {
+            return crudContext.composition.currentDetailItem;
         },
 
         /**********************************************************************************************************************/
