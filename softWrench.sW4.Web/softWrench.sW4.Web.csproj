@@ -354,6 +354,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\otb\commands.mobile.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\otb\deploy.xml" />
     <Content Include="App_Data\Client\otb\menu.mobile.xml" />
     <Content Include="App_Data\Client\otb\commands.xml">

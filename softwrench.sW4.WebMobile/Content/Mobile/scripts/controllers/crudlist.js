@@ -2,6 +2,7 @@
 
     $scope.noMoreItemsAvailable = false;
 
+    
     $scope.title = function () {
         return crudContextService.currentTitle();
     }

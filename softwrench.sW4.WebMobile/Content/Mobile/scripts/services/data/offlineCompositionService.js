@@ -79,12 +79,13 @@
             log.debug("fetching composition {0} using query {1}".format(displayable.associationKey, baseQuery));
             return swdbDAO.findByQuery("CompositionDataEntry", baseQuery, { projectionFields: ["remoteId", "datamap"] }).then(function (results) {
                 var resultCompositions = [];
-                mainDatamap[displayable.associationKey] = mainDatamap[displayable.associationKey] || [];
                 for (i=0; i< results.length;i++) {
                     resultCompositions.push(results[i].datamap);
                 }
                 // put any locally created compositions on top of the list
-                resultCompositions = resultCompositions.concat(mainDatamap[displayable.associationKey]);
+                if (mainDatamap[displayable.associationKey]) {
+                    resultCompositions = resultCompositions.concat(mainDatamap[displayable.associationKey]);
+                }
                 return resultCompositions;
             });
 
