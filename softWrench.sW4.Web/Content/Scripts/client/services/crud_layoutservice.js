@@ -118,7 +118,7 @@ app.factory('layoutservice', function (fieldService) {
             } else {
                 maxColumns = convertInputSizeToColumnCount(params.sectionparameters.childinputsize);
             }
-        } else if (params.columnCount) {
+        } else if (params.columnCount != null) {
             maxColumns = params.columnCount;
         } else {
             maxColumns = getDefaultMaxNumberOfColumns(datamap, schema, displayables, params.isVerticalOrientation);
@@ -140,8 +140,10 @@ app.factory('layoutservice', function (fieldService) {
             case 'medium':
                 columnCount = 2;
                 break;
-            default:
+            case 'large':
                 columnCount = 1;
+                break;
+            default:
         }
 
         return columnCount;
