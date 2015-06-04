@@ -598,14 +598,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return result;
             }
             $scope.getFieldClass = function (fieldMetadata) {
-                return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVertivalOrientation: this.isVerticalOrientation()});
+                return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
             }
             $scope.getLabelClass = function (fieldMetadata) {
-                return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVertivalOrientation: this.isVerticalOrientation() })
+                return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
             }
 
             $scope.getInputClass = function (fieldMetadata) {
-                return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVertivalOrientation: this.isVerticalOrientation() })
+                return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
             }
             $scope.showLabelTooltip = function (fieldMetadata) {
                 if (fieldMetadata.label !== fieldMetadata.toolTip) {
