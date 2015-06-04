@@ -115,7 +115,6 @@
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="ownergroup" label="Owner Group:"/>
             <field attribute="reportedby" label="Reported By:"/>
           </section>
@@ -129,7 +128,7 @@
             <field attribute="targcompdate" label="Target Finish Date:"/>
           </section>
 
-          <section>
+          <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
             <section id="attachmentsection" />

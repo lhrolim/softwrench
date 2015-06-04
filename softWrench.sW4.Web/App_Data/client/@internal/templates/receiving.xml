@@ -76,7 +76,6 @@
         <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
           <section id="siteidsection">
             <section orientation="horizontal">
-              <renderer type="default" params="childinputsize=medium" />
               <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true" />
               <field label="Site:" attribute="siteid" readonly="true" />
             </section>

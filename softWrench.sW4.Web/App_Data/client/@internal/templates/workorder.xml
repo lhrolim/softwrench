@@ -167,7 +167,6 @@
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="wonum" label="WO No:" readonly="true">
               <renderer type="default" />
             </field>
@@ -260,7 +259,7 @@
             </field>
           </section>
           
-          <section>
+          <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
             <section id="attachmentsection"/>
