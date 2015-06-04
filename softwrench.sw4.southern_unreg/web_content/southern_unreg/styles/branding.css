@@ -1,5 +1,5 @@
 ﻿.page-signin {
-    background: #e0f3f1 url(../images/signin.jpg) no-repeat center top fixed;
+    background: #629fd2 url(../images/signin.jpg) no-repeat center top fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -40,7 +40,7 @@
             }
 
         .page-signin .form-signin .divider.top {
-            height: 150px;
+            height: 100px;
         }
 
 .container header {
