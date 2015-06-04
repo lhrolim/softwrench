@@ -156,7 +156,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="inputsize=medium" />
           </field>
 
-          <section orientation="horizontal">
+          <section>
             <header displacement="ontop" label="PO Details" params="fieldset=true" />
             <field attribute="description" label="Description:">
               <renderer type="richtext"/>
@@ -176,7 +176,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="orderdate" label="Reported Date:" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
@@ -341,7 +340,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <option label="Yes" value="TRUE"/>
             </optionfield>
             <section orientation="horizontal">
-              <renderer type="default" params="childinputsize=medium" />
               <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
                 <renderer type="lookup"/>
               </association>

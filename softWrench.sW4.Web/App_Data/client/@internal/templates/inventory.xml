@@ -406,7 +406,7 @@
               <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
             </field>
           </section>
-          <section>
+          <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
@@ -452,13 +452,13 @@
               <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
             </field>
           </section>
-          <section>
-            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           </section>
           <section>
-            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true"/>
             <field attribute="refwo" label="Work Order" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="assetnum" label="Asset" readonly="true"/>
@@ -529,9 +529,8 @@
               <renderer type="numericinput" params="min=1;"/>
             </field>
           </section>
-          <section>
+         <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="inventory_.costtype" hidden="true"/>
@@ -605,9 +604,8 @@
               <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
             </field>
           </section>
-          <section>
+          <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;"/>
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="actualcost" label="Actual Cost" hidden="true"/>
@@ -691,7 +689,7 @@
             <field attribute="inventory_.itemnum" hidden="true" />
             <field attribute="inventory_.siteid" hidden="true" />
           </section>
-          <section>
+          <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
             <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
@@ -794,12 +792,8 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Item" attribute="itemnum" readonly="true">
-              <renderer type="default"  />
-            </field>
-            <field label="Description" attribute="item_.description" readonly="true">
-              <renderer type="default"/>
-            </field>
+            <field label="Item" attribute="itemnum" readonly="true" />
+            <field label="Description" attribute="item_.description" readonly="true" />
             <field label="Lot" attribute="lotnum" readonly="true" />
           </section>
 
@@ -1005,7 +999,6 @@
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true" />
             <field attribute="unitcost" label="Unit Cost" readonly="true" />
             <field attribute="inventory_.costtype" hidden="true"/>

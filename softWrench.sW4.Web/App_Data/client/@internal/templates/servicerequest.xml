@@ -76,7 +76,7 @@
             <field attribute="ticketid" label="SR No:" readonly="true"/>
           </section>
 
-          <section orientation="horizontal">
+          <section>
             <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="inputsize=medium" />
@@ -151,7 +151,7 @@
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
           </section>
-          <section>
+          <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
             <section id="attachmentsection" />

@@ -68,7 +68,6 @@
         <schema id="adetail" title="Solution Details" abstract="true" stereotype="detail" platform="web">
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="solution" label="Solution No" readonly="true">
               <renderer type="default" />
             </field>
