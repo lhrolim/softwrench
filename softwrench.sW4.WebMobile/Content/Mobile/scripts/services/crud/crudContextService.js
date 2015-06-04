@@ -16,7 +16,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         currentListSchema: null,
         itemlist: null,
 
-
+        originalDetailItem: null,
         currentDetailItem: null,
         currentDetailSchema: null,
 
@@ -27,6 +27,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             itemlist: null,
 
             currentDetailItem: null,
+            originalDetailItem: null,
             currentDetailSchema: null,
 
 
@@ -43,6 +44,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         var savedCrudContext = contextService.getFromContext("crudcontext");
         if (savedCrudContext) {
             crudContext = JSON.parse(savedCrudContext);
+            crudContext.originalDetailItem = angular.copy(crudContext.currentDetailItem);
             setPreviousAndNextItems(savedCrudContext.currentDetailItem);
         }
         $log.get("crudContextService#factory").debug("restoring state of crudcontext");
@@ -78,7 +80,16 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
     return {
 
+        isList:function() {
+            return crudContext.currentDetailItem == null;
+        },
+
         currentTitle: function () {
+            var tabTitle = this.tabTitle();
+            if (tabTitle != null) {
+                return crudContext.currentTitle + " / " + tabTitle;
+            }
+
             return crudContext.currentTitle;
         },
 
@@ -102,6 +113,8 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return crudContext.itemlist;
         },
 
+     
+
 
 
         mainDisplayables: function () {
@@ -117,28 +130,32 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return allDisplayables;
         },
 
-        leavingDetail : function() {
+        leavingDetail: function () {
             crudContext.composition = {};
+            crudContext.currentDetailItem = null;
         },
 
         isOnMainTab: function () {
             return crudContext.composition.currentTab == null;
         },
 
-        tabTitle: function() {
+        tabTitle: function () {
             if (this.isOnMainTab()) {
                 return null;
             }
             return crudContext.composition.currentTab.label;
         },
 
+        resetTab:function() {
+            crudContext.composition.currentTab = null;
+        },
+
         loadTab: function (tab) {
             if (tab == null) {
                 //let´s return to the main tab
-                crudContext.composition.currentTab = null;
+                this.resetTab();
                 return routeService.go("main.cruddetail.maininput");
             }
-
 
             if (tab.type != "ApplicationCompositionDefinition") {
                 //tabs do not need to load from the database since the data is already contained on the main datamap
@@ -156,14 +173,17 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             });
         },
 
-        loadCompositionDetail:function(item) {
+        loadCompositionDetail: function (item) {
+            
+
             crudContext.composition.currentDetailItem = item;
+            crudContext.composition.originalDetailItem = angular.copy(item);
             contextService.insertIntoContext("crudcontext", crudContext);
             return routeService.go("main.cruddetail.compositiondetail");
         },
 
 
-      
+
 
         compositionList: function () {
             return crudContext.composition.itemlist;
@@ -182,6 +202,26 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         },
 
         /**********************************************************************************************************************/
+
+
+        /**************************************************************************SAVE FNS********************************************************************************************/
+
+        hasDirtyChanges: function () {
+            if (crudContext.composition.currentDetailItem) {
+                return crudContext.composition.currentDetailItem && (!angular.equals(crudContext.composition.originalDetailItem, crudContext.composition.currentDetailItem));
+            }
+
+            return crudContext.currentDetailItem && (!angular.equals(crudContext.originalDetailItem, crudContext.currentDetailItem));
+        },
+
+        cancelChanges:function() {
+           if (crudContext.composition.currentDetailItem) {
+               crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItem);
+           }
+           crudContext.currentDetailItem = angular.copy(crudContext.originalDetailItem);
+        },
+
+        /**************************************************************************END SAVE FNS********************************************************************************************/
 
         loadMorePromise: function () {
 
@@ -225,6 +265,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
             crudContext.currentDetailItem = item;
+            crudContext.originalDetailItem = angular.copy(crudContext.currentDetailItem);
             setPreviousAndNextItems(item);
             contextService.insertIntoContext("crudcontext", crudContext);
             routeService.go("main.cruddetail.maininput");
@@ -240,6 +281,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
 
             crudContext.currentDetailSchema = loadDetailSchema();
+            crudContext.currentDetailItem = null;
 
 
             swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(applicationName), { pagesize: 10, pagenumber: 1 })

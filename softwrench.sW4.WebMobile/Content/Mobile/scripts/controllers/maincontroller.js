@@ -9,6 +9,10 @@
         return menuModelService.getMenuItens();
     }
 
+    $scope.isList = function () {
+        return crudContextService.isList();
+    }
+
     $scope.toggleLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     }

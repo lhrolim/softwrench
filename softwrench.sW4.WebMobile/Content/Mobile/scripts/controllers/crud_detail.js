@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudDetailController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover) {
+﻿softwrench.controller('CrudDetailController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
@@ -33,6 +33,38 @@
         return crudContextService.tabTitle();
     }
 
+
+    $scope.showNavigation = function () {
+        return this.isOnMainTab() && !crudContextService.hasDirtyChanges();
+    }
+
+    $scope.cancelChanges = function () {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Confirm Cancel',
+            template: 'Any changes made will be lost. Proceed?'
+        });
+        confirmPopup.then(function (res) {
+            if (res) {
+                crudContextService.cancelChanges();
+                $scope.datamap = crudContextService.currentDetailItem();
+            } 
+        });
+    }
+
+  
+
+    $scope.hasDirtyChanges = function () {
+        return crudContextService.hasDirtyChanges();
+    }
+
+    $scope.shouldShowBack = function() {
+        return !this.hasDirtyChanges() && $ionicHistory.viewHistory().backView;
+    }
+
+    $scope.navigateBack = function () {
+        return $ionicHistory.goBack();
+    }
+
     $scope.isOnMainTab = function () {
         return crudContextService.isOnMainTab();
     }
@@ -57,6 +89,9 @@
               if (toState.name.startsWith("main.cruddetail")) {
                   //needs to refresh the displayables and datamap everytime the detail page is loaded.
                   init();
+                  if (toState.name == "main.cruddetail.maininput") {
+                      crudContextService.resetTab();
+                  }
               } else {
                   crudContextService.leavingDetail();
               }
