@@ -1418,6 +1418,14 @@
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
       <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.deltadental\softwrench.sw4.deltadental.csproj">
+      <Project>{a89dc757-b0bd-4ba0-9436-e4ae87f31bf1}</Project>
+      <Name>softwrench.sw4.deltadental</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.entegra\softwrench.sw4.entegra.csproj">
+      <Project>{5497fcbc-4ab9-44c2-a966-90bc6a4c5427}</Project>
+      <Name>softwrench.sw4.entegra</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>
@@ -1450,9 +1458,13 @@
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.southern\softwrench.sw4.southern.csproj">
+    <ProjectReference Include="..\softwrench.sw4.southern_reg\softwrench.sw4.southern_reg.csproj">
+      <Project>{0da5c13d-5c3c-48ad-b6f8-87b9f73bcabf}</Project>
+      <Name>softwrench.sw4.southern_reg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.southern_unreg\softwrench.sw4.southern_unreg.csproj">
       <Project>{9a8c761c-3b9e-4c2c-af3d-a3676010919b}</Project>
-      <Name>softwrench.sw4.southern</Name>
+      <Name>softwrench.sw4.southern_unreg</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>

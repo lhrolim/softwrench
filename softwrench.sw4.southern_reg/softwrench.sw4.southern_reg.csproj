@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9A8C761C-3B9E-4C2C-AF3D-A3676010919B}</ProjectGuid>
+    <ProjectGuid>{0DA5C13D-5C3C-48AD-B6F8-87B9F73BCABF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.southern</RootNamespace>
-    <AssemblyName>softwrench.sw4.southern</AssemblyName>
+    <RootNamespace>softwrench.sw4.southern_reg</RootNamespace>
+    <AssemblyName>softwrench.sw4.southern_reg</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,16 +42,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\southern\properties.xml">
+    <EmbeddedResource Include="metadata\southern_reg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="metadata\southern\readme.txt" />
-    <Content Include="web_content\southern\images\header.jpg" />
-    <Content Include="web_content\southern\images\logo-byline.png" />
-    <Content Include="web_content\southern\images\logo-main.png" />
-    <Content Include="web_content\southern\images\signin.jpg" />
-    <Content Include="web_content\southern\styles\branding.css" />
+    <Content Include="metadata\southern_reg\readme.txt" />
+    <Content Include="web_content\southern_reg\images\header.jpg" />
+    <Content Include="web_content\southern_reg\images\logo-byline.png" />
+    <Content Include="web_content\southern_reg\images\logo-main.png" />
+    <Content Include="web_content\southern_reg\images\signin.jpg" />
+    <Content Include="web_content\southern_reg\styles\branding.css" />
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />
@@ -61,8 +61,8 @@
     <Folder Include="classes\com\cts\southern\connector\" />
     <Folder Include="classes\com\cts\southern\dataset\" />
     <Folder Include="classes\com\cts\southern\migration\" />
-    <Folder Include="web_content\southern\htmls\" />
-    <Folder Include="web_content\southern\scripts\" />
+    <Folder Include="web_content\southern_reg\htmls\" />
+    <Folder Include="web_content\southern_reg\scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
