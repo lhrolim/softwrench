@@ -2,8 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
-    <!--User-->
-    <template path="@user.xml"/>
+    
   </templates>
   
   <entities>
