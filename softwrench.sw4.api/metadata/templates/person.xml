@@ -36,8 +36,8 @@
         <schema id="detail" stereotype="detail" title="Person Detail">
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
-          <field attribute="#password" label="Password" showexpression="ldapEnabled"/>
-          <field attribute="#retypepassword" label="Retype Password" showexpression="ldapEnabled"/>
+          <field attribute="#password" label="Password" showexpression="!@ldapEnabled"/>
+          <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
           <field attribute="locationorg" label="Org ID"/>
@@ -63,9 +63,9 @@
 
         <schema id="newPersonDetail" stereotype="detail" title="New User" mode="input">
           <field attribute="personuid" label="Person ID" showexpression="false" default="-1"/>
-          <field attribute="#personid" label="Username" requiredexpression="!ldapEnabled" readonly="false" attributeToServer="personid"/>
-          <field attribute="#password" label="Password" requiredexpression="!ldapEnabled"/>
-          <field attribute="#retypepassword" label="Retype Password" requiredexpression="true"/>
+          <field attribute="#personid" label="Username" requiredexpression="true" readonly="false" attributeToServer="personid"/>
+          <field attribute="#password" label="Password" requiredexpression="!@ldapEnabled" showexpression="!@ldapEnabled"/>
+          <field attribute="#retypepassword" label="Retype Password" requiredexpression="!@ldapEnabled" showexpression="!@ldapEnabled"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
           <field attribute="locationorg" label="Org ID"/>

@@ -86,7 +86,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             // Hide the password inputs if using LDAP
             var ldapEnabled = ApplicationConfiguration.LdapServer != null;
             
-            dataMap.SetAttribute("#ldapEnabled", ldapEnabled);
+            dataMap.SetAttribute("ldapEnabled", ldapEnabled);
 
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
