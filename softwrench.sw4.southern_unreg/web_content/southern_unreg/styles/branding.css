@@ -1,9 +1,5 @@
 ﻿.page-signin {
-    background: #629fd2 url(../images/signin.jpg) no-repeat center top fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background: #629fd2 url(../images/signin-lg.jpg) no-repeat center top fixed;
 }
 
     .page-signin .shadow {
@@ -44,11 +40,7 @@
         }
 
 .container header {
-    background: #e0f3f1 url(../images/header.jpg) no-repeat top left;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background: #629fd2 url(../images/header.jpg) no-repeat top left;
 }
 
     .container header .branding {
@@ -68,3 +60,37 @@
             height: 70px;
             width: 199px;
         }
+
+        /* Extra Small Devices, Phones */
+@media all and (min-width: 1px) and (max-width: 479px) {
+    .page-signin {
+        background: #629fd2 url(../images/signin-xxs.jpg) no-repeat center center fixed;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .page-signin {
+        background: #629fd2 url(../images/signin-xs.jpg) no-repeat center center fixed;
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .page-signin {
+        background: #629fd2 url(../images/signin-sm.jpg) no-repeat center center fixed;
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .page-signin {
+        background: #629fd2 url(../images/signin-md.jpg) no-repeat center center fixed;
+    }
+}
+
+.page-signin, .container header {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
