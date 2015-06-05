@@ -11,6 +11,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.AUTH;
+using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -22,6 +23,7 @@ using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     public class BasePersonDataSet : MaximoApplicationDataSet {
@@ -80,6 +82,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 availableprofiles.Remove(profile);
             }
             dataMap.SetAttribute("#availableprofiles", availableprofiles);
+
+            // Hide the password inputs if using LDAP
+            var ldapEnabled = ApplicationConfiguration.LdapServer != null;
+            
+            dataMap.SetAttribute("#ldapEnabled", ldapEnabled);
 
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
