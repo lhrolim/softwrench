@@ -36,6 +36,7 @@
           <field attribute="#language" label="Language"/>
           <field attribute="#personid" hidden="true"/>
           <field attribute="#personuid" hidden="true"/>
+          <field attribute="#profiles" hidden="true" attributeToServer="profiles"/>
         </schema>
       </schemas>
     </application>

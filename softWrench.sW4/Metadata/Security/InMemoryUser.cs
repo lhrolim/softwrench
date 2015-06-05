@@ -79,7 +79,6 @@ namespace softWrench.sW4.Metadata.Security {
             var dataConstraints = new List<DataConstraint>();
             foreach (var profile in userProfiles) {
                 roles.AddRange(profile.Roles);
-                dataConstraints.AddRange(profile.DataConstraints);
             }
             if (dbUser.CustomRoles != null) {
                 foreach (var role in dbUser.CustomRoles) {

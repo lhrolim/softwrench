@@ -2,6 +2,8 @@
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using Iesi.Collections;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -40,11 +42,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var result = base.GetList(application, searchDto);
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             var swusers = UserManager.GetUsersByUsername(usernames);
-            foreach (var record in result.ResultObject)
-            {
+            foreach (var record in result.ResultObject) {
                 var swuser = swusers.Where(user => user.MaximoPersonId == record.GetAttribute("personid").ToString());
-                if (!swuser.Any())
-                {
+                if (!swuser.Any()) {
                     continue;
                 }
                 record.Attributes.Add("#isactive", swuser.First().IsActive);
@@ -68,17 +68,15 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             }
             // get isactive for person from swdb
-            User swUser = new User();
-            if (dataMap.GetAttribute("personid") != null)
-            {
+            var swUser = new User();
+            if (dataMap.GetAttribute("personid") != null) {
                 swUser = SecurityFacade.GetInstance().FetchUser(dataMap.Value("personid"));
             }
             var isActive = swUser.IsActive ? "1" : "0";
             dataMap.SetAttribute("#isactive", isActive);
             dataMap.SetAttribute("#profiles", swUser.Profiles);
-            List<UserProfile> availableprofiles = UserProfileManager.FetchAllProfiles(true).ToList();
-            foreach (UserProfile profile in swUser.Profiles)
-            {
+            var availableprofiles = UserProfileManager.FetchAllProfiles(true).ToList();
+            foreach (var profile in swUser.Profiles) {
                 availableprofiles.Remove(profile);
             }
             dataMap.SetAttribute("#availableprofiles", availableprofiles);
@@ -105,14 +103,27 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 user.Password = AuthUtils.GetSha1HashData(passwordString);
             }
             user.IsActive = isactive;
-
-            // Handle the profiles
-            // Deserialize profiles from json
-            // Set user.profiles to new profiles
-
+            user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
 
             return Engine().Execute(operationWrapper);
+        }
+
+
+        public Iesi.Collections.Generic.ISet<UserProfile> LoadProfiles(JObject json) {
+            var result = new HashedSet<UserProfile>();
+            var profiles = json.GetValue("#profiles");
+            if (profiles == null) {
+                return result;
+            }
+            dynamic obj = profiles;
+            //Loop over the array
+            foreach (dynamic row in profiles) {
+                result.Add(new UserProfile() {
+                    Id = row.id
+                });
+            }
+            return result;
         }
 
         public override string ApplicationName() {

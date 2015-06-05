@@ -34,12 +34,11 @@ namespace softWrench.sW4.Security.Entities {
 
         private Person _person;
 
-        public Person Person
-        {
-            get {return _person;} 
+        public Person Person {
+            get { return _person; }
             set { _person = value; }
         }
-        
+
         [Property(TypeType = typeof(BooleanToIntUserType))]
         public virtual Boolean IsActive { get; set; }
 
@@ -60,7 +59,7 @@ namespace softWrench.sW4.Security.Entities {
         public virtual Iesi.Collections.Generic.ISet<PersonGroupAssociation> PersonGroups { get; set; }
 
         [Set(0, Table = "sw_user_userprofile",
-        Lazy = CollectionLazy.False, Cascade = "all")]
+        Lazy = CollectionLazy.False, Cascade = "none")]
         [Key(1, Column = "user_id")]
         [ManyToMany(2, Column = "profile_id", ClassType = typeof(UserProfile))]
         public virtual Iesi.Collections.Generic.ISet<UserProfile> Profiles { get; set; }
@@ -83,9 +82,9 @@ namespace softWrench.sW4.Security.Entities {
         //}
 
 
-        public User()
-        {
+        public User() {
             Person = new Person();
+            Profiles = new HashedSet<UserProfile>();
         }
         /// <summary>
         /// used for nhibernate to generate a "view" of user entity to list screen
@@ -186,7 +185,7 @@ namespace softWrench.sW4.Security.Entities {
             if (inputPassword != null) {
                 user.Password = AuthUtils.GetSha1HashData(inputPassword);
             }
-            
+
 
             return user;
         }
