@@ -15,7 +15,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
         currentListSchema: null,
         itemlist: null,
-        filteredList:null,
+        filteredList: null,
 
         originalDetailItem: null,
         currentDetailItem: null,
@@ -81,15 +81,15 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
     return {
 
-        isList:function() {
+        isList: function () {
             return crudContext.currentDetailItem == null;
         },
 
-        getFilteredList:function() {
+        getFilteredList: function () {
             return crudContext.filteredList;
         },
 
-      
+
 
         currentTitle: function () {
             var tabTitle = this.tabTitle();
@@ -120,7 +120,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return crudContext.itemlist;
         },
 
-     
+
 
 
 
@@ -153,7 +153,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return crudContext.composition.currentTab.label;
         },
 
-        resetTab:function() {
+        resetTab: function () {
             crudContext.composition.currentTab = null;
         },
 
@@ -181,7 +181,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         },
 
         loadCompositionDetail: function (item) {
-            
+
 
             crudContext.composition.currentDetailItem = item;
             crudContext.composition.originalDetailItem = angular.copy(item);
@@ -221,11 +221,11 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return crudContext.currentDetailItem && (!angular.equals(crudContext.originalDetailItem, crudContext.currentDetailItem));
         },
 
-        cancelChanges:function() {
-           if (crudContext.composition.currentDetailItem) {
-               crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItem);
-           }
-           crudContext.currentDetailItem = angular.copy(crudContext.originalDetailItem);
+        cancelChanges: function () {
+            if (crudContext.composition.currentDetailItem) {
+                crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItem);
+            }
+            crudContext.currentDetailItem = angular.copy(crudContext.originalDetailItem);
         },
 
         /**************************************************************************END SAVE FNS********************************************************************************************/
@@ -239,7 +239,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
                 filteredMode = true;
                 baseQuery += ' and datamap like \'%:"{0}%\''.format(internalListContext.searchQuery);
             }
-            return swdbDAO.findByQuery("DataEntry",baseQuery , { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
+            return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
                 internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
                 var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
                 for (var i = 0; i < results.length; i++) {
@@ -284,7 +284,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
             var baseQuery = 'application = \'{0}\' and datamap like \'%:"{1}%\'';
             var applicationName = crudContext.currentApplicationName;
-            swdbDAO.findByQuery("DataEntry", baseQuery.format(applicationName,text), { pagesize: 10, pagenumber: 1 })
+            swdbDAO.findByQuery("DataEntry", baseQuery.format(applicationName, text), { pagesize: 10, pagenumber: 1 })
               .success(function (results) {
                   internalListContext.lastPageLoaded = 1;
                   crudContext.filteredList = [];
@@ -324,7 +324,22 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return $q.when();
         },
 
+        createDetail: function () {
+            crudContext.currentDetailItem = {};
+            offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem);
+            crudContext.originalDetailItem = {
+                //to make this new item always dirty!!!
+                "_newitem#$": true
+            };
+            return routeService.go("main.cruddetail.maininput");
+        },
+
         loadDetail: function (item) {
+            /// <summary>
+            ///  Loads a detail represented by the parameter item.
+            /// </summary>
+            /// <param name="item"></param>
+            /// <returns type=""></returns>
             if (!crudContext.currentDetailSchema) {
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
@@ -335,7 +350,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return routeService.go("main.cruddetail.maininput");
         }
 
-       
+
     }
 
 });

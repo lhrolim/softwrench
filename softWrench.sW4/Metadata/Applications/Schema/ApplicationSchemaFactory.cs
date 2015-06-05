@@ -168,6 +168,8 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     return name + " Grid";
                 case SchemaStereotype.Detail:
                     return name + " Detail";
+                case SchemaStereotype.DetailNew:
+                    return name + " Detail";
             }
             return null;
         }

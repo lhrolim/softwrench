@@ -666,6 +666,7 @@
     <restriction base="string">
       <enumeration value="list"></enumeration>
       <enumeration value="detail"></enumeration>
+      <enumeration value="detailnew"></enumeration>
       <enumeration value="compositionlist"></enumeration>
       <enumeration value="compositiondetail"></enumeration>
     </restriction>

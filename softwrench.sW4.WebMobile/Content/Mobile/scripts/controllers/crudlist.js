@@ -28,6 +28,8 @@
         crudContextService.filterList(text);
     };
 
+    
+
 
     $scope.disableSearch = function () {
         $scope._searching = false;
@@ -62,6 +64,10 @@
 
     $scope.openDetail = function (item) {
         crudContextService.loadDetail(item);
+    }
+
+    $scope.createItem = function () {
+        crudContextService.createDetail();
     }
 
     $scope.getStatusText = function (item) {

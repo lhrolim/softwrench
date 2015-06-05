@@ -340,7 +340,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
 
         // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
         // this first if is more of an unexpected case
-        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
+        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail' || $scope.schema.stereotype == 'DetailNew') {
             log.debug('rendering list view from server');
             $scope.renderListView(parameters);
         } else {

@@ -1,13 +1,12 @@
-﻿modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService) {
+﻿
+modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
         if (fieldMetadata.jscache.isHidden != undefined) {
             return fieldMetadata.jscache.isHidden;
         }
-        var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" &&
-              (fieldMetadata.attribute == schema.idFieldName && schema.stereotype == "Detail"
-              && schema.mode == "input" && !fieldMetadata.isReadOnly));
+        var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" && isIdFieldAndNotReadOnly(fieldMetadata,schema));
         var isTabComposition = fieldMetadata.type == "ApplicationCompositionDefinition" && !fieldMetadata.inline;
         if (baseHidden || isTabComposition) {
             fieldMetadata.jscache.isHidden = true;
@@ -29,6 +28,18 @@
         }
         return !expressionService.evaluate(fieldMetadata.showExpression, datamap);
     };
+
+    var isIdField = function(fieldMetadata, schema) {
+        return fieldMetadata.attribute == schema.idFieldName;
+    };
+
+    var isIdFieldAndNotReadOnly = function (fieldMetadata, schema) {
+        if (isIdField(fieldMetadata, schema)) {
+            return false;
+        }
+        return (schema.stereotype == "Detail" && schema.mode == "input" || schema.stereotype == "DetailNew") && !fieldMetadata.isReadOnly;
+    }
+
 
 
     return {
@@ -241,7 +252,7 @@
             return result;
         },
 
-
+     
 
         getNextVisibleDisplayableIdx: function (datamap, schema, key) {
 

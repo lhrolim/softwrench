@@ -40,7 +40,9 @@
         },
 
 
+        fillDefaultValues: function (schema, item) {
 
+        },
 
         locateAttributeByQualifier: function (schema, qualifier) {
             schema.jscache = schema.jscache || {};

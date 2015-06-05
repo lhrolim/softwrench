@@ -72,7 +72,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var nextSchema = nextMetadata.Schema;
 
             var dataSet = _dataSetProvider.LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
-            if (nextSchema.Stereotype == SchemaStereotype.Detail) {
+            if (nextSchema.Stereotype == SchemaStereotype.Detail || nextSchema.Stereotype == SchemaStereotype.DetailNew) {
                 if (targetMocked) {
                     Log.DebugFormat("retrieving mocked detail results");
                     return MockingUtils.GetMockedDataMap(applicationName, nextSchema, nextMetadata);
