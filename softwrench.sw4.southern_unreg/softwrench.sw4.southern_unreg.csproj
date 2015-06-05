@@ -50,7 +50,11 @@
     <Content Include="web_content\southern_unreg\images\header.jpg" />
     <Content Include="web_content\southern_unreg\images\logo-byline.png" />
     <Content Include="web_content\southern_unreg\images\logo-main.png" />
-    <Content Include="web_content\southern_unreg\images\signin.jpg" />
+    <Content Include="web_content\southern_unreg\images\signin-lg.jpg" />
+    <Content Include="web_content\southern_unreg\images\signin-md.jpg" />
+    <Content Include="web_content\southern_unreg\images\signin-sm.jpg" />
+    <Content Include="web_content\southern_unreg\images\signin-xs.jpg" />
+    <Content Include="web_content\southern_unreg\images\signin-xxs.jpg" />
     <Content Include="web_content\southern_unreg\styles\branding.css" />
   </ItemGroup>
   <ItemGroup>

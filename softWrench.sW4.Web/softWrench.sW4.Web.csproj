@@ -527,7 +527,11 @@
     <Content Include="Content\Images\pagination-next.png" />
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
-    <Content Include="Content\Images\signin.jpg" />
+    <Content Include="Content\Images\signin-lg.jpg" />
+    <Content Include="Content\Images\signin-md.jpg" />
+    <Content Include="Content\Images\signin-sm.jpg" />
+    <Content Include="Content\Images\signin-xs.jpg" />
+    <Content Include="Content\Images\signin-xxs.jpg" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
