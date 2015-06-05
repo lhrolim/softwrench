@@ -56,6 +56,6 @@ input.ion-autocomplete[readonly] {
     cursor: text;
 }
 
-/*.header-item {
-    right: 0 !important
-}*/
+.header-item {
+    right: 20px !important
+}
