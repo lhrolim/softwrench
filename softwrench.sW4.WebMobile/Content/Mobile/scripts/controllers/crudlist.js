@@ -1,4 +1,6 @@
-﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate) {
+﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate,$rootScope,$timeout) {
+
+    'use strict';
 
     $scope.moreItemsAvailable = true;
     $scope._searching = false;
@@ -17,7 +19,7 @@
     $scope.enableSearch = function () {
         $scope._searching = true;
         $ionicScrollDelegate.scrollTop();
-//        $scope.moreItemsAvailable = false;
+        //        $scope.moreItemsAvailable = false;
     }
 
     $scope.filter = function (data) {
@@ -60,7 +62,6 @@
 
     $scope.openDetail = function (item) {
         crudContextService.loadDetail(item);
-        $scope._searching = false;
     }
 
     $scope.getStatusText = function (item) {
@@ -74,6 +75,19 @@
         }
         return "white";
     }
+
+
+    $rootScope.$on('$stateChangeSuccess',
+         function (event, toState, toParams, fromState, fromParams) {
+             if (!toState.name.startsWith("main.crudlist")) {
+                 $timeout(function () {
+                     //to avoid strange transitions on the screen
+                     //TODO: transition finished event??
+                     $scope.disableSearch();
+                 }, 500);
+
+             }
+         });
 
     $scope.loadMore = function () {
         var log = $log.get("crudListController#loadMore");

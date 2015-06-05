@@ -15,9 +15,8 @@
         },
 
         go:function(stateName) {
-            $state.go(stateName);
             contextService.insertIntoContext("currentstate", stateName);
-
+            return $state.go(stateName);
         },
 
         loadInitialState:function(cookieAuthenticated) {

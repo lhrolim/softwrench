@@ -230,6 +230,8 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
         /**************************************************************************END SAVE FNS********************************************************************************************/
 
+        /**************************************************************************GRID FNS********************************************************************************************/
+
         loadMorePromise: function () {
             var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
             var filteredMode = false;
@@ -258,6 +260,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
             crudContext.currentDetailSchema = loadDetailSchema();
             crudContext.currentDetailItem = null;
+            crudContext.composition = {};
 
 
             swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(applicationName), { pagesize: 10, pagenumber: 1 })
@@ -294,6 +297,8 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         },
 
 
+        /**************************************************************************END GRID FNS********************************************************************************************/
+
         navigatePrevious: function () {
             if (!crudContext.previousItem) {
                 routeService.go("main.crudlist");
@@ -327,7 +332,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             crudContext.originalDetailItem = angular.copy(crudContext.currentDetailItem);
             setPreviousAndNextItems(item);
             contextService.insertIntoContext("crudcontext", crudContext);
-            routeService.go("main.cruddetail.maininput");
+            return routeService.go("main.cruddetail.maininput");
         }
 
        
