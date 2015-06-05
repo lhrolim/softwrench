@@ -34,7 +34,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
     };
 
     var isIdFieldAndNotReadOnly = function (fieldMetadata, schema) {
-        if (isIdField(fieldMetadata, schema)) {
+        if (!isIdField(fieldMetadata, schema)) {
             return false;
         }
         return (schema.stereotype == "Detail" && schema.mode == "input" || schema.stereotype == "DetailNew") && !fieldMetadata.isReadOnly;
