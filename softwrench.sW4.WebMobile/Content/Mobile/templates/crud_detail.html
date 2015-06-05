@@ -1,17 +1,31 @@
 ﻿<link href="/Content/Mobile/styles/detail.css" rel="stylesheet" />
 
-<ion-view title="{{title()}}">
+<ion-view>
 
+  
+
+
+    <ion-nav-buttons side="left">
+        <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
+    </ion-nav-buttons>
+    
+    <ion-nav-title>
+        <div>{{title()}}</div>
+    </ion-nav-title>
+    
+    
     <ion-header-bar class="bar-subheader bar-assertive" align-title="left">
 
         <div class="buttons" style="padding-left: 5px">
-            
+
             <button class="button icon ion-arrow-left-c" ng-show="shouldShowBack()" ng-click="navigateBack()">Back</button>
             <button class="button icon ion-android-cancel" ng-show="hasDirtyChanges()" ng-click="cancelChanges()">Cancel</button>
 
-           
+
             <button class="button icon ion-plus" ng-click="AddItem($event)" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges()">Add</button>
         </div>
+
+
 
         <div class="buttons" style="position: absolute; right: 5px; top:5px">
             <button class="button icon ion-arrow-left-a" ng-click="navigatePrevious()" ng-show="showNavigation()"></button>
@@ -24,14 +38,6 @@
 
     </ion-header-bar>
 
-
-
-
-    <ion-nav-buttons side="left">
-        <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
-    </ion-nav-buttons>
-    
-    
     <ion-content has-header="true" has-subheader="true">
         <div class="header-item text-center h4" ng-click="loadMainTab()">
             {{detailSummary()}}

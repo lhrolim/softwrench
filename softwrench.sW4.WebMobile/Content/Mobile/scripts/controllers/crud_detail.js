@@ -21,9 +21,7 @@
         $scope.compositionpopover.hide();
     });
 
-    $scope.title = function () {
-        return crudContextService.currentTitle();
-    }
+ 
 
     $scope.loadMainTab = function() {
         crudContextService.loadTab(null);

@@ -18,14 +18,17 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         var queryToUse = queryoptions.fullquery;
 
         var filter = getInstance(entity).all();
-        filter._additionalWhereSqls = [];
-        filter._projectionFields = [];
-        filter._querytoUse = null;
+       
 
         if (pageSize) {
             filter = filter.limit(pageSize);
             filter = filter.skip((pageSize * (pageNumber - 1)));
         }
+
+        filter._additionalWhereSqls = [];
+        filter._projectionFields = [];
+        filter._querytoUse = null;
+
         if (queryString) {
             filter._additionalWhereSqls.push(queryString);
         }

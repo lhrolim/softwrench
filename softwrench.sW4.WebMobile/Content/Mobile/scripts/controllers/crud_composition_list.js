@@ -5,7 +5,8 @@
 
 
         $scope.empty = function () {
-            return crudContextService.compositionList().length==0;
+            var compositionList = crudContextService.compositionList();
+            return !compositionList || compositionList.length == 0;
         }
 
         $scope.list = function () {

@@ -17,6 +17,11 @@
         $ionicSideMenuDelegate.toggleLeft();
     }
 
+
+    $scope.title = function () {
+        return crudContextService.currentTitle();
+    }
+
     $scope.loadApplication = function (menuleaf) {
         crudContextService.loadApplicationGrid(menuleaf.application,menuleaf.title, menuleaf.schema);
         $ionicSideMenuDelegate.toggleLeft();

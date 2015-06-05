@@ -15,6 +15,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
         currentListSchema: null,
         itemlist: null,
+        filteredList:null,
 
         originalDetailItem: null,
         currentDetailItem: null,
@@ -83,6 +84,12 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         isList:function() {
             return crudContext.currentDetailItem == null;
         },
+
+        getFilteredList:function() {
+            return crudContext.filteredList;
+        },
+
+      
 
         currentTitle: function () {
             var tabTitle = this.tabTitle();
@@ -224,14 +231,66 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         /**************************************************************************END SAVE FNS********************************************************************************************/
 
         loadMorePromise: function () {
-
-            return swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(crudContext.currentApplicationName), { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
+            var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
+            var filteredMode = false;
+            if (!nullOrEmpty(internalListContext.searchQuery)) {
+                filteredMode = true;
+                baseQuery += ' and datamap like \'%:"{0}%\''.format(internalListContext.searchQuery);
+            }
+            return swdbDAO.findByQuery("DataEntry",baseQuery , { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
                 internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
+                var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
                 for (var i = 0; i < results.length; i++) {
-                    crudContext.itemlist.push(results[i].datamap);
+                    listToPush.push(results[i].datamap);
                 }
                 return $q.when(results);
             });
+        },
+
+        loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
+            crudContext.currentTitle = applicationTitle;
+            var application = metadataModelService.getApplicationByName(applicationName);
+
+            crudContext.currentApplicationName = applicationName;
+            crudContext.currentApplication = application;
+            crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
+
+
+            crudContext.currentDetailSchema = loadDetailSchema();
+            crudContext.currentDetailItem = null;
+
+
+            swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(applicationName), { pagesize: 10, pagenumber: 1 })
+                .success(function (results) {
+                    internalListContext.lastPageLoaded = 1;
+                    crudContext.itemlist = [];
+                    for (var i = 0; i < results.length; i++) {
+                        results[i].datamap[constants.localIdKey] = results[i].id;
+                        crudContext.itemlist.push(results[i].datamap);
+                    }
+                    routeService.go("main.crudlist");
+                    contextService.insertIntoContext("crudcontext", crudContext);
+                });
+        },
+
+        filterList: function (text) {
+            if (text == null) {
+                internalListContext.searchQuery = null;
+                return;
+            }
+
+            var baseQuery = 'application = \'{0}\' and datamap like \'%:"{1}%\'';
+            var applicationName = crudContext.currentApplicationName;
+            swdbDAO.findByQuery("DataEntry", baseQuery.format(applicationName,text), { pagesize: 10, pagenumber: 1 })
+              .success(function (results) {
+                  internalListContext.lastPageLoaded = 1;
+                  crudContext.filteredList = [];
+                  for (var i = 0; i < results.length; i++) {
+                      results[i].datamap[constants.localIdKey] = results[i].id;
+                      crudContext.filteredList.push(results[i].datamap);
+                      internalListContext.searchQuery = text;
+                  }
+              });
         },
 
 
@@ -269,33 +328,9 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             setPreviousAndNextItems(item);
             contextService.insertIntoContext("crudcontext", crudContext);
             routeService.go("main.cruddetail.maininput");
-        },
-
-        loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
-            crudContext.currentTitle = applicationTitle;
-            var application = metadataModelService.getApplicationByName(applicationName);
-
-            crudContext.currentApplicationName = applicationName;
-            crudContext.currentApplication = application;
-            crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
-
-
-            crudContext.currentDetailSchema = loadDetailSchema();
-            crudContext.currentDetailItem = null;
-
-
-            swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(applicationName), { pagesize: 10, pagenumber: 1 })
-                .success(function (results) {
-                    internalListContext.lastPageLoaded = 1;
-                    crudContext.itemlist = [];
-                    for (var i = 0; i < results.length; i++) {
-                        results[i].datamap[constants.localIdKey] = results[i].id;
-                        crudContext.itemlist.push(results[i].datamap);
-                    }
-                    routeService.go("main.crudlist");
-                    contextService.insertIntoContext("crudcontext", crudContext);
-                });
         }
+
+       
     }
 
 });

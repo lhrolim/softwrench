@@ -1,14 +1,37 @@
-﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService) {
+﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate) {
 
-    $scope.noMoreItemsAvailable = false;
-
-    
-    $scope.title = function () {
-        return crudContextService.currentTitle();
-    }
+    $scope.moreItemsAvailable = true;
+    $scope._searching = false;
 
     $scope.list = function () {
-        return crudContextService.itemlist();
+        if (!this.isSearching() || nullOrEmpty($scope.searchQuery)) {
+            return crudContextService.itemlist();
+        }
+        return crudContextService.getFilteredList();
+    }
+
+    $scope.isSearching = function () {
+        return $scope._searching;
+    }
+
+    $scope.enableSearch = function () {
+        $scope._searching = true;
+        $ionicScrollDelegate.scrollTop();
+//        $scope.moreItemsAvailable = false;
+    }
+
+    $scope.filter = function (data) {
+        var text = data.searchQuery;
+        $scope.searchQuery = text;
+        crudContextService.filterList(text);
+    };
+
+
+    $scope.disableSearch = function () {
+        $scope._searching = false;
+        $scope.searchQuery = null;
+        crudContextService.filterList(null);
+        $ionicScrollDelegate.scrollTop();
     }
 
     $scope.itemTitle = function (item) {
@@ -37,6 +60,7 @@
 
     $scope.openDetail = function (item) {
         crudContextService.loadDetail(item);
+        $scope._searching = false;
     }
 
     $scope.getStatusText = function (item) {
