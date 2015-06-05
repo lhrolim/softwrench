@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <templates>
+    <!--Email-->
+    <template path="@email.xml"/>
+    
+    <!--Phone-->
+    <template path="@phone.xml"/>
+  </templates>
+    
   <entities>
     <entity name="localPerson" parententity="person" idAttribute="personid">
       <connectorParameters>

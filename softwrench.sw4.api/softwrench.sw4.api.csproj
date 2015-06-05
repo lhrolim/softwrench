@@ -160,7 +160,6 @@
     <EmbeddedResource Include="metadata\templates\person.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\templates\user.xml" />
     <EmbeddedResource Include="metadata\templates\failurecode.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
