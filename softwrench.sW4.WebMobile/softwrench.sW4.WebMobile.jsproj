@@ -118,6 +118,7 @@
     <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
     <Content Include="Content\Mobile\scripts\directives\crud\crud_output_fields.js" />
     <Content Include="Content\Mobile\scripts\directives\crud\crud_input_fields.js" />
+    <Content Include="Content\Mobile\scripts\directives\option_field.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />
@@ -143,6 +144,8 @@
     <Content Include="Content\Mobile\templates\crud_input.html" />
     <Content Include="Content\Mobile\templates\directives\crud\crud_output_fields.html" />
     <Content Include="Content\Mobile\templates\directives\crud\crud_input_fields.html" />
+    <Content Include="Content\Mobile\templates\directives\option_field_item.html" />
+    <Content Include="Content\Mobile\templates\directives\option_field.html" />
     <Content Include="Content\Vendor\css\ionautocomplete.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionautocomplete.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\css\ionic.css" />
@@ -168,6 +171,7 @@
     <Content Include="Content\Vendor\scripts\persistence.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.websql.js" />
+    <Content Include="css\optionfield.css" />
     <Content Include="tests\resources\jsons\syncdata\sampleassociationrequest.json" />
     <Content Include="tests\resources\jsons\syncdata\samplerequest.json" />
     <Content Include="tests\resources\jsons\syncdata\sql_utils.txt" />

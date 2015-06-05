@@ -1,4 +1,4 @@
-﻿softwrench.controller('CompositionMenuController', function ($log, $scope, crudContextService) {
+﻿softwrench.controller('CompositionMenuController', function ($log, $scope,$ionicScrollDelegate, crudContextService) {
 
     $scope.compositionMenus = function () {
         return crudContextService.currentCompositionsToShow();
@@ -10,7 +10,9 @@
 
     $scope.loadTab = function (tab) {
         crudContextService.loadTab(tab);
+        $ionicScrollDelegate.scrollTop();
         $scope.$emit("sw_compositionselected");
+        
     }
 
     $scope.notOnMainTab = function() {

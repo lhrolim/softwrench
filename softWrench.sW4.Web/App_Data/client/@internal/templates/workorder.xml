@@ -393,7 +393,9 @@
           </composition>
           <composition relationship="attachment" label="Attachments" />
           <field attribute="description" label="Description"  />
-          <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
         </detail>
       </schemas>
     </application>

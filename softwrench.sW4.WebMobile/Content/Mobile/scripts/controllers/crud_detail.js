@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudDetailController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory) {
+﻿softwrench.controller('CrudDetailController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate) {
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
@@ -23,7 +23,8 @@
 
  
 
-    $scope.loadMainTab = function() {
+    $scope.loadMainTab = function () {
+        $ionicScrollDelegate.scrollTop();
         crudContextService.loadTab(null);
     }
 
@@ -70,6 +71,10 @@
 
     $scope.detailSummary = function () {
         return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap, true);
+    }
+
+    $scope.addCompositionItem = function () {
+        crudContextService.createNewCompositionItem();
     }
 
     $scope.navigateNext = function () {

@@ -2,15 +2,33 @@
 
     <label class="item item-input">
         <span class="input-label">{{field.label}}</span>
-        <ng-switch on="(field.type == 'ApplicationAssociationDefinition') || (field.type == 'OptionField')">
-            <div ng-switch-when="true">
+        <ng-switch on="field.type">
+            <div ng-switch-when="ApplicationAssociationDefinition">
                 <ion-autocomplete ng-model="datamap[field.target]"
                                   identifier="{{field.associationKey}}"
                                   items-method="associationSearch(queryparameters)"
                                   item-value-key="{{getAssociationValueField(field)}}"
-                                  item-view-value-key="{{getAssociationLabelField(field)}}" />                
+                                  item-view-value-key="{{getAssociationLabelField(field)}}" />
             </div>
-            <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly">
+            <div ng-switch-when="OptionField">
+                <option-field header-text="Single"
+                              allow-empty='false'
+                              value="datamap[field.target]"
+                              text="Choose"
+                              items="field.options"
+                              />
+</div>
+            <div ng-switch-default ng-switch on="field.rendererType">
+                <textarea ng-switch-when="textarea" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
+                          data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
+                          maxlength="{{field.rendererParameters['maxlength']}}"></textarea>
+                <textarea ng-switch-when="richtext" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
+                          data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
+                          maxlength="{{field.rendererParameters['maxlength']}}"></textarea>
+                <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly">    
+            </div>
+
+            
         </ng-switch>
 
     </label>

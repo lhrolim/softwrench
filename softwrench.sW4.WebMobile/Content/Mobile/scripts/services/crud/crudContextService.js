@@ -189,6 +189,17 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             return routeService.go("main.cruddetail.compositiondetail");
         },
 
+        createNewCompositionItem: function () {
+            crudContext.composition.currentDetailItem = {};
+            offlineSchemaService.fillDefaultValues(crudContext.composition.currentDetailSchema, crudContext.composition.currentDetailItem);
+            crudContext.composition.originalDetailItem = {
+                //to make this new item always dirty!!!
+                "_newitem#$": true
+            };
+            contextService.insertIntoContext("crudcontext", crudContext);
+            return routeService.go("main.cruddetail.compositiondetail");
+        },
+
 
 
 
@@ -224,6 +235,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         cancelChanges: function () {
             if (crudContext.composition.currentDetailItem) {
                 crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItem);
+                return routeService.go("main.cruddetail.compositionlist");
             }
             crudContext.currentDetailItem = angular.copy(crudContext.originalDetailItem);
         },

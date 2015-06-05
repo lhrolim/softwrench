@@ -1,5 +1,5 @@
 ﻿softwrench.controller('CrudCompositionDetailController',
-    function ($log, $scope, $rootScope, crudContextService, fieldService,offlineCompositionService) {
+    function ($log, $scope, $rootScope, crudContextService, fieldService, offlineCompositionService, offlineAssociationService) {
 
         'use strict';
 
@@ -12,6 +12,18 @@
 
         $scope.fieldLabel = function (item,field) {
             return field.label + ":" + item[field.attribute];
+        }
+
+        $scope.associationSearch = function (queryparameters) {
+            return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
+        }
+
+        $scope.getAssociationLabelField = function (fieldMetadata) {
+            return 'datamap.' + fieldMetadata.labelFields[0];
+        }
+
+        $scope.getAssociationValueField = function (fieldMetadata) {
+            return 'datamap.' + fieldMetadata.valueField;
         }
 
         $scope.visibleFields = function () {
