@@ -166,4 +166,15 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/main/home');
 
+})
+
+.filter('linebreak', function () {
+    return function (value) {
+        if (value != null) {
+            value = value.toString();
+            return value.replace(/\n/g, '<br/>');
+        }
+        return value;
+    };
 });
+

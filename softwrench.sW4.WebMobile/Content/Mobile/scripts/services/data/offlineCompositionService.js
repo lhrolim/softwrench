@@ -84,7 +84,7 @@
                 }
                 // put any locally created compositions on top of the list
                 if (mainDatamap[displayable.associationKey]) {
-                    resultCompositions = resultCompositions.concat(mainDatamap[displayable.associationKey]);
+                    resultCompositions = mainDatamap[displayable.associationKey].concat(resultCompositions);
                 }
                 return resultCompositions;
             });

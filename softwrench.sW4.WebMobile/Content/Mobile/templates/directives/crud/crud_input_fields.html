@@ -11,13 +11,14 @@
                                   item-view-value-key="{{getAssociationLabelField(field)}}" />
             </div>
             <div ng-switch-when="OptionField">
-                <option-field header-text="Single"
+                {{datamap[field.target]}}
+                <option-field header-text="{{field.label}}"
                               allow-empty='false'
                               value="datamap[field.target]"
                               text="Choose"
                               items="field.options"
-                              />
-</div>
+                    />
+            </div>
             <div ng-switch-default ng-switch on="field.rendererType">
                 <textarea ng-switch-when="textarea" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
                           data-ng-maxlength="{{field.rendererParameters['maxlength']}}"

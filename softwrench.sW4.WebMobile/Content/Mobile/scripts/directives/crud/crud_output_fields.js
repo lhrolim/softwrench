@@ -1,46 +1,4 @@
-﻿softwrench.directive('sectionElementInput', function ($compile) {
-    return {
-        restrict: "E",
-        replace: true,
-        scope: {
-            schema: '=',
-            datamap: '=',
-            isDirty: '=',
-            displayables: '=',
-            associationOptions: '=',
-            associationSchemas: '=',
-            blockedassociations: '=',
-            extraparameters: '=',
-            elementid: '@',
-            orientation: '@',
-            islabelless: '@',
-            lookupAssociationsCode: '=',
-            lookupAssociationsDescription: '=',
-
-        },
-        template: "<div></div>",
-        link: function (scope, element, attrs) {
-            if (angular.isArray(scope.displayables)) {
-                element.append(
-                "<crud-input-fields displayables='displayables'" +
-                "schema='schema'" +
-                "datamap='datamap'" +
-                "is-dirty='isDirty'" +
-                "displayables='displayables'" +
-                "association-options='associationOptions'" +
-                "association-schemas='associationSchemas'" +
-                "blockedassociations='blockedassociations'" +
-                "elementid='{{elementid}}'" +
-                "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
-                "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
-                "></crud-input-fields>"
-                );
-                $compile(element.contents())(scope);
-            }
-        }
-    }
-});
-softwrench.directive('crudOutputFields', function ($log,fieldService, crudContextService) {
+﻿softwrench.directive('crudOutputFields', function ($log, fieldService, crudContextService, formatService) {
 
     return {
         restrict: 'E',
@@ -57,6 +15,11 @@ softwrench.directive('crudOutputFields', function ($log,fieldService, crudContex
         },
 
         controller: function ($scope) {
+
+            $scope.getFormattedValue = function (value, column, datamap) {
+                return formatService.format(value, column, datamap);
+            };
+
 
             $scope.getDisplayables = function () {
                 return $scope.displayables;

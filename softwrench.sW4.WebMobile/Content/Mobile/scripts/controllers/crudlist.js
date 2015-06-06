@@ -28,7 +28,9 @@
         crudContextService.filterList(text);
     };
 
-    
+    $scope.isDirty = function (item) {
+        return item[constants.isDirty];
+    }
 
 
     $scope.disableSearch = function () {

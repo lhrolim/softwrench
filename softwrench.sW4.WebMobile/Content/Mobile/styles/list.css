@@ -60,3 +60,7 @@ input.ion-autocomplete[readonly] {
     right: 20px !important;
     left: 30px !important
 }
+
+.missingsync {
+    background-color: wheat;
+}

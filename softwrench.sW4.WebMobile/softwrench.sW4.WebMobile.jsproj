@@ -121,6 +121,7 @@
     <Content Include="Content\Mobile\scripts\directives\option_field.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
+    <Content Include="Content\Mobile\scripts\services\data\offlineSaveService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />
     <Content Include="Content\Mobile\scripts\services\db\CompositionDataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\db\AssociationData.js" />

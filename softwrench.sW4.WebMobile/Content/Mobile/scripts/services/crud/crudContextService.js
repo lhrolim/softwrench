@@ -1,7 +1,7 @@
 ﻿var constants = constants || {};
 
 
-mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metadataModelService, offlineSchemaService, offlineCompositionService, schemaService, contextService, routeService, tabsService) {
+mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metadataModelService, offlineSchemaService, offlineCompositionService,offlineSaveService, schemaService, contextService, routeService, tabsService) {
     'use strict';
 
     var internalListContext = {
@@ -238,6 +238,23 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
                 return routeService.go("main.cruddetail.compositionlist");
             }
             crudContext.currentDetailItem = angular.copy(crudContext.originalDetailItem);
+        },
+
+        saveChanges: function () {
+            
+            var datamap = crudContext.currentDetailItem;
+            var that = this;
+            if (crudContext.composition && crudContext.composition.currentDetailItem) {
+                var compositionItem = crudContext.composition.currentDetailItem;
+                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, datamap, compositionItem, crudContext.composition.currentTab).then(function() {
+                    that.loadTab(crudContext.composition.currentTab);
+                });
+            }
+
+            return offlineSaveService.saveItem(crudContext.currentApplicationName, datamap).then(function() {
+                crudContext.originalDetailItem = angular.copy(datamap);
+                contextService.insertIntoContext("crudcontext", crudContext);
+            });
         },
 
         /**************************************************************************END SAVE FNS********************************************************************************************/

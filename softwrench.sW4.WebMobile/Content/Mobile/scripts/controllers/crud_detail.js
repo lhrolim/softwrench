@@ -50,6 +50,12 @@
         });
     }
 
+    $scope.saveChanges = function() {
+        crudContextService.saveChanges().then(function() {
+            init();
+        });
+    }
+
   
 
     $scope.hasDirtyChanges = function () {

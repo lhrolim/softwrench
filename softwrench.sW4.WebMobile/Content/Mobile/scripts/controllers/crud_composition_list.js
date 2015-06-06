@@ -1,5 +1,5 @@
 ﻿softwrench.controller('CrudCompositionListController',
-    function ($log, $scope, $rootScope, crudContextService, fieldService) {
+    function ($log, $scope, $rootScope, crudContextService, fieldService,formatService) {
 
         'use strict';
 
@@ -14,7 +14,7 @@
         }
 
         $scope.fieldLabel = function (item,field) {
-            return field.label + ":" + item[field.attribute];
+            return field.label + ":" + formatService.format(item[field.attribute],field,item);
         }
 
         $scope.visibleFields = function () {
@@ -24,6 +24,10 @@
 
         $scope.loadCompositionDetail = function(item) {
             crudContextService.loadCompositionDetail(item);
+        }
+
+        $scope.isDirty=function(item) {
+            return item[constants.localIdKey];
         }
 
        

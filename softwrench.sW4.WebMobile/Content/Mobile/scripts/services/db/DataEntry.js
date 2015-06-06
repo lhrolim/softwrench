@@ -19,3 +19,6 @@ entities.DataEntry.index(['application', 'remoteid'], { unique: true });
 entities.DataEntry.insertionQueryPattern = "insert into DataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',0,'{2}','{3}','{4}')";
 entities.DataEntry.updateQueryPattern = "update DataEntry set datamap='{0}',rowstamp='{1}' where remoteId='{2}' and application='{3}'";
 entities.DataEntry.deleteQueryPattern = "delete from DataEntry where remoteId in({0}) and application='{1}'";
+
+entities.DataEntry.updateLocalPattern = "update DataEntry set datamap='{0}', isDirty=1 where id ='{1}'";
+entities.DataEntry.insertLocalPattern = "insert into DataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',1,null,null,'{2}')";

@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('formatService', function ($filter, i18NService, dispatcherService) {
+﻿modules.webcommons.factory('formatService', function ($filter, i18NService, dispatcherService) {
 
     var doFormatDate = function (value, dateFormat, forceConversion) {
         if (value == null) {
