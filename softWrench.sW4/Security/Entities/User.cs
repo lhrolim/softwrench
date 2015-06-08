@@ -103,6 +103,7 @@ namespace softWrench.sW4.Security.Entities {
 
         public User(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc) {
             UserName = userName;
+            Person = new Person();
             Person.FirstName = firstName;
             Person.LastName = lastName;
             Person.SiteId = siteId;
