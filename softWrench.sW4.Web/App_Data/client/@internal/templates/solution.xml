@@ -66,26 +66,33 @@
         </detail>
 
         <schema id="adetail" title="Solution Details" abstract="true" stereotype="detail" platform="web">
-          <field attribute="solution" label="Solution No" readonly="true">
-            <renderer type="default" params="inputsize=medium" />
-          </field>
-          <section id="statussection" />
-          <field attribute="description" label="Description" requiredexpression="true" />
-          <field attribute="symptom_.ldtext" label="Symptom:">
-            <renderer type="richtext" />
-          </field>
-          <field attribute="cause_.ldtext" label="Cause:">
-            <renderer type="richtext" />
-          </field>
-          <field attribute="resolution_.ldtext" label="Resolution:">
-            <renderer type="richtext" />
-          </field>
+
+          <section orientation="horizontal">
+            <field attribute="solution" label="Solution No" readonly="true">
+              <renderer type="default" />
+            </field>
+            <section id="statussection" />
+          </section>
+
+          <section>
+            <header displacement="ontop" label="Solution Details" params="fieldset=true" />
+            <field attribute="description" label="Description" requiredexpression="true" />
+            <field attribute="symptom_.ldtext" label="Symptom:">
+              <renderer type="richtext" />
+            </field>
+            <field attribute="cause_.ldtext" label="Cause:">
+              <renderer type="richtext" />
+            </field>
+            <field attribute="resolution_.ldtext" label="Resolution:">
+              <renderer type="richtext" />
+            </field>
+          </section>
         </schema>
 
         <schema parentschema="adetail" id="editdetail" stereotype="detail" platform="web">
           <section id="statussection">
             <optionfield attribute="status" label="Status" requiredexpression="true">
-              <renderer type="combo" params="inputsize=medium" />
+              <renderer type="combo" />
               <option label="DRAFT" value="DRAFT" />
               <option label="ACTIVE" value="ACTIVE" />
               <option label="INACTIVE" value="INACTIVE" />
@@ -97,7 +104,7 @@
         <schema parentschema="adetail" id="newdetail" stereotype="detail" platform="web">
           <section id="statussection">
             <field attribute="status" label="Status" enableexpression="false">
-              <renderer type="default" params="inputsize=medium" />
+              <renderer type="default" />
             </field>
           </section>
         </schema>
