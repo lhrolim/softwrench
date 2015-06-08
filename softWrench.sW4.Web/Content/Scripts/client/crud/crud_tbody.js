@@ -262,7 +262,8 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 i18NService: i18NService,
                 fieldService: fieldService,
                 commandService: commandService,
-                searchService: searchService
+                searchService: searchService,
+                formatService:formatService
             });
 
             //first call when the directive is linked (listener was not yet in place)
