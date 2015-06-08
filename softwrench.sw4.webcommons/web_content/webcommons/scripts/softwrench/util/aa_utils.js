@@ -213,6 +213,13 @@ String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
     return s.toLowerCase() == other.toLowerCase();
 };
 
+Array.prototype.subarray = function (start, end) {
+    if (!end) {
+         end = -1;
+    }
+    return this.slice(start, this.length + 1 - (end * -1));
+}
+
 var nullOrEmpty = function (s) {
     return nullOrUndef(s) || String(s).trim().length == 0;
 };

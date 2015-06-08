@@ -123,6 +123,7 @@
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineSaveService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />
+    <Content Include="Content\Mobile\scripts\services\db\Batch.js" />
     <Content Include="Content\Mobile\scripts\services\db\CompositionDataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\db\AssociationData.js" />
     <Content Include="Content\Mobile\scripts\services\db\DataEntry.js" />

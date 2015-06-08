@@ -42,10 +42,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             }
         }
 
-        public void Submit(Batch batch, JArray jsonOb) {
-            var converter = Converters.FirstWithException(f => f.ApplicationName().EqualsIc(batch.Application), MissingConverter, batch.Application);
+        public void Submit(MultiItemBatch _multiItemBatch, JArray jsonOb) {
+            var converter = Converters.FirstWithException(f => f.ApplicationName().EqualsIc(_multiItemBatch.Application), MissingConverter, _multiItemBatch.Application);
             var submissionData = BuildSubmissionData(jsonOb, converter);
-            var report = UpdateDBEntries(submissionData, batch);
+            var report = UpdateDBEntries(submissionData, _multiItemBatch);
             if (report == null) {
                 //no report means that we don´t need to submit anything and the batch was deleted
                 return;
@@ -54,23 +54,23 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             SubmitItensOnNewThread(submissionData, report);
         }
 
-        private BatchReport UpdateDBEntries(BatchSubmissionData submissionData, Batch batch) {
+        private BatchReport UpdateDBEntries(BatchSubmissionData submissionData, MultiItemBatch _multiItemBatch) {
             if (!submissionData.ShouldSubmit()) {
                 //this means that we have nothing to process for this batch, since the customer didnt close anything lets just delete it
-                _dao.Delete(batch);
+                _dao.Delete(_multiItemBatch);
                 return null;
             }
 
             //some of the originally selected entries might be removed, so let´s update the batch entries (besides of the status and date)
-            batch.ItemIds = string.Join(",", submissionData.RemainingIds);
-            batch.DataMapJsonAsString = submissionData.RemainingArray.ToString();
-            batch.Status = BatchStatus.SUBMITTING;
-            batch.UpdateDate = DateTime.Now;
-            _dao.Save(batch);
+            _multiItemBatch.ItemIds = string.Join(",", submissionData.RemainingIds);
+            _multiItemBatch.DataMapJsonAsString = submissionData.RemainingArray.ToString();
+            _multiItemBatch.Status = BatchStatus.SUBMITTING;
+            _multiItemBatch.UpdateDate = DateTime.Now;
+            _dao.Save(_multiItemBatch);
 
             var report = new BatchReport {
                 CreationDate = DateTime.Now,
-                OriginalBatch = batch,
+                OriginalMultiItemBatch = _multiItemBatch,
             };
 
             report = _dao.Save(report);
@@ -79,7 +79,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         private void SubmitItensOnNewThread(BatchSubmissionData submissionData, BatchReport report) {
             Task.Factory.NewThread(array => {
-                var reportKey = "sw_batchreport{0}".Fmt(report.OriginalBatch.Id);
+                var reportKey = "sw_batchreport{0}".Fmt(report.OriginalMultiItemBatch.Id);
                 _contextLookuper.SetMemoryContext(reportKey, report);
                 foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                     try {
@@ -102,8 +102,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 }
                 _contextLookuper.RemoveFromMemoryContext(reportKey);
                 _dao.Save(report);
-                report.OriginalBatch.Status = BatchStatus.COMPLETE;
-                _dao.Save(report.OriginalBatch);
+                report.OriginalMultiItemBatch.Status = BatchStatus.COMPLETE;
+                _dao.Save(report.OriginalMultiItemBatch);
                 _batchReportEmailService.SendEmail(report);
             }, submissionData);
         }

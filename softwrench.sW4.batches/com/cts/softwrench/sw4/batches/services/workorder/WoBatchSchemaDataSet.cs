@@ -33,7 +33,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 searchDto.AppendSearchEntry("schedfinish", "<=" + endToday.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture));
             }
             var result = base.GetList(application, searchDto);
-            var allActiveBatches = _swdbdao.FindByQuery<Batch>(Batch.ActiveBatchesofApplication, application.Name);
+            var allActiveBatches = _swdbdao.FindByQuery<MultiItemBatch>(MultiItemBatch.ActiveBatchesofApplication, application.Name);
             var idsUsed = new HashSet<string>();
             foreach (var activeBatch in allActiveBatches) {
                 idsUsed.AddAll(activeBatch.ItemIds.Split(','));

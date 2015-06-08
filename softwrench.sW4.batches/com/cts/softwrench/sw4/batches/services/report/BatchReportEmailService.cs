@@ -38,7 +38,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
                 Log.WarnFormat("unable to send report email, as user {0} has no email registered", user.Login);
                 return;
             }
-            var appurl = _redirectService.GetApplicationUrl("_batchreport", "detail", "output", report.OriginalBatch.Id.ToString());
+            var appurl = _redirectService.GetApplicationUrl("_batchreport", "detail", "output", report.OriginalMultiItemBatch.Id.ToString());
             var msg =
                 _template.Render(
                     Hash.FromAnonymousObject(

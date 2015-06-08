@@ -25,7 +25,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
         //actually it would be one-to-one
         [ManyToOne(Column = "batch")]
-        public virtual Batch OriginalBatch { get; set; }
+        public virtual MultiItemBatch OriginalMultiItemBatch { get; set; }
 
         [Property]
         public virtual DateTime? CreationDate { get; set; }
@@ -54,7 +54,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
         public Int32 PercentageDone {
             get {
-                var numberOfItems = OriginalBatch.NumberOfItems;
+                var numberOfItems = OriginalMultiItemBatch.NumberOfItems;
                 var totalSentItens = NumberOfProblemItens + NumberOfSentItens;
                 var percentageDone = totalSentItens * 100 / numberOfItems;
                 //return 100 to avoid strange scenarios on screen

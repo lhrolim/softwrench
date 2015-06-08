@@ -79,31 +79,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 path: 'TEXT',
             });
 
-
-
-            entities.Batch = persistence.define('Batch', {
-                application: 'TEXT',
-                sentDate: 'DATE',
-                completionDate: 'DATE',
-                lastChecked: 'DATE'
-            });
-
-
-
-            entities.BatchItem = persistence.define('BatchItem', {
-                application: 'TEXT',
-                datamap: 'JSON',
-                //The id of this entry in maximo, it will be null when it´s created locally
-                remoteId: 'TEXT',
-                //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-                rowstamp: 'TEXT',
-                //either pending, or completed
-                status: 'TEXT',
-                problemId: 'TEXT',
-            });
-
-            entities.Batch.hasMany('items', entities.BatchItem, 'batch');
-
             entities.WhereClause = persistence.define("WhereClause", {
                 ///
                 /// This should get populated only if, there are multiple whereclauses present for a given association.
@@ -117,10 +92,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 data: "TEXT",
             });
 
-
-            
-
-           
             entities.Menu = persistence.define('Menu', {
                 data: "JSON"
             });
@@ -132,7 +103,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
 
-            persistence.debug = "true" == sessionStorage["logsql"];
+            persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
             persistence.schemaSync();
 
         },
@@ -159,7 +130,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
             var ob = entities[entity];
-            if (memoryObject.id == null || (memoryObject.type && memoryObject.type != entity)) {
+            if (memoryObject.id == null || (memoryObject._type && memoryObject._type != entity)) {
                 //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                 //just instantiate a new one
                 var transientEntity = new ob();

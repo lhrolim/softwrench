@@ -35,7 +35,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             if (batchReport == null) {
                 throw BatchException.BatchReportNotFound(batchId);
             }
-            if (!batchReport.OriginalBatch.UserId.Equals(user.DBId))
+            if (!batchReport.OriginalMultiItemBatch.UserId.Equals(user.DBId))
             {
                 throw BatchException.UnauthorizedException();
             }
@@ -53,7 +53,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             detailResult.ExtraParameters.Add("failedbatchschema", CloneAddingMessageItem(batchApplication.Schema));
 
 
-            var batchDataMap = _batchDataSet.DoGetMergedBatch(batchApplication, batchReport.OriginalBatch.ItemIds, batchReport.OriginalBatch);
+            var batchDataMap = _batchDataSet.DoGetMergedBatch(batchApplication, batchReport.OriginalMultiItemBatch.ItemIds, batchReport.OriginalMultiItemBatch);
 
 
             var attributeHolders = batchDataMap.ResultObject;
@@ -83,8 +83,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
         }
 
         private static ApplicationMetadata GetBatchSchema(BatchReport batchReport) {
-            var originalBatchApplicationName = batchReport.OriginalBatch.Application;
-            var originalBatchSchemaName = batchReport.OriginalBatch.Schema;
+            var originalBatchApplicationName = batchReport.OriginalMultiItemBatch.Application;
+            var originalBatchSchemaName = batchReport.OriginalMultiItemBatch.Schema;
 
             return
                 MetadataProvider.Application(originalBatchApplicationName)

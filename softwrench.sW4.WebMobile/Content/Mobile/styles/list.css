@@ -62,5 +62,5 @@ input.ion-autocomplete[readonly] {
 }
 
 .missingsync {
-    background-color: wheat;
+    background-color: wheat !important;
 }

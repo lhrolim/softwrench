@@ -35,9 +35,7 @@
                     }
                 }
 
-                persistence.transaction(function (tx) {
-                    return swdbDAO.executeQueries(queryArray, tx);
-                });
+                return swdbDAO.executeQueries(queryArray);
 
             }).catch(function (err) {
                 if (!err) {

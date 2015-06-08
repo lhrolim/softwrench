@@ -39,6 +39,10 @@
     <Reference Include="DotLiquid">
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
     </Reference>
+    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
@@ -75,12 +79,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchItem.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchAttributes.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchItemProblem.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\MultiItemBatch.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\Batch.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchReport.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchStatus.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchStatusType.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\migration\Migration201506062320BatOffLine.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionData.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionItem.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\OldBatchCleanUpJob.cs" />
@@ -118,6 +126,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

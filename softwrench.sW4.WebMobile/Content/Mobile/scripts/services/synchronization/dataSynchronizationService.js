@@ -62,9 +62,7 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                 }
             }
             queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
-            persistence.transaction(function (tx) {
-                return swdbDAO.executeQueries(queryArray, tx);
-            });
+            return swdbDAO.executeQueries(queryArray);
         }).catch(function (err) {
             if (!err) {
                 //normal interruption

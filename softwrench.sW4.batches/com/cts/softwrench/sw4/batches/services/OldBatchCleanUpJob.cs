@@ -29,10 +29,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
         public override void ExecuteJob() {
             var reports = _dao.FindAll<BatchReport>(typeof(BatchReport));
             foreach (var report in reports) {
-                var updateDate = report.OriginalBatch.UpdateDate;
+                var updateDate = report.OriginalMultiItemBatch.UpdateDate;
                 if (updateDate.IsOlderThan(15).Days()) {
                     _dao.Delete(report);
-                    _dao.Delete(report.OriginalBatch);
+                    _dao.Delete(report.OriginalMultiItemBatch);
                 }
             }
         }

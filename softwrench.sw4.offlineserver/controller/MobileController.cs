@@ -108,7 +108,8 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpPost]
-        public void SubmitBatch(JObject batchContent) {
+        public void SubmitBatch([FromUri]String application, [FromUri]String remoteId, JObject batchContent) {
+            Log.InfoFormat("Creating batch for application {0}", application);
             //TODO: implement
         }
 
