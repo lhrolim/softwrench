@@ -1,9 +1,15 @@
-﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate,$rootScope,$timeout) {
+﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover) {
 
     'use strict';
 
     $scope.moreItemsAvailable = true;
     $scope._searching = false;
+
+    $ionicPopover.fromTemplateUrl('Content/Mobile/templates/filteroptionsmenu.html', {
+        scope: $scope,
+    }).then(function (popover) {
+        $scope.filteroptionspopover = popover;
+    });
 
     $scope.list = function () {
         if (!this.isSearching() || nullOrEmpty($scope.searchQuery)) {
@@ -22,6 +28,7 @@
         //        $scope.moreItemsAvailable = false;
     }
 
+
     $scope.filter = function (data) {
         var text = data.searchQuery;
         $scope.searchQuery = text;
@@ -32,6 +39,17 @@
         return item[constants.isDirty];
     }
 
+    $scope.isPending = function (item) {
+        return item[constants.isPending];
+    }
+
+    $scope.showFilterOptions = function ($event) {
+        $scope.filteroptionspopover.show($event);
+    }
+
+    $scope.$on("sw_filteroptionclosed", function () {
+        $scope.filteroptionspopover.hide();
+    });
 
     $scope.disableSearch = function () {
         $scope._searching = false;

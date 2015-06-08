@@ -110,6 +110,7 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Content\Mobile\scripts\controllers\filterOptionController.js" />
     <Content Include="Content\Mobile\scripts\controllers\compositionMenuController.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_composition_detail.js" />
     <Content Include="Content\Mobile\scripts\controllers\crud_composition_list.js" />
@@ -138,6 +139,7 @@
     <Content Include="Content\Mobile\scripts\utils\mobileconstants.js" />
     <Content Include="Content\Mobile\styles\detail.css" />
     <Content Include="Content\Mobile\styles\list.css" />
+    <Content Include="Content\Mobile\templates\filteroptionsmenu.html" />
     <Content Include="Content\Mobile\templates\compositionmenu.html" />
     <Content Include="Content\Mobile\templates\crud_composition_detail.html" />
     <Content Include="Content\Mobile\templates\crud_composition_list.html" />

@@ -15,6 +15,21 @@
         </div>
     </ion-nav-title>
 
+    <ion-header-bar class="bar-subheader bar-assertive" align-title="left">
+
+        <div class="buttons" style="padding-left: 5px">
+
+
+        </div>
+
+
+
+        <div class="buttons" style="position: absolute; right: 5px; top:5px">
+            <button class="button icon ion-android-more-vertical" ng-click="showFilterOptions($event)"></button>
+        </div>
+
+    </ion-header-bar>
+
     <ion-nav-buttons side="right">
 
         <button class="button-icon ion-android-cancel" ng-show="isList() && isSearching()" ng-click="disableSearch()"></button>
@@ -26,13 +41,14 @@
 
         <ion-list class="has-header">
 
-            <ion-item ng-repeat="item in list()" ng-class="{'missingsync': isDirty(item)}"item="item">
+            <ion-item ng-repeat="item in list()" ng-class="{'missingsync': isDirty(item),'pending': isPending(item)  }" item="item">
 
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
                         <button class="button button-status" ng-style="{background:getStatusColor(item),color:getTextColor(item)}">{{getStatusText(item)}}</button>
-                        <i class="icon ion-refresh" ng-show="isDirty(item)"></i>
+                        <i class="icon ion-refresh" ng-show="isDirty(item) && !isPending(item)"></i>
+                        <i class="icon ion-android-cloud" ng-show="isPending(item)"></i>
                     </div>
                     <div class="col-75">
                         <ul>
