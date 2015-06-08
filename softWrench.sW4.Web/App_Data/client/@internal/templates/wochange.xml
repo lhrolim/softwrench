@@ -88,131 +88,108 @@
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
-
-        <schema id="editdetail" title="Change Detail" abstract="true" stereotype="detail" platform="web">
-          <field attribute="workorderid" hidden="true" />
-          <field attribute="workorder_.wonum" hidden="true" />
-          <field attribute="workorder_.status" hidden="true" />
-
-
-          <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
-          <field attribute="ownergroup" label="Owner Group:"/>
-          <field attribute="location" label="Location:"/>
-
-          <field attribute="description" label="Summary:"/>
-          <field attribute="reportedby" label="Reported By:"/>
-          <field attribute="classstructureid" label="Classification:"/>
-
-          <field attribute="worktype" label="Category:"/>
-          <!--field attribute="pmcomimpact" label="Impact"/>
-          <field attribute="pmcomurgency" label="Urgency"/-->
-          <field attribute="reasonforchange" label="Reason:"/>
-          <field attribute="reasonforchange_.ldtext" label="Reason Details:"/>
-          <!--field attribute="itdchgbusimpct" label="Business Impact"/-->
-          <field attribute="verification" label="Verification:"/>
-          <!--field attribute="itdbckoutdur" label="Backout Duration"/-->
-          <field attribute="backoutplan" label="Back Out Plan:"/>
-          <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail:"/>
-          <!--field attribute="itdchgpretstdtl" label="Pretest"/-->
-          <field attribute="pretestdetail_.ldtext" label="Pretest Details:"/>
-          <field attribute="schedstart" label="Scheduled Start Date:"/>
-          <field attribute="schedfinish" label="Scheduled Finish Date:"/>
-          <field attribute="targstartdate" label="Target Start Date:"/>
-          <field attribute="targcompdate" label="Target Finish Date:"/>
-          <!--field attribute="itdcreatedate" label="CR Activation Date/Time"/-->
-          <field attribute="wopriority" label="Priority:"/>
-          <field attribute="status" label="Status:" requiredexpression="true"/>
-          <field attribute="longdescription_.ldtext" label="Remarks:"/>
-          <!--field attribute="itdclosurecode" label="Implementation Result"/-->
-          <section id="compositions">
-            <!--composition relationship="worklog" label="Work Log" >
-              <collectionproperties allowcreation="true"/>
-            </composition>
-            <composition relationship="woactivity" label="Job Plan" >
-              <collectionproperties allowcreation="false"/>
-            </composition>
-            <composition relationship="approvals" label="Approvals" >
-              <collectionproperties allowcreation="false"/>
-            </composition>
-            <composition relationship="attachment" label="Attachments">
-              <collectionproperties allowcreation="true"/>
-            </composition-->
+        
+        <schema id="adetail" title="Change Detail" abstract="true" stereotype="detail" platform="web">
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
+            <section id="statussection"/>
           </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Change Details" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="description" label="Summary:" />
+            <field attribute="location" label="Location:"/>
+            <field attribute="classstructureid" label="Classification:"/>
+            <field attribute="worktype" label="Category:"/>
+            <field attribute="reasonforchange" label="Reason:"/>
+            <field attribute="reasonforchange_.ldtext" label="Reason Details:"/>
+            <field attribute="verification" label="Verification:"/>
+            <field attribute="backoutplan" label="Back Out Plan:"/>
+            <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail:"/>
+            <field attribute="pretestdetail_.ldtext" label="Pretest Details:"/>
+            <field attribute="wopriority" label="Priority:"/>
+            <field attribute="longdescription_.ldtext" label="Remarks:"/>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <field attribute="ownergroup" label="Owner Group:"/>
+            <field attribute="reportedby" label="Reported By:"/>
+          </section>
+          
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="schedstart" label="Scheduled Start Date:"/>
+            <field attribute="schedfinish" label="Scheduled Finish Date:"/>
+            <field attribute="targstartdate" label="Target Start Date:"/>
+            <field attribute="targcompdate" label="Target Finish Date:"/>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <section id="attachmentsection" />
+          </section>
+
+          <section id="remainingflieds"/>
         </schema>
 
-        <schema id="newdetail" title="New Change" abstract="true" stereotype="detail" platform="web">
-          <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
-          <field attribute="ownergroup" label="Owner Group:"/>
-          <field attribute="location" label="Location:"/>
-          <field attribute="estdur"            default="0" hidden="true"/>
-          <field attribute="estlabhrs"         default="0" hidden="true"/>
-          <field attribute="estmatcost"        hidden="true" default="0"/>
-          <field attribute="estintlabhrs"      hidden="true" default="0"/>
-          <field attribute="estintlabcost"     hidden="true" default="0"/>
-          <field attribute="estatapprlabhrs"   hidden="true" default="0"/>
-          <field attribute="estatapprmatcost"  hidden="true" default="0"/>
-          <field attribute="estatapprlabcost"  hidden="true" default="0"/>
-          <field attribute="estatapprtoolcost" hidden="true" default="0"/>
-          <field attribute="estatapprservcost" hidden="true" default="0"/>
-          <field attribute="estapprlabhrs"     hidden="true" default="0"/>
-          <field attribute="estapprmatcost"    hidden="true" default="0"/>
-          <field attribute="estapprlabcost"    hidden="true" default="0"/>
-          <field attribute="estlabcost"        hidden="true" default="0"/>
-          <field attribute="esttoolcost"       hidden="true" default="0"/>
-          <field attribute="estservcost"       hidden="true" default="0"/>
-          <field attribute="actlabhrs"         hidden="true" default="0"/>
-          <field attribute="actlabcost"        hidden="true" default="0"/>
-          <field attribute="actservcost"       hidden="true" default="0"/>
-          <field attribute="actmatcost"        hidden="true" default="0"/>
-          <field attribute="acttoolcost"       hidden="true" default="0"/>
-          <field attribute="outlabcost"        hidden="true" default="0"/>
-          <field attribute="outmatcost"        hidden="true" default="0"/>
-          <field attribute="outtoolcost"       hidden="true" default="0"/>
-          <field attribute="outservcost"       hidden="true" default="0"/>
+        <schema parentschema="adetail" id="editdetail" title="Change Detail">
 
-          <field attribute="description" label="Summary:"/>
-          <field attribute="reportedby" label="Reported By:"/>
-          <field attribute="classstructureid" label="Classification:"/>
+          <section id="statussection">
+            <field attribute="status" label="Status:" requiredexpression="true"/>
+          </section>
 
-          <field attribute="worktype" label="Category:"/>
-          <!--field attribute="pmcomimpact" label="Impact"/>
-          <field attribute="pmcomurgency" label="Urgency"/-->
-          <field attribute="reasonforchange" label="Reason:"/>
-          <field attribute="reasonforchange_.ldtext" label="Reason Details:"/>
-          <!--field attribute="itdchgbusimpct" label="Business Impact"/-->
-          <field attribute="verification" label="Verification:"/>
-          <!--field attribute="itdbckoutdur" label="Backout Duration"/-->
-          <field attribute="backoutplan" label="Back Out Plan:"/>
-          <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail:"/>
-          <!--field attribute="itdchgpretstdtl" label="Pretest"/-->
-          <field attribute="pretestdetail_.ldtext" label="Pretest Details:"/>
-          <field attribute="schedstart" label="Scheduled Start Date:"/>
-          <field attribute="schedfinish" label="Scheduled Finish Date:"/>
-          <field attribute="targstartdate" label="Target Start Date:"/>
-          <field attribute="targcompdate" label="Target Finish Date:"/>
-          <!--field attribute="itdcreatedate" label="CR Activation Date/Time"/-->
-          <field attribute="wopriority" label="Priority:"/>
-          <field attribute="status" label="Status:" readonly="true" default="WAPPR" requiredexpression="true"/>
-          <field attribute="statusdate" hidden="true" default="@currentdatetime"/>
-          <field attribute="longdescription_.ldtext" label="Remarks:"/>
-          <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
-          </field>
-          
-          <!--field attribute="itdclosurecode" label="Implementation Result"/-->
-          <section id="compositions">
-            <!--composition relationship="worklog" label="Work Log" >
-              <collectionproperties allowcreation="true"/>
-            </composition>
-            <composition relationship="woactivity" label="Job Plan" >
-              <collectionproperties allowcreation="false"/>
-            </composition>
-            <composition relationship="approvals" label="Approvals" >
-              <collectionproperties allowcreation="false"/>
-            </composition>
-            <composition relationship="attachment" label="Attachments">
-              <collectionproperties allowcreation="true"/>
-            </composition-->
+          <section id="remainingflieds">
+            <field attribute="workorderid" hidden="true" />
+            <field attribute="workorder_.wonum" hidden="true" />
+            <field attribute="workorder_.status" hidden="true" />
+
+            <section id="compositions"/>
+          </section>
+        </schema>
+        
+        <schema parentschema="adetail" id="newdetail" title="New Change">
+          <section id="statussection">
+            <field attribute="status" label="Status:" readonly="true" default="WAPPR" requiredexpression="true"/>
+          </section>
+
+          <section id="remainingflieds">
+            <field attribute="estdur"            default="0" hidden="true"/>
+            <field attribute="estlabhrs"         default="0" hidden="true"/>
+            <field attribute="estmatcost"        hidden="true" default="0"/>
+            <field attribute="estintlabhrs"      hidden="true" default="0"/>
+            <field attribute="estintlabcost"     hidden="true" default="0"/>
+            <field attribute="estatapprlabhrs"   hidden="true" default="0"/>
+            <field attribute="estatapprmatcost"  hidden="true" default="0"/>
+            <field attribute="estatapprlabcost"  hidden="true" default="0"/>
+            <field attribute="estatapprtoolcost" hidden="true" default="0"/>
+            <field attribute="estatapprservcost" hidden="true" default="0"/>
+            <field attribute="estapprlabhrs"     hidden="true" default="0"/>
+            <field attribute="estapprmatcost"    hidden="true" default="0"/>
+            <field attribute="estapprlabcost"    hidden="true" default="0"/>
+            <field attribute="estlabcost"        hidden="true" default="0"/>
+            <field attribute="esttoolcost"       hidden="true" default="0"/>
+            <field attribute="estservcost"       hidden="true" default="0"/>
+            <field attribute="actlabhrs"         hidden="true" default="0"/>
+            <field attribute="actlabcost"        hidden="true" default="0"/>
+            <field attribute="actservcost"       hidden="true" default="0"/>
+            <field attribute="actmatcost"        hidden="true" default="0"/>
+            <field attribute="acttoolcost"       hidden="true" default="0"/>
+            <field attribute="outlabcost"        hidden="true" default="0"/>
+            <field attribute="outmatcost"        hidden="true" default="0"/>
+            <field attribute="outtoolcost"       hidden="true" default="0"/>
+            <field attribute="outservcost"       hidden="true" default="0"/>
+            <field attribute="statusdate" hidden="true" default="@currentdatetime"/>
+          </section>
+
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
           </section>
         </schema>
       </schemas>

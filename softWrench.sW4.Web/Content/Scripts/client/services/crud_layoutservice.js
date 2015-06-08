@@ -1,34 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
-
-
-
 app.factory('layoutservice', function (fieldService) {
-
-    function getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation) {
-        if (verticalOrientation) {
-            return 1;
-        }
-
-        var countColumns = fieldService.countVisibleDisplayables(datamap, schema, displayables);
-
-        //ensure that no more than 4 inputs are placed on one row
-        if (countColumns > 4) {
-            countColumns = 4;
-        }
-
-        return countColumns
-    };
-
-    function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, verticalOrientation, inputSize) {
-        var maxColumns = 0;
-
-        //use the provided inputSize, else calculate the number of columns
-        if (inputSize) {
-            maxColumns = inputSize;
-        } else {
-            maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
-        }
+    function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
+        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
         //use full-width fields on xsmall screen
         var classes = ' col-xs-12';
@@ -49,14 +23,14 @@ app.factory('layoutservice', function (fieldService) {
         return classes;
     };
 
-    function getDefaultColumnClassesForLabel(datamap, schema, displayables, verticalOrientation, inputSize) {
-        var maxColumns = 0;
+    function getDefaultColumnClassesForLabel(datamap, schema, displayables, params) {
+        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
-        //use the provided inputSize, else calculate the number of columns
-        if (inputSize) {
-            maxColumns = inputSize;
-        } else {
-            maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
+        var childColumns = 1;
+        if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
+
+            //TODO: allow for large, medium or small inputsizes
+            childColumns = 2;
         }
 
         //use full-width fields on xsmall screen, label above the input
@@ -64,25 +38,26 @@ app.factory('layoutservice', function (fieldService) {
 
         //calculate the small screen columns
         if (maxColumns == 1) {
-            classes += ' col-sm-3';
+            //classes += ' col-sm-3';
+            classes += ' col-sm-' + 3 * childColumns;
         } else {
-            classes += ' col-sm-6';
+            //classes += ' col-sm-6';
+            classes += ' col-sm-' + 6 * childColumns;
         }
 
         //calculate the medium screen columns
-        classes += ' col-md-' + 2 * maxColumns;
+        classes += ' col-md-' + 2 * maxColumns * childColumns;
 
         return classes;
     };
 
-    function getDefaultColumnClassesForInput(datamap, schema, displayables, verticalOrientation, inputSize) {
-        var maxColumns = 0;
+    function getDefaultColumnClassesForInput(datamap, schema, displayables, params) {
+        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
-        //use the provided inputSize, else calculate the number of columns
-        if (inputSize) {
-            maxColumns = inputSize;
-        } else {
-            maxColumns = getMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation);
+        var childColumns = 1;
+        if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
+            //TODO: allow for large, medium or small inputsizes
+            childColumns = 2;
         }
 
         //use full-width fields on xsmall screen, input below the label
@@ -90,43 +65,93 @@ app.factory('layoutservice', function (fieldService) {
 
         //calculate the small screen columns
         if (maxColumns == 1) {
-            classes += ' col-sm-9';
+            //classes += ' col-sm-9';
+            classes += ' col-sm-' + 9 * childColumns;
         } else {
-            classes += ' col-sm-6';
+            //classes += ' col-sm-6';
+            classes += ' col-sm-' + 6 * childColumns;
         }
 
         //calculate the medium screen columns
-        classes += ' col-md-' + (12 - (2 * maxColumns));
+        classes += ' col-md-' + (12 - (2 * maxColumns * childColumns));
 
         return classes;
     };
 
-    function convertInputSizeToColumnCount(fieldMetadata) {
+    function getDefaultMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation) {
+        if (verticalOrientation) {
+            return 1;
+        }
+
+        var countColumns = fieldService.countVisibleDisplayables(datamap, schema, displayables);
+
+        //ensure that no more than 4 inputs are placed on one row
+        if (countColumns > 4) {
+            countColumns = 4;
+        }
+
+        return countColumns
+    };
+
+    function getFieldColumnCount(fieldMetadata) {
         var columnCount = null;
 
-        if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['inputsize'] != null) {
-            switch (fieldMetadata.rendererParameters['inputsize']) {
-                case 'xsmall':
-                    columnCount = 4;
-                    break;
-                case 'small':
-                    columnCount = 3;
-                    break;
-                case 'medium':
-                    columnCount = 2;
-                    break;
-                case 'large':
-                    columnCount = 1;
-                    break;
-            }
+        if (fieldMetadata.rendererParameters != null) {
+            var inputSize = '';
+
+            if (fieldMetadata.rendererParameters['inputsize'] != null) {
+                inputSize = fieldMetadata.rendererParameters['inputsize'];
+            } 
+
+            columnCount = convertInputSizeToColumnCount(inputSize)
         }
 
         return columnCount;
     };
 
-    return {
+    function CalculateMaxNumberOfColumns(datamap, schema, displayables, params) {
+        var maxColumns = null;
 
-        getFieldClass: function (fieldMetadata, datamap, schema, displayables, isVerticalOrientation) {
+        if (params.sectionparameters != null && params.sectionparameters.childinputsize != null) {
+            if (params.sectionparameters.inputsize != null) {
+                maxColumns = 1;
+            } else {
+                maxColumns = convertInputSizeToColumnCount(params.sectionparameters.childinputsize);
+            }
+        } else if (params.columnCount != null) {
+            maxColumns = params.columnCount;
+        } else {
+            maxColumns = getDefaultMaxNumberOfColumns(datamap, schema, displayables, params.isVerticalOrientation);
+        }
+
+        return maxColumns;
+    };
+
+    function convertInputSizeToColumnCount(inputSize) {
+        var columnCount = null;
+
+        switch (inputSize) {
+            case 'xsmall':
+                columnCount = 4;
+                break;
+            case 'small':
+                columnCount = 3;
+                break;
+            case 'medium':
+                columnCount = 2;
+                break;
+            case 'large':
+                columnCount = 1;
+                break;
+            default:
+        }
+
+        return columnCount;
+    };
+
+
+    return {
+        getFieldClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
@@ -139,24 +164,32 @@ app.factory('layoutservice', function (fieldService) {
                 }
             }
 
+            //if section has inputsize render parameter
+            if (fieldMetadata.type == "ApplicationSection") {
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.inputsize != null) {
+                    cssclass += ' sidebyside';
+                }                
+            }
+
+            //add class if section has header
             if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
                 cssclass += ' hasheader';
             }
 
+            //add class if section has children
             if (fieldMetadata.displayables != null) {
                 cssclass += ' haschildren';
             }
 
-            var columnCount = convertInputSizeToColumnCount(fieldMetadata);
-            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, isVerticalOrientation, columnCount);
+            params.columnCount = getFieldColumnCount(fieldMetadata);
 
+            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params);
             cssclass += ' row';
 
             return cssclass;
         },
 
-
-        getInputClass: function (fieldMetadata, datamap, schema, displayables, isVerticalOrientation) {
+        getInputClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.type == 'ApplicationSection') {
@@ -178,10 +211,10 @@ app.factory('layoutservice', function (fieldService) {
                 return cssclass;
             }
 
-            var columnCount = convertInputSizeToColumnCount(fieldMetadata);
+            params.columnCount = getFieldColumnCount(fieldMetadata);
 
             if (this.hasSameLineLabel(fieldMetadata)) {
-                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, isVerticalOrientation, columnCount);
+                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, params);
             } else {
                 cssclass += ' col-xs-12';
             }
@@ -189,7 +222,7 @@ app.factory('layoutservice', function (fieldService) {
             return cssclass;
         },
 
-        getLabelClass: function (fieldMetadata, datamap, schema, displayables, isVerticalOrientation) {
+        getLabelClass: function (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['labelclass'] != null) {
@@ -207,10 +240,10 @@ app.factory('layoutservice', function (fieldService) {
             }
 
             var returnClass = '';
-            var columnCount = convertInputSizeToColumnCount(fieldMetadata);
+            params.columnCount = getFieldColumnCount(fieldMetadata);
 
             if (this.hasSameLineLabel(fieldMetadata)) {
-                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, isVerticalOrientation, columnCount);
+                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, params);
             } else {
                 returnClass += 'col-xs-12';
             }

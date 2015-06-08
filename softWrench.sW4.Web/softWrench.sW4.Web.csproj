@@ -347,6 +347,34 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\asset.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\attachments.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\commlogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\incident.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\inventory.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\item.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labor.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\location.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\longdescription.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\materials.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\meter.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\purchasing.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worktype.xml" />
     <Content Include="App_Data\Client\%40internal\templates\email.xml" />
     <Content Include="App_Data\Client\%40internal\templates\person.xml" />
     <Content Include="App_Data\Client\%40internal\templates\phone.xml" />
@@ -1363,6 +1391,7 @@
     <Content Include="Content\Controller\EntityMetadataBuilder.html" />
     <Content Include="Views\Generic\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Content\Controller\MyProfile.html" />
     <Content Include="Content\Controller\EntityMetadataEditor.html" />
     <Content Include="Views\Configuration\Index.cshtml" />
     <Content Include="Views\SignIn\Index_old.cshtml" />
