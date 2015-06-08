@@ -29,7 +29,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             //    return securedMenu;
             //}
             // If the dashboards are disabled, do not load the dashboards.
-            if (!MetadataProvider.GlobalProperties.DashboardsEnabled())
+            if (MetadataProvider.GlobalProperties.DashboardsDisabled())
             {
                 return securedMenu;
             }
