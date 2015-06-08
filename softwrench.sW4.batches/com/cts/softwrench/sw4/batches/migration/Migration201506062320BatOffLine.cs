@@ -9,8 +9,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.migration {
 
             Rename.Table("BAT_BATCH").To("BAT_MULBATCH");
 
+
             Create.Table("BAT_BATCH")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithColumn("Id").AsInt64().PrimaryKey("pk_bat_batch2").Identity()
                 .WithColumn("CreatedBy").AsInt32().ForeignKey("fk_batch2_user_id", "SW_USER2", "id")
                 .WithColumn("CreationDate").AsDateTime().NotNullable()
                 .WithColumn("Application").AsString(MigrationUtil.StringSmall).NotNullable()
