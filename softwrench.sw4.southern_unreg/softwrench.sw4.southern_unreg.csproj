@@ -46,6 +46,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="metadata\southern_unreg\metadata.xml" />
     <Content Include="metadata\southern_unreg\readme.txt" />
     <Content Include="web_content\southern_unreg\images\header.jpg" />
     <Content Include="web_content\southern_unreg\images\logo-byline.png" />
