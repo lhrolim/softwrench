@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+  </entities>
+
+  <applications>
+    <application name="invissue" title="Issue Inventory" entity="invissue">
+      <schemas>
+        <schema id="newInvIssueDetail" mode="input" stereotype="detail" redeclaring="false">
+          <customization position="location">
+            <association showexpression="false" label="Location" target="location" labelfield="location_.description" dependantfields="siteid" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
+            </association>
+          </customization>
+          <customization position="assetnum">
+            <association showexpression="false" label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid" extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
+            </association>
+          </customization>
+          <customization position="gldebitacct">
+            <association showexpression="false" label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
+            </association>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>
