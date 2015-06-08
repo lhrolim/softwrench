@@ -153,20 +153,21 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
+            <!--<renderer type="default" params="childinputsize=medium" />-->
             <section id="attachmentsection" />
-          </section>
+          <!--</section>-->
           
-          <!--COMSW 24 required field for population purposes-->
-          <!--<field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
-          <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
-          <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
-          <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
-          <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />-->
-          <!--COMSW 24 association field used for lazy lookup-->
-          <!--<association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
-            <renderer type="lookup" />
-          </association>--> 
+            <!--COMSW 24 required field for population purposes-->
+            <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+            <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+            <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+            <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+            <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+            <!--COMSW 24 association field used for lazy lookup-->
+            <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+              <renderer type="lookup" />
+            </association>
+          </section>
           
           <section id="compositions"/>
         </schema>
