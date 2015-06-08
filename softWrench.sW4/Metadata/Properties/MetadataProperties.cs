@@ -18,6 +18,7 @@ namespace softWrench.sW4.Metadata.Properties {
         public const string Source = "sourcemapping";
         public const string MaximoTimezone = "maximoutc";
         public const string I18NRequiredConst = "i18nrequired";
+        public const string DashboardsEnable = "enabledashboards";
 
         private readonly IDictionary<string, string> _globalProperties = new Dictionary<string, string>();
         private readonly IList<EnvironmentProperties> _envProperties = new List<EnvironmentProperties>();
@@ -75,6 +76,12 @@ namespace softWrench.sW4.Metadata.Properties {
 
         public string MaximoTimeZone() {
             return GlobalProperty(MaximoTimezone);
+        }
+
+        public bool DashboardsEnabled()
+        {
+            var propertyValue = GlobalProperty(DashboardsEnable);
+            return propertyValue.ToLower() == "true";
         }
 
         public Boolean I18NRequired() {
