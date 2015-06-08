@@ -20,7 +20,7 @@
                     </button>
                 </a>-->
 
-                <a href="#" ng-click="doAction(null,'User','MyProfile',null,$event.target)" ng-show="myprofileenabled"
+                <a href="#" ng-click="myProfile()" ng-show="myprofileenabled"
                    rel="tooltip" data-original-title="{{i18N('_headermenu.myprofile_tooltip','View your profile')}}" data-placement="bottom">
 
 
@@ -47,7 +47,8 @@
                         Admin&ensp;<span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" ng-click="doAction(null,'User','List',null,$event.target)">{{i18N('_headermenu.usersetup','User Setup')}}</a></li>
+                        <li><a href="#" ng-click="loadApplication('Person','newPersonDetail')">{{i18N('_headermenu.usersetup','New User')}}</a></li>
+                        <li><a href="#" ng-click="loadApplication('Person','list')">{{i18N('_headermenu.usersetup','User Setup')}}</a></li>
                         <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)">{{i18N('_headermenu.userprofilesetup','User Profile Setup')}}</a></li>
                         <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)">{{i18N('_headermenu.rolesetup','Role Setup')}}</a></li>
                         <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)">{{i18N('_headermenu.schedulersetup','Scheduler Setup')}}</a></li>

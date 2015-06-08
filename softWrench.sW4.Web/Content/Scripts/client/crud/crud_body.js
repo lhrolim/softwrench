@@ -230,6 +230,9 @@ app.directive('crudBody', function (contextService) {
 
             $scope.disableNavigationButton = function (direction) {
                 var value = contextService.fetchFromContext("crud_context", true);
+                if (value == undefined) {
+                    return true;
+                }
                 return direction == 1 ? value.detail_previous : value.detail_next;
             }
 

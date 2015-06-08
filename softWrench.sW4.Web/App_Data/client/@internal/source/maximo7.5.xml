@@ -15,7 +15,7 @@
         <attribute name="servername" type="varchar" required="true" />
       </attributes>
       <connectorParameters>
-        <connectorParameter key="dbtable" value="maxpropvalue" />
+        <connectorParameter key="dbtable" value="maxpropvalue" />P
       </connectorParameters>
     </entity>
 
@@ -152,7 +152,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="person" idAttribute="personuid">
+    <entity name="person" idAttribute="personid">
       <attributes>
         <attribute name="personid" type="varchar" required="true" />
         <attribute name="status" type="varchar" required="true" />
@@ -215,20 +215,22 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="dfltapp" type="varchar" required="false" />
         <attribute name="deviceclass" type="smallint" required="false" />
+        
       </attributes>
       <relationships>
         <relationship to="maxuser">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
-        <relationship to="email">
+        <relationship to="email" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
-        <relationship to="phone">
+        <relationship to="phone" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />
+        <connectorParameter key="integration_interface" value="SWPERSON" />
       </connectorParameters>
 
     </entity>
