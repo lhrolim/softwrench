@@ -28,8 +28,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
             //    //TODO: remove this when it´s good for qa
             //    return securedMenu;
             //}
-            // If the dashboards are disabled, do not load the dashboards.
-            if (MetadataProvider.GlobalProperties.DashboardsDisabled())
+
+            // If the dashboards are not enabled, do not load the dashboards.
+            if (!ApplicationConfiguration.EnableDashboardFlag)
             {
                 return securedMenu;
             }
