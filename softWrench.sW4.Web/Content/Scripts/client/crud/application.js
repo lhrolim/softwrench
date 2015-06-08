@@ -54,8 +54,22 @@ app.directive('filterrowrendered', function ($timeout) {
 function ApplicationController($scope, $http, $log, $templateCache, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
-    checkpointService) {
+    checkpointService, focusService) {
     $scope.$name = 'applicationController';
+
+
+    var currentFocusedIdx = 0;
+
+    $rootScope.$on("sw_resetFocusToCurrent", function (event, schema, field) {
+        focusService.resetFocusToCurrent(schema, field);
+    });
+    //
+    $rootScope.$on("sw_movefocus", function (event, datamap, schema, attribute) {
+        if (datamap[attribute] != null && datamap[attribute] != '') {
+            focusService.moveFocus(datamap, schema, attribute);
+        }
+    });
+
 
     function switchMode(mode, scope) {
         if (scope == null) {
@@ -91,7 +105,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
         $('#saveBTN').removeAttr('disabled');
         //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
 
-        contextService.insertIntoContext("grid_refreshdata",{ data: data, panelid: null }, true);
+        contextService.insertIntoContext("grid_refreshdata", { data: data, panelid: null }, true);
         scope.$broadcast("sw_gridrefreshed", data, null);
         scope.$broadcast("sw_gridchanged");
         switchMode(false, scope);
@@ -326,7 +340,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
 
         // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
         // this first if is more of an unexpected case
-        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
+        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail' || $scope.schema.stereotype == 'DetailNew') {
             log.debug('rendering list view from server');
             $scope.renderListView(parameters);
         } else {
@@ -341,7 +355,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
                 //check crud_list#gridRefreshed
                 resultObject: $scope.datamap,
                 schema: schema,
-                pageResultDto: (checkPointData && checkPointData.length>0)? checkPointData[0].listContext : {},
+                pageResultDto: (checkPointData && checkPointData.length > 0) ? checkPointData[0].listContext : {},
             }
             $scope.toList(data);
         }
@@ -377,7 +391,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
 
     //called first time a crud is registered
     function initApplication() {
-        
+
         $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
             var msg = "Are you sure you want to leave the page?";
             if (validationService.getDirty()) {

@@ -5,6 +5,7 @@ using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
@@ -27,8 +28,10 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
         {
             var result = base.GetApplicationDetail(application, user, request);
 
-            if (_contextLookuper.LookupContext().ScanMode)
+            if (result != null && _contextLookuper.LookupContext().ScanMode)
             {
+                // Submit the requested record back to the database with updated audit date
+
                 _auditManager.CreateAuditEntry("scan", application.Name, request.Id, JsonConvert.SerializeObject(result.ResultObject.Fields), DateTime.Now.FromServerToRightKind());
             }
 

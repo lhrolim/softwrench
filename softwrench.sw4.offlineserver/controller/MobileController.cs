@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
 using cts.commons.Util;
@@ -12,6 +13,7 @@ using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.dto.association;
 using softwrench.sw4.offlineserver.services;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -59,7 +61,7 @@ namespace softwrench.sw4.offlineserver.controller {
         public MobileMetadataDownloadResponseDefinition DownloadMetadatas() {
             var watch = Stopwatch.StartNew();
             var user = SecurityFacade.CurrentUser();
-            var topLevel = OffLineMetadataProvider.FetchTopLevelApps();
+            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user);
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
             var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
 
@@ -95,7 +97,19 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpPost]
-        public void SubmitBatch(JObject batchContent) {
+        public AssociationSynchronizationResultDto PullAssociationData(JObject rowstampMap) {
+            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap);
+        }
+
+
+        [HttpPost]
+        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]String applicationToFetch, JObject rowstampMap) {
+            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
+        }
+
+        [HttpPost]
+        public void SubmitBatch([FromUri]String application, [FromUri]String remoteId, JObject batchContent) {
+            Log.InfoFormat("Creating batch for application {0}", application);
             //TODO: implement
         }
 

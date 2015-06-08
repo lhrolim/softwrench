@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Menu;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
@@ -37,10 +40,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
             MenuBaseDefinition dashBoardMenu;
 
-            var canCreateDashBoards = user.IsInRole(DashboardConstants.RoleManager) || user.IsInRole(DashboardConstants.RoleAdmin);
+            var canCreateDashBoards = CanCreateDashBoards(user);
             var enumerable = dashboards as Dashboard[] ?? dashboards.ToArray();
             var count = enumerable.Count();
-            if (!canCreateDashBoards && count == 0) {
+            if (!canCreateDashBoards && (count == 0 || AllPanelsInvisible(enumerable))) {
+                //either has no dashboard, or has only invisible panels due to roles
                 //this user cannot create any dashboard, and there´s no one shared with him --> do not show the menu.
                 return securedMenu;
             }
@@ -70,7 +74,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     Controller = "DashBoard",
                     Tooltip = "Click here to go to your preferred dashboard",
                     Id = "loadpreferred"
-                    
+
                 };
 
                 // Only display manage dashboard option if user has access to do so
@@ -97,6 +101,19 @@ namespace softwrench.sw4.dashboard.classes.controller {
             securedMenu.Leafs = leafs;
             securedMenu.ItemindexId = "loadpreferred";
             return securedMenu;
+        }
+
+        /// <summary>
+        /// To create a dashboard, the user has to have the dashboard roles and at least one application should be visible to him
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private static bool CanCreateDashBoards(ISWUser user) {
+            return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user).Any() && (user.IsInRole(DashboardConstants.RoleManager) || user.IsInRole(DashboardConstants.RoleAdmin));
+        }
+
+        private static bool AllPanelsInvisible(Dashboard[] enumerable) {
+            return enumerable.All(d => d.Panels.Count == 0 || d.Panels.All(p => !p.Panel.Visible));
         }
 
         private static ActionMenuItemDefinition ManageDashboardAction() {

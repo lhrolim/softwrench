@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using cts.commons.portable.Util;
 using log4net;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Security.Services;
@@ -23,13 +25,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         //TODO: adjust caching
         public static DynamicObject LookupProxy(EntityMetadata metaData, Boolean queryProxy = false) {
+            var wsdlUri = GetWsdlUri(metaData, queryProxy);
             try {
-                string wsdlUri = GetWsdlUri(metaData, queryProxy);
+                
                 var factory = LookupFactory(wsdlUri);
                 return factory.CreateMainProxy();
             } catch (Exception e) {
-                Log.Error("Error LookupProxy", e);
-                throw e;
+                var httpException =new HttpRequestException("wsdl cannot be downloaded at {0}".Fmt(wsdlUri),e);
+                Log.Error("Error LookupProxy", httpException);
+                throw httpException;
             }
         }
 

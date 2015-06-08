@@ -44,7 +44,7 @@
             this.$element = this.$source.prev().find('input[type=text]');
             this.$target = this.$source.prev().find('input[type=hidden]');
         }
-        
+
         this.$menu = $(this.options.menu).appendTo('body');
         this.matcher = this.options.matcher || this.matcher;
         this.sorter = this.options.sorter || this.sorter;
@@ -132,6 +132,7 @@
     }
 
     , select: function () {
+
         var val = this.$menu.find('.active').attr('data-value');
         this.$element.val(this.updater(val)).trigger('change');
         this.$target.val(this.map[val]).trigger('change');
@@ -186,6 +187,7 @@
         $('.dropdown-menu').on('mousedown', $.proxy(this.scrollSafety, this));
         $('.dropdown-menu').on('scroll', $.proxy(this.paginate, this));
         this.shown = true;
+        $(document).trigger("sw_autocompleteselected", this.$source.data("associationkey"));
         return this;
     }
 
@@ -372,12 +374,12 @@
         //    this.triggerChange();
         //    this.clearElement();
         //} else {
-            if (this.shown) {
-                this.hide();
-            } else {
-                //don't clear the contents, just show the whole list
-                this.lookup(null, null, { lookupall: true });
-            }
+        if (this.shown) {
+            this.hide();
+        } else {
+            //don't clear the contents, just show the whole list
+            this.lookup(null, null, { lookupall: true });
+        }
         //}
     },
 
@@ -397,11 +399,12 @@
 
         clearElement: function () {
             //don't autofocus until the combobox loads
-            if (this.loading) {
-                this.$element.val('');
-            } else {
-                this.$element.val('').focus();
-            }
+            this.$element.val('');
+            //            if (this.loading) {
+            ////                this.$element.val('');
+            //            } else {
+            //                .focus();
+            //            }
         }
 
     , clearTarget: function () {
@@ -525,10 +528,10 @@
                 break;
             case 9: // tab
             case 13: // enter
-                if (!this.shown) { return; }
                 this.select();
-                break;
-
+                e.stopPropagation();
+                e.preventDefault();
+                return;
             case 27: // escape
                 if (!this.shown) { return; }
                 this.hide();
@@ -555,7 +558,12 @@
 
     , focus: function (e) {
         this.focused = true;
-    }
+    },
+
+        setFocus: function (e) {
+            this.$element.focus();
+            this.focused = true;
+        }
 
     , blur: function (e) {
         var that = this;
@@ -573,7 +581,7 @@
         e.stopPropagation();
         e.preventDefault();
         this.select();
-        this.$element.focus();
+        //        this.$element.focus();
     }
 
     , mouseenter: function (e) {

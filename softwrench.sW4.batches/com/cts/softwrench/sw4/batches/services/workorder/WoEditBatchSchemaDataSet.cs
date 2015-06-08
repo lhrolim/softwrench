@@ -28,7 +28,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             if (batchId == null) {
                 throw BatchException.BatchIdNotInformed();
             }
-            var batch = _swdbdao.FindByPK<Batch>(typeof(Batch), Int32.Parse(batchId));
+            var batch = _swdbdao.FindByPK<MultiItemBatch>(typeof(MultiItemBatch), Int32.Parse(batchId));
             if (batch == null) {
                 throw BatchException.BatchNotFound(batchId);
             }
@@ -37,22 +37,22 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             return DoGetMergedBatch(application, itemIds, batch);
         }
 
-        public ApplicationListResult DoGetMergedBatch(ApplicationMetadata application, string itemIds, Batch batch) {
+        public ApplicationListResult DoGetMergedBatch(ApplicationMetadata application, string itemIds, MultiItemBatch _multiItemBatch) {
             var searchDto = new PaginatedSearchRequestDto();
             searchDto.AppendSearchEntry("wonum", itemIds.Split(','));
             var result = base.GetList(application, searchDto);
-            MergeDataMap(result, batch);
+            MergeDataMap(result, _multiItemBatch);
             return result;
         }
 
-        private void MergeDataMap(ApplicationListResult result,  Batch batch)
+        private void MergeDataMap(ApplicationListResult result,  MultiItemBatch _multiItemBatch)
         {
-            var dataMapJsonAsString= batch.DataMapJsonAsString;
+            var dataMapJsonAsString= _multiItemBatch.DataMapJsonAsString;
             var originalList = result.ResultObject;
             var dict = new Dictionary<string, AttributeHolder>();
             foreach (var item in originalList) {
-                item.SetAttribute("#batchId", batch.Id);
-                item.SetAttribute("#batchalias", batch.Alias);
+                item.SetAttribute("#batchId", _multiItemBatch.Id);
+                item.SetAttribute("#batchalias", _multiItemBatch.Alias);
                 dict.Add(item.GetAttribute("wonum").ToString(), item);
                 if (item.GetAttribute("actfinish") == null) {
                     //this is the default value... 

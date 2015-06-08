@@ -103,6 +103,7 @@
             return appNames;
         },
 
+
         updateTopLevelMetadata: function (serverMetadatas) {
             return doUpdateMetadata(serverMetadatas, 'topLevelApplications',
                 function (memoryObject, entity) {

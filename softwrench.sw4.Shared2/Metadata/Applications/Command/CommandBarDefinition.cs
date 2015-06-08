@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
@@ -14,6 +15,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
         public Boolean ExcludeUndeclared { get; set; }
 
         public List<ICommandDisplayable> Commands { get; set; }
+
+        public ClientPlatform? Platform { get; set; }
 
 
         public CommandBarDefinition(string id, string position,Boolean excludeUndeclared, IEnumerable<ICommandDisplayable> commands) {

@@ -308,11 +308,6 @@
     <application name="workorder" title="Work Order" entity="workorder">      
       <schemas>
         <schema id="editdetail" platform="web" redeclaring="false">
-          <customization position="+wonum">
-            <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
-          </customization>
           <customization position="classstructureid">
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
@@ -326,11 +321,6 @@
         </schema>
         
         <schema id="newdetail" platform="web" redeclaring="false">
-          <customization position="+wonum">
-            <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
-          </customization>
           <customization position="classstructureid">
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />

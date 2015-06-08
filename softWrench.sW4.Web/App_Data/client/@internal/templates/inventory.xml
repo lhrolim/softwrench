@@ -1,0 +1,1300 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@chartofaccounts.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@item.xml"/>
+    <template path="@glcomponents.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
+      <relationships>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <!-- INVISSUE.ITEMNUM is not NULL in whereclause it to prevent showing materials. -->
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL" >
+      <relationships>
+        <relationship to="asset" qualifier="rotatingasset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
+          <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>
+      </connectorParameters>
+    </entity>
+
+    <entity name="physicalDeviation" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 0 and curbal != physcnt">
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
+      <attributes>
+        <attribute name="availablequantity" type="bigint" query="(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where itemnum = !@itemnum and siteid = !@siteid and location = !@location)"/>
+      </attributes>
+      <relationships>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invissue">
+          <relationshipAttribute from="wonum" to="refwo" primary="true"/>
+          <relationshipAttribute from="assetnum" to="assetnum"/>
+          <relationshipAttribute from="issueto" to="issueto"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <!--SwWEB-1032: Only display active items-->
+    <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE' and (select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = inventory.itemnum and invbalances.siteid = inventory.siteid and invbalances.location = inventory.location) > 0">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="binnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="modelnum" type="varchar" required="false" />
+        <attribute name="catalogcode" type="varchar" required="false" />
+        <attribute name="minlevel" type="decimal" required="true" />
+        <attribute name="maxlevel" type="decimal" required="true" />
+        <attribute name="category" type="varchar" required="true" />
+        <attribute name="orderunit" type="varchar" required="false" />
+        <attribute name="issueunit" type="varchar" required="true" />
+        <attribute name="orderqty" type="decimal" required="true" />
+        <attribute name="lastissuedate" type="datetime" required="false" />
+        <attribute name="issueytd" type="decimal" required="true" />
+        <attribute name="issue1yrago" type="decimal" required="true" />
+        <attribute name="issue2yrago" type="decimal" required="true" />
+        <attribute name="issue3yrago" type="decimal" required="true" />
+        <attribute name="abctype" type="varchar" required="false" />
+        <attribute name="ccf" type="int" required="true" />
+        <attribute name="sstock" type="decimal" required="false" />
+        <attribute name="deliverytime" type="int" required="true" />
+        <attribute name="il1" type="varchar" required="false" />
+        <attribute name="il5" type="decimal" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="controlacc" type="varchar" required="true" />
+        <attribute name="shrinkageacc" type="varchar" required="false" />
+        <attribute name="invcostadjacc" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="internal" type="smallint" required="true" />
+        <attribute name="inventoryid" type="int" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="storeloc" type="varchar" required="false" />
+        <attribute name="storelocsiteid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="false" />
+        <attribute name="quantity" type="bigint" query="(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = !@itemnum and invbalances.siteid = !@siteid and invbalances.location = !@location)"/>
+      </attributes>
+      <relationships>
+        <relationship to="invcost" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="inventory" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="matrectransTransfers" parententity="matrectrans" idAttribute="matrectransid" whereclause="issuetype='TRANSFER'"/>
+  </entities>
+
+  <applications>
+    <application name="invissuewo" title="Batch Issuing" entity="invissuewo">
+      <schemas>
+        <schema id="newdetail" stereotype="detail" mode="input" title="Batch Issue Details">
+          <field attribute="wonum" hidden="true"/>
+          <field attribute="#issuetype" hidden="true" default="ISSUE"/>
+          <field attribute="#refwo" label="Work Order" readonly="true"/>
+          <field attribute="#siteid" label="Site" readonly="true"/>
+          <field attribute="#assetnum" label="Asset" readonly="true"/>
+          <field attribute="#location" label="Location" readonly="true"/>
+          <field attribute="#issueto" label="Issue To" readonly="true"/>
+          <field attribute="#storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="#gldebitacct" label="GL Debit Account" readonly="true"/>
+          <composition relationship="invissue" label="Items" detailschema="newitem" inline="true">
+            <renderer type="default" params="fieldclass=issue-items" />
+            <collectionproperties listschema="itemlist" hideexistingdata="true" allowcreation="false" autocommit="false" />
+          </composition>
+          <properties>
+            <property key="detail.navigationbuttons.disabled" value="true"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="additemtobatchissue" label="Add Item" service="inventoryService" method="displayNewIssueModal" parameters="schema,datamap"/>
+              <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewBatchIssue" parameters="schema,datamap" />
+              <command id="cancelnewbatchissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" />
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="inventory" title="Inventory" entity="inventory">
+      <schemas>
+        <list>
+          <field attribute="itemnum"/>
+          <field attribute="binnum"/>
+          <field attribute="location"/>
+          <field attribute="siteid"/>
+          <field attribute="orgid"/>
+          <field attribute="status"/>
+          <field attribute="costtype"/>
+          <field attribute="itemtype"/>
+          <field attribute="issueunit"/>
+          <field attribute="costtype"/>
+          <field attribute="binnum"/>
+        </list>
+
+        <schema id="inventoryLookupList" stereotype="list" mode="output">
+          <field attribute="storeloc" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field label="Item" attribute="itemnum">
+            <renderer type="default" params="width=19%"/>
+          </field>
+          <field label="Description" attribute="item_.description">
+            <renderer type="default"/>
+          </field>
+          <field label="Type" attribute="item_.itemtype">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <optionfield label="Rotating" attribute="item_.rotating">
+            <renderer type="combo" params="width=16%;filteronly=true;formatter=numberToBoolean"/>
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
+          <optionfield label="Kit" attribute="item_.iskit">
+            <renderer type="combo" params="width=16%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <field label="Quantity" attribute="quantity"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="invissue" title="Issue Inventory" entity="invissue">
+      <schemas>
+        <schema stereotype="list" id="invIssueList" title="Issues and Returns">
+          <properties>
+            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
+                       successmessage="Issue created" position="&lt;filter"/>
+              <!--<command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>-->
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="storeloc" hidden="true"/>
+          <field attribute="binnum" hidden="true"/>
+          <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="rotassetnum" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" />
+          </field>
+          <field attribute="item_.itemtype" label="Item Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
+          </field>
+          <field attribute="lotnum" label="Lot">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="refwo" label="Work Order">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
+          </field>
+          <field attribute="issueto" label="Issued To">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
+          </field>
+          <field attribute="issuetype" label="Issue Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <optionfield attribute="item_.rotating" label="Rotating">
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <optionfield attribute="item_.iskit" label="Kit">
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <field attribute="quantity" label="Qty">
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+          </field>
+          <field attribute="qtyreturned" label="Qty Rtn">
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
+            <renderer type="default" params="width=3%"/>
+          </section>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+
+        <schema id="itemlist" stereotype="compositionlist">
+          <properties>
+            <property key="list.click.popup" value="modal"/>
+            <property key="list.click.service" value="inventoryService.batchissuelistclick"/>
+            <property key="list.click.schema" value="updateitem"/>
+            <property key="list.disablepagination" value="true"/>
+            <property key="nextschema.schemaid" value="newitem"/>
+          </properties>
+          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="refwo" hidden="true"/>
+          <field attribute="issueto" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="unitcost" hidden="true"/>
+          <field attribute="itemtype" hidden="true"/>
+          <field attribute="costtype" hidden="true"/>
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="item_.description" label="Description"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="gldebitacct" label="GL Debit Account"/>
+          <field attribute="quantity" label="Issue Quantity"/>
+          <field attribute="issuetype" label="Issue Type" default="ISSUE" hidden="true"/>
+          <field attribute="storeloc" hidden="true"/>
+          <section resourcepath="/Content/Templates/otb/compositionlistdeleteaction.html">
+            <renderer type="default" params="width=4%"/>
+          </section>
+        </schema>
+
+        <schema id="viewinvreturndetail" stereotype="detail" mode="input">
+          <section>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
+            <field attribute="item_.rotating" label="Rotating" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="item_.iskit" label="Kit" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="binnum" label="Bin" readonly="true"/>
+            <field attribute="lotnum" label="Lot" readonly="true"/>
+            <field attribute="quantity" label="Quantity Returned" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
+        </schema>
+
+        <schema id="viewinvissuedetail" stereotype="detail" mode="input">
+          <section>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true" showexpression="@issueto != null"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="item_.description" label="Description" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="rotassetnum" showexpression="@rotassetnum != null" readonly="true" label="Rotating Asset"/>
+            <field attribute="binnum" label="Bin" readonly="true"/>
+            <field attribute="lotnum" label="Lot" readonly="true"/>
+            <field attribute="quantity" label="Quantity Issued" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+            </field>
+            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
+        </schema>
+
+        <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
+          <section>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="item_.description" label="Description" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="rotassetnum" readonly="true" label="Rotating Asset"/>
+            <field attribute="binnum" label="Bin" readonly="true"/>
+            <field attribute="lotnum" label="Lot" readonly="true"/>
+            <field attribute="quantity" label="Quantity Issued" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+            </field>
+            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+            </field>
+            <field attribute="#quantityadj" label="New Return Quantity" default="1">
+              <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="actualcost" label="Actual Cost" hidden="true"/>
+            <field attribute="linecost" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="issueid" hidden="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <field attribute="glcreditacct" hidden="true"/>
+            <field attribute="issueid" hidden="true"/>
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <!--<removecommand id="save"/>-->
+              <removecommand id="cancel"/>
+              <!--<command id="return" position="&lt;print" label="Submit" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>-->
+              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
+            </commandgroup>
+          </commandbars>
+          <!--<event type="onvalidation" service="inventoryService" method="validateReturn"/>-->
+          <!--<event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>-->
+          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateReturn"/>
+          <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
+          <properties>
+            <property key="nextschema.schemaid" value="invIssueList"/>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
+        </schema>
+
+        <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
+          <section>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
+              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
+              <event type="afterchange" service="inventoryService" method="invIssueBatch_afterChangeItem"/>
+            </association>
+            <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@inventory_.item_.rotating==0">
+              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+              <dataprovider prefilterfunction="FilterBins"/>
+            </association>
+            <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field attribute="binbalances_.binnum" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+            </field>
+            <field attribute="lotbalances_.lotnum" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
+            </field>
+            <field attribute="binbalances_.curbal" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBinBalance"/>
+            </field>
+            <field attribute="lotbalances_.curbal" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
+            </field>
+            <field attribute="#curbal" label="Current Balance" readonly="true"/>
+            <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
+              <renderer type="numericinput" params="min=1;max=@curbal;"/>
+            </field>
+            <field attribute="inventory_.location" hidden="true" />
+            <field attribute="inventory_.itemnum" hidden="true" />
+            <field attribute="inventory_.siteid" hidden="true" />
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="inventory_.costtype" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <association label="Override GL Debit Account" target="#gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
+              <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
+            </association>
+          </section>
+          <field attribute="issuetype" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="cancel"/>
+              <removecommand id="print"/>
+              <removecommand id="save"/>
+              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" showexpression="@issuetype == null" parameters="datamap,previousdata"/>
+              <command id="updateiteminbatch" label="Update" service="inventoryService" method="updateItemInBatch" showexpression="@issuetype != null" parameters="datamap,previousdata"/>
+              <command id="cancel" label="Cancel" service="inventoryService" method="hideNewIssueModal"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="batchInvIssueFilter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
+          <field attribute="matusetransid" hidden="true"/>
+          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
+            <dataprovider prefilterfunction="FilterWorkorders"/>
+            <renderer type="lookup"/>
+            <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>-->
+          </association>
+          <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
+            <renderer type="lookup"/>
+            <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>-->
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
+            <renderer type="lookup"/>
+            <!--<dataprovider prefilterfunction="FilterAssets" />-->
+            <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>-->
+          </association>
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" default="@storeloc" dependantfields="siteid" requiredexpression="true" >
+            <renderer type="lookup"/>
+          </association>
+          <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
+          </association>
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="start_issuing" label="Next" service="inventoryService" position="&lt;save" method="navToBatchIssueDetail" parameters="schema,datamap" />
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newInvIssueDetail" mode="input" stereotype="detail">
+          <section>
+            <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
+            <field attribute="issuetype" hidden="true" default="ISSUE"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+              <renderer type="lookup"/>
+            </association>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
+            <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" dependantfields="siteid" requiredexpression="true" >
+              <renderer type="lookup"/>
+            </association>
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
+              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
+              <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
+            </association>
+            <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
+            </association>
+            <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" dependantfields="itemnum" extraprojectionvalues="curbal,lotnum,binnum">
+              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+              <dataprovider prefilterfunction="FilterBins"/>
+            </association>
+            <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
+              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+            </field>
+            <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
+              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+            </field>
+            <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
+              <renderer type="numericinput" params="min=1;"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="inventory_.costtype" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <association label="Work Order" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="location,assetnum" requiredexpression="(@location=='' || @location==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
+              <dataprovider prefilterfunction="FilterWorkorders"/>
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>
+            </association>
+            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
+            </association>
+            <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid" extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
+            </association>
+            <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
+            </association>
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="cancel"/>
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
+              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
+            </commandgroup>
+          </commandbars>
+          <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+            <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+          </properties>
+          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
+          <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="physicalcount" entity="physicalCount" title="Physical Count">
+      <schemas>
+        <schema stereotype="list" id="physicalcountList" title="Physical Count">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="invbalancesid" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="inventory_.siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%" />
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
+          </field>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+
+
+        <schema id="detail" stereotype="detail" title="Physical Count Entry">
+          <properties>
+            <property key="nextschema.schemaid" value="physicalcountList"/>
+            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
+          </properties>
+          <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+
+          <section orientation="horizontal">
+            <field label="Item" attribute="itemnum" readonly="true">
+              <renderer type="default"  />
+            </field>
+            <field label="Description" attribute="item_.description" readonly="true">
+              <renderer type="default"/>
+            </field>
+          </section>
+          <field label="Site" attribute="siteid" readonly="true">
+            <renderer type="default" params="inputsize=medium" />
+          </field>
+
+          <section>
+            <header displacement="ontop" label="Location" params="fieldset=true" />
+            <section orientation="horizontal">
+              <field label="Storeroom" attribute="location" readonly="true">
+                <renderer type="default" />
+              </field>
+              <field label="Bin" attribute="binnum" readonly="true">
+                <renderer type="default"  />
+              </field>
+              <field label="Lot" attribute="lotnum" readonly="true">
+                <renderer type="default"  />
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <field label="Condition Code" attribute="conditioncode" readonly="true">
+                <renderer type="default" params="inputsize=small" />
+              </field>
+              <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true">
+                <renderer type="default" params="inputsize=small" />
+              </field>
+            </section>
+          </section>
+          <section orientation="horizontal">
+            <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field label="Count Date" attribute="physcntdate">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field label="New Count" attribute="physcnt">
+              <renderer type="numericinput" params="min=0;"/>
+            </field>
+          </section>
+          <field attribute="curbal" hidden="true"/>
+          <event type="onload" service="physicalInventoryService" method="newPhysicalCount"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="physicaldeviation" entity="physicalDeviation" title="Physical Deviation">
+      <schemas>
+        <schema stereotype="list" id="physicaldeviationList" title="Physical Count">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/PhysicalDeviation/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="invbalancesid" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+          </field>
+          <field attribute="inventory_.siteid" label="Site">
+            <renderer type="default"  />
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%" />
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
+          </field>
+          <field attribute="physcnt" label="Physical Count">
+            <renderer type="default" params="widthXS=30%;widthSM=20%" />
+          </field>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+        <schema id="detail" stereotype="detail" title="Physical Count Entry">
+          <properties>
+            <property key="nextschema.schemaid" value="physicaldeviationList"/>
+            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
+          </properties>
+          <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field label="Item" attribute="itemnum" readonly="true"/>
+          <field label="Description" attribute="item_.description" readonly="true"/>
+          <field label="Storeroom" attribute="location" readonly="true"/>
+          <field label="Bin" attribute="binnum" readonly="true"/>
+          <field label="Site" attribute="siteid" readonly="true"/>
+          <field label="Condition Code" attribute="conditioncode" readonly="true"/>
+          <field label="Lot" attribute="lotnum" readonly="true"/>
+          <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
+          <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field label="Count Date" attribute="physcntdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field label="New Count" attribute="physcnt">
+            <renderer type="numericinput" params="min=0;"/>
+          </field>
+          <field attribute="curbal" hidden="true"/>
+          <event type="onload" service="physicalInventoryService" method="editPhysicalCount"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
+      <schemas>
+        <schema stereotype="list" id="reservedMaterialsList" title="Reserved Mateirals">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/ReservedMaterials/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="wonum" label="Work Order">
+            <renderer type="default" params="widthXS=40%;widthSM=30%;widthMD=20%;widthLG=10%" />
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" />
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="reservedqty" label="Reserved">
+            <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=8%"/>
+          </field>
+          <field attribute="actualqty" label="Issued">
+            <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=8%"/>
+          </field>
+          <field attribute="availablequantity" label="Available">
+            <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%;"/>
+          </field>
+          <field attribute="location" hidden="true"/>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+
+        <schema id="detail" mode="input" stereotype="detail">
+          <section>
+            <field attribute="invreserveid" hidden="true"/>
+            <field attribute="requireddate" hidden="true"/>
+            <field attribute="requestnum" hidden="true"/>
+            <field attribute="itemsetid" hidden="true"/>
+            <field attribute="siteid" hidden="true"/>
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
+            <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
+
+            <section orientation="horizontal">
+              <field attribute="requestedby" label="Requested By" readonly="true">
+                <renderer type="default" />
+              </field>
+              <field attribute="enterby" label="Entered By" readonly="true" default="@username">
+                <renderer type="default"  />
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="#issuetype" label="Issue Type" readonly="true">
+                <renderer type="default"  />
+              </field>
+              <field attribute="issueto" label="Issue To" readonly="true">
+                <renderer type="default"  />
+              </field>
+            </section>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <section orientation="horizontal">
+              <field attribute="siteid" label="Site" readonly="true">
+                <renderer type="default" />
+              </field>
+              <field attribute="location" label="Storeroom" readonly="true">
+                <renderer type="default"  />
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="item_.itemtype" label="Item Type" readonly="true">
+                <renderer type="default"  />
+              </field>
+              <association target="#rotatingAssetNumber" label="Rotating Asset" valuefield="assetnum" labelfield="asset_.description" extraprojectionvalues="binnum" enableexpression="@item_.rotating==1" requiredexpression="@item_.rotating==1">
+                <dataprovider prefilterfunction="FilterAssets"/>
+                <renderer type="lookup" />
+                <event type="afterchange" service="inventoryService" method="afterChangeInvreserveAsset"/>
+              </association>
+            </section>
+            <section>
+              <field attribute="item_.rotating" label="Rotating" enableexpression="false">
+                <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
+              </field>
+              <field attribute="item_.iskit" label="Kit" enableexpression="false">
+                <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
+                <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
+                <dataprovider prefilterfunction="FilterBins"/>
+              </association>
+              <field attribute="invbalances_.lotnum" label="Lot" readonly="true">
+                <renderer type="default" />
+              </field>
+              <field attribute="invbalances_.curbal" label="Current Balance" readonly="true">
+                <renderer type="default"  />
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="reservedqty" label="Reserved Quantity" readonly="true">
+                <renderer type="default"  />
+              </field>
+              <field attribute="#issueqty" label="Issue Quantity">
+                <renderer type="numericinput" params="min=1;max=@reservedqty;inputsize=small"/>
+                <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>
+              </field>
+            </section>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+            <field attribute="unitcost" label="Unit Cost" readonly="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+            <field attribute="inventory_.costtype" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="wonum" label="Work Order" readonly="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+            <section>
+              <field attribute="tostoreloc" label="Location" readonly="true">
+                <renderer type="default" params="inputsize=medium" />
+              </field>
+              <field attribute="assetnum" label="Asset" readonly="true">
+                <renderer type="default" params="inputsize=medium" />
+              </field>
+              <!--<association label="Location" target="tostoreloc" labelfield="location_.description" dependantfields="siteid"  readonly="true">
+                <renderer type="lookup" params="inputsize=medium"/>
+              </association>-->
+              <!--<association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid"  readonly="true">
+                <renderer type="lookup" params="inputsize=medium"/>
+              </association>-->
+            </section>
+            <field attribute="glaccount" label="GL Account" readonly="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+          </section>
+          <event type="onload" service="inventoryService" method="onloadReservation"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="saveIssue" icon="fa fa-save" label="Submit" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Request: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="invbalances" title="Inventory" entity="invbalances">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web">
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthXS=35%;widthSM=30%;widthMD=18%;widthLG=10%" />
+          </field>
+          <field attribute="item_.description" label="Description">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=18%" />
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="lotnum" label="Lot">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <optionfield attribute="item_.rotating" label="Rotating">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <optionfield attribute="item_.iskit" label="Kit">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <field attribute="curbal" label="Balance">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=18%" />
+          </field>
+          <field attribute="invbalancesid" hidden="true"/>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+          <properties>
+            <property key="list.click.schema" value="invbalancesDetail"/>
+            <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>
+          </properties>
+        </schema>
+
+        <schema id="invbalancesDetail" stereotype="detail" title="Inventory Balance Details">
+          <properties>
+            <property key="nextschema.schemaid" value="invbalancesList"/>
+          </properties>
+          <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field label="Item" attribute="itemnum" readonly="true"/>
+          <field label="Description" attribute="item_.description" readonly="true"/>
+          <field label="Rotating" attribute="item_.rotating" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <field label="Kit" attribute="item_.iskit" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <field label="Storeroom" attribute="location" readonly="true"/>
+          <field label="Bin" attribute="binnum" readonly="true"/>
+          <field label="Lot" attribute="lotnum" readonly="true"/>
+          <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
+          <field label="Balance" attribute="curbal"/>
+          <field label="Site" attribute="siteid" readonly="true"/>
+          <field attribute="physcnt" hidden="true"/>
+        </schema>
+
+        <schema id="binLookupList" stereotype="list">
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="itemnum" label="Item" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="curbal" label="Current Balance"/>
+        </schema>
+
+        <schema id="lotLookupList" stereotype="list">
+          <field attribute="itemnum" label="Item" hidden="true"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="curbal" label="Current Balance"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfers">
+      <schemas>
+        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfers">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/InventoryTransfer/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService"
+                       method="createTransfer" parameters="schema" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+          </field>
+          <field attribute="item_.itemtype" label="Item Type"/>
+          <field attribute="fromstoreloc" label="From Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
+          <field attribute="frombin" label="From Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="tostoreloc" label="To Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
+          <field attribute="tobin" label="To Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="quantity" label="Quantity">
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+          </field>
+          <field attribute="actualdate" label="Transfer Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="detail"/>
+          </properties>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+
+        <schema id="detail" title="Inventory Transfer">
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="fromstoreloc" label="From Storeroom" readonly="true"/>
+          <field attribute="frombin" label="From Bin" readonly="true"/>
+          <field attribute="tostoreloc" label="To Storeroom" readonly="true"/>
+          <field attribute="tobin" label="To Bin" readonly="true"/>
+          <field attribute="issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="quantity" label="Quantity" readonly="true"/>
+          <field attribute="actualdate" label="Transfer Date" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="invuse" name="invuse" title="Inventory Transfer">
+      <schemas>
+        <schema id="newdetail" stereotype="detail" mode="input">
+          <properties>
+            <property key="routing.nextapplication" value="matrectransTransfers"/>
+            <property key="nextschema.schemaid" value="matrectransTransfersList"/>
+          </properties>
+          <field attribute="usetype" hidden="true"/>
+          <field attribute="invuseline_.fromstoreloc" default="@storeloc" hidden="true"/>
+          <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
+            <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
+          </association>
+
+          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" hideDescription="true">
+            <renderer type="lookup" params="inputsize=small" />
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>
+          </association>
+
+
+          <field attribute="invuseline_.siteid" default="@usersite" hidden="true"/>
+          <association target="fromstoreloc" label="Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid" hideDescription="true">
+            <renderer type="lookup"  params="inputsize=small" />
+            <dataprovider prefilterfunction="FilterFromStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromStoreLoc"/>
+          </association>
+          <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type">
+            <renderer type="default"  params="inputsize=small" />
+          </field>
+          <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="false" extraprojectionvalues="binnum,lotnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <renderer type="lookup" />
+          </association>
+
+
+          <!--<field label="Rotating" target="inventory_.item_.rotating"/>-->
+          <!--<field label="Kit" target="inventory_.item_.iskit"/>-->
+          <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
+            <dataprovider prefilterfunction="FilterFromBin"/>
+          </association>
+          <field label="Lot" attribute="invuseline_.fromlot" readonly="true">
+            <renderer type="default"  params="inputsize=small" />
+          </field>
+          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true">
+            <renderer type="default"  params="inputsize=small" />
+          </field>
+          <field attribute="#curbal" label="Current Balance" readonly="true">
+            <renderer type="default"  params="inputsize=small" />
+          </field>
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">
+            <dataprovider prefilterfunction="FilterToStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeToStoreroom"/>
+            <renderer type="lookup" params="inputsize=small" />
+          </association>
+          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" forcedistinctoptions="false" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+            <dataprovider prefilterfunction="FilterToBin" />
+            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;allowFreeText=true;inputsize=small"/>
+          </association>
+          <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true">
+            <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
+            <renderer type="numericinput" params="min=1;inputsize=small"/>
+          </field>
+          <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
+          <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
+          <field attribute="lotnum" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="false">
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="inventoryService" method="cancelTransfer"/>
+            </commandgroup>
+          </commandbars>
+          <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="invcost" name="invcost" title="invcost">
+      <schemas>
+        <schema id="list" title="Invcost List" stereotype="list">
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="location" label="location"/>
+          <field attribute="avgcost" label="Average Cost"/>
+          <field attribute="stdcost" label="Standard Cost"/>
+          <field attribute="lastcost" label="lastcost"/>
+          <field attribute="siteid" label="siteid"/>
+          <field attribute="conditioncode" label="conditioncode"/>
+          <field attribute="condrate" label="condrate"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

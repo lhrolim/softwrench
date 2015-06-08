@@ -19,8 +19,9 @@ module.exports = function (grunt) {
                 destPrefix: 'Content/Vendor/scripts'
             },
 
-
+            
             dev: {
+
 
                 files: {
                     'angular-sanitize.js': 'angular-sanitize/angular-sanitize.js',
@@ -34,7 +35,27 @@ module.exports = function (grunt) {
 //                    'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
                     'moment.js': 'moment/moment.js',
+                    'ionautocomplete.js': 'ion-autocomplete/dist/ion-autocomplete.js',
+//                    'ionic/release/js/ionic.js': 'ionic/release/js/ionic.js',
+//                    'ionic/release/js/ionic-angular.js': 'ionic/release/js/ionic-angular.js',
+//                    'ionic/release/css/ionic.css': 'ionic/release/css/ionic.css',
+//                    'ionic/release/fonts/ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
+//                    'ionic/release/fonts/ionicons.woff': 'ionic/release/fonts/ionicons.woff',
+                },
+
+              
+            },
+
+            css: {
+
+                options: {
+                    destPrefix: 'Content/Vendor/css'
+                },
+                files: {
+                    'ionautocomplete.css': 'ion-autocomplete/dist/ion-autocomplete.min.css',
                 }
+
+                
             },
 
             prod: {
@@ -50,6 +71,12 @@ module.exports = function (grunt) {
 //                    'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
                     'moment.js': 'moment/min/moment.min.js',
+                    'ionautocomplete.js': 'ion-autocomplete/dist/ion-autocomplete.min.js',
+//                    'ionic/release/js/ionic.js': 'ionic/release/js/ionic.min.js',
+//                    'ionic/release/js/ionic-angular.js': 'ionic/release/js/ionic-angular.min.js',
+//                    'ionic/release/css/ionic.css': 'ionic/release/css/ionic.min.css',
+//                    'ionic/release/fonts/ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
+//                    'ionic/release/fonts/ionicons.woff': 'ionic/release/fonts/ionicons.woff',
                 }
             }
 
@@ -64,14 +91,14 @@ module.exports = function (grunt) {
             },
 
             build: {
-                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
                 dest: 'layout.html'
             }
         },
 
         concat: {
             mobileScripts: {
-                src: ["Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
                 dest: "scripts/dist/mobile_angular.js"
             },
         }
@@ -98,7 +125,7 @@ module.exports = function (grunt) {
     grunt.registerTask('prod', ['clean', 'bowercopy:prod', 'uglify']);
 
     grunt.registerTask('fulldev', ['clean', 'bowercopy:dev', 'tags']);
-    grunt.registerTask('quick_dev', ['bowercopy:dev','tags']);
+    grunt.registerTask('quick_dev', ['bowercopy:dev','bowercopy:css','tags']);
 
 
 };

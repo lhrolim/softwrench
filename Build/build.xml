@@ -53,7 +53,6 @@
     <property name="platformtoexclude" value="web" />
   </if>
 
-  
 
   <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,deploy"/>
 

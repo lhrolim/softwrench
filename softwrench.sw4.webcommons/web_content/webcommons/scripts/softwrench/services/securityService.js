@@ -24,7 +24,7 @@ app.factory('securityService', function (contextService,alertService) {
                 }
             }
 
-            if (!foundRole || foundRole.authorized) {
+            if (!foundRole || ( foundRole.authorized != false)) {
                 return true;
             }
 

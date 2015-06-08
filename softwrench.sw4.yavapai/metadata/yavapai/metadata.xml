@@ -74,7 +74,7 @@
             </association>
           </customization>
           <customization position="gldebitacct">
-            <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
+            <field label="GL Debit Account:" attribute="gldebitacct" hidden="true" />
           </customization>
         </schema>
       </schemas>

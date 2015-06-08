@@ -1,8 +1,4 @@
-﻿/*
- */
-var app = angular.module('sw_layout');
-
-app.factory('eventService', function ($log, dispatcherService) {
+﻿modules.webcommons.factory('eventService', function ($log, dispatcherService) {
     var loadEvent = function(schema, eventName) {
         if (schema.events === undefined) {
             return null;

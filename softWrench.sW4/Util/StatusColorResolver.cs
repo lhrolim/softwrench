@@ -6,9 +6,12 @@ using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using log4net;
 
 namespace softWrench.sW4.Util {
     public class StatusColorResolver : ISingletonComponent, ISWEventListener<ClearCacheEvent> {
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StatusColorResolver));
 
         private const string PathPattern = "{0}App_Data\\Client\\{1}\\statuscolors.json";
 
@@ -86,8 +89,19 @@ namespace softWrench.sW4.Util {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var patternToUse = ApplicationConfiguration.IsUnitTest ? TestI18NdirPattern : PathPattern;
             var statusColorJsonPath = String.Format(patternToUse, baseDirectory, currentClient);
-            if (File.Exists(statusColorJsonPath)) {
-                _cachedCatalogs = JSonUtil.BuildJSon(statusColorJsonPath);
+            if (File.Exists(statusColorJsonPath))
+            {
+                JObject statusColorJson;
+                try
+                {
+                    statusColorJson = JSonUtil.BuildJSon(statusColorJsonPath);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error reading Status Color JSON");
+                    statusColorJson = new JObject();
+                }
+                _cachedCatalogs = statusColorJson;
             }
             else {
                 _cachedCatalogs = null;

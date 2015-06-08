@@ -666,6 +666,7 @@
     <restriction base="string">
       <enumeration value="list"></enumeration>
       <enumeration value="detail"></enumeration>
+      <enumeration value="detailnew"></enumeration>
       <enumeration value="compositionlist"></enumeration>
       <enumeration value="compositiondetail"></enumeration>
     </restriction>
@@ -877,6 +878,15 @@
     </choice>
     <attribute use="optional" default="false"
 			name="removeundeclared" type="boolean">
+    </attribute>
+
+    <attribute use="optional" name="platform">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="web"></enumeration>
+          <enumeration value="mobile"></enumeration>
+        </restriction>
+      </simpleType>
     </attribute>
 
     <attribute name="position">

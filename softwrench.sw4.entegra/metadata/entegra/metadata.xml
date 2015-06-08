@@ -12,6 +12,7 @@
     <!--Inventory-->
     <template path="@inventory.xml"/>
     
+    <template path="@purchasing.xml"/>
   </templates>
 
   <applications>

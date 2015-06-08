@@ -42,7 +42,7 @@ namespace softwrench.sw4.offlineserver.services {
                 }
                 return;
             }
-            var newIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.NewEntities);
+            var newIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.NewEntities,lookupAttribute.From);
             var columnName = lookupAttribute.To;
 
             if (!offParameter.ExistingEntities.Any()){
@@ -54,8 +54,8 @@ namespace softwrench.sw4.offlineserver.services {
             
             var rowstamp = parameter.Rowstamp;
 
-            
-            var updateIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.ExistingEntities);
+
+            var updateIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.ExistingEntities, lookupAttribute.From);
 
 
             searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, newIdsForQuery);

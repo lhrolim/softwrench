@@ -1,15 +1,12 @@
-﻿var app = angular.module('sw_layout');
+﻿
+modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService) {
 
-app.factory('fieldService', function ($injector, $log, expressionService, eventService) {
-
-    var isFieldHidden = function (datamap, application, fieldMetadata) {
+    var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
         if (fieldMetadata.jscache.isHidden != undefined) {
             return fieldMetadata.jscache.isHidden;
         }
-        var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" &&
-              (fieldMetadata.attribute == application.idFieldName && application.stereotype == "Detail"
-              && application.mode == "input" && !fieldMetadata.isReadOnly));
+        var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" && isIdFieldAndNotReadOnly(fieldMetadata,schema));
         var isTabComposition = fieldMetadata.type == "ApplicationCompositionDefinition" && !fieldMetadata.inline;
         if (baseHidden || isTabComposition) {
             fieldMetadata.jscache.isHidden = true;
@@ -17,7 +14,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
         } else if (fieldMetadata.type == "ApplicationSection" && fieldMetadata.resourcepath == null &&
             (fieldMetadata.displayables.length == 0 ||
              $.grep(fieldMetadata.displayables, function (e) {
-                  return !isFieldHidden(datamap, application, e);
+                  return !isFieldHidden(datamap, schema, e);
         }).length == 0)) {
 
             //            fieldMetadata.jscache.isHidden = true;
@@ -25,12 +22,24 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
         }
         //the opposite of the expression: showexpression --> hidden
         var result = !expressionService.evaluate(fieldMetadata.showExpression, datamap);
-        if (application.stereotype == "List") {
+        if (schema.stereotype == "List") {
             //list schemas can be safely cached since if the header is visible the rest would be as well
             fieldMetadata.jscache.isHidden = result;
         }
         return !expressionService.evaluate(fieldMetadata.showExpression, datamap);
     };
+
+    var isIdField = function(fieldMetadata, schema) {
+        return fieldMetadata.attribute == schema.idFieldName;
+    };
+
+    var isIdFieldAndNotReadOnly = function (fieldMetadata, schema) {
+        if (!isIdField(fieldMetadata, schema)) {
+            return false;
+        }
+        return (schema.stereotype == "Detail" && schema.mode == "input" || schema.stereotype == "DetailNew") && !fieldMetadata.isReadOnly;
+    }
+
 
 
     return {
@@ -38,7 +47,34 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
+        isFieldReadOnly: function (datamap, application, fieldMetadata) {
+            //test the metadata read-only property
+            var isReadOnly = fieldMetadata.isReadOnly;
+
+            //check if field is diable via other means
+            if (isReadOnly) {
+                return true;
+            }
+            if (fieldMetadata.enableExpression == null) {
+                return false;
+            }
+            return !expressionService.evaluate(fieldMetadata.enableExpression, datamap);
+        },
+
+        isPropertyTrue: function (field, propertyName) {
+            if (!field) {
+                return false;
+            }
+            return field.rendererParameters && "true" == field.rendererParameters[propertyName];
+        },
+
         nonTabFields: function (displayables, includeHiddens) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="displayables"></param>
+            /// <param name="includeHiddens">whether hidden fields should be included or not</param>
+            /// <returns type=""></returns>
             includeHiddens = includeHiddens == undefined ? true : includeHiddens;
             var result = [];
             for (var i = 0; i < displayables.length; i++) {
@@ -164,6 +200,82 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
                 }
             }
             return result;
+        },
+
+        getDisplayableIndexByKey: function (schema, key) {
+            var displayables = schema.displayables;
+            for (var i = 0; i < displayables.length; i++) {
+                //is this the current field?
+                var fieldMetadata = displayables[i];
+
+                if (fieldMetadata.attribute && fieldMetadata.attribute == key) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+
+        getDisplayableIdxByKey: function (schema, attribute) {
+            schema.jscache = schema.jscache || {};
+            var results = this.getLinearDisplayables(schema);
+            for (var i = 0; i < results.length; i++) {
+                var result = results[i];
+                if (result.associationKey == attribute || result.target == attribute || result.attribute == attribute) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+
+        getLinearDisplayables: function (container) {
+            /// <summary>
+            /// gets a list of all the displayables of the current schema/section in a linear mode, excluding any sections/tabs itselves.
+            /// </summary>
+            /// <param name="container">either a schema or a section</param>
+            /// <returns type=""></returns>
+            container.jscache = container.jscache || {};
+            if (container.jscache.alldisplayables) {
+                return container.jscache.alldisplayables;
+            }
+            var displayables = container.displayables;
+            var result = [];
+            for (var i = 0; i < displayables.length; i++) {
+                var displayable = displayables[i];
+                if (displayable.displayables) {
+                    //at this point displayable is a section, calling recursively
+                    result = result.concat(this.getLinearDisplayables(displayable));
+                } else {
+                    result.push(displayable);
+                }
+            }
+            container.jscache.alldisplayables = result;
+            return result;
+        },
+
+     
+
+        getNextVisibleDisplayableIdx: function (datamap, schema, key) {
+
+            //all fields, regardless of sections
+            var displayables = this.getLinearDisplayables(schema);
+            var fieldIdx = this.getDisplayableIdxByKey(schema, key);
+            if (fieldIdx == -1 || fieldIdx == displayables.length) {
+                //no such field, or last field
+                return -1;
+            }
+
+            for (var i = fieldIdx + 1; i < displayables.length; i++) {
+                //is this the current field?
+                var fieldMetadata = displayables[i];
+
+                //if the current field is found, get the next visible and editable field
+                if (!this.isFieldHidden(datamap, schema, fieldMetadata) && !this.isFieldReadOnly(datamap, schema, fieldMetadata)) {
+                    $log.getInstance("fieldService#getNextVisibleDisplayable").debug('found', fieldMetadata.attribute, fieldMetadata);
+                    return i;
+
+                }
+            }
+            return -1;
         },
 
         getRequiredDisplayables: function (schema) {

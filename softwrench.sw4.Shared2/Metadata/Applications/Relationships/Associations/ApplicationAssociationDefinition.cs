@@ -40,6 +40,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
         private string _valueField;
+        private Boolean _valueFieldSet = false;
 
         //used to resolve renderer parameters that needs access to a scope outside of the shared dll project
         protected Lazy<IDictionary<string, object>> LazyRendererParametersResolver;
@@ -70,7 +71,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield,string defaultExpression, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -162,7 +163,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public string ValueField {
-            get { return _valueField; }
+            get {
+                if (_valueField == null && !_valueFieldSet) {
+                    var primaryAttribute = EntityAssociation.PrimaryAttribute();
+                    if (primaryAttribute != null) {
+                        //TODO: this should not be allowed
+                        _valueField = primaryAttribute.To;
+                    }
+                    _valueFieldSet = true;
+                }
+                return _valueField;
+            }
             set { _valueField = value; }
         }
 
@@ -234,8 +245,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, OrderByField,DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField)
-                {
+                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

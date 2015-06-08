@@ -1,0 +1,14 @@
+﻿<ion-popover-view ng-controller="CompositionMenuController">
+    <ion-content>
+        <div class="list">
+            
+            <a class="item icon" ng-click="loadTab()" target="_blank" ng-show="notOnMainTab()">
+                Main
+            </a>
+
+            <a class="item icon {{getTabIcon(composition)}}" ng-repeat="composition in compositionMenus()" ng-click="loadTab(composition)" target="_blank">
+                {{composition.label}}
+            </a>
+        </div>
+    </ion-content>
+</ion-popover-view>

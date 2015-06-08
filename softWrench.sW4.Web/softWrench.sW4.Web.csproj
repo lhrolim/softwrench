@@ -347,10 +347,17 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\email.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\person.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\phone.xml" />
     <Content Include="App_Data\Client\hapag\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\hapag\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\otb\commands.mobile.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -380,6 +387,99 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\asset.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\attachments.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\chartofaccounts.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\commlogs.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\failurecode.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\incident.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\inventory.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\item.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\labor.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\labtrans.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\location.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\longdescription.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\materials.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\meter.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\purchasing.xml" />
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\receiving.xml" />
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\relatedrecords.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\servicerequest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\solution.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\synstatus.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\woactivity.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\wochange.xml" />
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\worklogs.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\workorder.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Data\Client\%40internal\templates\worktype.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="App_Data\Client\tva\deploy.xml" />
     <Content Include="App_Data\Client\%40internal\target\tvamaximo_target.xml">
       <SubType>Designer</SubType>
@@ -430,7 +530,11 @@
     <Content Include="Content\Images\pagination-next.png" />
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
-    <Content Include="Content\Images\signin.jpg" />
+    <Content Include="Content\Images\signin-lg.jpg" />
+    <Content Include="Content\Images\signin-md.jpg" />
+    <Content Include="Content\Images\signin-sm.jpg" />
+    <Content Include="Content\Images\signin-xs.jpg" />
+    <Content Include="Content\Images\signin-xxs.jpg" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -446,10 +550,7 @@
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
     <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
-    <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
-    <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
-    <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
-    <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
+    <Content Include="Content\Scripts\client\services\crud_layoutservice.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
@@ -541,6 +642,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
+    <Content Include="Content\styles\default\button.css" />
     <Content Include="Content\styles\default\xeditable.css" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
@@ -1323,6 +1425,14 @@
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
       <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.deltadental\softwrench.sw4.deltadental.csproj">
+      <Project>{a89dc757-b0bd-4ba0-9436-e4ae87f31bf1}</Project>
+      <Name>softwrench.sw4.deltadental</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.entegra\softwrench.sw4.entegra.csproj">
+      <Project>{5497fcbc-4ab9-44c2-a966-90bc6a4c5427}</Project>
+      <Name>softwrench.sw4.entegra</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>
@@ -1355,9 +1465,13 @@
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.southern\softwrench.sw4.southern.csproj">
+    <ProjectReference Include="..\softwrench.sw4.southern_reg\softwrench.sw4.southern_reg.csproj">
+      <Project>{0da5c13d-5c3c-48ad-b6f8-87b9f73bcabf}</Project>
+      <Name>softwrench.sw4.southern_reg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.southern_unreg\softwrench.sw4.southern_unreg.csproj">
       <Project>{9a8c761c-3b9e-4c2c-af3d-a3676010919b}</Project>
-      <Name>softwrench.sw4.southern</Name>
+      <Name>softwrench.sw4.southern_unreg</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>

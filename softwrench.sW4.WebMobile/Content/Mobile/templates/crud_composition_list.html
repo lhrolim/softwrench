@@ -1,0 +1,23 @@
+﻿<div class="list">
+    <ion-list class="has-header" ng-show="!empty()">
+
+        <ion-item ng-repeat="item in list()" item="item" ng-class="{'missingsync': isDirty(item)}">
+            <div class="row" ng-click="loadCompositionDetail(item)">
+                <div class="col">
+                    <ul>
+                        <li ng-repeat="field in visibleFields()">{{fieldLabel(item,field)}}</li>
+                    </ul>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <div ng-show="empty()">
+        <h5 class="text-center">No records to display</h5>
+    </div>
+    
+    
+    
+
+
+</div>

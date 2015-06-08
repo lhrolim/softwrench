@@ -23,7 +23,7 @@ namespace softWrench.sW4.Metadata {
             var watch =Stopwatch.StartNew();
             foreach (var metadata in applications) {
                 foreach (var schema in metadata.Schemas().Values) {
-                    if (schema.Stereotype != SchemaStereotype.Detail) {
+                    if (schema.Stereotype != SchemaStereotype.Detail && schema.Stereotype != SchemaStereotype.DetailNew) {
                         continue;
                     }
                     var compositions = schema.Compositions;

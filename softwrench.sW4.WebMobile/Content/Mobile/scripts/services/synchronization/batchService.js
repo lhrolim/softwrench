@@ -1,4 +1,4 @@
-﻿mobileServices.factory('batchService', function ($q, restService, swdbDAO, $log) {
+﻿mobileServices.factory('batchService', function ($q, restService, swdbDAO, $log, schemaService, offlineSchemaService) {
 
     return {
 
@@ -18,8 +18,13 @@
             var promises = [];
             for (var i = 0; i < batches.length; i++) {
                 var batch = batches[i];
+
                 if (batch != null) {
-                    promises.push(restService.postPromise('Mobile', 'SubmitBatch', batch.items));
+                    var batchParams = {
+                        application: batch.application,
+                        remoteId: batch.id
+                    }
+                    promises.push(restService.postPromise('Mobile', 'SubmitBatch', batchParams, JSON.stringify(batch)));
                 }
             }
             if (promises.length == 0) {
@@ -30,11 +35,14 @@
         },
 
 
-        createBatch: function (application) {
+        createBatch: function (dbapplication) {
+            var applicationName = dbapplication.application;
 
             var log = $log.getInstance('batchService#createBatch');
 
-            return swdbDAO.findByQuery('DataEntry', "isDirty = 1 and application = '{0}'".format(application))
+            var detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
+
+            return swdbDAO.findByQuery('DataEntry', "isDirty = 1 and pending=0 and application = '{0}'".format(applicationName))
                 .then(function (items) {
                     if (items.length == 0) {
                         log.debug('no items to submit to the server. returning null batch');
@@ -42,23 +50,30 @@
                         return $q.reject();
                     }
                     var batchItemPromises = [];
-                    var batchDeletePromises = [];
-                    for (var i = 0; i < items.length; i++) {
-                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', items[i]));
-                        batchDeletePromises.push($q.when(item));
+                    var length = items.length;
+                    for (var i = 0; i < length; i++) {
+                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', items[i], function (dataEntry, batchItem) {
+                            batchItem.dataentry = dataEntry;
+                            batchItem.status = 'pending';
+                            batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
+                            return batchItem;
+                        }));
+                        items[i].pending = true;
                     }
-                    var txPromise = swdbDAO.createTx();
                     var batchPromise = swdbDAO.instantiate('Batch');
                     log.debug('creating db promises');
-                    return $q.all([txPromise, batchPromise, batchItemPromises, batchDeletePromises]);
+                    var dbPromises = [];
+                    dbPromises.push(batchPromise);
+                    dbPromises.push($q.when(items));
+                    dbPromises = dbPromises.concat(batchItemPromises);
+                    return $q.all(dbPromises);
                 }).catch(function (err) {
                     return $q.reject(err);
                 }).then(function (items) {
-                    var tx = items[0];
-                    var batch = items[1];
-                    var batchItemsToCreate = items[2];
-                    var dataEntriesToDelete = items[3];
-                    batch.application = application;
+                    var batch = items[0];
+                    var dataEntries = items[1];
+                    var batchItemsToCreate = items.subarray(2, length + 1);
+                    batch.application = applicationName;
                     batch.sentDate = new Date();
                     for (var i = 0; i < batchItemsToCreate.length; i++) {
                         //creating relationships
@@ -66,18 +81,22 @@
                         batch.items.add(item);
                         item.batch = batch;
                     }
+                    var deferred = $q.defer();
+                    persistence.transaction(function (tx) {
+                        try {
+                            log.debug('executing batching db tx');
+                            swdbDAO.bulkSave(batchItemsToCreate, tx);
+                            swdbDAO.bulkSave(dataEntries, tx);
+                            swdbDAO.save(batch, tx);
+                            persistence.flush(tx, function () {
+                                return deferred.resolve(batch);
+                            });
+                        } catch (err) {
+                            deferred.reject(err);
+                        }
+                    });
+                    return deferred.promise;
                     //use a single transaction here
-                    swdbDAO.bulkSave(batchItemsToCreate, tx);
-                    swdbDAO.bulkDelete(dataEntriesToDelete, tx);
-                    swdbDAO.save(batch, tx);
-                    try {
-                        log.debug('executing batching db tx');
-                        persistence.flush(tx, function () {
-                            $q.when(batch);
-                        });
-                    } catch (err) {
-                        $q.reject(err);
-                    }
                 }).catch(function (error) {
                     if (!error) {
                         //it was interrupted due to an abscence of items, but it should resolve to the outer calls!

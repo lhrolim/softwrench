@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
+﻿modules.webcommons.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
 
 
     var compiledDatamapRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
@@ -300,7 +298,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
             key (original reference in metadata) with an expression we can evaluate   */
             if (variables != null) {
                 $.each(variables, function (key, value) {
-                        expression = expression.replace(key, value);
+                    expression = expression.replace(new RegExp(key, 'g'), value);
                 });
             }
 

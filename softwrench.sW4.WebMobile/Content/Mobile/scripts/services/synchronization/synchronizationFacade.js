@@ -10,14 +10,15 @@
             log.info("init full synchronization process");
             var start = new Date().getTime();
 
-            var applications = metadataModelService.getApplicationNames();
+            var dbapplications = metadataModelService.getMetadatas();
 
             //one per application
             var batchPromises = [];
 
-            for (var i = 0; i < applications.length; i++) {
-                var application = applications[i];
-                batchPromises.push(batchService.createBatch(application));
+            for (var i = 0; i < dbapplications.length; i++) {
+                var dbapplication = dbapplications[i];
+                var application = dbapplication.application;
+                batchPromises.push(batchService.createBatch(dbapplication));
             }
 
             return $q.all(batchPromises)
@@ -31,14 +32,16 @@
                     httpPromises.push(batchSubmissionPromise);
                     httpPromises.push(metadataDownloadedPromise);
                     httpPromises.push(associationDataDownloadPromise);
-                    httpPromises=httpPromises.concat(syncDataPromise);
+                    httpPromises = httpPromises.concat(syncDataPromise);
 
                     return $q.all(httpPromises);
                 }).catch(function (err) {
                     return $q.reject(false);
                 }).then(function (results) {
+                    var batchResult = results[0];
+
                     var end = new Date().getTime();
-                    log.info("finished full synchronization process. Ellapsed {0}".format(end-start));
+                    log.info("finished full synchronization process. Ellapsed {0}".format(end - start));
                 });
 
         },

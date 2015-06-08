@@ -28,7 +28,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
         public IGenericResponseResult Create(string application, string schema, string alias, JObject jsonIds) {
             //TODO: add id checkings on server side
             var userId = SecurityFacade.CurrentUser().DBId;
-            var batch = new Batch {
+            var batch = new MultiItemBatch {
                 Alias = alias,
                 Application = application,
                 Schema = schema,
@@ -39,11 +39,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
                 ItemIds = jsonIds["ids"].ToString(),
             };
             var saved = _dao.Save(batch);
-            return new GenericResponseResult<Batch>(saved);
+            return new GenericResponseResult<MultiItemBatch>(saved);
         }
 
         public void Update(Int32 batchId, JObject datamap) {
-            var batch = _dao.FindByPK<Batch>(typeof(Batch), batchId);
+            var batch = _dao.FindByPK<MultiItemBatch>(typeof(MultiItemBatch), batchId);
             if (batch == null) {
                 throw BatchException.BatchNotFound(batchId);
             }
@@ -53,7 +53,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
         }
 
         public void Submit(Int32 batchId, JObject datamap) {
-            var batch = _dao.FindByPK<Batch>(typeof(Batch), batchId);
+            var batch = _dao.FindByPK<MultiItemBatch>(typeof(MultiItemBatch), batchId);
             if (batch == null) {
                 throw BatchException.BatchNotFound(batchId);
             }

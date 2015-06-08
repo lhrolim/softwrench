@@ -69,7 +69,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
                             if (entity != null) {
                                 var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
-                                if (attr != null && attr.Type == "timestamp") {
+                                if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
                                     return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName);
                                 }
                             }

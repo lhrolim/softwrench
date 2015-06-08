@@ -20,6 +20,14 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
             }
         },
 
+        focus:function(displayable) {
+            var element = $("select[data-associationkey='" + displayable.associationKey + "']");
+            var combobox = $(element).data('combobox');
+            if (combobox != undefined) {
+                combobox.setFocus();
+            }
+        },
+
         refreshFromAttribute: function (attribute) {
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
             if (combo != undefined) {

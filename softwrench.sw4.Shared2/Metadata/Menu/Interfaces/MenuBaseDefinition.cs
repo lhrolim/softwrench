@@ -9,6 +9,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Interfaces {
         public string Tooltip { get; set; }
         public string Icon { get; set; }
 
+        public Boolean RoleDefinedByParent { get; set; }
+
         public string Module { get; set; }
 
         public MenuBaseDefinition() {

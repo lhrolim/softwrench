@@ -26,28 +26,14 @@ namespace softWrench.sW4.Metadata {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(OffLineMetadataProvider));
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps() {
-            var watch = Stopwatch.StartNew();
-            var result = new HashSet<CompleteApplicationMetadataDefinition>();
-            var menu = MetadataProvider.Menu(ClientPlatform.Mobile);
-            var leafs = menu.ExplodedLeafs;
-            foreach (var menuBaseDefinition in leafs) {
-                if (menuBaseDefinition is ApplicationMenuItemDefinition) {
-                    result.Add(MetadataProvider.Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application));
-                }
-            }
-
-            Log.DebugFormat("fetching top level apps took: {0} ", LoggingUtil.MsDelta(watch));
-            //TODO: add hidden menu items
-            return result;
-        }
+        
 
 
         public static IEnumerable<CompleteApplicationMetadataDefinition> FetchCompositionApps(InMemoryUser user) {
             //TODO: cache
             var watch = Stopwatch.StartNew();
             var names = new List<string>();
-            foreach (var app in FetchTopLevelApps()) {
+            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {
@@ -70,7 +56,7 @@ namespace softWrench.sW4.Metadata {
             //TODO: cache
             var watch = Stopwatch.StartNew();
             var names = new List<string>();
-            foreach (var app in FetchTopLevelApps()) {
+            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {

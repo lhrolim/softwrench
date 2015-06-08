@@ -123,7 +123,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (application.Schema.Stereotype == SchemaStereotype.List) {
                 return GetList(application, PaginatedSearchRequestDto.DefaultInstance(application.Schema));
             }
-            if (application.Schema.Stereotype == SchemaStereotype.Detail || request.Key.Mode == SchemaMode.input) {
+            if (application.Schema.Stereotype == SchemaStereotype.Detail || application.Schema.Stereotype == SchemaStereotype.DetailNew || request.Key.Mode == SchemaMode.input) {
                 //case of detail of new items
                 return GetApplicationDetail(application, user, DetailRequest.GetInstance(application, adapter));
             }

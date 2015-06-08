@@ -18,14 +18,17 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         var queryToUse = queryoptions.fullquery;
 
         var filter = getInstance(entity).all();
-        filter._additionalWhereSqls = [];
-        filter._projectionFields = [];
-        filter._querytoUse = null;
+       
 
         if (pageSize) {
             filter = filter.limit(pageSize);
             filter = filter.skip((pageSize * (pageNumber - 1)));
         }
+
+        filter._additionalWhereSqls = [];
+        filter._projectionFields = [];
+        filter._querytoUse = null;
+
         if (queryString) {
             filter._additionalWhereSqls.push(queryString);
         }
@@ -76,43 +79,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 path: 'TEXT',
             });
 
-
-
-            entities.Batch = persistence.define('Batch', {
-                application: 'TEXT',
-                sentDate: 'DATE',
-                completionDate: 'DATE',
-                lastChecked: 'DATE'
-            });
-
-
-
-            entities.BatchItem = persistence.define('BatchItem', {
-                application: 'TEXT',
-                datamap: 'JSON',
-                //The id of this entry in maximo, it will be null when it´s created locally
-                remoteId: 'TEXT',
-                //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-                rowstamp: 'TEXT',
-                //either pending, or completed
-                status: 'TEXT',
-                problemId: 'TEXT',
-            });
-
-            entities.Batch.hasMany('items', entities.BatchItem, 'batch');
-
-
-
-            //this entity stores the Data which will be used as support of the main entities.
-            //It cannot be created locally. Hence Synchronization should use rowstamp caching capabilities by default
-            entities.AssociationData = persistence.define('AssociationData', {
-                application: 'TEXT',
-                label: 'TEXT',
-                value: 'TEXT',
-                projectionfields: 'JSON',
-            });
-
-
             entities.WhereClause = persistence.define("WhereClause", {
                 ///
                 /// This should get populated only if, there are multiple whereclauses present for a given association.
@@ -126,41 +92,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 data: "TEXT",
             });
 
-
-            entities.AssociationCache = persistence.define('AssociationCache', {
-                ///Holds an object that for each application will have properties that will help the framework to understaand how to proceed upon synchronization:
-                /// <ul>
-                ///     <li>maximorowstamp --> the rowstamp of the last data fetched from maximo of this application</li>
-                ///     <li>whereclausehash--> the md5 hash of the latest applied whereclause used to pick this data, or null, if none present
-                ///             The framework will compare to see if the wc has changed, invalidating the entire cache in that case.</li>
-                ///     <li>syncschemahash --> the hash of the sync schema used for last synchronization. It could have changed due to a presence of a new projection field, for instance</li>
-                /// </ul>
-                ///ex:
-                /// {
-                ///    location:{
-                ///       maximorowstamp: 1000
-                ///       whereclausehash:'abasacvsava'
-                ///       syncschemahash:'asadfasdfasdfasdfasdfadsfasdfasdfamlmlmlsdafsadfassfdafa'
-                ///    }
-                /// 
-                ///
-
-                ///    asset:{
-                ///       maximorowstamp: 12500
-                ///       whereclausehash:'hashoflatestappliedwhereclause'
-                ///       syncschemahash:baadfasdfasdfa
-                ///    }
-                //        .
-                //        .
-                //        .
-                // }
-                data: "JSON"
-            });
-
-            entities.DataEntry.index(['application', 'remoteid'], { unique: true });
-
-            entities.AssociationData.index(['application', 'value']);
-
             entities.Menu = persistence.define('Menu', {
                 data: "JSON"
             });
@@ -172,7 +103,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
 
-            persistence.debug = "true" == sessionStorage["sqldebug"];
+            persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
             persistence.schemaSync();
 
         },
@@ -199,7 +130,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
             var ob = entities[entity];
-            if (memoryObject.id == null || (memoryObject.type && memoryObject.type != entity)) {
+            if (memoryObject.id == null || (memoryObject._type && memoryObject._type != entity)) {
                 //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                 //just instantiate a new one
                 var transientEntity = new ob();

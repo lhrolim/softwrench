@@ -89,14 +89,28 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService, $log, expressionService) {
+            validationService, schemaService, $timeout, eventService, $log, expressionService,focusService) {
+
+            $(document).on("sw_autocompleteselected", function(event, key) {
+                focusService.resetFocusToCurrent($scope.schema, key);
+            });
+
 
             $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                if (!$scope.schema) {
+                    return;
+                }
+
                 var hasMainTab = schemaService.hasAnyFieldOnMainTab($scope.schema);
                 if (!hasMainTab) {
                     //if main tab is absent (schema with just compositions) redirect to first tab
                     redirectService.redirectToTab(firstTabId);
                 }
+                $timeout(function () {
+                    //time for the components to be rendered
+                    focusService.setFocusToFirstField($scope.schema, $scope.datamap);
+                }, 1000, false);
+
             });
 
             $scope.setForm = function (form) {
@@ -143,14 +157,6 @@ app.directive('crudBody', function (contextService) {
                 //make sure we are seeing the top of the detail page 
                 log.debug('scroll to top');
                 window.scrollTo(0, 0);
-
-                //SWWEB-960 - set focus to the first input, on new creations
-                if (!$scope.isEditDetail($scope.datamap, $scope.schema)) {
-                    log.debug('set input focus');
-                    $('#crudInputMainFields').find('input,textarea,select').filter(':visible:not([readonly]):first').focus();
-                }
-
-                log.debug('finish');
             });
 
             $scope.setActiveTab = function (tabId) {
@@ -189,21 +195,7 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.getTitle = function () {
-                var schema = $scope.schema;
-                var datamap = $scope.datamap;
-                if (schema.properties['detail.titleexpression'] != null) {
-                    return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
-                }
-                var titleId = schema.idDisplayable;
-                if (titleId == null) {
-                    return schema.title;
-                }
-
-                var result = titleId + " " + datamap.fields[schema.userIdFieldName];
-                if (datamap.fields.description != null) {
-                    result += " Summary: " + datamap.fields.description;
-                }
-                return result;
+                return schemaService.getTitle($scope.schema, $scope.datamap);
             }
 
             $scope.isNotHapagTest = function () {

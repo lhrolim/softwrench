@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService, $rootScope) {
+app.factory('inventoryService', function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService, $rootScope) {
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -279,6 +279,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         submitReturnConfirmation: function (event, datamap, parameters) {
+            returnTransformation(event, datamap);
             return returnConfirmation(event, datamap, parameters);
         },
 
@@ -585,39 +586,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             modalService.hide();
         },
 
-        invIssue_afterChangeWorkorder: function(parameters) {
-            if (nullOrEmpty(parameters.fields['refwo'])) {
-                parameters.fields['refwo'] = null;
-                parameters.fields['location'] = null;
-                parameters.fields['assetnum'] = null;
-                parameters.fields['gldebitacct'] = null;
-                return;
-            }
-
-            // If the workorder's location is null, remove the current datamap's location
-            if (parameters.fields['workorder_.location'] == null) {
-                parameters.fields['location'] = null;
-            } else {
-                parameters.fields['location'] = parameters.fields['workorder_.location'];
-            }
-
-            // If the workorder's assetnum is null, remove the current datamap's assetnum
-            if (parameters.fields['workorder_.assetnum'] == null) {
-                parameters.fields['assetnum'] = null;
-            } else {
-                parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
-            }
-
-            // If the workorder's GL account is null, remove the current datamap's GL Debit Acct
-            if (parameters.fields['workorder_.glaccount'] == null) {
-                parameters.fields['gldebitacct'] = null;
-            } else {
-                parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
-            }
-
-            return;
-        },
-
         invIssueBatch_afterChangeItem: function(parameters) {
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
@@ -680,38 +648,67 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
-        invIssue_afterChangeAsset: function(parameters) {
-            //Sets the associated GL Debit Account
-            //if a workorder isn't already specified
-            //Updates the location field from the asset's location
-            if (parameters.fields['assetnum'].trim() != "") {
-                var refwo = parameters.fields['refwo'];
-                var location = parameters.fields['location'];
+        invIssue_afterChangeWorkorder: function (parameters) {
+            if (nullOrEmpty(parameters.fields['refwo'])) {
+                parameters.fields['refwo'] = null;
+                parameters.fields['workorder'] = null;
+                parameters.fields['location'] = null;
+                parameters.fields['assetnum'] = null;
+                parameters.fields['gldebitacct'] = null;
+                return;
+            }
+            // If the workorder's location is null, remove the current datamap's location
+            if (parameters.fields['workorder_.location'] == null) {
+                parameters.fields['location'] = null;
+            } else {
+                parameters.fields['location'] = parameters.fields['workorder_.location'];
+            }
+            // If the workorder's assetnum is null, remove the current datamap's assetnum
+            if (parameters.fields['workorder_.assetnum'] == null) {
+                parameters.fields['assetnum'] = null;
+            } else {
+                parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
+            }
+        },
 
+        invIssue_afterChangeLocation: function (parameters) {
+            console.log(arguments.callee.toString());
+            if (nullOrEmpty(parameters.fields['location'])) {
+                parameters.fields['refwo'] = null;
+                parameters.fields['workorder'] = null;
+                parameters.fields['assetnum'] = null;
+            }
+        },
+
+        invIssue_afterChangeAsset: function (parameters) {
+            var refwo = parameters.fields['refwo'];
+            var location = parameters.fields['location'];
+            if (!nullOrEmpty(parameters.fields['assetnum'])) {
                 if (!refwo || refwo.trim() == "") {
-                    refwo = "";
+                    refwo = null;
                 }
                 if (!location || location.trim() == "") {
-                    location = "";
+                    location = null;
                 }
-
                 if (refwo != "") {
                     return;
                 }
-
                 if (refwo != "" && location == "") {
                     parameters.fields['location'] = parameters.fields['asset_.location'];
                     return;
                 }
-
                 if (refwo == "") {
                     parameters.fields['location'] = parameters.fields['asset_.location'];
-                    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
                 }
+            } else {
+                // If the asset is cleared, clear the workorder and the location
+                parameters.fields['refwo'] = null;
+                parameters.fields['workorder'] = null;
+                parameters.fields['location'] = null;
             }
         },
 
-        invIssue_afterChangeRotAsset: function(parameters) {
+        invIssue_afterChangeRotAsset: function (parameters) {
             if (parameters.fields['rotassetnum'].trim() != "") {
                 parameters.fields['binbalances_.binnum'] = parameters.fields['rotatingasset_.binnum'];
                 parameters.fields['binnum'] = parameters.fields['rotatingasset_.binnum'];
@@ -719,25 +716,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters.fields['lotnum'] = "";
                 parameters.fields['binbalances_.curbal'] = 1;
             }
-        },
-
-        invIssue_afterChangeLocation: function(parameters) {
-            //Sets the gldebitacct and clears the asset 
-            //if there is no refwo defined
-            if (parameters.fields['location'].trim() != "") {
-                var refwo = parameters.fields['refwo'];
-
-                if (!refwo || refwo.trim() == "") {
-                    refwo = "";
-                }
-
-                if (refwo != "")
-                    return;
-
-                parameters.fields['assetnum'] = "";
-                parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
-            }
-
         },
 
         invIssue_afterChangeLaborCode: function(parameters){

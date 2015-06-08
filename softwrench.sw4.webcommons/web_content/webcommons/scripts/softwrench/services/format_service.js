@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('formatService', function ($filter, i18NService, dispatcherService) {
+﻿modules.webcommons.factory('formatService', function ($filter, i18NService, dispatcherService) {
 
     var doFormatDate = function (value, dateFormat, forceConversion) {
         if (value == null) {
@@ -145,7 +143,15 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
             }
         },
 
+
         adjustDateFormatForPicker: function (dateFormat, showTime) {
+            /// <summary>
+            ///  Bootstrap picker uses mm for month, and ii for minutes.
+            ///  Angular, however, uses MM for month and hh mm for minutes.
+            /// </summary>
+            /// <param name="dateFormat"></param>
+            /// <param name="showTime"></param>
+            /// <returns type=""></returns>
             if (dateFormat == undefined || dateFormat == '') {
                 //default ==> should be client specific
                 return showTime ? "mm/dd/yyyy hh:ii" : "mm/dd/yyyy";
