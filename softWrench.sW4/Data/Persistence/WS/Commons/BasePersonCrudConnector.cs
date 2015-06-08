@@ -30,6 +30,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var person = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+
+            EmailAddressHandler.HandleEmailAddress(crudData, person);
+            PhoneNumberHandler.HandlePhoneNumbers(crudData, person);
+
+            base.BeforeCreation(maximoTemplateData);
         }
     }
 }

@@ -21,6 +21,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -71,8 +72,14 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
             // get isactive for person from swdb
             var swUser = new User();
-            if (dataMap.GetAttribute("personid") != null) {
+            if (dataMap.GetAttribute("personid") != null)
+            {
                 swUser = SecurityFacade.GetInstance().FetchUser(dataMap.Value("personid"));
+            }
+            else
+            {
+                dataMap.SetAttribute("email_", new JArray());
+                dataMap.SetAttribute("phone_", new JArray());
             }
             var isActive = swUser.IsActive ? "1" : "0";
             dataMap.SetAttribute("#isactive", isActive);
@@ -85,7 +92,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             // Hide the password inputs if using LDAP
             var ldapEnabled = ApplicationConfiguration.LdapServer != null;
-            
             dataMap.SetAttribute("ldapEnabled", ldapEnabled);
 
             var associationResults = BuildAssociationOptions(dataMap, application, request);
