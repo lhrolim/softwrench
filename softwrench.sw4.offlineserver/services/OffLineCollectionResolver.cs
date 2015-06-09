@@ -13,6 +13,8 @@ using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softwrench.sw4.offlineserver.services {
     public class OffLineCollectionResolver : CollectionResolver {
+        //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
+        //TODO:(2) this won´t bring compositions whose joined tables were updated, should be a minor bug, since compositions are rarely updated after all.
         private const string BothQueryTemplate = "({0} in ({1}) and Cast({4}.rowstamp AS BIGINT)  > {2}) or ({0} in ({3}))";
         private const string AllNewTemplate = "{0} in ({1})";
 
