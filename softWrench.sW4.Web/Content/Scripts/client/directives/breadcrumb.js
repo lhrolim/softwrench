@@ -53,6 +53,8 @@ function findCurrentPage(log, leafs, current) {
             var icon = '<i class="' + leafs[id].icon + '"></i>&ensp;'
             if (newPath != undefined && newPath != '') {
                 path = icon + leafs[id].title + seperator + newPath;
+
+                //TODO: call method to get siblings and build menu
             } else if (leafs[id].title == current) {
                 path = icon + leafs[id].title;
             }
