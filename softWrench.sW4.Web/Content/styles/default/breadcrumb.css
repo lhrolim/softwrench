@@ -1,0 +1,20 @@
+﻿.breadcrumb {
+    padding: 0;
+    margin-bottom: 0;
+    background: none;
+    border-radius: 0;
+}
+
+.container header .menu-admin .breadcrumb {
+    float: left;
+    color: #fff;
+    margin-top: 18px;
+}
+
+.container header .menu-admin .breadcrumb i {
+    color: #c9c7c7;
+}
+
+.container header .menu-admin .breadcrumb .seperator {
+    color: #0d374d;
+}

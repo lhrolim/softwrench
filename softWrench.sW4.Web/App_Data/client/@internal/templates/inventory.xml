@@ -1180,7 +1180,7 @@
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
-        <schema id="detail" title="Inventory Transfer">
+        <schema id="detail" title="View Inventory Transfer">
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
           </field>
@@ -1209,7 +1209,7 @@
 
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
-        <schema id="newdetail" stereotype="detail" mode="input">
+        <schema id="newdetail" stereotype="detail" mode="input" title="New Inventory Transfer">
           <properties>
             <property key="routing.nextapplication" value="matrectransTransfers"/>
             <property key="nextschema.schemaid" value="matrectransTransfersList"/>

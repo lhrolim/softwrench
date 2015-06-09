@@ -18,29 +18,43 @@ app.directive('breadcrumb', function ($rootScope, $log, $timeout) {
     }
 });
 
+var seperator = '&emsp;<span class="seperator">/</span>&emsp;';
+
 function getBreadCrumbHTML(log, menu, current) {
     log.debug(menu, current);
 
-    if (current != undefined) {
-        //TODO: look for dashboard, if not there add home icon
+    var path = '<i class="fa fa-home"></i>&ensp;';
 
-        var path = findCurrentPage(log, menu.leafs, current, "")
-
-        return path;
+    if (menu.leafs[0].controller == 'Dashboard') {
+        path += 'Dashboard';
+    } else {
+        path += 'Home';
     }
+
+    if (current != undefined) {
+        var foundPath = findCurrentPage(log, menu.leafs, current);
+
+        if (foundPath) {
+            path += seperator;
+            path += foundPath;
+        }
+    }
+
+    return path;
 }
 
-function findCurrentPage(log, leafs, current, parent) {
+function findCurrentPage(log, leafs, current) {
     var path = '';
 
     if (leafs != null) {
         for (var id in leafs) {
-            var newPath = findCurrentPage(log, leafs[id].leafs, current, parent);
+            var newPath = findCurrentPage(log, leafs[id].leafs, current);
 
+            var icon = '<i class="' + leafs[id].icon + '"></i>&ensp;'
             if (newPath != undefined && newPath != '') {
-                path = '<i class="' + leafs[id].icon + '"></i>&ensp;' + leafs[id].title + '&ensp;/&ensp;' + newPath;
+                path = icon + leafs[id].title + seperator + newPath;
             } else if (leafs[id].title == current) {
-                path = '<i class="' + leafs[id].icon + '"></i>&ensp;' + leafs[id].title;
+                path = icon + leafs[id].title;
             }
         }
     }

@@ -671,6 +671,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
+    <Content Include="Content\styles\default\breadcrumb.css" />
     <Content Include="Content\styles\default\button.css" />
     <Content Include="Content\styles\default\xeditable.css" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
