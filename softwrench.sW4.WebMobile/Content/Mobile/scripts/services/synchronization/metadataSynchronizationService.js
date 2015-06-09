@@ -17,7 +17,8 @@
                 //TODO: server return a whole list of configs
                 var configServicePromise = configurationService.saveConfigs([{ key: 'statuscolor', value: statusColorJson }]);
                 return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, configServicePromise]).then(function (results) {
-                    $q.when();
+                    //TODO: return whether changes where downloaded or not
+                    $q.when(true);
                 });
             }).catch(function (errordata) {
                 $q.reject();

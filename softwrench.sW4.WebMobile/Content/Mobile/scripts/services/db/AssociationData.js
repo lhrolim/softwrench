@@ -10,7 +10,7 @@ entities.AssociationData = persistence.define('AssociationData', {
     application: 'TEXT',
     datamap: 'JSON',
     remoteId: 'TEXT',
-    rowstamp: 'TEXT'
+    rowstamp: 'INT'
 });
 
 

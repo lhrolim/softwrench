@@ -96,19 +96,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 data: "JSON"
             });
 
-            entities.SyncStatus = persistence.define('SyncStatus', {
-                lastsynced: "DATE",
-                lastsyncServerVersion: "TEXT",
-                status: 'TEXT',
-                numberofdownloadeditems: 'INT',
-                numberofdownloadedsupportdata: 'INT',
-                metadatachange: 'BOOL',
-            });
-
-
-            entities.SyncStatus.hasOne('batch', entities.Batch);
-
-
             persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
             persistence.schemaSync();
 

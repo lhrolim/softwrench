@@ -102,7 +102,7 @@
                 }).catch(function (error) {
                     if (!error) {
                         //it was interrupted due to an abscence of items, but it should resolve to the outer calls!
-                        return $q.when(null);
+                        return $q.when();
                     }
                     return $q.reject();
                 });

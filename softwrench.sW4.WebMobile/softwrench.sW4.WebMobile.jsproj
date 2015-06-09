@@ -128,6 +128,7 @@
     <Content Include="Content\Mobile\scripts\services\db\Batch.js" />
     <Content Include="Content\Mobile\scripts\services\db\CompositionDataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\db\AssociationData.js" />
+    <Content Include="Content\Mobile\scripts\services\db\SyncOperation.js" />
     <Content Include="Content\Mobile\scripts\services\db\DataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
@@ -136,6 +137,7 @@
     <Content Include="Content\Mobile\scripts\services\routes\routesService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\synchronizationOperationService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileconstants.js" />
     <Content Include="Content\Mobile\styles\detail.css" />
