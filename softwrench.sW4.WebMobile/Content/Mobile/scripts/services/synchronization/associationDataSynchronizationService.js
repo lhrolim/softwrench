@@ -34,13 +34,14 @@
                         queryArray.push(query);
                     }
                 }
-
-                return swdbDAO.executeQueries(queryArray);
-
+                return swdbDAO.executeQueries(queryArray).then(function () {
+                    //returning the number of associationData created
+                    return $q.when(queryArray.length);
+                });
             }).catch(function (err) {
                 if (!err) {
                     //normal interruption
-                    return $q.when();
+                    return $q.when(0);
                 }
                 return $q.reject(err);
             });

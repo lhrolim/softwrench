@@ -99,24 +99,24 @@ namespace softWrench.sW4.Security.Init {
         private static void UpdateOrgId(User user) {
             var defaultOrgId = ApplicationConfiguration.DefaultOrgId;
             if (defaultOrgId == null) return;
-            if (user.OrgId == defaultOrgId) return;
-            user.OrgId = defaultOrgId;
+            if (user.Person.OrgId == defaultOrgId) return;
+            user.Person.OrgId = defaultOrgId;
             _dao.Save(user);
         }
 
         private static void UpdateSiteId(User user) {
             var defaultSiteId = ApplicationConfiguration.DefaultSiteId;
             if (defaultSiteId == null) return;
-            if (user.SiteId == defaultSiteId) return;
-            user.SiteId = defaultSiteId;
+            if (user.Person.SiteId == defaultSiteId) return;
+            user.Person.SiteId = defaultSiteId;
             _dao.Save(user);
         }
 
         private static void UpdateStoreloc(User user) {
             var defaultStoreloc = ApplicationConfiguration.DefaultStoreloc;
             if (defaultStoreloc == null) return;
-            if (user.Storeloc == defaultStoreloc) return;
-            user.Storeloc = defaultStoreloc;
+            if (user.Person.Storeloc == defaultStoreloc) return;
+            user.Person.Storeloc = defaultStoreloc;
             _dao.Save(user);
         }
     }

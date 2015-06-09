@@ -93,6 +93,7 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
@@ -130,6 +131,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
     </Reference>
@@ -146,16 +148,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
-    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
-    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
-    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
-    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BasePersonDataSet.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\BaseAssetCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\LocationHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PaeAssetCrudConnector.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationSyncSchemaFactory.cs" />
@@ -189,12 +192,14 @@
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseResult.cs" />
     <Compile Include="Configuration\Services\Api\IWhereClauseFacade.cs" />
     <Compile Include="Configuration\Services\WhereClauseFacade.cs" />
+    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Association\ListOptionsPrefetchRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\CheckPointCrudContext.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
+    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
     <Compile Include="Data\API\OperationDataRequest.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\API\RouterParametersDTO.cs" />
@@ -332,6 +337,8 @@
     <Compile Include="Data\API\Association\AssociationUpdateRequest.cs" />
     <Compile Include="Data\API\Association\LookupAssociationUpdateResult.cs" />
     <Compile Include="Data\API\Association\BaseAssociationUpdateResult.cs" />
+    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
+    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Configuration\ConfigurationConstants.cs" />
     <Compile Include="Data\Configuration\ConfigurationRegistry.cs" />
     <Compile Include="Data\Entities\AttachmentDao.cs" />
@@ -361,6 +368,7 @@
     <Compile Include="Data\API\DataRequestAdapter.cs" />
     <Compile Include="Data\API\DetailRequest.cs" />
     <Compile Include="Data\API\IDataRequest.cs" />
+    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
@@ -388,6 +396,7 @@
     <Compile Include="Scheduler\SimpleInjectorJobFactory.cs" />
     <Compile Include="Security\Context\ContextHolder.cs" />
     <Compile Include="Security\Context\IContextLookuper.cs" />
+    <Compile Include="Security\Entities\Person.cs" />
     <Compile Include="Security\Entities\PersonGroupAssociation.cs" />
     <Compile Include="Security\Entities\PersonGroup.cs" />
     <Compile Include="Security\Entities\RoleWithErrorMessage.cs" />
@@ -591,6 +600,7 @@
     <Compile Include="Util\StreamUtils.cs" />
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
+    <Compile Include="Util\TransactionConstants.cs" />
     <Compile Include="Util\Validate.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -820,6 +830,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Entities\Attachment\" />
+    <Folder Include="Data\Persistence\Sync\" />
     <Folder Include="Data\Persistence\WS\Gric\" />
     <Folder Include="Data\Persistence\WS\Manchester\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />

@@ -1,6 +1,6 @@
 ﻿
 
-function UserController($scope, $http, $templateCache, pwdenforceService, i18NService) {
+function UserController($scope, $http, $templateCache, pwdenforceService, i18NService, redirectService) {
 
     var app = angular.module('plunker', ['ui.multiselect']);
 
@@ -53,32 +53,10 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
 
     }
 
-    $scope.edit = function (id) {
-        $http({
-            method: "GET",
-            url: url("api/security/User/" + id),
-        })
-            .success(function (data) {
-                $scope.user = data;
-                $scope.user.password = null;
-                $scope.availableprofilesselected = {};
-                $scope.selectedProfiles = {};
-                $scope.selectedroles = {};
-                $scope.availablerolesselected = {};
-
-                var availableProfilesArr = $scope.availableprofiles;
-                $scope.availableprofiles = availableProfilesArr.filter(function (item) {
-                    var profiles = data.profiles;
-                    for (var i = 0; i < profiles.length; i++) {
-                        if (item["id"] == profiles[i]["id"]) {
-                            return false;
-                        }
-                    }
-                    return true;
-                });
-                toDetail();
-            });
-
+    $scope.edit = function (username, id) {
+        var param = {};
+        param.id = id;
+        redirectService.goToApplicationView("Person", "detail", "Input", null, param, null);
     };
     
     $scope.i18N = function (key, defaultValue, paramArray) {

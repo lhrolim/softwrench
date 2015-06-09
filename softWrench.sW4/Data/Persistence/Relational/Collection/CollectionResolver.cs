@@ -185,7 +185,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 if (lookupAttribute.From != null) {
                     matchingResultWrapper.AddKey(lookupAttribute.To);
 
-                    BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto);
+                    BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto,collectionAssociation.To);
                 } else if (lookupAttribute.Literal != null) {
                     //if the from is a literal, don´t bother with the entities values
                     searchRequestDto.AppendSearchEntry(lookupAttribute.To, lookupAttribute.Literal);
@@ -203,7 +203,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
         protected virtual void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper, InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute,
-            SearchRequestDto searchRequestDto) {
+            SearchRequestDto searchRequestDto,string relationshipName) {
             var searchValues = new HashSet<string>();
             var attributeHolders = parameter.EntitiesList;
             var enumerable = attributeHolders as AttributeHolder[] ?? attributeHolders.ToArray();

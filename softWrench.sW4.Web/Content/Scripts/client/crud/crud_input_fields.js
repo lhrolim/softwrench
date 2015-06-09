@@ -54,7 +54,7 @@ app.directive('sectionElementInput', function ($compile) {
             islabelless: '@',
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
-
+            rendererParameters :'='
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -68,6 +68,7 @@ app.directive('sectionElementInput', function ($compile) {
                 "association-options='associationOptions'" +
                 "association-schemas='associationSchemas'" +
                 "blockedassociations='blockedassociations'" +
+                "section-parameters='rendererParameters'" +
                 "elementid='{{elementid}}'" +
                 "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
                 "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
@@ -98,9 +99,11 @@ app.directive('crudInputFields', function (contextService, eventService) {
             previousdata: '=',
             previousschema: '=',
             outerassociationcode: '=',
+            sectionParameters:'=',
             outerassociationdescription: '=',
             issection: '@',
-            ismodal: '@'
+            ismodal: '@',
+            
         },
 
         link: function (scope, element, attrs) {
@@ -595,14 +598,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return result;
             }
             $scope.getFieldClass = function (fieldMetadata) {
-                return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
+                return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
             }
             $scope.getLabelClass = function (fieldMetadata) {
-                return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
+                return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
             }
 
             $scope.getInputClass = function (fieldMetadata) {
-                return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, this.isVerticalOrientation());
+                return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
             }
             $scope.showLabelTooltip = function (fieldMetadata) {
                 if (fieldMetadata.label !== fieldMetadata.toolTip) {
@@ -643,31 +646,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
             };
-            $scope.getValueColumnClass = function (fieldMetadata) {
-                var classes = '';
-                if ($scope.sectionHasSameLineLabel(fieldMetadata)) {
-                    classes += 'col-sectionsamelineheader ';
-                }
-                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    return 'col-md-12';
-                }
-                if ($scope.isSectionWithoutLabel(fieldMetadata)) {
-                    // classes += 'col-md-12 ';
-                } else if (!$scope.hasSameLineLabel(fieldMetadata)) {
-                    classes += 'col-md-12 ';
-                } else if ($scope.isVerticalOrientation()) {
-                    //SM - 08/30 - Start, fix label width
-                    var lengthparam = $scope.getLengthParam(fieldMetadata);
-                    if (lengthparam != null) {
-                        classes += lengthparam;
-                    } else {
-                        classes += 'col-md-10 ';
-                    }
-                    // classes += 'col-md-8 ';
-                    //SM - 08/30 - End, fix label width
-                }
-                return classes;
-            };
+        
             $scope.formatId = function (id) {
                 return RemoveSpecialChars(id);
             }

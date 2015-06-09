@@ -1,5 +1,5 @@
 ﻿mobileServices.factory('synchronizationFacade', function ($http, $log, $q, routeService,
-    dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService) {
+    dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService) {
 
     return {
 
@@ -17,31 +17,40 @@
 
             for (var i = 0; i < dbapplications.length; i++) {
                 var dbapplication = dbapplications[i];
-                var application = dbapplication.application;
                 batchPromises.push(batchService.createBatch(dbapplication));
             }
-
+            var batchsSubmited = false;
             return $q.all(batchPromises)
                 .then(function (batches) {
-                    log.info('batches created locally');
-                    var batchSubmissionPromise = batchService.submitBatches(batches);
+                    if (batches[0] != null) {
+                        log.info('batches created locally, server will respond asynchronously');
+                        batchsSubmited = true;
+                        return batchService.submitBatches(batches);
+                    }
                     var syncDataPromise = dataSynchronizationService.syncData(batches);
                     var metadataDownloadedPromise = metadataSynchronizationService.syncData("1.0");
                     var associationDataDownloadPromise = associationDataSynchronizationService.syncData();
                     var httpPromises = [];
-                    httpPromises.push(batchSubmissionPromise);
                     httpPromises.push(metadataDownloadedPromise);
                     httpPromises.push(associationDataDownloadPromise);
                     httpPromises = httpPromises.concat(syncDataPromise);
-
                     return $q.all(httpPromises);
                 }).catch(function (err) {
                     return $q.reject(false);
                 }).then(function (results) {
-                    var batchResult = results[0];
-
+                    if (batchsSubmited) {
+                        return synchronizationOperationService.createBatchOperation(start, results);
+                    }
                     var end = new Date().getTime();
                     log.info("finished full synchronization process. Ellapsed {0}".format(end - start));
+                    var metadataDownloadedResult = results[0];
+                    var associationDataDownloaded = results[1];
+                    var dataDownloadedResult = results.subarray(2);
+                    var totalNumber = 0;
+                    for (var j = 0; j < dataDownloadedResult.length; j++) {
+                        totalNumber += dataDownloadedResult[j];
+                    }
+                    synchronizationOperationService.createNonBatchOperation(start, end,totalNumber,associationDataDownloaded,metadataDownloadedResult);
                 });
 
         },

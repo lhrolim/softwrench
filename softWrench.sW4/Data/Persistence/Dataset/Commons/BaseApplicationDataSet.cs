@@ -317,7 +317,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 //            return Engine().Sync(applicationMetadata, applicationSyncData);
 //        }
 
-        public TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
             return Engine().Execute(operationWrapper);

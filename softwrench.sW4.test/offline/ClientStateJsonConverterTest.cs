@@ -12,16 +12,16 @@ namespace softwrench.sW4.test.offline {
              [
                {
                     'id': '100',
-                    rowstamp: '1000'
+                    rowstamp: 1000
                 },
                 {
                     'id': '101',
-                    rowstamp: '1001'
+                    rowstamp: 1001
                 }
              ],
             compositionmap: {
-               'worklog': '1000',
-                'attachments': '1001',
+               'worklog': 1000,
+                'attachments': 1001,
             }
     
           }"
@@ -30,13 +30,13 @@ namespace softwrench.sW4.test.offline {
         public static string AssociationMapJson = @"{
                 'associationmap': {
                     'asset': {
-                        'maximorowstamp': '12500',
+                        'maximorowstamp': 12500,
                         'whereclausehash': 'hashoflatestappliedwhereclause',
                         'syncschemahash': 'baadfasdfasdfa'
                     },
 
                     'problem': {
-                        'maximorowstamp': '12000',
+                        'maximorowstamp': 12000,
                         'whereclausehash': 'hashoflatestappliedwhereclause',
                         'syncschemahash': 'baadfasdfasdfa'
                     }

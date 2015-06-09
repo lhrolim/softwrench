@@ -56,7 +56,6 @@ namespace softWrench.sW4.Security.Services {
                         var userProfile = (UserProfile)profile;
                         if (eager) {
                             NHibernateUtil.Initialize(userProfile.Roles);
-                            NHibernateUtil.Initialize(userProfile.DataConstraints);
                         }
                         profiles.Add(userProfile.Name, userProfile);
                         ProfileCache.Add(userProfile.Id, userProfile);
@@ -71,12 +70,6 @@ namespace softWrench.sW4.Security.Services {
         public static UserProfile SaveUserProfile(UserProfile profile) {
             var isUpdate = profile.Id != null;
             var sb = new StringBuilder();
-            foreach (var dataConstraint in profile.DataConstraints) {
-                var message = ConstraintValidator.ValidateContraint(dataConstraint);
-                if (message != null) {
-                    sb.Append(message).Append("\n");
-                }
-            }
             if (sb.Length > 0) {
                 throw new InvalidOperationException(String.Format("Error saving constraints. Stack trace {0}", sb.ToString()));
             }

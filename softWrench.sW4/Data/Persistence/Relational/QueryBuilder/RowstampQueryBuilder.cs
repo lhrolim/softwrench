@@ -5,9 +5,10 @@ using softWrench.sW4.Data.Search;
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
     class RowstampQueryBuilder : IWhereBuilder {
-        private const string Both = " rowstamp > :lowerrowstamp and rowstamp < :upperrowstamp ";
-        private const string Upper = " rowstamp < :upperrowstamp ";
-        private const string Lower = " rowstamp > :lowerrowstamp ";
+        //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
+        private const string Both = " Cast(rowstamp as BIGINT) > :lowerrowstamp and Cast(rowstamp as BIGINT) < :upperrowstamp ";
+        private const string Upper = " CAST(rowstamp as BIGINT)< :upperrowstamp ";
+        private const string Lower = " CAST(rowstamp as BIGINT) > :lowerrowstamp ";
 
         private readonly Rowstamps _rowstamps;
 

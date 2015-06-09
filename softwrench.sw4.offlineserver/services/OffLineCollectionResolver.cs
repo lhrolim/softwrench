@@ -13,7 +13,9 @@ using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softwrench.sw4.offlineserver.services {
     public class OffLineCollectionResolver : CollectionResolver {
-        private const string BothQueryTemplate = "( ({0} in ({1}) and rowstamp > {2} ) or ({0} in ({3}))";
+        //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
+        //TODO:(2) this won´t bring compositions whose joined tables were updated, should be a minor bug, since compositions are rarely updated after all.
+        private const string BothQueryTemplate = "({0} in ({1}) and Cast({4}.rowstamp AS BIGINT)  > {2}) or ({0} in ({3}))";
         private const string AllNewTemplate = "{0} in ({1})";
 
 
@@ -25,9 +27,9 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
         protected override void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper,
-            InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute, SearchRequestDto searchRequestDto) {
+            InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute, SearchRequestDto searchRequestDto,string relationshipName) {
             if (!lookupAttribute.Primary) {
-                base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto);
+                base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto,relationshipName);
                 return;
             }
 
@@ -35,7 +37,7 @@ namespace softwrench.sw4.offlineserver.services {
             var offParameter = (OfflineCollectionResolverParameters)parameter.ExternalParameters;
 
             if (!offParameter.NewEntities.Any()) {
-                base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto);
+                base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto, relationshipName);
                 //if no new parent entities were returned, we just need to bring these who have a bigger rowstamp than the client data.
                 if (parameter.Rowstamp != null) {
                     searchRequestDto.AppendSearchEntry(RowStampUtil.RowstampColumnName, ">{0}".Fmt(parameter.Rowstamp));
@@ -58,7 +60,7 @@ namespace softwrench.sw4.offlineserver.services {
             var updateIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.ExistingEntities, lookupAttribute.From);
 
 
-            searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, newIdsForQuery);
+            searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, newIdsForQuery, relationshipName);
         }
 
         protected override CollectionMatchingResultWrapper GetResultWrapper() {

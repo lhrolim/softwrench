@@ -14,7 +14,7 @@ entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
     remoteId: 'TEXT',
     //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
     isDirty: 'BOOL',
-    rowstamp: 'TEXT',
+    rowstamp: 'INT',
 });
 
 entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',0,'{2}','{3}','{4}')";

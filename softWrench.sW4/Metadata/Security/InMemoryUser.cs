@@ -15,6 +15,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {
@@ -56,15 +60,15 @@ namespace softWrench.sW4.Metadata.Security {
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, UserPreferences userPreferences, int? timezoneOffset) {
             DBUser = dbUser;
             _login = dbUser.UserName;
-            SiteId = dbUser.SiteId;
-            _firstName = dbUser.FirstName;
-            _lastName = dbUser.LastName;
-            _email = dbUser.Email;
-            _orgId = dbUser.OrgId;
-            _storeloc = dbUser.Storeloc;
-            _department = dbUser.Department;
-            _phone = dbUser.Phone;
-            _language = dbUser.Language;
+            SiteId = dbUser.Person.SiteId;
+            _firstName = dbUser.Person.FirstName;
+            _lastName = dbUser.Person.LastName;
+            _email = dbUser.Person.Email;
+            _orgId = dbUser.Person.OrgId;
+            _storeloc = dbUser.Person.Storeloc;
+            _department = dbUser.Person.Department;
+            _phone = dbUser.Person.Phone;
+            _language = dbUser.Person.Language;
             _dbId = dbUser.Id;
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
@@ -75,7 +79,6 @@ namespace softWrench.sW4.Metadata.Security {
             var dataConstraints = new List<DataConstraint>();
             foreach (var profile in userProfiles) {
                 roles.AddRange(profile.Roles);
-                dataConstraints.AddRange(profile.DataConstraints);
             }
             if (dbUser.CustomRoles != null) {
                 foreach (var role in dbUser.CustomRoles) {

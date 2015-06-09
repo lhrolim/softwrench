@@ -22,6 +22,8 @@ using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.MyProfile;
 using softWrench.sW4.Web.SPF;
 using System.Text.RegularExpressions;
+using cts.commons.persistence;
+using softWrench.sW4.Data.Entities.SyncManagers;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [Authorize]
@@ -30,17 +32,18 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly SecurityFacade _facade = SecurityFacade;
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
-        private SWDBHibernateDAO dao;
+        private ISWDBHibernateDAO dao;
 
-        public UserController(SWDBHibernateDAO dao)
-        {
+        public UserController(ISWDBHibernateDAO dao) {
             this.dao = dao;
         }
 
         [SPFRedirect(Title = "User Setup")]
         [HttpGet]
         public GenericResponseResult<UserListDto> List(bool refreshData = true) {
-            var users = dao.FindByQuery<User>("select new User(id,UserName,FirstName,LastName,IsActive) from User order by UserName");
+            var partialUsers = dao.FindByQuery<User>("select new User(id,UserName,IsActive) from User order by UserName");
+            var users = partialUsers.Select(user => UserSyncManager.GetUserFromMaximoBySwUser(user)).ToList();
+            users.RemoveAll(user => user == null);
             ICollection<UserProfile> profiles = new List<UserProfile>();
             IList<Role> roles = new List<Role>();
             if (refreshData) {
@@ -51,17 +54,17 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return new GenericResponseResult<UserListDto>(new UserListDto { Users = users, Roles = roles, Profiles = profiles });
         }
 
-        [HttpGet]
-        [SPFRedirect(URL = "MyProfile", Title = "Profile Details")]
-        public GenericResponseResult<MyProfileModel> MyProfile() {
-            var user = SecurityFacade.CurrentUser();
-            var restrictions = GetRestrictions(user);
-            var canViewRestrictions = CanViewRestrictions(user);
-            var canChangeLanguage = CanChangeLanguage(user);
+        //[HttpGet]
+        //[SPFRedirect(URL = "MyProfile", Title = "Profile Details")]
+        //public GenericResponseResult<MyProfileModel> MyProfile() {
+        //    var user = SecurityFacade.CurrentUser();
+        //    var restrictions = GetRestrictions(user);
+        //    var canViewRestrictions = CanViewRestrictions(user);
+        //    var canChangeLanguage = CanChangeLanguage(user);
 
-            var myProfile = new MyProfileModel(user, restrictions, canViewRestrictions, canChangeLanguage);
-            return new GenericResponseResult<MyProfileModel>(myProfile);
-        }
+        //    var myProfile = new MyProfileModel(user, restrictions, canViewRestrictions, canChangeLanguage);
+        //    return new GenericResponseResult<MyProfileModel>(myProfile);
+        //}
 
         private static bool CanChangeLanguage(InMemoryUser user) {
             return user.PersonGroups.All(f => HlagLocationUtil.IsEndUser(f.PersonGroup) || !HlagLocationUtil.ContainsProfilesGroup(f.PersonGroup));

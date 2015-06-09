@@ -83,15 +83,15 @@
         } else {
             user.password = null;
         }
-        user.firstName = $scope.currentUser.firstName;
-        user.lastName = $scope.currentUser.lastName;
-        user.siteId = $scope.currentUser.siteId;
-        user.email = $scope.currentUser.email;
-        user.department = $scope.currentUser.department;
-        user.phone = $scope.currentUser.phone;
+        user.person.firstName = $scope.currentUser.firstName;
+        user.person.lastName = $scope.currentUser.lastName;
+        user.person.siteId = $scope.currentUser.siteId;
+        user.person.email = $scope.currentUser.email;
+        user.person.department = $scope.currentUser.department;
+        user.person.phone = $scope.currentUser.phone;
         if (!nullOrUndef($scope.language.selected)) {
-            $scope.currentUser.language = $scope.language.selected.value;
+            $scope.currentUser.person.language = $scope.language.selected.value;
         }
-        user.language = $scope.currentUser.language;
+        user.person.language = $scope.currentUser.person.language;
     }
 }

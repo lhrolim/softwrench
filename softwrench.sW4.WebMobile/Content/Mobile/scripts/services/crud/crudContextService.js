@@ -1,7 +1,10 @@
 ﻿var constants = constants || {};
 
 
-mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metadataModelService, offlineSchemaService, offlineCompositionService, offlineSaveService, schemaService, contextService, routeService, tabsService) {
+mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
+    metadataModelService, offlineSchemaService, offlineCompositionService,
+    offlineSaveService, schemaService, contextService, routeService, tabsService,
+    crudFilterContextService) {
     'use strict';
 
     var internalListContext = {
@@ -16,7 +19,6 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
         currentListSchema: null,
         itemlist: null,
         filteredList: null,
-        showPending: false,
 
         originalDetailItem: null,
         currentDetailItem: null,
@@ -88,14 +90,6 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
         getFilteredList: function () {
             return crudContext.filteredList;
-        },
-
-        showPending: function (value) {
-            if (value!=undefined) {
-                crudContext.showPending = value;
-                contextService.insertIntoContext("crudcontext", crudContext);
-            }
-            return crudContext.showPending;
         },
 
 
@@ -269,6 +263,30 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
 
         /**************************************************************************GRID FNS********************************************************************************************/
 
+
+        filterList: function (text) {
+            
+            internalListContext.searchQuery = text;
+            if (text == null) {
+                return;
+            }
+            crudContext.filteredList = crudContext.filteredList || [];
+            internalListContext.pageNumber = 1;
+            internalListContext.lastPageLoaded = 0;
+            this.loadMorePromise();
+        },
+
+        refreshGrid: function () {
+            internalListContext.searchQuery = null;
+            crudContext.itemlist = [];
+            internalListContext.lastPageLoaded = 0;
+            internalListContext.pageNumber = 1;
+            this.loadMorePromise().then(function() {
+                routeService.go("main.crudlist");
+                contextService.insertIntoContext("crudcontext", crudContext);
+            });
+        },
+
         loadMorePromise: function () {
             var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
             var filteredMode = false;
@@ -276,39 +294,28 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
                 filteredMode = true;
                 baseQuery += ' and datamap like \'%:"{0}%\''.format(internalListContext.searchQuery);
             }
-            if (!crudContext.showPending) {
+            if (!crudFilterContextService.showPending()) {
                 baseQuery += ' and pending = 0 ';
             }
+            if (!crudFilterContextService.showDirty()) {
+                baseQuery += ' and isDirty = 0 ';
+            }
+
             return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
                 internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
+                if (filteredMode) {
+                    crudContext.filteredList = [];
+                }
                 var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
                 for (var i = 0; i < results.length; i++) {
                     listToPush.push(results[i].datamap);
+                    results[i].datamap[constants.localIdKey] = results[i].id;
+                    results[i].datamap[constants.isPending] = results[i].pending;
                 }
                 return $q.when(results);
             });
         },
 
-        refreshGrid: function () {
-            var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
-
-            if (!crudContext.showPending) {
-                baseQuery += ' and pending = 0 ';
-            }
-
-            swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pagenumber: 1 })
-                .success(function (results) {
-                    internalListContext.lastPageLoaded = 1;
-                    crudContext.itemlist = [];
-                    for (var i = 0; i < results.length; i++) {
-                        results[i].datamap[constants.localIdKey] = results[i].id;
-                        results[i].datamap[constants.isPending] = results[i].pending;
-                        crudContext.itemlist.push(results[i].datamap);
-                    }
-                    routeService.go("main.crudlist");
-                    contextService.insertIntoContext("crudcontext", crudContext);
-                });
-        },
 
         loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
             crudContext.currentTitle = applicationTitle;
@@ -325,30 +332,6 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO, metada
             this.refreshGrid();
         },
 
-        filterList: function (text) {
-            if (text == null) {
-                internalListContext.searchQuery = null;
-                return;
-            }
-
-            var baseQuery = 'application = \'{0}\' and datamap like \'%:"{1}%\'';
-
-            if (!crudContext.showPending) {
-                baseQuery += ' and pending = 0 ';
-            }
-            var applicationName = crudContext.currentApplicationName;
-            swdbDAO.findByQuery("DataEntry", baseQuery.format(applicationName, text), { pagesize: 10, pagenumber: 1 })
-              .success(function (results) {
-                  internalListContext.lastPageLoaded = 1;
-                  crudContext.filteredList = [];
-                  for (var i = 0; i < results.length; i++) {
-                      results[i].datamap[constants.localIdKey] = results[i].id;
-                      results[i].datamap[constants.isPending] = results[i].pending;
-                      crudContext.filteredList.push(results[i].datamap);
-                      internalListContext.searchQuery = text;
-                  }
-              });
-        },
 
 
         /**************************************************************************END GRID FNS********************************************************************************************/

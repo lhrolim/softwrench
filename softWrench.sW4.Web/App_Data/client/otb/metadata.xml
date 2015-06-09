@@ -23,6 +23,9 @@
     
     <!--Solution-->
     <template path="@solution.xml"/>
+
+    <!--Person-->
+    <template path="@person.xml"/>
   </templates>
   
   <entities>

@@ -130,7 +130,15 @@ namespace softWrench.sW4.Web {
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             Response.Cache.SetNoStore();
-            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            
+            
+            if (Request.UrlReferrer != null){
+                //this is for ripple development where CORS is enabled.
+                //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://"+Request.UrlReferrer.Authority);
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");    
+            }
+            
 
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {
                 //These headers are handling the "pre-flight" OPTIONS call sent by the browser

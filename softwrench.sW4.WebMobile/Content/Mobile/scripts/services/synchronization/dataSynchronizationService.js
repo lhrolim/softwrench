@@ -61,12 +61,16 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                     queryArray.push(query);
                 }
             }
+            //ignoring composition number to SyncOperation table
+            var numberOfDownloadedItems = queryArray.length;
             queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
-            return swdbDAO.executeQueries(queryArray);
+            return swdbDAO.executeQueries(queryArray).then(function() {
+                return $q.when(numberOfDownloadedItems);
+            });
         }).catch(function (err) {
             if (!err) {
                 //normal interruption
-                return $q.when();
+                return $q.when(0);
             }
             return $q.reject(err);
         });

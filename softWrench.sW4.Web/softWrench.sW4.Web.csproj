@@ -292,6 +292,7 @@
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.0\20150205_SWWEB_889.cs" />
     <Compile Include="DB_Migration\4.0\20150417_PAE_001.cs" />
+    <Compile Include="DB_Migration\4.2.0\20150529_DDCA_14.cs" />
     <Compile Include="DB_Migration\4.2.0\20150422_SWWEB_1163.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
@@ -300,7 +301,6 @@
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
-    <Compile Include="Models\MyProfile\MyProfileModel.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
@@ -347,6 +347,37 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\asset.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\attachments.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\commlogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\incident.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\inventory.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\item.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labor.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\location.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\longdescription.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\materials.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\meter.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\purchasing.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worktype.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\email.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\person.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\phone.xml" />
     <Content Include="App_Data\Client\hapag\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -541,6 +572,7 @@
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
+    <Content Include="Content\Scripts\client\adminresources\profile.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
@@ -728,7 +760,6 @@
     <Content Include="Content\Scripts\client\crud\home.js" />
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
     <Content Include="Content\Scripts\client\crud\messagehandler.js" />
-    <Content Include="Content\Scripts\client\adminresources\myProfile.js" />
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.de.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.es.js" />
@@ -843,7 +874,6 @@
     <Content Include="Content\Controller\Faq.html" />
     <Content Include="Content\Controller\Role.html" />
     <Content Include="Content\Controller\UserProfile.html" />
-    <Content Include="Content\Controller\User.html" />
     <Content Include="Content\Controller\Scheduler.html" />
     <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
     <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
@@ -852,6 +882,7 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
     <Content Include="Content\Shared\readme.txt" />
+    <Content Include="Content\Templates\otb\profiles.html" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

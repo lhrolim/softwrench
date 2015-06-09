@@ -11,6 +11,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using softWrench.sW4.Metadata.Properties;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dashboard.classes.controller {
@@ -27,6 +28,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
             //    //TODO: remove this when it´s good for qa
             //    return securedMenu;
             //}
+
+            // If the dashboards are not enabled, do not load the dashboards.
+            if (!ApplicationConfiguration.EnableDashboardFlag)
+            {
+                return securedMenu;
+            }
 
             var leafs = new List<MenuBaseDefinition>();
 

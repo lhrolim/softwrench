@@ -71,83 +71,103 @@
           </properties>
         </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-          <field attribute="ticketid" label="SR No:" readonly="true"/>
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <section id ="siteidsection"/>
-          
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
-          <field attribute="class" label="" hidden="true"/>
-          <field attribute="actlabcost" hidden="true" />
-          <field attribute="actlabhrs" hidden="true"/>
-          <field attribute="siteid" hidden="true" />
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="createby" hidden="true"/>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="ticketid" label="SR No:" readonly="true"/>
+          </section>
 
-          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
-          <section id="statussection"/>
-          <!--COMSW-1-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-          <!--SWWEB-342-->
-          <field attribute="changeby" default="@username" hidden="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
-          <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
-            <renderer type="lookup" params="columnlabel=Name;"/>
-          </association>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
-            <renderer type="lookup" params="columnlabel=Name"/>
-          </association>
-          <!--Added Reported Date just the way it was in gric to otb  Dt: 06/20/2014 -->
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <field attribute="targetstart" label="Target Finish Date:">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <field attribute="targetfinish" label="Target Finish Date:">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <field attribute="actualstart" label="Actual Start Date:">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <field attribute="actualfinish" label="Actual Finish Date:">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
-          </field>
-          <!-- Code added from gric metadata.xml SWWEB 173-->
-          <section id="attachmentsection" />
-          <!--COMSW 24 required field for population purposes-->
-          <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
-          <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
-          <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
-          <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
-          <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
-          <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
-            <renderer type="lookup" />
-          </association>
+          <section>
+            <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+            <field label="Details:" attribute="longdescription_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <section id ="siteidsection"/>
+
+            <field attribute="ticketuid" label="SR No:" hidden="true"/>
+            <field attribute="class" label="" hidden="true"/>
+            <field attribute="actlabcost" hidden="true" />
+            <field attribute="actlabhrs" hidden="true"/>
+            <field attribute="siteid" hidden="true" />
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="createby" hidden="true"/>
+
+            <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            </association>
+            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            </association>
+            <section id="statussection"/>
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="changeby" default="@username" hidden="true"/>
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeowner"/>
+            </association>
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            </association>
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
+              <renderer type="lookup" params="columnlabel=Name;"/>
+            </association>
+            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
+              <renderer type="lookup" params="columnlabel=Name"/>
+            </association>
+          </section>
           
-          <!-- SWWEB 173-->
-          <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="targetstart" label="Target Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="targetfinish" label="Target Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="actualstart" label="Actual Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="actualfinish" label="Actual Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+          </section>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+            <!--<renderer type="default" params="childinputsize=medium" />-->
+            <section id="attachmentsection" />
+          <!--</section>-->
+          
+            <!--COMSW 24 required field for population purposes-->
+            <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+            <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+            <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+            <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+            <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+            <!--COMSW 24 association field used for lazy lookup-->
+            <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+              <renderer type="lookup" />
+            </association>
+          </section>
           
           <section id="compositions"/>
         </schema>

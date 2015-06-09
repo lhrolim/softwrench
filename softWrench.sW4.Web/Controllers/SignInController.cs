@@ -138,6 +138,7 @@ namespace softWrench.sW4.Web.Controllers {
 
         private InMemoryUser GetUser(string userName, string password, string userTimezoneOffset) {
             var userAux = _dao.FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, userName);
+            // User needs to load person data
             var allowNonUsersToLogin = "true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"));
             if (userAux == null) {
                 if (!allowNonUsersToLogin) {
