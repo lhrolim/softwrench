@@ -230,7 +230,7 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
         private static bool IsChildGroup(PersonGroup g, PersonGroup @group) {
-            return g.Description!= null && g.Description.StartsWith(@group.Description) && !g.Description.Equals(@group.Description) && !g.SuperGroup;
+            return g.Description != null && g.Description.StartsWith(@group.Description) && !g.Description.Equals(@group.Description) && !g.SuperGroup;
         }
 
 

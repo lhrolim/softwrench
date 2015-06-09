@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
         }
 
-        public static User GetUserFromMaximoByUserName([NotNull] string userName) {
+        public static User GetUserFromMaximoByUserName([NotNull] string userName, int? swId) {
             if (userName == null) throw new ArgumentNullException("userName");
             User user = null;
             var dto = new SearchRequestDto {
@@ -58,7 +58,32 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             }
             var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
             user = userFromMaximo.FirstOrDefault();
+            user.Id = swId;
             return user;
+        }
+
+        public static User GetUserFromMaximoBySwUser(User swUser) {
+            if (swUser == null) throw new ArgumentNullException("swUser");
+            User fullUser = null;
+            var dto = new SearchRequestDto {
+                WhereClause = (" person.personid = '" + swUser.UserName + "'").ToUpper()
+            };
+            dto = BuildDTO(dto);
+            var entityMetadata = MetadataProvider.Entity(EntityName);
+            var maximoUsers = EntityRepository.Get(entityMetadata, dto);
+            var attributeHolders = maximoUsers as AttributeHolder[] ?? maximoUsers.ToArray();
+            if (!attributeHolders.Any()) {
+                return null;
+            }
+            var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
+            fullUser = userFromMaximo.FirstOrDefault();
+            fullUser.Id = swUser.Id;
+            fullUser.IsActive = swUser.IsActive;
+            fullUser.Profiles = swUser.Profiles;
+            fullUser.CustomRoles = swUser.CustomRoles;
+            fullUser.PersonGroups = swUser.PersonGroups;
+            fullUser.CustomConstraints = swUser.CustomConstraints;
+            return fullUser;
         }
 
         private static SearchRequestDto BuildDTO(SearchRequestDto dto = null) {
@@ -101,17 +126,20 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             return maximoUsers.Select(maximoUser => new User {
                 UserName = (string)maximoUser.GetAttribute("maxuser_.loginid") ?? (string)maximoUser.GetAttribute("personid"),
                 Password = null,
-                FirstName = (string)maximoUser.GetAttribute("firstname"),
-                LastName = (string)maximoUser.GetAttribute("lastname"),
-                IsActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",
-                OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
-                SiteId = (string)maximoUser.GetAttribute("maxuser_.defsite"),
-                Email = (string)maximoUser.GetAttribute("email_.emailaddress"),
-                Department = (string)maximoUser.GetAttribute("department"),
-                Phone = (string)maximoUser.GetAttribute("phone_.phonenum"),
-                Language = (string)maximoUser.GetAttribute("language"),
+                IsActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",   
+                Person = new Person{
+                    FirstName = (string)maximoUser.GetAttribute("firstname"),
+                    LastName = (string)maximoUser.GetAttribute("lastname"),
+                    OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
+                    SiteId = (string)maximoUser.GetAttribute("maxuser_.defsite"),
+                    Email = (string)maximoUser.GetAttribute("email_.emailaddress"),
+                    Department = (string)maximoUser.GetAttribute("department"),
+                    Phone = (string)maximoUser.GetAttribute("phone_.phonenum"),
+                    Language = (string)maximoUser.GetAttribute("language")
+                },
                 CriptoProperties = string.Empty,
-                MaximoPersonId = (string)maximoUser.GetAttribute("personid")
+                MaximoPersonId = (string)maximoUser.GetAttribute("personid"),
+                
             });
         }
 
@@ -142,17 +170,17 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
             var userToIntegrate = user.user;
             // todo: remove temporary validation solution
-            if (string.IsNullOrEmpty(userToIntegrate.FirstName)) {
-                userToIntegrate.FirstName = userToIntegrate.UserName;
+            if (string.IsNullOrEmpty(userToIntegrate.Person.FirstName)) {
+                userToIntegrate.Person.FirstName = userToIntegrate.UserName;
             }
-            if (string.IsNullOrEmpty(userToIntegrate.LastName)) {
-                userToIntegrate.LastName = userToIntegrate.UserName;
+            if (string.IsNullOrEmpty(userToIntegrate.Person.LastName)) {
+                userToIntegrate.Person.LastName = userToIntegrate.UserName;
             }
 
             var isValid =
                 (
-                    !string.IsNullOrEmpty(userToIntegrate.FirstName) &&
-                    !string.IsNullOrEmpty(userToIntegrate.LastName) &&
+                    !string.IsNullOrEmpty(userToIntegrate.Person.FirstName) &&
+                    !string.IsNullOrEmpty(userToIntegrate.Person.LastName) &&
                     !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)
                 );
             if (!isValid)

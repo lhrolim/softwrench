@@ -16,9 +16,22 @@
                 redirectService.redirectToAction(title, controller, action, parameters);
             };
 
-            scope.loadApplication = function (applicationName, schemaId) {
-                redirectService.goToApplicationView(applicationName, schemaId, null, null, null, null);
+            scope.loadApplication = function (applicationName, schemaId, mode, id) {
+                var parameters = {
+                    Id: id
+                }
+                redirectService.goToApplicationView(applicationName, schemaId, mode, null, parameters, null);
             };
+
+            scope.myProfile = function () {
+                var crudContext = {
+                    detail_next: "0",
+                    detail_previous: "-1"
+                };
+                contextService.insertIntoContext("crud_context", crudContext);
+                var id = contextService.getUserData().maximoPersonId;
+                this.loadApplication('Person', 'detail', 'input', id);
+            }
 
             scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);

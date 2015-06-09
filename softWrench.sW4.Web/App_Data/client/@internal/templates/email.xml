@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+
+  </entities>
+
+  <applications>
+    <application name="email" title="Email" entity="email">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
+      </properties>
+      <schemas>
+        <schema id="list" stereotype="compositionlist" title="Email List">
+          <field attribute="personid" hidden="true"/>
+          <field attribute="emailid" hidden="true"/>
+          <field attribute="emailaddress" label="Email Address"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="isprimary" label="Primary"/>
+        </schema>
+        <schema id="detail" stereotype="compositiondetail" title="Email Detail">
+          <field attribute="personid" hidden="true"/>
+          <field attribute="emailid" hidden="true"/>
+          <field attribute="emailaddress" label="Email Address"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="isprimary" label="Primary">
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

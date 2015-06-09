@@ -1,8 +1,13 @@
-﻿using Iesi.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
 using cts.commons.simpleinjector;
+using Quartz.Util;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
@@ -16,13 +21,37 @@ namespace softWrench.sW4.Security.Services {
             }
         }
 
-        public static User SaveUser(User user) {
+        public static User SaveUser(User user, bool updateMaximo = false) {
             if (user.Id != null) {
                 var dbuser = DAO.FindByPK<User>(typeof(User), (int)user.Id);
                 user.MergeFromDBUser(dbuser);
 
             }
+            if (updateMaximo)
+            {
+                user.Person.Save();
+            }
             return DAO.Save(user);
+        }
+
+        public static User GetUserById(int id)
+        {
+            return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
+        }
+
+        public static User GetUserByUsername(string username)
+        {
+            User user = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username) ?? null;
+            
+            return user;
+        }
+
+        public static IEnumerable<User> GetUsersByUsername(List<string> usernames)
+        {
+            var param = BaseQueryUtil.GenerateInString(usernames);
+            var querystring = string.Format("from User where lower(userName) in ({0})", param.ToLower());
+            return SWDBHibernateDAO.GetInstance()
+                .FindByQuery<User>(querystring);
         }
 
         public static User CreateMissingDBUser(string userName, bool save = true) {
@@ -32,7 +61,7 @@ namespace softWrench.sW4.Security.Services {
                     personid += HlagPrefix;
                 }
             }
-            var user = UserSyncManager.GetUserFromMaximoByUserName(personid);
+            var user = UserSyncManager.GetUserFromMaximoByUserName(personid, null);
             if (user == null) {
                 //if the user does not exist on maximo, then we should not create it on softwrench either
                 return null;
@@ -55,7 +84,7 @@ namespace softWrench.sW4.Security.Services {
                 return existingUser;
             }
 
-            var user = UserSyncManager.GetUserFromMaximoByUserName(existingUser.MaximoPersonId);
+            var user = UserSyncManager.GetUserFromMaximoByUserName(existingUser.MaximoPersonId, existingUser.Id);
             if (user == null) {
                 return existingUser;
             }
