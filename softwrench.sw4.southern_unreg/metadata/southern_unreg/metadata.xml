@@ -32,5 +32,34 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="physicalcount" entity="physicalCount" title="Physical Count">
+      <schemas>
+        <schema stereotype="list" id="physicalcountList" title="Physical Count" redeclaring="true">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="invbalancesid" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="inventory_.siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%" />
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
+          </field>
+          <event type="onload" service="scannerdetectionService" method="initSouthernPhysicalCountGridListener"/>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>
