@@ -37,11 +37,13 @@ app.directive('columnWidths', function ($log, $timeout) {
                             var column = parseInt(id) + 1;
                         }
 
+                        //log.debug(json[id]);
+
                         //new row object
                         var row = {};
 
                         //if the column has rendererParameters, else default to 0 width
-                        if (!json[id].isHidden) {
+                        if (!json[id].isHidden && json[id].attribute != null) {
                             if (json[id].rendererParameters) {
                                 width = removePercent(json[id].rendererParameters.width);
 
