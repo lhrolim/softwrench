@@ -1,4 +1,7 @@
 ﻿modules.webcommons.config(['$httpProvider', function ($httpProvider) {
+
+    $httpProvider.defaults.withCredentials = true;
+
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log) {
         var started = function (config) {
             config.headers['offlineMode'] = true;

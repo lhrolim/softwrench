@@ -51,10 +51,10 @@ namespace softWrench.sW4.Data.Sync {
         public IDictionary<string, object> GetParameters() {
             var dictionary = new Dictionary<String, object>();
             if (_lowerlimit != null) {
-                dictionary.Add("@lowerrowstamp", _lowerlimit);
+                dictionary.Add("lowerrowstamp", _lowerlimit);
             }
             if (_upperlimit != null) {
-                dictionary.Add("@upperrowstamp", _upperlimit);
+                dictionary.Add("upperrowstamp", _upperlimit);
             }
             return dictionary;
         }

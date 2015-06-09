@@ -19,7 +19,11 @@ namespace softwrench.sw4.offlineserver.services.util {
             foreach (dynamic row in obj.items) {
                 var id = row.id;
                 var rowstamp = row.rowstamp;
-                result.Add(id.Value, rowstamp.Value);
+                if (id.Value != null) {
+                    //new items, generated on the client side, do not need to be included
+                    result.Add(id.Value, rowstamp.Value);
+                }
+
             }
             return result;
         }

@@ -52,13 +52,15 @@
                     var batchItemPromises = [];
                     var length = items.length;
                     for (var i = 0; i < length; i++) {
-                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', items[i], function (dataEntry, batchItem) {
+                        var entry = items[i];
+                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function (dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
                             return batchItem;
                         }));
-                        items[i].pending = true;
+                        entry.pending = true;
+                        entry.isDirty = false;
                     }
                     var batchPromise = swdbDAO.instantiate('Batch');
                     log.debug('creating db promises');
