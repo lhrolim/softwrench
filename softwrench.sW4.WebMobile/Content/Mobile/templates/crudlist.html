@@ -41,7 +41,7 @@
 
         <ion-list class="has-header">
 
-            <ion-item ng-repeat="item in list()" ng-class="{'missingsync': isDirty(item),'pending': isPending(item)  }" item="item">
+            <ion-item ng-repeat="item in list()" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item">
 
 
                 <div class="row" ng-click="openDetail(item)">

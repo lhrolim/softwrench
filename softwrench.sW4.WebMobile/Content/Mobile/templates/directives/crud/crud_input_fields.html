@@ -26,6 +26,10 @@
                 <textarea ng-switch-when="richtext" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
                           data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
                           maxlength="{{field.rendererParameters['maxlength']}}"></textarea>
+                
+                <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" 
+                       min="{{fieldMetadata.rendererParameters['min']}}"
+                       max="{{setMaxNumericInput(datamap,fieldMetadata)}}">    
                 <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly">    
             </div>
 
