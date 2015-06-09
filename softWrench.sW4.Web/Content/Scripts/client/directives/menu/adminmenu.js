@@ -7,10 +7,11 @@
             isClientAdmin: '=',
             isSysAdmin: '=',
             popupmode: '=',
-            myprofileenabled:'='
+            myprofileenabled: '=',
+            menu: '=',
+            title: '='
         },
-        link: function(scope,element,attr) {
-
+        link: function (scope, element, attr) {
             scope.doAction = function (title, controller, action, parameters, target) {
                 menuService.setActiveLeaf(target);
                 redirectService.redirectToAction(title, controller, action, parameters);
