@@ -29,7 +29,8 @@ namespace softWrench.sW4.Data.Offline {
             } else if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
                 return System.Convert.ToInt64(dbstamp);
             }
-            throw new NotImplementedException("not implemented for oracle database yet");
+            return 1;
+            //throw new NotImplementedException("not implemented for oracle database yet");
         }
 
         public static IList<object> TryToGetDeletedRecordsId(EntityMetadata entityMetadata, string rowstamp) {
@@ -85,7 +86,8 @@ namespace softWrench.sW4.Data.Offline {
             if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
                 return "bigint";
             }
-            throw new NotImplementedException("not implemented for oracle database yet");
+            return "bigint";
+            //throw new NotImplementedException("not implemented for oracle database yet");
         }
 
 

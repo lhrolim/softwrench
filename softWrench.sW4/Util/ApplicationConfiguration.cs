@@ -510,6 +510,8 @@ namespace softWrench.sW4.Util {
                     return DBMS.MSSQL;
                 case "System.Data.OracleClient":
                     return DBMS.ORACLE;
+                case "Oracle.DataAccess.Client":
+                    return DBMS.ORACLE;
                 case "IBM.Data.DB2":
                     return DBMS.DB2;
             }
