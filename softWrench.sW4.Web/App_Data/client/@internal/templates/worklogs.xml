@@ -25,7 +25,7 @@
 
         <detail stereotype="compositiondetail">
           <field attribute="description" label="Summary:" requiredexpression="true" />
-          <field attribute="worklogdesc_.ldtext" label="Details:" >
+          <field attribute="wld_.ldtext" label="Details:" >
           <renderer type="richtext"/>
           </field>
           <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE">
