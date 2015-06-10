@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
@@ -17,8 +18,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         public static string AliasEntity(string entity, string alias) {
             var metadata = MetadataProvider.Entity(entity);
             var table = metadata.GetTableName();
-
-            return string.Format("{0} {1}", table, alias);
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo))
+            {
+                return string.Format("{0} {1}", table, alias);
+            }
+            return string.Format("{0} as {1}", table, alias);
         }
 
         public static string QualifyAttribute(EntityMetadata entityMetadata, EntityAttribute attribute) {
