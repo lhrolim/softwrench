@@ -215,6 +215,10 @@
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
 
+          <association label="Request Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+            <renderer type="lookup" />
+          </association>
+          
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
@@ -317,6 +321,14 @@
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
+          </customization>
+          <customization position="failurecode">
+            <association label="Request Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+              <renderer type="lookup" />
+            </association>
+          </customization>
+          <customization position="problemcode">
+            
           </customization>
         </schema>
         

@@ -12,7 +12,9 @@
     </entity>
 
     <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
-
+      <attributes>
+        <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
     </entity>
 
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
