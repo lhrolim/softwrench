@@ -56,6 +56,10 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
+            if (dbUser.UserName.ToLower() == "swadmin")
+            {
+                return UserFound(dbUser, userTimezoneOffset);
+            }
             dbUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             return UserFound(dbUser, userTimezoneOffset);
         }
@@ -158,8 +162,12 @@ namespace softWrench.sW4.Security.Services {
             if (swUser == null) {
                 throw new InvalidOperationException("user should exist at DB");
             }
-            var fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
+            var fullUser = new User();
+            if (swUser.UserName.ToLower() != "swadmin") {
+                fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
+            }
             fullUser.Id = swUser.Id;
+            fullUser.UserName = swUser.UserName;
             fullUser.Profiles = swUser.Profiles;
             fullUser.CustomRoles = swUser.CustomRoles;
             fullUser.PersonGroups = swUser.PersonGroups;
