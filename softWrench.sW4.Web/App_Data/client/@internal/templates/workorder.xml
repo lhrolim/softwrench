@@ -178,7 +178,7 @@
             <field attribute="description" label="Summary:">
               <renderer type="default" params="inputsize=medium" />
             </field>
-            <field label="Details:" attribute="longdescription_.ldtext">
+            <field label="Details:" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
           </section>
@@ -395,7 +395,7 @@
           </composition>
           <composition relationship="attachment" label="Attachments" />
           <field attribute="description" label="Description"  />
-          <field label="Details:" attribute="longdescription_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
         </detail>
