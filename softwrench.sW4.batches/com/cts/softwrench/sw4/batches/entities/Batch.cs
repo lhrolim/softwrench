@@ -38,8 +38,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
 
         [JsonIgnore]
-        [Set(0, Lazy = CollectionLazy.False, Inverse = true)]
-        [Key(1, Column = "batch_id")]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Key(1, Column = "batch_id",NotNull = true)]
         [OneToMany(2, ClassType = typeof(BatchItem))]
         public virtual Iesi.Collections.Generic.ISet<BatchItem> Items { get; set; }
 

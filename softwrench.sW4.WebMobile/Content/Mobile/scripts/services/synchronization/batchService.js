@@ -18,20 +18,46 @@
             var promises = [];
             for (var i = 0; i < batches.length; i++) {
                 var batch = batches[i];
-
-                if (batch != null) {
-                    var batchParams = {
-                        application: batch.application,
-                        remoteId: batch.id
-                    }
-                    promises.push(restService.postPromise('Mobile', 'SubmitBatch', batchParams, JSON.stringify(batch)));
+                if (batch == null) {
+                    continue;
                 }
+                var batchParams = {
+                    application: batch.application,
+                    remoteId: batch.id
+                }
+                var itemArray = [];
+                var loadeditems = batch.loadeditems;
+                for (var j = 0; j < loadeditems.length; j++) {
+                    var batchItem = loadeditems[j];
+                    var item = {
+                        datamap: this.generateDatamapDiff(batchItem),
+                        itemId: batchItem.dataentry.remoteId,
+                        //local id becomes remote from the server perspective
+                        remoteId: batchItem.id,
+                        application: batch.application
+                    };
+                    itemArray.push(item);
+                }
+                var jsonToSend = { items: itemArray };
+                promises.push(restService.postPromise('Mobile', 'SubmitBatch', batchParams, angular.toJson(jsonToSend)));
             }
             if (promises.length == 0) {
                 log.info("no batches submitted");
                 return $q.when();
             }
             return $q.all(promises);
+        },
+
+        generateDatamapDiff: function (batchItem) {
+            if (batchItem.operation) {
+                return batchItem.operation.datamap;
+            }
+            var datamap = batchItem.dataentry.datamap;
+            var original = batchItem.dataentry.originalDatamap;
+
+            //TODO: implement the diff, passing also the ID + siteid all the time
+            return datamap;
+
         },
 
 
@@ -77,6 +103,7 @@
                     var batchItemsToCreate = items.subarray(2, length + 1);
                     batch.application = applicationName;
                     batch.sentDate = new Date();
+
                     for (var i = 0; i < batchItemsToCreate.length; i++) {
                         //creating relationships
                         var item = batchItemsToCreate[i];
@@ -91,7 +118,10 @@
                             swdbDAO.bulkSave(dataEntries, tx);
                             swdbDAO.save(batch, tx);
                             persistence.flush(tx, function () {
-                                return deferred.resolve(batch);
+                                batch.items.list(null, function (results) {
+                                    batch.loadeditems = results;
+                                    return deferred.resolve(batch);
+                                });
                             });
                         } catch (err) {
                             deferred.reject(err);

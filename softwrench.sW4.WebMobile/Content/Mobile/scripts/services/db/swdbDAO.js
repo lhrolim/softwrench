@@ -13,6 +13,8 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
     function createFilter(entity, queryString, queryoptions) {
         queryoptions = queryoptions || {};
         var pageNumber = queryoptions.pageNumber || 1;
+        var orderProperty = queryoptions.orderby || null;
+        var orderascending = queryoptions.orderbyascending;
         var pageSize = queryoptions.pagesize;
         var projectionFields = queryoptions.projectionFields || [];
         var queryToUse = queryoptions.fullquery;
@@ -34,6 +36,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         }
         if (projectionFields.length > 0) {
             filter._projectionFields = projectionFields;
+        }
+        if (orderProperty) {
+            filter=filter.order(orderProperty, orderascending);
         }
         if (queryToUse) {
             filter._querytoUse = queryToUse;

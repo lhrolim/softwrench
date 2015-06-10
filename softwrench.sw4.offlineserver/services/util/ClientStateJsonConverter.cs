@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softwrench.sw4.offlineserver.dto.association;
 
 namespace softwrench.sw4.offlineserver.services.util {
@@ -21,7 +23,7 @@ namespace softwrench.sw4.offlineserver.services.util {
                 var rowstamp = row.rowstamp;
                 if (id.Value != null) {
                     //new items, generated on the client side, do not need to be included
-                    result.Add(id.Value, ""+rowstamp.Value);
+                    result.Add(id.Value, "" + rowstamp.Value);
                 }
 
             }
@@ -54,8 +56,27 @@ namespace softwrench.sw4.offlineserver.services.util {
                 var maxRowstamp = row.Value.maximorowstamp.Value;
                 //TODO: implement other fields
                 result.Add(application, new ClientAssociationCacheEntry() {
-                    MaxRowstamp = ""+ maxRowstamp
+                    MaxRowstamp = "" + maxRowstamp
                 });
+            }
+            return result;
+        }
+
+        public static Iesi.Collections.Generic.ISet<BatchItem> GetBatchItems(JObject batchContent) {
+            Iesi.Collections.Generic.ISet<BatchItem> result = new HashedSet<BatchItem>();
+            dynamic obj = batchContent;
+            foreach (dynamic item in obj.items) {
+                JObject dm = item.datamap;
+                var batchItem = new BatchItem {
+                    DataMapJsonAsString = dm.ToString(),
+                    ItemId = item.itemId.Value,
+                    Application = item.application.Value,
+                    RemoteId = item.remoteId.Value,
+                    Status = BatchStatus.SUBMITTING,
+                    UpdateDate = DateTime.Now,
+                    Schema = "detail"
+                };
+                result.Add(batchItem);
             }
             return result;
         }

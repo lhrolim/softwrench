@@ -27,12 +27,12 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.migration {
                 .WithColumn("Status").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("Application").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("ItemId").AsString(MigrationUtil.StringSmall).NotNullable()
-                .WithColumn("schema_").AsString(MigrationUtil.StringSmall).NotNullable()
-                .WithColumn("Operation").AsString(MigrationUtil.StringSmall).NotNullable()
+                .WithColumn("schema_").AsString(MigrationUtil.StringSmall).Nullable()
+                .WithColumn("Operation").AsString(MigrationUtil.StringSmall).Nullable()
                 .WithColumn("DataMapJson").AsBinary().NotNullable()
                 .WithColumn("RemoteId").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("batch_id").AsInt64().ForeignKey("fk_batchitem_batch_id", "BAT_BATCH", "id")
-                .WithColumn("problem_id").AsInt64().ForeignKey("fk_batchitem_problem_id", "PROB_PROBLEM", "id");
+                .WithColumn("problem_id").AsInt64().ForeignKey("fk_batchitem_problem_id", "PROB_PROBLEM", "id").Nullable();
 
 
         }

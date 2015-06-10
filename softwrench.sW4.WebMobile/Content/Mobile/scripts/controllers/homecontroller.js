@@ -1,6 +1,7 @@
 ﻿/// <reference path="maincontroller.js" />
-softwrench.controller('HomeController', function ($scope, synchronizationFacade, $ionicPopup, $ionicLoading) {
+softwrench.controller('HomeController', function ($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService,formatService) {
     $scope.data = {};
+    $scope.expanded = false;
 
     $scope.fullSynchronize = function () {
 
@@ -17,6 +18,7 @@ softwrench.controller('HomeController', function ($scope, synchronizationFacade,
                 title: "Synchronization Suceeded",
                 template: message
             });
+            synchronizationOperationService.refreshSync();
         }).catch(function () {
             $ionicPopup.alert({
                 title: "Error Synchronizing Data",
@@ -24,8 +26,45 @@ softwrench.controller('HomeController', function ($scope, synchronizationFacade,
         }).finally(function (message) {
             $ionicLoading.hide();
         });
+    }
 
+    $scope.doneNoProblems=function(syncOperation) {
+        return syncOperation.status.equalIc("complete") && !synchronizationOperationService.hasProblems(syncOperation);
+    }
 
+    $scope.doneWithProblems = function (syncOperation) {
+        return syncOperation.status.equalIc("complete") && synchronizationOperationService.hasProblems(syncOperation);
+    }
+
+    $scope.isPending = function (syncOperation) {
+        return syncOperation.status.equalIc("pending");
+    }
+
+    $scope.getItemsSent = function (item) {
+        //TODO: get from batch
+        return 10;
+    }
+
+    $scope.getFormattedDate=function(startdate) {
+        return formatService.formatDate(startdate, 'MM/dd/yyyy HH:mm');
+    }
+
+    $scope.synchronizationlist = function() {
+        return synchronizationOperationService.getSyncList();
+    }
+
+    $scope.getTimeElapsed=function(item) {
+        return (item.enddate - item.startdate)/1000;
+    }
+
+    $scope.getStatusColor=function(item) {
+        if (this.doneNoProblems(item)) {
+            return "green";
+        }
+    }
+
+    $scope.toggleExpansion=function() {
+        $scope.expanded = !$scope.expanded;
     }
 
 })

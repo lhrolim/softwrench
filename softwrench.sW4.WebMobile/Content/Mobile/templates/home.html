@@ -1,12 +1,76 @@
 ﻿<ion-view title="Home">
     <!--    <search-bar></search-bar>-->
-    
+
     <ion-nav-buttons side="left">
         <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-content class="padding has-header" padding="true">
+
         <button class="button button-block button-calm" ng-click="fullSynchronize()">Synchronize</button>
+
+        <ion-list class="has-header">
+            
+            
+            <ion-item class="item-stable"
+                      ng-click="toggleExpansion()"
+                      ng-class="{active: expanded}">
+                <i class="icon" ng-class="expanded ? 'ion-minus' : 'ion-plus'"></i>
+                &nbsp;
+                Show Latest Synchronizations
+            </ion-item>
+
+            <ion-item ng-repeat="item in synchronizationlist()" item="item" ng-show="expanded" >
+                
+                <div class="row">
+                    <div class="col">
+                        Date Performed:{{getFormattedDate(item.startdate)}}
+                    </div>
+                </div>
+
+                <div class="row" ng-click="openDetail(item)">
+                    <div class="col-25">
+                        <button class="button button-status" ng-style="{'background-color':getStatusColor(item)}">
+                            <i class="icon ion-android-done" ng-show="doneNoProblems(item)"></i>
+                            <i class="icon ion-alert" ng-show="doneWithProblems(item)"></i>
+                            <i class="icon ion-android-cloud" ng-show="isPending(item)"></i>
+                        </button>
+
+                    </div>
+                    <div class="col-75">
+                        <ul>
+                            <li>Status:{{item.status}}</li>
+                            <li ng-show="item.status == 'COMPLETE'">Elapsed: {{getTimeElapsed(item)}} seconds</li>
+                            <li ng-show="item.status == 'PENDING'">Items Sent: {{getItemsSent(item)}}</li>
+                        </ul>
+                    </div>
+
+
+                </div>
+                <div class="row" ng-click="openDetail(item)" ng-if="item.status == 'PENDING'">
+                    <div class="col">
+                        <ul>
+                            <li>Last Checked:{{getFormattedDate(item.lastcheckdate)}}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row" ng-click="openDetail(item)" ng-if="item.status == 'COMPLETE'">
+                    <div class="col">
+                        <ul>
+                            
+                            <li>Applications Downloaded: {{item.numberofdownloadeditems}}</li>
+                            <li>Support Data Downloaded: {{item.numberofdownloadedsupportdata}}</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </ion-item>
+
+        </ion-list>
+
+
     </ion-content>
 
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
@@ -7,6 +8,8 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using RabbitMQ.Util;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Sync;
@@ -41,14 +44,16 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly StatusColorResolver _statusColorResolver;
 
+        private OffLineBatchService _offLineBatchService;
+
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManager syncManager, StatusColorResolver statusColorResolver)
-        {
-            this._syncManager = syncManager;
+        public MobileController(SynchronizationManager syncManager, StatusColorResolver statusColorResolver, OffLineBatchService offLineBatchService) {
+            _syncManager = syncManager;
             _statusColorResolver = statusColorResolver;
+            _offLineBatchService = offLineBatchService;
         }
 
         /// <summary>
@@ -61,7 +66,7 @@ namespace softwrench.sw4.offlineserver.controller {
         public MobileMetadataDownloadResponseDefinition DownloadMetadatas() {
             var watch = Stopwatch.StartNew();
             var user = SecurityFacade.CurrentUser();
-            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user);
+            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
             var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
 
@@ -72,7 +77,7 @@ namespace softwrench.sw4.offlineserver.controller {
             bool fromCache;
             var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
 
-            var statusColorJSONString="";
+            var statusColorJSONString = "";
 
             var statusColorJson = _statusColorResolver.FetchCatalogs();
             if (statusColorJson != null) {
@@ -110,9 +115,13 @@ namespace softwrench.sw4.offlineserver.controller {
         [HttpPost]
         public void SubmitBatch([FromUri]String application, [FromUri]String remoteId, JObject batchContent) {
             Log.InfoFormat("Creating batch for application {0}", application);
+            _offLineBatchService.SubmitBatch(application, remoteId, batchContent);
+          
+
+
             //TODO: implement
         }
 
-
+     
     }
 }

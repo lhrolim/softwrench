@@ -3,6 +3,7 @@
 entities.SyncOperation = persistence.define('SyncOperation', {
     startdate: "DATE",
     enddate: "DATE",
+    lastcheckdate: "DATE",
     lastsyncServerVersion: "TEXT",
     //pending,complete
     status: 'TEXT',
