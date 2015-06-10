@@ -1,8 +1,24 @@
-﻿mobileServices.factory('batchService', function ($q, restService, swdbDAO, $log, schemaService, offlineSchemaService) {
+﻿(function () {
+    'use strict';
 
-    return {
+    service.$inject = ['$q', 'restService','swdbDAO','$log','schemaService','offlineSchemaService'];
 
-        getIdsFromBatch: function (batch) {
+
+    mobileServices.factory('batchService', service);
+
+
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService) {
+
+        var api = {
+            getIdsFromBatch: getIdsFromBatch,
+            submitBatches: submitBatches,
+            generateDatamapDiff: generateDatamapDiff,
+            createBatch: createBatch
+        };
+
+        return api;
+
+        function getIdsFromBatch(batch) {
             var items = batch.items;
             var ids = [];
             for (var i = 0; i < items.length; i++) {
@@ -10,9 +26,9 @@
                 ids.push(batchItem['remoteId']);
             }
             return ids;
-        },
+        };
 
-        submitBatches: function (batches) {
+        function submitBatches(batches) {
 
             var log = $log.getInstance('batchService#submitBatches');
             var promises = [];
@@ -46,9 +62,9 @@
                 return $q.when();
             }
             return $q.all(promises);
-        },
+        };
 
-        generateDatamapDiff: function (batchItem) {
+        function generateDatamapDiff(batchItem) {
             if (batchItem.operation) {
                 return batchItem.operation.datamap;
             }
@@ -58,10 +74,10 @@
             //TODO: implement the diff, passing also the ID + siteid all the time
             return datamap;
 
-        },
+        };
 
 
-        createBatch: function (dbapplication) {
+        function createBatch(dbapplication) {
             var applicationName = dbapplication.application;
 
             var log = $log.getInstance('batchService#createBatch');
@@ -138,6 +154,11 @@
                 });
         }
 
-    }
 
-})
+    }
+})();
+
+
+
+
+
