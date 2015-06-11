@@ -10,12 +10,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             sb.AppendFormat("Affected Location: {0}\n", entity.GetAttribute("#pluspcustomer_label"));
             sb.AppendFormat("Callback Number: {0}\n", entity.GetAttribute("callbacknum"));
-            
+
             if (schemaId == "sd") {
 
                 sb.AppendFormat("Platform Version: {0}\n", entity.GetAttribute("platformversion"));
                 sb.AppendFormat("Issue: {0}\n", entity.GetAttribute("issue"));
 
+            } else if (schemaId == "iam") {
+                sb.AppendFormat("Does this Problem Affect: {0}\n", entity.GetAttribute("#problemaffect_label"));
             } else if (schemaId == "printer") {
 
                 sb.AppendFormat("Affected Printer: {0}\n", entity.GetAttribute("#assetnum_label"));

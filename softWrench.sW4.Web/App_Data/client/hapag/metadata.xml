@@ -1346,6 +1346,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
+        <schema id="iam" title="User Access or Authorization-Problem" parentschema="AnewSR">
+          <section id="abstractSection">
+            <optionfield attribute="problemaffect" label="Does this Problem Affect:">
+              <option label="Login Problem (server offline or password problem)" value="login"/>
+              <option label="Authorization Problem" value="authorization"/>
+              <option label="Other" value="other"/>
+            </optionfield>
+          </section>
+        </schema>
+
         <schema id="printer" title="New Service Request - Printer" parentschema="AnewSR">
           <properties>
             <property key="usefulfaqlinks" value="5;4"/>
