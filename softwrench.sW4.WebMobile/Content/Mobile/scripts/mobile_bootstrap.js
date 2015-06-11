@@ -5,6 +5,24 @@
 //    angular.bootstrap(document, ['softwrench']);
 //});
 
+/**
+ * Function that returns the angular $scope attached to an element.
+ * It helps debug the app when deployed in Ripple (batarang's $scope inspection doesn't work in iframe);
+ * 
+ * @param {} element DOM element 
+ * @returns {} $scope 
+ */
+var $s = function (element) {
+    var elementWrapper = angular.element(element);
+    if (typeof (elementWrapper['scope']) !== "function") {
+        return null;
+    }
+    var scope = elementWrapper.scope();
+    if (!scope['$parent']) {
+        return scope;
+    }
+    return scope.$parent;
+};
 
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services']);
 var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
