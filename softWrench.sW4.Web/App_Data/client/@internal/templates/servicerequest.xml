@@ -33,6 +33,10 @@
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
+        <relationship to="failurelistonly" qualifier="failurelist">
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
