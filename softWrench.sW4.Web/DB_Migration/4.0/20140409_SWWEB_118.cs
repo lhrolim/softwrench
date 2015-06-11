@@ -9,7 +9,7 @@ namespace softWrench.sW4.Web.DB_Migration {
     public class Migration20140409Swweb118 : FluentMigrator.Migration {
 
         public override void Up() {
-            Delete.Column("condition_").FromTable("conf_propertyvalue");
+//            Delete.Column("condition_").FromTable("conf_propertyvalue");
 
             Create.Table("CONF_CONDITION")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()

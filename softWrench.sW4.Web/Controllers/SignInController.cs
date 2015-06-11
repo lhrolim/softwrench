@@ -177,7 +177,7 @@ namespace softWrench.sW4.Web.Controllers {
         [HttpPost]
         public ActionResult SignInReturningUserData(string userName, string password, string userTimezoneOffset) {
             userName = userName.ToLower();
-            var user = SecurityFacade.GetInstance().Login(userName, password, userTimezoneOffset);
+            var user = GetUser(userName, password, userTimezoneOffset);
           
 
             if (user == null) {
