@@ -4,6 +4,7 @@
   <!--GRIC-->
 
   <templates>
+    <template path="@person.xml"/>
     <!--WorkOrder-->
     <template path="@workorder.xml"/>
 

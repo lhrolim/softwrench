@@ -2,6 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata" >
 
   <templates>
+    <template path="@person.xml"/>
     <template path="@chartofaccounts.xml"/>
     <template path="@workorder.xml"/>
     <template path="@item.xml"/>

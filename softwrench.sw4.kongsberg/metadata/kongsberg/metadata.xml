@@ -2,6 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <!--kongsberg-->
   <templates>
+    <template path="@person.xml"/>
     <template path="@worklogs.xml"/>
     <template path="@solution.xml"/>
   </templates>
