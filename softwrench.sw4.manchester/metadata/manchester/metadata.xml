@@ -525,7 +525,7 @@
             </association>
           </customization>
           <customization position="gldebitacct">
-            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
+            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.previousdata.fields['glaccount']">
               <renderer type="lookup"/>
             </association>
           </customization>
@@ -537,7 +537,7 @@
       <schemas>
         <detail platform="web" redeclaring="false">
           <customization position="gldebitacct">
-            <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext">
+            <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.previousdata.fields['glaccount']">
               <renderer type="lookup"/>
             </association>
           </customization>
