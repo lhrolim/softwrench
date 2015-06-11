@@ -12,6 +12,8 @@ namespace softWrench.sW4.Web.Models.MyProfile {
         private readonly bool _canViewRestrictions;
         private readonly bool _canChangeLanguage;
 
+        public String RolesAndFunctions { get; set; }
+
         public MyProfileModel(InMemoryUser user, List<LocationCostCenterRestriction> locationCostCenterRestrictions, bool canViewRestrictions, bool canChangeLanguage) {
             _user = user;
             _restrictions = locationCostCenterRestrictions;

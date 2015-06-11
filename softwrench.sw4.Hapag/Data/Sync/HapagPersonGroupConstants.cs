@@ -32,20 +32,20 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
         #region profiles
         public const string BaseHapagProfilePrefix = "C-HLC-WW-RO-";
-        internal const string HEu = "C-HLC-WW-RO-EU";
-        internal const string HITC = "C-HLC-WW-RO-ITC";
-        internal const string HExternalUser = "C-HLC-WW-RO-EXT";
+        public const string HEu = "C-HLC-WW-RO-EU";
+        public const string HITC = "C-HLC-WW-RO-ITC";
+        public const string HExternalUser = "C-HLC-WW-RO-EXT";
         #endregion
 
         #region functionalroles
-        internal const string InternalRolesPrefix = "C-HLC-WW-IFU";
+        public const string InternalRolesPrefix = "C-HLC-WW-IFU";
         internal const string Tom = "C-HLC-WW-IFU-TOM";
         internal const string Itom = "C-HLC-WW-IFU-ITOM";
         internal const string Ad = "C-HLC-WW-IFU-AD";
         internal const string Change = "C-HLC-WW-IFU-CHANGE";
         internal const string Offering = "C-HLC-WW-IFU-OFFERING";
 
-        internal const string ExternalRolesPrefix = "C-HLC-WW-EFU";
+        public const string ExternalRolesPrefix = "C-HLC-WW-EFU";
         internal const string SSO = "C-HLC-WW-EFU-SSO";
         internal const string Tui = "C-HLC-WW-EFU-TUI";
 

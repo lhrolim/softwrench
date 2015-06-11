@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
@@ -48,9 +49,39 @@ namespace softWrench.sW4.Web.Controllers.Security {
             var restrictions = GetRestrictions(user);
             var canViewRestrictions = CanViewRestrictions(user);
             var canChangeLanguage = CanChangeLanguage(user);
-
-            var myProfile = new MyProfileModel(user, restrictions, canViewRestrictions, canChangeLanguage);
+            var rolesAndFunctions = getRolesAndFunctions(user);
+            var myProfile = new MyProfileModel(user, restrictions, canViewRestrictions, canChangeLanguage) {
+                RolesAndFunctions = rolesAndFunctions
+            };
             return new GenericResponseResult<MyProfileModel>(myProfile);
+        }
+
+        private string getRolesAndFunctions(InMemoryUser user) {
+            var sb = new StringBuilder();
+            var personGroups = user.PersonGroups;
+            var roleGroup = personGroups.FirstOrDefault(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.BaseHapagProfilePrefix));
+            if (roleGroup == null) {
+                return "End User";
+            }
+            if (roleGroup.GroupName.Equals(HapagPersonGroupConstants.HEu)) {
+                var internalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.InternalRolesPrefix));
+                foreach (var role in internalRoles) {
+                    sb.Append(roleGroup.PersonGroup.Description).Append(role.PersonGroup.Description).Append(" ");
+                }
+
+            } else if (roleGroup.GroupName.Equals(HapagPersonGroupConstants.HITC)) {
+                sb.Append(roleGroup.PersonGroup.Description).Append(" ");
+                var internalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.InternalRolesPrefix)).OrderBy(f => f.GroupName);
+                foreach (var role in internalRoles) {
+                    sb.Append(role.PersonGroup.Description).Append(" ");
+                }
+            } else if (roleGroup.GroupName.Equals(HapagPersonGroupConstants.HExternalUser)) {
+                var externalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.ExternalRolesPrefix) && !f.GroupName.Equals(HapagPersonGroupConstants.ExternalRolesPrefix));
+                foreach (var role in externalRoles) {
+                    sb.Append(roleGroup.PersonGroup.Description).Append(role.PersonGroup.Description);
+                }
+            }
+            return sb.ToString();
         }
 
         private static bool CanChangeLanguage(InMemoryUser user) {

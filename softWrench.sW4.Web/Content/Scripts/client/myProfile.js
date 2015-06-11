@@ -10,6 +10,7 @@
             $scope.isMyProfile = true;
             $scope.isHapag = $rootScope.clientName == 'hapag' ? true : false;
             $scope.canChangeLanguage = "true" == sessionStorage.mocklanguagechange || ($scope.isHapag && data.canChangeLanguage);
+            $scope._rolesandfunctions = data.rolesAndFunctions;
             fillRestrictions(data);
             fillLanguage();
         }
@@ -34,6 +35,10 @@
                 break;
             }
         }
+    }
+
+    $scope.rolesAndFunctions=function() {
+        return $scope._rolesandfunctions;
     }
 
     $scope.fixselecttext = function () {
