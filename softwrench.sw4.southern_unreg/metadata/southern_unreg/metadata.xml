@@ -9,7 +9,79 @@
     <template path="@inventory.xml"/>
   </templates>
 
+  <entities>
+    <entity name="invreturn" parententity="invissue" idAttribute="matusetransid" whereclause="issuetype='ISSUE' and INVRETURN.ITEMNUM is not NULL">
+    </entity>
+  </entities>
+
   <applications>
+    <application name="invreturn" title="Return Inventory" entity="invreturn">
+      <schemas>
+        <schema stereotype="list" id="invReturnList" title="Outstanding Returns">
+          <properties>
+            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="storeloc" hidden="true"/>
+          <field attribute="binnum" hidden="true"/>
+          <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="rotassetnum" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" />
+          </field>
+          <field attribute="item_.itemtype" label="Item Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
+          </field>
+          <field attribute="lotnum" label="Lot">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="refwo" label="Work Order">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
+          </field>
+          <field attribute="issueto" label="Issued To">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
+          </field>
+          <field attribute="issuetype" label="Issue Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <optionfield attribute="item_.rotating" label="Rotating">
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <optionfield attribute="item_.iskit" label="Kit">
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <field attribute="quantity" label="Qty">
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+          </field>
+          <field attribute="qtyreturned" label="Qty Rtn">
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
+            <renderer type="default" params="width=3%"/>
+          </section>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+      </schemas>
+    </application>
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
         <schema id="newInvIssueDetail" mode="input" stereotype="detail" redeclaring="false">

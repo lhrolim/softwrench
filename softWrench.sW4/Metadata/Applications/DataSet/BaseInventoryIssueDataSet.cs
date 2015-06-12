@@ -61,12 +61,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             // CC: Worst case scenario, it will equal the number of records in the datamap. 
             // CC: Note: I did not set remaining records to zero because of Luiz changes in the grid.  
             if (query != null && query.Any()) {
-                foreach (var entry in query) {
+                foreach (var entry in query)
+                {
                     // CC: This is now safe because we are guarantee a record before we couldn't determine if we could find a matching record
                     // CC: matusetransid is case sensitive... maybe change the dictionary to case-insensitive.   
                     var datamapRecord = (from record in datamap
-                                         where record.Attributes["matusetransid"].ToString() == entry["issueid"].ToString()
-                                         select record).SingleOrDefault();
+                        where record.Attributes["matusetransid"].ToString() == entry["issueid"].ToString()
+                        select record).SingleOrDefault();
 
                     datamapRecord.SetAttribute("QTYRETURNED", Double.Parse(entry["returned"]));
                 }
@@ -159,7 +160,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override string ClientFilter() {
-            return "bering,pae";
+            return "bering,pae,southern_unreg";
         }
     }
 }
