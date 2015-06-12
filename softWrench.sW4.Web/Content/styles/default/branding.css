@@ -3,7 +3,7 @@
 }
 
 .container header {
-    background: #34a7e0 url(../../Images/header.jpg) no-repeat center left;
+    background: #0780c9 url(../../Images/header.jpg) no-repeat center left;
 }
 
     .container header .branding {
@@ -42,8 +42,5 @@
 }
 
 .page-signin, .container header {
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
 }
