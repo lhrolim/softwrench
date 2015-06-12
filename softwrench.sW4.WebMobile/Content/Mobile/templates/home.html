@@ -8,7 +8,7 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
-        <button class="button button-clear sync-button" menu-toggle="left">
+        <button class="button button-clear sync-button" on-tap="fullSynchronize()">
             <i class="icon ion-loop"></i>
             Sync
         </button>
@@ -17,40 +17,40 @@
     <ion-content class="has-header">
 
         <ion-list class="list operation-list">
-            <ion-item class="item operation-item" ng-repeat="operation in operationList">
+            <ion-item class="item operation-item" ng-repeat="operation in synchronizationlist()" on-tap="">
                 <div class="row">
                     <div class="col col-20 col-center operation-item-col">
-
+                        <!-- icon indicating syncoperation's status -->
                         <div class="operation-status-icon"
-                             ng-class="{ 'statussuccess' : operation.statuscode === 1,
-                             'statuspending' : operation.statuscode === 2,
-                             'statusproblem' : operation.statuscode === 0 }">
+                             ng-class="{ 'statussuccess' : doneNoProblems(operation),
+                                        'statuspending' : isPending(operation),
+                                        'statusproblem' : doneWithProblems(operation) }">
                             <div class="row">
                                 <div class="col">
                                     <i class="icon"
-                                       ng-class="{ 'ion-checkmark' : operation.statuscode === 1,
-                                       'ion-alert-circled' : operation.statuscode === 0,
-                                       'ion-loop' : operation.statuscode === 2 }">
+                                       ng-class="{ 'ion-checkmark' : doneNoProblems(operation),
+                                                'ion-loop' : isPending(operation),
+                                                'ion-alert-circled' : donewithproblems(operation) }">
                                     </i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div ng-if="operation.statuscode !== 2" class="col col-60 col-center operation-item-col">
+                    <!-- some info about syncoperation: date, status (formatted), pending items -->
+                    <div ng-if="!isPending(operation)" class="col col-60 col-center operation-item-col">
                         <h3>{{getFormattedDate(operation.startdate)}}</h3>
-                        <span class="row responsive-sm item-text-wrap operation-status-text">{{operation.status}}</span>
+                        <span class="row responsive-sm item-text-wrap operation-status-text">{{getFormattedStatus(operation)}}</span>
                     </div>
-                    <div ng-if="operation.statuscode === 2" class="col col-60 col-center operation-item-col">
-                        <h3>{{operation.status}}</h3>
+                    <div ng-if="isPending(operation)" class="col col-60 col-center operation-item-col">
+                        <h3>{{getFormattedStatus(operation)}}</h3>
                         <span class="row responsive-sm item-text-wrap operation-status-text">{{operation.items}}&nbsp;Items</span>
                     </div>
-                    
+                    <!-- details click hint text -->
                     <div class="col col-20 col-center operation-item-col">
                         <p>Details ></p>
                     </div>
                 </div>
-                
+
             </ion-item>
         </ion-list>
 

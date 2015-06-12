@@ -5,8 +5,6 @@
     softwrench.controller('HomeController',
         ['$scope', 'synchronizationFacade', '$ionicPopup', '$ionicLoading', 'synchronizationOperationService', 'formatService',
         function($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService, formatService) {
-            $scope.data = {};
-            $scope.expanded = false;
 
             $scope.fullSynchronize = function() {
 
@@ -17,8 +15,8 @@
                     maxWidth: 200,
                     showDelay: 10
                 });
-                var promise = synchronizationFacade.fullSync();
-                promise.then(function(message) {
+                synchronizationFacade.fullSync()
+                .then(function (message) {
                     $ionicPopup.alert({
                         title: "Synchronization Suceeded",
                         template: message
@@ -54,7 +52,8 @@
                 return formatService.formatDate(startdate, 'MM/dd/yyyy HH:mm');
             };
 
-            $scope.synchronizationlist = function() {
+            $scope.synchronizationlist = function () {
+                // TODO: promise resolution + set number of pending items
                 return synchronizationOperationService.getSyncList();
             };
 
@@ -62,26 +61,17 @@
                 return (item.enddate - item.startdate) / 1000;
             };
 
-            $scope.getStatusColor = function(item) {
-                if (this.doneNoProblems(item)) {
-                    return "green";
+            $scope.getFormattedStatus = function(syncOperation) {
+                if ($scope.doneNoProblems(syncOperation)) {
+                    return "Completed";
+                } else if ($scope.isPending(syncOperation)) {
+                    return "Pending";
+                } else if ($scope.doneWithProblems(syncOperation)) {
+                    return "Completed with Issues";
+                } else {
+                    return undefined;
                 }
             };
-
-            $scope.toggleExpansion = function() {
-                $scope.expanded = !$scope.expanded;
-            };
-
-            // new home style
-            var now = new Date();
-            $scope.operationList = [
-                { status: 'Pending', statuscode: 2, startdate: now, items: 9 },
-                { status: 'Completed', statuscode: 1, startdate: now },
-                { status: 'Completed', statuscode: 1, startdate: now },
-                { status: 'Completed with Issues', statuscode: 0, startdate: now },
-                { status: 'Completed', statuscode: 1, startdate: now },
-                { status: 'Completed', statuscode: 1, startdate: now },
-            ];
 
         }
     ]);

@@ -18,7 +18,7 @@ var $s = function (element) {
         return null;
     }
     var scope = elementWrapper.scope();
-    if (!scope['$parent']) {
+    if (!scope || !scope['$parent']) {
         return scope;
     }
     return scope.$parent;

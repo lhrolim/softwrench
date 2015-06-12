@@ -13,4 +13,4 @@ entities.SyncOperation = persistence.define('SyncOperation', {
 });
 
 //many batches, one per application sent, as they can be processed in parallel cpus
-entities.SyncOperation.hasMany('batch', entities.Batch, 'syncoperation');
+entities.SyncOperation.hasMany('batches', entities.Batch, 'syncoperation');
