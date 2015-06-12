@@ -80,6 +80,74 @@
           </section>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
+        <schema title="View Issue and Return" id="editinvreturndetail" stereotype="detail" mode="input" platform="web">
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Location" params="fieldset=true"/>
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="binnum" label="Bin" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true"/>
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="lotnum" label="Lot" readonly="true"/>
+            <field attribute="item_.description" label="Description" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="rotassetnum" readonly="true" label="Rotating Asset"/>
+            <field attribute="quantity" label="Quantity Issued" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+            </field>
+            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+            </field>
+            <field attribute="#quantityadj" label="New Return Quantity" default="1">
+              <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
+            </field>
+          </section>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="actualcost" label="Actual Cost" hidden="true"/>
+            <field attribute="linecost" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;"/>
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="issueid" hidden="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <field attribute="glcreditacct" hidden="true"/>
+            <field attribute="issueid" hidden="true"/>
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <!--<removecommand id="save"/>-->
+              <!--<removecommand id="cancel"/>-->
+              <!--<command id="return" position="&lt;print" label="Submit" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>-->
+              <!--<command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>-->
+            </commandgroup>
+          </commandbars>
+          <!--<event type="onvalidation" service="inventoryService" method="validateReturn"/>-->
+          <!--<event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>-->
+          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateReturn"/>
+          <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
+          <properties>
+            <property key="nextschema.schemaid" value="invReturnList"/>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
+        </schema>
       </schemas>
     </application>
     <application name="invissue" title="Issue Inventory" entity="invissue">
