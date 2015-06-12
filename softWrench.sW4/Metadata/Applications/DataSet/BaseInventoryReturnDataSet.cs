@@ -47,7 +47,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override string ClientFilter() {
-            return "bering,pae,southern_unreg";
+            return "southern_unreg";
         }
     }
 }
