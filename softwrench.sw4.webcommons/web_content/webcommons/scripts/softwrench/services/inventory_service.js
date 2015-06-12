@@ -286,7 +286,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
         invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
-            var application = 'invissue';
+            var application = schema.applicationName;
             var detail = 'viewinvreturndetail';
             var mode = 'input';
             //Logic to determine whether the record is an ISSUE
@@ -337,7 +337,11 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
 
                         return;
                     } else {
-                        detail = 'editinvissuedetail';
+                        if (application == "invreturn") {
+                            detail = 'editinvreturndetail';
+                        } else {
+                            detail = 'editinvissuedetail';
+                        }
                     }
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
