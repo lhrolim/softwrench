@@ -120,6 +120,11 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                 } else {
                     scope.compositiondata = scope.parentdata[scope.metadata.relationship];
                 }
+                if (!scope.compositiondata) {
+                    //a blank array if nothing exists, scenario for selfcompositions
+                    scope.compositiondata = [];
+                }
+
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
                 element.append("<composition-list title='{{tabLabel}}' ismodal='{{ismodal}}'" +
@@ -292,11 +297,11 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             this.shouldShowAdd = function () {
-                return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata);
+                return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) && $scope.collectionproperties.autoCommit;
             }
 
             $scope.shouldShowAdd = function () {
-                return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata);
+                return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) && $scope.collectionproperties.autoCommit;
             }
 
             this.getAddIcon = function () {
@@ -425,6 +430,10 @@ app.directive('compositionList', function (contextService, formatService, schema
                     });
             };
 
+            $scope.newDetailFn = function () {
+                $scope.edit({});
+            };
+
             $scope.cancelComposition = function () {
                 $scope.newDetail = false;
                 $scope.selecteditem = null;
@@ -432,8 +441,12 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             $scope.allowButton = function (value) {
-                return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
+                return expressionService.evaluate(value, $scope.parentdata) && $scope.inline && !this.isBatch();
             };
+
+            $scope.isBatch = function() {
+                return "batch" == $scope.compositionschemadefinition.rendererParameters["mode"];
+            }
 
             $scope.hasModified = function (key, displayables) {
                 for (var index = 0; index < displayables.length; index++) {

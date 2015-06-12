@@ -424,6 +424,11 @@ namespace softWrench.sW4.Metadata {
         }
 
         public static CompleteApplicationMetadataDefinition GetCompositionApplication(ApplicationSchemaDefinition schema, string relationship) {
+            if (relationship.StartsWith("#")) {
+                //self relationship application
+                return Application(schema.ApplicationName);
+            }
+
             var application = Application(EntityUtil.GetApplicationName(relationship), false);
             if (application != null) {
                 return application;

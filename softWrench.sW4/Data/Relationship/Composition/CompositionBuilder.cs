@@ -41,7 +41,10 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             if (composition.Collection && applicationCompositionSchema is ApplicationCompositionCollectionSchema) {
                 compositionResult.List = GetListSchema(applicationCompositionSchema, compositionApplication);
                 compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication);
-                compositionResult.Sync = GetSyncSchema(applicationCompositionSchema, compositionApplication);
+                if (!composition.IsSelfRelationship) {
+                    //this won´t be needed into the synchronization
+                    compositionResult.Sync = GetSyncSchema(applicationCompositionSchema, compositionApplication);
+                }
                 var collSchema = (ApplicationCompositionCollectionSchema)applicationCompositionSchema;
                 collSchema.FetchFromServer = ShouldFetchFromServer(compositionResult.Detail, compositionResult.List);
             }
