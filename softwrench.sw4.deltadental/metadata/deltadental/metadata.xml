@@ -6,6 +6,8 @@
     
     <!--WorkOrder-->
     <template path="@workorder.xml"/>
+    
+    <template path="@person.xml"/>
 
     <template path="@tooltrans.xml"/>
     <template path="@materials.xml"/>

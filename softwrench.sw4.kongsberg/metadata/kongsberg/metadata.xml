@@ -2,6 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <!--kongsberg-->
   <templates>
+    <template path="@person.xml"/>
     <template path="@worklogs.xml"/>
     <template path="@solution.xml"/>
   </templates>
@@ -2851,8 +2852,8 @@
             <renderer type="checkbox" params="inputsize=medium" />
           </field>
           <section>
-            <field label="% Effectiveness Score" attribute="pmsoleffscore">
-              <renderer type="numericinput" params="min=1;max=100;inputsize=medium" />
+            <field label="% Effectiveness Score" attribute="pmsoleffscore" readonly="true">
+              <renderer type="default" params="inputsize=small" />
             </field>
           </section>
           <section>

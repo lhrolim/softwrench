@@ -2,6 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
+    <template path="@person.xml"/>
     <!--WorkOrder-->
     <template path="@workorder.xml"/>
 
