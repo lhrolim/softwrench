@@ -376,13 +376,18 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (e == null) {
                 throw new InvalidOperationException(String.Format(MissingRelationship, applicationName, relationship));
             }
-            var entityAssociation = e.Associations.FirstOrDefault(a => a.Qualifier == EntityUtil.GetRelationshipName(relationship));
-            if (entityAssociation == null) {
-                throw new InvalidOperationException(String.Format(MissingRelationship, applicationName, relationship));
+            var isCollection = false;
+            if (!relationship.StartsWith("#")) {
+                //# would mean a self relationship
+                var entityAssociation = e.Associations.FirstOrDefault(a => a.Qualifier == EntityUtil.GetRelationshipName(relationship));
+                if (entityAssociation == null) {
+                    throw new InvalidOperationException(String.Format(MissingRelationship, applicationName, relationship));
+                }
+                isCollection = entityAssociation.Collection;
             }
-            var isCollection = entityAssociation.Collection;
+
             var collectionProperties = ParseCollectionProperties(composition);
-            ISet<ApplicationEvent> applicationEvents = ParseEvents(composition);
+            var applicationEvents = ParseEvents(composition);
             if (collectionProperties != null || isCollection) {
                 return new ApplicationCompositionCollectionSchema(inline, schemaId, collectionProperties, mode,
                     (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, applicationEvents);
