@@ -31,6 +31,9 @@
             }
         }
         if (contextService.InModule(["xitc"])) {
+            //HAP-1007
+            //for xitc, not only the persongroups of the user, but also the indirect locations brought due to R0017 should also be considered.
+            //this property is set on HapagImacDataSet
             var xitcLocations = user.genericproperties["hlaglocationxitc"];
             for (var j = 0; j < xitcLocations.length; j++) {
                 var xitcLocation = xitcLocations[j];
