@@ -64,16 +64,27 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 return "End User";
             }
             if (roleGroup.GroupName.Equals(HapagPersonGroupConstants.HEu)) {
-                var internalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.InternalRolesPrefix));
+                var internalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.InternalRolesPrefix)).OrderBy(f => f.GroupName);
+                var i = 0;
+                sb.Append(roleGroup.PersonGroup.Description).Append(" ");
                 foreach (var role in internalRoles) {
-                    sb.Append(roleGroup.PersonGroup.Description).Append(role.PersonGroup.Description).Append(" ");
+                    sb.Append(role.PersonGroup.Description);
+                    if (i < internalRoles.Count() - 1) {
+                        sb.Append("; ");
+                    }
+                    i++;
                 }
 
             } else if (roleGroup.GroupName.Equals(HapagPersonGroupConstants.HITC)) {
                 sb.Append(roleGroup.PersonGroup.Description).Append(" ");
                 var internalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.InternalRolesPrefix)).OrderBy(f => f.GroupName);
+                var i = 0;
                 foreach (var role in internalRoles) {
-                    sb.Append(role.PersonGroup.Description).Append(" ");
+                    sb.Append(role.PersonGroup.Description);
+                    if (i < internalRoles.Count() - 1) {
+                        sb.Append("; ");
+                    }
+                    i++;
                 }
             } else if (roleGroup.GroupName.Equals(HapagPersonGroupConstants.HExternalUser)) {
                 var externalRoles = personGroups.Where(f => f.GroupName.StartsWithIc(HapagPersonGroupConstants.ExternalRolesPrefix) && !f.GroupName.Equals(HapagPersonGroupConstants.ExternalRolesPrefix));

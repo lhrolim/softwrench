@@ -21,14 +21,6 @@
                 </div>
             </div>
             
-            <div class="form-group" ng-show="!canViewRestrictions">
-                <label class="control-label col-lg-3"><span>{{i18N('general.rolesfunctions','Roles/Functions')}}:</span></label>
-                <div class="col-lg-9">
-                    <label class="control-label" ng-bind-html="rolesAndFunctions() | linebreak | html" style="text-align: left">
-
-                    </label>
-                </div>
-            </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-3"><span>{{i18N('general.primaryphone','Primary Phone')}}:</span></label>
@@ -65,7 +57,7 @@
                 </div>
             </div>
             
-            <div class="form-group" ng-show="canViewRestrictions" >
+            <div class="form-group" >
                 <label class="control-label col-lg-3"><span>{{i18N('general.rolesfunctions','Roles/Functions')}}:</span></label>
                 <div class="col-lg-9">
                     <label class="control-label" ng-bind-html="rolesAndFunctions() | linebreak | html" style="text-align: left">

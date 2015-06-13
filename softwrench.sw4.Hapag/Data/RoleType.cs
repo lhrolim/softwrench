@@ -19,6 +19,7 @@ namespace softwrench.sw4.Hapag.Data {
         IncidentDetailsReport,
         IncidentPerLocationReport,
         AssetCategoriesReport,
-        ITCReport
+        ITCReport,
+        Iamsr
     }
 }

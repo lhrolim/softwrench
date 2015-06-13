@@ -19,7 +19,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
-      <application id="iamsr" title="IAM" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="iamsr" title="User Access or Authorization-Problem" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser" role="iamsr"/>
 		</container>
     <!--Finish Endser Items-->
 
@@ -229,7 +229,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
-      <application id="iamsr" title="IAM" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="iamsr" title="User Access or Authorization-Problem" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
     </container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
 		<application title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
@@ -307,7 +307,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
-      <application id="iamsr" title="IAM" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="iamsr" title="User Access or Authorization-Problem" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
@@ -360,7 +360,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
-      <application id="iamsr" title="IAM" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="iamsr" title="User Access or Authorization-Problem" tooltip="Click to create a new User Access or Authorization-Problem Request" schema="iam" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>

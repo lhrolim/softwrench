@@ -5,10 +5,8 @@ using softWrench.sW4.Security.Entities;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.SimpleInjector;
 
-namespace softwrench.sw4.Hapag.Security
-{
-    public interface IHlagLocationManager :ISingletonComponent
-    {
+namespace softwrench.sw4.Hapag.Security {
+    public interface IHlagLocationManager : ISingletonComponent {
         IEnumerable<HlagGroupedLocation> FindLocationsOfParentLocation(PersonGroup group);
         /// <summary>
         /// Returns a list of all the available locations of the current logged user, taking in consideration whether we are inside XTIC FR 
@@ -22,6 +20,10 @@ namespace softwrench.sw4.Hapag.Security
         IEnumerable<HlagGroupedLocation> FindAllLocations();
         IEnumerable<IAssociationOption> FindDefaultITCsOfLocation(string subcustomer);
 
-        IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId=null);
+        IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId = null);
+
+        HlagGroupedLocation[] GetLocationsOfLoggedUser();
+
+
     }
 }

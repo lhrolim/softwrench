@@ -1,4 +1,6 @@
-﻿using softwrench.sw4.Hapag.Data.Configuration;
+﻿using System.Text;
+using softwrench.sw4.Hapag.Data.Configuration;
+using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.SimpleInjector;
 using System;
@@ -7,11 +9,12 @@ namespace softwrench.sw4.Hapag.Data {
     public class DashboardWhereClauseProvider : ISingletonComponent {
         readonly R0017WhereClauseProvider _r0017WhereClauseProvider;
         readonly IContextLookuper _contextLookuper;
+        readonly IHlagLocationManager _iHlagLocationManager;
 
-        public DashboardWhereClauseProvider(R0017WhereClauseProvider r0017WhereClauseProvider, IContextLookuper contextLookuper)
-        {
+        public DashboardWhereClauseProvider(R0017WhereClauseProvider r0017WhereClauseProvider, IContextLookuper contextLookuper, IHlagLocationManager iHlagLocationManager) {
             _r0017WhereClauseProvider = r0017WhereClauseProvider;
             _contextLookuper = contextLookuper;
+            _iHlagLocationManager = iHlagLocationManager;
         }
 
         public string LocalITCDashboardSRWhereClause() {
@@ -31,19 +34,11 @@ namespace softwrench.sw4.Hapag.Data {
             return HapagQueryConstants.IncidentITCDashboard();
         }
 
-        public string DashboardIMACWhereClause()
-        {
-            var ctx =_contextLookuper.LookupContext();
-            var isViewAllOperation = ctx.ApplicationLookupContext != null &&
-                                     "list".Equals(ctx.ApplicationLookupContext.Schema);
-            return "(" + _r0017WhereClauseProvider.ImacWhereClause() + ")" + " AND " + HapagQueryConstants.ITCOpenImacs(GetUserPersonGroupsUtils(),isViewAllOperation);
-        }
-
-        public string ITomDashboardIMACWhereClause() {
+        public string DashboardIMACWhereClause() {
             var ctx = _contextLookuper.LookupContext();
             var isViewAllOperation = ctx.ApplicationLookupContext != null &&
-                                     ctx.ApplicationLookupContext.Schema.Equals("list");
-            return HapagQueryConstants.ITCOpenImacs(GetUserPersonGroupsUtils(),isViewAllOperation);
+                                     "list".Equals(ctx.ApplicationLookupContext.Schema);
+            return HapagQueryConstants.ITCOpenImacs(GetUserPersonGroupsUtils(), isViewAllOperation);
         }
 
         public string DashboardAdIncidentsWhereClause() {
@@ -58,8 +53,14 @@ namespace softwrench.sw4.Hapag.Data {
 
         internal string GetUserPersonGroupsUtils() {
             var module = _contextLookuper.LookupContext().Module;
-            var personGroups = InMemoryUserExtensions.GetPersonGroupsForQuery(module);
-            return personGroups;
+
+            var sb = new StringBuilder();
+            var locations = _iHlagLocationManager.GetLocationsOfLoggedUser();
+            foreach (var location in locations) {
+                sb.Append(location.GetBuildDescriptionForQuery());
+                sb.Append(",");
+            }
+            return sb.ToString(0,sb.Length-1);
         }
     }
 }

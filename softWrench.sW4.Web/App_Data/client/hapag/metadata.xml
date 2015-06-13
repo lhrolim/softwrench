@@ -1145,6 +1145,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <application entity="SR" name="servicerequest" title="Service Request">
       <components>
+        <componentdisplayable id="remarks">
+          <field label="@prop:remarks.title" attribute="longdescription_.ldtext" required="true">
+            <renderer type="textarea" params="maxlength=8000" />
+          </field>
+        </componentdisplayable>
+
+
         <componentdisplayable id="generaloutlookassetsection">
           <!--TODO: make header accept showexpression-->
           <section>
@@ -1181,6 +1188,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
 
         </componentdisplayable>
+        
+        
       </components>
 
       <schemas>
@@ -1298,6 +1307,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="addassociationlabels" value="true"/>
             <property key="associationstoprefetch" value="hlagUserLocations"/>
+            <property key="remarks.title" value="General Remarks:"/>
           </properties>
 
           <section id="usefulFaqLinks" attribute="usefulFaqLinks" resourcepath="/Content/Templates/usefulFaqLinks.html" />
@@ -1327,9 +1337,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Summary:" attribute="description" required="true">
             <renderer type="default" params="maxlength=95" />
           </field>
-          <field label="General Remarks:" attribute="longdescription_.ldtext" required="true">
-            <renderer type="textarea" params="maxlength=8000" />
-          </field>
+          <reference id="remarks"/>
           <!--wip-->
           <field label="Attachment:" attribute="newattachment" >
             <renderer type="upload"/>
@@ -1347,8 +1355,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema id="iam" title="User Access or Authorization-Problem" parentschema="AnewSR">
+          <properties>
+            <property key="remarks.title" value="Problem Description:"/>
+          </properties>
           <section id="abstractSection">
             <optionfield attribute="problemaffect" label="Does this Problem Affect:">
+              <option label="---Select One---" value=""/>
               <option label="Login Problem (server offline or password problem)" value="login"/>
               <option label="Authorization Problem" value="authorization"/>
               <option label="Other" value="other"/>

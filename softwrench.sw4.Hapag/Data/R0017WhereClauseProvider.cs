@@ -29,7 +29,7 @@ namespace softwrench.sw4.Hapag.Data {
 
         #region DelegateMEthods
         public string AssetWhereClause() {
-            return AssetWhereClauseFromLocations(GetLocations());
+            return AssetWhereClauseFromLocations(_locationManager.GetLocationsOfLoggedUser());
         }
 
         public string LocalITCSRWhereClause() {
@@ -82,7 +82,7 @@ namespace softwrench.sw4.Hapag.Data {
         private string InnerTicketWhereClause(string ticketQualifier = "SR") {
             var sb = new StringBuilder();
             sb.AppendFormat("{0}.pluspcustomer = 'HLC-00' or", ticketQualifier);
-            var locations = GetLocations();
+            var locations = _locationManager.GetLocationsOfLoggedUser();
             var i = 0;
             //if itc is not bound to any location let´s fix at least HLC-00 to it...
             var subCustomers = new StringBuilder("'HLC-00',");
@@ -158,45 +158,7 @@ namespace softwrench.sw4.Hapag.Data {
             return conditionToCheck;
         }
 
-        public HlagGroupedLocation[] GetLocations() {
-            var user = SecurityFacade.CurrentUser();
-            var locations = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
-            Log.DebugFormat("locations of user {0}: {1}", user.Login, locations);
-            var ctx = _contextLookuper.LookupContext();
-            if (locations == null) {
-                return null;
-            }
-            //            var groupedLocations = locations.GroupedLocations;
-            if (ctx.IsInModule(FunctionalRole.XItc)) {
-                if (user.IsWWUser()) {
-                    HlagGroupedLocation[] hlagGroupedLocations;
-                    if (ctx.MetadataParameters.ContainsKey("region")) {
-                        //HAP-994
-                        var parentRegion = ctx.MetadataParameters["region"];
-                        Log.DebugFormat("Region {0} was previously selected", parentRegion);
-                        try {
-                            hlagGroupedLocations =
-                                _locationManager.FindLocationsOfParentLocation(new PersonGroup { Name = parentRegion })
-                                    .ToArray();
-                        } catch (Exception) {
-                            Log.WarnFormat("region {0} not found, applying default", parentRegion);
-                            hlagGroupedLocations = _locationManager.FindAllLocations().ToArray();
-                        }
-                    } else {
-                        hlagGroupedLocations = _locationManager.FindAllLocations().ToArray();
-                    }
-                    Log.DebugFormat("found {0} location entries for R0017", hlagGroupedLocations.Length);
-                    return hlagGroupedLocations;
-                }
-                var supergroups = locations.GroupedLocationsFromParent;
-                var groupedLocations = supergroups.ToArray();
-                Log.DebugFormat("found {0} location entries for R0017", groupedLocations.Length);
-                return groupedLocations;
-            }
-            var result = locations.DirectGroupedLocations.ToArray();
-            Log.DebugFormat("found {0} location entries for R0017", result.Length);
-            return result;
-        }
+      
 
     }
 }

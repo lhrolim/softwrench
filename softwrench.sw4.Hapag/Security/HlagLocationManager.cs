@@ -406,13 +406,53 @@ namespace softwrench.sw4.Hapag.Security {
             return options;
         }
 
+        public HlagGroupedLocation[] GetLocationsOfLoggedUser() {
+            var user = SecurityFacade.CurrentUser();
+            var locations = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
+            Log.DebugFormat("locations of user {0}: {1}", user.Login, locations);
+            var ctx = _contextLookuper.LookupContext();
+            if (locations == null) {
+                return null;
+            }
+            //            var groupedLocations = locations.GroupedLocations;
+            if (ctx.IsInModule(FunctionalRole.XItc)) {
+                if (user.IsWWUser()) {
+                    HlagGroupedLocation[] hlagGroupedLocations;
+                    if (ctx.MetadataParameters.ContainsKey("region")) {
+                        //HAP-994
+                        var parentRegion = ctx.MetadataParameters["region"];
+                        Log.DebugFormat("Region {0} was previously selected", parentRegion);
+                        try {
+                            hlagGroupedLocations =
+                                FindLocationsOfParentLocation(new PersonGroup { Name = parentRegion })
+                                    .ToArray();
+                        } catch (Exception) {
+                            Log.WarnFormat("region {0} not found, applying default", parentRegion);
+                            hlagGroupedLocations = FindAllLocations().ToArray();
+                        }
+                    } else {
+                        hlagGroupedLocations = FindAllLocations().ToArray();
+                    }
+                    Log.DebugFormat("found {0} location entries for R0017", hlagGroupedLocations.Length);
+                    return hlagGroupedLocations;
+                }
+                var supergroups = locations.GroupedLocationsFromParent;
+                var groupedLocations = supergroups.ToArray();
+                Log.DebugFormat("found {0} location entries for R0017", groupedLocations.Length);
+                return groupedLocations;
+            }
+            var result = locations.DirectGroupedLocations.ToArray();
+            Log.DebugFormat("found {0} location entries for R0017", result.Length);
+            return result;
+        }
+
         private string BuildCostCentersFromMaximo(string subCustomer, string personId) {
             var groupNameToQuery = "'" + HapagPersonGroupConstants.BaseHapagLocationPrefix + subCustomer + "%" + "'";
             var results =
                 _maxDAO.FindByNativeQuery(
                     "select p.persongroup,description from PERSONGROUP p left join persongroupview v on p.PERSONGROUP = v.PERSONGROUP " +
                     "where (p.persongroup  like {0} ) and v.PERSONID = {1}"
-                        .Fmt(groupNameToQuery,"'" + personId + "'"));
+                        .Fmt(groupNameToQuery, "'" + personId + "'"));
             var list = results.Cast<IEnumerable<KeyValuePair<string, object>>>()
                 .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase)).ToList();
             ISet<string> costcenters = new HashSet<string>();
@@ -424,7 +464,7 @@ namespace softwrench.sw4.Hapag.Security {
                 var supergroup = HlagLocationUtil.IsSuperGroup(pg);
                 if (HlagLocationUtil.IsALocationGroup(pg) && !supergroup) {
                     costcenters.Add(HlagLocationUtil.GetCostCenter(pg));
-                } 
+                }
             }
 
             var groupedLocation = new HlagGroupedLocation(subCustomer, costcenters, false);

@@ -39,6 +39,7 @@ namespace softwrench.sw4.Hapag.Data.Init {
                 case ProfileType.Itc:
                     userProfile.Roles = new HashedSet<Role>(){
                         ordinaryRoles[RoleType.Incident],
+                        ordinaryRoles[RoleType.Iamsr],
                         ordinaryRoles[RoleType.Asset],
                         ordinaryRoles[RoleType.Faq],
                         ordinaryRoles[RoleType.ITCSearch],

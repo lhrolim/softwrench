@@ -10,9 +10,7 @@ namespace softwrench.sw4.Hapag.Data {
         public static string GetPersonGroupsForQuery(string module) {
 
             var user = SecurityFacade.CurrentUser();
-            string[] personGroups = user.PersonGroups.Where(x => "xitc".EqualsIc(module) ^ !HlagLocationUtil.IsSuperGroup(x.PersonGroup))
-                        .Select(f => f.PersonGroup.Name)
-                        .ToArray();
+            string[] personGroups;
             if ("xitc".EqualsIc(module)) {
                 personGroups =
                     user.PersonGroups.Where(x => HlagLocationUtil.IsSuperGroup(x.PersonGroup))
