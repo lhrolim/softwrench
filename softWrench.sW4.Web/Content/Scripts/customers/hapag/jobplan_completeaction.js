@@ -30,6 +30,16 @@
                 return true;
             }
         }
+        if (contextService.InModule(["xitc"])) {
+            var xitcLocations = user.genericproperties["hlaglocationxitc"];
+            for (var j = 0; j < xitcLocations.length; j++) {
+                var xitcLocation = xitcLocations[j];
+                if (xitcLocation== ownerGroup) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

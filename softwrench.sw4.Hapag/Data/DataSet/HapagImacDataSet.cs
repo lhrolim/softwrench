@@ -1,4 +1,5 @@
 ﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
+using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
@@ -32,6 +33,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return result;
         }
 
+
+
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
             InMemoryUser user, DetailRequest request) {
             var isCreationFromAsset = request.InitialValues != null && request.InitialValues.ContainsAttribute("assetnum");
@@ -50,6 +53,19 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
             result.AllassociatiosFetched = isCreationFromAsset;
             if (request.Id != null) {
+                if (ContextLookuper.LookupContext().IsInModule(FunctionalRole.XItc) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
+                    //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
+                    //TODO: move to a better place...
+                    var allGroups = LocationManager.GetLocationsOfLoggedUser();
+                    var xitcgroups = new HashSet<string>();
+                    foreach (var hlagGroupedLocation in allGroups) {
+                        var descriptions = hlagGroupedLocation.GetGroupDescriptions();
+                        foreach (var description in descriptions) {
+                            xitcgroups.Add(description);
+                        }
+                    }
+                    user.Genericproperties[HapagPersonGroupConstants.HlagLocationXITCProperty] = xitcgroups;
+                }
                 //need to fill in service type from swdb
             }
             return result;
@@ -295,7 +311,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             searchDto.AppendSearchEntry("commodity", new[] { "HLC-0003", "HLC-0005", "HLC-0006", "HLC-0007", "HLC-0008", "HLC-0786" });
 
             // This value is added due to a inserted parameter in a relatioship clause (from 'commodities' to 'assetloccomm') 
-            searchDto.ValuesDictionary["commodityassetnum"]=  new SearchParameter(assetnum);
+            searchDto.ValuesDictionary["commodityassetnum"] = new SearchParameter(assetnum);
 
             var entities = _maximoConnectorEngine.Find(entityMetadata, searchDto);
 

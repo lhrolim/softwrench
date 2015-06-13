@@ -4,6 +4,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
 
         public const string HlagLocationProperty = "hlaglocation";
+        public const string HlagLocationXITCProperty = "hlaglocationxitc";
         public const string PersonGroupPrefix = "HLC-DE-";
 
         internal const string BaseHapagPrefix = "C-HLC-WW-%";

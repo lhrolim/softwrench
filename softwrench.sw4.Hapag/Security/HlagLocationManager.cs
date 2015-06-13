@@ -174,6 +174,7 @@ namespace softwrench.sw4.Hapag.Security {
             };
             var result = result1;
             user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] = result;
+
             return result;
         }
 

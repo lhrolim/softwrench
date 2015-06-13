@@ -12,6 +12,8 @@ namespace softwrench.sw4.Hapag.Security {
 
         private string _cachedGroupDescriptionForQuery;
 
+        private ISet<string> _cachedGroupDescriptions;
+
         public ISet<string> CostCenters {
             get { return _costCenters; }
         }
@@ -102,6 +104,17 @@ namespace softwrench.sw4.Hapag.Security {
             return string.Format("CostCenters: {1}, SubCustomerSuffix: {0}", CostCenters, SubCustomerSuffix);
         }
 
+        public ISet<String> GetGroupDescriptions() {
+            if (_cachedGroupDescriptions != null) {
+                return _cachedGroupDescriptions;
+            }
+            _cachedGroupDescriptions = new HashSet<string>();
+            foreach (var costCenter in CostCenters) {
+                _cachedGroupDescriptions.Add(HapagPersonGroupConstants.BaseHapagLocationPrefix + SubCustomerSuffix + "_" +
+                                             costCenter.Split('/')[1]);
+            }
+            return _cachedGroupDescriptions;
+        }
 
         public string GetBuildDescriptionForQuery() {
             if (_cachedGroupDescriptionForQuery != null) {

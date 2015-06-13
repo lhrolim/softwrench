@@ -98,6 +98,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
         var schemaObj = schemaService.parseAppAndSchema(dashboard.detailSchema);
         var applicationToUse = schemaObj.app == null ? dashboard.applicationName : schemaObj.app;
         var id = dashboard.idFieldName != "" ? datamap[dashboard.idFieldName] : datamap[$scope.schema.idFieldName];
+        contextService.insertIntoContext("currentmodulenewwindow", contextService.retrieveFromContext('currentmodule'));
         var parameters = {
             id: id,
             popupmode: $scope.schema.properties['list.click.popupmode'],

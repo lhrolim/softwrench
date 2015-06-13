@@ -5,6 +5,8 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
     var adjustCurrentModuleForNewWindow = function (currentModule) {
         var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
         if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
+            //this currentmodulenewwindow is used to avoid that the module of the menu changes if a leaf on another module context that opens a browser gets clicked
+            //HAP-813
             currentModule = currentModuleNewWindow;
             if (currentModule == null) {
                 currentModule = "null";
