@@ -537,9 +537,15 @@
             </association>
           </section>
 
+          <association label="Item" target="itemnum" labelfield="inventory_.item_.description" 
+                       extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
+            <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
+            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
+          </association>
+          
           <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail" >
             <collectionproperties allowcreation="true" allowremoval="true" allowupdate="true" listschema="batchitemline" autocommit="false"/>
-            <renderer type="TABLE" params="mode=batch"/>
+            <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
           </composition>
 
           <section orientation="horizontal" showexpression="false">

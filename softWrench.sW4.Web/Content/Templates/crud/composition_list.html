@@ -32,7 +32,7 @@
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
                 <th ng-if="isBatch()">
-                    <button class="fa fa-plus btn btn-primary"></button>
+                    <button class="fa fa-plus btn btn-primary" ng-click="addBlankItem()"></button>
                 </th>
             </tr>
         </thead>
@@ -87,6 +87,15 @@
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox">
                                     <i class="fa" ng-class="{'fa-check-square-o' : compositionitem[column.attribute] == 'true', 'fa-square-o' :  compositionitem[column.attribute] == 'false'}" />
+                                </div>
+                                <div ng-switch-when="numericinput">
+                                    <input id="spinner"
+                                           class="hidden-phone form-control"
+                                           ng-model="compositionitem[column.attribute]"
+                                           ng-init="initField(column)"
+                                           min="{{column.rendererParameters['min']}}"
+                                           max="{{setMaxNumericInput(compositionitem,column)}}"
+                                           number-spinner />
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>

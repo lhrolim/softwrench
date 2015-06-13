@@ -123,6 +123,10 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                 if (!scope.compositiondata) {
                     //a blank array if nothing exists, scenario for selfcompositions
                     scope.compositiondata = [];
+
+                    if ("true" == metadata.schema.renderer.parameters["startwithentry"]) {
+                        scope.compositiondata.push({});
+                    }
                 }
 
                 scope.compositionschemadefinition = metadata.schema;
@@ -429,6 +433,10 @@ app.directive('compositionList', function (contextService, formatService, schema
                         }, 0, false);
                     });
             };
+
+            $scope.addBlankItem = function() {
+                $scope.clonedCompositionData.push({});
+            }
 
             $scope.newDetailFn = function () {
                 $scope.edit({});
