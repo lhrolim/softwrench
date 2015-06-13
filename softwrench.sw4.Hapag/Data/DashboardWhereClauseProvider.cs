@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using softwrench.sw4.Hapag.Data.Configuration;
 using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Security.Entities;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using System;
 
@@ -38,21 +41,24 @@ namespace softwrench.sw4.Hapag.Data {
             var ctx = _contextLookuper.LookupContext();
             var isViewAllOperation = ctx.ApplicationLookupContext != null &&
                                      "list".Equals(ctx.ApplicationLookupContext.Schema);
-            return HapagQueryConstants.ITCOpenImacs(GetUserPersonGroupsUtils(), isViewAllOperation);
+            return HapagQueryConstants.ITCOpenImacs(GetUserPersonGroupsUtils(true), isViewAllOperation);
         }
 
         public string DashboardAdIncidentsWhereClause() {
-            var personGroups = GetUserPersonGroupsUtils();
+            var personGroups = GetUserPersonGroupsUtils(false);
             return String.Format(HapagQueryConstants.DashBoardADOpenIncidents, personGroups);
         }
 
         public string AdIncidentsWhereClause() {
-            var personGroups = GetUserPersonGroupsUtils();
+            var personGroups = GetUserPersonGroupsUtils(false);
             return String.Format(HapagQueryConstants.ADOpenIncidents, personGroups);
         }
 
-        internal string GetUserPersonGroupsUtils() {
+        internal string GetUserPersonGroupsUtils(Boolean onlyLocations) {
             var module = _contextLookuper.LookupContext().Module;
+            if (!onlyLocations) {
+                return InMemoryUserExtensions.GetPersonGroupsForQuery(module);
+            }
 
             var sb = new StringBuilder();
             var locations = _iHlagLocationManager.GetLocationsOfLoggedUser();
@@ -60,7 +66,16 @@ namespace softwrench.sw4.Hapag.Data {
                 sb.Append(location.GetBuildDescriptionForQuery());
                 sb.Append(",");
             }
-            return sb.ToString(0,sb.Length-1);
+
+            //TODO: check with Thomas whether this is really necessary
+            var user = SecurityFacade.CurrentUser();
+            var otherGroups = user.PersonGroups.Where(p => !HlagLocationUtil.IsALocationGroup(p.PersonGroup));
+            foreach (var personGroupAssociation in otherGroups) {
+                sb.Append("'").Append(personGroupAssociation.GroupName).Append("'");
+                sb.Append(",");
+            }
+
+            return sb.ToString(0, sb.Length - 1);
         }
     }
 }
