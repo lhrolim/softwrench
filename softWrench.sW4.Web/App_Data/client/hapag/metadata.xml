@@ -3456,10 +3456,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field  attribute="class" label="Class" />
           <field  attribute="hlagcreateby" label="Created By" />
           <field  attribute="createby" label="Created By" hidden="true"/>
-          <field attribute="createdate" label="Created Date">
+          <field attribute="itdcreatedate" label="Created Date">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
           </field>
-          <field attribute="itdcreatedate" label="Created Date" hidden="true"/>
           <field  attribute="logtype" label="Log Type" />
           <field  attribute="description" label="Summary" />
           <field  attribute="longdescription_.ldtext" label="Details" hidden="true" />
@@ -3480,10 +3479,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field  attribute="class" label="Class" />
           <field  attribute="hlagcreateby" label="Created By" />
           <field  attribute="createby" label="Created By" hidden="true"/>
-          <field attribute="createdate" label="Created Date">
+          <field attribute="itdcreatedate" label="Created Date">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
           </field>
-          <field attribute="itdcreatedate" label="Created Date" hidden="true"/>
           <field  attribute="logtype" label="Log Type" />
           <field  attribute="description" label="Summary" />
           <field  attribute="longdescription_.ldtext" label="Details"/>
