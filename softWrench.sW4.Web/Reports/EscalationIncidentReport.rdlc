@@ -536,6 +536,7 @@ Convert.ToDatetime(Fields!LastActionDateTime.Value).ToString("dd/MM/yyyy HH:mm")
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -628,7 +629,6 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -842,7 +842,7 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
           <rd:TypeName>System.Object</rd:TypeName>
         </Field>
         <Field Name="LastActionDateTime">
-          <DataField>lastworklog_.createdate</DataField>
+          <DataField>lastworklog_.itdcreatedate</DataField>
           <rd:TypeName>System.Object</rd:TypeName>
         </Field>
         <Field Name="HoursInactive">
