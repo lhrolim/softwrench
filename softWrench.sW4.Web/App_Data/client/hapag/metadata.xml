@@ -668,7 +668,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Open Date" attribute="affecteddate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;manwidth=110px"/>
           </field>
-          <field label="Last-Action Date" attribute="lastworklog_.createdate">
+          <field label="Last-Action Date" attribute="lastworklog_.itdcreatedate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;manwidth=110px"/>
           </field>
           <field label="Last-Action Worklog" attribute="lastworklog_.description"/>
@@ -810,7 +810,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Owner Group" attribute="ownergroup">
             <renderer type="default" params="minwidth=84px;maxwidth=84px" />
           </field>
-          <field label="Last Action Date/Time" attribute="lastworklog_.createdate">
+          <field label="Last Action Date/Time" attribute="lastworklog_.itdcreatedate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=84px"/>
           </field>
           <field label="Hours Inactive" attribute="#hoursinactive">

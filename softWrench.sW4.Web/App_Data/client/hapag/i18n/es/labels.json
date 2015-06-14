@@ -640,6 +640,7 @@ worklog:{
 	class:Categoría
 	createby:Creado por
 	createdate:Fecha de creación
+	itdcreatedate:Fecha de creación
 	logtype:Modo de registro
 	description:Sumario
 }

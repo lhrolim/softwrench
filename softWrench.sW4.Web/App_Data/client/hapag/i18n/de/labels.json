@@ -622,6 +622,7 @@ worklog:{
 	class:Klasse
 	createby:Erstellt von
 	createdate:Erstellungsdatum
+	itdcreatedate:Erstellungsdatum
 	logtype:Typ
 	description:Zusammenfassung
 }
