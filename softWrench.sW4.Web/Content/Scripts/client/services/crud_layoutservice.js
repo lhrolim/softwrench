@@ -181,6 +181,11 @@ app.factory('layoutservice', function (fieldService) {
                 cssclass += ' haschildren';
             }
 
+            //add classes if childinputsize is set
+            if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.childinputsize != null) {
+                cssclass += ' childinputsize ' + fieldMetadata.rendererParameters.childinputsize;
+            }
+
             params.columnCount = getFieldColumnCount(fieldMetadata);
 
             cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params);
