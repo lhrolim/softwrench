@@ -4,7 +4,6 @@ using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Util;
 using System;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace softWrench.sW4.Security.Entities {
     [Class(Table = "SW_USERPROFILE")]
@@ -55,11 +54,13 @@ namespace softWrench.sW4.Security.Entities {
         public static UserProfile FromJson(JToken jObject) {
             var profile = new UserProfile();
             profile.Roles = new HashedSet<Role>();
-            JToken roles = jObject["roles"];		
+            
+            JToken roles = jObject["roles"];
             if (roles != null) {		
                 foreach (var jToken in roles.ToArray()) {		
                     profile.Roles.Add(new Role {		
-                        Id = (int?)jToken["id"]	
+                        Id = (int?)jToken["id"],
+	                    Name = (string)jToken["name"]
                     });		
                 }		
             }
