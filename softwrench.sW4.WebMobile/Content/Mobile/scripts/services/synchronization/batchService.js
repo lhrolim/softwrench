@@ -61,7 +61,9 @@
                 log.info("no batches submitted");
                 return $q.when();
             }
-            return $q.all(promises);
+            return $q.all(promises).then(function() {
+                return $q.when(batches);
+            });
         };
 
         function generateDatamapDiff(batchItem) {
