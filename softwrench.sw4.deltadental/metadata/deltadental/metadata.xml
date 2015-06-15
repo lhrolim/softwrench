@@ -299,7 +299,7 @@
           </association>
 
           <!--COMSW-1-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+          <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_SRClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
 
@@ -307,10 +307,6 @@
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
-
-          <association label="Request Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
-            <renderer type="lookup" />
           </association>
           
           <association label="Location:" target="location" labelfield="location_.description" >
@@ -407,7 +403,7 @@
       <schemas>
         <schema id="editdetail" platform="web" redeclaring="false">
           <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
+            <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
             </optionfield>
           </customization>
@@ -417,18 +413,16 @@
             </association>
           </customization>
           <customization position="failurecode">
-            <association label="Request Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+            <association label="Failure Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
               <renderer type="lookup" />
             </association>
           </customization>
-          <customization position="problemcode">
-            
-          </customization>
+          <customization position="problemcode"/>
         </schema>
         
         <schema id="newdetail" platform="web" redeclaring="false">
           <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
+            <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
             </optionfield>
           </customization>
@@ -437,6 +431,12 @@
               <renderer type="lookup"/>
             </association>
           </customization>
+          <customization position="failurecode">
+            <association label="Failure Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+              <renderer type="lookup" />
+            </association>
+          </customization>
+          <customization position="problemcode"/>
         </schema>
       </schemas>
     </application>
