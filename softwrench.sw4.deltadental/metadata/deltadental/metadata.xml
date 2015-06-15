@@ -289,14 +289,24 @@
           </association>
           <!-- SWWEB 173-->
 
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+          <association target="reportedbyperson_.personid" label="Reported By:" labelfield="reportedbyperson_.personid" hideDescription="true" defaultexpression="@username" extraprojectionvalues="altdisplayname,altphone,altemail" enableexpression="true" showexpression="false">
+            <renderer type="lookup" />
+          </association>
+          <field attribute="reportedby" label="Reported By:" default="@username" enableexpression="false"/>
+          <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
+          <field attribute="reportedbyemail" label="Reported By Email:" readonly="true"/>
+          <field attribute="reportedbyperson_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
+          <field attribute="reportedbyperson_.altphone" label="Alt Contact Phone:" readonly="true"/>
+          <field attribute="reportedbyperson_.altemail" label="Alt Contact Email:" readonly="true"/>
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
 
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="phone_.phonenum,email_.emailaddress">
             <renderer type="lookup" params="columnlabel=Name"/>
           </association>
+          <field attribute="person_.phone_.phonenum" label="Affected Person Phone:" readonly="true" attributeToServer="affectedphone"/>
+          <field attribute="person_.email_.emailaddress" label="Affected Person Email:" readonly="true" attributeToServer="affectedemail"/>
 
           <!--COMSW-1-->
           <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_SRClassStructureType">
