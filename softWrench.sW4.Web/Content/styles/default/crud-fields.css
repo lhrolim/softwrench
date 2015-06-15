@@ -280,3 +280,15 @@ input[type="date"], input[type="time"] {
         width: auto !important;
     }
 }
+
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+    .childinputsize.medium fieldset:nth-child(2n+1), .childinputsize.small fieldset:nth-child(2n+1), .childinputsize.xsmall fieldset:nth-child(2n+1) {
+        clear: both;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .childinputsize.medium fieldset:nth-child(2n+1), .childinputsize.small fieldset:nth-child(3n+1), .childinputsize.xsmall fieldset:nth-child(4n+1) {
+        clear: both;
+    }
+}

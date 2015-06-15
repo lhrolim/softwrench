@@ -18,6 +18,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             WsUtil.CloneArray(Phones, rootObject, "PHONE", delegate(object integrationObject, CrudOperationData crudData) {
 
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
+                ReflectionUtil.InstantiateAndSetIfNull(integrationObject, "type");
             });
         }
     }
