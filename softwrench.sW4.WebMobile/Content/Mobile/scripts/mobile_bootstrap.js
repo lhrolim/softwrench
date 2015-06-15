@@ -5,6 +5,11 @@
 //    angular.bootstrap(document, ['softwrench']);
 //});
 
+document.addEventListener("deviceready", function() {
+    // retrieve the DOM element that had the ng-app attribute
+    angular.bootstrap(document.body, ["softwrench"]);
+}, false);
+
 /**
  * Function that returns the angular $scope attached to an element.
  * It helps debug the app when deployed in Ripple (batarang's $scope inspection doesn't work in iframe);
