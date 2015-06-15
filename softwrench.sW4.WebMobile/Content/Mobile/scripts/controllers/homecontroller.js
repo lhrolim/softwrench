@@ -30,9 +30,8 @@
                         title: "Synchronization Suceeded",
                         template: message
                     });
-                    synchronizationOperationService.refreshSync();
-                        $scope.loadSyncOperationList();
-                    }).catch(function() {
+                    $scope.loadSyncOperationList();
+                }).catch(function() {
                     $ionicPopup.alert({
                         title: "Error Synchronizing Data",
                     });

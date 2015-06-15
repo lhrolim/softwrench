@@ -8,12 +8,6 @@ modules.webcommons.factory("synchronizationOperationService", ['$log', '$q', 'sw
             lastPageLoaded: 1
         }
 
-        var context = {
-            list: null,
-        }
-
-        var operationmap = null;
-
         return {
             createBatchOperation: function(startdate, relatedBatches) {
                 var log = $log.get("synchronizationOperationService#createBatchOperation");
@@ -65,26 +59,13 @@ modules.webcommons.factory("synchronizationOperationService", ['$log', '$q', 'sw
                 });
             },
 
-            refreshSync: function() {
-                context.list = null;
-            },
-
             hasProblems: function() {
                 //TODO:implement
                 return false;
             },
 
             getSyncList: function() {
-                if (context.list && context.list !== null && context.list.length > 0) {
-                    return $q.when(context.list);
-                }
-                return swdbDAO.findByQuery("SyncOperation", null, { pagesize: 10, pagenumber: internalListContext.pageNumber, orderby: "startdate", orderbyascending: false })
-                .then(function (operations) {
-                    context.list = operations;
-                    return context.list;
-                });
-
-
+                return swdbDAO.findByQuery("SyncOperation", null, { pagesize: 10, pagenumber: internalListContext.pageNumber, orderby: "startdate", orderbyascending: false });
             }
 
         }
