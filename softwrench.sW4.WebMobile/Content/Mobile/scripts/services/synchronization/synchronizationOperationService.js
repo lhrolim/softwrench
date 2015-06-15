@@ -9,22 +9,27 @@ modules.webcommons.factory("synchronizationOperationService", ['$log', '$q', 'sw
         }
 
         var context = {
-            list: null
+            list: null,
         }
 
+        var operationmap = null;
 
         return {
             createBatchOperation: function(startdate, relatedBatches) {
                 var log = $log.get("synchronizationOperationService#createBatchOperation");
                 var operation = {
                     startdate: startdate,
-                    status: "PENDING"
+                    status: "PENDING",
+                    items: 0
                 };
                 // return promise chain initiated with the creation of SyncOperation
                 return swdbDAO.instantiate("SyncOperation", operation)
                     .then(function(operationEntity) {
                         relatedBatches.forEach(function (batch) {
                             operationEntity.batches.add(batch);
+                            if (batch.loadeditems && batch.loadeditems !== null && batch.loadeditems.length > 0) {
+                                operationEntity.items += batch.loadeditems.length;
+                            }
                             batch.syncoperation = operationEntity;
                         });
                         var deferred = $q.defer();
@@ -70,14 +75,16 @@ modules.webcommons.factory("synchronizationOperationService", ['$log', '$q', 'sw
             },
 
             getSyncList: function() {
-                if (context.list) {
-                    return context.list;
+                if (context.list && context.list !== null && context.list.length > 0) {
+                    return $q.when(context.list);
                 }
-                context.list = [];
-                return swdbDAO.findByQuery('SyncOperation', "", { pagesize: 10, pagenumber: internalListContext.pageNumber, orderby: 'startdate', orderbyascending: false }).then(function(results) {
-                    context.list = results;
-                    return $q.when();
+                return swdbDAO.findByQuery("SyncOperation", null, { pagesize: 10, pagenumber: internalListContext.pageNumber, orderby: "startdate", orderbyascending: false })
+                .then(function (operations) {
+                    context.list = operations;
+                    return context.list;
                 });
+
+
             }
 
         }

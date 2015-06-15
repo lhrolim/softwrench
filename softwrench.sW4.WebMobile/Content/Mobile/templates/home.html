@@ -17,7 +17,7 @@
     <ion-content class="has-header">
 
         <ion-list class="list operation-list">
-            <ion-item class="item operation-item" ng-repeat="operation in synchronizationlist()" on-tap="">
+            <ion-item class="item operation-item" ng-repeat="operation in operationList" on-tap="openDetail()">
                 <div class="row">
                     <div class="col col-20 col-center operation-item-col">
                         <!-- icon indicating syncoperation's status -->

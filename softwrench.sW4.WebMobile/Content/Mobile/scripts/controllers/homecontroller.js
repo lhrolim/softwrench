@@ -1,10 +1,19 @@
 ﻿/// <reference path="maincontroller.js" />
 (function () {
-    'use strict'
+    "use strict";
 
     softwrench.controller('HomeController',
         ['$scope', 'synchronizationFacade', '$ionicPopup', '$ionicLoading', 'synchronizationOperationService', 'formatService',
         function($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService, formatService) {
+
+            $scope.operationList = [];
+
+            $scope.loadSyncOperationList = function () {
+                synchronizationOperationService.getSyncList()
+                    .then(function(operations) {
+                        $scope.operationList = operations;
+                    });
+            };
 
             $scope.fullSynchronize = function() {
 
@@ -22,7 +31,8 @@
                         template: message
                     });
                     synchronizationOperationService.refreshSync();
-                }).catch(function() {
+                        $scope.loadSyncOperationList();
+                    }).catch(function() {
                     $ionicPopup.alert({
                         title: "Error Synchronizing Data",
                     });
@@ -41,11 +51,6 @@
 
             $scope.isPending = function(syncOperation) {
                 return syncOperation.status.equalIc("pending");
-            };
-
-            $scope.getItemsSent = function(item) {
-                //TODO: get from batch
-                return 10;
             };
 
             $scope.getFormattedDate = function(startdate) {
@@ -72,6 +77,15 @@
                     return undefined;
                 }
             };
+
+            $scope.openDetail = function(syncOperation) {
+
+            };
+
+            // load syncoperation list after controller is loaded
+            $scope.loadSyncOperationList();
+
+            // TODO: infinite scroll loading syncoperation list
 
         }
     ]);
