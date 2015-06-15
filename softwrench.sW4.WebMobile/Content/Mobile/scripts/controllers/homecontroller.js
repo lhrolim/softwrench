@@ -1,70 +1,92 @@
 ﻿/// <reference path="maincontroller.js" />
-softwrench.controller('HomeController', function ($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService,formatService) {
-    $scope.data = {};
-    $scope.expanded = false;
+(function () {
+    "use strict";
 
-    $scope.fullSynchronize = function () {
+    softwrench.controller('HomeController',
+        ['$scope', 'synchronizationFacade', '$ionicPopup', '$ionicLoading', 'synchronizationOperationService', 'formatService',
+        function($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService, formatService) {
 
-        $ionicLoading.show({
-            content: '<i class="icon ion-looping"></i> Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 10
-        });
-        var promise = synchronizationFacade.fullSync();
-        promise.then(function (message) {
-            $ionicPopup.alert({
-                title: "Synchronization Suceeded",
-                template: message
-            });
-            synchronizationOperationService.refreshSync();
-        }).catch(function () {
-            $ionicPopup.alert({
-                title: "Error Synchronizing Data",
-            });
-        }).finally(function (message) {
-            $ionicLoading.hide();
-        });
-    }
+            $scope.operationList = [];
 
-    $scope.doneNoProblems=function(syncOperation) {
-        return syncOperation.status.equalIc("complete") && !synchronizationOperationService.hasProblems(syncOperation);
-    }
+            $scope.loadSyncOperationList = function () {
+                synchronizationOperationService.getSyncList()
+                    .then(function(operations) {
+                        $scope.operationList = operations;
+                    });
+            };
 
-    $scope.doneWithProblems = function (syncOperation) {
-        return syncOperation.status.equalIc("complete") && synchronizationOperationService.hasProblems(syncOperation);
-    }
+            $scope.fullSynchronize = function() {
 
-    $scope.isPending = function (syncOperation) {
-        return syncOperation.status.equalIc("pending");
-    }
+                $ionicLoading.show({
+                    content: '<i class="icon ion-looping"></i> Loading',
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 10
+                });
+                synchronizationFacade.fullSync()
+                .then(function (message) {
+                    $ionicPopup.alert({
+                        title: "Synchronization Suceeded",
+                        template: message
+                    });
+                    $scope.loadSyncOperationList();
+                }).catch(function() {
+                    $ionicPopup.alert({
+                        title: "Error Synchronizing Data",
+                    });
+                }).finally(function(message) {
+                    $ionicLoading.hide();
+                });
+            };
 
-    $scope.getItemsSent = function (item) {
-        //TODO: get from batch
-        return 10;
-    }
+            $scope.doneNoProblems = function(syncOperation) {
+                return syncOperation.status.equalIc("complete") && !synchronizationOperationService.hasProblems(syncOperation);
+            };
 
-    $scope.getFormattedDate=function(startdate) {
-        return formatService.formatDate(startdate, 'MM/dd/yyyy HH:mm');
-    }
+            $scope.doneWithProblems = function(syncOperation) {
+                return syncOperation.status.equalIc("complete") && synchronizationOperationService.hasProblems(syncOperation);
+            };
 
-    $scope.synchronizationlist = function() {
-        return synchronizationOperationService.getSyncList();
-    }
+            $scope.isPending = function(syncOperation) {
+                return syncOperation.status.equalIc("pending");
+            };
 
-    $scope.getTimeElapsed=function(item) {
-        return (item.enddate - item.startdate)/1000;
-    }
+            $scope.getFormattedDate = function(startdate) {
+                return formatService.formatDate(startdate, 'MM/dd/yyyy HH:mm');
+            };
 
-    $scope.getStatusColor=function(item) {
-        if (this.doneNoProblems(item)) {
-            return "green";
+            $scope.synchronizationlist = function () {
+                // TODO: promise resolution + set number of pending items
+                return synchronizationOperationService.getSyncList();
+            };
+
+            $scope.getTimeElapsed = function(item) {
+                return (item.enddate - item.startdate) / 1000;
+            };
+
+            $scope.getFormattedStatus = function(syncOperation) {
+                if ($scope.doneNoProblems(syncOperation)) {
+                    return "Completed";
+                } else if ($scope.isPending(syncOperation)) {
+                    return "Pending";
+                } else if ($scope.doneWithProblems(syncOperation)) {
+                    return "Completed with Issues";
+                } else {
+                    return undefined;
+                }
+            };
+
+            $scope.openDetail = function(syncOperation) {
+
+            };
+
+            // load syncoperation list after controller is loaded
+            $scope.loadSyncOperationList();
+
+            // TODO: infinite scroll loading syncoperation list
+
         }
-    }
+    ]);
 
-    $scope.toggleExpansion=function() {
-        $scope.expanded = !$scope.expanded;
-    }
-
-})
+})();

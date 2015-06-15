@@ -1,0 +1,44 @@
+﻿.page-home .operation-list .operation-item {
+    padding: 10px 0;
+}
+.page-home .operation-list .operation-item .operation-item-col {
+    vertical-align: middle;
+    padding: 0 5px 0 0;
+}
+.page-home .operation-list .operation-item .operation-item-col:first-child {
+    text-align: center;
+}
+.page-home .operation-list .operation-item .operation-item-col:last-child {
+    padding-right: 0;
+    text-align: right;
+}
+.page-home .operation-list .operation-item .operation-status-text {
+    padding-left: 0;
+    font-size: 14px;
+}
+.page-home .operation-list .operation-item .operation-status-icon {
+    color: white;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    font-size: 25px;
+}
+.page-home .operation-list .operation-item .operation-status-icon.statussuccess {
+    background-color: rgb(57, 181, 74);
+}
+.page-home .operation-list .operation-item .operation-status-icon.statuspending {
+    background-color: rgb(128, 128, 128);
+}
+.page-home .operation-list .operation-item .operation-status-icon.statusproblem {
+    background-color: rgb(229, 147, 35);
+}
+.page-home .operation-list .operation-item .operation-status-icon .row {
+    height: 100%;
+    padding: 0;
+}
+.page-home .operation-list .operation-item .operation-status-icon .row .col {
+    padding: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}

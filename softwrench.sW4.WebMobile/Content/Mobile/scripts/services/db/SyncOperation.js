@@ -7,10 +7,11 @@ entities.SyncOperation = persistence.define('SyncOperation', {
     lastsyncServerVersion: "TEXT",
     //pending,complete
     status: 'TEXT',
-    numberofdownloadeditems: 'INT',
-    numberofdownloadedsupportdata: 'INT',
-    metadatachange: 'BOOL',
+    numberofdownloadeditems: "INT",
+    numberofdownloadedsupportdata: "INT",
+    metadatachange: "BOOL",
+    items: "INT" // batches.items.length
 });
 
 //many batches, one per application sent, as they can be processed in parallel cpus
-entities.SyncOperation.hasMany('batch', entities.Batch, 'syncoperation');
+entities.SyncOperation.hasMany("batches", entities.Batch, "syncoperation");
