@@ -15,7 +15,7 @@
         <attribute name="servername" type="varchar" required="true" />
       </attributes>
       <connectorParameters>
-        <connectorParameter key="dbtable" value="maxpropvalue" />P
+        <connectorParameter key="dbtable" value="maxpropvalue" />
       </connectorParameters>
     </entity>
 
