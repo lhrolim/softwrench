@@ -40,9 +40,15 @@
           <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
-          <field attribute="locationorg" label="Org ID"/>
-          <field attribute="locationsite" label="Site ID"/>
-          <field attribute="location" label="Location"/>
+          <association target="locationorg" labelfield="organization_.description" label="Org ID">
+            <renderer type="lookup"/>
+          </association>
+          <association target="locationsite" labelfield="site_.description" label="Site ID">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.description" label="Location">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="department" label="Department"/>
           <field attribute="langcode" label="Language"/>
           <field attribute="#isactive" label="Active">

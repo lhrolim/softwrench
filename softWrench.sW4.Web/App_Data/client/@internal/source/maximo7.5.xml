@@ -227,12 +227,46 @@
         <relationship to="phone" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="locationsite" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="organization">
+          <relationshipAttribute from="locationorg" to="orgid" primary="true"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute to="type" query="!@type = 'OPERATING'"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />
         <connectorParameter key="integration_interface" value="SWPERSON" />
       </connectorParameters>
 
+    </entity>
+
+    <entity name="organization" idAttribute="orgid">
+      <attributes>
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="basecurrency1" type="varchar" required="true" />
+        <attribute name="basecurrency2" type="varchar" required="false" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="companysetid" type="varchar" required="true" />
+        <attribute name="organizationid" type="bigint" required="true" />
+        <attribute name="clearingacct" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="dfltitemstatus" type="varchar" required="true" />
+        <attribute name="category" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="organization" />
+      </connectorParameters>
     </entity>
 
     <entity name="synonymdomain" idAttribute="synonymdomainid">
