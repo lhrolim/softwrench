@@ -111,8 +111,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         updateUnderlyingAssociationObject: function (associationFieldMetadata, underlyingValue, scope) {
 
             //if association options have no fields, we need to define it as an empty array. 
-            if (scope.associationOptions == undefined)
-                scope.associationOptions = [];
+            scope.associationOptions = scope.associationOptions || [];
+                
 
             var key = associationFieldMetadata.associationKey;
             var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
@@ -381,9 +381,11 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
         //to its value that will filter the lookup), build a searchDTO, and return the post call to the
         //UpdateAssociations function in the ExtendedData controller.
-        getAssociationOptions: function (scope, lookupObj, pageNumber, searchObj) {
-            var schema = scope.schema;
-            var fields = scope.datamap;
+        getAssociationOptions: function (schema,datamap, lookupObj, pageNumber, searchObj) {
+            var fields = datamap;
+            if (lookupObj.searchDatamap) {
+                fields = lookupObj.searchDatamap;
+            }
 
             var parameters = {};
             parameters.application = schema.applicationName;
@@ -450,7 +452,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook, searchObj) {
             var getAssociationOptions = this.getAssociationOptions;
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
-            getAssociationOptions(scope, lookupObj, null, searchObj).success(function (data) {
+            lookupObj.searchDatamap = datamap;
+            getAssociationOptions(scope.schema,scope.datamap, lookupObj, null, searchObj).success(function (data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {

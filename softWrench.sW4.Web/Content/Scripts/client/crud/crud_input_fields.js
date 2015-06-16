@@ -315,7 +315,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 if (key == undefined) {
                     return true;
                 }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
+                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap,$scope);
                 if (result != $scope.disabledassociations[key]) {
                     cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                     $scope.disabledassociations[key] = result;
@@ -383,7 +383,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 }
 
                 $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata, code);
+                cmplookup.updateLookupObject($scope, fieldMetadata, code,$scope.datamap);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
