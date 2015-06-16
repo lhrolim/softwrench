@@ -233,6 +233,10 @@
         <relationship to="organization">
           <relationshipAttribute from="locationorg" to="orgid" primary="true"/>
         </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute to="type" query="!@type = 'OPERATING'"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />

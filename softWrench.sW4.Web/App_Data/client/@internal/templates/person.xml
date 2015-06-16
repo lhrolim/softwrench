@@ -46,7 +46,9 @@
           <association target="locationsite" labelfield="site_.description" label="Site ID">
             <renderer type="lookup"/>
           </association>
-          <field attribute="location" label="Location"/>
+          <association target="location" labelfield="location_.description" label="Location">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="department" label="Department"/>
           <field attribute="langcode" label="Language"/>
           <field attribute="#isactive" label="Active">
