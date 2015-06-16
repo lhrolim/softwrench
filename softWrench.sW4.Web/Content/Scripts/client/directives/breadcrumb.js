@@ -10,20 +10,55 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
             title: '='
         },
         link: function (scope, element, attr) {
+            log.debug(scope.menu);
+
             scope.$watch('title', function () {
                 //element.html(getBreadCrumbHTML(log, scope.menu, scope.title));
 
                 var template = (getBreadCrumbHTML(log, scope.menu, scope.title));
                 var content = $compile(template)(scope);
                 element.html(content);
-
             });
         },
-        controller: function ($scope, $rootScope) {
-            log.debug('Breadcrumb Controller');
 
-            $scope.clicktest = function () {
+    }
+});
+
+app.directive('bcMenu', function ($rootScope, $log, $compile) {
+    var log = $log.getInstance('sw4.breadcrumb Menu');
+
+    return {
+        link: function (scope, element, attr) {
+
+        }
+    }
+});
+
+app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
+    var log = $log.getInstance('sw4.breadcrumb Menu Item');
+
+    return {
+        link: function (scope, element, attr) {
+            $compile(element.contents())(scope);
+        },
+        controller: function ($scope, $rootScope, menuService, alertService, validationService) {
+            //log.debug('Breadcrumb Menu Item Controller');
+
+            $scope.testclick = function () {
                 log.debug('click test');
+            };
+
+            $scope.goToApplication = function (leaf, target) {
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.goToApplication(leaf, target);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.goToApplication(leaf, target);
+                }
             };
         },
     }
@@ -32,7 +67,7 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
 var seperator = '<span class="part seperator">/</span>';
 
 function getBreadCrumbHTML(log, menu, current) {
-    var path = '<div class="part"><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-home"></i>&ensp;';
+    var path = '<div class="part" bc-menu><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-home"></i>&ensp;';
 
     //get the title of the home item
     if (menu.leafs[0].controller == 'Dashboard') {
@@ -105,7 +140,6 @@ function findCurrentPage(log, leafs, current, parent) {
     return path;
 }
 
-
 function getChildMenu(log, leafs, parent) {
     var path = '';
     var searchLeafs = null;
@@ -120,7 +154,7 @@ function getChildMenu(log, leafs, parent) {
     }
 
     if (searchLeafs != null) {
-        path += '<ul class="dropdown-menu" role="menu">';
+        path += '<ul class="dropdown-menu" role="menu" bc-menu>';
         for (var id in searchLeafs) {
             if (searchLeafs[id].title != null) {
                 var childMenu = getChildMenu(log, searchLeafs[id].leafs, searchLeafs[id]);
@@ -129,7 +163,7 @@ function getChildMenu(log, leafs, parent) {
                 if (childMenu) {
                     path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                    path += '<li><a ng-click="testclick()">';
+                    path += '<li><a bc-menu-item ng-click="goToApplication(menu.leafs[1], $event.target)">';
                 }
 
                 //build the menu item
