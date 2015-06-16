@@ -22,14 +22,14 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
         controller: function ($scope, $rootScope) {
             log.debug('Breadcrumb Controller');
 
-            $rootScope.clicktest = function () {
+            $scope.clicktest = function () {
                 log.debug('click test');
             };
         },
     }
 });
 
-var seperator = '<span class="part seperator" ng-click="clicktest()">/</span>';
+var seperator = '<span class="part seperator">/</span>';
 
 function getBreadCrumbHTML(log, menu, current) {
     var path = '<div class="part"><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-home"></i>&ensp;';
