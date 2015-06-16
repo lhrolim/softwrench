@@ -180,7 +180,7 @@
         </complexType>
       </element>
       <element name="notifications" maxOccurs="1" minOccurs="0" type="tns:NotificationsDeclarationsType">
-        
+
       </element>
       <element name="properties" maxOccurs="1" minOccurs="0">
         <complexType>
@@ -274,13 +274,13 @@
         <attribute name="title" type="string"></attribute>
         <attribute name="abstract" type="boolean"></attribute>
         <attribute name="parentschema" type="string"></attribute>
-        <attribute name="redeclaring" type="string" use="optional" default="false"> 
+        <attribute name="redeclaring" type="string" use="optional" default="false">
           <annotation>
             <documentation>
               If true, it means that we should disconsider any schema declared with the same name on the templates file and use only this schema declaration.
             </documentation>
           </annotation>
-          
+
         </attribute>
       </extension>
     </complexContent>
@@ -289,9 +289,9 @@
   <complexType name="CustomizationType">
     <annotation>
       <documentation>
-        Used for modifying the base template on a given position, adding or removing fields for a customer. Ex: customer xxx wants to use workorder template, modifying just a field of a schema. 
+        Used for modifying the base template on a given position, adding or removing fields for a customer. Ex: customer xxx wants to use workorder template, modifying just a field of a schema.
         Then, he would need to redeclare the schema with the same key and a customization on it with the fields (or empty to replace)
-        
+
         One single redeclared schema could contain several customizations in place.
       </documentation>
     </annotation>
@@ -428,17 +428,18 @@
   <complexType name="Association">
     <choice minOccurs="0" maxOccurs="unbounded">
       <element name="dataprovider" type="tns:DataProvider"
-				maxOccurs="1" minOccurs="0">
+    		maxOccurs="1" minOccurs="0">
       </element>
       <element name="renderer" type="tns:Renderer" maxOccurs="1"
-				minOccurs="0">
+    		minOccurs="0">
       </element>
       <element name="filter" type="tns:Filter" maxOccurs="1"
-        minOccurs="0">
+    		minOccurs="0">
       </element>
       <element name="event" type="tns:inputEvent" minOccurs="0"
-				maxOccurs="unbounded">
+    		maxOccurs="unbounded">
       </element>
+      <element name="details" type="tns:sectionComplexType" maxOccurs="1" minOccurs="0"></element>
     </choice>
 
     <attribute name="label" type="string" use="required"></attribute>
@@ -515,6 +516,10 @@
     <attribute name="method" type="string"></attribute>
   </complexType>
 
+  <complexType name="AssociationDetail">
+    <attribute name="showexpression" type="string"></attribute>
+  </complexType>
+
   <complexType name="Composition">
     <sequence>
 
@@ -543,7 +548,7 @@
             <attribute name="printenabled" type="boolean" use="optional">
               <annotation>
                 <documentation>
-                  Enable/disable the print section.                  
+                  Enable/disable the print section.
                 </documentation>
               </annotation>
             </attribute>
@@ -1104,9 +1109,9 @@
             <element name="summary" maxOccurs="1" minOccurs="1" type="tns:NotificationAttributeType"/>
 
             <element name="createddate" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
-            
+
             <element name="uid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
-            
+
             <element name="changeby" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
 
             <element name="extraAttributes" minOccurs="0" maxOccurs="1">
@@ -1132,7 +1137,7 @@
     <attribute name="targetApplication" type="string"></attribute>
     <attribute name="whereClause" type="string"></attribute>
   </complexType>
-  
+
   <complexType name="NotificationsDeclarationsType">
     <choice minOccurs="1" maxOccurs="1">
       <element name="notification" type="tns:Notification" minOccurs="0"
@@ -1145,7 +1150,7 @@
       <element name="application" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
       <element name="parentuid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
       <element name="parentid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
-    </all> 
+    </all>
   </complexType>
 
   <complexType name="NotificationAttributeType">
