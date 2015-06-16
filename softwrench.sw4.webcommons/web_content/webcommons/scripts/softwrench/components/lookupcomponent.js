@@ -57,7 +57,9 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
         },
 
         
-        updateLookupObject: function (scope, fieldMetadata, searchValue) {
+        updateLookupObject: function (scope, fieldMetadata, searchValue,searchDatamap) {
+
+
             if (scope.lookupObj == null) {
                 scope.lookupObj = {};
             }
@@ -75,7 +77,7 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
                 searchObj[fieldMetadata.target] = searchValue;
             }
 
-            associationService.updateDependentAssociationValues(scope, scope.datamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
+            associationService.updateDependentAssociationValues(scope, searchDatamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
             //to avoid circular dependency
             scope.$emit("sw_resetFocusToCurrent", scope.schema, fieldMetadata.attribute);
 //            focusService.resetFocusToCurrent(scope.schema, fieldMetadata.attribute);

@@ -20,6 +20,10 @@
     <table class="table table-hover" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
+                <th ng-if="hasDetailSchema()">
+                    <!--batchMode-->
+                </th>
+
                 <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'">
                     <!--Multiselect-->
                 </th>
@@ -32,15 +36,23 @@
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
                 <th ng-if="isBatch()">
-                    <button class="fa fa-plus btn btn-primary" ng-click="addBlankItem()"></button>
+                    <button class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
                 </th>
             </tr>
+            
         </thead>
-        <tbody ng-show="clonedCompositionData.length > 0">
-            <tr ng-repeat-start="compositionitem in clonedCompositionData"
+        <tbody ng-show="compositionData().length > 0">
+            <tr ng-repeat-start="compositionitem in compositionData()"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
-                ng-click="toggleDetails(compositionitem,column)"
+                ng-click="toggleDetails(compositionitem,column,false,$event)"
                 ng-class="$odd ? 'odd' : 'even'">
+                <td ng-if="hasDetailSchema()">
+                    <button class="btn" ng-click="toggleDetails(compositionitem,column,true,$event)">
+                        <i class="fa right-caret" ng-hide="isItemExpanded(compositionitem)"></i>
+                        <i class="fa bottom-caret" ng-show="isItemExpanded(compositionitem)"></i>
+                    </button>
+                </td>
+
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
@@ -64,13 +76,15 @@
                                     <div class="col-lg-12">
                                         <div class="input-group">
                                             <input type="text" placeholder="{{column.label}}" class="form-control"
+                                                   ng-enabled="isSelectEnabled(column,compositionitem)"
                                                    ng-model="compositionitem[column.attribute]"
                                                    ng-change="lookupCodeChange(column)"
                                                    ng-blur="lookupCodeBlur(column)"
                                                    ng-enter="showLookupModal(column,compositionitem)"
                                                    rel="tooltip" data-original-title="Enter {{column.label}} id to lookup " />
                                             <span class="input-group-addon last" ng-click="showLookupModal(column,compositionitem)"
-                                                  rel="tooltip" data-original-title="Open the lookup popup">
+                                                  rel="tooltip" data-original-title="Open the lookup popup"
+                                                  ng-enabled="isSelectEnabled(column,compositionitem)">
                                                 <i class="glyphicon glyphicon-search" style="cursor: pointer"></i>
                                             </span>
                                             <div></div><!--stop addon from moving on hover-->
@@ -95,6 +109,7 @@
                                            ng-init="initField(column)"
                                            min="{{column.rendererParameters['min']}}"
                                            max="{{setMaxNumericInput(compositionitem,column)}}"
+                                           ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            number-spinner />
                                 </div>
                                 <div ng-switch-when="icon">
@@ -116,11 +131,11 @@
                                         </span>
                                     </div>
                                     <a ng-if="column.rendererParameters['editable'] != 'true'">
-                                        {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
+                                        {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                     </a>
 
                                 </div>
-                                <div ng-switch-default>
+                                <div ng-switch-default style="padding-top: 6px">
 
                                     <div ng-if="column.rendererParameters['editable'] == 'true'"
                                          ng-class="{'input-group': column.rendererParameters['prepend'] || column.rendererParameters['append'] }">
@@ -135,8 +150,8 @@
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
 
-                                    <a ng-if="column.rendererParameters['editable'] != 'true'">
-                                        {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
+                                    <a ng-if="column.rendererParameters['editable'] != 'true'" style="vertical-align: middle">
+                                        {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                     </a>
                                 </div>
                             </ng-switch>
@@ -144,6 +159,9 @@
 
 
                     </ng-switch>
+                </td>
+                <td ng-if="isBatch()" ng-hide="firstItem(compositionitem)">
+                    <button class="fa fa-trash-o btn" ng-click="removeBatchItem()"></button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
@@ -167,7 +185,7 @@
                 </td>
             </tr>
         </tbody>
-        <tbody ng-show="clonedCompositionData.length == 0">
+        <tbody ng-show="isNoRecords">
             <tr>
                 <td colspan="100%">
                     {{i18N('general.norecords','No records to display')}}
@@ -228,7 +246,7 @@
                               lookup-associations-description="lookupAssociationsDescription"
                               association-options="associationOptions"
                               schema="compositionlistschema"
-                              datamap="compositiondata">
+                              datamap="parentdata">
         </lookup-modal-wrapper>
     </div>
 

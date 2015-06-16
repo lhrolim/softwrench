@@ -14,6 +14,11 @@ app.directive('lookupModalWrapper', function ($compile) {
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
+            if (!scope.datamap) {
+                scope.datamap =  {};
+            }
+            
+
             element.append(
             "<lookup-modal lookup-obj='lookupObj'" +
                 "lookup-associations-code='lookupAssociationsCode'" +
@@ -47,7 +52,7 @@ app.directive('lookupModal', function (contextService) {
             $scope.lookupModalSearch = function (pageNumber) {
                 focusService.resetFocusToCurrent($scope.schema,$scope.lookupObj.fieldMetadata.attribute);
 
-                associationService.getAssociationOptions($scope, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
+                associationService.getAssociationOptions($scope.schema,$scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
                     var result = data.resultObject;
                     $scope.populateModal(result);
                 }).error(function (data) {
@@ -109,6 +114,10 @@ app.directive('lookupModal', function (contextService) {
                 }
 
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
+                if (!$scope.lookupAssociationsCode) {
+                    return;
+                }
+
                 if ($scope.selectedOption == null &&
                     $scope.datamap[fieldMetadata.attribute] != $scope.lookupAssociationsCode[fieldMetadata.attribute]) {
                     if ($scope.modalCanceled == true) {
@@ -129,6 +138,9 @@ app.directive('lookupModal', function (contextService) {
             };
 
             $element.on('shown.bs.modal', function (e) {
+                if ($scope.lookupObj.item) {
+                    $scope.datamap = $scope.lookupObj.item;
+                }
                 $scope.modalCanceled = false;
                 $scope.selectedOption = null;
                 $scope.searchObj = {};
