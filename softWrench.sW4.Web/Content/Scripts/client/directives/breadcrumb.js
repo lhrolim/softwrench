@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('breadcrumb', function ($rootScope, $log, $timeout) {
+app.directive('breadcrumb', function ($rootScope, $log, $compile) {
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
@@ -11,17 +11,27 @@ app.directive('breadcrumb', function ($rootScope, $log, $timeout) {
         },
         link: function (scope, element, attr) {
             scope.$watch('title', function () {
-                element.html(getBreadCrumbHTML(log, scope.menu, scope.title));
-            });  
+                //element.html(getBreadCrumbHTML(log, scope.menu, scope.title));
+
+                var template = (getBreadCrumbHTML(log, scope.menu, scope.title));
+                var content = $compile(template)(scope);
+                element.html(content);
+
+            });
+        },
+        controller: function ($scope, $rootScope) {
+            log.debug('Breadcrumb Controller');
+
+            $rootScope.clicktest = function () {
+                log.debug('click test');
+            };
         },
     }
 });
 
-var seperator = '<span class="part seperator">/</span>';
+var seperator = '<span class="part seperator" ng-click="clicktest()">/</span>';
 
 function getBreadCrumbHTML(log, menu, current) {
-    log.debug(menu, current);
-
     var path = '<div class="part"><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-home"></i>&ensp;';
 
     //get the title of the home item
@@ -55,34 +65,39 @@ function findCurrentPage(log, leafs, current, parent) {
     if (leafs != null) {
         for (var id in leafs) {
             var newPath = findCurrentPage(log, leafs[id].leafs, current, leafs[id]);
-
             var icon = '<i class="' + leafs[id].icon + '"></i>&ensp;'
-            if (newPath != undefined && newPath != '') {
 
-                //build button and dropdown menu
+            //if this is part of the breadcrumb
+            if ((newPath != undefined && newPath != '') || (leafs[id].title == current)) {
+
+                //get the child menu items
+                var childMenu = getChildMenu(log, leafs, leafs[id]);
+
+                //build the breadcrumb part and menu
                 path += '<div class="part">';
-                path += '<a data-toggle="dropdown" aria-expanded="false">';
-                path += icon + leafs[id].title;
-                path += '</a>';
-                path += getChildMenu(log, leafs, leafs[id]);
-                path += '</div>';
-                path += seperator + newPath;
 
-            } else if (leafs[id].title == current) {
-
-                //build the button and dropdown menu
-                path += '<div class="part">';
-                path += '<a>';
-                path += icon + leafs[id].title;
-
-                //build the dropdown menu
-                if (leafs[id].leafs != null) {
-                    //TODO: get children menu items
-                    log.debug('get children menu items', leafs[id]);
+                //if child menu found, add the dropdown toggle
+                if (newPath) {
+                    path += '<a data-toggle="dropdown" aria-expanded="false">';
+                } else {
+                    path += '<a>';
                 }
 
+                //add the icon and title
+                path += icon + leafs[id].title;
                 path += '</a>';
+
+                //add the child menu items
+                if (newPath) {
+                    path += getChildMenu(log, leafs, leafs[id]);
+                }
+
                 path += '</div>';
+
+                //if found add the next breadcrumb part
+                if (newPath != undefined && newPath != '') {
+                    path += seperator + newPath;
+                }
             }
         }
     }
@@ -108,21 +123,22 @@ function getChildMenu(log, leafs, parent) {
         path += '<ul class="dropdown-menu" role="menu">';
         for (var id in searchLeafs) {
             if (searchLeafs[id].title != null) {
-                var menuItem = getChildMenu(log, searchLeafs[id].leafs, searchLeafs[id]);
+                var childMenu = getChildMenu(log, searchLeafs[id].leafs, searchLeafs[id]);
 
-                //if child items found, display as submenu
-                if (menuItem) {
-                    path += '<li class="dropdown-submenu">';
+                //if child menu found, display as submenu
+                if (childMenu) {
+                    path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                    path += '<li>';
+                    path += '<li><a ng-click="testclick()">';
                 }
 
                 //build the menu item
-                path += '<a data-toggle="dropdown" aria-expanded="false"><i class="' + searchLeafs[id].icon + '"></i>&ensp;' + searchLeafs[id].title + '</a>';
+                path += '<i class="' + searchLeafs[id].icon + '"></i>&ensp;' + searchLeafs[id].title;
+                path += '</a>';
 
-                //append the child menu items
-                if (menuItem) {
-                    path += menuItem;
+                //add the child menu items
+                if (childMenu) {
+                    path += childMenu;
                 }
 
                 path += '</li>';

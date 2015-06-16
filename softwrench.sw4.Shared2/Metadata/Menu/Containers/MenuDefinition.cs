@@ -9,7 +9,7 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
 
     public class MenuDefinition {
         public enum MenuDisplacement {
-            Vertical, Horizontal, Bread,
+            Vertical, Horizontal, Breadcrumb,
         }
 
         private List<MenuBaseDefinition> _cachedExplodedLeafs;
