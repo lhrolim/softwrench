@@ -80,6 +80,7 @@
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" requiredexpression="true"
                        enableexpression="(@mode=='batch' &amp;&amp; @itemnum!=null) || (@mode!='batch' &amp;&amp; @siteid!=null)">
             <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterStoreRooms"/>
           </association>
         </componentdisplayable>
 
@@ -287,6 +288,12 @@
         <schema id="batchitemline">
           <reference id="issuestoreloc"/>
           <reference id="issuebin"/>
+          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description"  
+                       extraprojectionvalues="binnum" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
+          </association>
 
           <field attribute="binbalances_.curbal" label="Current Balance" readonly="true"/>
 

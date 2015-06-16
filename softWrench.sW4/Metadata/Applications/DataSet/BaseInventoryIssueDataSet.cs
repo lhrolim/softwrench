@@ -35,12 +35,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         public override ApplicationListResult GetList(ApplicationMetadata application,
             PaginatedSearchRequestDto searchDto) {
-                var result = base.GetList(application, searchDto);
-                LookupQuantityReturnedList(result.ResultObject);
-                return result;
-            }
+            var result = base.GetList(application, searchDto);
+            LookupQuantityReturnedList(result.ResultObject);
+            return result;
+        }
 
-        private void LookupQuantityReturnedList(IEnumerable<AttributeHolder> datamap ) {
+        private void LookupQuantityReturnedList(IEnumerable<AttributeHolder> datamap) {
             var matusetransidlist = datamap.Select(row => row.Attributes["MATUSETRANSID"]).ToList();
 
             if (!matusetransidlist.Any()) {
@@ -87,7 +87,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
              String.Format("SELECT sum(quantity) FROM matusetrans WHERE issueid = {0} and siteid='{1}'", matusetransid, user.SiteId));
 
             if (query == null) {
-                return;   
+                return;
             }
 
             double qtyReturned;
@@ -120,7 +120,18 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
             filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
-            
+
+            return filter;
+        }
+
+        public virtual SearchRequestDto FilterStoreRooms(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            if (!parameters.OriginalEntity.ContainsAttribute("itemnum")) {
+                //for non batch mode, the item gets selected after the storeroom, so any valid storeroom is ok
+                return filter;
+            }
+            filter.AppendWhereClauseFormat("(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = '{0}' " +
+                                           "and invbalances.siteid = location.siteid and invbalances.location = location.location) > 0", parameters.OriginalEntity.GetAttribute("itemnum"));
             return filter;
         }
 
