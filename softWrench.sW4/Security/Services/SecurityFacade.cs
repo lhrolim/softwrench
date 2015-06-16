@@ -1,5 +1,6 @@
 ﻿using cts.commons.portable.Util;
 using cts.commons.Util;
+using DocumentFormat.OpenXml.Bibliography;
 using log4net;
 using softWrench.sW4.Preferences;
 using softwrench.sW4.Shared2.Util;
@@ -46,7 +47,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
 
-        public static readonly IDictionary<string, InMemoryUser> _users = new ConcurrentDictionary<string, InMemoryUser>();
+        private static readonly IDictionary<string, InMemoryUser> _users = new ConcurrentDictionary<string, InMemoryUser>();
 
         public InMemoryUser LdapLogin(User dbUser, string userTimezoneOffset) {
             return UserFound(dbUser, userTimezoneOffset);
@@ -56,8 +57,7 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
-            if (dbUser.UserName.ToLower() == "swadmin")
-            {
+            if (dbUser.UserName.ToLower() == "swadmin") {
                 return UserFound(dbUser, userTimezoneOffset);
             }
             dbUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
@@ -152,8 +152,14 @@ namespace softWrench.sW4.Security.Services {
                 return InMemoryUser.TestInstance("test");
             }
 
+            if ("true".Equals(LogicalThreadContext.GetData<string>("executinglogin"))) {
+                //in the middle of the logging in process
+                return null;
+            }
+
+
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
-            if (!fetchFromDB || currLogin == null || _users.ContainsKey(currLogin)) {
+            if (!fetchFromDB || string.IsNullOrEmpty(currLogin) || _users.ContainsKey(currLogin)) {
                 return _users[currLogin];
             }
             //cookie authenticated already 
@@ -163,6 +169,7 @@ namespace softWrench.sW4.Security.Services {
                 throw new InvalidOperationException("user should exist at DB");
             }
             var fullUser = new User();
+            LogicalThreadContext.SetData("executinglogin", "true");
             if (swUser.UserName.ToLower() != "swadmin") {
                 fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
             }
@@ -180,6 +187,7 @@ namespace softWrench.sW4.Security.Services {
                 timezone = userData["userTimezoneOffset"] as string;
             }
             UserFound(fullUser, timezone);
+            LogicalThreadContext.FreeNamedDataSlot("executinglogin");
             return _users[currLogin];
         }
 
@@ -227,7 +235,7 @@ namespace softWrench.sW4.Security.Services {
             ClearUserFromCache(user.UserName);
 
             if (saveUser.UserName.Equals(loginUser.Login)) {
-                var timezone = loginUser.TimezoneOffset.ToString(); 
+                var timezone = loginUser.TimezoneOffset.ToString();
                 UserFound(user, timezone);
             }
 
@@ -238,14 +246,12 @@ namespace softWrench.sW4.Security.Services {
             SWDBHibernateDAO.GetInstance().Delete(user);
         }
 
-        public User FetchUser(int id)
-        {
+        public User FetchUser(int id) {
             User swUser = UserManager.GetUserById(id);
             return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
         }
 
-        public User FetchUser(string maximopersonid)
-        {
+        public User FetchUser(string maximopersonid) {
             User swUser = UserManager.GetUserByUsername(maximopersonid);
             return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
         }
