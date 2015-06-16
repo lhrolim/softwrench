@@ -204,6 +204,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return $scope.clonedCompositionData;
             }
 
+            $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
+                var datamap = item == null ? $scope.parentdata : this.buildSearchDatamap(item, $scope.parentdata);
+
+                return fieldService.isFieldHidden(datamap, application, fieldMetadata);
+            };
+
             function init() {
                 if (!$scope.compositionschemadefinition.schemas) {
                     //this means that we recevived only the list schema, for inline compositions
