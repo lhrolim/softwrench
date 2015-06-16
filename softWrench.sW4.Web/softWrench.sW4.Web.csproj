@@ -354,6 +354,7 @@
     <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
     <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
     <Content Include="App_Data\Client\%40internal\templates\incident.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\invissue.xml" />
     <Content Include="App_Data\Client\%40internal\templates\inventory.xml" />
     <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />
     <Content Include="App_Data\Client\%40internal\templates\item.xml" />
