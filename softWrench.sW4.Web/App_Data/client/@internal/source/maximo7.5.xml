@@ -123,6 +123,22 @@
         <connectorParameter key="dbtable" value="maxuser" />
       </connectorParameters>
     </entity>
+    
+    <entity name="ALNDOMAIN" idAttribute="domainid">
+      <attributes>
+        <attribute name="domainid" type="varchar" required="true" />
+        <attribute name="value" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="alndomainid" type="bigint" required="true" />
+        <attribute name="valueid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ALNDOMAIN" />
+      </connectorParameters>
+    </entity>
 
     <entity name="email" idAttribute="emailid">
       <attributes>
