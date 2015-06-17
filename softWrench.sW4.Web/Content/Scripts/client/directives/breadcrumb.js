@@ -13,8 +13,6 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
             log.debug(scope.menu);
 
             scope.$watch('title', function () {
-                //element.html(getBreadCrumbHTML(log, scope.menu, scope.title));
-
                 var template = (getBreadCrumbHTML(log, scope.menu, scope.title));
                 var content = $compile(template)(scope);
                 element.html(content);
@@ -42,22 +40,21 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
             $compile(element.contents())(scope);
         },
         controller: function ($scope, $rootScope, menuService, alertService, validationService) {
-            //log.debug('Breadcrumb Menu Item Controller');
 
-            $scope.testclick = function () {
-                log.debug('click test');
-            };
+            //TODO: fix for dashboard
+            //TODO: add doaction
 
-            $scope.goToApplication = function (leaf, target) {
+            $scope.goToApplication = function (title) {
+                var leaf = findleafByTitle(log, $scope.menu.leafs, title);
                 var msg = "Are you sure you want to leave the page?";
                 if (validationService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
-                        menuService.goToApplication(leaf, target);
+                        menuService.goToApplication(leaf, null);
                         $scope.$digest();
                     }, msg, function () { return; });
                 }
                 else {
-                    menuService.goToApplication(leaf, target);
+                    menuService.goToApplication(leaf, null);
                 }
             };
         },
@@ -140,6 +137,29 @@ function findCurrentPage(log, leafs, current, parent) {
     return path;
 }
 
+function findleafByTitle(log, leafs, title) {
+
+    var found = null;
+
+    if (leafs != null) {
+        for (var id in leafs) {
+            var search = findleafByTitle(log, leafs[id].leafs, title);
+
+            //if a child is the current item, pass it along
+            if (search != null) {
+                found = search;
+            }
+
+            //if this is the current item
+            if (leafs[id].title == title) {
+                found = leafs[id];
+            }
+        }
+    }
+
+    return found;
+}
+
 function getChildMenu(log, leafs, parent) {
     var path = '';
     var searchLeafs = null;
@@ -163,7 +183,8 @@ function getChildMenu(log, leafs, parent) {
                 if (childMenu) {
                     path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                    path += '<li><a bc-menu-item ng-click="goToApplication(menu.leafs[1], $event.target)">';
+                    //TODO: add dashboard & do action
+                    path += '<li><a bc-menu-item ng-click="goToApplication(\'' + searchLeafs[id].title + '\')">';
                 }
 
                 //build the menu item
