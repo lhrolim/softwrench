@@ -60,8 +60,9 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser.UserName.ToLower() == "swadmin") {
                 return UserFound(dbUser, userTimezoneOffset);
             }
-            dbUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
-            return UserFound(dbUser, userTimezoneOffset);
+            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
+            maximoUser.MergeFromDBUser(dbUser);
+            return UserFound(maximoUser, userTimezoneOffset);
         }
 
         public InMemoryUser Login(string userName, string password, string userTimezoneOffset) {

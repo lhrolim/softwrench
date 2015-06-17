@@ -119,10 +119,9 @@ namespace softWrench.sW4.Security.Entities {
         public void MergeFromDBUser(User dbUSer) {
             //keep password unchanged
             Password = Password ?? dbUSer.Password;
-            CriptoProperties = CriptoProperties ?? dbUSer.CriptoProperties;
-            PersonGroups = PersonGroups ?? dbUSer.PersonGroups;
-            CustomRoles = CustomRoles ?? dbUSer.CustomRoles;
-            Profiles = Profiles ?? dbUSer.Profiles;
+            PersonGroups = dbUSer.PersonGroups;
+            CustomRoles = dbUSer.CustomRoles;
+            Profiles = dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
         }
 
