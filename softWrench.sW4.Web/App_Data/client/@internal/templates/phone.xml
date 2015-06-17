@@ -22,7 +22,9 @@
           <field attribute="personid" hidden="true"/>
           <field attribute="phoneid" hidden="true"/>
           <field attribute="phonenum" label="Phone #"/>
-          <field attribute="type" label="Type"/>
+          <optionfield attribute="type" label="Type" providerattribute="_PhoneTypeOptions">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <field attribute="isprimary" label="Primary">
             <renderer type="checkbox"/>
           </field>

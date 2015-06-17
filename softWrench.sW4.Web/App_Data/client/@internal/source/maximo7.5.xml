@@ -133,6 +133,12 @@
         <attribute name="rowstamp" type="integer" required="true" />
         <attribute name="type" type="varchar" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute query="!@domainid = 'EMAILTYPE'" primary="true"/>
+          <relationshipAttribute from="type" to="value"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="email" />
       </connectorParameters>
@@ -147,6 +153,12 @@
         <attribute name="rowstamp" type="integer" required="true" />
         <attribute name="type" type="varchar" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute query="!@domainid = 'PHONETYPE'" primary="true"/>
+          <relationshipAttribute from="type" to="value"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="phone" />
       </connectorParameters>
