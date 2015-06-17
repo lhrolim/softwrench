@@ -228,6 +228,11 @@ var isArrayNullOrEmpty = function (arr) {
     return nullOrUndef(arr) || arr.length == 0;
 };
 
+var hasSingleElement = function (arr) {
+    return !nullOrUndef(arr) && arr.length == 1;
+};
+
+
 var safePush = function (baseObject, propertyName, item) {
     if (!baseObject[propertyName]) {
         baseObject[propertyName] = [];
