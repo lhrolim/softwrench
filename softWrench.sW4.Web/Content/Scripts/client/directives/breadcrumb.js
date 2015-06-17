@@ -40,10 +40,6 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
             $compile(element.contents())(scope);
         },
         controller: function ($scope, $rootScope, menuService, alertService, validationService) {
-
-            //TODO: fix for dashboard
-            //TODO: add doaction
-
             $scope.goToApplication = function (title) {
                 var leaf = findleafByTitle(log, $scope.menu.leafs, title);
                 var msg = "Are you sure you want to leave the page?";
@@ -57,6 +53,23 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
                     menuService.goToApplication(leaf, null);
                 }
             };
+
+            $scope.doAction = function (title) {
+                //update title when switching to dashboard
+                $scope.$emit('sw_titlechanged', null);
+
+                var leaf = findleafByTitle(log, $scope.menu.leafs, title);
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.doAction(leaf, null);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.doAction(leaf, null);
+                }
+            };
         },
     }
 });
@@ -64,14 +77,15 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
 var seperator = '<span class="part seperator">/</span>';
 
 function getBreadCrumbHTML(log, menu, current) {
-    var path = '<div class="part" bc-menu><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-home"></i>&ensp;';
+    var path = '<div class="part" bc-menu><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bars"></i>';
 
     //get the title of the home item
-    if (menu.leafs[0].controller == 'Dashboard') {
-        path += 'Dashboard';
-    } else {
-        path += 'Home';
-    }
+    //if (menu.leafs[0].controller == 'Dashboard') {
+        //path += 'Dashboard';
+    //} else {
+     //   path += 'Menu';
+    //}
+    path += '&ensp;<i class="fa fa-caret-down"></i>';
     path += '</a>';
 
     //add submenu
@@ -117,6 +131,12 @@ function findCurrentPage(log, leafs, current, parent) {
 
                 //add the icon and title
                 path += icon + leafs[id].title;
+
+                if (newPath) {
+                    path += '&ensp;<i class="fa fa-caret-down"></i>';
+                }
+
+
                 path += '</a>';
 
                 //add the child menu items
@@ -183,8 +203,15 @@ function getChildMenu(log, leafs, parent) {
                 if (childMenu) {
                     path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                    //TODO: add dashboard & do action
-                    path += '<li><a bc-menu-item ng-click="goToApplication(\'' + searchLeafs[id].title + '\')">';
+                    path += '<li><a bc-menu-item ng-click="';
+
+                    if (searchLeafs[id].type == 'ActionMenuItemDefinition') {
+                        path += 'doAction';
+                    } else if (searchLeafs[id].type == 'ApplicationMenuItemDefinition') {
+                        path += 'goToApplication';
+                    }
+                    
+                    path += '(\'' + searchLeafs[id].title + '\')">';
                 }
 
                 //build the menu item

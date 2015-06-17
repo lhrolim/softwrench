@@ -291,8 +291,8 @@
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
-                       successmessage="Issue created" position="&lt;filter"/>
+              <!--<command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
+                       successmessage="Issue created" position="&lt;filter"/>-->
               <!--<command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>-->
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
@@ -1148,8 +1148,8 @@
           <commandbars>
             <commandgroup position="gridtop">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
-              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService"
-                       method="createTransfer" parameters="schema" position="&lt;filter"/>
+              <!--<command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService"
+                       method="createTransfer" parameters="schema" position="&lt;filter"/>-->
             </commandgroup>
           </commandbars>
           <field attribute="itemnum" label="Item">

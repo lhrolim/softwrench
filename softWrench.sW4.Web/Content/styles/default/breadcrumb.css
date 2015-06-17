@@ -16,6 +16,9 @@
     cursor: pointer; }
     .container header .menu-admin .breadcrumb a i {
       color: #c9c7c7; }
+      .container header .menu-admin .breadcrumb a i.fa-caret-down {
+        color: #fff;
+        font-size: 12px; }
     .container header .menu-admin .breadcrumb a:hover {
       text-decoration: none; }
   .container header .menu-admin .breadcrumb .seperator {

@@ -102,7 +102,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 }
                 dashBoardMenu = container;
             }
-            dashBoardMenu.Icon = "fa fa-home";
+            dashBoardMenu.Icon = "fa fa-tachometer";
             leafs.Add(dashBoardMenu);
             leafs.AddRange(securedMenu.Leafs);
             securedMenu.Leafs = leafs;

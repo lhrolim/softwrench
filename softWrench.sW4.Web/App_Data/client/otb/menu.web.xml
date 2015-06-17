@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="horizontal" indexitem
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem
   ="SR">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
   <container title="Service Requests" tooltip="Click to access your request tasks" icon="fa fa-ticket" id="servicereq" role="sr">
@@ -32,10 +32,16 @@
   </container>
   <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
     <application id="IN" icon="fa fa-table" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" />
-    <application id="IR" icon="fa fa-table" title="Issues and Returns" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" />
-    <application id="IT" icon="fa fa-table" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid"/>
-    <application id="PC" icon="fa fa-table" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
-    <application id="PD" icon="fa fa-table" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
-    <application id="RM" icon="fa fa-plus" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
-  </container>
+    <container title="Issues and Returns" tooltip="Click to access your issues and returns" icon="fa fa-cube" id="IssuesAndReturns" role="issuesandreturns" >
+      <application id="IRG" icon="fa fa-table" title="Issues and Returns Grid" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" />
+      <application id="NIR" icon="fa fa-plus" title="New Issue and Return" ref="invissue" schema="newInvIssueDetail" tooltip="Click to add an New Issue and Return"/>
+    </container>
+    <container title="Inventory Transfer" tooltip="Click to access your inventory transfer" icon="fa fa-cube" id="InventoryTransfer" role="inventorytransfer" >
+      <application id="ITG" icon="fa fa-table" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid"/>
+      <application id="NIT" icon="fa fa-plus" title="New Inventory Transfer" ref="invuse" schema="newdetail" tooltip="Click to add an New Inventory Transfer"/>
+    </container>
+      <application id="PC" icon="fa fa-table" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
+      <application id="PD" icon="fa fa-table" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
+      <application id="RM" icon="fa fa-plus" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
+    </container>
 </Menu>
