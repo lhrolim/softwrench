@@ -458,7 +458,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
                 if (postFetchHook != null) {
                     var continueFlag = postFetchHook(result, lookupObj, scope, datamap);
-                    if (continueFlag == false) {
+                    if (!continueFlag) {
                         return;
                     }
                 }

@@ -84,6 +84,12 @@
           </association>
         </componentdisplayable>
 
+        <componentdisplayable id="site">
+          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid">
+            <renderer type="lookup"/>
+          </association>
+        </componentdisplayable>
+
         <componentdisplayable id="issuebin">
           <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@itemnum!=null &amp;&amp; @storeloc!=null">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
@@ -365,9 +371,7 @@
             <section orientation="horizontal">
               <header displacement="ontop" label="Location" params="fieldset=true"/>
               <renderer type="default" params="childinputsize=medium" />
-              <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
-                <renderer type="lookup"/>
-              </association>
+              <reference id="site"/>
               <reference id="issuestoreloc"/>
 
             </section>
@@ -409,9 +413,7 @@
 
           <section showexpression="@mode == 'batch'">
 
-            <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
+            <reference id="site"/>
 
             <section>
               <reference id="issueitem" />
