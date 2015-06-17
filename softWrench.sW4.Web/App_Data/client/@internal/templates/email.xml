@@ -21,7 +21,9 @@
           <field attribute="personid" hidden="true"/>
           <field attribute="emailid" hidden="true"/>
           <field attribute="emailaddress" label="Email Address"/>
-          <field attribute="type" label="Type"/>
+          <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <field attribute="isprimary" label="Primary">
             <renderer type="checkbox"/>
           </field>
