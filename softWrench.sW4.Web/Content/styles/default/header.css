@@ -17,7 +17,7 @@
 
     .container header .menu-grid .menu-expand {
         background-color: #878787;
-        border-bottom: #000000 1px solid;
+        border-bottom: #000 1px solid;
     }
 
     .container header div.menu-open + .menu-items {
@@ -105,7 +105,7 @@
 
         .container header .logout.mobile {
             float: right;
-            margin-top: 25px;
+            margin-top: 22px;
             margin-right: 60px;
         }
 
