@@ -1,6 +1,8 @@
 ﻿modules.webcommons.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
 
 
+    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)([\w+\.]+)(?!\w)/g
+
     var compiledDatamapRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
     //var datamapRegexString = "(\@\#?)(\w+(\.?\w?)*)";
 
@@ -308,7 +310,7 @@
         },
 
         getVariables: function (expression,datamap) {
-            if (datamap.fields != undefined) {
+            if (datamap && datamap.fields != undefined) {
                 expression = expression.replace(/\@/g, 'datamap.fields.');
             } else {
                 if (expression.startsWith('@#')) {
@@ -322,32 +324,42 @@
             return expression;
         },
 
-        getVariablesForWatch: function (expression, datamap, scope) {
-            var variables = this.getVariables(expression, datamap, false, scope);
-
-            var collWatch = '[';
+        getVariablesBeforeJordanFuckedUp: function (expression) {
+            var variables = expression.match(preCompiledReplaceRegex);
             if (variables != null) {
-                var i = 0;
-                $.each(variables, function (key, value) {
-                    //Checks whether or not the variable is a function. If it is, it will
-                    //not be included as a variable to watch. Instead, the getVariables function
-                    //will return any parameters that are truely variables so that we can watch
-                    //them and re-evaluate the expression when a variable changes.
-                    if (!key.endsWith(')') && !key.toUpperCase().startsWith('FN:')) {
-                        collWatch += value + ',';
-                    }
-                    i = i + 1;
-                });
+                for (var i = 0; i < variables.length; i++) {
+                    variables[i] = variables[i].replace(/[\@\(\)]/g, '').trim();
+                }
             }
+            return variables;
+        },
 
-            if (collWatch.charAt(collWatch.length - 1) == ",") {
-                collWatch = collWatch.slice(0, -1);
+        getVariablesForWatch: function (expression, placeholder) {
+            /// <summary>
+            ///  Returns an array of variables that we need to watch for changes.
+            ///  The placeholder parameter will be prepended on each variable.
+            /// 
+            ///  EX: (@item != null &amp;&amp; @bin == '1' --> ['datamap.item','datamap.bin'])
+            ///  
+            /// </summary>
+            /// <param name="expression"></param>
+            /// <param name="placeholder">if blank, than datamap. will be used, but this might not be what the scope needs for binding the watch</param>
+            /// <returns type="Array"></returns>
+            placeholder = placeholder || "datamap.";
+
+            var variables = this.getVariablesBeforeJordanFuckedUp(expression);
+            var collWatch = '[';
+            for (var i = 0; i < variables.length; i++) {
+                collWatch += placeholder + variables[i];
+                if (i != variables.length - 1) {
+                    collWatch += ",";
+                }
             }
 
             collWatch += ']';
-
             return collWatch;
         },
+
 
 
         evaluate: function (expression, datamap, scope) {

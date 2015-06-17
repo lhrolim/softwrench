@@ -272,7 +272,10 @@
                             class="richtextbox" frameborder="0" />
                 </div>
                 <div ng-switch-when="numericinput">
-                    <input id="spinner"
+                    <input 
+                            
+                           data-field="{{fieldMetadata.attribute}}"
+                           id="spinner"
                            class="hidden-phone form-control"
                            ng-model="datamap[fieldMetadata.attribute]"
                            ng-init="initField(fieldMetadata)"

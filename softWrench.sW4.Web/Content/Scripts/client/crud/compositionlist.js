@@ -189,7 +189,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
         controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade) {
+            expressionService, $timeout, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
 
             $scope.lookupObj = {};
 
@@ -208,6 +208,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 var datamap = item == null ? $scope.parentdata : this.buildSearchDatamap(item, $scope.parentdata);
 
                 return fieldService.isFieldHidden(datamap, application, fieldMetadata);
+            };
+
+
+            $scope.initField = function (fieldMetadata, item) {
+                var idx = $scope.compositionData().indexOf(item);
+                crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx),idx);
             };
 
             function init() {
@@ -229,11 +235,14 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
 
+                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
                 if (!$scope.isBatch()) {
                     $scope.clonedCompositionData = [];
                     $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
+                } else if (!$scope.isNoRecords) {
+                    crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[0]", $scope.compositionlistschema.displayables);
                 }
-                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
+                
 
                 $scope.detailData = {};
                 $scope.clonedData = {};
@@ -259,7 +268,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
             };
 
-            
+
 
 
 
@@ -280,12 +289,12 @@ app.directive('compositionList', function (contextService, formatService, schema
             }
 
 
-            
-            $scope.buildSearchDatamap = function(datamap,parentdata) {
+
+            $scope.buildSearchDatamap = function (datamap, parentdata) {
                 var clonedDataMap = angular.copy(parentdata);
                 if (datamap) {
                     var item = datamap;
-                    for (var prop in item){
+                    for (var prop in item) {
                         if (item.hasOwnProperty(prop)) {
                             clonedDataMap[prop] = item[prop];
                         }
@@ -294,27 +303,27 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return clonedDataMap;
             },
 
-              $scope.isModifiableEnabled = function (fieldMetadata,item) {
-                  var result = expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata),$scope);
+              $scope.isModifiableEnabled = function (fieldMetadata, item) {
+                  var result = expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata), $scope);
                   return result;
               };
 
-            $scope.isSelectEnabled = function (fieldMetadata,item) {
+            $scope.isSelectEnabled = function (fieldMetadata, item) {
                 var key = fieldMetadata.associationKey;
                 $scope.disabledassociations = instantiateIfUndefined($scope.disabledassociations);
                 if (key == undefined) {
                     return true;
                 }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item,$scope.parentdata),$scope);
+                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata), $scope);
                 if (result != $scope.disabledassociations[key]) {
-//                    cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
+                    //                    cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                     $scope.disabledassociations[key] = result;
                 }
                 return result;
             };
 
             $scope.showLookupModal = function (fieldMetadata, item) {
-                if (!$scope.isSelectEnabled(fieldMetadata,item)) {
+                if (!$scope.isSelectEnabled(fieldMetadata, item)) {
                     return;
                 }
                 var code = '';
@@ -327,7 +336,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.lookupObj.parentdata = $scope.parentdata;
                 $scope.datamap = item;
 
-                var searchDatamap = this.buildSearchDatamap(item,$scope.parentdata);
+                var searchDatamap = this.buildSearchDatamap(item, $scope.parentdata);
 
                 cmplookup.updateLookupObject($scope, fieldMetadata, code, searchDatamap);
             };
@@ -453,7 +462,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             /// </summary>
             /// <param name="item">the row entry, datamap</param>
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
-            $scope.toggleDetails = function (item, column, usingArrowButton,$event) {
+            $scope.toggleDetails = function (item, column, usingArrowButton, $event) {
 
                 if (usingArrowButton) {
                     $event.stopImmediatePropagation();
@@ -489,7 +498,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.isReadOnly = !updating;
 
                 // Need to disable all other rich text box for viewable real estate
-//                $scope.collapseAll();
+                //                $scope.collapseAll();
 
 
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
@@ -526,7 +535,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                             $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                         }, 0, false);
                     });
-              
+
             };
 
 
@@ -534,6 +543,8 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             $scope.addBatchItem = function () {
                 $scope.compositionData().push({});
+                var idx =$scope.compositionData().length - 1;
+                crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables);
             }
 
             $scope.isItemExpanded = function (item) {

@@ -46,11 +46,14 @@
             var log = $log.getInstance('cmplookup#refreshFromAttribute');
             var target = fieldMetadata.attribute;
             if (scope.associationOptions == null) {
-                //this scenario happens when a composition has lookup-associations on its details,
-                //but the option list has not been fetched yet
-                scope.lookupAssociationsDescription[target] = null;
-                scope.lookupAssociationsCode[target] = null;
-                log.debug('cleaning up association code/description');
+
+                if (scope.lookupAssociationsDescription) {
+                    //this scenario happens when a composition has lookup-associations on its details,
+                    //but the option list has not been fetched yet
+                    scope.lookupAssociationsDescription[target] = null;
+                    scope.lookupAssociationsCode[target] = null;
+                    log.debug('cleaning up association code/description');
+                }
                 return;
             }
 

@@ -45,7 +45,8 @@
             <tr ng-repeat-start="compositionitem in compositionData()"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
                 ng-click="toggleDetails(compositionitem,column,false,$event)"
-                ng-class="$odd ? 'odd' : 'even'">
+                ng-class="$odd ? 'odd' : 'even'"
+                ng-init="rowindex = $index">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,true,$event)">
                         <i class="fa right-caret" ng-hide="isItemExpanded(compositionitem)"></i>
@@ -106,10 +107,11 @@
                                     <input id="spinner"
                                            class="hidden-phone form-control"
                                            ng-model="compositionitem[column.attribute]"
-                                           ng-init="initField(column)"
+                                           ng-init="initField(column,compositionitem)"
                                            min="{{column.rendererParameters['min']}}"
                                            max="{{setMaxNumericInput(compositionitem,column)}}"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
+                                           data-field="{{column.attribute+rowindex}}"
                                            number-spinner />
                                 </div>
                                 <div ng-switch-when="icon">

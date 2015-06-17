@@ -54,7 +54,7 @@ app.directive('sectionElementInput', function ($compile) {
             islabelless: '@',
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
-            rendererParameters :'='
+            rendererParameters: '='
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -79,7 +79,7 @@ app.directive('sectionElementInput', function ($compile) {
         }
     }
 });
-app.directive('crudInputFields', function (contextService, eventService) {
+app.directive('crudInputFields', function (contextService, eventService, crud_inputcommons) {
     return {
         restrict: 'E',
         replace: true,
@@ -99,11 +99,11 @@ app.directive('crudInputFields', function (contextService, eventService) {
             previousdata: '=',
             previousschema: '=',
             outerassociationcode: '=',
-            sectionParameters:'=',
+            sectionParameters: '=',
             outerassociationdescription: '=',
             issection: '@',
             ismodal: '@',
-            
+
         },
 
         link: function (scope, element, attrs) {
@@ -211,7 +211,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
-                    $scope.configureAssociationChangeEvents();
+                    crud_inputcommons.configureAssociationChangeEvents($scope,'datamap',$scope.displayables);
                     $scope.configureFieldChangeEvents();
                     $scope.configureDirtyWatcher();
                 }
@@ -233,100 +233,27 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 }, 0, false);
             }
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
-            $scope.configureAssociationChangeEvents = function () {
-                var associations = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
-                $.each(associations, function (key, association) {
-                    var shouldDoWatch = true;
-                    var isMultiValued = association.multiValued;
-                    $scope.$watch('datamap["' + association.attribute + '"]', function (newValue, oldValue) {
-                        if (oldValue == newValue || !shouldDoWatch) {
-                            return;
-                        }
-                        if (newValue != null) {
-                            //this is a hacky thing when we want to change a value of a field without triggering the watch
-                            var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
-                            if (ignoreWatchIdx != -1) {
-                                shouldDoWatch = false;
-                                $scope.datamap[association.attribute] = newValue.substring(0, ignoreWatchIdx);
-                                try {
-                                    $scope.$digest();
-                                    shouldDoWatch = true;
-                                } catch (e) {
-                                    //nothing to do, just checking if digest was already in place or not
-                                    $timeout(function () {
-                                        shouldDoWatch = true;
-                                    }, 0, false);
-                                }
-                                return;
-                            }
-                        }
-                        var eventToDispatch = {
-                            oldValue: oldValue,
-                            newValue: newValue,
-                            fields: $scope.datamap,
-                            displayables: $scope.displayables,
-                            scope: $scope,
-                            'continue': function () {
-                                if (isMultiValued && association.rendererType != 'lookup') {
-                                    associationService.updateUnderlyingAssociationObject(association, null, $scope);
-                                }
-                                var result = associationService.updateAssociations(association, $scope);
-                                if (result != undefined && result == false) {
-                                    var resolved = contextService.fetchFromContext("associationsresolved", false, true);
-                                    var phase = resolved ? 'configured' : 'initial';
-                                    var dispatchedbytheuser = $scope.associationsResolved ? true : false;
-                                    associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
-                                }
-                                try {
-                                    $scope.$digest();
-                                } catch (ex) {
-                                    //nothing to do, just checking if digest was already in place or not
-                                }
-                            },
-                            interrupt: function () {
-                                $scope.datamap[association.attribute] = oldValue;
-                                //to avoid infinite recursion here.
-                                shouldDoWatch = false;
-                                cmpfacade.digestAndrefresh(association, $scope);
-                                //turn it on for future changes
-                                shouldDoWatch = true;
-                            }
-                        };
-                        associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
-                        cmpfacade.digestAndrefresh(association, $scope);
-                    });
-                    $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
-                        if (newvalue == old) {
-                            return;
-                        }
-                        $timeout(
-                        function () {
-                            cmpfacade.digestAndrefresh(association, $scope);
-                        }, 0, false);
-                    });
-                    $scope.$watch('blockedassociations.' + association.associationKey, function (newValue, oldValue) {
-                        cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
-                    });
-                });
+           
+
+            $scope.haslookupModal = function (schema) {
+                return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
             }
+            $scope.isModifiableEnabled = function (fieldMetadata) {
+                var result = expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
+                return result;
+            };
+
             $scope.isSelectEnabled = function (fieldMetadata) {
                 var key = fieldMetadata.associationKey;
                 $scope.disabledassociations = instantiateIfUndefined($scope.disabledassociations);
                 if (key == undefined) {
                     return true;
                 }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap,$scope);
+                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap, $scope);
                 if (result != $scope.disabledassociations[key]) {
                     cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                     $scope.disabledassociations[key] = result;
                 }
-                return result;
-            };
-            $scope.haslookupModal = function (schema) {
-                return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
-            }
-            $scope.isModifiableEnabled = function (fieldMetadata) {
-                var result = expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
                 return result;
             };
 
@@ -383,7 +310,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 }
 
                 $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata, code,$scope.datamap);
+                cmplookup.updateLookupObject($scope, fieldMetadata, code, $scope.datamap);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
@@ -493,7 +420,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
             };
 
             $scope.configureOptionFields = function () {
-                var log =$log.get("crud_input_fields#configureOptions");
+                var log = $log.get("crud_input_fields#configureOptions");
                 //TODO: check field parameter as well, with top priority before schema
                 if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] == "true") {
                     return;
@@ -646,7 +573,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
             };
-        
+
             $scope.formatId = function (id) {
                 return RemoveSpecialChars(id);
             }
@@ -671,21 +598,8 @@ app.directive('crudInputFields', function (contextService, eventService) {
             }
             init();
 
-            function bindExpression(fieldMetadata) {
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression, $scope.datamap, $scope);
-                $scope.$watchCollection(variables, function (newVal, oldVal) {
-                    if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap, $scope);
-                    }
-                });
-                return variables;
-            }
-
             $scope.initField = function (fieldMetadata) {
-                if (fieldMetadata.evalExpression != null) {
-                    return bindExpression(fieldMetadata);
-                }
-                return null;
+                crud_inputcommons.initField($scope,fieldMetadata, "datamap");
             };
 
             $scope.initRichtextField = function (fieldMetadata) {
