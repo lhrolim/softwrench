@@ -3,21 +3,21 @@
     var fallbackFunction = function (status, applicationname) {
 
         if (status.equalsAny("NEW", "WAPPR", "WSCH", "ACTIVE")) {
-            return "orange";
+            return "#e59323"; //orange
         }
         if (status.equalsAny("QUEUED", "INPROG", "CANTREPROD", "WAITONINFO", "PENDING","null")) {
-            return "yellow";
+            return "#fde62f"; //yellow
         }
 
         if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ", "WONT FIX", "WONTIMPLNT", "WONTRESPND", "POSTPONED", "SPAM" )) {
-            return "red";
+            return "#f65752"; //red
         }
 
         if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "APPFM", "APPLM", "BY DESIGN", "AUTHORIZED", "DUPLICATE", "AUTH", "FIXED", "HOLDINPRG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
-            return "blue";
+            return "#4488f2"; //blue
         }
         if (status.equalsAny("CLOSED", "IMPLEMENTED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "COMPLETED", "INPRG", "PLANNED")) {
-            return "green";
+            return "#39b54a"; //green
         }
         if (status.equalsAny("DRAFT")) {
             return "white";
