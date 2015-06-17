@@ -416,7 +416,7 @@
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
-            <composition relationship="attachment" label="Attachments">
+            <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
               
             </composition>
