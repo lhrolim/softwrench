@@ -77,14 +77,9 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
 var seperator = '<span class="part seperator">/</span>';
 
 function getBreadCrumbHTML(log, menu, current) {
-    var path = '<div class="part" bc-menu><a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bars"></i>';
-
-    //get the title of the home item
-    //if (menu.leafs[0].controller == 'Dashboard') {
-        //path += 'Dashboard';
-    //} else {
-     //   path += 'Menu';
-    //}
+    var path = '<div class="part main" bc-menu>';
+    path += '<a data-toggle="dropdown" aria-expanded="false">';
+    path += '<i class="fa fa-bars"></i>';
     path += '&ensp;<i class="fa fa-caret-down"></i>';
     path += '</a>';
 

@@ -2,54 +2,61 @@
     width: 100%;
 }
 
-    /*Responsive Menu*/
-    .container header .menu-expand {
-        color: #fff;
-        padding: 20px 20px 15px;
-        cursor: pointer;
+    .container header .admin-area {
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
+        padding: 10px 55px 8px 20px;
     }
 
-        .container header .menu-expand:hover {
-            color: #000;
-        }
-
-    .container header .menu-grid .menu-expand {
-        background-color: #878787;
-        border-bottom: #000 1px solid;
-    }
-
-    .container header div.menu-open + .menu-items {
-        display: block;
-    }
-
-    .container header div.menu-open, .container header .menu-grid div.menu-open {
-        border-bottom: none;
-        padding: 10px 20px 0;
-    }
-
-    .container header .menu-admin {
-        background-color: rgba(52, 167, 224, 0.5);
-        border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
-        padding: 20px;
-    }
-
-        .container header .menu-admin .text {
+        .container header .admin-area .text {
             float: left;
             color: #fff;
             margin-top: 16px;
         }
 
-            .container header .menu-admin .text a {
+            .container header .admin-area .text a {
                 color: #fff;
             }
 
-                .container header .menu-admin .text a:hover {
+                .container header .admin-area .text a:hover {
                     text-decoration: none;
                 }
 
-        .container header .menu-admin .buttons {
+        .container header .admin-area .admin-menu {
+            float: right;
+            margin-top: 2px;
+        }
+
+            .container header .admin-area .admin-menu i.fa-cog {
+                color: #fff;
+            }
+
+            .container header .admin-area .admin-menu .dropdown-menu {
+                top: auto;
+                left: auto;
+                right: 55px !important;
+                border-radius: 6px;
+            }
+
+                .container header .admin-area .admin-menu .dropdown-menu .user {
+                    border-bottom: 1px solid #ccc;
+                    margin-bottom: 5px;
+                    padding-bottom: 2px;
+                }
+
+                    .container header .admin-area .admin-menu .dropdown-menu .user a:hover {
+                        background: none;
+                        color: #333;
+                    }
+
+            .container header .admin-area .admin-menu .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: auto;
+                right: 148px !important;
+            }
+
+        /*TODO remove*/
+        .container header .admin-area .buttons {
             padding-top: 20px;
             float: right;
         }
@@ -83,32 +90,6 @@
         z-index: 1010;
     }
 
-        .container header .menu-expand {
-            display: block;
-        }
-
-        .container header .menu-items {
-            display: none;
-        }
-
-        .container header .menu-admin .buttons {
-            width: 100%;
-        }
-
-            .container header .menu-admin .buttons .btn {
-                margin-bottom: 5px;
-            }
-
-            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                width: 100%;
-            }
-
-        .container header .logout.mobile {
-            float: right;
-            margin-top: 22px;
-            margin-right: 60px;
-        }
-
         .container header .menu-grid li {
             width: 100%;
         }
@@ -123,24 +104,12 @@
 }
 
 @media all and (min-width: 330px) {
-    .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-        width: 49%;
-    }
-
-        .container header .menu-admin .buttons .btn-group .btn {
-            width: 100%;
-        }
-
     .container header .branding .logo img {
         width: 274px;
     }
 }
 
 @media all and (min-width: 480px) {
-    .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-        width: 32%;
-    }
-
     .container header .menu-grid li {
         width: 49%;
     }
@@ -156,30 +125,6 @@
     .container.desktop header {
         position: fixed;
     }
-
-    .container header .menu-expand {
-        display: none;
-    }
-
-    .container header .menu-items {
-        display: block;
-    }
-
-    .container header .menu-admin .buttons {
-        width: auto;
-    }
-
-        .container header .menu-admin .buttons .btn {
-            margin-bottom: 0;
-        }
-
-        .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-            width: auto;
-        }
-
-        .container header .menu-admin .buttons .logout {
-            display: inline-block !important;
-        }
 
     .container header .menu-grid li {
         width: auto;

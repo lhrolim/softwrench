@@ -5,41 +5,48 @@
   border-radius: 0;
   font-size: 14px; }
 
-.container header .menu-admin .breadcrumb {
+.container header .admin-area .breadcrumb {
   float: left;
-  color: #fff;
-  margin-top: 18px; }
-  .container header .menu-admin .breadcrumb .part {
-    float: left; }
-  .container header .menu-admin .breadcrumb a {
+  color: #fff; }
+  .container header .admin-area .breadcrumb .part {
+    float: left;
+    display: none; }
+    .container header .admin-area .breadcrumb .part.main {
+      display: block; }
+  .container header .admin-area .breadcrumb a {
     color: #fff;
     cursor: pointer; }
-    .container header .menu-admin .breadcrumb a i {
+    .container header .admin-area .breadcrumb a i {
       color: #c9c7c7; }
-      .container header .menu-admin .breadcrumb a i.fa-caret-down {
+      .container header .admin-area .breadcrumb a i.fa-caret-down {
         color: #fff;
         font-size: 12px; }
-    .container header .menu-admin .breadcrumb a:hover {
+    .container header .admin-area .breadcrumb a:hover {
       text-decoration: none; }
-  .container header .menu-admin .breadcrumb .seperator {
+  .container header .admin-area .breadcrumb .seperator {
     color: #0d374d;
     margin: 0 15px; }
-  .container header .menu-admin .breadcrumb .dropdown-menu {
+  .container header .admin-area .breadcrumb .dropdown-menu {
     top: auto;
     left: auto; }
-    .container header .menu-admin .breadcrumb .dropdown-menu li a {
+    .container header .admin-area .breadcrumb .dropdown-menu li a {
       padding: 3px 30px 3px 10px;
       color: #333; }
-      .container header .menu-admin .breadcrumb .dropdown-menu li a:hover {
+      .container header .admin-area .breadcrumb .dropdown-menu li a:hover {
         color: #fff; }
-        .container header .menu-admin .breadcrumb .dropdown-menu li a:hover i {
+        .container header .admin-area .breadcrumb .dropdown-menu li a:hover i {
           color: #fff; }
-      .container header .menu-admin .breadcrumb .dropdown-menu li a i {
+      .container header .admin-area .breadcrumb .dropdown-menu li a i {
         color: #333; }
-  .container header .menu-admin .breadcrumb .dropdown-submenu > .dropdown-menu {
+  .container header .admin-area .breadcrumb .dropdown-submenu > .dropdown-menu {
     left: 100%;
     top: 0; }
-  .container header .menu-admin .breadcrumb .dropdown-submenu > a:after {
+  .container header .admin-area .breadcrumb .dropdown-submenu > a:after {
     margin-right: -20px; }
+
+@media all and (min-width: 768px) {
+  .container header .admin-area .breadcrumb .part {
+    display: block; }
+ }
 
 /*# sourceMappingURL=breadcrumb.css.map */

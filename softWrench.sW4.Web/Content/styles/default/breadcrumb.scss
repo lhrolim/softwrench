@@ -8,14 +8,18 @@
 
 .container {
     header {
-        .menu-admin {
+        .admin-area {
             .breadcrumb {
                 float: left;
                 color: #fff;
-                margin-top: 18px;
 
                 .part {
                     float: left;
+                    display: none;
+
+                    &.main {
+                        display: block;
+                    }
                 }
 
                 a {
@@ -75,6 +79,20 @@
 
                 .dropdown-submenu > a:after {
                     margin-right: -20px;
+                }
+            }
+        }
+    }
+}
+
+@media all and (min-width: 768px) {
+    .container {
+        header {
+            .admin-area {
+                .breadcrumb {
+                    .part {
+                        display: block;
+                    }
                 }
             }
         }
