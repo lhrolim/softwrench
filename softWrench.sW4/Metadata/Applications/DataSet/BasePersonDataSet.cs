@@ -46,7 +46,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             var swusers = UserManager.GetUsersByUsername(usernames);
             foreach (var record in result.ResultObject) {
-                var swuser = swusers.Where(user => user.MaximoPersonId == record.GetAttribute("personid").ToString());
+                var swuser = swusers.Where(user => user.UserName.ToLower() == record.GetAttribute("personid").ToString().ToLower());
                 if (!swuser.Any()) {
                     continue;
                 }
