@@ -19,6 +19,16 @@
 
                     &.main {
                         display: block;
+
+                        i {
+                            &.fa-bars {
+                                color: #fff;
+                            }
+
+                            &.fa-caret-down {
+                                display: none;
+                            }
+                        }
                     }
                 }
 
@@ -65,9 +75,6 @@
                             i {
                                 color: #333;
                             }
-
-                            &:after {
-                            }
                         }
                     }
                 }
@@ -92,6 +99,19 @@
                 .breadcrumb {
                     .part {
                         display: block;
+
+                        &.main {
+                            i {
+                                &.fa-bars {
+                                    color: #c9c7c7;
+                                }
+
+                                &.fa-caret-down {
+                                    display: inline-block;
+                                    color: #fff;
+                                }
+                            }
+                        }
                     }
                 }
             }
