@@ -84,7 +84,6 @@ namespace softWrench.sW4.Security.Entities {
 
         public User() {
             Person = new Person();
-            Profiles = new HashedSet<UserProfile>();
         }
         /// <summary>
         /// used for nhibernate to generate a "view" of user entity to list screen
@@ -121,7 +120,7 @@ namespace softWrench.sW4.Security.Entities {
             Password = Password ?? dbUSer.Password;
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
-            Profiles = dbUSer.Profiles;
+            Profiles = Profiles ?? dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
         }
 

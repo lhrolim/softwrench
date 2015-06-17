@@ -4,6 +4,7 @@ using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -80,6 +81,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
+                swUser.Profiles = new HashedSet<UserProfile>();
             }
             var isActive = swUser.IsActive ? "1" : "0";
             dataMap.SetAttribute("#isactive", isActive);
@@ -133,7 +135,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             //Loop over the array
             foreach (dynamic row in profiles) {
                 result.Add(new UserProfile() {
-                    Id = row.id
+                    Id = row.id,
+                    Name = row.name
                 });
             }
             return result;
