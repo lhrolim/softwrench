@@ -169,11 +169,12 @@ namespace softWrench.sW4.Security.Services {
             if (swUser == null) {
                 throw new InvalidOperationException("user should exist at DB");
             }
-            var fullUser = new User();
+             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
             if (swUser.UserName.ToLower() != "swadmin") {
                 fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
             }
+
 
             fullUser.Id = swUser.Id;
             fullUser.UserName = swUser.UserName;
