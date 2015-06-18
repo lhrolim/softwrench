@@ -1,4 +1,6 @@
-﻿using softWrench.sW4.Data.Offline;
+﻿using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -10,17 +12,24 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Data.Persistence.Engine {
     public sealed class MaximoConnectorEngine : AConnectorEngine {
 
-//        private readonly SyncItemHandler _syncHandler;
+        //        private readonly SyncItemHandler _syncHandler;
 
-        public MaximoConnectorEngine(EntityRepository entityRepository)
-            : base(entityRepository) {
-//            _syncHandler = syncHandler;
+
+
+        public MaximoConnectorEngine(EntityRepository entityRepository, IBatchSubmissionService batchSubmissionService)
+            : base(entityRepository, batchSubmissionService) {
+            //            _syncHandler = syncHandler;
         }
 
-        public override TargetResult Execute(OperationWrapper operationWrapper) {
+        public override TargetResult Execute(OperationWrapper operationWrapper, bool isBatch) {
             var entityMetadata = operationWrapper.EntityMetadata;
             var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName);
             var operationName = operationWrapper.OperationName;
+            if (isBatch) {
+                return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
+            }
+
+
             var result = DoExecuteCrud(operationWrapper, connector);
             if (result != null) {
                 return result;
@@ -67,20 +76,20 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         }
 
         public object Create(CrudOperationData crudOperationData) {
-            return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_CREATE));
+            return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_CREATE), false);
         }
 
         public object Update(CrudOperationData crudOperationData) {
-            return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_UPDATE));
+            return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_UPDATE), false);
         }
 
         public object Delete(CrudOperationData crudOperationData) {
-            return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_DELETE));
+            return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_DELETE), false);
         }
 
-//        public override SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
-//            return _syncHandler.Sync(appMetadata, applicationSyncData, syncItemHandlerDelegate);
-//        }
+        //        public override SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
+        //            return _syncHandler.Sync(appMetadata, applicationSyncData, syncItemHandlerDelegate);
+        //        }
 
         sealed class MaximoCrudConnectorEngine {
 

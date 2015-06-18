@@ -352,9 +352,9 @@
           </section>
         </schema>
 
-        <schema title="New Issue and Return" id="newInvIssueDetail" mode="input" stereotype="detail">
+        <schema title="New Issue and Return" id="newInvIssueDetail" mode="input" stereotype="detailnew">
 
-          <optionfield attribute="mode" label="Mode">
+          <optionfield attribute="mode" label="Mode" qualifier="batchselector">
             <option label="Single Item" value="single"/>
             <option label="Batch" value="batch"/>
           </optionfield>

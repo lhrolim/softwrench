@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Linq;
-using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
-using CompressionUtil = cts.commons.Util.CompressionUtil;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
+namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
     ///
     [Class(Table = "BAT_MULBATCH", Lazy = false)]
-    public class MultiItemBatch : IBaseAuditEntity {
+    public class MultiItemBatch : IBatch {
 
         public static string ActiveBatchesofApplication = "from MultiItemBatch where Application =? and Status = 'INPROG' ";
         public static string OldSubmittedBatches = "from MultiItemBatch where Application =? and Status = 'COMPLETE' ";

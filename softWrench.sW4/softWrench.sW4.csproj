@@ -311,6 +311,7 @@
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
     <Compile Include="Metadata\Security\UserPreferences.cs" />
+    <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
@@ -359,7 +360,6 @@
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryJoinBuilder.cs" />
-    <Compile Include="Data\Persistence\WS\API\MaximoResult.cs" />
     <Compile Include="Data\Persistence\WS\Commons\AttachmentHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagServiceRequestCrudConnector.cs" />
@@ -509,7 +509,6 @@
     <Compile Include="Data\Entities\Entity.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityAttribute.cs" />
     <Compile Include="Metadata\Entities\Schema\EntitySchema.cs" />
-    <Compile Include="Metadata\Applications\ApplicationMetadata.cs" />
     <Compile Include="Metadata\MetadataProvider.cs" />
     <Compile Include="Metadata\Parsing\XmlApplicationMetadataParser.cs" />
     <Compile Include="Data\EntityDetailData.cs" />
@@ -885,6 +884,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>

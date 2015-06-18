@@ -1,18 +1,15 @@
 ﻿using System;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using Iesi.Collections.Generic;
 using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
+namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
     [Class(Table = "BAT_REPORT", Lazy = false)]
     public class BatchReport : IBaseEntity {
 
         public const string ByBatchId = "from BatchReport where OriginalBatch.Id =?";
-        
+
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -60,6 +57,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
                 //return 100 to avoid strange scenarios on screen
                 return percentageDone > 100 ? 100 : percentageDone;
             }
+        }
+
+        public string GetReportKey() {
+
+            if (OriginalMultiItemBatch.Id != null) {
+                return "sw_batchreport{0}".Fmt(OriginalMultiItemBatch.Id);
+            }
+            return null;
+
         }
     }
 }

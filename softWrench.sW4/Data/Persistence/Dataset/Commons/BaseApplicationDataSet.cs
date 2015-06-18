@@ -326,10 +326,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
 
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,Boolean isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
-            return Engine().Execute(operationWrapper);
+            return Engine().Execute(operationWrapper,isBatch);
         }
 
         public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,

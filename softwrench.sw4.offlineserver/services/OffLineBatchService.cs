@@ -2,7 +2,7 @@
 using cts.commons.simpleinjector;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.offlineserver.services.util;
 
 namespace softwrench.sw4.offlineserver.services {

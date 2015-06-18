@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
@@ -8,11 +7,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using RabbitMQ.Util;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
-using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.offlineserver.dto;
@@ -44,7 +39,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly StatusColorResolver _statusColorResolver;
 
-        private OffLineBatchService _offLineBatchService;
+        private readonly OffLineBatchService _offLineBatchService;
 
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -16,6 +17,6 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas);
         IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata entityMetadata, PaginatedSearchRequestDto searchDto, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemata);
 //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
-        TargetResult Execute(OperationWrapper operationWrapper);
+        TargetResult Execute(OperationWrapper operationWrapper,Boolean isBatch);
     }
 }

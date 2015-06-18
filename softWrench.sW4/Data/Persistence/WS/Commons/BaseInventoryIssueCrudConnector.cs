@@ -1,4 +1,5 @@
 ﻿using System;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
@@ -9,6 +10,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class BaseInventoryIssueCrudConnector : CrudConnectorDecorator {
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var crudData = (CrudOperationData)maximoTemplateData.OperationData;
+            if ("batch".Equals(crudData.GetAttribute("mode"))) {
+                return;
+            }
+
+
             var invIssue = maximoTemplateData.IntegrationObject;
 
             var currentTime = DateTime.Now.FromServerToRightKind();

@@ -2,6 +2,7 @@
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
@@ -99,7 +100,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return detailResult;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,bool isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
 
@@ -119,7 +120,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
 
-            return Engine().Execute(operationWrapper);
+            return Engine().Execute(operationWrapper,isBatch);
         }
 
 

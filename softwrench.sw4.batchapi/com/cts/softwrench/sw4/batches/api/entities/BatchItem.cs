@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.problem.classes;
-using CompressionUtil = cts.commons.Util.CompressionUtil;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
+namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
     [Class(Table = "BAT_BATCHITEM", Lazy = false)]
     public class BatchItem : IBaseEntity {

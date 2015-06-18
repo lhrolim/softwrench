@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService, alertService) {
+app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService, alertService,schemaService) {
 
     function addSchemaDataToParameters(parameters, schema, nextSchema) {
         parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
@@ -110,7 +110,7 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
             }
         },
 
-        createSubmissionParameters: function (schema,nextSchemaObj,id) {
+        createSubmissionParameters: function (datamap,schema,nextSchemaObj,id) {
             var parameters = {};
             if (sessionStorage.mockmaximo == "true") {
                 //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
@@ -124,6 +124,17 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
             }
             parameters.applicationName = schema.applicationName;
             parameters.id = id;
+
+            //whether it shall run on batch mode
+            var displayable = schemaService.locateAttributeByQualifier(schema, "batchselector");
+            if (schemaService.isPropertyTrue(schema, "batch")) {
+                parameters.batch = true;
+            }
+            else if (displayable && datamap[displayable.attribute]) {
+                parameters.batch = datamap[displayable.attribute].equalsAny("batch", "true");
+            }
+
+            
             parameters.platform = platform();
             return parameters;
         },

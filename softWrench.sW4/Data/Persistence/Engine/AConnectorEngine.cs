@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.Collection;
@@ -16,14 +18,18 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 //        public abstract SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
 //            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
 
-        public abstract TargetResult Execute(OperationWrapper operationWrapper);
+        public abstract TargetResult Execute(OperationWrapper operationWrapper,bool isBatch);
 
         private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 
         private readonly EntityRepository _entityRepository;
 
-        protected AConnectorEngine(EntityRepository entityRepository) {
+        protected IBatchSubmissionService BatchSubmissionService;
+
+        protected AConnectorEngine(EntityRepository entityRepository, IBatchSubmissionService batchSubmissionService)
+        {
             _entityRepository = entityRepository;
+            BatchSubmissionService = batchSubmissionService;
         }
 
         public int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
@@ -61,5 +67,6 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             return list;
         }
 
+      
     }
 }
