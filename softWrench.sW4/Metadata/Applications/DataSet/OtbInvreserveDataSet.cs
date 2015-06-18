@@ -101,7 +101,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var filter = parameters.BASEDto;
             filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
             filter.ProjectionFields.Clear();
-            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "COALESCE(invbalances.binnum, '')"));
             filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
             filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
             filter.SearchSort = "invbalances.binnum,invbalances.lotnum";

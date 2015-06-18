@@ -53,7 +53,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
             filter.ProjectionFields.Clear();
-            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "COALESCE(invbalances.binnum, '')"));
             filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
             filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
             filter.SearchSort = "invbalances.binnum";
@@ -73,7 +73,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
             filter.ProjectionFields.Clear();
-            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "COALESCE(invbalances.binnum, '')"));
             filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
             filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
             filter.SearchSort = "invbalances.binnum";
