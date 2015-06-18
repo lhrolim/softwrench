@@ -11,7 +11,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (ld != null) {
                 w.SetValue(integrationObject, property, ld.GetAttribute("ldtext"));
             } else {
-                var longDescription = entity.GetAttribute("longdescription_.ldtext") ?? entity.GetAttribute("worklogdesc_.ldtext");
+                var longDescription = entity.GetAttribute("ld_.ldtext") ?? entity.GetAttribute("wld_.ldtext");
                 w.SetValue(integrationObject, property, longDescription);
             }
 
