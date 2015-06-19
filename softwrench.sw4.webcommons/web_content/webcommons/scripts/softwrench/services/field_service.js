@@ -43,6 +43,9 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
 
     return {
         isFieldHidden: function (datamap, application, fieldMetadata) {
+            if (fieldMetadata == null) {
+                return false;
+            }
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
