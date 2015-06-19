@@ -145,19 +145,26 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                     _maximoEngine.Execute(itemToSubmit.CrudData);
                     report.AppendSentItem(itemToSubmit.CrudData.Id);
                 } catch (Exception e) {
-                    if (options.GenerateProblems) {
-                        var problem = new BatchItemProblem {
+                    if (options.GenerateProblems)
+                    {
+                        var problem = new BatchItemProblem
+                        {
                             DataMapJsonAsString = itemToSubmit.OriginalLine.ToString(),
                             ErrorMessage = e.Message,
                             ItemId = itemToSubmit.CrudData.Id,
                             Report = report
                         };
                         problem = _dao.Save(problem);
-                        if (report.ProblemItens == null) {
+                        if (report.ProblemItens == null)
+                        {
                             report.ProblemItens = new HashedSet<BatchItemProblem>();
                         }
                         report.ProblemItens.Add(problem);
                         _dao.Save(report);
+                    }
+                    else
+                    {
+                        throw e;
                     }
                 }
             }

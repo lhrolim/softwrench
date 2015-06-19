@@ -10,14 +10,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class BaseInventoryIssueCrudConnector : CrudConnectorDecorator {
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            var crudData = (CrudOperationData)maximoTemplateData.OperationData;
-            if ("batch".Equals(crudData.GetAttribute("mode"))) {
-                return;
-            }
-
-
             var invIssue = maximoTemplateData.IntegrationObject;
-
             var currentTime = DateTime.Now.FromServerToRightKind();
             //Seconds are removed to prevent date syncronization error between maximo server / softwrench server
             var adjustedCurrentTime = currentTime.AddSeconds(-60);
