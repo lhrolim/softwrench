@@ -15,7 +15,7 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.InvIssue {
 
-    public class InvIssueBatchConverter : IBatchSubmissionConverter<ApplicationMetadata,OperationWrapper> {
+    public class InvIssueBatchConverter : IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> {
 
         private readonly EntityMetadata _entityMetadata;
 
@@ -32,7 +32,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.InvIssue {
         }
 
         public InvIssueBatchConverter() {
-            _entityMetadata = MetadataProvider.Entity("invissue");
+            if (!ApplicationConfiguration.IsUnitTest) {
+                _entityMetadata = MetadataProvider.Entity("invissue");
+            }
         }
 
         public JArray BreakIntoRows(JObject mainDatamap) {
@@ -56,10 +58,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.InvIssue {
             return true;
         }
 
-        public OperationWrapper Convert(JObject row, ApplicationMetadata applicationMetadata)
-        {
+        public OperationWrapper Convert(JObject row, ApplicationMetadata applicationMetadata) {
             var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, applicationMetadata, row, null);
-            return new OperationWrapper(crudOperationData,OperationConstants.CRUD_CREATE);
+            return new OperationWrapper(crudOperationData, OperationConstants.CRUD_CREATE);
         }
     }
 }
