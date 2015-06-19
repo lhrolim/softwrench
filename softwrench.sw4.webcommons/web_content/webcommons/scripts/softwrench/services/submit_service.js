@@ -126,7 +126,8 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
             parameters.id = id;
 
             //whether it shall run on batch mode
-            var batchAttribute = schemaService.locateAttributeByQualifier(schema, "batchselector");
+            var batchDisplayable = schemaService.locateDisplayableByQualifier(schema, "batchselector");
+            var batchAttribute = batchDisplayable ? batchDisplayable.attribute : null;
             if (schemaService.isPropertyTrue(schema, "batch")) {
                 parameters.batch = true;
             }

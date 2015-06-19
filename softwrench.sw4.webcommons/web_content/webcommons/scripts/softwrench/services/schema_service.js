@@ -128,14 +128,14 @@
             return result;
         },
 
-        locateAttributeByQualifier: function (schema, qualifier) {
+        locateDisplayableByQualifier: function (schema, qualifier) {
             schema.jscache = schema.jscache || {};
             if (schema.jscache.qualifiercache) {
                 //already cached
-                return schema.jscache.qualifiercache[qualifier].attribute;
+                return schema.jscache.qualifiercache[qualifier];
             }
             buildQualifierCache(schema);
-            return schema.jscache.qualifiercache[qualifier].attribute;
+            return schema.jscache.qualifiercache[qualifier];
         }
 
 
