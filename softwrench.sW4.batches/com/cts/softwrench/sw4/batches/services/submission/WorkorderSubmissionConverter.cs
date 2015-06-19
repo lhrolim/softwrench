@@ -18,7 +18,7 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
 
     //TODO: make this specific to TVA, and modify SimpleInjector
-    public class WorkorderBatchSubmissionConverter : IBatchSubmissionConverter {
+    public class WorkorderBatchSubmissionConverter : IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> {
         public JArray BreakIntoRows(JObject mainDatamap) {
             var dataMapJsonAsString = mainDatamap["datamap"].ToString();
             return JArray.Parse(dataMapJsonAsString);
@@ -28,12 +28,13 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             return "true".EqualsIc(row.StringValue("#closed"));
         }
 
-        public Object Convert(JObject row) {
+        public OperationWrapper Convert(JObject row, ApplicationMetadata metadata) {
             var completeApp = MetadataProvider.Application("workorder");
             var app = completeApp.ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("detail"));
             var entityMetadata = MetadataProvider.Entity("workorder");
             var id = row.StringValue("wonum");
-            return new CrudOperationData(id, BuildAttributes(row), BuildRelationships(row), entityMetadata, app);
+            var crudOperationData = new CrudOperationData(id, BuildAttributes(row), BuildRelationships(row), entityMetadata, app);
+            return new OperationWrapper(crudOperationData, OperationConstants.CRUD_UPDATE);
         }
 
         private static Dictionary<string, object> BuildRelationships(JObject row) {

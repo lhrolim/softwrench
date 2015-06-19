@@ -10,6 +10,7 @@ using Iesi.Collections.Generic;
 using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
@@ -72,6 +73,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private IContextLookuper _contextLookuper;
 
+        private IBatchSubmissionService _batchSubmissionService;
+
         internal BaseApplicationDataSet() { }
 
         protected IContextLookuper ContextLookuper {
@@ -82,6 +85,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 _contextLookuper =
                     SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
                 return _contextLookuper;
+            }
+        }
+
+        protected IBatchSubmissionService BatchSubmissionService {
+            get {
+                if (_batchSubmissionService != null) {
+                    return _batchSubmissionService;
+                }
+                _batchSubmissionService =
+                    SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>(typeof(IBatchSubmissionService));
+                return _batchSubmissionService;
             }
         }
 
@@ -329,7 +343,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,Boolean isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
-            return Engine().Execute(operationWrapper,isBatch);
+            if (isBatch) {
+                return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
+            }
+
+            return Engine().Execute(operationWrapper);
         }
 
         public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,

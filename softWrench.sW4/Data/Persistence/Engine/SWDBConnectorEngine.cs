@@ -14,7 +14,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
     class SWDBConnectorEngine : AConnectorEngine {
 
 
-        public SWDBConnectorEngine(EntityRepository entityRepository, IBatchSubmissionService batchSubmissionService) : base(entityRepository, batchSubmissionService) { }
+        public SWDBConnectorEngine(EntityRepository entityRepository) : base(entityRepository) { }
 
         //        public override SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata,
         //            SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
@@ -22,7 +22,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         //            throw new NotImplementedException();
         //        }
 
-        public override TargetResult Execute(OperationWrapper operationWrapper,bool isBatch) {
+        public override TargetResult Execute(OperationWrapper operationWrapper) {
             throw new NotImplementedException();
         }
 

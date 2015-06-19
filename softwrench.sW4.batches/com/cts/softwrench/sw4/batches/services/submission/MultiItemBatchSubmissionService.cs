@@ -7,13 +7,18 @@ using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Security.Services;
+using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
@@ -24,7 +29,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly MaximoConnectorEngine _maximoEngine;
-        private IEnumerable<IBatchSubmissionConverter> _converters;
+        private IEnumerable<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>> _converters;
         private readonly IContextLookuper _contextLookuper;
         private readonly BatchReportEmailService _batchReportEmailService;
         private readonly BatchSubmissionProvider _submissionProvider;
@@ -41,12 +46,12 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             _configurerProvider = configurerProvider;
         }
 
-        public IEnumerable<IBatchSubmissionConverter> Converters {
+        public IEnumerable<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>> Converters {
             get {
                 if (_converters != null) {
                     return _converters;
                 }
-                _converters = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<IBatchSubmissionConverter>(typeof(IBatchSubmissionConverter));
+                _converters = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>>(typeof(IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>));
                 return _converters;
             }
         }
@@ -59,8 +64,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 options = configurer.GenerateOptions(multiItemBatch);
             }
 
+            var applicationMetadata = MetadataProvider
+            .Application(multiItemBatch.Application).ApplyPolicies(new ApplicationMetadataSchemaKey(multiItemBatch.Schema), SecurityFacade.CurrentUser(), ClientPlatform.Web);
+
             BatchReport report = null;
-            var submissionData = BuildSubmissionData(multiItemBatch, jsonOb, converter);
+            var submissionData = BuildSubmissionData(multiItemBatch, jsonOb, converter, applicationMetadata);
             if (options.GenerateReport) {
                 report = UpdateDBEntries(submissionData, multiItemBatch);
                 if (report == null) {
@@ -77,8 +85,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 //new thread to give a fast response to the user
                 Task.Factory.NewThread(array => DoExecuteBatch(submissionData, report, options), submissionData);
                 return null;
-            } 
-             return DoExecuteBatch(submissionData, report, options);
+            }
+            return DoExecuteBatch(submissionData, report, options);
 
         }
 
@@ -98,8 +106,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 DataMapJsonAsString = datamap.ToString()
             };
             var options = configurer.GenerateOptions(batch);
-            if (!options.GenerateReport) {
-                //no need to store it if it´s synchronous
+            if (options.GenerateReport) {
+                //no need to store it if there´ll be no report stored
                 batch = _dao.Save(batch);
             }
             return Submit(batch, datamap);
@@ -134,7 +142,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             _contextLookuper.SetMemoryContext(reportKey, report);
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                 try {
-                    _maximoEngine.Execute(itemToSubmit.CrudData, false);
+                    _maximoEngine.Execute(itemToSubmit.CrudData);
                     report.AppendSentItem(itemToSubmit.CrudData.Id);
                 } catch (Exception e) {
                     if (options.GenerateProblems) {
@@ -163,27 +171,28 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 }
             }
             //TODO implement for synchronous result
-            return null;
+            return new BatchResult(null);
         }
 
-        private BatchSubmissionData BuildSubmissionData(MultiItemBatch batch, JObject jsonOb, IBatchSubmissionConverter converter) {
+        private BatchSubmissionData BuildSubmissionData(MultiItemBatch batch, JObject jsonOb, IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> converter, ApplicationMetadata applicationMetadata) {
             if (jsonOb == null) {
                 jsonOb = JObject.Parse(batch.DataMapJsonAsString);
             }
             var submissionData = new BatchSubmissionData();
             var jArray = converter.BreakIntoRows(jsonOb);
+
             foreach (var row in jArray) {
                 var r = (JObject)row;
                 var fields = r.Property("fields");
-                if (fields == null) {
-                    continue;
+                var originalLine = r;
+                if (fields != null) {
+                    originalLine = ((JObject)fields.Value);
                 }
-                var originalLine = ((JObject)fields.Value);
                 var shouldSubmit = converter.ShouldSubmit(originalLine);
                 if (!shouldSubmit) {
                     continue;
                 }
-                var crudData = (OperationWrapper)converter.Convert(originalLine);
+                var crudData = converter.Convert(originalLine, applicationMetadata);
                 submissionData.AddItem(new BatchSubmissionItem {
                     CrudData = crudData,
                     OriginalLine = originalLine

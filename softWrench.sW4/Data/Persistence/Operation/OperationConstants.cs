@@ -6,7 +6,6 @@
         public const string CRUD_UPDATE = "crud_update";
         public const string CRUD_DELETE = "crud_delete";
 
-        public const string CRUD_BATCH = "crud_batch";
 
 
         public static bool IsCrud(string operation) {

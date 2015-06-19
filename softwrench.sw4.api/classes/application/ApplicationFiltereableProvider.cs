@@ -10,9 +10,9 @@ namespace softwrench.sw4.api.classes.application {
 
 
         public virtual T LookupItem(String applicationName, string schemaId, string clientName) {
+            var storage = LocateStorageByName(applicationName);
             //first we try a perfect match: app + client + schema
-            var key = LookUp(applicationName, schemaId, clientName);
-            var storage= LocateStorageByName(applicationName);
+            var key = LookUp(applicationName, schemaId, clientName,storage);
             //if not found return the default
             return storage.ContainsKey(key) ? storage[key] : LocateDefaultItem(applicationName, schemaId,clientName);
         }

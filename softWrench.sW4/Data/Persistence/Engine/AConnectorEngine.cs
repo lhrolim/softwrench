@@ -15,21 +15,18 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
     public abstract class AConnectorEngine : IConnectorEngine {
-//        public abstract SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
-//            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
+        //        public abstract SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
+        //            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
 
-        public abstract TargetResult Execute(OperationWrapper operationWrapper,bool isBatch);
+        public abstract TargetResult Execute(OperationWrapper operationWrapper);
 
         private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 
         private readonly EntityRepository _entityRepository;
 
-        protected IBatchSubmissionService BatchSubmissionService;
 
-        protected AConnectorEngine(EntityRepository entityRepository, IBatchSubmissionService batchSubmissionService)
-        {
+        protected AConnectorEngine(EntityRepository entityRepository) {
             _entityRepository = entityRepository;
-            BatchSubmissionService = batchSubmissionService;
         }
 
         public int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
@@ -38,7 +35,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-                var mainEntity = _entityRepository.Get(entityMetadata, id);
+            var mainEntity = _entityRepository.Get(entityMetadata, id);
             if (mainEntity == null) {
                 return null;
             }
@@ -57,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-                var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
+            var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
 
             // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
             if (compositionSchemas != null && compositionSchemas.Count > 0) {
@@ -67,6 +64,6 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             return list;
         }
 
-      
+
     }
 }

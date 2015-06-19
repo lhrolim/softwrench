@@ -120,7 +120,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
 
-            return Engine().Execute(operationWrapper,isBatch);
+            return Engine().Execute(operationWrapper);
         }
 
 

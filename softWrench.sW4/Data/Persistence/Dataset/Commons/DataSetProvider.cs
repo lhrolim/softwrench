@@ -21,7 +21,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private readonly IDictionary<ApplicationFiltereableKey, IDataSet> _maximoDataSets = new Dictionary<ApplicationFiltereableKey, IDataSet>();
         private readonly IDictionary<ApplicationFiltereableKey, IDataSet> _swdbDataSets = new Dictionary<ApplicationFiltereableKey, IDataSet>();
 
-        private readonly IDictionary<ApplicationFiltereableKey, IBatchSubmissionConverter> _batchSubmissionConverter = new Dictionary<ApplicationFiltereableKey, IBatchSubmissionConverter>();
 
         public DataSetProvider(MaximoApplicationDataSet defaultMaximoDataSet, MaximoApplicationDataSet defaultSWDBDataSet) {
             _defaultMaximoDataSet = defaultMaximoDataSet;

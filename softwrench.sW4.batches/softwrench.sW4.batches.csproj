@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchResult.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\migration\Migration201506062320BatOffLine.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionData.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="com\cts\softwrench\sw4\batches\services\report\BatchReportEmailService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchConfigurerProvider.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchSubmissionProvider.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchSubmissionService.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\MultiItemBatchSubmissionService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\WorkorderSubmissionConverter.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchesRoleEvaluator.cs" />

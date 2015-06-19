@@ -5,7 +5,7 @@ using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.application;
 
 namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services {
-    public interface IBatchSubmissionConverter : IApplicationFiltereable,IComponent {
+    public interface IBatchSubmissionConverter<T,R> : IApplicationFiltereable,IComponent {
 
         JArray BreakIntoRows(JObject mainDatamap);
         
@@ -17,8 +17,9 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services {
         /// Need more modularization, and implementations need to make sure to return a CrudOperationData as for now
         /// </summary>
         /// <param name="row"></param>
+        /// <param name="applicationMetadata">same problem, will be of type ApplicationMetadata</param>
         /// <returns></returns>
-        Object Convert(JObject row);
+        R Convert(JObject row, T applicationMetadata);
       
     }
 }
