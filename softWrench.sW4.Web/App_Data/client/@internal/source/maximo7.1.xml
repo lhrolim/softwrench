@@ -200,7 +200,7 @@
         <attribute name="acceptingwfmail" type="smallint" required="true" />
         <attribute name="wopriority" type="int" required="false" />
         <attribute name="loctoservreq" type="smallint" required="true" />
-        <attribute name="personuid" type="int" required="true" />
+        <attribute name="personuid" type="bigint" required="true" />
         <attribute name="langcode" type="varchar" required="true" />
         <attribute name="sendersysid" type="varchar" required="false" />
         <attribute name="sourcesysid" type="varchar" required="false" />
@@ -212,23 +212,62 @@
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="primarysms" type="varchar" required="false" />
         <attribute name="ownergroup" type="varchar" required="false" />
-        <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="im_id" type="varchar" required="false" />
         <attribute name="caltype" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="dfltapp" type="varchar" required="false" />
+        <attribute name="deviceclass" type="smallint" required="false" />
+
       </attributes>
       <relationships>
         <relationship to="maxuser">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
-        <relationship to="email">
+        <relationship to="email" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
-        <relationship to="phone">
+        <relationship to="phone" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="locationsite" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="organization">
+          <relationshipAttribute from="locationorg" to="orgid" primary="true"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute to="type" query="!@type != 'STOREROOM'"/>
         </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />
+        <connectorParameter key="integration_interface" value="SWPERSON" />
+      </connectorParameters>
+
+    </entity>
+    
+    <entity name="organization" idAttribute="orgid">
+      <attributes>
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="basecurrency1" type="varchar" required="true" />
+        <attribute name="basecurrency2" type="varchar" required="false" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="companysetid" type="varchar" required="true" />
+        <attribute name="organizationid" type="bigint" required="true" />
+        <attribute name="clearingacct" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="dfltitemstatus" type="varchar" required="true" />
+        <attribute name="category" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="organization" />
       </connectorParameters>
     </entity>
 
@@ -951,7 +990,7 @@
       </attributes>
 
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="worklogdesc" >
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -1882,23 +1921,26 @@
       </connectorParameters>
     </entity>
 
-    <entity name="woactivity" idAttribute="workorderid">
+    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum">
       <attributes>
-        <attribute name="actfinish" type="datetime" required="false" />
+        <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="decimal" required="true" />
-        <attribute name="actlabhrs" type="float" required="true" />
+        <attribute name="actlabhrs" type="double" required="true" />
         <attribute name="actmatcost" type="decimal" required="true" />
         <attribute name="actservcost" type="decimal" required="true" />
-        <attribute name="actstart" type="datetime" required="false" />
+        <attribute name="actstart" type="timestamp" required="false" />
         <attribute name="acttoolcost" type="decimal" required="true" />
-        <attribute name="assetlocpriority" type="int" required="false" />
+        <attribute name="assetlocpriority" type="integer" required="false" />
         <attribute name="assetnum" type="varchar" required="false" />
         <attribute name="backoutplan" type="varchar" required="false" />
-        <attribute name="calcpriority" type="int" required="false" />
+        <attribute name="calccalendar" type="varchar" required="false" />
+        <attribute name="calcorgid" type="varchar" required="false" />
+        <attribute name="calcpriority" type="integer" required="false" />
+        <attribute name="calcshift" type="varchar" required="false" />
         <attribute name="calendar" type="varchar" required="false" />
         <attribute name="changeby" type="varchar" required="false" />
-        <attribute name="changedate" type="datetime" required="false" />
-        <attribute name="chargestore" type="smallint" required="true" />
+        <attribute name="changedate" type="timestamp" required="false" />
+        <attribute name="chargestore" type="integer" required="true" />
         <attribute name="cinum" type="varchar" required="false" />
         <attribute name="classstructureid" type="varchar" required="false" />
         <attribute name="commodity" type="varchar" required="false" />
@@ -1906,46 +1948,46 @@
         <attribute name="contract" type="varchar" required="false" />
         <attribute name="crewid" type="varchar" required="false" />
         <attribute name="description" type="varchar" required="false" />
-        <attribute name="disabled" type="smallint" required="true" />
-        <attribute name="downtime" type="smallint" required="true" />
+        <attribute name="disabled" type="integer" required="true" />
+        <attribute name="downtime" type="integer" required="true" />
         <attribute name="environment" type="varchar" required="false" />
         <attribute name="estatapprlabcost" type="decimal" required="true" />
-        <attribute name="estatapprlabhrs" type="float" required="true" />
+        <attribute name="estatapprlabhrs" type="double" required="true" />
         <attribute name="estatapprmatcost" type="decimal" required="true" />
         <attribute name="estatapprservcost" type="decimal" required="true" />
         <attribute name="estatapprtoolcost" type="decimal" required="true" />
-        <attribute name="estdur" type="float" required="true" />
+        <attribute name="estdur" type="double" required="true" />
         <attribute name="estlabcost" type="decimal" required="true" />
-        <attribute name="estlabhrs" type="float" required="true" />
+        <attribute name="estlabhrs" type="double" required="true" />
         <attribute name="estmatcost" type="decimal" required="true" />
         <attribute name="estservcost" type="decimal" required="true" />
         <attribute name="esttoolcost" type="decimal" required="true" />
         <attribute name="externalrefid" type="varchar" required="false" />
-        <attribute name="faildate" type="datetime" required="false" />
+        <attribute name="faildate" type="timestamp" required="false" />
         <attribute name="failurecode" type="varchar" required="false" />
         <attribute name="fincntrlid" type="varchar" required="false" />
         <attribute name="firstapprstatus" type="varchar" required="false" />
         <attribute name="flowaction" type="varchar" required="false" />
-        <attribute name="flowactionassist" type="smallint" required="true" />
-        <attribute name="flowcontrolled" type="smallint" required="true" />
+        <attribute name="flowactionassist" type="integer" required="true" />
+        <attribute name="flowcontrolled" type="integer" required="true" />
         <attribute name="generatedforpo" type="varchar" required="false" />
-        <attribute name="genforpolineid" type="int" required="false" />
+        <attribute name="genforpolineid" type="integer" required="false" />
         <attribute name="glaccount" type="varchar" required="false" />
-        <attribute name="haschildren" type="smallint" required="true" />
-        <attribute name="hasfollowupwork" type="smallint" required="true" />
-        <attribute name="hasld" type="smallint" required="true" />
-        <attribute name="historyflag" type="smallint" required="true" />
+        <attribute name="haschildren" type="integer" required="true" />
+        <attribute name="hasfollowupwork" type="integer" required="true" />
+        <attribute name="hasld" type="integer" required="true" />
+        <attribute name="historyflag" type="integer" required="true" />
         <attribute name="inspector" type="varchar" required="false" />
-        <attribute name="interruptible" type="smallint" required="true" />
-        <attribute name="istask" type="smallint" required="true" />
-        <attribute name="jobtaskid" type="int" required="false" />
+        <attribute name="interruptible" type="integer" required="true" />
+        <attribute name="istask" type="integer" required="true" />
+        <attribute name="jobtaskid" type="integer" required="false" />
         <attribute name="jpnum" type="varchar" required="false" />
         <attribute name="justifypriority" type="varchar" required="false" />
         <attribute name="langcode" type="varchar" required="true" />
         <attribute name="launchentryname" type="varchar" required="false" />
         <attribute name="lead" type="varchar" required="false" />
         <attribute name="location" type="varchar" required="false" />
-        <attribute name="measuredate" type="datetime" required="false" />
+        <attribute name="measuredate" type="timestamp" required="false" />
         <attribute name="measurementvalue" type="decimal" required="false" />
         <attribute name="newchildclass" type="varchar" required="true" />
         <attribute name="observation" type="varchar" required="false" />
@@ -1960,63 +2002,112 @@
         <attribute name="ownergroup" type="varchar" required="false" />
         <attribute name="ownersysid" type="varchar" required="false" />
         <attribute name="parent" type="varchar" required="false" />
-        <attribute name="parentchgsstatus" type="smallint" required="true" />
+        <attribute name="parentchgsstatus" type="integer" required="true" />
         <attribute name="persongroup" type="varchar" required="false" />
         <attribute name="phone" type="varchar" required="false" />
+        <attribute name="pluspaddressline2" type="varchar" required="false" />
+        <attribute name="pluspaddressline3" type="varchar" required="false" />
+        <attribute name="pluspaddrischanged" type="integer" required="true" />
+        <attribute name="pluspagreement" type="varchar" required="false" />
+        <attribute name="pluspallowquote" type="integer" required="true" />
+        <attribute name="pluspbblinenum" type="integer" required="false" />
+        <attribute name="pluspbillbatch" type="varchar" required="false" />
+        <attribute name="pluspbillbatchid" type="integer" required="false" />
+        <attribute name="pluspbillstatus" type="varchar" required="false" />
+        <attribute name="pluspcalccalnum" type="varchar" required="false" />
+        <attribute name="pluspcalcorgid" type="varchar" required="false" />
+        <attribute name="pluspcalcshift" type="varchar" required="false" />
+        <attribute name="pluspcity" type="varchar" required="false" />
+        <attribute name="pluspcostcenter" type="varchar" required="false" />
+        <attribute name="pluspcountry" type="varchar" required="false" />
+        <attribute name="pluspcounty" type="varchar" required="false" />
+        <attribute name="pluspcustchacct" type="varchar" required="false" />
+        <attribute name="pluspcustomer" type="varchar" required="false" />
+        <attribute name="pluspcustponum" type="varchar" required="false" />
+        <attribute name="pluspdirections" type="varchar" required="false" />
+        <attribute name="pluspgeocode" type="varchar" required="false" />
+        <attribute name="plusplatdirection" type="varchar" required="false" />
+        <attribute name="plusplatitude" type="decimal" required="false" />
+        <attribute name="plusplinestatus" type="varchar" required="false" />
+        <attribute name="plusplongdirection" type="varchar" required="false" />
+        <attribute name="plusplongitude" type="decimal" required="false" />
+        <attribute name="pluspmaxprice" type="decimal" required="false" />
+        <attribute name="plusporigqprice" type="decimal" required="false" />
+        <attribute name="plusporigqtype" type="varchar" required="false" />
+        <attribute name="pluspporeq" type="integer" required="true" />
+        <attribute name="plusppostalcode" type="varchar" required="false" />
+        <attribute name="plusppricesched" type="varchar" required="false" />
+        <attribute name="pluspquotedprice" type="decimal" required="false" />
+        <attribute name="pluspquotetype" type="varchar" required="false" />
+        <attribute name="plusprefpoint" type="varchar" required="false" />
+        <attribute name="pluspregiondistr" type="varchar" required="false" />
+        <attribute name="pluspresponseplan" type="varchar" required="false" />
+        <attribute name="plusprevnum" type="integer" required="false" />
+        <attribute name="pluspstaddrdirprfx" type="varchar" required="false" />
+        <attribute name="pluspstaddrdirsfx" type="varchar" required="false" />
+        <attribute name="pluspstaddrnumber" type="varchar" required="false" />
+        <attribute name="pluspstaddrstreet" type="varchar" required="false" />
+        <attribute name="pluspstaddrsttype" type="varchar" required="false" />
+        <attribute name="pluspstaddrunitnum" type="varchar" required="false" />
+        <attribute name="pluspstateprovince" type="varchar" required="false" />
+        <attribute name="pluspstreetaddress" type="varchar" required="false" />
+        <attribute name="plusptimezone" type="varchar" required="false" />
         <attribute name="pmcombpelactname" type="varchar" required="false" />
-        <attribute name="pmcombpelenabled" type="smallint" required="false" />
-        <attribute name="pmcombpelinprog" type="smallint" required="false" />
+        <attribute name="pmcombpelenabled" type="integer" required="false" />
+        <attribute name="pmcombpelinprog" type="integer" required="false" />
+        <attribute name="pmcomimpact" type="integer" required="false" />
         <attribute name="pmcomstate" type="varchar" required="false" />
         <attribute name="pmcomtype" type="varchar" required="false" />
-        <attribute name="pmduedate" type="datetime" required="false" />
-        <attribute name="pmextdate" type="datetime" required="false" />
-        <attribute name="pmnextduedate" type="datetime" required="false" />
+        <attribute name="pmcomurgency" type="integer" required="false" />
+        <attribute name="pmduedate" type="date" required="false" />
+        <attribute name="pmextdate" type="date" required="false" />
+        <attribute name="pmnextduedate" type="date" required="false" />
         <attribute name="pmnum" type="varchar" required="false" />
         <attribute name="pointnum" type="varchar" required="false" />
         <attribute name="problemcode" type="varchar" required="false" />
         <attribute name="reasonforchange" type="varchar" required="false" />
-        <attribute name="remdur" type="float" required="false" />
-        <attribute name="reportdate" type="datetime" required="false" />
+        <attribute name="remdur" type="double" required="false" />
+        <attribute name="reportdate" type="timestamp" required="false" />
         <attribute name="reportedby" type="varchar" required="false" />
-        <attribute name="respondby" type="datetime" required="false" />
+        <attribute name="respondby" type="timestamp" required="false" />
         <attribute name="risk" type="varchar" required="false" />
         <attribute name="route" type="varchar" required="false" />
-        <attribute name="routestopid" type="int" required="false" />
-        <attribute name="rowstamp" type="timestamp" required="true" />
-        <attribute name="schedfinish" type="datetime" required="false" />
-        <attribute name="schedstart" type="datetime" required="false" />
+        <attribute name="routestopid" type="integer" required="false" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="schedfinish" type="timestamp" required="false" />
+        <attribute name="schedstart" type="timestamp" required="false" />
         <attribute name="sendersysid" type="varchar" required="false" />
         <attribute name="siteid" type="varchar" required="true" />
         <attribute name="sourcesysid" type="varchar" required="false" />
         <attribute name="status" type="varchar" required="true" />
-        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="statusdate" type="timestamp" required="true" />
         <attribute name="supervisor" type="varchar" required="false" />
-        <attribute name="suspendflow" type="smallint" required="true" />
-        <attribute name="targcompdate" type="datetime" required="false" />
+        <attribute name="suspendflow" type="integer" required="true" />
+        <attribute name="targcompdate" type="timestamp" required="false" />
         <attribute name="targetdesc" type="varchar" required="false" />
-        <attribute name="targstartdate" type="datetime" required="false" />
-        <attribute name="taskid" type="int" required="false" />
+        <attribute name="targstartdate" type="timestamp" required="false" />
+        <attribute name="taskid" type="integer" required="false" />
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="verification" type="varchar" required="false" />
         <attribute name="whomischangefor" type="varchar" required="false" />
-        <attribute name="woacceptscharges" type="smallint" required="true" />
+        <attribute name="woacceptscharges" type="integer" required="true" />
         <attribute name="woclass" type="varchar" required="true" />
         <attribute name="woeq1" type="varchar" required="false" />
         <attribute name="woeq10" type="varchar" required="false" />
         <attribute name="woeq11" type="varchar" required="false" />
         <attribute name="woeq12" type="decimal" required="false" />
-        <attribute name="woeq13" type="datetime" required="false" />
+        <attribute name="woeq13" type="timestamp" required="false" />
         <attribute name="woeq14" type="decimal" required="false" />
         <attribute name="woeq2" type="varchar" required="false" />
         <attribute name="woeq3" type="varchar" required="false" />
         <attribute name="woeq4" type="varchar" required="false" />
         <attribute name="woeq5" type="decimal" required="false" />
-        <attribute name="woeq6" type="datetime" required="false" />
+        <attribute name="woeq6" type="timestamp" required="false" />
         <attribute name="woeq7" type="decimal" required="false" />
         <attribute name="woeq8" type="varchar" required="false" />
         <attribute name="woeq9" type="varchar" required="false" />
         <attribute name="wogroup" type="varchar" required="false" />
-        <attribute name="woisswap" type="smallint" required="true" />
+        <attribute name="woisswap" type="integer" required="true" />
         <attribute name="wojo1" type="varchar" required="false" />
         <attribute name="wojo2" type="varchar" required="false" />
         <attribute name="wojo3" type="varchar" required="false" />
@@ -2029,33 +2120,33 @@
         <attribute name="wojp2" type="varchar" required="false" />
         <attribute name="wojp3" type="varchar" required="false" />
         <attribute name="wojp4" type="decimal" required="false" />
-        <attribute name="wojp5" type="datetime" required="false" />
+        <attribute name="wojp5" type="timestamp" required="false" />
         <attribute name="wol1" type="varchar" required="false" />
         <attribute name="wol2" type="varchar" required="false" />
         <attribute name="wol3" type="decimal" required="false" />
-        <attribute name="wol4" type="datetime" required="false" />
+        <attribute name="wol4" type="timestamp" required="false" />
         <attribute name="wolablnk" type="varchar" required="false" />
         <attribute name="wolo1" type="varchar" required="false" />
-        <attribute name="wolo10" type="int" required="false" />
+        <attribute name="wolo10" type="integer" required="false" />
         <attribute name="wolo2" type="varchar" required="false" />
         <attribute name="wolo3" type="varchar" required="false" />
         <attribute name="wolo4" type="varchar" required="false" />
         <attribute name="wolo5" type="varchar" required="false" />
         <attribute name="wolo6" type="decimal" required="false" />
-        <attribute name="wolo7" type="datetime" required="false" />
+        <attribute name="wolo7" type="timestamp" required="false" />
         <attribute name="wolo8" type="decimal" required="false" />
         <attribute name="wolo9" type="varchar" required="false" />
         <attribute name="wonum" type="varchar" required="true" />
-        <attribute name="wopriority" type="int" required="false" />
+        <attribute name="wopriority" type="integer" required="false" />
         <attribute name="worklocation" type="varchar" required="false" />
-        <attribute name="workorderid" type="int" required="true" />
+        <attribute name="workorderid" type="integer" required="true" />
         <attribute name="worktype" type="varchar" required="false" />
         <attribute name="worts1" type="varchar" required="false" />
         <attribute name="worts2" type="varchar" required="false" />
         <attribute name="worts3" type="varchar" required="false" />
-        <attribute name="worts4" type="datetime" required="false" />
+        <attribute name="worts4" type="timestamp" required="false" />
         <attribute name="worts5" type="decimal" required="false" />
-        <attribute name="wosequence" type="int" required="false" />
+        <attribute name="wosequence" type="integer" required="false" />
       </attributes>
       <relationships>
         <relationship to="longdescription" >
@@ -2063,9 +2154,13 @@
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="dbtable" value="woactivity" />
+        <connectorParameter key="dbtable" value="WOACTIVITY" />
       </connectorParameters>
     </entity>
 
@@ -3646,6 +3741,364 @@
       </attributes>
       <connectorParameters>
         <connectorParameter key="dbtable" value="glcomponents" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="invuse" idAttribute="invuseid">
+      <attributes>
+        <attribute name="invusenum" type="varchar" required="true" />
+        <attribute name="invowner" type="varchar" required="false" />
+        <attribute name="usetype" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="fromstoreloc" type="varchar" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="statusiface" type="smallint" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="autocreated" type="smallint" required="true" />
+        <attribute name="receipts" type="varchar" required="false" />
+        <attribute name="shipmentdate" type="datetime" required="false" />
+        <attribute name="shiptoattn" type="varchar" required="false" />
+        <attribute name="currencycode" type="varchar" required="false" />
+        <attribute name="exchangedate" type="datetime" required="false" />
+        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="invuseid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="workorderid" type="bigint" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="invuseline">
+          <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="fromstoreloc" to="fromstoreloc"/>
+          <relationshipAttribute from="usetype" to="usetype"/>
+        </relationship>
+        <relationship to="invcost">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="fromstoreloc" to="location"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+        </relationship>
+        <relationship to="location" qualifier="fromlocation">
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="frominvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="tolocation">
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="toinvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="invuseline_.rotassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum"/>
+          <relationshipAttribute from="invuseline_.fromlot" to="lotnum"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVUSE"/>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvuseCrudConnector"/>
+        <connectorParameter key="dbtable" value="invuse" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invuseline" idAttribute="invuselineid">
+      <attributes>
+        <attribute name="invusenum" type="varchar" required="true" />
+        <attribute name="usetype" type="varchar" required="true" />
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="tostoreloc" type="varchar" required="false" />
+        <attribute name="tositeid" type="varchar" required="false" />
+        <attribute name="quantity" type="double" required="true" />
+        <attribute name="fromconditioncode" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="requestnum" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="validated" type="smallint" required="true" />
+        <attribute name="financialperiod" type="varchar" required="false" />
+        <attribute name="enteredastask" type="smallint" required="true" />
+        <attribute name="toconditioncode" type="varchar" required="false" />
+        <attribute name="linetype" type="varchar" required="true" />
+        <attribute name="remark" type="varchar" required="false" />
+        <attribute name="tobin" type="varchar" required="false" />
+        <attribute name="tolot" type="varchar" required="false" />
+        <attribute name="fromstoreloc" type="varchar" required="true" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="invuselinenum" type="int" required="true" />
+        <attribute name="issueid" type="bigint" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="issueto" type="varchar" required="false" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="refwo" type="varchar" required="false" />
+        <attribute name="actualdate" type="datetime" required="true" />
+        <attribute name="conversion" type="decimal" required="false" />
+        <attribute name="unitcost" type="double" required="true" />
+        <attribute name="linecost" type="double" required="true" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="porevisionnum" type="int" required="false" />
+        <attribute name="polinenum" type="int" required="false" />
+        <attribute name="positeid" type="varchar" required="false" />
+        <attribute name="mrnum" type="varchar" required="false" />
+        <attribute name="mrlinenum" type="int" required="false" />
+        <attribute name="prsiteid" type="varchar" required="false" />
+        <attribute name="rotassetnum" type="varchar" required="false" />
+        <attribute name="fromlot" type="varchar" required="false" />
+        <attribute name="frombin" type="varchar" required="false" />
+        <attribute name="physcnt" type="decimal" required="true" />
+        <attribute name="physcntdate" type="datetime" required="true" />
+        <attribute name="split" type="smallint" required="true" />
+        <attribute name="newassetnum" type="varchar" required="false" />
+        <attribute name="returnagainstissue" type="smallint" required="true" />
+        <attribute name="toorgid" type="varchar" required="false" />
+        <attribute name="receiptscomplete" type="smallint" required="true" />
+        <attribute name="receivedqty" type="decimal" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="returnedqty" type="decimal" required="false" />
+        <attribute name="inspectionrequired" type="smallint" required="true" />
+        <attribute name="invuselineid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invuseline" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="meter" idAttribute="meterid">
+      <attributes>
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="metertype" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="domainid" type="varchar" required="false" />
+        <attribute name="meterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="meter" />
+      </connectorParameters>
+    </entity>
+
+
+    <entity name="meterreading" idAttribute="meterreadingid">
+      <attributes>
+        <attribute name="meterreadingid" type="bigint" required="true" />
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="readingsource" type="varchar" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="delta" type="decimal" required="false" />
+        <attribute name="reading" type="decimal" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="readingdate" type="datetime" required="true" />
+        <attribute name="inspector" type="varchar" required="true" />
+        <attribute name="rolldownsource" type="varchar" required="false" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="rolldownid" type="bigint" required="false" />
+        <attribute name="modified" type="smallint" required="true" />
+        <attribute name="inheritedfromasset" type="varchar" required="false" />
+        <attribute name="locmeterreadingid" type="float" required="false" />
+        <attribute name="matusetransid" type="bigint" required="false" />
+        <attribute name="assetid" type="bigint" required="true" />
+        <attribute name="didrollover" type="smallint" required="true" />
+        <attribute name="reason" type="varchar" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="startfeaturelabel" type="varchar" required="false" />
+        <attribute name="endfeaturelabel" type="varchar" required="false" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="meterreading" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="assetmeter" idAttribute="assetmeterid">
+      <attributes>
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="avgcalcmethod" type="varchar" required="false" />
+        <attribute name="slidingwindowsize" type="int" required="false" />
+        <attribute name="rolldownsource" type="varchar" required="false" />
+        <attribute name="sincelastrepair" type="decimal" required="true" />
+        <attribute name="sincelastoverhaul" type="decimal" required="true" />
+        <attribute name="sincelastinspect" type="decimal" required="true" />
+        <attribute name="sinceinstall" type="decimal" required="true" />
+        <attribute name="lifetodate" type="decimal" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="remarks" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lastreadingdate" type="datetime" required="false" />
+        <attribute name="lastreading" type="varchar" required="false" />
+        <attribute name="pointnum" type="varchar" required="false" />
+        <attribute name="average" type="decimal" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="lastreadinginspctr" type="varchar" required="false" />
+        <attribute name="assetmeterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="sequence" type="smallint" required="false" />
+        <attribute name="endfeature" type="varchar" required="false" />
+        <attribute name="startfeature" type="varchar" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="startfeatureid" type="bigint" required="false" />
+        <attribute name="endfeatureid" type="bigint" required="false" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="linearassetmeterid" type="int" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="disabledrollover" type="boolean" query="'false'" />
+      </attributes>
+      <relationships>
+        <relationship to="meter">
+          <relationshipAttribute from="metername" to="metername" primary="true"/>
+        </relationship>
+        <relationship to="person" ignoreprimary="true">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+
+      </relationships>
+
+
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetmeter" />
+      </connectorParameters>
+    </entity>
+  
+  <entity name="locationmeter" idAttribute="locationmeterid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="avgcalcmethod" type="varchar" required="false" />
+        <attribute name="slidingwindowsize" type="int" required="false" />
+        <attribute name="sincelastrepair" type="decimal" required="true" />
+        <attribute name="sincelastoverhaul" type="decimal" required="true" />
+        <attribute name="sincelastinspect" type="decimal" required="true" />
+        <attribute name="sinceinstall" type="decimal" required="true" />
+        <attribute name="lifetodate" type="decimal" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="remarks" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lastreadingdate" type="datetime" required="false" />
+        <attribute name="lastreading" type="varchar" required="false" />
+        <attribute name="pointnum" type="varchar" required="false" />
+        <attribute name="average" type="decimal" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="lastreadinginspctr" type="varchar" required="false" />
+        <attribute name="locationmeterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="sequence" type="smallint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="disabledrollover" type="boolean" query="'false'" />
+      </attributes>
+      <relationships>
+        <relationship to="meter">
+          <relationshipAttribute from="metername" to="metername" primary="true"/>
+        </relationship>
+        <relationship to="person" ignoreprimary="true">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locationmeter" />
       </connectorParameters>
     </entity>
   </entities>
