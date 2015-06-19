@@ -310,20 +310,20 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Site" attribute="siteid" readonly="true" />
-            <field label="Storeroom" attribute="location" readonly="true" />
-            <field label="Bin" attribute="binnum" readonly="true" />
-          </section>
+              <field label="Site" attribute="siteid" readonly="true" />
+              <field label="Storeroom" attribute="location" readonly="true" />
+              <field label="Bin" attribute="binnum" readonly="true" />
+            </section>
 
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Issuing" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <field label="Condition Code" attribute="conditioncode" readonly="true">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true">
-              <renderer type="default" params="inputsize=small" />
-            </field>
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Issuing" params="fieldset=true" />
+              <renderer type="default" params="childinputsize=medium" />
+              <field label="Condition Code" attribute="conditioncode" readonly="true">
+                <renderer type="default" params="inputsize=small" />
+              </field>
+              <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true">
+                <renderer type="default" params="inputsize=small" />
+              </field>
             <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
@@ -499,14 +499,14 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="siteid" label="Site" readonly="true" />
-            <field attribute="location" label="Storeroom" readonly="true" />
-            <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
-              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
-              <dataprovider prefilterfunction="FilterBins"/>
-            </association>
+              <field attribute="siteid" label="Site" readonly="true" />
+              <field attribute="location" label="Storeroom" readonly="true" />
+              <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
+                <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
+                <dataprovider prefilterfunction="FilterBins"/>
+              </association>
           </section>
-
+          
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true" />
@@ -587,8 +587,8 @@
         </schema>
 
         <schema id="invbalancesDetail" stereotype="detail" title="Inventory Balance Details">
-
-
+          
+          
           <properties>
             <property key="nextschema.schemaid" value="invbalancesList"/>
           </properties>
@@ -658,8 +658,8 @@
           <commandbars>
             <commandgroup position="gridtop">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
-              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService"
-                       method="createTransfer" parameters="schema" position="&lt;filter"/>
+              <!--<command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService"
+                       method="createTransfer" parameters="schema" position="&lt;filter"/>-->
             </commandgroup>
           </commandbars>
           <field attribute="itemnum" label="Item">
@@ -690,7 +690,7 @@
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
-        <schema id="detail" title="Inventory Transfer">
+        <schema id="detail" title="View Inventory Transfer">
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
           </field>
@@ -719,7 +719,7 @@
 
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
-        <schema id="newdetail" stereotype="detail" mode="input">
+        <schema id="newdetail" stereotype="detail" mode="input" title="New Inventory Transfer">
           <properties>
             <property key="routing.nextapplication" value="matrectransTransfers"/>
             <property key="nextschema.schemaid" value="matrectransTransfersList"/>
@@ -790,7 +790,7 @@
             <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
             <field attribute="lotnum" hidden="true"/>
           </section>
-
+          
           <commandbars>
             <commandgroup position="detailform" removeundeclared="false">
               <removecommand id="print"/>

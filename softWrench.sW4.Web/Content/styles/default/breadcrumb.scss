@@ -1,0 +1,120 @@
+﻿.breadcrumb {
+    padding: 0;
+    margin-bottom: 0;
+    background: none;
+    border-radius: 0;
+    font-size: 14px;
+}
+
+.container {
+    header {
+        .admin-area {
+            .breadcrumb {
+                float: left;
+                color: #fff;
+
+                .part {
+                    float: left;
+                    display: none;
+
+                    &.main {
+                        display: block;
+
+                        i {
+                            &.fa-bars {
+                                color: #fff;
+                            }
+
+                            &.fa-caret-down {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+
+                a {
+                    color: #fff;
+                    cursor: pointer;
+
+                    i {
+                        color: #c9c7c7;
+
+                        &.fa-caret-down {
+                            color: #fff;
+                            font-size: 12px;
+                        }
+                    }
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+
+                .seperator {
+                    color: #0d374d;
+                    margin: 0 15px;
+                }
+
+                .dropdown-menu {
+                    top: auto;
+                    left: auto;
+
+                    li {
+                        a {
+                            padding: 3px 30px 3px 10px;
+                            color: #333;
+
+                            &:hover {
+                                color: #fff;
+
+                                i {
+                                    color: #fff;
+                                }
+                            }
+
+                            i {
+                                color: #333;
+                            }
+                        }
+                    }
+                }
+
+                .dropdown-submenu > .dropdown-menu {
+                    left: 100%;
+                    top: 0;
+                }
+
+                .dropdown-submenu > a:after {
+                    margin-right: -20px;
+                }
+            }
+        }
+    }
+}
+
+@media all and (min-width: 768px) {
+    .container {
+        header {
+            .admin-area {
+                .breadcrumb {
+                    .part {
+                        display: block;
+
+                        &.main {
+                            i {
+                                &.fa-bars {
+                                    color: #c9c7c7;
+                                }
+
+                                &.fa-caret-down {
+                                    display: inline-block;
+                                    color: #fff;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

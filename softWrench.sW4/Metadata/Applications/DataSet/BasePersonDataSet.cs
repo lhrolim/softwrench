@@ -5,6 +5,7 @@ using cts.commons.simpleinjector;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -47,7 +48,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             var swusers = UserManager.GetUsersByUsername(usernames);
             foreach (var record in result.ResultObject) {
-                var swuser = swusers.Where(user => user.MaximoPersonId == record.GetAttribute("personid").ToString());
+                var swuser = swusers.Where(user => user.UserName.ToLower() == record.GetAttribute("personid").ToString().ToLower());
                 if (!swuser.Any()) {
                     continue;
                 }
@@ -81,6 +82,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
+                swUser.Profiles = new HashedSet<UserProfile>();
             }
             var isActive = swUser.IsActive ? "1" : "0";
             dataMap.SetAttribute("#isactive", isActive);
@@ -134,7 +136,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             //Loop over the array
             foreach (dynamic row in profiles) {
                 result.Add(new UserProfile() {
-                    Id = row.id
+                    Id = row.id,
+                    Name = row.name
                 });
             }
             return result;

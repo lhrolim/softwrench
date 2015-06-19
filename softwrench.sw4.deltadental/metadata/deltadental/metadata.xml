@@ -117,22 +117,6 @@
         <connectorParameter key="integration_interface" value="SWPERSON" />
       </connectorParameters>
     </entity>
-
-    <entity name="ALNDOMAIN" idAttribute="domainid">
-      <attributes>
-        <attribute name="domainid" type="varchar" required="true" />
-        <attribute name="value" type="varchar" required="true" />
-        <attribute name="description" type="varchar" required="false" />
-        <attribute name="siteid" type="varchar" required="false" />
-        <attribute name="orgid" type="varchar" required="false" />
-        <attribute name="alndomainid" type="bigint" required="true" />
-        <attribute name="valueid" type="varchar" required="true" />
-        <attribute name="rowstamp" type="timestamp" required="true" />
-      </attributes>
-      <connectorParameters>
-        <connectorParameter key="dbtable" value="ALNDOMAIN" />
-      </connectorParameters>
-    </entity>
     
     <entity name="floordomain" parententity="ALNDOMAIN" idAttribute="alndomainid" whereclause="domainid = 'FLOOR'">
       <attributes>
@@ -326,7 +310,7 @@
           <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" showexpression="false">
             <renderer type="lookup" />
           </association>
           <!-- SWWEB 173-->
@@ -432,7 +416,7 @@
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
-            <composition relationship="attachment" label="Attachments">
+            <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
               
             </composition>
@@ -617,19 +601,29 @@
         </schema>
 
         <schema id="newPersonDetail" stereotype="detail" title="New User" mode="input" redeclaring="false">
-          <customization position="+locationsite">
-            <field attribute="costcenter" label="Cost Center"/>
+          <customization position="department">
+            <field attribute="costcenter" hidden="true"/>
+            <association target="costcenter" labelfield="cc_.description" label="Cost Center">
+              <renderer type="lookup"/>
+            </association>
           </customization>
           <customization position="+location">
-            <field attribute="floor" label="Floor"/>
+            <field attribute="floor" hidden="true"/>
+            <association target="floor" labelfield="fd_.description" label="Floor">
+              <renderer type="lookup"/>
+            </association>
             <field attribute="room" label="Room"/>
           </customization>
           <customization position="+langcode">
-            <field attribute="altfirstname" label="Alt Contact First Name"/>
-            <field attribute="altlastname" label="Alt Contact Last Name"/>
-            <field attribute="altdisplayname" label="Alt Contact Display Name"/>
-            <field attribute="altphone" label="Alt Contact Phone"/>
-            <field attribute="altemail" label="Alt Contact Email"/>
+            <field attribute="altdisplayname" hidden="true"/>
+            <association target="altdisplayname" labelfield="altperson_.displayname" hideDescription="true" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
+              <renderer type="lookup" params="application=person;schemaId=personlookup;"/>
+              <event service="personService" method="afterChangeAltDisplayname" type="afterchange"/>
+            </association>
+            <field attribute="altfirstname" label="Alt Contact First Name" readonly="true"/>
+            <field attribute="altlastname" label="Alt Contact Last Name" readonly="true"/>
+            <field attribute="altphone" label="Alt Contact Phone" readonly="true"/>
+            <field attribute="altemail" label="Alt Contact Email" readonly="true"/>
           </customization>
         </schema>
       </schemas>

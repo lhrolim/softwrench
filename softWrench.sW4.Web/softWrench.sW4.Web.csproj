@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build;CopyCustomerDLL" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -577,6 +577,7 @@
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\crud\crud_input_fields_commons.js" />
+    <Content Include="Content\Scripts\client\directives\breadcrumb.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
     <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
@@ -672,6 +673,16 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
+    <Content Include="Content\styles\default\breadcrumb.css.map">
+      <DependentUpon>breadcrumb.css</DependentUpon>
+    </Content>
+    <None Include="Content\styles\default\breadcrumb.scss" />
+    <Content Include="Content\styles\default\breadcrumb.css">
+      <DependentUpon>breadcrumb.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\styles\default\breadcrumb.min.css">
+      <DependentUpon>breadcrumb.css</DependentUpon>
+    </Content>
     <Content Include="Content\styles\default\button.css" />
     <Content Include="Content\styles\default\xeditable.css" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />

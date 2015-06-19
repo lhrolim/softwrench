@@ -94,6 +94,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             dto.AppendProjectionField(ProjectionField.Default("lastname"));
             dto.AppendProjectionField(ProjectionField.Default("status"));
             dto.AppendProjectionField(ProjectionField.Default("locationorg"));
+            dto.AppendProjectionField(ProjectionField.Default("locationsite"));
             dto.AppendProjectionField(ProjectionField.Default("email_.emailaddress"));
             dto.AppendProjectionField(ProjectionField.Default("phone_.phonenum"));
             dto.AppendProjectionField(ProjectionField.Default("language"));
@@ -131,7 +132,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     FirstName = (string)maximoUser.GetAttribute("firstname"),
                     LastName = (string)maximoUser.GetAttribute("lastname"),
                     OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
-                    SiteId = (string)maximoUser.GetAttribute("maxuser_.defsite"),
+                    SiteId = (string)maximoUser.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
                     Email = (string)maximoUser.GetAttribute("email_.emailaddress"),
                     Department = (string)maximoUser.GetAttribute("department"),
                     Phone = (string)maximoUser.GetAttribute("phone_.phonenum"),

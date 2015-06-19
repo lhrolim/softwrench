@@ -16,5 +16,10 @@ app.factory('personService', function ($http, $timeout) {
                 datamap.fields['altemail'] = datamap.fields['altperson_.email_.emailaddress'];
             }
         },
+        afterChangeUsername: function(datamap) {
+            if (datamap.fields["#personid"] && datamap.fields["#personid"] != "") {
+                datamap.fields["personid"] = datamap.fields["#personid"];
+            }
+        },
     }
 });
