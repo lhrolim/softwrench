@@ -3,16 +3,16 @@
     "use strict";
 
     softwrench.controller('HomeController',
-        ['$scope', 'synchronizationFacade', '$ionicPopup', '$ionicLoading', 'synchronizationOperationService', 'formatService',
-        function($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService, formatService) {
+        ['$scope', 'synchronizationFacade', '$ionicPopup', '$ionicLoading', 'synchronizationOperationService', 'routeService',
+        function($scope, synchronizationFacade, $ionicPopup, $ionicLoading, synchronizationOperationService, routes) {
 
             $scope.operationList = [];
 
             $scope.loadSyncOperationList = function () {
                 synchronizationOperationService.getSyncList()
-                    .then(function(operations) {
-                        $scope.operationList = operations;
-                    });
+                .then(function(operations) {
+                    $scope.operationList = operations;
+                });
             };
 
             $scope.fullSynchronize = function() {
@@ -40,45 +40,8 @@
                 });
             };
 
-            $scope.doneNoProblems = function(syncOperation) {
-                return syncOperation.status.equalIc("complete") && !synchronizationOperationService.hasProblems(syncOperation);
-            };
-
-            $scope.doneWithProblems = function(syncOperation) {
-                return syncOperation.status.equalIc("complete") && synchronizationOperationService.hasProblems(syncOperation);
-            };
-
-            $scope.isPending = function(syncOperation) {
-                return syncOperation.status.equalIc("pending");
-            };
-
-            $scope.getFormattedDate = function(startdate) {
-                return formatService.formatDate(startdate, 'MM/dd/yyyy HH:mm');
-            };
-
-            $scope.synchronizationlist = function () {
-                // TODO: promise resolution + set number of pending items
-                return synchronizationOperationService.getSyncList();
-            };
-
-            $scope.getTimeElapsed = function(item) {
-                return (item.enddate - item.startdate) / 1000;
-            };
-
-            $scope.getFormattedStatus = function(syncOperation) {
-                if ($scope.doneNoProblems(syncOperation)) {
-                    return "Completed";
-                } else if ($scope.isPending(syncOperation)) {
-                    return "Pending";
-                } else if ($scope.doneWithProblems(syncOperation)) {
-                    return "Completed with Issues";
-                } else {
-                    return undefined;
-                }
-            };
-
-            $scope.openDetail = function(syncOperation) {
-
+            $scope.openDetail = function (syncOperation) {
+                routes.go("main.syncdetail", { id: syncOperation.id });
             };
 
             // load syncoperation list after controller is loaded

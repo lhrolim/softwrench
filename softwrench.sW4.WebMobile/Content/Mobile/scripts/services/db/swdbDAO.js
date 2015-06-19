@@ -157,15 +157,21 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             return deferred.promise;;
         },
 
-        findById: function (entity, id, cbk) {
-            if (!entities[entity]) {
-                throw new Error("entity {0} not found".format(entity));
+        findById: function (entity, id) {
+            var deferred = dispatcherService.loadBaseDeferred();
+            var dbEntity = entities[entity];
+            if (!dbEntity) {
+                deferred.reject(new Error("entity {0} not found".format(entity)));
             }
-            var filter = entities[entity].all().filter("id", '=', id);
-            filter.list(null, function (result) {
+            dbEntity.findBy("id", id, function (result) {
                 //single result expected
-                cbk(result[0]);
+                if (!result || result.length <= 0) {
+                    deferred.reject(new Error("no {0} found with 'id' = {1}".format(entity, id)));
+                } else {
+                    deferred.resolve(result);
+                }
             });
+            return deferred.promise;
         },
 
         /// <summary>

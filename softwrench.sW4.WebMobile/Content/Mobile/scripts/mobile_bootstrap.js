@@ -34,7 +34,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
 
 
-.run(function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService",
+    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService) {
 
     initContext();
 
@@ -90,9 +91,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         //        }
     };
 
-})
+}])
 
-.config(function ($stateProvider, $urlRouterProvider, $logProvider) {
+.config(["$stateProvider", "$urlRouterProvider", "$logProvider", function ($stateProvider, $urlRouterProvider, $logProvider) {
 
     $logProvider.debugEnabled(true);
 
@@ -125,6 +126,15 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 'main': {
                     templateUrl: 'Content/Mobile/templates/home.html',
                     controller: 'HomeController'
+                }
+            }
+        })
+        .state('main.syncdetail', {
+            url: '/syncdetail/{id}',
+            views: {
+                'main': {
+                    templateUrl: 'Content/Mobile/templates/syncdetail.html',
+                    controller: 'SyncDetailController'
                 }
             }
         })
@@ -189,7 +199,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/main/home');
 
-})
+}])
 
 .filter('linebreak', function () {
     return function (value) {

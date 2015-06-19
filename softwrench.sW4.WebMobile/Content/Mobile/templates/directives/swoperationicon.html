@@ -1,0 +1,12 @@
+﻿<div class="sw-operation-icon">
+    <div class="operation-status-icon"
+         ng-class="{ 'statussuccess' : operation.issuccess, 'statuspending' : operation.ispending, 'statusproblem' : operation.hasproblems }">
+        <div class="row">
+            <div class="col">
+                <i class="icon"
+                   ng-class="{ 'ion-checkmark' : operation.issuccess, 'ion-loop' : operation.ispending, 'ion-alert-circled' : operation.hasproblems }">
+                </i>
+            </div>
+        </div>
+    </div>
+</div>
