@@ -275,6 +275,53 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                     submitService.submitConfirmation(null, datamap, parameters);
                 }
             });
-        }
+        },
+
+        initSouthernPhysicalCountGridListener: function (scope, schema, datamap, parameters) {
+            var searchData = parameters.searchData;
+
+            // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
+            $(document).scannerDetection({
+                avgTimeByChar: timeBetweenCharacters,
+                onComplete: function (data) {
+                    // Retrieve the scan order string from the context that relates to the current schema
+                    var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
+                    var scanOrder = scanOrderString.split(",");
+                    var extraparameters = { keepfilterparameters: true };
+                    // When the user scans a value, loop through the properties in the scan order
+                    for (var attribute in scanOrder) {
+                        var currentAttribute = scanOrder[attribute];
+                        // If the property is not already in the scan data, add it and its value
+                        if (!searchData.hasOwnProperty(currentAttribute)) {
+                            var localSearchData = {};
+                            localSearchData[currentAttribute] = data;
+                            searchService.refreshGrid(localSearchData, extraparameters);
+                            return;
+                            // Else if the property exists but is blank, set it to its new value
+                        } else if (searchData[currentAttribute] === '') {
+                            searchData[currentAttribute] = data;
+                            searchService.refreshGrid(searchData, extraparameters);
+                            return;
+                        }
+                    }
+                },
+            });
+            // Add auto redirect
+            // After griddata has changed
+            scope.$on('sw_griddatachanged', function (event, data, panelId) {
+                // If only one record is found
+                if (data.length === 1) {
+                    var invbalanceid = data[0]['fields']['invbalancesid'];
+                    var param = {};
+                    param.id = invbalanceid;
+                    var application = 'physicalcount';
+                    var detail = 'detail';
+                    var mode = 'input';
+                    param.scanmode = true;
+                    // Redirect to the detail page for that record
+                    redirectService.goToApplicationView(application, detail, mode, null, param, null);
+                }
+            });
+        },
     };
 });
