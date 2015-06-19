@@ -310,18 +310,7 @@
         },
 
         getVariables: function (expression,datamap) {
-            if (datamap && datamap.fields != undefined) {
-                expression = expression.replace(/\@/g, 'datamap.fields.');
-            } else {
-                if (expression.startsWith('@#')) {
-                    expression = expression.replace(/\@#/g, 'datamap[\'#');
-                    expression = expression + '\']';
-                }
-                expression = expression.replace(/\@/g, 'datamap.');
-            }
-            expression = expression.replace(/ctx:/g, 'contextService.');
-            expression = expression.replace(/\$/g, 'scope');
-            return expression;
+            return getVariables(expression, datamap, false, scope);
         },
 
         getVariablesBeforeJordanFuckedUp: function (expression) {
