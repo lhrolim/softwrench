@@ -230,7 +230,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web,null);
-            var response = _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId,  OperationConstants.CRUD_FIND_BY_ID);
+            var response = _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId,  OperationConstants.CRUD_FIND_BY_ID,false);
 
             var parent = response.ResultObject;
             if (parent != null) {

@@ -72,7 +72,15 @@ namespace softWrench.sW4.Security.Context {
             if (!baseEqual) {
                 return false;
             }
-            var profileEqual = UserProfiles == null ? other.UserProfiles == null : UserProfiles.SequenceEqual(other.UserProfiles);
+            var profileEqual = false;
+            if (UserProfiles == null) {
+                profileEqual = other.UserProfiles == null;
+            } else {
+                if (other.UserProfiles != null) {
+                    profileEqual = UserProfiles.SequenceEqual(other.UserProfiles);
+                }
+            }
+
             var appContextEqual = ApplicationLookupContext == null ? other.ApplicationLookupContext == null :
                 ApplicationLookupContext.Equals(other.ApplicationLookupContext);
             return profileEqual && appContextEqual;

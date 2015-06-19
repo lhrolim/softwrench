@@ -1,4 +1,5 @@
 ﻿using System;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
@@ -10,7 +11,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var invIssue = maximoTemplateData.IntegrationObject;
-
             var currentTime = DateTime.Now.FromServerToRightKind();
             //Seconds are removed to prevent date syncronization error between maximo server / softwrench server
             var adjustedCurrentTime = currentTime.AddSeconds(-60);

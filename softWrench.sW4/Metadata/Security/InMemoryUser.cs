@@ -60,11 +60,11 @@ namespace softWrench.sW4.Metadata.Security {
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, UserPreferences userPreferences, int? timezoneOffset) {
             DBUser = dbUser;
             _login = dbUser.UserName;
-            SiteId = dbUser.Person.SiteId;
-            _firstName = dbUser.Person.FirstName;
-            _lastName = dbUser.Person.LastName;
+            SiteId = dbUser.Person.SiteId?? dbUser.SiteId;
+            _firstName = dbUser.Person.FirstName ?? dbUser.FirstName;
+            _lastName = dbUser.Person.LastName ?? dbUser.LastName;
             _email = dbUser.Person.Email;
-            _orgId = dbUser.Person.OrgId;
+            _orgId = dbUser.Person.OrgId ?? dbUser.OrgId;
             _storeloc = dbUser.Person.Storeloc;
             _department = dbUser.Person.Department;
             _phone = dbUser.Person.Phone;

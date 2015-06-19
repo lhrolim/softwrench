@@ -23,5 +23,7 @@ namespace softWrench.sW4.Data.API {
             }
         }
         public string Operation { get; set; }
+
+        public bool Batch { get; set; }
     }
 }

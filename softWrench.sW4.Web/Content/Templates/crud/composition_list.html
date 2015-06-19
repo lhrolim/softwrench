@@ -20,6 +20,10 @@
     <table class="table table-hover" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
+                <th ng-if="hasDetailSchema()">
+                    <!--batchMode-->
+                </th>
+
                 <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'">
                     <!--Multiselect-->
                 </th>
@@ -28,16 +32,28 @@
                 </th>
                 <th class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
-                    ng-show="!isFieldHidden(compositionlistschema,column)">
+                    ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
+                <th ng-if="isBatch()">
+                    <button class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
+                </th>
             </tr>
+            
         </thead>
-        <tbody ng-show="clonedCompositionData.length > 0">
-            <tr ng-repeat-start="compositionitem in clonedCompositionData"
+        <tbody ng-show="compositionData().length > 0">
+            <tr ng-repeat-start="compositionitem in compositionData()"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
-                ng-click="toggleDetails(compositionitem,column)"
-                ng-class="$odd ? 'odd' : 'even'">
+                ng-click="toggleDetails(compositionitem,column,false,$event)"
+                ng-class="$odd ? 'odd' : 'even'"
+                ng-init="rowindex = $index">
+                <td ng-if="hasDetailSchema()">
+                    <button class="btn" ng-click="toggleDetails(compositionitem,column,true,$event)">
+                        <i class="fa right-caret" ng-hide="isItemExpanded(compositionitem)"></i>
+                        <i class="fa bottom-caret" ng-show="isItemExpanded(compositionitem)"></i>
+                    </button>
+                </td>
+
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
@@ -52,7 +68,7 @@
                 </td>
                 <td class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
-                    ng-show="!isFieldHidden(compositionlistschema,column)">
+                    ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)">
                     <ng-switch on="column.type">
 
                         <div ng-switch-when="ApplicationAssociationDefinition">
@@ -61,13 +77,15 @@
                                     <div class="col-lg-12">
                                         <div class="input-group">
                                             <input type="text" placeholder="{{column.label}}" class="form-control"
+                                                   ng-enabled="isSelectEnabled(column,compositionitem)"
                                                    ng-model="compositionitem[column.attribute]"
                                                    ng-change="lookupCodeChange(column)"
                                                    ng-blur="lookupCodeBlur(column)"
                                                    ng-enter="showLookupModal(column,compositionitem)"
                                                    rel="tooltip" data-original-title="Enter {{column.label}} id to lookup " />
                                             <span class="input-group-addon last" ng-click="showLookupModal(column,compositionitem)"
-                                                  rel="tooltip" data-original-title="Open the lookup popup">
+                                                  rel="tooltip" data-original-title="Open the lookup popup"
+                                                  ng-enabled="isSelectEnabled(column,compositionitem)">
                                                 <i class="glyphicon glyphicon-search" style="cursor: pointer"></i>
                                             </span>
                                             <div></div><!--stop addon from moving on hover-->
@@ -84,6 +102,17 @@
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox">
                                     <i class="fa" ng-class="{'fa-check-square-o' : compositionitem[column.attribute] == 'true', 'fa-square-o' :  compositionitem[column.attribute] == 'false'}" />
+                                </div>
+                                <div ng-switch-when="numericinput">
+                                    <input id="spinner"
+                                           class="hidden-phone form-control"
+                                           ng-model="compositionitem[column.attribute]"
+                                           ng-init="initField(column,compositionitem)"
+                                           min="{{column.rendererParameters['min']}}"
+                                           max="{{setMaxNumericInput(compositionitem,column)}}"
+                                           ng-enabled="isModifiableEnabled(column,compositionitem)"
+                                           data-field="{{column.attribute+rowindex}}"
+                                           number-spinner />
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
@@ -104,11 +133,11 @@
                                         </span>
                                     </div>
                                     <a ng-if="column.rendererParameters['editable'] != 'true'">
-                                        {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
+                                        {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                     </a>
 
                                 </div>
-                                <div ng-switch-default>
+                                <div ng-switch-default style="padding-top: 6px">
 
                                     <div ng-if="column.rendererParameters['editable'] == 'true'"
                                          ng-class="{'input-group': column.rendererParameters['prepend'] || column.rendererParameters['append'] }">
@@ -123,8 +152,8 @@
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
 
-                                    <a ng-if="column.rendererParameters['editable'] != 'true'">
-                                        {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
+                                    <a ng-if="column.rendererParameters['editable'] != 'true'" style="vertical-align: middle">
+                                        {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                     </a>
                                 </div>
                             </ng-switch>
@@ -132,6 +161,9 @@
 
 
                     </ng-switch>
+                </td>
+                <td ng-if="isBatch()" ng-hide="firstItem(compositionitem)">
+                    <button class="fa fa-trash-o btn" ng-click="removeBatchItem()"></button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
@@ -155,7 +187,7 @@
                 </td>
             </tr>
         </tbody>
-        <tbody ng-show="clonedCompositionData.length == 0">
+        <tbody ng-show="isNoRecords">
             <tr>
                 <td colspan="100%">
                     {{i18N('general.norecords','No records to display')}}
@@ -176,7 +208,7 @@
     </div>
 
     <div class="form-actions hidden-phone form-group hiddenonprint commandbar" data-class="commandbar" ng-show="selecteditem==null && !inline">
-        <div class="spinner" data-class="spinner" id="detailspinner"></div>
+        <div class="spinner" data-class="spinner" id="detailspinner" ng-if="!inline"></div>
         <table style="width: 100%;">
             <tr>
                 <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
@@ -216,7 +248,7 @@
                               lookup-associations-description="lookupAssociationsDescription"
                               association-options="associationOptions"
                               schema="compositionlistschema"
-                              datamap="compositiondata">
+                              datamap="parentdata">
         </lookup-modal-wrapper>
     </div>
 

@@ -50,6 +50,8 @@ namespace softWrench.sW4.Security.Services {
         private static readonly IDictionary<string, InMemoryUser> _users = new ConcurrentDictionary<string, InMemoryUser>();
 
         public InMemoryUser LdapLogin(User dbUser, string userTimezoneOffset) {
+            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
+            maximoUser.MergeFromDBUser(dbUser);
             return UserFound(dbUser, userTimezoneOffset);
         }
 
@@ -57,7 +59,8 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
-            if (dbUser.UserName.ToLower() == "swadmin") {
+            if (dbUser.MaximoPersonId==null) {
+                //no integration needed
                 return UserFound(dbUser, userTimezoneOffset);
             }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
@@ -171,16 +174,10 @@ namespace softWrench.sW4.Security.Services {
             }
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
-            if (swUser.UserName.ToLower() != "swadmin") {
+            if (swUser.MaximoPersonId != null) {
                 fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
             }
-            fullUser.Id = swUser.Id;
-            fullUser.UserName = swUser.UserName;
-            fullUser.Profiles = swUser.Profiles;
-            fullUser.CustomRoles = swUser.CustomRoles;
-            fullUser.PersonGroups = swUser.PersonGroups;
-            fullUser.CustomConstraints = swUser.CustomConstraints;
-
+            fullUser.MergeFromDBUser(swUser);
             var formsIdentity = CurrentPrincipal.Identity as System.Web.Security.FormsIdentity;
             var timezone = String.Empty;
             if (formsIdentity != null && formsIdentity.Ticket != null && !String.IsNullOrWhiteSpace(formsIdentity.Ticket.UserData)) {

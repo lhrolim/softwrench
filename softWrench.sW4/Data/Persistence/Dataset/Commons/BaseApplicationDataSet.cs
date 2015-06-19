@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.Util;
+using Iesi.Collections.Generic;
 using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
@@ -71,6 +73,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private IContextLookuper _contextLookuper;
 
+        private IBatchSubmissionService _batchSubmissionService;
+
         internal BaseApplicationDataSet() { }
 
         protected IContextLookuper ContextLookuper {
@@ -81,6 +85,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 _contextLookuper =
                     SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
                 return _contextLookuper;
+            }
+        }
+
+        protected IBatchSubmissionService BatchSubmissionService {
+            get {
+                if (_batchSubmissionService != null) {
+                    return _batchSubmissionService;
+                }
+                _batchSubmissionService =
+                    SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>(typeof(IBatchSubmissionService));
+                return _batchSubmissionService;
             }
         }
 
@@ -235,11 +250,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             #region associations
 
+            System.Collections.Generic.ISet<string> handledAssociations = new HashSet<string>();
+
             foreach (var applicationAssociation in associations) {
                 if (!associationsToFetch.ShouldResolve(applicationAssociation.AssociationKey)) {
                     Log.Debug("ignoring association fetching: {0}".Fmt(applicationAssociation.AssociationKey));
                     continue;
                 }
+                if (handledAssociations.Contains(applicationAssociation.AssociationKey)) {
+                    //this happens if a screen has multiple associations defined, as if sections that share the same fields, but that are never visible at the same time
+                    continue;
+                }
+
+                handledAssociations.Add(applicationAssociation.AssociationKey);
 
                 //only resolve the association options for non lazy associations or (lazy loaded with value set or reverse associations)
                 var search = new SearchRequestDto();
@@ -247,7 +270,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     // default branch
                 } else {
                     var primaryAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute();
-                    if (primaryAttribute == null){
+                    if (primaryAttribute == null) {
                         //this is a rare case, but sometimes the relationship doesn´t have a primary attribute, like workorder --> glcomponents
                         continue;
                     }
@@ -313,13 +336,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-//        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
-//            return Engine().Sync(applicationMetadata, applicationSyncData);
-//        }
+        //        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
+        //            return Engine().Sync(applicationMetadata, applicationSyncData);
+        //        }
 
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,Boolean isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
+            if (isBatch) {
+                return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
+            }
+
             return Engine().Execute(operationWrapper);
         }
 
@@ -349,7 +376,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var before = LoggingUtil.StartMeasuring(Log, "starting update association options fetching for application {0} schema {1}", application.Name, application.Schema.Name);
             IDictionary<string, BaseAssociationUpdateResult> resultObject =
                 new Dictionary<string, BaseAssociationUpdateResult>();
-            ISet<string> associationsToUpdate = null;
+            System.Collections.Generic.ISet<string> associationsToUpdate = null;
 
             // Check if 'self' (for lazy load) or 'dependant' (for dependant combos) association update
             if (!String.IsNullOrWhiteSpace(request.AssociationFieldName)) {

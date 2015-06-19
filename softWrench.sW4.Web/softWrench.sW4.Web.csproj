@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build;CopyCustomerDLL" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -354,6 +354,7 @@
     <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
     <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
     <Content Include="App_Data\Client\%40internal\templates\incident.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\invissue.xml" />
     <Content Include="App_Data\Client\%40internal\templates\inventory.xml" />
     <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />
     <Content Include="App_Data\Client\%40internal\templates\item.xml" />
@@ -575,6 +576,7 @@
     <Content Include="Content\Scripts\client\adminresources\profile.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
+    <Content Include="Content\Scripts\client\crud\crud_input_fields_commons.js" />
     <Content Include="Content\Scripts\client\directives\breadcrumb.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />

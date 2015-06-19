@@ -79,32 +79,11 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
-            // Sorting Precedence 
-            // 1. Sort by orderbyfield - if defined
-            // 2. Sort by value - if defined
-            // 3. Sort by the first projection field - if defined
-            // 4. Sort by the first column in the SQL query
-            // 5. Sort by prefilter function - if defined
-
             // Set projections
             var numberOfLabels = BuildProjections(associationFilter, association);
 
             //Set the orderbyfield if any
-            var orderByField = association.OrderByField;
-            if (orderByField != null) {
-                associationFilter.SearchSort = orderByField;
-                associationFilter.SearchAscending = !orderByField.EndsWith("desc");
-            }
-            else {
-                if (associationFilter.ProjectionFields.Any(f => f.Alias == "value")) {
-                    associationFilter.SearchSort = "value";
-                }
-                else {
-                    // Applying 1 will cause the query to order by the first column
-                    associationFilter.SearchSort = associationFilter.ProjectionFields.Any() ? associationFilter.ProjectionFields.FirstOrDefault().Alias : "1";
-                }
-                associationFilter.SearchAscending = true;
-            }
+            DefineSorting(association, associationFilter);
 
             // Set pre-filter functions
             var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
@@ -124,11 +103,34 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
 
             var options = BuildOptions(queryResponse, association, numberOfLabels, associationFilter.SearchSort == null);
-            string filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
+            var filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
             return filterFunctionName != null ? ApplyFilters(applicationMetadata, originalEntity, filterFunctionName, options, association) : options;
         }
 
-
+        /// Sorting Precedence 
+        /// 1. Sort by orderbyfield - if defined
+        /// 2. Sort by value - if defined
+        /// 3. Sort by the first projection field - if defined
+        /// 4. Sort by the first column in the SQL query
+        /// 5. Sort by prefilter function - if defined
+        /// 
+        private static void DefineSorting(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
+            var orderByField = association.OrderByField;
+            if (orderByField != null) {
+                associationFilter.SearchSort = orderByField;
+                associationFilter.SearchAscending = !orderByField.EndsWith("desc");
+            } else {
+                if (associationFilter.ProjectionFields.Any(f => f.Alias == "value")) {
+                    associationFilter.SearchSort = "value";
+                } else {
+                    // Applying 1 will cause the query to order by the first column
+                    associationFilter.SearchSort = associationFilter.ProjectionFields.Any()
+                        ? associationFilter.ProjectionFields.FirstOrDefault().Alias
+                        : "1";
+                }
+                associationFilter.SearchAscending = true;
+            }
+        }
 
 
         private ISet<IAssociationOption> BuildOptions(IEnumerable<AttributeHolder> queryResponse,

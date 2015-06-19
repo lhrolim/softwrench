@@ -39,7 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\application\ApplicationFiltereableProvider.cs" />
+    <Compile Include="classes\application\ApplicationFiltereableKey.cs" />
+    <Compile Include="classes\application\IApplicationFiltereable.cs" />
     <Compile Include="classes\IMenuManager.cs" />
+    <Compile Include="classes\integration\TargetResult.cs" />
     <Compile Include="classes\user\ISWUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

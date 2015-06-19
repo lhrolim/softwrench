@@ -8,32 +8,32 @@ namespace softWrench.sW4.Data.Persistence.Operation {
     public class OperationWrapper {
         private const string CrudFieldNotFound = "crud field expected on json of operation {0} of entity {1}";
         private String _operationName;
-        private readonly JObject _json;
+        
         private readonly EntityMetadata _entityMetadata;
-        private readonly ApplicationMetadata _applicationMetadata;
-        private readonly String _id;
-        private String _userId;
+        
+        public ApplicationMetadata ApplicationMetadata { get; set; }
 
-        public string UserId {
-            get { return _userId; }
-            set { _userId = value; }
-        }
+        public JObject JSON { get; set; }
+
+        private readonly String _id;
+
+        public string UserId { get; set; }
 
         private IOperationData _operationData;
 
 
         public OperationWrapper(ApplicationMetadata applicationMetadata, EntityMetadata entityMetadata, string operationName, JObject json, String id) {
             _operationName = operationName;
-            _json = json;
+            JSON = json;
             _entityMetadata = entityMetadata;
             _id = id;
-            _applicationMetadata = applicationMetadata;
+            ApplicationMetadata = applicationMetadata;
         }
 
         public OperationWrapper(CrudOperationData operationData, String operationName) {
             _entityMetadata = operationData.EntityMetadata;
             _id = operationData.Id;
-            _userId = operationData.UserId;
+            UserId = operationData.UserId;
             _operationName = operationName;
             _operationData = operationData;
         }
@@ -51,26 +51,26 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get { return _id; }
         }
 
-        public IOperationData OperationData(Type type) {
+        public IOperationData OperationData(Type type=null) {
             if (_operationData != null) {
                 return _operationData;
             }
 
-            bool isCrud = OperationConstants.IsCrud(_operationName) || typeof(CrudOperationData) == type;
+            var isCrud = OperationConstants.IsCrud(_operationName) || typeof(CrudOperationData) == type;
             if (isCrud) {
-                return EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, _applicationMetadata, _json, _id);
+                return EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, _id);
             }
-            var data = (OperationData)_json.ToObject(type);
+            var data = (OperationData)JSON.ToObject(type);
             data.EntityMetadata = EntityMetadata;
             if (!typeof(CrudOperationDataContainer).IsAssignableFrom(type)) {
                 return data;
             }
             JToken crudFields;
-            if (!_json.TryGetValue("crud", out crudFields)) {
+            if (!JSON.TryGetValue("crud", out crudFields)) {
                 throw new InvalidOperationException(String.Format(CrudFieldNotFound, OperationName, _entityMetadata.Name));
             }
-            ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, _applicationMetadata, (JObject)crudFields, _id);
-            data.ApplicationMetadata = _applicationMetadata;
+            ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, _id);
+            data.ApplicationMetadata = ApplicationMetadata;
             _operationData = data;
             return data;
         }

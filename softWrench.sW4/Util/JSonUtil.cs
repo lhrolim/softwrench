@@ -12,6 +12,12 @@ namespace softWrench.sW4.Util {
         private static readonly ILog Log = LogManager.GetLogger(typeof(JSonUtil));
 
 
+        public static void ReplaceValue(this JObject ob, string propertyName, JToken value) {
+            ob.Remove(propertyName);
+            ob.Add(propertyName, value);
+
+        }
+
 
         public static String StringValue(this JObject ob, string propertyName) {
             var prop = ob.Property(propertyName);

@@ -1,18 +1,20 @@
 ﻿modules.webcommons.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
 
 
+    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)([\w+\.]+)(?!\w)/g
+
     var compiledDatamapRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
     //var datamapRegexString = "(\@\#?)(\w+(\.?\w?)*)";
 
     var datamapRegexString = "(\@\#?)" +
   //                                Looks leading @ or @#
                                     "(\w+(\.?\w?)*)";
-  //                                At least one word, followed by unlimited number of .word
-  //    
+    //                                At least one word, followed by unlimited number of .word
+    //    
     //                      Examples:      https://www.regex101.com/r/fB6kI9/24
-  //                                @inventory_.item_.itemnum                  
-  //                                @assetnum                                  
-  //                                @#customfield   
+    //                                @inventory_.item_.itemnum                  
+    //                                @assetnum                                  
+    //                                @#customfield   
 
     var compiledScopeRegex = /\$\.(\w+)?((\.\w+)|(\[.*?\]+)|(\(.*?\)))*/g;
     //var scopeRegexString = "\$\.(\w+)?((\.\w+)|(\[.*?\]+)|(\(.*?\)))*";
@@ -21,15 +23,15 @@
 
   //                               Looks for leading $. that could be followed by a word 
   //                               ($. will translate into scope.)
-        
+
   //                               The following three conditions are OR'd together 
   //                               and can be repeated 0 or more times
-        
+
                                     "(" +
-                                                "(\.\w+)"                  + "|" +
+                                                "(\.\w+)" + "|" +
   //                                Condition 1: Looks for .word
 
-                                                "(\[.*?\]+)"                + "|" +
+                                                "(\[.*?\]+)" + "|" +
   //                                Condition 2: Looks for an open bracket [ and will accept
   //                                any characters until the first closing bracket ] is found.
   //                                There can be multiple closing brackets back to back. This
@@ -42,27 +44,27 @@
                                     ")*";
 
     //                          Examples:     https://www.regex101.com/r/fB6kI9/25
-                 /*                       $.previousdata.fields['wonum'].list[@assetnum]
-                                          $.previousdata.fields[wonum].list[key]
-                                          $.previousdata.fields('CAT')
-                                          $.previousdata.fields(@#assetnum)
-                                          $.previousdata.fields(var)
-                                          $.previousdata.fields(var,'CAT',@assetnum)
-                                          $.previousdata.fields('CAT', var, @assetnum).list[@assetnum]
-                                          $.previousdata.fields(@assetnum, 'CAT', var).update(@currentVariable)
-                                          $.previousdata.fields(var)
-                                          $.previousdata['@wonum'].fields
-                                          $.previousdata.fields.test
-                                          $.previousdata.fields[@assetnum]
-                                          $.lookupAssociationCode[@#lookupCode]
-                                          $.currentfunction($.datamap[@assetnum])
-                                          $.scope.datamap[@assetnum]                  */
+    /*                       $.previousdata.fields['wonum'].list[@assetnum]
+                             $.previousdata.fields[wonum].list[key]
+                             $.previousdata.fields('CAT')
+                             $.previousdata.fields(@#assetnum)
+                             $.previousdata.fields(var)
+                             $.previousdata.fields(var,'CAT',@assetnum)
+                             $.previousdata.fields('CAT', var, @assetnum).list[@assetnum]
+                             $.previousdata.fields(@assetnum, 'CAT', var).update(@currentVariable)
+                             $.previousdata.fields(var)
+                             $.previousdata['@wonum'].fields
+                             $.previousdata.fields.test
+                             $.previousdata.fields[@assetnum]
+                             $.lookupAssociationCode[@#lookupCode]
+                             $.currentfunction($.datamap[@assetnum])
+                             $.scope.datamap[@assetnum]                  */
 
 
     var compiledServiceRegex = /fn\:\w+\.\w+(\(.*?\)((\s?\,\s?.*?)*\))*)((\.\w+)|(\[.*?\])|\)|(\(.*?\)((\s?\,\s?.*?)*\))*))*/g;
     //var serviceRegexString = "fn\:\w+\.\w+(\(.*?\)((\s?\,\s?.*?)*\))*)((\.\w+)|(\[.*?\])|\)|(\(.*?\)((\s?\,\s?.*?)*\))*))*";
 
-    var serviceRegexString = "fn\:\w+\.\w+" + 
+    var serviceRegexString = "fn\:\w+\.\w+" +
   //                                Looks for leading fn:word.word (will translate into service.method call)
 
                                     "(\(.*?\)" + "((\s?\,\s?.*?)*\))*)" +
@@ -72,25 +74,25 @@
   //                                  commas that are followed by a word. Finally, this condition would expect
   //                                  a closed parenthesis. This part of the condition can occur 0 to unlimited number of times
   //                                  This case will allow for all variables nested within ( ) i.e. $.test($.test(), $.test())
-    
+
   //                                The following four conditions are OR'd together 
   //                                and can be repeated 0 or more times
 
                                     "(" +
 
-                                               "(\.\w+)"                        + "|" +
+                                               "(\.\w+)" + "|" +
   //                                Condition 1: Looks for .word
 
 
-                                               "(\[.*?\])"                      + "|" +
+                                               "(\[.*?\])" + "|" +
   //                                Condition 2: Looks for an open bracket [ and will accept
   //                                any characters until the first closing bracket ] is found.
   //                                This allows for you to call a function, and then refer to a 
   //                                key in its result. For example, 
   //                                     fn:contextService.getCurrentDatamap()[@assetnum]
-  
 
-                                               "\)"                             + "|" +
+
+                                               "\)" + "|" +
   //                                Condition 3: This OR with a close parenthesis ) will help when
   //                                capturing variables nested within parenthesis.
 
@@ -113,9 +115,9 @@
                     fn:inventoryService.retrieveCost($.datamap[@assetnum]).parseDouble()
                     fn:inventoryService.retrieveCost($.datamap[@assetnum], $.test()).parseDouble()
                     fn:contextService.getCurrentDatamap()[@assetnum]                                    */
-        
 
-    function buildScopeVariables(variables,scopeVariables,datamap,onlyReturnRootNode,scope) {
+
+    function buildScopeVariables(variables, scopeVariables, datamap, onlyReturnRootNode, scope) {
         for (var i = 0; i < scopeVariables.length; i++) {
             var referenceVariable = scopeVariables[i];
 
@@ -249,13 +251,13 @@
         The onlyReturnRootNode would be set to true when trying to evaluate an expression.
         When the flag is false, the resulting list will have all variables, including nested
         variables.                                                                     */
-    function getVariables (expression, datamap, onlyReturnRootNode, scope) {
+    function getVariables(expression, datamap, onlyReturnRootNode, scope) {
         var variables = {};
 
         var scopeVariables = expression.match(compiledScopeRegex);
 
         if (scopeVariables != null) {
-            buildScopeVariables(variables, scopeVariables,datamap,onlyReturnRootNode, scope);
+            buildScopeVariables(variables, scopeVariables, datamap, onlyReturnRootNode, scope);
         }
 
         var serviceVariables = expression.match(compiledServiceRegex);
@@ -287,15 +289,15 @@
         },
 
         getExpression: function (expression, datamap, scope) {
-        /*  The third parameter (boolean flag) will force the getVariables
-              method to evaluate sub variables and only return a mapping for
-              the root nodes. This means that nested variables will not have
-              their own key/value pair in the resulting dictionary          */
+            /*  The third parameter (boolean flag) will force the getVariables
+                  method to evaluate sub variables and only return a mapping for
+                  the root nodes. This means that nested variables will not have
+                  their own key/value pair in the resulting dictionary          */
             var variables = getVariables(expression, datamap, true, scope);
 
-        /*  Each dictionary key is used to quickly update an expression with its
-            true value. We loop through each variable, replacing any instance of the
-            key (original reference in metadata) with an expression we can evaluate   */
+            /*  Each dictionary key is used to quickly update an expression with its
+                true value. We loop through each variable, replacing any instance of the
+                key (original reference in metadata) with an expression we can evaluate   */
             if (variables != null) {
                 $.each(variables, function (key, value) {
                     expression = expression.replace(new RegExp(key, 'g'), value);
@@ -307,36 +309,46 @@
             return expression;
         },
 
-        getVariables: function (expression, datamap, onlyReturnRootNode, scope) {
-            return getVariables(expression, datamap, onlyReturnRootNode, scope);
+        getVariables: function (expression,datamap) {
+            return getVariables(expression, datamap, false, scope);
         },
-       
-        getVariablesForWatch: function (expression, datamap, scope) {
-            var variables = this.getVariables(expression, datamap, false, scope);
 
-            var collWatch = '[';
+        getVariablesBeforeJordanFuckedUp: function (expression) {
+            var variables = expression.match(preCompiledReplaceRegex);
             if (variables != null) {
-                var i = 0;
-                $.each(variables, function (key, value) {
-                    //Checks whether or not the variable is a function. If it is, it will
-                    //not be included as a variable to watch. Instead, the getVariables function
-                    //will return any parameters that are truely variables so that we can watch
-                    //them and re-evaluate the expression when a variable changes.
-                    if (!key.endsWith(')') && !key.toUpperCase().startsWith('FN:')) {
-                        collWatch += value + ',';
-                    }
-                    i = i + 1;
-                });
+                for (var i = 0; i < variables.length; i++) {
+                    variables[i] = variables[i].replace(/[\@\(\)]/g, '').trim();
+                }
             }
+            return variables;
+        },
 
-            if (collWatch.charAt(collWatch.length - 1) == ",") {
-                collWatch = collWatch.slice(0, -1);
+        getVariablesForWatch: function (expression, placeholder) {
+            /// <summary>
+            ///  Returns an array of variables that we need to watch for changes.
+            ///  The placeholder parameter will be prepended on each variable.
+            /// 
+            ///  EX: (@item != null &amp;&amp; @bin == '1' --> ['datamap.item','datamap.bin'])
+            ///  
+            /// </summary>
+            /// <param name="expression"></param>
+            /// <param name="placeholder">if blank, than datamap. will be used, but this might not be what the scope needs for binding the watch</param>
+            /// <returns type="Array"></returns>
+            placeholder = placeholder || "datamap.";
+
+            var variables = this.getVariablesBeforeJordanFuckedUp(expression);
+            var collWatch = '[';
+            for (var i = 0; i < variables.length; i++) {
+                collWatch += placeholder + variables[i];
+                if (i != variables.length - 1) {
+                    collWatch += ",";
+                }
             }
 
             collWatch += ']';
-            
             return collWatch;
         },
+
 
 
         evaluate: function (expression, datamap, scope) {
@@ -346,7 +358,9 @@
             if (expression === "false" || expression === false) {
                 return false;
             }
-            var expressionToEval = this.getExpression(expression, datamap, scope);
+            //            var expressionToEval = this.getVariables(expression, datamap);
+            expression = expression.replace(/\$/g, 'scope');
+            var expressionToEval = this.getExpression(expression, datamap,scope);
             try {
                 return eval(expressionToEval);
             } catch (e) {

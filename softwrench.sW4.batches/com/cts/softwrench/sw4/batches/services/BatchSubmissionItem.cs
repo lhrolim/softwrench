@@ -8,7 +8,8 @@ using softWrench.sW4.Data.Persistence.Operation;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
     internal class BatchSubmissionItem {
-        internal CrudOperationData CrudData { get; set; }
+
+        internal OperationWrapper CrudData { get; set; }
         internal JObject OriginalLine { get; set; }
     }
 }

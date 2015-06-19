@@ -426,7 +426,7 @@ app.directive('crudBody', function (contextService) {
 
                 var jsonString = angular.toJson(transformedFields);
 
-                var submissionParameters = submitService.createSubmissionParameters(schemaToSave, nextSchemaObj, id);
+                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id);
 
                 $rootScope.savingMain = !isComposition;
 

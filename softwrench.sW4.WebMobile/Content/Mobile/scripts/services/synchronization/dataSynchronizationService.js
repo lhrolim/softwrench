@@ -111,7 +111,8 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
             clientCurrentTopLevelApps: currentApps,
             returnNewApps: firstInLoop
         }
-        return rowstampService.generateRowstampMap(app).then(function(rowstampMap) {
+        return rowstampService.generateRowstampMap(app)
+            .then(function (rowstampMap) {
             //see samplerequest.json
             rowstampMap.compositionmap = compositionMap;
             log.debug("invoking service to get new data");
