@@ -44,20 +44,11 @@
                        dependantfields="siteid" requiredexpression="true" enableexpression="(@mode=='batch' &amp;&amp; @siteid!=null) || (@mode!='batch' &amp;&amp; @siteid!=null &amp;&amp; @storeloc!=null)">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
             <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
-            <details showexpression="@mode=='batch'">
-              <section>
-                <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
-                <renderer type="default" params="childinputsize=medium" />
-                
+            <details showexpression="@mode=='batch'" orientation="horizontal">
+              <section orientation="horizontal">
+                <header displacement="ontop" label="Item Details" params="fieldset=true;font-weight=bold;"/>
+                <renderer type="default"/>
                 <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-
-                <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description"  
-                             extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
-                  <dataprovider prefilterfunction="FilterAssets"/>
-                  <renderer type="lookup"/>
-                  <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
-                </association>
-
                 <field attribute="inventory_.item_.rotating" label="Rotating" enableexpression="false">
                   <renderer type="checkbox" params="formatter=numberToBoolean"/>
                 </field>
@@ -65,12 +56,7 @@
                   <renderer type="checkbox" params="formatter=numberToBoolean"/>
                 </field>
               </section>
-              <section orientation="horizontal">
-                <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
-                <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-                <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-                <field attribute="inventory_.costtype" hidden="true"/>
-              </section>
+
             </details>
           </association>
         </componentdisplayable>
@@ -114,8 +100,8 @@
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-<!--              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"-->
-<!--                       successmessage="Issue created" position="&lt;filter"/>-->
+              <!--              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"-->
+              <!--                       successmessage="Issue created" position="&lt;filter"/>-->
               <!--<command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>-->
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
@@ -300,7 +286,7 @@
         <schema id="batchitemline">
           <reference id="issuestoreloc"/>
           <reference id="issuebin"/>
-          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description"  
+          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description"
                        extraprojectionvalues="binnum" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
             <dataprovider prefilterfunction="FilterAssets"/>
             <renderer type="lookup"/>
@@ -311,7 +297,7 @@
 
           <reference id="issuequantity"/>
 
-          
+
         </schema>
 
         <schema id="batchitemlinedetail">
@@ -364,11 +350,11 @@
             <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
-            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
-              <renderer type="lookup"/>
-            </association>
+            <reference id="site"/>
           </section>
-
+          <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+            <renderer type="lookup"/>
+          </association>
 
 
 
@@ -376,7 +362,7 @@
             <section orientation="horizontal">
               <header displacement="ontop" label="Location" params="fieldset=true"/>
               <renderer type="default" params="childinputsize=medium" />
-              <reference id="site"/>
+              
               <reference id="issuestoreloc"/>
 
             </section>
@@ -416,7 +402,6 @@
 
           <section showexpression="@mode == 'batch'">
 
-            <reference id="site"/>
 
             <section>
               <reference id="issueitem" />

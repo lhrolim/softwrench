@@ -140,6 +140,11 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup, layoutservice) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
+
+
+            //dictionary containing which details are or not expanded
+            $scope.expandeddetails = {};
+
             $scope.handlerTitleInputFile = function (cssclassaux) {
                 var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
                 var fileInput = $('.' + cssclassaux);
@@ -160,6 +165,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 $scope.crudform = form;
             };
 
+            
 
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
@@ -563,6 +569,40 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             $scope.isSectionWithoutLabel = function (fieldMetadata) {
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
+
+            $scope.isExpansionAvailable=function(fieldMetadata) {
+                if (!fieldService.isAssociation(fieldMetadata) || !fieldMetadata.detailSection) {
+                    //if there are no details, there´s nothing at all to expand
+                    return false;
+                }
+                var key = fieldMetadata.associationKey;
+                if (!$scope.datamap[key]) {
+                    //if the item is not yet selected it should not be shown
+                    return false;
+                }
+                return true;
+            }
+
+            $scope.toggleDetailExpansion = function (fieldMetadata) {
+                if (!fieldService.isAssociation(fieldMetadata) || !fieldMetadata.detailSection) {
+                    return;
+                }
+                var key = fieldMetadata.associationKey;
+                $scope.expandeddetails[key] = !$scope.expandeddetails[key];
+            }
+
+            $scope.detailsExpanded = function(fieldMetadata) {
+                if (!this.isExpansionAvailable(fieldMetadata)) {
+                    return false;
+                }
+                var key = fieldMetadata.associationKey;
+                if (!$scope.expandeddetails[key]) {
+                    $scope.expandeddetails[key] = false;
+                }
+                return $scope.expandeddetails[key];
+            }
+         
+
             $scope.hasSameLineLabel = function (fieldMetadata) {
 
 
@@ -684,3 +724,4 @@ app.directive('selectCombo', function () {
         }
     };
 });
+

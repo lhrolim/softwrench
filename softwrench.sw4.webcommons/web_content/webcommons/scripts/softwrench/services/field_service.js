@@ -12,8 +12,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
             fieldMetadata.jscache.isHidden = true;
             return true;
         } else if (fieldMetadata.type == "ApplicationSection" && fieldMetadata.resourcepath == null &&
-            (fieldMetadata.displayables.length == 0 ||
-             $.grep(fieldMetadata.displayables, function (e) {
+            (fieldMetadata.displayables.length == 0 || $.grep(fieldMetadata.displayables, function (e) {
                   return !isFieldHidden(datamap, schema, e);
         }).length == 0)) {
 
@@ -26,7 +25,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
             //list schemas can be safely cached since if the header is visible the rest would be as well
             fieldMetadata.jscache.isHidden = result;
         }
-        return !expressionService.evaluate(fieldMetadata.showExpression, datamap);
+        return result;
     };
 
     var isIdField = function(fieldMetadata, schema) {
@@ -116,6 +115,11 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
                 }
             });
             return datamap;
+        },
+
+        isAssociation:function(displayable) {
+            var type = displayable.type;
+            return type == "ApplicationAssociationDefinition";
         },
 
         isTabComposition: function (displayable) {
