@@ -50,16 +50,20 @@ namespace softWrench.sW4.Security.Services {
         private static readonly IDictionary<string, InMemoryUser> _users = new ConcurrentDictionary<string, InMemoryUser>();
 
         public InMemoryUser LdapLogin(User dbUser, string userTimezoneOffset) {
+            if (dbUser.MaximoPersonId == null) {
+                //no need to sync to maximo, since there´s no such maximoPersonId
+                return UserFound(dbUser, userTimezoneOffset);
+            }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             maximoUser.MergeFromDBUser(dbUser);
-            return UserFound(dbUser, userTimezoneOffset);
+            return UserFound(maximoUser, userTimezoneOffset);
         }
 
         public InMemoryUser Login(User dbUser, string typedPassword, string userTimezoneOffset) {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
-            if (dbUser.MaximoPersonId==null) {
+            if (dbUser.MaximoPersonId == null) {
                 //no integration needed
                 return UserFound(dbUser, userTimezoneOffset);
             }
