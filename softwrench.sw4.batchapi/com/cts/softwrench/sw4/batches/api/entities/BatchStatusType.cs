@@ -1,6 +1,6 @@
 ﻿using NHibernate.Type;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
+namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
     class BatchStatusType : EnumStringType<BatchStatus> {
     }
 }

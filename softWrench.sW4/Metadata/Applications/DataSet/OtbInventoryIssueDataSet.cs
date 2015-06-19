@@ -35,6 +35,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
+
         public override string ApplicationName() {
             return "invissue";
         }

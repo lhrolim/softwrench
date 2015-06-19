@@ -79,6 +79,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\focus_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\application_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\person_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\profile_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\user_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\readme.txt" />

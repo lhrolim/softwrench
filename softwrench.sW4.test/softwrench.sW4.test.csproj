@@ -88,6 +88,7 @@
     <Compile Include="Data\Persistence\Relational\DataConstraintWhereBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySelectBuilderTest.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\InvIssueBatchConverterTest.cs" />
     <Compile Include="Data\Persistence\WS\Ism\ImacDescriptionHandlerTest.cs" />
     <Compile Include="Data\Relationship\CompositionExpanderHelperTest.cs" />
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
@@ -245,6 +246,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
       <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
-using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Services;
@@ -15,10 +14,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
 
 
         private readonly SWDBHibernateDAO _dao;
-        private readonly BatchSubmissionService _submissionService;
+        private readonly MultiItemBatchSubmissionService _submissionService;
 
 
-        public BatchController(SWDBHibernateDAO dao, BatchSubmissionService submissionService) {
+        public BatchController(SWDBHibernateDAO dao, MultiItemBatchSubmissionService submissionService) {
             _dao = dao;
             _submissionService = submissionService;
         }
@@ -57,9 +56,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
             if (batch == null) {
                 throw BatchException.BatchNotFound(batchId);
             }
-            var dataMapJsonAsString = datamap["datamap"].ToString();
-            var jsonOb = JArray.Parse(dataMapJsonAsString);
-            _submissionService.Submit(batch, jsonOb);
+
+            _submissionService.Submit(batch, datamap);
 
 
         }

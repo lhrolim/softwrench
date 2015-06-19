@@ -42,6 +42,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ApplicationMetadata.cs" />
     <Compile Include="Data\Association\AssociationOption.cs" />
     <Compile Include="Data\Association\GenericAssociationOption.cs" />
     <Compile Include="Data\Association\IAssociationOption.cs" />

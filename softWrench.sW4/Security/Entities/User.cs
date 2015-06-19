@@ -25,19 +25,14 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string UserName {
             get {
-                return _userName == null ? "" : _userName.ToLower();
+                return _userName == null ? null : _userName.ToLower();
             }
             set {
                 _userName = value;
             }
         }
 
-        private Person _person;
-
-        public Person Person {
-            get { return _person; }
-            set { _person = value; }
-        }
+        public Person Person { get; set; }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
         public virtual Boolean IsActive { get; set; }
@@ -50,6 +45,19 @@ namespace softWrench.sW4.Security.Entities {
 
         [Property]
         public virtual string Password { get; set; }
+
+        [Property]
+        public virtual string FirstName { get; set; }
+
+        [Property]
+        public string LastName { get; set; }
+
+        [Property]
+        public string SiteId { get; set; }
+
+        [Property]
+        public string OrgId { get; set; }
+
 
         [JsonIgnore]
         [Set(0, Table = "SEC_PERSONGROUPASSOCIATION",
@@ -84,7 +92,6 @@ namespace softWrench.sW4.Security.Entities {
 
         public User() {
             Person = new Person();
-            Profiles = new HashedSet<UserProfile>();
         }
         /// <summary>
         /// used for nhibernate to generate a "view" of user entity to list screen
@@ -118,10 +125,16 @@ namespace softWrench.sW4.Security.Entities {
 
         public void MergeFromDBUser(User dbUSer) {
             //keep password unchanged
+            Id = Id ?? dbUSer.Id;
+            UserName = UserName ?? dbUSer.UserName;
             Password = Password ?? dbUSer.Password;
-            CriptoProperties = CriptoProperties ?? dbUSer.CriptoProperties;
-            PersonGroups = PersonGroups ?? dbUSer.PersonGroups;
-            CustomRoles = CustomRoles ?? dbUSer.CustomRoles;
+            FirstName = FirstName ?? dbUSer.FirstName;
+            LastName = LastName ?? dbUSer.LastName;
+            SiteId = SiteId ?? dbUSer.SiteId;
+            OrgId = OrgId ?? dbUSer.OrgId;
+
+            PersonGroups = dbUSer.PersonGroups;
+            CustomRoles = dbUSer.CustomRoles;
             Profiles = Profiles ?? dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
         }
@@ -145,32 +158,32 @@ namespace softWrench.sW4.Security.Entities {
 
 
 
-        public static User fromJson(JObject jObject) {
+        public static User FromJson(JObject jObject) {
             var user = new User();
             user.CustomRoles = new HashedSet<UserCustomRole>();
             user.CustomConstraints = new HashedSet<UserCustomConstraint>();
             user.Profiles = new HashedSet<UserProfile>();
-            JToken roles = jObject["customRoles"];
+            var roles = jObject["customRoles"];
             if (roles != null) {
-                foreach (JToken jToken in roles.ToArray()) {
+                foreach (var jToken in roles.ToArray()) {
                     user.CustomRoles.Add(jToken.ToObject<UserCustomRole>());
                 }
             }
-            JToken customConstraints = jObject["customConstraints"];
+            var customConstraints = jObject["customConstraints"];
             if (customConstraints != null) {
-                foreach (JToken jToken in customConstraints.ToArray()) {
+                foreach (var jToken in customConstraints.ToArray()) {
                     user.CustomConstraints.Add(jToken.ToObject<UserCustomConstraint>());
                 }
             }
-            JToken profiles = jObject["profiles"];
+            var profiles = jObject["profiles"];
             if (profiles != null) {
-                foreach (JToken jToken in profiles.ToArray()) {
+                foreach (var jToken in profiles.ToArray()) {
                     user.Profiles.Add(UserProfile.FromJson(jToken));
                 }
             }
-            JToken personGroups = jObject["personGroups"];
+            var personGroups = jObject["personGroups"];
             if (personGroups != null) {
-                foreach (JToken jToken in personGroups.ToArray()) {
+                foreach (var jToken in personGroups.ToArray()) {
                     if (user.PersonGroups == null) {
                         user.PersonGroups = new HashedSet<PersonGroupAssociation>();
                     }

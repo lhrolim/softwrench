@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
-using softWrench.sW4.Data.API;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
 
     class WoBatchSchemaDataSet : MaximoApplicationDataSet {
 
-        private readonly SWDBHibernateDAO _swdbdao;
+        private readonly ISWDBHibernateDAO _swdbdao;
 
-        public WoBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
+        public WoBatchSchemaDataSet(ISWDBHibernateDAO swdbdao) {
             _swdbdao = swdbdao;
         }
 

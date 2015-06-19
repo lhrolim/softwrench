@@ -7,6 +7,11 @@ using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Security.Entities {
+
+
+    /// <summary>
+    /// This data will come from Maximo 
+    /// </summary>
     public class Person
     {
         private string _language;

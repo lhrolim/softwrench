@@ -9,9 +9,9 @@
         var datamap = ({
             status: 'test'
         });
-        var variables = expressionService.getVariables("@status == 'test'", datamap, false);
-        expect(Object.keys(variables).length).toBe(1);
-        expect(eval(variables['@status'])).toBe('test');
+        var variables = expressionService.getVariablesBeforeJordanFuckedUp("@status == 'test'", datamap, false);
+        expect(variables.length).toBe(1);
+        expect(variables[0]).toBe('status');
     });
 
 
@@ -21,26 +21,28 @@
             status: 'test',
             ticketid: '1000'
         });
-        var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null", datamap, false);
-        expect(Object.keys(variables).length).toBe(2);
-        expect(eval(variables['@status'])).toBe('test');
-        expect(eval(variables['@ticketid'])).toBe('1000');
+        var variables = expressionService.getVariablesBeforeJordanFuckedUp("@status == 'test' and @b_.ticketid!=null", datamap, false);
+        expect(variables.length).toBe(2);
+        expect(variables[0]).toBe('status');
+        expect(variables[1]).toBe('b_.ticketid');
     });
 
     it('should match datamap variables by @ 3', function () {
         var datamap = {};
-        var variables = expressionService.getVariables("@status == 'test'", datamap, false);
-        expect(Object.keys(variables).length).toBe(1);
-        expect(eval(variables['@status'])).toBeUndefined();
+        var variables = expressionService.getVariablesBeforeJordanFuckedUp("@status == 'test'", datamap, false);
+        expect(variables.length).toBe(1);
+        expect(variables[0]).toBe('status');
+        
+        //        expect(eval(variables['@status'])).toBeUndefined();
     });
 
-//    it('should match services by fn:', function () {
-//        var datamap = {};
-//        debugger;
-//        var expression = expressionService.getExpression("fn:service.method($.datamap,$.schema)'", null, false);
-//        expect(expression).toEqual("dispatcherService.invokeService('service','method',[scope.datamap,scope.schema])");
-//    });
-   
-    
+    //    it('should match services by fn:', function () {
+    //        var datamap = {};
+    //        debugger;
+    //        var expression = expressionService.getExpression("fn:service.method($.datamap,$.schema)'", null, false);
+    //        expect(expression).toEqual("dispatcherService.invokeService('service','method',[scope.datamap,scope.schema])");
+    //    });
+
+
 
 });

@@ -39,7 +39,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             return null;
         }
 
-        public bool Collection { get { return EntityAssociation != null && EntityAssociation.Collection; } }
+        public virtual bool Collection { get { return EntityAssociation != null && EntityAssociation.Collection; } }
         public bool Resolved { get { return !Collection; } }
 
         public EntityAssociation EntityAssociation {

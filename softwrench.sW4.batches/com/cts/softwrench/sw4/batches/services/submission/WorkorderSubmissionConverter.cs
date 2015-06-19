@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -17,17 +18,23 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
 
     //TODO: make this specific to TVA, and modify SimpleInjector
-    public class WorkorderSubmissionConverter : ISubmissionConverter {
+    public class WorkorderBatchSubmissionConverter : IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> {
+        public JArray BreakIntoRows(JObject mainDatamap) {
+            var dataMapJsonAsString = mainDatamap["datamap"].ToString();
+            return JArray.Parse(dataMapJsonAsString);
+        }
+
         public bool ShouldSubmit(JObject row) {
             return "true".EqualsIc(row.StringValue("#closed"));
         }
 
-        public CrudOperationData Convert(JObject row) {
+        public OperationWrapper Convert(JObject row, ApplicationMetadata metadata) {
             var completeApp = MetadataProvider.Application("workorder");
             var app = completeApp.ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("detail"));
             var entityMetadata = MetadataProvider.Entity("workorder");
             var id = row.StringValue("wonum");
-            return new CrudOperationData(id, BuildAttributes(row), BuildRelationships(row), entityMetadata, app);
+            var crudOperationData = new CrudOperationData(id, BuildAttributes(row), BuildRelationships(row), entityMetadata, app);
+            return new OperationWrapper(crudOperationData, OperationConstants.CRUD_UPDATE);
         }
 
         private static Dictionary<string, object> BuildRelationships(JObject row) {
@@ -61,6 +68,14 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         public string ApplicationName() {
             return "workorder";
+        }
+
+        public string SchemaId() {
+            return null;
+        }
+
+        public string ClientFilter() {
+            return "tva";
         }
 
         private void HandleLogNote(AttributeHolder item, JObject ob) {

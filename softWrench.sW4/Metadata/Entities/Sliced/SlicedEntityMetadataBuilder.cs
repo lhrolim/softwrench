@@ -107,7 +107,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
         private static IEnumerable<EntityAssociation> HandleCompositions(IEnumerable<ApplicationCompositionDefinition> compositions, EntityMetadata entityMetadata, ApplicationSchemaDefinition appSchema) {
             return
-                compositions.Select(
+                compositions.Where(c=> !c.Relationship.StartsWith("#")).Select(
                 composition => {
                     var entityAssociation = entityMetadata.Associations.FirstOrDefault(a => a.Qualifier == composition.Relationship);
                     if (entityAssociation == null) {

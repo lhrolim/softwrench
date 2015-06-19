@@ -35,12 +35,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         public override ApplicationListResult GetList(ApplicationMetadata application,
             PaginatedSearchRequestDto searchDto) {
-                var result = base.GetList(application, searchDto);
-                LookupQuantityReturnedList(result.ResultObject);
-                return result;
-            }
+            var result = base.GetList(application, searchDto);
+            LookupQuantityReturnedList(result.ResultObject);
+            return result;
+        }
 
-        private void LookupQuantityReturnedList(IEnumerable<AttributeHolder> datamap ) {
+        private void LookupQuantityReturnedList(IEnumerable<AttributeHolder> datamap) {
             var matusetransidlist = datamap.Select(row => row.Attributes["MATUSETRANSID"]).ToList();
 
             if (!matusetransidlist.Any()) {
@@ -61,13 +61,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             // CC: Worst case scenario, it will equal the number of records in the datamap. 
             // CC: Note: I did not set remaining records to zero because of Luiz changes in the grid.  
             if (query != null && query.Any()) {
-                foreach (var entry in query)
-                {
+                foreach (var entry in query) {
                     // CC: This is now safe because we are guarantee a record before we couldn't determine if we could find a matching record
                     // CC: matusetransid is case sensitive... maybe change the dictionary to case-insensitive.   
                     var datamapRecord = (from record in datamap
-                        where record.Attributes["matusetransid"].ToString() == entry["issueid"].ToString()
-                        select record).SingleOrDefault();
+                                         where record.Attributes["matusetransid"].ToString() == entry["issueid"].ToString()
+                                         select record).SingleOrDefault();
 
                     datamapRecord.SetAttribute("QTYRETURNED", Double.Parse(entry["returned"]));
                 }
@@ -87,7 +86,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
              String.Format("SELECT sum(quantity) FROM matusetrans WHERE issueid = {0} and siteid='{1}'", matusetransid, user.SiteId));
 
             if (query == null) {
-                return;   
+                return;
             }
 
             double qtyReturned;
@@ -120,7 +119,18 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
             filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
-            
+
+            return filter;
+        }
+
+        public virtual SearchRequestDto FilterStoreRooms(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            if (string.IsNullOrEmpty((string)parameters.OriginalEntity.GetAttribute("itemnum"))) {
+                //for non batch mode, the item gets selected after the storeroom, so any valid storeroom is ok
+                return filter;
+            }
+            filter.AppendWhereClauseFormat("(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = '{0}' " +
+                                           "and invbalances.siteid = location.siteid and invbalances.location = location.location) > 0", parameters.OriginalEntity.GetAttribute("itemnum"));
             return filter;
         }
 

@@ -1031,6 +1031,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                 //Check if null rather than nullOrEmpty since the binnum for an association option can be an empty string
                 parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
                 parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                parameters['fields']['curbal'] = parameters['fields']['binbalances_.curbal'];
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
@@ -1052,6 +1053,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                     var curbal = fields['curbal'];
                     parameters['fields']['lotnum'] = lotnum;
                     parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
+                    parameters['fields']['curbal'] = curbal == null ? 0 : curbal;
                     parameters['fields']['binbalances_.lotnum'] = lotnum;
                     parameters['fields']['binbalances_.curbal'] = curbal == null ? 0 : curbal;
                 });

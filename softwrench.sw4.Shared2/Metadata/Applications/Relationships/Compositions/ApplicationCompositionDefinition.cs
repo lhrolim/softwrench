@@ -17,6 +17,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         private ApplicationCompositionSchema _schema;
         public ApplicationHeader Header { get; set; }
 
+        /// <summary>
+        /// if this is true, then the composition is not really a relationship to another application, but rather one 
+        /// whose data should come from the datamap itself.
+        /// 
+        /// If the attribute has no such value, than the table will be a null table
+        /// 
+        /// The list and detail schemas shall point to the same application in that case.
+        /// 
+        /// </summary>
+        public Boolean IsSelfRelationship { get { return Relationship.StartsWith("#"); } }
+
+        private Boolean _isCollection = false;
+
         public ApplicationCompositionDefinition() {
 
         }
@@ -33,7 +46,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
                 //if hidden then the detail schema can be marked as empty
                 _schema.DetailSchema = "";
             }
-        }
+            _isCollection = schema is ApplicationCompositionCollectionSchema;
+            }
 
 
         public string Relationship {
@@ -73,6 +87,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get { return _schema.DependantFields; }
         }
 
+        public override bool Collection { get { return _isCollection; } }
 
         public string AssociationKey { get { return Relationship; } }
     }

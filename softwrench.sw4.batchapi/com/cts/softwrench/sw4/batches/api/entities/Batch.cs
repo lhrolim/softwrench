@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Linq;
 using cts.commons.persistence;
-using cts.commons.portable.Util;
-using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Security.Entities;
-using CompressionUtil = cts.commons.Util.CompressionUtil;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
+namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
     ///
     [Class(Table = "BAT_BATCH", Lazy = false)]
-    public class Batch : IBaseAuditEntity {
+    public class Batch : IBatch {
 
         public static string ActiveBatchesofApplication = "from Batch where Application =? and Status = 'INPROG' ";
         public static string OldSubmittedBatches = "from Batch where Application =? and Status = 'COMPLETE' ";
@@ -39,11 +34,12 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
         [JsonIgnore]
         [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
-        [Key(1, Column = "batch_id",NotNull = true)]
+        [Key(1, Column = "batch_id", NotNull = true)]
         [OneToMany(2, ClassType = typeof(BatchItem))]
         public virtual Iesi.Collections.Generic.ISet<BatchItem> Items { get; set; }
 
 
+        public int NumberOfItems { get { return Items.Count; } }
     }
 
 

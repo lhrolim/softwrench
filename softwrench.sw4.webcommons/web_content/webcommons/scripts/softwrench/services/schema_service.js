@@ -1,5 +1,25 @@
 ﻿modules.webcommons.factory('schemaService', function (fieldService, expressionService) {
 
+    /// <summary>
+    /// builds a cache of the grid qualified displayables to show on small grids
+    /// </summary>
+    /// <param name="schema"></param>
+    function buildQualifierCache(schema) {
+        schema.jscache = schema.jscache || {};
+        if (schema.jscache.griddisplayables) {
+            //already cached
+            return;
+        }
+        schema.jscache.qualifiercache = {};
+        var displayables = schema.displayables;
+        for (var i = 0; i < displayables.length; i++) {
+            var displayable = displayables[i];
+            if (displayable.qualifier) {
+                schema.jscache.qualifiercache[displayable.qualifier] = displayable;
+            }
+        }
+    };
+
 
 
     return {
@@ -81,7 +101,7 @@
             return basekey;
         },
 
-        getTitle: function (schema, datamap,smallDevices) {
+        getTitle: function (schema, datamap, smallDevices) {
             var fields = datamap.fields ? datamap.fields : datamap;
 
             if (schema.properties['detail.titleexpression'] != null) {
@@ -103,9 +123,19 @@
                 } else {
                     result += " Summary: " + fields.description;
                 }
-                
+
             }
             return result;
+        },
+
+        locateDisplayableByQualifier: function (schema, qualifier) {
+            schema.jscache = schema.jscache || {};
+            if (schema.jscache.qualifiercache) {
+                //already cached
+                return schema.jscache.qualifiercache[qualifier];
+            }
+            buildQualifierCache(schema);
+            return schema.jscache.qualifiercache[qualifier];
         }
 
 

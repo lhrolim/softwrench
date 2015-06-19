@@ -40,9 +40,15 @@
           <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
-          <field attribute="locationorg" label="Org ID"/>
-          <field attribute="locationsite" label="Site ID"/>
-          <field attribute="location" label="Location"/>
+          <association target="locationorg" labelfield="organization_.description" label="Org ID">
+            <renderer type="lookup"/>
+          </association>
+          <association target="locationsite" labelfield="site_.description" label="Site ID">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.description" label="Location">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="department" label="Department"/>
           <field attribute="langcode" label="Language"/>
           <field attribute="#isactive" label="Active">
@@ -62,15 +68,27 @@
         </schema>
 
         <schema id="newPersonDetail" stereotype="detail" title="New User" mode="input">
+          <properties>
+            <property key="hidetitle" value="true"/>
+          </properties>
           <field attribute="personuid" label="Person ID" showexpression="false" default="-1"/>
-          <field attribute="#personid" label="Username" requiredexpression="true" readonly="false" attributeToServer="personid"/>
-          <field attribute="#password" label="Password" requiredexpression="!@ldapEnabled" showexpression="!@ldapEnabled"/>
-          <field attribute="#retypepassword" label="Retype Password" requiredexpression="!@ldapEnabled" showexpression="!@ldapEnabled"/>
+          <field attribute="#personid" label="Username" requiredexpression="@personuid == -1" showexpression="@personuid == -1">
+            <event type="afterchange" service="personService" method="afterChangeUsername"/>
+          </field>
+          <field attribute="personid" label="Username" showexpression="@personuid != -1" readonly="true" />
+          <field attribute="#password" label="Password" requiredexpression="!@ldapEnabled &amp;&amp; @personuid == -1" showexpression="!@ldapEnabled"/>
+          <field attribute="#retypepassword" label="Retype Password" requiredexpression="!@ldapEnabled &amp;&amp; @personuid == -1" showexpression="!@ldapEnabled"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
-          <field attribute="locationorg" label="Org ID"/>
-          <field attribute="locationsite" label="Site ID"/>
-          <field attribute="location" label="Location"/>
+          <association target="locationorg" labelfield="organization_.description" label="Org ID">
+            <renderer type="lookup"/>
+          </association>
+          <association target="locationsite" labelfield="site_.description" label="Site ID">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.description" label="Location">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="department" label="Department"/>
           <field attribute="langcode" label="Language"/>
           <field attribute="#isactive" label="Active">
