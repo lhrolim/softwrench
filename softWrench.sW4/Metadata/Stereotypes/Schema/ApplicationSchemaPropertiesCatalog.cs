@@ -145,5 +145,10 @@
         /// If true all options fields of this schema will be rendered with no initial selection
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
+
+        /// <summary>
+        /// If true, the title of the detail schema will be hidden
+        /// </summary>
+        public static string DetailHideTitle = "detail.hidetitle";
     }
 }

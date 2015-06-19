@@ -17,7 +17,7 @@ app.factory('personService', function ($http, $timeout) {
             }
         },
         afterChangeUsername: function(datamap) {
-            if (datamap.fields["#personid"] && datamap.fields["#personid"] != "") {
+            if (!nullOrEmpty(datamap.fields["#personid"])) {
                 datamap.fields["personid"] = datamap.fields["#personid"];
             }
         },
