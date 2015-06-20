@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence;
@@ -25,7 +27,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }*/
 
         private static SWDBHibernateDAO _swdbDao;
-        
+
         private SWDBHibernateDAO GetSWDBDAO() {
             if (_swdbDao == null) {
                 _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
@@ -33,36 +35,34 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return _swdbDao;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
-            var datamap = result.ResultObject;
-            var idFieldName = result.Schema.IdFieldName;
-            var applicationName = result.ApplicationName;
-//            JoinCommLogData(datamap, idFieldName, applicationName);
-            return result;
-        }
 
-        private void JoinCommLogData(DataMap resultObject, string parentIdFieldName, string applicationName) {
-            var applicationItemID = resultObject.GetAttribute(parentIdFieldName);
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+            JObject currentData) {
+            var compList = base.GetCompositionData(application, request, currentData);
             var user = SecurityFacade.CurrentUser();
 
-            if (applicationItemID == null || user == null) {
-                return;
+            if (user == null) {
+                return compList;
             }
 
-            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, applicationName, applicationItemID, user.DBId);
+            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application.Name, request.Id, user.DBId);
 
-            var commlogs = (IList<Dictionary<string, object>>)resultObject.Attributes["commlog_"];
+            if (!compList.ResultObject.ContainsKey("commlog_")) {
+                return compList;
+            }
 
-            foreach (var commlog in commlogs)
-            {
+            var commlogs = compList.ResultObject["commlog_"].ResultList;
+
+            foreach (var commlog in commlogs) {
                 var readFlag = (from c in commData
-                    where c.CommlogId.ToString() == commlog["commloguid"].ToString()
-                    select c.ReadFlag).FirstOrDefault();
+                                where c.CommlogId.ToString() == commlog["commloguid"].ToString()
+                                select c.ReadFlag).FirstOrDefault();
 
                 commlog["read"] = readFlag;
             }
+            return compList;
         }
+
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);
@@ -88,8 +88,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return dto;
         }
 
-        public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters) {
 
             // TODO: Change the design to use a tree view component
             var query = string.Format(@"SELECT  c.classstructureid AS ID, 
@@ -118,8 +117,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            foreach (var record in result)
-            {
+            foreach (var record in result) {
                 list.Add(new AssociationOption(record["ID"],
                          String.Format("{0}{1}{2}{3}{4}",
                                         record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
