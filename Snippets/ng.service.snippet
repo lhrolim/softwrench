@@ -18,25 +18,39 @@
         <Literal>
           <ID>service</ID>
           <ToolTip>Replace with the string name of the service.</ToolTip>
-          <Default>customService</Default>
+          <Default>serviceName</Default>
         </Literal>
         <Literal>
           <ID>dependency</ID>
           <ToolTip>Replace with the dependency for service.</ToolTip>
           <Default>config</Default>
         </Literal>
+        <Literal>
+          <ID>member1</ID>
+          <ToolTip>Replace with the name of a member of the service.</ToolTip>
+          <Default>fn1</Default>
+        </Literal>
       </Declarations>
       <Code Language="JavaScript">
         <![CDATA[
 (function () {
-    "use strict";
+    'use strict';
     
-    var $service$ = function($dependency$) {
+    angular.module('$module$').factory('$service$', ['$dependency$', $service$]);
 
-    }; 
+    function $service$($dependency$) {
     
-    angular.module("$module$").service("$service$", ["$dependency$", $service$]);
+        var service = {
+            $member1$: $member1$
+        };
+
+        return service;
+
+        function $member1$() {
+
+        }
     
+    }
 })();
                 ]]>
       </Code>

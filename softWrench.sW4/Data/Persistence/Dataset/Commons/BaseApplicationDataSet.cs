@@ -165,7 +165,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return detailResult;
         }
 
-        public CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+        public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
@@ -173,8 +173,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
                application, currentData, request.Id);
 
-            _collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
-            return new CompositionFetchResult(cruddata);
+            var result =_collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
+
+            return new CompositionFetchResult(result);
         }
 
 

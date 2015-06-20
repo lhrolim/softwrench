@@ -127,7 +127,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     //a blank array if nothing exists, scenario for selfcompositions
                     scope.compositiondata = arr;
 
-                    if ("true" == metadata.schema.renderer.parameters["startwithentry"]) {
+                    if (metadata.schema.renderer.parameters && "true" == metadata.schema.renderer.parameters["startwithentry"]) {
                         scope.compositiondata.push({});
                     }
                 }
@@ -268,7 +268,10 @@ app.directive('compositionList', function (contextService, formatService, schema
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
             };
 
-
+            $scope.$on('sw_compositiondataresolved', function (event, datamap) {
+                $scope.compositiondata = datamap[$scope.relationship];
+                init();
+            });
 
 
 

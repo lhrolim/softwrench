@@ -165,7 +165,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 $scope.crudform = form;
             };
 
-            
+
 
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
@@ -217,9 +217,9 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
-                    crud_inputcommons.configureAssociationChangeEvents($scope,'datamap',$scope.displayables);
+                    crud_inputcommons.configureAssociationChangeEvents($scope, 'datamap', $scope.displayables);
                     $scope.configureFieldChangeEvents();
-                    $scope.configureDirtyWatcher();
+                    //                    $scope.configureDirtyWatcher();
                 }
                 $('.datetimereadonly').datepicker("remove");
                 // Configure input files
@@ -229,7 +229,9 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                     }
                 });
             });
-            $scope.configureDirtyWatcher = function () {
+
+
+            $scope.$on("sw_configuredirtywatcher", function () {
                 $timeout(function () {
                     $scope.$watch('datamap', function (newValue, oldValue) {
                         if (newValue != oldValue) {
@@ -237,9 +239,11 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                         }
                     }, true);
                 }, 0, false);
-            }
+            });
+
+
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
-           
+
 
             $scope.haslookupModal = function (schema) {
                 return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
@@ -570,7 +574,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
 
-            $scope.isExpansionAvailable=function(fieldMetadata) {
+            $scope.isExpansionAvailable = function (fieldMetadata) {
                 if (!fieldService.isAssociation(fieldMetadata) || !fieldMetadata.detailSection) {
                     //if there are no details, there´s nothing at all to expand
                     return false;
@@ -591,7 +595,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 $scope.expandeddetails[key] = !$scope.expandeddetails[key];
             }
 
-            $scope.detailsExpanded = function(fieldMetadata) {
+            $scope.detailsExpanded = function (fieldMetadata) {
                 if (!this.isExpansionAvailable(fieldMetadata)) {
                     return false;
                 }
@@ -601,7 +605,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 }
                 return $scope.expandeddetails[key];
             }
-         
+
 
             $scope.hasSameLineLabel = function (fieldMetadata) {
 
@@ -639,7 +643,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             init();
 
             $scope.initField = function (fieldMetadata) {
-                crud_inputcommons.initField($scope,fieldMetadata, "datamap");
+                crud_inputcommons.initField($scope, fieldMetadata, "datamap");
             };
 
             $scope.initRichtextField = function (fieldMetadata) {
