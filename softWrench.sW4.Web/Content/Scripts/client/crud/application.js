@@ -51,10 +51,10 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $templateCache, $timeout,
+function ApplicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
-    checkpointService, focusService) {
+    checkpointService, focusService,detailService) {
     $scope.$name = 'applicationController';
 
 
@@ -264,19 +264,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
         validationService.clearDirty();
         if (result.type == 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
-            var shouldFetchAssociationsFromServer = result.schema.properties['associationstoprefetch'] != "#all";
-            if (shouldFetchAssociationsFromServer) {
-                $timeout(function () {
-                    log.info('fetching eager associations of {0}'.format(scope.schema.applicationName));
-                    associationService.getEagerAssociations(scope);
-
-                });
-            }
-            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
-            scope.compositions = result.compositions;
-            if (!shouldFetchAssociationsFromServer) {
-                contextService.insertIntoContext("associationsresolved", true, true);
-            }
+            detailService.fetchRelationshipData(scope, result);
             toDetail(scope);
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");

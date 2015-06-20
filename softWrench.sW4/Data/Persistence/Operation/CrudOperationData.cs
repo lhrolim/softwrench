@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
@@ -28,6 +29,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             set { SetAttribute(_userIdAttributeName, value); }
         }
         public string Class { get { return EntityMetadata.GetTableName(); } }
+        
+        [JsonIgnore]
         public EntityMetadata EntityMetadata { get; set; }
         public OperationType OperationType { get; set; }
 

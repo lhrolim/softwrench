@@ -79,7 +79,7 @@ app.factory('compositionService', function ($log, $http, submitService) {
                     platform: platform(),
                 },
             };
-            var urlToUse = url("/api/generic/Data/GetCompositionData?" + $.param(parameters));
+            var urlToUse = url("/api/generic/ExtendedData/GetCompositionData?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
             var log = $log.getInstance('compositionservice#populateWithCompositionData');
             log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));

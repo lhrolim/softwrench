@@ -1,36 +1,86 @@
-﻿var app = angular.module('sw_layout');
+﻿(function () {
+    "use strict";
 
-app.factory('detailService', function ($log, $http,$timeout, associationService, compositionService, fieldService) {
 
-    return {
+    detailService.$inject = ["$log", "$http", "$timeout", "associationService", "compositionService", "fieldService", "schemaService", "contextService"];
 
-        fetchAssociatedData: function (scope, result) {
+    angular.module("sw_layout").factory("detailService", detailService);
+
+    function detailService($log, $http, $timeout, associationService, compositionService, fieldService, schemaService, contextService) {
+
+        var api = {
+            fetchRelationshipData: fetchRelationshipData,
+            isEditDetail: isEditDetail
+        };
+
+        return api;
+
+        function fetchRelationshipData(scope, result) {
+
             var datamap = scope.datamap.fields;
             var schema = scope.schema;
             var isEdit = this.isEditDetail(schema, datamap);
-            var shouldFetchAssociations = result.schema.properties['prefetchassociations'] != "true";
-            //fetch composition data only for edit mode
-            var shouldFetchCompositions = result.schema.properties['prefetchcompositions'] != "true" && isEdit;
-            if (!shouldFetchAssociations) {
-                associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, datamap);
-            }
-            $timeout(function () {
-                if (shouldFetchAssociations) {
-                    associationService.getEagerAssociations(scope);
-                }
-                if (shouldFetchCompositions) {
-                    compositionService.populateWithCompositionData(schema, datamap);
-                }
-            });
-        },
 
-        isEditDetail: function (schema, datamap) {
+            handleAssociations(scope, result);
+            
+
+            //fetch composition data only for edit mode
+            if (!isEdit) {
+                return;
+            }
+
+            handleCompositions(scope, result);
+
+        };
+
+        function isEditDetail(schema, datamap) {
             return fieldService.getId(datamap, schema) != undefined;
+        };
+
+        function handleAssociations(scope,result) {
+            var shouldFetchAssociations = schemaService.getProperty(result.schema, "prefetchassociations") != "#all";
+
+            //some associations might already been retrieved
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
+
+            if (shouldFetchAssociations) {
+                $timeout(function () {
+                    //why this timeout?
+                    $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(scope.schema.applicationName));
+                    associationService.getEagerAssociations(scope);
+
+                });
+            } else {
+                //they are all resolved already
+                contextService.insertIntoContext("associationsresolved", true, true);
+            }
         }
 
+        function handleCompositions(scope,result) {
+            var shouldFetchCompositions = !schemaService.isPropertyTrue(result.schema, "detail.prefetchcompositions");
+
+            if (!shouldFetchCompositions) {
+                scope.compositions = result.compositions;
+            }
+
+            $timeout(function () {
+                if (shouldFetchCompositions) {
+                    $log.get("#detailService#fetchRelationshipData").info('fetching compositions of {0}'.format(scope.schema.applicationName));
+                    compositionService.populateWithCompositionData(scope.schema, scope.datamap.fields);
+                }
+            });
+        }
 
     };
 
-});
+
+
+
+
+})();
+
+ngservice
+
+
 
 

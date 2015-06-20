@@ -173,8 +173,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
                application, currentData, request.Id);
 
-            _collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
-            return new CompositionFetchResult(cruddata);
+            var result =_collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
+            return new CompositionFetchResult(result);
         }
 
 

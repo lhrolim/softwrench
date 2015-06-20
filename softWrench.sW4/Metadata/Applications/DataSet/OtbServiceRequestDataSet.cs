@@ -38,7 +38,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var datamap = result.ResultObject;
             var idFieldName = result.Schema.IdFieldName;
             var applicationName = result.ApplicationName;
-            JoinCommLogData(datamap, idFieldName, applicationName);
+//            JoinCommLogData(datamap, idFieldName, applicationName);
             return result;
         }
 
