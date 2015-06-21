@@ -128,7 +128,10 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     scope.compositiondata = arr;
 
                     if (metadata.schema.renderer.parameters && "true" == metadata.schema.renderer.parameters["startwithentry"]) {
-                        scope.compositiondata.push({});
+                        scope.compositiondata.push({
+                            '#datamaptype': "compositionitem",
+                            '#datamapidx': 0
+                        });
                     }
                 }
 
@@ -247,7 +250,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.detailData = {};
                 $scope.clonedData = {};
 
-                $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
+                $scope.noupdateallowed = !$scope.isBatch() && !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
                 $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
@@ -460,6 +463,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return $scope.compositiondetailschema != null;
             }
 
+            $scope.expansionAllowed = function (item) {
+                var compositionId = item[$scope.compositionlistschema.idFieldName];
+                //we cannot expand an item that doesn´t have an id
+                return compositionId != null;
+            }
+
             /// <summary>
             ///  Method called when an entry of the composition is clicked
             /// </summary>
@@ -505,7 +514,8 @@ app.directive('compositionList', function (contextService, formatService, schema
 
 
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
-                if (!needServerFetching) {
+                if (!needServerFetching || this.isBatch()) {
+                    //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
                     doToggle(compositionId, item, item);
                     return;
                 }
@@ -545,8 +555,13 @@ app.directive('compositionList', function (contextService, formatService, schema
             /***************Batch functions **************************************/
 
             $scope.addBatchItem = function () {
-                $scope.compositionData().push({});
-                var idx =$scope.compositionData().length - 1;
+                var idx = $scope.compositionData().length;
+                $scope.compositionData().push({
+                    //used to make a differentiation between a compositionitem datamap and a regular datamap
+                    '#datamaptype' : "compositionitem",
+                    '#datamapidx' : idx
+                });
+                
                 crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables);
             }
 

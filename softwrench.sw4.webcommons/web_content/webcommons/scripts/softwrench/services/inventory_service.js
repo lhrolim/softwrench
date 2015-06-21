@@ -1019,49 +1019,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                 parameters['fields']['invbalances_.binnum'] = parameters['fields']['asset_.binnum'];
             }
         },
-
-        invIssue_afterChangeBin: function (parameters) {
-            if (parameters['fields']['binnum'] == null) {
-                parameters['fields']['binbalances_.binnum'] = null;
-                parameters['fields']['binbalances_.lotnum'] = null;
-                parameters['fields']['binbalances_.curbal'] = null;
-                return;
-            }
-            if (parameters['fields']['binbalances_'] && parameters['fields']['binnum'] != null) {
-                //Check if null rather than nullOrEmpty since the binnum for an association option can be an empty string
-                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-                parameters['fields']['curbal'] = parameters['fields']['binbalances_.curbal'];
-                return;
-            };
-            // If the binbalances_ record is not filled but the binnum is
-            // (binnum filled after itemnum change) then use the available 
-            // fields to find an applicable lotnum and curbal. If the binnum
-            // has been cleared, clear the lot and curbal
-            if (parameters['fields']['binnum'] != null && parameters['fields']['binnum'] != " ") {
-                var searchData = {
-                    orgid: parameters['fields']['orgid'],
-                    siteid: parameters['fields']['siteid'],
-                    itemnum: parameters['fields']['itemnum'],
-                    location: parameters['fields']['storeloc'],
-                    binnum: parameters['fields']['binnum']
-                };
-                searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
-                    var resultObject = data.resultObject;
-                    var fields = resultObject[0].fields;
-                    var lotnum = fields['lotnum'];
-                    var curbal = fields['curbal'];
-                    parameters['fields']['lotnum'] = lotnum;
-                    parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
-                    parameters['fields']['curbal'] = curbal == null ? 0 : curbal;
-                    parameters['fields']['binbalances_.lotnum'] = lotnum;
-                    parameters['fields']['binbalances_.curbal'] = curbal == null ? 0 : curbal;
-                });
-            } else {
-                parameters['fields']['lotnum'] = null;
-                parameters['fields']['#curbal'] = null;
-            }
-        },
+      
 
         invIssueAfterChangeCurbal: function (parameters) {
             parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];

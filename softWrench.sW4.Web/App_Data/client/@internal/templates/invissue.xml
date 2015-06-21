@@ -79,7 +79,7 @@
         <componentdisplayable id="issuebin">
           <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@itemnum!=null &amp;&amp; @storeloc!=null">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+            <event type="afterchange" service="invissueService" method="afterChangeBin"/>
             <dataprovider prefilterfunction="FilterBins"/>
           </association>
         </componentdisplayable>
@@ -301,42 +301,15 @@
         </schema>
 
         <schema id="batchitemlinedetail">
-          <section>
-            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
-            <renderer type="default" params="childinputsize=medium" />
-            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
-              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
-              <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
-            </association>
-            <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
-            </field>
-            <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description"  extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
-              <dataprovider prefilterfunction="FilterAssets"/>
-              <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
-            </association>
-            <field attribute="inventory_.item_.rotating" label="Rotating" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
-            </field>
-            <field attribute="inventory_.item_.iskit" label="Kit" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
-            </field>
-            <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
-            </field>
-            <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
-              <renderer type="numericinput" params="min=1;"/>
-            </field>
-          </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
+            <field label="Lot" attribute="binbalances_.lotnum" readonly="true"/>
             <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="inventory_.costtype" hidden="true"/>
           </section>
         </schema>
+        
 
         <schema title="New Issue and Return" id="newInvIssueDetail" mode="input" stereotype="detailnew">
 
@@ -407,7 +380,7 @@
               <reference id="issueitem" />
             </section>
 
-            <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="" showexpression="@itemnum!=null">
+            <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail" showexpression="@itemnum!=null">
               <collectionproperties listschema="batchitemline" autocommit="false"/>
               <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
             </composition>

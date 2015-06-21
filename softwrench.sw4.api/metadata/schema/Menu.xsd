@@ -63,6 +63,7 @@
     <restriction base="string">
       <enumeration value="vertical"></enumeration>
       <enumeration value="horizontal"></enumeration>
+      <enumeration value="breadcrumb"></enumeration>
     </restriction>
   </simpleType>
 

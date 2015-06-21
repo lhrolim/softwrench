@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build;CopyCustomerDLL" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -354,6 +354,7 @@
     <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
     <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
     <Content Include="App_Data\Client\%40internal\templates\incident.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\invtransfer.xml" />
     <Content Include="App_Data\Client\%40internal\templates\invissue.xml" />
     <Content Include="App_Data\Client\%40internal\templates\inventory.xml" />
     <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />

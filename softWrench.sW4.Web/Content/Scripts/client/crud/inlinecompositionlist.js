@@ -11,6 +11,7 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             iscollection: '=',
             parentdata: '=',
             metadata: '=',
+            parentschema:'=',
             mode: '@'
         },
 
@@ -20,7 +21,7 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
                 scope.compositionschemadefinition = scope.metadata.schema;
                 scope.compositiondata = scope.parentdata[scope.metadata.relationship];
                 element.append(
-                    "<inline-composition-list parentdata='parentdata'" +
+                    "<inline-composition-list parentdata='parentdata' parentschema='parentschema'" +
                     "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode'/>"
                 );
                 $compile(element.contents())(scope);
@@ -53,6 +54,7 @@ app.directive('inlineCompositionList', function (contextService) {
             iscollection: '=',
             compositionschemadefinition: '=',
             compositiondata: '=',
+            parentschema: '=',
             mode: '@'
         },
 
