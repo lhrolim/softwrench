@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService, $rootScope) {
+app.factory('inventoryService', function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService,inventoryServiceCommons, $rootScope) {
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -113,64 +113,9 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
         });
     };
 
-    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName) {
-        var searchData = {
-            itemnum: parameters['fields']['itemnum'],
-            location: parameters['fields'][locationFieldName],
-            siteid: parameters['fields']['siteid']
-        };
-        searchService.searchWithData("invcost", searchData).success(function (data) {
-            var resultObject = data.resultObject;
-            var fields = resultObject[0].fields;
-            var costtype = parameters['fields']['inventory_.costtype'];
-            if (costtype === 'STANDARD') {
-                parameters.fields[unitCostFieldName] = fields.stdcost;
-            } else if (costtype === 'AVERAGE') {
-                parameters.fields[unitCostFieldName] = fields.avgcost;
-            }
-        });
-    };
 
-    var updateInventoryCosttype = function(parameters, storelocation) {
-        var searchData = {
-            itemnum: parameters['fields']['itemnum'],
-            location: parameters['fields'][storelocation],
-            siteid: parameters['fields']['siteid'],
-            orgid: parameters['fields']['orgid'],
-            itemsetid: parameters['fields']['itemsetid']
-        };
-        searchService.searchWithData("inventory", searchData).success(function (data) {
-            var resultObject = data.resultObject;
-            var fields = resultObject[0].fields;
-            var costtype = fields['costtype'];
-            parameters['fields']['inventory_.costtype'] = costtype;
-            doUpdateUnitCostFromInventoryCost(parameters, "unitcost", storelocation);
-        });
-    };
+   
 
-    var returnTransformation = function (event, datamap) {
-        datamap['issueid'] = datamap['matusetransid'];
-        datamap['matusetransid'] = null;
-        datamap['rowstamp'] = null;
-        datamap['quantity'] = datamap['#quantityadj'];
-        datamap['issuetype'] = 'RETURN';
-        datamap['qtyreturned'] = null;
-        datamap['qtyrequested'] = datamap['#quantityadj'];
-    };
-
-    var returnConfirmation = function (event, datamap, parameters) {
-        var returnQty = datamap['#quantityadj'];
-        var item = datamap['itemnum'];
-        var storeloc = datamap['storeloc'];
-        var binnum = datamap['binnum'];
-        var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
-        if (binnum != null) {
-            message = message + " (Bin: " + binnum + ")";
-        }
-        return alertService.confirm(null, null, function () {
-            parameters.continue();
-        }, message);
-    };
 
     invIssue_maximo71_afterChangeItem = function (parameters) {
         if (nullOrEmpty(parameters['fields']['itemnum']) || nullOrEmpty(parameters['fields']['storeloc'])) {
@@ -279,77 +224,8 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
         },
 
         submitReturnConfirmation: function (event, datamap, parameters) {
-            returnTransformation(event, datamap);
-            return returnConfirmation(event, datamap, parameters);
-        },
-
-        invissuelistclick: function(datamap, schema) {
-            var param = {};
-            param.id = datamap['matusetransid'];
-            var application = schema.applicationName;
-            var detail = 'viewinvreturndetail';
-            var mode = 'input';
-            //Logic to determine whether the record is an ISSUE
-            //and whether all of the issued items have been returned
-            if (datamap['issuetype'] == 'ISSUE') {
-
-                //Sets qtyreturned to 0 if null
-                //Parses the qtyreturned if its in a strng format
-                var qtyreturned = 0;
-                if (typeof datamap['qtyreturned'] === "string") {
-                    qtyreturned = parseInt(datamap['qtyreturned']);
-                } else if (datamap['qtyreturned'] != null) {
-                    qtyreturned = datamap['qtyreturned'];
-                }
-
-                //For an issue, the quantity will be a negative number, representing the # of items issued
-                //The below if statement will add the positive quantityreturned to the negative quantity.
-                //If the result is negative, then are still items to be returned
-                if (qtyreturned + datamap['quantity'] < 0) {
-                    if (qtyreturned + datamap['quantity'] == -1) {
-                        var transformedData = angular.copy(datamap);
-                        transformedData['#quantityadj'] = 1;
-                        returnTransformation(null, transformedData);
-                        // Get the cost type
-                        updateInventoryCosttype({ fields: transformedData }, 'storeloc');
-                        var originalDatamap = {
-                            fields: datamap,
-                        };
-                        returnConfirmation(null, transformedData, {
-                            continue: function () {
-                                // TODO: update so that mock client validation is not necessary
-                                sessionStorage.mockclientvalidation = true;
-                                $rootScope.$broadcast('sw_submitdata', {
-                                    successCbk: function (data) {
-                                        sessionStorage.mockclientvalidation = false;
-                                        $rootScope.$broadcast('sw_refreshgrid');
-                                    },
-                                    failureCbk: function (data) {
-                                        sessionStorage.mockclientvalidation = false;
-                                    },
-                                    isComposition: false,
-                                    refresh: true,
-                                    selecteditem: transformedData,
-                                    originalDatamap: originalDatamap,
-                                });
-                            },
-                        });
-
-                        return;
-                    } else {
-                        if (application == "invreturn") {
-                            detail = 'editinvreturndetail';
-                        } else {
-                            detail = 'editinvissuedetail';
-                        }
-                    }
-                } else {
-                    //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
-                    detail = 'viewinvissuedetail';
-                }
-            }
-
-            redirectService.goToApplicationView(application, detail, mode, null, param, null);
+            inventoryServiceCommons.returnTransformation(event, datamap);
+            return inventoryServiceCommons.returnConfirmation(event, datamap, parameters);
         },
 
         invissuelistclick_maximo71: function (datamap, schema) {
@@ -378,14 +254,14 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                     if (qtyreturned + datamap['quantity'] == -1) {
                         var transformedData = angular.copy(datamap);
                         transformedData['#quantityadj'] = 1;
-                        returnTransformation(null, transformedData);
+                        inventoryServiceCommons.returnTransformation(null, transformedData);
                         // Maximo 7.1 store the inventory cost type in a different table than maximo 7.5
                         // Using the afterchange item for maximo 7.1 to get the cost type and unit cost
                         invIssue_maximo71_afterChangeItem({ fields: transformedData });
                         var originalDatamap = {
                             fields: datamap,
                         };
-                        returnConfirmation(null, transformedData, {
+                        inventoryServiceCommons.returnConfirmation(null, transformedData, {
                             continue: function () {
                                 // TODO: update so that mock client validation is not necessary
                                 sessionStorage.mockclientvalidation = true;
@@ -622,110 +498,12 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                     locationFieldName = "storeloc";
                 }
                 //parameters['fields']['inventory_.issueunit'] = fields['issueunit'];
-                doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
+                inventoryServiceCommons.doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
             });
         },
+
         invIssue_maximo71_afterChangeItem: function (parameters) {
             invIssue_maximo71_afterChangeItem(parameters)
-        },
-
-        afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['lotnum'] = null;
-            parameters['fields']['#curbal'] = null;
-
-            var itemnum = parameters['fields']['itemnum'];
-            if (nullOrEmpty(itemnum)) {
-                parameters['fields']['binnum'] = null;
-                parameters['fields']['unitcost'] = null;
-                parameters['fields']['inventory_.issueunit'] = null;
-                parameters['fields']['inventory_.itemtype'] = null;
-
-                return;
-            }
-
-            if (parameters['fields']['inventory_.binnum'] == null) {
-                parameters['fields']['binnum'] = "";
-            } else {
-                parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
-            }
-
-            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-        },
-
-        invIssue_afterChangeWorkorder: function (parameters) {
-            if (nullOrEmpty(parameters.fields['refwo'])) {
-                parameters.fields['refwo'] = null;
-                parameters.fields['workorder'] = null;
-                parameters.fields['location'] = null;
-                parameters.fields['assetnum'] = null;
-                parameters.fields['gldebitacct'] = null;
-                return;
-            }
-            // If the workorder's location is null, remove the current datamap's location
-            if (parameters.fields['workorder_.location'] == null) {
-                parameters.fields['location'] = null;
-            } else {
-                parameters.fields['location'] = parameters.fields['workorder_.location'];
-            }
-            // If the workorder's assetnum is null, remove the current datamap's assetnum
-            if (parameters.fields['workorder_.assetnum'] == null) {
-                parameters.fields['assetnum'] = null;
-            } else {
-                parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
-            }
-        },
-
-        invIssue_afterChangeLocation: function (parameters) {
-            console.log(arguments.callee.toString());
-            if (nullOrEmpty(parameters.fields['location'])) {
-                parameters.fields['refwo'] = null;
-                parameters.fields['workorder'] = null;
-                parameters.fields['assetnum'] = null;
-            }
-        },
-
-        invIssue_afterChangeAsset: function (parameters) {
-            var refwo = parameters.fields['refwo'];
-            var location = parameters.fields['location'];
-            if (!nullOrEmpty(parameters.fields['assetnum'])) {
-                if (!refwo || refwo.trim() == "") {
-                    refwo = null;
-                }
-                if (!location || location.trim() == "") {
-                    location = null;
-                }
-                if (refwo != "") {
-                    return;
-                }
-                if (refwo != "" && location == "") {
-                    parameters.fields['location'] = parameters.fields['asset_.location'];
-                    return;
-                }
-                if (refwo == "") {
-                    parameters.fields['location'] = parameters.fields['asset_.location'];
-                }
-            } else {
-                // If the asset is cleared, clear the workorder and the location
-                parameters.fields['refwo'] = null;
-                parameters.fields['workorder'] = null;
-                parameters.fields['location'] = null;
-            }
-        },
-
-        invIssue_afterChangeRotAsset: function (parameters) {
-            if (parameters.fields['rotassetnum'].trim() != "") {
-                parameters.fields['binbalances_.binnum'] = parameters.fields['rotatingasset_.binnum'];
-                parameters.fields['binnum'] = parameters.fields['rotatingasset_.binnum'];
-                parameters.fields['binbalances_.lotnum'] = "";
-                parameters.fields['lotnum'] = "";
-                parameters.fields['binbalances_.curbal'] = 1;
-            }
-        },
-
-        invIssue_afterChangeLaborCode: function(parameters){
-            if (parameters.fields['labor_']) {
-                parameters.fields['issueto'] = parameters.fields['labor_']['personid'];
-            }
         },
 
         createTransfer: function(schema) {
@@ -760,114 +538,6 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
-        invUseAfterChangeFromStoreLoc: function(parameters) {
-            parameters['fields']['invuseline_.fromstoreloc'] = parameters['fields']['fromstoreloc'];
-        },
-
-        invUseAfterChangeFromBin: function(parameters) {
-            parameters['fields']['invuseline_.fromlot'] = parameters['fields']['frominvbalance_.lotnum'];
-            parameters['fields']['invuseline_.tolot'] = parameters['fields']['frominvbalance_.lotnum'];
-            parameters['fields']['#curbal'] = parameters['fields']['frominvbalance_.curbal'];
-            //$rootScope.$digest();
-        },
-
-        invUseAfterChangeSite: function(parameters) {
-
-            if (parameters['fields']['invuseline_.siteid'] == null ||
-                parameters['fields']['invuseline_.siteid'].trim() === "") {
-                parameters['fields']['itemnum'] = null;
-                parameters['fields']['fromstoreloc'] = null;
-                parameters['fields']['invuseline_.frombin'] = null;
-                parameters['fields']['invuseline_.tostoreloc'] = null;
-                parameters['fields']['invuseline_.tobin'] = null;
-                return;
-            }
-
-        },
-
-        invUseAfterChangeItem: function (parameters) {
-            var itemnum = parameters['fields']['itemnum'];
-            parameters['fields']['invuseline_.itemnum'] = itemnum;
-            parameters['fields']['binnum'] = null;
-            parameters['fields']['invuseline_.binnum'] = null;
-            parameters['fields']['lotnum'] = null;
-            parameters['fields']['invuseline_.lotnum'] = null;
-            parameters['fields']['#curbal'] = null;
-            parameters['fields']['frominvbalance_.curbal'] = null;
-            if (nullOrEmpty(itemnum)) {
-                parameters['fields']['invuseline_.itemnum'] = null;
-                parameters['fields']['unitcost'] = null;
-                parameters['fields']['invuseline_.issueunit'] = null;
-                parameters['fields']['invuseline_.itemtype'] = null;
-                return;
-            }
-
-            var searchData = {
-                itemnum: itemnum,
-                location: parameters['fields']['fromstoreloc'],
-                siteid: parameters['fields']['siteid'],
-                orgid: parameters['fields']['orgid'],
-                itemsetid: parameters['fields']['itemsetid']
-            };
-
-            searchService.searchWithData("inventory", searchData)
-                .success(function(data) {
-                    var resultObject = data.resultObject;
-                    var fields = resultObject[0].fields;
-                    var costtype = fields['costtype'];
-                    parameters['fields']['inventory_.costtype'] = costtype;
-                    var locationFieldName = "";
-                    if (parameters['fields'].fromstoreloc != undefined) {
-                        locationFieldName = "fromstoreloc";
-                    }
-                    doUpdateUnitCostFromInventoryCost(parameters,
-                        "invuseline_.unitcost", locationFieldName);
-                });
-
-            // Check if there is a single invbalance record for the item in the
-            // given location. If there is, use it as the from bin, from lot 
-            // and curbal.
-            var searchOperators = {
-                itemnum: searchService.getSearchOperator("="),
-                location: searchService.getSearchOperator("="),
-                siteid: searchService.getSearchOperator("=")
-            }
-            searchService.searchWithData("invbalances", searchData,
-                "binLookupList", { searchOperators: searchOperators }).success(function (data) {
-                    var resultObject = data.resultObject;
-                    if (resultObject.length === 1) {
-                        parameters["fields"]["binnum"] =
-                            resultObject[0].fields.binnum;
-                        parameters["fields"]["invuseline_.frombin"] =
-                            resultObject[0].fields.binnum;
-                        parameters["fields"]["lotnum"] =
-                            resultObject[0].fields.lotnum;
-                        parameters["fields"]["invuseline_.lotnum"] =
-                            resultObject[0].fields.lotnum;
-                        parameters["fields"]["#curbal"] =
-                            resultObject[0].fields.curbal;
-                        parameters["fields"]["frominvbalance_.curbal"] =
-                            resultObject[0].fields.curbal;
-                    }
-                });
-        },
-
-        validateInvIssue: function(schema, datamap) {
-            var errors = [];
-            var refwo = datamap['refwo'];
-            var location = datamap['location'];
-            var assetnum = datamap['assetnum'];
-            var gldebitacct = datamap['gldebitacct'];
-            var itemtype = datamap['inventory_.item_.itemtype'];
-            if (itemtype == 'ITEM' &&
-                nullOrEmpty(refwo) &&
-                nullOrEmpty(location) &&
-                nullOrEmpty(assetnum) &&
-                nullOrEmpty(gldebitacct)) {
-                errors.push("Either a Workorder, Location, Asset, or GL Debit Account is required.");
-            }
-            return errors;
-        },
 
         validateReturn: function (schema, datamap) {
             var errors = [];
@@ -880,16 +550,6 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             return errors;
         },
 
-        cancelTransfer: function() {
-            redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList");
-        },
-
-        afterChangeTransferQuantity: function(event) {
-            if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
-                alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
-                event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
-            }
-        },
 
         afterChangeTransferFromLocation: function(event) {
             event.fields['itemnum'] = "";
@@ -1000,7 +660,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             var parameters = {
                 fields: datamap
             };
-            updateInventoryCosttype(parameters, location);
+            inventoryServiceCommons.updateInventoryCosttype(parameters, location);
             datamap['#issueqty'] = datamap['reservedqty'];
             datamap['#issuetype'] = "ISSUE";
             var searchData = {
@@ -1021,15 +681,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
         },
       
 
-        invIssueAfterChangeCurbal: function (parameters) {
-            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-        },
-
-        invIssueAfterChangeLotnum: function (parameters) {
-            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-        }
+  
 
     };
 });

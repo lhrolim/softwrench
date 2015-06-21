@@ -17,18 +17,27 @@
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input" title="New Inventory Transfer">
+         
           <properties>
             <property key="routing.nextapplication" value="matrectransTransfers"/>
             <property key="nextschema.schemaid" value="matrectransTransfersList"/>
           </properties>
+          
           <field attribute="usetype" hidden="true"/>
           <field attribute="invuseline_.fromstoreloc" default="@storeloc" hidden="true"/>
 
+          <association label="Site" target="siteid" labelfield="site_.description"
+                       extraprojectionvalues="description" requiredexpression="true" hideDescription="true" default="@usersite">
+            <renderer type="lookup" />
+            <event type="afterchange" service="invtransferService" method="afterChangeSite"/>
+          </association>
+
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
+            <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" 
+                         extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
-              <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
+              <event type="afterchange" service="invtransferService" method="afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type">
               <renderer type="default" />
@@ -38,21 +47,18 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" hideDescription="true">
-              <renderer type="lookup" />
-              <event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>
-            </association>
+
             <field label="Lot" attribute="invuseline_.fromlot" readonly="true">
               <renderer type="default"  params="inputsize=small" />
             </field>
             <association target="fromstoreloc" label="From Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid" hideDescription="true">
               <renderer type="lookup" />
               <dataprovider prefilterfunction="FilterFromStoreLoc"/>
-              <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromStoreLoc"/>
+              <event type="afterchange" service="invtrasnferService" method="afterChangeFromStoreLoc"/>
             </association>
             <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
-              <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
+              <event type="afterchange" service="inventorytransferService" method="afterChangeFromBin"/>
               <dataprovider prefilterfunction="FilterFromBin"/>
             </association>
             <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">
@@ -80,7 +86,7 @@
               <renderer type="default"  params="inputsize=small" />
             </field>
             <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true">
-              <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
+              <event type="afterchange" service="invtransferService" method="afterChangeTransferQuantity"/>
               <renderer type="numericinput" params="min=1;inputsize=small"/>
             </field>
             <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
@@ -92,7 +98,7 @@
             <commandgroup position="detailform" removeundeclared="false">
               <removecommand id="print"/>
               <removecommand id="cancel"/>
-              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="inventoryService" method="cancelTransfer"/>
+              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="invtransferService" method="cancel"/>
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>

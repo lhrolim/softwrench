@@ -43,7 +43,7 @@
           <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating"
                        dependantfields="siteid" requiredexpression="true" enableexpression="(@mode=='batch' &amp;&amp; @siteid!=null) || (@mode!='batch' &amp;&amp; @siteid!=null &amp;&amp; @storeloc!=null)">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
-            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
+            <event type="afterchange" service="invissueService" method="afterchangeItem"/>
             <details showexpression="@mode=='batch'" orientation="horizontal">
               <section orientation="horizontal">
                 <header displacement="ontop" label="Item Details" params="fieldset=true;font-weight=bold;"/>
@@ -90,12 +90,20 @@
           </field>
         </componentdisplayable>
 
+        <componentdisplayable id="rotasset">
+          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <renderer type="lookup"/>
+            <event type="afterchange" service="invissueService" method="afterChangeRotAsset"/>
+          </association>
+        </componentdisplayable>
+        
       </components>
 
       <schemas>
         <schema stereotype="list" id="invIssueList" title="Issues and Returns">
           <properties>
-            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
           </properties>
           <commandbars>
@@ -286,12 +294,7 @@
         <schema id="batchitemline">
           <reference id="issuestoreloc"/>
           <reference id="issuebin"/>
-          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description"
-                       extraprojectionvalues="binnum" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
-          </association>
+          <reference id="rotasset"/>
 
           <field attribute="binbalances_.curbal" label="Current Balance" readonly="true"/>
 
@@ -345,14 +348,10 @@
               <reference id="issueitem"/>
               <reference id="issuebin"/>
               <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
-                <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+                <event type="afterchange" service="invissueService" method="afterChangeLotnum"/>
               </field>
               <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-              <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
-                <dataprovider prefilterfunction="FilterAssets"/>
-                <renderer type="lookup"/>
-                <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
-              </association>
+              <reference id="rotasset"/>
               <field attribute="inventory_.item_.rotating" label="Rotating" enableexpression="false">
                 <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
@@ -360,7 +359,7 @@
                 <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
               <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
-                <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+                <event type="afterchange" service="invissueService" method="afterChangeCurbal"/>
               </field>
               <reference id="issuequantity"/>
             </section>
@@ -397,15 +396,15 @@
                          requiredexpression="(@location=='' || @location==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>
+              <event type="afterchange" service="invissueService" method="afterChangeWorkorder"/>
             </association>
             <association label="Location" target="location" labelfield="location_.description"  requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
+              <event type="afterchange" service="invissueService" method="afterChangeLocation"/>
             </association>
             <association label="Asset" target="assetnum" labelfield="asset_.description"  extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
+              <event type="afterchange" service="invissueService" method="afterChangeAsset"/>
             </association>
             <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
               <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
@@ -424,7 +423,7 @@
             <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>
-          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
+          <event type="beforesubmit.onvalidation" service="invissueService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
         </schema>
 

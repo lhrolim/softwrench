@@ -440,7 +440,7 @@
             <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
               <dataprovider prefilterfunction="FilterAssets"/>
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
+              <event type="afterchange" service="invissueService" method="afterChangeRotAsset"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
@@ -454,10 +454,10 @@
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
             <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+              <event type="afterchange" service="invissueService" method="afterChangeLotnum"/>
             </field>
             <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+              <event type="afterchange" service="invissueService" method="afterChangeCurbal"/>
             </field>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
@@ -722,7 +722,7 @@
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <association label="Labor Code" target="laborcode" labelfield="labor_.personid" valuefield="laborcode"  extraprojectionvalues="personid">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLaborCode"/>
+              <event type="afterchange" service="invissueService" method="afterChangeLaborCode"/>
               <renderer type="lookup"/>
             </association>
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
@@ -746,7 +746,7 @@
             <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
               <dataprovider prefilterfunction="FilterAssets"/>
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
+              <event type="afterchange" service="invissueService" method="afterChangeRotAsset"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
@@ -760,10 +760,10 @@
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
             <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+              <event type="afterchange" service="invissueService" method="afterChangeLotnum"/>
             </field>
             <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+              <event type="afterchange" service="invissueService" method="afterChangeCurbal"/>
             </field>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
