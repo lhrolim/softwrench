@@ -26,6 +26,7 @@
                 fields['lotnum'] = fields['binbalances_.lotnum'];
                 fields['#curbal'] = fields['binbalances_.curbal'];
                 fields['curbal'] = fields['binbalances_.curbal'];
+                fields['quantity'] = 1;
                 //to enable composition details on batch mode
                 if (fields['#datamaptype'] == "compositionitem") {
                     fields['matusetransid'] = -1 * (fields["#datamapidx"] - 1);
@@ -56,6 +57,7 @@
                     fields['curbal'] = curbal == null ? 0 : curbal;
                     fields['binbalances_.lotnum'] = lotnum;
                     fields['binbalances_.curbal'] = curbal == null ? 0 : curbal;
+                    fields['quantity'] = 1;
                     //to enable composition details on batch mode
                     if (fields['#datamaptype'] == "compositionitem") {
                         //let´s put a negative id so that it gets ignored on maximo side
