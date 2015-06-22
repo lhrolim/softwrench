@@ -9,18 +9,16 @@ namespace softwrench.sw4.problem.classes {
         /// </summary>
         /// <param name="recordType"></param>
         /// <param name="recordId"></param>
-        /// <param name="data"></param>
         /// <param name="createdBy"></param>
+        /// <param name="handler"></param>
         /// <param name="assignee"></param>
         /// <param name="priority"></param>
+        /// <param name="datamap"></param>
         /// <param name="stackTrace"></param>
-        /// <param name="description"></param>
+        /// <param name="message"></param>
         /// <param name="profiles"></param>
-        /// <param name="problemHandler"></param>
-        Problem Register(string recordType, string recordId, string stackTrace,string data,
-            string createdBy, string assignee,
-            int priority, string description,
-            string profiles, string problemHandler);
+        Problem Register(string recordType, string recordId, string datamap, int? createdBy, string stackTrace,
+            string message,string handler=null, string assignee=null,int priority= 1,string profiles=null);
 
 
         void List();

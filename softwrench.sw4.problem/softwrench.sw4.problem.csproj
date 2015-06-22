@@ -56,6 +56,7 @@
     <Compile Include="classes\Problem.cs" />
     <Compile Include="classes\ProblemManager.cs" />
     <Compile Include="classes\ProblemStatus.cs" />
+    <Compile Include="DB_Migration\Migration20150424Swweb1166Part2.cs" />
     <Compile Include="DB_Migration\20150424_SWWEB_1166.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

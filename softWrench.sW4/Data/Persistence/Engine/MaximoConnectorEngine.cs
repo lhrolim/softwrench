@@ -44,8 +44,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
 
         private static TargetResult DoExecuteCrud(OperationWrapper operationWrapper, IMaximoConnector connector) {
-
-            if (!OperationConstants.IsCrud(operationWrapper.OperationName)) {
+            var operationName = operationWrapper.OperationName;
+            operationName = operationName.ToLower();
+            if (!OperationConstants.IsCrud(operationName)) {
                 //custom operation
                 return null;
             }
@@ -53,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             var crudConnector = new MaximoCrudConnectorEngine((IMaximoCrudConnector)connector);
             var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
             operationWrapper.UserId = crudOperationData.UserId;
-            switch (operationWrapper.OperationName) {
+            switch (operationName) {
                 case OperationConstants.CRUD_CREATE:
                     return crudConnector.Create(crudOperationData);
                 case OperationConstants.CRUD_UPDATE:

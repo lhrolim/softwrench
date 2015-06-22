@@ -60,42 +60,26 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         public Batch Submit(Batch batch, BatchOptions options) {
             var submissionData = BuildSubmissionData(batch);
+            var user = SecurityFacade.CurrentUser();
             var reportKey = batch.RemoteId;
             _contextLookuper.SetMemoryContext(reportKey, batch);
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
+                var originalItem = itemToSubmit.OriginalItem;
                 try {
                     _maximoEngine.Execute(itemToSubmit.CrudData);
-                    batch.SuccessItems.Add(itemToSubmit.OriginalItem.RemoteId);
+                    batch.SuccessItems.Add(originalItem.RemoteId);
                 } catch (Exception e) {
                     if (options.GenerateProblems) {
-                        //                        _problemManager.Register();
-                        //                        var problem = new BatchItemProblem {
-                        //                            DataMapJsonAsString = itemToSubmit.OriginalLine.ToString(),
-                        //                            ErrorMessage = e.Message,
-                        //                            ItemId = itemToSubmit.CrudData.Id,
-                        //                            Report = report
-                        //                        };
-                        //                        problem = _dao.Save(problem);
-                        //                        if (report.ProblemItens == null) {
-                        //                            report.ProblemItens = new HashedSet<BatchItemProblem>();
-                        //                        }
-                        //                        report.ProblemItens.Add(problem);
-                        //                        _dao.Save(report);
+                        var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
+                        var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id, problemDataMap,user.DBId,e.StackTrace, e.Message);
+                        batch.Problems.Add(originalItem.RemoteId, problem);
                     } else {
                         throw e;
                     }
                 }
             }
-            if (options.GenerateReport) {
-                //                _contextLookuper.RemoveFromMemoryContext(reportKey);
-                //                _dao.Save(report);
-                //                report.OriginalMultiItemBatch.Status = BatchStatus.COMPLETE;
-                //                _dao.Save(report.OriginalMultiItemBatch);
-                //                if (options.SendEmail) {
-                //                    _batchReportEmailService.SendEmail(report);
-                //                }
-            }
-            //TODO implement for synchronous result
+            _contextLookuper.RemoveFromMemoryContext(reportKey);
+            batch.Status = BatchStatus.COMPLETE;
             return batch;
         }
 
