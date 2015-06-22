@@ -29,7 +29,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }*/
 
         private static SWDBHibernateDAO _swdbDao;
-        
+
         private SWDBHibernateDAO GetSWDBDAO() {
             if (_swdbDao == null) {
                 _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
@@ -37,36 +37,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return _swdbDao;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
-            var datamap = result.ResultObject;
-            var idFieldName = result.Schema.IdFieldName;
-            var applicationName = result.ApplicationName;
-            JoinCommLogData(datamap, idFieldName, applicationName);
-            return result;
-        }
-
-        private void JoinCommLogData(DataMap resultObject, string parentIdFieldName, string applicationName) {
-            var applicationItemID = resultObject.GetAttribute(parentIdFieldName);
-            var user = SecurityFacade.CurrentUser();
-
-            if (applicationItemID == null || user == null) {
-                return;
-            }
-
-            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, applicationName, applicationItemID, user.DBId);
-
-            var commlogs = (IList<Dictionary<string, object>>)resultObject.Attributes["commlog_"];
-
-            foreach (var commlog in commlogs)
-            {
-                var readFlag = (from c in commData
-                    where c.CommlogId.ToString() == commlog["commloguid"].ToString()
-                    select c.ReadFlag).FirstOrDefault();
-
-                commlog["read"] = readFlag;
-            }
-        }
 
         public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
@@ -119,8 +89,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return dto;
         }
 
-        public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters) {
 
             // TODO: Change the design to use a tree view component
             var query = string.Format(@"SELECT  c.classstructureid AS ID, 
@@ -146,8 +115,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                                         parameters.OriginalEntity.Attributes["siteid"],
                                         parameters.OriginalEntity.Attributes["class"] == "" ? parameters.OriginalEntity.Attributes["class"] : "SR");
 
-            if (ApplicationConfiguration.IsOracle(DBType.Maximo))
-            {
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo)) {
                 query = string.Format(@"SELECT  c.classstructureid AS ID, 
                                                 p3.classificationid AS CLASS_5, 
                                                 p2.classificationid AS CLASS_4,  
