@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
@@ -17,6 +18,7 @@ using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     class OtbServiceRequestDataSet : MaximoApplicationDataSet {
@@ -27,7 +29,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }*/
 
         private static SWDBHibernateDAO _swdbDao;
-
+        
         private SWDBHibernateDAO GetSWDBDAO() {
             if (_swdbDao == null) {
                 _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
@@ -35,6 +37,36 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return _swdbDao;
         }
 
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = base.GetApplicationDetail(application, user, request);
+            var datamap = result.ResultObject;
+            var idFieldName = result.Schema.IdFieldName;
+            var applicationName = result.ApplicationName;
+            JoinCommLogData(datamap, idFieldName, applicationName);
+            return result;
+        }
+
+        private void JoinCommLogData(DataMap resultObject, string parentIdFieldName, string applicationName) {
+            var applicationItemID = resultObject.GetAttribute(parentIdFieldName);
+            var user = SecurityFacade.CurrentUser();
+
+            if (applicationItemID == null || user == null) {
+                return;
+            }
+
+            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, applicationName, applicationItemID, user.DBId);
+
+            var commlogs = (IList<Dictionary<string, object>>)resultObject.Attributes["commlog_"];
+
+            foreach (var commlog in commlogs)
+            {
+                var readFlag = (from c in commData
+                    where c.CommlogId.ToString() == commlog["commloguid"].ToString()
+                    select c.ReadFlag).FirstOrDefault();
+
+                commlog["read"] = readFlag;
+            }
+        }
 
         public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
@@ -63,7 +95,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return compList;
         }
 
-
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);
         }
@@ -88,7 +119,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return dto;
         }
 
-        public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters) {
+        public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters)
+        {
 
             // TODO: Change the design to use a tree view component
             var query = string.Format(@"SELECT  c.classstructureid AS ID, 
@@ -113,6 +145,32 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                                         parameters.OriginalEntity.Attributes["orgid"],
                                         parameters.OriginalEntity.Attributes["siteid"],
                                         parameters.OriginalEntity.Attributes["class"] == "" ? parameters.OriginalEntity.Attributes["class"] : "SR");
+
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo))
+            {
+                query = string.Format(@"SELECT  c.classstructureid AS ID, 
+                                                p3.classificationid AS CLASS_5, 
+                                                p2.classificationid AS CLASS_4,  
+                                                p1.classificationid AS CLASS_3, 
+                                                p.classificationid  AS CLASS_2, 
+                                                c.classificationid  AS CLASS_1
+                                        from classstructure  c
+                                        left join classstructure  p on p.classstructureid = c.parent
+                                        left join classstructure  p1 on p1.classstructureid = p.parent
+                                        left join classstructure  p2 on p2.classstructureid = p1.parent
+                                        left join classstructure  p3 on p3.classificationid = p2.parent
+                                        where 
+                                        c.haschildren = 0 
+                                        and (c.orgid is null or (c.orgid is not null and c.orgid  =  '{0}' )) 
+                                        and (c.siteid is null or (c.siteid is not null and c.siteid  =  '{1}' )) 
+                                        and c.classstructureid in (select classusewith.classstructureid 
+                                                                    from classusewith  
+                                                                    where classusewith.classstructureid=c.classstructureid
+                                                                    and objectname= '{2}')",
+                                        parameters.OriginalEntity.Attributes["orgid"],
+                                        parameters.OriginalEntity.Attributes["siteid"],
+                                        parameters.OriginalEntity.Attributes["class"] == "" ? parameters.OriginalEntity.Attributes["class"] : "SR");
+            }
 
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();

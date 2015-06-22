@@ -106,7 +106,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
         public virtual SearchRequestDto FilterBins(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "COALESCE(invbalances.binnum, '')"));
             filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
 

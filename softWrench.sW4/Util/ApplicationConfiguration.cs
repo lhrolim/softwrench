@@ -493,6 +493,15 @@ namespace softWrench.sW4.Util {
             return toUse == DBMS.DB2;
         }
 
+        public static bool IsOracle(DBType dbType)
+        {
+            DBMS? toUse = dbType == DBType.Maximo ? _maximodbType : _swdbType;
+            if (toUse == null) {
+                toUse = DiscoverDBMS(dbType);
+            }
+            return toUse == DBMS.ORACLE;
+        }
+
 
         //TODO: review connection string provider names
         internal static DBMS DiscoverDBMS(DBType dbType) {
@@ -509,6 +518,8 @@ namespace softWrench.sW4.Util {
                 case "System.Data.SqlClient":
                     return DBMS.MSSQL;
                 case "System.Data.OracleClient":
+                    return DBMS.ORACLE;
+                case "Oracle.DataAccess.Client":
                     return DBMS.ORACLE;
                 case "IBM.Data.DB2":
                     return DBMS.DB2;

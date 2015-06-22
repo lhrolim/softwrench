@@ -73,7 +73,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private void HandleSolutions(CrudOperationData crudDataEntity, object sr) {
             var sympton = crudDataEntity.GetAttribute("symptom_.ldtext");
             var cause = crudDataEntity.GetAttribute("cause_.ldtext");
-            var resolution = crudDataEntity.GetAttribute("resolution_.ldtext");
+            var resolution = crudDataEntity.GetAttribute("resol_.ldtext");
             w.SetValue(sr, "FR1CODE_LONGDESCRIPTION", cause);
             w.SetValue(sr, "FR2CODE_LONGDESCRIPTION", resolution);
             w.SetValue(sr, "PROBLEMCODE_LONGDESCRIPTION", sympton);

@@ -494,7 +494,7 @@
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
           <relationshipAttribute to="ownertable" literal="SR" quoteLiteral="true"/>
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -528,7 +528,7 @@
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
         <attribute name="location" type="varchar" required="true" />
-        <attribute name="binnum" type="varchar" required="false" query="ISNULL(!@binnum, '')"/>
+        <attribute name="binnum" type="varchar" required="false" query="COALESCE(!@binnum, '')"/>
         <attribute name="lotnum" type="varchar" required="false" />
         <attribute name="curbal" type="double" required="true" />
         <attribute name="physcnt" type="double" required="true" />
@@ -962,7 +962,7 @@
         <attribute name="assignmentid" type="bigint" required="false" />
       </attributes>
       <relationships>
-        <relationship to="longdescription" qualifier="worklogdesc" >
+        <relationship to="longdescription" qualifier="wld" >
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -1029,7 +1029,7 @@
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
         </relationship>
-        <relationship to="longdescription" qualifier="resolution">
+        <relationship to="longdescription" qualifier="resol">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
@@ -1442,7 +1442,7 @@
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -1580,7 +1580,7 @@
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -2268,7 +2268,7 @@
         <attribute name="wosequence" type="integer" required="false" />
       </attributes>
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
