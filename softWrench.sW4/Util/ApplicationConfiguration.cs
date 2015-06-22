@@ -245,8 +245,7 @@ namespace softWrench.sW4.Util {
         #region Notification Functionality
 
         public static bool ActivityStreamFlag {
-            get
-            {
+            get {
                 var flagStr = MetadataProvider.GlobalProperty("notifications.activityStream.enabled");
                 var flag = false;
                 Boolean.TryParse(flagStr, out flag);
@@ -254,17 +253,15 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public static string NotificationRefreshRate
-        {
-            get
-            {
+        public static string NotificationRefreshRate {
+            get {
                 var flagValue = MetadataProvider.GlobalProperty("notifications.updateJob.refreshRate");
                 var flag = flagValue ?? "2";
                 return flag;
             }
         }
 
-        public static string ActivityStreamRefreshRate{
+        public static string ActivityStreamRefreshRate {
             get {
                 var flagValue = MetadataProvider.GlobalProperty("notifications.activityStream.refreshRate");
                 var flag = flagValue ?? "2";
@@ -426,7 +423,7 @@ namespace softWrench.sW4.Util {
 
         public static DBConnectionResult DBConnectionStringBuilder(DBType dbType) {
             var dbConnectionString = DBConnectionString(dbType);
-            if (IsMSSQL(dbType)) {
+            if (IsMSSQL(dbType) || IsOracle(dbType)) {
                 var sqlBuilder = new SqlConnectionStringBuilder(dbConnectionString);
                 return new DBConnectionResult {
                     Catalog = sqlBuilder.InitialCatalog,
@@ -441,6 +438,7 @@ namespace softWrench.sW4.Util {
                     Schema = (string)builder["CurrentSchema"]
                 };
             }
+
             return new DBConnectionResult {
                 Catalog = (string)builder["database"],
                 DataSource = (string)builder["server"]
@@ -493,8 +491,7 @@ namespace softWrench.sW4.Util {
             return toUse == DBMS.DB2;
         }
 
-        public static bool IsOracle(DBType dbType)
-        {
+        public static bool IsOracle(DBType dbType) {
             DBMS? toUse = dbType == DBType.Maximo ? _maximodbType : _swdbType;
             if (toUse == null) {
                 toUse = DiscoverDBMS(dbType);
