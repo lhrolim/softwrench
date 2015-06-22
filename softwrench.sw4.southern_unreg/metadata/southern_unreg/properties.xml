@@ -34,7 +34,9 @@
   </environment>
 
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
+    <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
+    <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.53)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=KHTEST)));User Id=MAXIMO;Password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_KHTEST;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="dev-activity">
