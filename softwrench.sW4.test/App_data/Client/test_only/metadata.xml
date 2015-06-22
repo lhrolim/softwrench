@@ -651,7 +651,7 @@
         </list>
         <detail redeclaring="false">
           <customization position="description"/>
-          <customization position="worklogdesc_.ldtext">
+          <customization position="wld_.ldtext">
             <field attribute="zzz" hidden="true"/>
             <reference id="test4"/>
           </customization>
