@@ -9,6 +9,10 @@
     
     <template path="@person.xml"/>
 
+    <template path="@inventory.xml"/>
+    <template path="@invissue.xml"/>
+    <template path="@invtransfer.xml"/>
+
     <template path="@tooltrans.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
@@ -203,7 +207,7 @@
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -315,15 +319,15 @@
           </association>
           <!-- SWWEB 173-->
 
-          <association target="reportedbyperson_.personid" label="Reported By:" labelfield="reportedbyperson_.personid" hideDescription="true" defaultexpression="@username" extraprojectionvalues="altdisplayname,altphone,altemail" enableexpression="true" showexpression="false">
+          <association target="reportedby" label="Reported By:" labelfield="reportedbyp_.displayname" default="@username" extraprojectionvalues="email_.emailaddress,phone_.phonenum,altdisplayname,altphone,altemail,displayname" enableexpression="true" showexpression="true">
             <renderer type="lookup" />
           </association>
-          <field attribute="reportedby" label="Reported By:" default="@username" enableexpression="false"/>
-          <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
-          <field attribute="reportedbyemail" label="Reported By Email:" readonly="true"/>
-          <field attribute="reportedbyperson_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
-          <field attribute="reportedbyperson_.altphone" label="Alt Contact Phone:" readonly="true"/>
-          <field attribute="reportedbyperson_.altemail" label="Alt Contact Email:" readonly="true"/>
+          <!--<field attribute="reportedby" label="Reported By:" default="@username" enableexpression="false"/>-->
+          <field attribute="reportedbyp_.phone_.phonenum" label="Reported By Phone:" readonly="true" attributeToServer="reportedphone"/>
+          <field attribute="reportedbyp_.email_.emailaddress" label="Reported By Email:" readonly="true" attributeToServer="reportedemail" />
+          <field attribute="reportedbyp_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
+          <field attribute="reportedbyp_.altphone" label="Alt Contact Phone:" readonly="true"/>
+          <field attribute="reportedbyp_.altemail" label="Alt Contact Email:" readonly="true"/>
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
@@ -352,7 +356,7 @@
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           
-          <field label="Details:" attribute="longdescription_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
 
