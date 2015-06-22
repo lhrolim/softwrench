@@ -74,7 +74,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var applicationMetadata = MetadataProvider
                 .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web,request.SchemaFieldsToDisplay);
+                .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
 
             ContextLookuper.FillContext(request.Key);
@@ -91,7 +91,7 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-      
+
 
         /// <summary>
         /// API Method to handle Delete operations
@@ -123,6 +123,14 @@ namespace softWrench.sW4.Web.Controllers {
             operationDataRequest.Operation = OperationConstants.CRUD_CREATE;
             return DoExecute(operationDataRequest, json);
         }
+//
+//        /// <summary>
+//        /// API Method to handle Insert operations
+//        /// </summary>
+//        public IApplicationResponse CreateBatch([FromUri]OperationDataRequest operationDataRequest, [NotNull] JObject json) {
+//            operationDataRequest.IsBatch = true;
+//            return DoExecute(operationDataRequest, json);
+//        }
 
         /// <summary>
         /// API Method to handle generic operations
@@ -175,12 +183,12 @@ namespace softWrench.sW4.Web.Controllers {
             var mockMaximo = operationDataRequest.MockMaximo;
 
             //mocked instance by default
-            var maximoResult = new TargetResult(null,null,null);
+            var maximoResult = new TargetResult(null, null, null);
             var operation = operationDataRequest.Operation;
 
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation);
+                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation,operationDataRequest.Batch);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections
@@ -192,8 +200,8 @@ namespace softWrench.sW4.Web.Controllers {
             var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTO, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
-            response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,operation);
-            
+            response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId, operation);
+
             // TODO: Implement some sort of interception
             if (applicationMetadata.AuditEnabled) {
                 _auditManager.CreateAuditEntry(

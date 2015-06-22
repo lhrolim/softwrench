@@ -79,14 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchItem.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchAttributes.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchItemProblem.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\MultiItemBatch.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\Batch.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchReport.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchStatus.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchStatusType.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchResult.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchConfigurationException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\migration\Migration201506062320BatOffLine.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionData.cs" />
@@ -94,8 +88,10 @@
     <Compile Include="com\cts\softwrench\sw4\batches\services\OldBatchCleanUpJob.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\report\BatchReportDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\report\BatchReportEmailService.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\ISubmissionConverter.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchSubmissionService.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchConfigurerProvider.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchSubmissionProvider.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchItemSubmissionService.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\MultiItemBatchSubmissionService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\WorkorderSubmissionConverter.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchesRoleEvaluator.cs" />
@@ -126,6 +122,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>

@@ -154,7 +154,7 @@ namespace softWrench.sW4.Web.Controllers {
                         //user might not exist on maximo either, in that case we should block its access
                         return null;
                     }
-                    return SecurityFacade.GetInstance().LdapLogin(userAux, userTimezoneOffset);
+                    return SecurityFacade.GetInstance().DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }
@@ -164,7 +164,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
 
-                    return SecurityFacade.GetInstance().LdapLogin(userAux, userTimezoneOffset);
+                    return SecurityFacade.GetInstance().DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }

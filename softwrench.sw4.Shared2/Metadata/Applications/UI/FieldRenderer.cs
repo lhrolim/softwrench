@@ -11,11 +11,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
         public FieldRenderer() { }
 
+        private readonly string _parameterString;
+
+        private IDictionary<string, object> _parameters;
+
         public FieldRenderer(string renderertype, string parameters, string targetName) {
-            Parameters = parameters;
+            _parameterString = parameters;
             TargetName = targetName;
             RendererType = renderertype;
             ValidateRendererType(renderertype);
+            _parameters = ParametersAsDictionary();
         }
 
         protected virtual void ValidateRendererType(String rendererType) {
@@ -32,7 +37,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
         public string RendererType { get; set; }
 
-        public string Parameters { get; set; }
+        public IDictionary<string, object> Parameters {
+            get { return _parameters; }
+        }
 
 
 
@@ -42,7 +49,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
 
         public IDictionary<string, object> ParametersAsDictionary() {
-            return PropertyUtil.ConvertToDictionary(Parameters);
+            return PropertyUtil.ConvertToDictionary(_parameterString);
         }
 
         public override string ToString() {

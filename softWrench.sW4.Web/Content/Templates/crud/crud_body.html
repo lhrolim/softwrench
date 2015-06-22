@@ -87,7 +87,8 @@
                     <div class="tab-pane" ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
                         <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
                             <div ng-switch-when="true" class="hiddenonprint">
-                                <composition-list-wrapper parentschema="schema"
+                                <composition-list-wrapper 
+                                                          parentschema="schema"
                                                           parentdata="datamap"
                                                           cancelfn="cancel(data,schema)"
                                                           previousschema="previousschema" previousdata="previousdata"

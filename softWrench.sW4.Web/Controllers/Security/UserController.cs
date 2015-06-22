@@ -131,7 +131,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         //todo make message specific
         public GenericResponseResult<ICollection<User>> Post(JObject userJson) {
-            SecurityFacade.SaveUser(sW4.Security.Entities.User.fromJson(userJson));
+            SecurityFacade.SaveUser(sW4.Security.Entities.User.FromJson(userJson));
             var users = List(false).ResultObject.Users;
 
             var response = new GenericResponseResult<ICollection<User>> {

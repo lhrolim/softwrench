@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('compositionService', function ($log, $http, submitService) {
+app.factory('compositionService', function ($log, $http,$rootScope,$timeout, submitService) {
 
     var nonInlineCompositionsDict = function (schema) {
         if (schema.nonInlineCompositionsDict != undefined) {
@@ -79,19 +79,27 @@ app.factory('compositionService', function ($log, $http, submitService) {
                     platform: platform(),
                 },
             };
-            var urlToUse = url("/api/generic/Data/GetCompositionData?" + $.param(parameters));
+            var urlToUse = url("/api/generic/ExtendedData/GetCompositionData?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
             var log = $log.getInstance('compositionservice#populateWithCompositionData');
             log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
 
-            $http.post(urlToUse, jsonString).success(function (data) {
-                var newDatamap = data.resultObject;
-                for (var field in newDatamap.fields) {
-                    if (!datamap.hasOwnProperty(field)) {
-                        datamap[field] = newDatamap.fields[field];
+            
+            return $http.post(urlToUse, jsonString,{avoidspin:true}).success(function(data) {
+
+                var compositionArray = data.resultObject;
+                for (var composition in compositionArray) {
+                    if (!compositionArray.hasOwnProperty(composition)) {
+                        continue;
                     }
+                    datamap[composition] = compositionArray[composition].resultList;
                 }
                 log.info('compositions returned');
+                $timeout(function() {
+                    $rootScope.$broadcast("sw_compositiondataresolved", datamap);
+
+                }, 100, false);
+
             });
         }
 

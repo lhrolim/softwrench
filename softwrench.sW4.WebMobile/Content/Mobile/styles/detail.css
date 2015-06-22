@@ -1,3 +1,14 @@
-﻿.scroll{
-
+﻿/* syncdetail page */
+.page-syncdetail .row.operation-details {
+    padding-top: 0;
+}
+.page-syncdetail .operation-details .detail-section {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.page-syncdetail .operation-details .detail-section.upload-section .item-list {
+    color: gray;
+}
+.page-syncdetail .operation-details .detail-section.upload-section .item-list .icon {
+    padding-right: 5px;
 }

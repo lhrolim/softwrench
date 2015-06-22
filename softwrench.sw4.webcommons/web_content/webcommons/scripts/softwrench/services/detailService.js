@@ -1,36 +1,89 @@
-﻿var app = angular.module('sw_layout');
+﻿(function () {
+    "use strict";
 
-app.factory('detailService', function ($log, $http,$timeout, associationService, compositionService, fieldService) {
 
-    return {
+    detailService.$inject = ["$log", "$q", "$timeout", "$rootScope", "associationService", "compositionService", "fieldService", "schemaService", "contextService"];
 
-        fetchAssociatedData: function (scope, result) {
-            var datamap = scope.datamap.fields;
-            var schema = scope.schema;
-            var isEdit = this.isEditDetail(schema, datamap);
-            var shouldFetchAssociations = result.schema.properties['prefetchassociations'] != "true";
-            //fetch composition data only for edit mode
-            var shouldFetchCompositions = result.schema.properties['prefetchcompositions'] != "true" && isEdit;
-            if (!shouldFetchAssociations) {
-                associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, datamap);
-            }
-            $timeout(function () {
-                if (shouldFetchAssociations) {
-                    associationService.getEagerAssociations(scope);
-                }
-                if (shouldFetchCompositions) {
-                    compositionService.populateWithCompositionData(schema, datamap);
-                }
+    angular.module("sw_layout").factory("detailService", detailService);
+
+    function detailService($log, $q, $timeout, $rootScope, associationService, compositionService, fieldService, schemaService, contextService) {
+
+        var api = {
+            fetchRelationshipData: fetchRelationshipData,
+            isEditDetail: isEditDetail
+        };
+
+        return api;
+
+        function fetchRelationshipData(scope, result) {
+
+            var associationPromise = handleAssociations(scope, result);
+            var compositionPromise = handleCompositions(scope, result);
+            $q.all([associationPromise, compositionPromise]).then(function (results) {
+                //ready to listen for dirty watchers
+                scope.$broadcast("sw_configuredirtywatcher");
             });
-        },
 
-        isEditDetail: function (schema, datamap) {
+        };
+
+        function isEditDetail(schema, datamap) {
             return fieldService.getId(datamap, schema) != undefined;
+        };
+
+        function handleAssociations(scope, result) {
+            var shouldFetchAssociations = schemaService.getProperty(result.schema, "prefetchassociations") != "#all";
+
+            //some associations might already been retrieved
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
+
+            if (shouldFetchAssociations) {
+                return $timeout(function () {
+                    //why this timeout?
+                    $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(scope.schema.applicationName));
+                    associationService.getEagerAssociations(scope, { avoidspin: true });
+
+                });
+            } else {
+                //they are all resolved already
+                contextService.insertIntoContext("associationsresolved", true, true);
+
+                return $q.when();
+            }
         }
 
+        function handleCompositions(scope, result) {
+            var datamap = scope.datamap.fields;
+            var schema = scope.schema;
+            var isEdit = isEditDetail(schema, datamap);
+
+            if (!isEdit) {
+                return $q.when();
+            }
+
+            //fetch composition data only for edit mode
+            var shouldFetchCompositions = !schemaService.isPropertyTrue(result.schema, "detail.prefetchcompositions");
+
+            if (!shouldFetchCompositions) {
+                scope.compositions = result.compositions;
+            }
+
+            return $timeout(function () {
+                if (shouldFetchCompositions) {
+                    $log.get("#detailService#fetchRelationshipData").info('fetching compositions of {0}'.format(scope.schema.applicationName));
+                    return compositionService.populateWithCompositionData(scope.schema, scope.datamap.fields);
+                }
+                return $q.when();
+            });
+
+        }
 
     };
 
-});
+
+
+
+
+})();
+
 
 

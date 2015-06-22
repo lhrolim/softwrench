@@ -191,7 +191,7 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.shouldShowTitle = function () {
-                return $scope.ismodal == "false" && $scope.schema.properties['hidetitle'] != 'true';
+                return $scope.ismodal == "false" && $scope.schema.properties['detail.hidetitle'] != 'true';
             }
 
             $scope.getTitle = function () {
@@ -426,7 +426,7 @@ app.directive('crudBody', function (contextService) {
 
                 var jsonString = angular.toJson(transformedFields);
 
-                var submissionParameters = submitService.createSubmissionParameters(schemaToSave, nextSchemaObj, id);
+                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id);
 
                 $rootScope.savingMain = !isComposition;
 

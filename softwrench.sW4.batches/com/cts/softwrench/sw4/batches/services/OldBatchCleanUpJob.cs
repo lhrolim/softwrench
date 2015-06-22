@@ -1,7 +1,6 @@
-﻿using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+﻿using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Scheduler;
-using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {

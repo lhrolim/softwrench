@@ -1,4 +1,4 @@
-using cts.commons.portable.Util;
+﻿using cts.commons.portable.Util;
 using cts.commons.Util;
 using DocumentFormat.OpenXml.Bibliography;
 using log4net;
@@ -49,8 +49,14 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly IDictionary<string, InMemoryUser> _users = new ConcurrentDictionary<string, InMemoryUser>();
 
-        public InMemoryUser LdapLogin(User dbUser, string userTimezoneOffset) {
-            return UserFound(dbUser, userTimezoneOffset);
+        public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
+            if (dbUser.MaximoPersonId == null) {
+                //no need to sync to maximo, since there´s no such maximoPersonId
+                return UserFound(dbUser, userTimezoneOffset);
+            }
+            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
+            maximoUser.MergeFromDBUser(dbUser);
+            return UserFound(maximoUser, userTimezoneOffset);
         }
 
         public InMemoryUser Login(User dbUser, string typedPassword, string userTimezoneOffset) {
@@ -58,8 +64,8 @@ namespace softWrench.sW4.Security.Services {
                 return null;
             }
             if (dbUser.UserName.ToLower() == "swadmin") {
-            return UserFound(dbUser, userTimezoneOffset);
-        }
+                return UserFound(dbUser, userTimezoneOffset);
+            }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             maximoUser.MergeFromDBUser(dbUser);
             return UserFound(maximoUser, userTimezoneOffset);
@@ -169,20 +175,12 @@ namespace softWrench.sW4.Security.Services {
             if (swUser == null) {
                 throw new InvalidOperationException("user should exist at DB");
             }
-             var fullUser = new User();
+            var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
-            if (swUser.UserName.ToLower() != "swadmin") {
+            if (swUser.MaximoPersonId != null) {
                 fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
             }
-
-
-            fullUser.Id = swUser.Id;
-            fullUser.UserName = swUser.UserName;
-            fullUser.Profiles = swUser.Profiles;
-            fullUser.CustomRoles = swUser.CustomRoles;
-            fullUser.PersonGroups = swUser.PersonGroups;
-            fullUser.CustomConstraints = swUser.CustomConstraints;
-
+            fullUser.MergeFromDBUser(swUser);
             var formsIdentity = CurrentPrincipal.Identity as System.Web.Security.FormsIdentity;
             var timezone = String.Empty;
             if (formsIdentity != null && formsIdentity.Ticket != null && !String.IsNullOrWhiteSpace(formsIdentity.Ticket.UserData)) {
@@ -238,7 +236,7 @@ namespace softWrench.sW4.Security.Services {
             ClearUserFromCache(user.UserName);
 
             if (saveUser.UserName.Equals(loginUser.Login)) {
-                var timezone = loginUser.TimezoneOffset.ToString(); 
+                var timezone = loginUser.TimezoneOffset.ToString();
                 UserFound(user, timezone);
             }
 

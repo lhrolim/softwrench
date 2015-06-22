@@ -7,8 +7,7 @@ using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.problem.classes {
     [Class(Table = "PROB_PROBLEM", Lazy = false)]
-    public class Problem : IBaseEntity
-    {
+    public class Problem : IBaseEntity {
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
@@ -22,7 +21,7 @@ namespace softwrench.sw4.problem.classes {
         [Property]
         public virtual DateTime CreatedDate { get; set; }
         [Property]
-        public virtual string CreatedBy { get; set; }
+        public virtual int? CreatedBy { get; set; }
         [Property]
         public virtual string Assignee { get; set; }
         [Property]
@@ -30,7 +29,7 @@ namespace softwrench.sw4.problem.classes {
         [Property]
         public virtual string StackTrace { get; set; }
         [Property]
-        public virtual string Description { get; set; }
+        public virtual string Message { get; set; }
         [Property]
         public virtual string Profiles { get; set; }
         [Property]
@@ -39,23 +38,21 @@ namespace softwrench.sw4.problem.classes {
         public virtual string Status { get; set; }
 
         public virtual string DataAsString {
-            get
-            {
+            get {
                 return StringExtensions
                     .GetString(CompressionUtil.Decompress(Data));
             }
             set { Data = CompressionUtil.Compress(value.GetBytes()); }
         }
 
-        public Problem()
-        {
-            
+        public Problem() {
+
         }
 
         public Problem(string recordType, string recordId,
-            string data, DateTime createdDate, string createdBy,
+            string data, DateTime createdDate, int? createdBy,
             string assignee, int priority, string stackTrace,
-            string description, string profiles, string problemHandler,
+            string message, string profiles, string problemHandler,
             string status) {
             RecordType = recordType;
             RecordId = recordId;
@@ -65,7 +62,7 @@ namespace softwrench.sw4.problem.classes {
             Assignee = assignee;
             Priority = priority;
             StackTrace = stackTrace;
-            Description = description;
+            Message = message;
             Profiles = profiles;
             ProblemHandler = problemHandler;
             Status = status;

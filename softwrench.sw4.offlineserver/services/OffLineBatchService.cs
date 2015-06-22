@@ -1,9 +1,15 @@
-﻿using cts.commons.persistence;
+﻿using System;
+using System.Threading.Tasks;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
+using softWrench.sW4.Configuration.Services.Api;
 using softwrench.sw4.offlineserver.services.util;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.services {
     public class OffLineBatchService : ISingletonComponent {
@@ -11,20 +17,43 @@ namespace softwrench.sw4.offlineserver.services {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(OffLineBatchService));
 
-        public OffLineBatchService(ISWDBHibernateDAO swdbHibernateDAO) {
+        private readonly IConfigurationFacade _configurationFacade;
+
+        private readonly BatchItemSubmissionService _batchItemSubmissionService;
+
+        public OffLineBatchService(ISWDBHibernateDAO swdbHibernateDAO, IConfigurationFacade configurationFacade, BatchItemSubmissionService batchItemSubmissionService) {
             _swdbHibernateDAO = swdbHibernateDAO;
+            _configurationFacade = configurationFacade;
+            _batchItemSubmissionService = batchItemSubmissionService;
             Log.DebugFormat("init sync log");
         }
 
 
-        public void SubmitBatch(string application, string remoteId, JObject batchContent) {
+        public Batch SubmitBatch(string application, string remoteId, JObject batchContent) {
+
+            var minSize = _configurationFacade.Lookup<Int32>(OfflineConstants.AsyncBatchMinSize);
+
             var batch = new Batch {
                 Application = application,
                 RemoteId = remoteId,
                 Status = BatchStatus.SUBMITTING
             };
             batch.Items = ClientStateJsonConverter.GetBatchItems(batchContent);
+            var batchOptions = new BatchOptions {
+                    GenerateProblems = true,
+                    GenerateReport = false,
+                    SendEmail = false,
+                    Synchronous = batch.Items.Count < minSize
+                };
+
+            if (batch.Items.Count < minSize) {
+                return _batchItemSubmissionService.Submit(batch, batchOptions);
+            }
             _swdbHibernateDAO.Save(batch);
+            //TODO: replace with rabbitMQ
+            Task.Factory.NewThread(() => _batchItemSubmissionService.Submit(batch, batchOptions));
+            return batch;
+            //async call here
         }
 
     }

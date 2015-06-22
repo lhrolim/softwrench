@@ -111,6 +111,9 @@
     <Reference Include="SimpleInjector">
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
+    <Reference Include="softwrench.sW4.batches">
+      <HintPath>..\softWrench.sW4.Web\Bin\softwrench.sW4.batches.dll</HintPath>
+    </Reference>
     <Reference Include="SpreadsheetLight">
       <HintPath>..\packages\SpreadsheetLight.3.4.2\lib\SpreadsheetLight.dll</HintPath>
     </Reference>
@@ -151,13 +154,16 @@
   <ItemGroup>
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
+    <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Metadata\Applications\DataSet\BasePhoneDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseInventoryReturnDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryReturnDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseEmailDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BasePersonDataSet.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
@@ -277,7 +283,7 @@
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseIncidentDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInvuseDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComMatusetransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
@@ -287,10 +293,10 @@
     <Compile Include="Metadata\Applications\DataSet\WorkorderMaterialsDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\GLComponentsDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseInventoryIssueDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryIssueDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OptionFieldProviderParameters.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDBApplicationDataset.cs" />
@@ -314,6 +320,7 @@
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
     <Compile Include="Metadata\Security\UserPreferences.cs" />
+    <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
@@ -362,7 +369,6 @@
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryJoinBuilder.cs" />
-    <Compile Include="Data\Persistence\WS\API\MaximoResult.cs" />
     <Compile Include="Data\Persistence\WS\Commons\AttachmentHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagServiceRequestCrudConnector.cs" />
@@ -512,7 +518,6 @@
     <Compile Include="Data\Entities\Entity.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityAttribute.cs" />
     <Compile Include="Metadata\Entities\Schema\EntitySchema.cs" />
-    <Compile Include="Metadata\Applications\ApplicationMetadata.cs" />
     <Compile Include="Metadata\MetadataProvider.cs" />
     <Compile Include="Metadata\Parsing\XmlApplicationMetadataParser.cs" />
     <Compile Include="Data\EntityDetailData.cs" />
@@ -888,6 +893,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>

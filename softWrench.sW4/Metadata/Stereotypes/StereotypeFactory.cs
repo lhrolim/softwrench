@@ -1,4 +1,6 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using cts.commons.portable.Util;
+using softWrench.sW4.Security.Init;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using System.Collections.Generic;
 
@@ -15,6 +17,10 @@ namespace softWrench.sW4.Metadata.Stereotypes {
                     return OutputDetailStereotype.GetInstance();
                 }
                 return DetailSchemaStereotype.GetInstance();
+            }
+
+            if (SchemaStereotype.DetailNew.GetName().EqualsIc(stereotype)) {
+                return DetailNewSchemaStereotype.GetInstance();
             }
 
             if (stereotype.ToLower() == "compositionlist") {

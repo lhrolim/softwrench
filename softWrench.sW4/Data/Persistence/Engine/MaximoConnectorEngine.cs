@@ -1,26 +1,27 @@
-﻿using softWrench.sW4.Data.Offline;
+﻿using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Data.Sync;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
     public sealed class MaximoConnectorEngine : AConnectorEngine {
 
-//        private readonly SyncItemHandler _syncHandler;
+        //        private readonly SyncItemHandler _syncHandler;
+
+
 
         public MaximoConnectorEngine(EntityRepository entityRepository)
             : base(entityRepository) {
-//            _syncHandler = syncHandler;
+            //            _syncHandler = syncHandler;
         }
 
         public override TargetResult Execute(OperationWrapper operationWrapper) {
             var entityMetadata = operationWrapper.EntityMetadata;
             var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName);
             var operationName = operationWrapper.OperationName;
+
             var result = DoExecuteCrud(operationWrapper, connector);
             if (result != null) {
                 return result;
@@ -43,8 +44,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
 
         private static TargetResult DoExecuteCrud(OperationWrapper operationWrapper, IMaximoConnector connector) {
-
-            if (!OperationConstants.IsCrud(operationWrapper.OperationName)) {
+            var operationName = operationWrapper.OperationName;
+            operationName = operationName.ToLower();
+            if (!OperationConstants.IsCrud(operationName)) {
                 //custom operation
                 return null;
             }
@@ -52,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             var crudConnector = new MaximoCrudConnectorEngine((IMaximoCrudConnector)connector);
             var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
             operationWrapper.UserId = crudOperationData.UserId;
-            switch (operationWrapper.OperationName) {
+            switch (operationName) {
                 case OperationConstants.CRUD_CREATE:
                     return crudConnector.Create(crudOperationData);
                 case OperationConstants.CRUD_UPDATE:
@@ -78,9 +80,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_DELETE));
         }
 
-//        public override SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
-//            return _syncHandler.Sync(appMetadata, applicationSyncData, syncItemHandlerDelegate);
-//        }
+        //        public override SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
+        //            return _syncHandler.Sync(appMetadata, applicationSyncData, syncItemHandlerDelegate);
+        //        }
 
         sealed class MaximoCrudConnectorEngine {
 

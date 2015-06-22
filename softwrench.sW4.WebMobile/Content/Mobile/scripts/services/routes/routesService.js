@@ -14,9 +14,10 @@
             return contextService.getFromContext("serverurl") + "/api/mobile/PullNewData";
         },
 
-        go:function(stateName) {
+        go: function (stateName, params) {
+            // TODO: insert params in the context and recover
             contextService.insertIntoContext("currentstate", stateName);
-            return $state.go(stateName);
+            return $state.go(stateName, params);
         },
 
         loadInitialState:function(cookieAuthenticated) {

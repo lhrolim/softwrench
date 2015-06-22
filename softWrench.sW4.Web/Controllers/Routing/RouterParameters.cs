@@ -27,6 +27,49 @@ namespace softWrench.sW4.Web.Controllers.Routing {
     public class RouterParameters {
 
 
+        private ApplicationMetadata _nextApplication;
+        private String _nextController;
+        private String _nextAction;
+
+        /// <summary>
+        /// The next application we should redirect the user to
+        /// </summary>
+        public ApplicationMetadata NextApplication {
+            get {
+                if (TargetResult != null && TargetResult.NextApplication != null) {
+                    //let´s give a chance that maximo connectors change the next application the user needs to get redirected based upon complex flows
+                    return TargetResult.NextApplication;
+                }
+                return _nextApplication;
+            }
+            set { _nextApplication = value; }
+        }
+
+
+        public string NextController
+        {
+            get
+            {
+                if (TargetResult != null && TargetResult.NextController != null) {
+                    //let´s give a chance that maximo connectors change the next application the user needs to get redirected based upon complex flows
+                    return TargetResult.NextController;
+                }
+                
+                return _nextController;
+            }
+        }
+
+        public string NextAction
+        {
+            get
+            {
+                if (TargetResult != null && TargetResult.NextAction != null) {
+                    //let´s give a chance that maximo connectors change the next application the user needs to get redirected based upon complex flows
+                    return TargetResult.NextAction;
+                }
+                return _nextAction;
+            }
+        }
 
         public RouterParameters(ApplicationMetadata currentApplication,
             ClientPlatform platform, RouterParametersDTO routerDTO,
@@ -98,14 +141,14 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
         private void FillNextActionAndController(ApplicationMetadata currentApplication, RouterParametersDTO routerDTO) {
             if (routerDTO.NextController != null && routerDTO.NextAction != null) {
-                NextController = routerDTO.NextController;
-                NextAction = routerDTO.NextAction;
+                _nextController= routerDTO.NextController;
+                _nextAction = routerDTO.NextAction;
             } else if (currentApplication.Schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.AfterSubmitAction)) {
                 var afterSubmitAction =
                     currentApplication.Schema.Properties[ApplicationSchemaPropertiesCatalog.AfterSubmitAction];
                 var controllerAndAction = afterSubmitAction.Split('.');
-                NextController = controllerAndAction[0];
-                NextAction = controllerAndAction[1];
+                _nextController = controllerAndAction[0];
+                _nextAction = controllerAndAction[1];
             }
         }
 
@@ -124,10 +167,9 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
         public ClientPlatform Platform { get; set; }
 
-        /// <summary>
-        /// The next application we should redirect the user to
-        /// </summary>
-        public ApplicationMetadata NextApplication { get; set; }
+
+
+     
 
 
         /// <summary>
@@ -154,9 +196,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         /// </summary>
         public TargetResult TargetResult { get; set; }
 
-        public string NextController { get; private set; }
 
-        public string NextAction { get; private set; }
 
 
         /// <summary>

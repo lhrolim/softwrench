@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence;
@@ -64,6 +66,33 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
                 commlog["read"] = readFlag;
             }
+        }
+
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+            JObject currentData) {
+            var compList = base.GetCompositionData(application, request, currentData);
+            var user = SecurityFacade.CurrentUser();
+
+            if (user == null) {
+                return compList;
+            }
+
+            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application.Name, request.Id, user.DBId);
+
+            if (!compList.ResultObject.ContainsKey("commlog_")) {
+                return compList;
+            }
+
+            var commlogs = compList.ResultObject["commlog_"].ResultList;
+
+            foreach (var commlog in commlogs) {
+                var readFlag = (from c in commData
+                                where c.CommlogId.ToString() == commlog["commloguid"].ToString()
+                                select c.ReadFlag).FirstOrDefault();
+
+                commlog["read"] = readFlag;
+            }
+            return compList;
         }
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
@@ -146,8 +175,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            foreach (var record in result)
-            {
+            foreach (var record in result) {
                 list.Add(new AssociationOption(record["ID"],
                          String.Format("{0}{1}{2}{3}{4}",
                                         record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",

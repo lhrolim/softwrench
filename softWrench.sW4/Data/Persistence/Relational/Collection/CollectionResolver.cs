@@ -55,9 +55,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, attributeHolders));
         }
 
-        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
+        public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
             compositionSchemas, AttributeHolder attributeHolders) {
-            DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders }));
+            return DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders }));
         }
 
 
@@ -157,6 +157,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             if (attributeHolders.Count() == 1) {
                 //default scenario, we have just one entity here
                 firstAttributeHolder.Attributes.Add(targetCollectionAttribute, queryResult.ResultList);
+                parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
                 return;
             }
             MatchResults(queryResult, matchingResultWrapper, targetCollectionAttribute);

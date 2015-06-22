@@ -2,7 +2,7 @@
 using System.IO;
 using DotLiquid;
 using log4net;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;

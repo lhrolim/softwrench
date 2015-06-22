@@ -286,7 +286,7 @@
       <schemas>
         <schema stereotype="list" id="invIssueList" title="Issues and Returns">
           <properties>
-            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
           </properties>
           <commandbars>
@@ -675,7 +675,7 @@
             <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
               <dataprovider prefilterfunction="FilterAssets"/>
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
+              <event type="afterchange" service="invissueService" method="afterChangeRotAsset"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
@@ -689,10 +689,10 @@
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
             <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+              <event type="afterchange" service="invissueService" method="afterChangeLotnum"/>
             </field>
             <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
-              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+              <event type="afterchange" service="invissueService" method="afterChangeCurbal"/>
             </field>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
@@ -732,7 +732,7 @@
               <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>
-          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
+          <event type="beforesubmit.onvalidation" service="invissueService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
         </schema>
       </schemas>
@@ -1117,71 +1117,7 @@
     </application>
 
     <!-- TRANSFERS NEEDS TO BE REWRITTEN FOR 7.1. INVUSE TABLE/INTEGRATION OBJECT DOES NOT EXIST IN THIS VERSION -->
-    
-    <!--<application entity="invuse" name="invuse" title="Inventory Transfer">
-      <schemas>
-        <schema id="newdetail" stereotype="detail" mode="input">
-          <properties>
-            <property key="routing.nextapplication" value="matrectransTransfers"/>
-            <property key="nextschema.schemaid" value="matrectransTransfersList"/>
-          </properties>
-          <field attribute="usetype" hidden="true"/>
-          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>
-          </association>
-          <field attribute="invuseline_.siteid" default="@usersite" hidden="true"/>
-          <association target="fromstoreloc" label="Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterFromStoreLoc"/>
-            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromStoreLoc"/>
-          </association>
-          <field attribute="invuseline_.fromstoreloc" default="@storeloc" hidden="true"/>
-          <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
-            <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
-            <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
-          </association>
-          <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-          <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="false" extraprojectionvalues="binnum,lotnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
-            <renderer type="lookup" />
-          </association>
-          --><!--<field label="Rotating" target="inventory_.item_.rotating"/>--><!--
-          --><!--<field label="Kit" target="inventory_.item_.iskit"/>--><!--
-          <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
-            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
-            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
-            <dataprovider prefilterfunction="FilterFromBin"/>
-          </association>
-          <field label="Lot" attribute="invuseline_.fromlot" readonly="true"/>
-          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-          <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">
-            <dataprovider prefilterfunction="FilterToStoreLoc"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeToStoreroom"/>
-            <renderer type="lookup"/>
-          </association>
-          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" forcedistinctoptions="false" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
-            <dataprovider prefilterfunction="FilterToBin" />
-            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;allowFreeText=true;"/>
-          </association>
-          <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true">
-            <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
-            <renderer type="numericinput" params="min=1;"/>
-          </field>
-          <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
-          <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
-          <field attribute="lotnum" hidden="true"/>
-          <commandbars>
-            <commandgroup position="detailform" removeundeclared="false">
-              <removecommand id="print"/>
-              <removecommand id="cancel"/>
-              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="inventoryService" method="cancelTransfer"/>
-            </commandgroup>
-          </commandbars>
-          <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>
-        </schema>
-      </schemas>
-    </application>-->
+   
     
     <application name="maxvars" entity="maxvars" title="Maxvars items">
         <schemas>

@@ -2,9 +2,7 @@
 
     var menuModel = {
         dbData: {},
-        listItems: [
-        { title: "WorkOrder" },
-        { title: "Service Request" }]
+        listItems: []
     };
 
 

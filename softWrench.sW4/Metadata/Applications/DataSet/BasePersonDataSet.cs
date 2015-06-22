@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
@@ -47,7 +49,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             var swusers = UserManager.GetUsersByUsername(usernames);
             foreach (var record in result.ResultObject) {
-                var swuser = swusers.Where(user => user.UserName.ToLower() == record.GetAttribute("personid").ToString().ToLower());
+                var swuser = swusers.Where(user => user.UserName.EqualsIc(record.GetAttribute("personid").ToString()));
                 if (!swuser.Any()) {
                     continue;
                 }
@@ -101,7 +103,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return detailResult;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,bool isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
 

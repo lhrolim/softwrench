@@ -111,8 +111,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         updateUnderlyingAssociationObject: function (associationFieldMetadata, underlyingValue, scope) {
 
             //if association options have no fields, we need to define it as an empty array. 
-            if (scope.associationOptions == undefined)
-                scope.associationOptions = [];
+            scope.associationOptions = scope.associationOptions || [];
+                
 
             var key = associationFieldMetadata.associationKey;
             var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
@@ -347,7 +347,11 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));
             log.debug('Content: \n {0}'.format(jsonString));
-            $http.post(urlToUse, jsonString).success(function (data) {
+            var config = {};
+            if (options.avoidspin) {
+                config.avoidspin = true;
+            }
+            return $http.post(urlToUse, jsonString,config).success(function (data) {
                 var options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields);
@@ -381,9 +385,11 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
         //to its value that will filter the lookup), build a searchDTO, and return the post call to the
         //UpdateAssociations function in the ExtendedData controller.
-        getAssociationOptions: function (scope, lookupObj, pageNumber, searchObj) {
-            var schema = scope.schema;
-            var fields = scope.datamap;
+        getAssociationOptions: function (schema,datamap, lookupObj, pageNumber, searchObj) {
+            var fields = datamap;
+            if (lookupObj.searchDatamap) {
+                fields = lookupObj.searchDatamap;
+            }
 
             var parameters = {};
             parameters.application = schema.applicationName;
@@ -450,12 +456,13 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook, searchObj) {
             var getAssociationOptions = this.getAssociationOptions;
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
-            getAssociationOptions(scope, lookupObj, null, searchObj).success(function (data) {
+            lookupObj.searchDatamap = datamap;
+            getAssociationOptions(scope.schema,scope.datamap, lookupObj, null, searchObj).success(function (data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {
                     var continueFlag = postFetchHook(result, lookupObj, scope, datamap);
-                    if (continueFlag == false) {
+                    if (!continueFlag) {
                         return;
                     }
                 }

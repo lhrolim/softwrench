@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder;
 using softWrench.sW4.Data;

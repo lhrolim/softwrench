@@ -215,7 +215,7 @@ String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
 
 Array.prototype.subarray = function (start, end) {
     if (!end) {
-         end = -1;
+        end = -1;
     }
     return this.slice(start, this.length + 1 - (end * -1));
 }
@@ -228,11 +228,26 @@ var isArrayNullOrEmpty = function (arr) {
     return nullOrUndef(arr) || arr.length == 0;
 };
 
+var hasSingleElement = function (arr) {
+    return !nullOrUndef(arr) && arr.length == 1;
+};
+
 var safePush = function (baseObject, propertyName, item) {
     if (!baseObject[propertyName]) {
         baseObject[propertyName] = [];
     }
     baseObject[propertyName].push(item);
+}
+
+var nullifyProperties = function (baseObject, propertyArray) {
+    if (!propertyArray || !baseObject) {
+        return;
+    }
+
+    for (var i = 0; i < propertyArray.length; i++) {
+        var propName = propertyArray[i];
+        baseObject[propName] = null;
+    }
 }
 
 String.format = function () {

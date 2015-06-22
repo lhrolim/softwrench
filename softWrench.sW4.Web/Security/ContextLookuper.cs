@@ -55,6 +55,9 @@ namespace softWrench.sW4.Web.Security {
         }
 
         public void SetMemoryContext(string key, object ob, bool userSpecific = false) {
+            if (key == null) {
+                return;
+            }
             var user = SecurityFacade.CurrentUser();
             var login = userSpecific ? user.Login : null;
             //            var userKey = new UserKey(login, key);
@@ -62,13 +65,16 @@ namespace softWrench.sW4.Web.Security {
         }
 
         public void RemoveFromMemoryContext(string key, bool userSpecific = false) {
+            if (key == null) {
+                return;
+            }
             var user = SecurityFacade.CurrentUser();
             var login = userSpecific ? user.Login : null;
             //            var userKey = new UserKey(login, key);
             MemoryContext.Remove(key);
         }
 
-        public T GetFromMemoryContext<T>(string key) {
+        public T GetFromMemoryContext<T>(string key,bool userSpecific = false) {
             var user = SecurityFacade.CurrentUser();
             var userKey = new UserKey(user.Login, key);
             if (!MemoryContext.ContainsKey(key)) {
