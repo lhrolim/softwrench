@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using cts.commons.persistence;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
+using softwrench.sw4.problem.classes;
 
 namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
@@ -38,6 +42,19 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
         [OneToMany(2, ClassType = typeof(BatchItem))]
         public virtual Iesi.Collections.Generic.ISet<BatchItem> Items { get; set; }
 
+
+        /// <summary>
+        ///  There´s no necessity for the BatchReport here, this class plus the BatchItems will hold the status after all.
+        ///   
+        ///  For synchronous operations this will be built in-memory as the batch proceeds. Otherwise a query will be fetched to determine it
+        ///    
+        /// </summary>
+        public Iesi.Collections.Generic.ISet<string> SuccessItems = new HashedSet<string>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IDictionary<string, Problem> Problems = new Dictionary<string, Problem>();
 
         public int NumberOfItems { get { return Items.Count; } }
     }

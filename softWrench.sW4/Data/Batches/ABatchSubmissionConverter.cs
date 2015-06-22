@@ -14,7 +14,7 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Batches {
     public abstract class ABatchSubmissionConverter : IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> {
-        private EntityMetadata _entityMetadata;
+        private readonly EntityMetadata _entityMetadata;
         public abstract string ApplicationName();
         public abstract string ClientFilter();
         public abstract string SchemaId();

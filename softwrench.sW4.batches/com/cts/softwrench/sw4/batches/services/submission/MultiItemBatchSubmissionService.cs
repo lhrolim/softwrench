@@ -23,7 +23,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
-    public class MultiItemBatchSubmissionService : IBatchSubmissionService, ISingletonComponent {
+    public class MultiItemBatchSubmissionService : IBatchSubmissionService {
 
         private const string MissingConverter = "missing batch submission converter for application {0}";
         private const string MultipleBatchConverters = "Multiple batch converters where found for application {0} schema {1}";

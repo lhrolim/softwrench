@@ -90,6 +90,7 @@
     <Compile Include="com\cts\softwrench\sw4\batches\services\report\BatchReportEmailService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchConfigurerProvider.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchSubmissionProvider.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchItemSubmissionService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\MultiItemBatchSubmissionService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\submission\WorkorderSubmissionConverter.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchDataSet.cs" />

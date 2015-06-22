@@ -3,15 +3,13 @@ using System.ComponentModel;
 using cts.commons.simpleinjector;
 
 namespace softwrench.sw4.problem.classes {
-    public interface IProblemManager : ISingletonComponent
-    {
+    public interface IProblemManager : ISingletonComponent {
         /// <summary>
         /// Registers a new problem record
         /// </summary>
         /// <param name="recordType"></param>
         /// <param name="recordId"></param>
         /// <param name="data"></param>
-        /// <param name="createdDate"></param>
         /// <param name="createdBy"></param>
         /// <param name="assignee"></param>
         /// <param name="priority"></param>
@@ -19,11 +17,10 @@ namespace softwrench.sw4.problem.classes {
         /// <param name="description"></param>
         /// <param name="profiles"></param>
         /// <param name="problemHandler"></param>
-        /// <param name="status"></param>
-        Problem Register(string recordType, string recordId, string data, 
-            DateTime createdDate, string createdBy, string assignee, 
-            int priority, string stackTrace, string description, 
-            string profiles, string problemHandler, string status);
+        Problem Register(string recordType, string recordId, string stackTrace,string data,
+            string createdBy, string assignee,
+            int priority, string description,
+            string profiles, string problemHandler);
 
 
         void List();
