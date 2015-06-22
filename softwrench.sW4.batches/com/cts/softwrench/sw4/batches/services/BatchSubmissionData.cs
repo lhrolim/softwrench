@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
     class BatchSubmissionData {
+        
         internal List<BatchSubmissionItem> ItemsToSubmit = new List<BatchSubmissionItem>();
 
         internal JArray RemainingArray = new JArray();
