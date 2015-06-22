@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using log4net;
@@ -8,6 +9,7 @@ using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softWrench.sW4.Configuration.Services.Api;
 using softwrench.sw4.offlineserver.services.util;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.services {
     public class OffLineBatchService : ISingletonComponent {
@@ -37,15 +39,19 @@ namespace softwrench.sw4.offlineserver.services {
                 Status = BatchStatus.SUBMITTING
             };
             batch.Items = ClientStateJsonConverter.GetBatchItems(batchContent);
-            if (batch.Items.Count < minSize) {
-                return _batchItemSubmissionService.Submit(batch, new BatchOptions {
+            var batchOptions = new BatchOptions {
                     GenerateProblems = true,
                     GenerateReport = false,
                     SendEmail = false,
-                    Synchronous = true
-                });
+                    Synchronous = batch.Items.Count < minSize
+                };
+
+            if (batch.Items.Count < minSize) {
+                return _batchItemSubmissionService.Submit(batch, batchOptions);
             }
             _swdbHibernateDAO.Save(batch);
+            //TODO: replace with rabbitMQ
+            Task.Factory.NewThread(() => _batchItemSubmissionService.Submit(batch, batchOptions));
             return batch;
             //async call here
         }

@@ -61,8 +61,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         public Batch Submit(Batch batch, BatchOptions options) {
             var submissionData = BuildSubmissionData(batch);
             var user = SecurityFacade.CurrentUser();
-            var reportKey = batch.RemoteId;
-            _contextLookuper.SetMemoryContext(reportKey, batch);
+            _contextLookuper.SetMemoryContext(batch.RemoteId, batch);
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                 var originalItem = itemToSubmit.OriginalItem;
                 try {
@@ -71,15 +70,20 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 } catch (Exception e) {
                     if (options.GenerateProblems) {
                         var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
-                        var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id, problemDataMap,user.DBId,e.StackTrace, e.Message);
+                        var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id, problemDataMap, user.DBId, e.StackTrace, e.Message);
                         batch.Problems.Add(originalItem.RemoteId, problem);
                     } else {
-                        throw e;
+                        throw;
                     }
                 }
             }
-            _contextLookuper.RemoveFromMemoryContext(reportKey);
             batch.Status = BatchStatus.COMPLETE;
+            if (options.Synchronous) {
+                //if asynchronous then the removal should be performed by the polling service
+                _contextLookuper.RemoveFromMemoryContext(batch.RemoteId);
+            } else {
+                _dao.Save(batch);
+            }
             return batch;
         }
 
