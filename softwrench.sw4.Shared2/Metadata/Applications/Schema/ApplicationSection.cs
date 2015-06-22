@@ -39,6 +39,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private Boolean AreComponentsResolved = false;
         private string _parametersString;
         private FieldRenderer _renderer;
+        private string _role;
         public string RendererType {
             get { return _renderer.RendererType; }
         }
@@ -60,7 +61,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ApplicationSection(string id, string applicationName,
             bool @abstract, string label, string attribute, string resourcepath,
             string parameters, List<IApplicationDisplayable> displayables, string showExpression,
-            string toolTip, string orientation, ApplicationHeader header, FieldRenderer renderer) {
+            string toolTip, string orientation, ApplicationHeader header, FieldRenderer renderer,
+            string role) {
             Id = id;
             ApplicationName = applicationName;
             Abstract = @abstract;
@@ -75,7 +77,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ValidateOrientation(orientation);
             Header = header;
             _renderer = renderer;
-
+            Role = role;
             }
         protected virtual void ValidateOrientation(string orientation) {
 
@@ -93,7 +95,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string Type { get { return GetType().Name; } }
         public string Orientation { get { return OrientationEnum.ToString().ToLower(); } }
-        public string Role { get { return ApplicationName + "." + Id; } }
+
+        public string Role
+        {
+            get { return _role ?? ApplicationName + "." + Id; }
+            set { _role = value; }
+        }
 
         public override string ToString() {
             return string.Format("Id: {0}, Displayables: {1}, Abstract: {2}", Id, Displayables.Count, Abstract);
@@ -111,7 +118,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
             return new ApplicationSection(Id, ApplicationName, Abstract, Label, Attribute, Resourcepath, _parametersString,
-            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer);
+            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer, Role);
         }
 
         public List<IApplicationDisplayable> Displayables {

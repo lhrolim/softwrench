@@ -55,7 +55,7 @@
             <renderer type="checkbox"/>
           </field>
 
-          <section attribute="profilessection" resourcepath="/Content/Templates/otb/profiles.html">
+          <section attribute="profilessection" resourcepath="/Content/Templates/otb/profiles.html" role="sysadmin">
             <header displacement="ontop" label="Profiles" showexpression="true"/>
           </section>
           
@@ -95,7 +95,7 @@
             <renderer type="checkbox"/>
           </field>
           
-          <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html">
+          <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html" role="sysadmin">
             <header displacement="ontop" label="Profiles" showexpression="true"/>
           </section>
           
