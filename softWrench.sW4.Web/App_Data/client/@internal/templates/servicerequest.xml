@@ -15,8 +15,10 @@
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
         </relationship>
-        <relationship to="person" qualifier="reportedbyperson">
+        <relationship to="person" qualifier="reportedbyp">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+          <relationshipAttribute from="reportedphone" to="phone_.phonenum"/>
+          <relationshipAttribute from="reportedemail" to="email_.emailaddress"/>
         </relationship>
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
@@ -128,7 +130,7 @@
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
               <renderer type="lookup" params="columnlabel=Name;"/>
             </association>
             <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
