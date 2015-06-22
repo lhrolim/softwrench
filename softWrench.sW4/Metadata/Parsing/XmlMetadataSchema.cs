@@ -184,6 +184,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationSectionLabelAttribute = "label";
         public const string ApplicationSectionAttributeAttribute = "attribute";
         public const string ApplicationSectionOrientationAttribute = "orientation";
+        public const string ApplicationSectionRoleAttribute = "role";
 
         public const string ApplicationTabElement = "tab";
 

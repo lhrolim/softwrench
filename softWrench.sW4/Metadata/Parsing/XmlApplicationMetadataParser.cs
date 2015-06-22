@@ -225,13 +225,14 @@ namespace softWrench.sW4.Metadata.Parsing {
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((String)null);
             var renderer = ParseRendererNew(sectionElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
                 attribute, FieldRendererType.SECTION, entityMetadata);
+            var role = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionRoleAttribute).ValueOrDefault((string) null);
 
             // Removing this code due to "Asset Specification" section in IMAC application, Update Schema
             /*if (displayables != null && displayables.Count > 0 && !String.IsNullOrWhiteSpace(resourcePath)) {
                 throw new InvalidOperationException("<section> cannot contains inner elements AND resourcePath attribute");
             }*/
             return new ApplicationSection(id, applicationName, @abstract, label, attribute, resourcePath, parameters,
-                displayables, showExpression, toolTip, orientation, header, renderer);
+                displayables, showExpression, toolTip, orientation, header, renderer, role);
         }
 
         private static IApplicationDisplayable ParseCustomization(string applicationName, XElement customizationElement, EntityMetadata entityMetadata) {

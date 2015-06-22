@@ -858,6 +858,7 @@
         </restriction>
       </simpleType>
     </attribute>
+    <attribute name="role" type="string"></attribute>
   </complexType>
   <element name="commands" type="tns:CommandsDeclarationsType">
 
