@@ -153,14 +153,16 @@
   <ItemGroup>
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
+    <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
-    <Compile Include="Data\Persistence\WS\Applications\InvIssue\InvIssueBatchConverter.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Metadata\Applications\DataSet\BasePhoneDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseInventoryReturnDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryReturnDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseEmailDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BasePersonDataSet.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
@@ -280,7 +282,7 @@
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseIncidentDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInvuseDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComMatusetransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
@@ -290,10 +292,10 @@
     <Compile Include="Metadata\Applications\DataSet\WorkorderMaterialsDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\GLComponentsDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseInventoryIssueDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryIssueDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OptionFieldProviderParameters.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDBApplicationDataset.cs" />

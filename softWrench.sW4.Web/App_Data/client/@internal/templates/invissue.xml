@@ -294,7 +294,7 @@
         <schema id="batchitemline">
           <reference id="issuestoreloc"/>
           <reference id="issuebin"/>
-          <reference id="rotasset"/>
+          <reference id="rotasset" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1"/>
 
           <field attribute="binbalances_.curbal" label="Current Balance" readonly="true"/>
 

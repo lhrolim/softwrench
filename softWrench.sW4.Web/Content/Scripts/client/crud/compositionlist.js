@@ -127,12 +127,6 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     //a blank array if nothing exists, scenario for selfcompositions
                     scope.compositiondata = arr;
 
-                    if (metadata.schema.renderer.parameters && "true" == metadata.schema.renderer.parameters["startwithentry"]) {
-                        scope.compositiondata.push({
-                            '#datamaptype': "compositionitem",
-                            '#datamapidx': 0
-                        });
-                    }
                 }
 
                 scope.compositionschemadefinition = metadata.schema;
@@ -141,6 +135,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     "compositionschemadefinition='compositionschemadefinition'" +
                     "relationship='{{relationship}}'" +
                     "compositiondata='compositiondata'" +
+                    "metadatadeclaration='metadata'" +
                     "parentschema='parentschema'" +
                     "parentdata='parentdata'" +
                     "cancelfn='cancel(data,schema)'" +
@@ -186,6 +181,8 @@ app.directive('compositionList', function (contextService, formatService, schema
             previousschema: '=',
             previousdata: '=',
             parentschema: '=',
+            //the composition declaration tag, of the parent schema
+            metadatadeclaration:'=',
             mode: '@',
             ismodal: '@'
         },
@@ -216,7 +213,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             $scope.initField = function (fieldMetadata, item) {
                 var idx = $scope.compositionData().indexOf(item);
-                crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx),idx);
+                crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx), idx);
             };
 
             function init() {
@@ -238,14 +235,17 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
 
-                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
+                
+
+
                 if (!$scope.isBatch()) {
                     $scope.clonedCompositionData = [];
                     $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
-                } else if (!$scope.isNoRecords) {
-                    crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[0]", $scope.compositionlistschema.displayables);
+                } else if ($scope.metadatadeclaration.schema.renderer.parameters && "true" == $scope.metadatadeclaration.schema.renderer.parameters["startwithentry"]) {
+                    $scope.addBatchItem();
                 }
-                
+
+                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
 
                 $scope.detailData = {};
                 $scope.clonedData = {};
@@ -556,12 +556,13 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             $scope.addBatchItem = function () {
                 var idx = $scope.compositionData().length;
-                $scope.compositionData().push({
+                var newItem = {
                     //used to make a differentiation between a compositionitem datamap and a regular datamap
-                    '#datamaptype' : "compositionitem",
-                    '#datamapidx' : idx
-                });
-                
+                    '#datamaptype': "compositionitem",
+                    '#datamapidx': idx
+                };
+                fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+                $scope.compositionData().push(newItem);
                 crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables);
             }
 

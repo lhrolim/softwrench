@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using softWrench.sW4.Data.Persistence.WS.Applications.InvIssue;
+using softWrench.sW4.Data.Persistence.WS.Applications.Inventory.Issue;
 
 namespace softwrench.sW4.test.Data.Persistence.WS.Applications {
 
