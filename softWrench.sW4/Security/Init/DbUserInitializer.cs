@@ -33,7 +33,6 @@ namespace softWrench.sW4.Security.Init {
                             if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
                                 var adminUser = User.CreateAdminUser("swadmin", "admin", "admin", ApplicationConfiguration.DefaultSiteId ?? ApplicationConfiguration.DefaultOrgId,
                                     ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n", ApplicationConfiguration.DefaultStoreloc);
-                                adminUser.Password = "sw@dm1n";
                                 _dao.Save(adminUser);
                                 CreateUserRoles(adminUser, UserType.Admin);
                             }
