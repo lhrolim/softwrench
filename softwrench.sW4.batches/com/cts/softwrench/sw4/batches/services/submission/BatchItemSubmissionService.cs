@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using cts.commons.persistence;
-using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -23,28 +17,22 @@ using cts.commons.simpleinjector;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
     public class BatchItemSubmissionService : ISingletonComponent {
 
-        private const string MissingConverter = "missing batch submission converter for application {0}";
-        private const string MultipleBatchConverters = "Multiple batch converters where found for application {0} schema {1}";
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly MaximoConnectorEngine _maximoEngine;
         private IEnumerable<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>> _converters;
         private readonly IContextLookuper _contextLookuper;
-        private readonly BatchReportEmailService _batchReportEmailService;
         private readonly ProblemManager _problemManager;
 
 
-        public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, BatchReportEmailService batchReportEmailService,
-            BatchSubmissionProvider submissionProvider, BatchConfigurerProvider configurerProvider, ProblemManager problemManager) {
+        public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, ProblemManager problemManager) {
             _dao = dao;
             _maximoEngine = maximoEngine;
             _contextLookuper = contextLookuper;
-            _batchReportEmailService = batchReportEmailService;
             _problemManager = problemManager;
         }
 
@@ -60,42 +48,30 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         public Batch Submit(Batch batch, BatchOptions options) {
             var submissionData = BuildSubmissionData(batch);
-            var reportKey = batch.RemoteId;
-            _contextLookuper.SetMemoryContext(reportKey, batch);
+            var user = SecurityFacade.CurrentUser();
+            _contextLookuper.SetMemoryContext(batch.RemoteId, batch);
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
+                var originalItem = itemToSubmit.OriginalItem;
                 try {
                     _maximoEngine.Execute(itemToSubmit.CrudData);
-                    batch.SuccessItems.Add(itemToSubmit.OriginalItem.RemoteId);
+                    batch.SuccessItems.Add(originalItem.RemoteId);
                 } catch (Exception e) {
                     if (options.GenerateProblems) {
-                        //                        _problemManager.Register();
-                        //                        var problem = new BatchItemProblem {
-                        //                            DataMapJsonAsString = itemToSubmit.OriginalLine.ToString(),
-                        //                            ErrorMessage = e.Message,
-                        //                            ItemId = itemToSubmit.CrudData.Id,
-                        //                            Report = report
-                        //                        };
-                        //                        problem = _dao.Save(problem);
-                        //                        if (report.ProblemItens == null) {
-                        //                            report.ProblemItens = new HashedSet<BatchItemProblem>();
-                        //                        }
-                        //                        report.ProblemItens.Add(problem);
-                        //                        _dao.Save(report);
+                        var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
+                        var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id, problemDataMap, user.DBId, e.StackTrace, e.Message);
+                        batch.Problems.Add(originalItem.RemoteId, problem);
                     } else {
-                        throw e;
+                        throw;
                     }
                 }
             }
-            if (options.GenerateReport) {
-                //                _contextLookuper.RemoveFromMemoryContext(reportKey);
-                //                _dao.Save(report);
-                //                report.OriginalMultiItemBatch.Status = BatchStatus.COMPLETE;
-                //                _dao.Save(report.OriginalMultiItemBatch);
-                //                if (options.SendEmail) {
-                //                    _batchReportEmailService.SendEmail(report);
-                //                }
+            batch.Status = BatchStatus.COMPLETE;
+            if (options.Synchronous) {
+                //if asynchronous then the removal should be performed by the polling service
+                _contextLookuper.RemoveFromMemoryContext(batch.RemoteId);
+            } else {
+                _dao.Save(batch);
             }
-            //TODO implement for synchronous result
             return batch;
         }
 

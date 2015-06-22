@@ -12,12 +12,13 @@ namespace softwrench.sw4.problem.classes {
 
 
 
-        public Problem Register(string recordType, string recordId,string stackTrace,string data,
-            string createdBy, string assignee, int priority, string description,
-            string profiles, string problemHandler) {
-            var problem = new Problem(recordType, recordId, data, DateTime.Now,
-                createdBy, assignee, priority, stackTrace, description,
-                profiles, problemHandler, ProblemStatus.Open.ToString());
+
+
+        public Problem Register(string recordType, string recordId, string datamap, int? createdBy,string stackTrace,
+            string message, string handler = null, string assignee = null, int priority = 1, string profiles = null) {
+            var problem = new Problem(recordType, recordId, datamap, DateTime.Now,
+                createdBy, assignee, priority, stackTrace, message,
+                profiles, handler, ProblemStatus.Open.ToString());
             return _swdbHibernateDAO.Save(problem);
         }
 
