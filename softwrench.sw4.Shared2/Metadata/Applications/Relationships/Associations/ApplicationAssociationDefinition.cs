@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
@@ -45,6 +46,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         //used to resolve renderer parameters that needs access to a scope outside of the shared dll project
         protected Lazy<IDictionary<string, object>> LazyRendererParametersResolver;
 
+        /// <summary>
+        /// a section that will contain pertinent information regarding the association. Usually read-only fields.
+        /// By default, it will only be visible when an item is selected, but still hidden under a collapsible panel.
+        /// </summary>
+        public ApplicationSection DetailSection { get; set; }
+
         public class LabelData {
 
             public string Label { get; set; }
@@ -71,7 +78,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression,
+            string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null, ApplicationSection detailSection = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -89,6 +97,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             OrderByField = orderbyfield;
             _valueField = valueField;
             DefaultExpression = defaultExpression;
+            DetailSection = detailSection;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -245,7 +254,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField) {
+                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField,DetailSection) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

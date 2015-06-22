@@ -8,6 +8,7 @@ using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -59,6 +60,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         public TargetResult Submit(MultiItemBatch multiItemBatch, JObject jsonOb = null, BatchOptions options = null) {
             var converter = _submissionProvider.LookupItem(multiItemBatch.Application, multiItemBatch.Schema,
                 ApplicationConfiguration.ClientName);
+            if (converter == null) {
+                throw BatchConfigurationException.BatchNotFound(multiItemBatch.Application, multiItemBatch.Schema, ApplicationConfiguration.ClientName);
+            }
+
             if (options == null) {
                 var configurer = _configurerProvider.LookupItem(multiItemBatch.Application, multiItemBatch.Schema, ApplicationConfiguration.ClientName);
                 options = configurer.GenerateOptions(multiItemBatch);
@@ -145,25 +150,20 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                     _maximoEngine.Execute(itemToSubmit.CrudData);
                     report.AppendSentItem(itemToSubmit.CrudData.Id);
                 } catch (Exception e) {
-                    if (options.GenerateProblems)
-                    {
-                        var problem = new BatchItemProblem
-                        {
+                    if (options.GenerateProblems) {
+                        var problem = new BatchItemProblem {
                             DataMapJsonAsString = itemToSubmit.OriginalLine.ToString(),
                             ErrorMessage = e.Message,
                             ItemId = itemToSubmit.CrudData.Id,
                             Report = report
                         };
                         problem = _dao.Save(problem);
-                        if (report.ProblemItens == null)
-                        {
+                        if (report.ProblemItens == null) {
                             report.ProblemItens = new HashedSet<BatchItemProblem>();
                         }
                         report.ProblemItens.Add(problem);
                         _dao.Save(report);
-                    }
-                    else
-                    {
+                    } else {
                         throw e;
                     }
                 }

@@ -19,7 +19,7 @@
       <schemas>
         <schema stereotype="list" id="invReturnList" title="Outstanding Returns">
           <properties>
-            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
           </properties>
           <commandbars>
@@ -156,13 +156,14 @@
           <customization position="location">
             <association showexpression="1!=1" label="Location" target="location" labelfield="location_.description" dependantfields="siteid" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
+              <event type="afterchange" service="invissueService" method="afterChangeLocation"/>
             </association>
           </customization>
           <customization position="assetnum">
-            <association showexpression="1!=1" label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid" extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
+            <association showexpression="1!=1" label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid" 
+                         extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
               <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
+              <event type="afterchange" service="invissueService" method="afterChangeAsset"/>
             </association>
           </customization>
           <customization position="gldebitacct">

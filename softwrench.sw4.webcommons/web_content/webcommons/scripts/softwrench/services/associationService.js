@@ -347,7 +347,11 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));
             log.debug('Content: \n {0}'.format(jsonString));
-            $http.post(urlToUse, jsonString).success(function (data) {
+            var config = {};
+            if (options.avoidspin) {
+                config.avoidspin = true;
+            }
+            return $http.post(urlToUse, jsonString,config).success(function (data) {
                 var options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields);

@@ -10,17 +10,19 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             var log = $log.getInstance('sw4.ajaxint#started');
+            var spinAvoided = false;
             if (config.url.indexOf("/Content/") == -1) {
                 //let´s ignore angularjs templates loading, that would pass through here as well
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
                 }
-                if (!$rootScope.avoidspin) {
+                spinAvoided = $rootScope.avoidspin || config.avoidspin;
+                if (!spinAvoided) {
                     $rootScope.$broadcast('sw_ajaxinit');
                 }
             }
-            log.trace("url: {0} | current module:{1} | current metadata:{2} "
-               .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
+            log.trace("url: {0} | current module:{1} | current metadata:{2} | spin avoided:{3} "
+               .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata'], spinAvoided));
             activeRequests++;
 
         };

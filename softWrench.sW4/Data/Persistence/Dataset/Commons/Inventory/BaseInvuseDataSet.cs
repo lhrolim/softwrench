@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.Spreadsheet;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
-using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 
-
-namespace softWrench.sW4.Metadata.Applications.DataSet {
+namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
     class BaseInvuseDataSet : MaximoApplicationDataSet {
-        
+
         public SearchRequestDto FilterToStoreLoc(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             const string type = "STOREROOM";
@@ -32,13 +27,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var filter = parameters.BASEDto;
             filter.SearchSort = "location.location asc";
 
+            filter.AppendWhereClauseFormat("(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = '{0}' " +
+                                       "and invbalances.siteid = location.siteid and invbalances.location = location.location) > 0", parameters.OriginalEntity.GetAttribute("itemnum"));
             return filter;
+
         }
 
         public SearchRequestDto FilterItem(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             filter.SearchSort = "inventory.itemnum";
-            
+
             return filter;
         }
 

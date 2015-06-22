@@ -141,14 +141,24 @@
         /// The string to use as the title id (first part of crud_body.html title) 
         /// </summary>
         public static string DetailTitleId = "detail.titleid";
-        /// <summary>
-        /// If true all options fields of this schema will be rendered with no initial selection
-        /// </summary>
-        public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
+
 
         /// <summary>
         /// If true, the title of the detail schema will be hidden
         /// </summary>
         public static string DetailHideTitle = "detail.hidetitle";
+
+        /// <summary>
+        /// If true, the title of the detail schema will be hidden
+        /// </summary>
+        public static string DetailPreFetchCompositions = "detail.prefetchcompositions";
+
+
+        /// <summary>
+        /// If true all options fields of this schema will be rendered with no initial selection
+        /// </summary>
+        public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
+
+     
     }
 }

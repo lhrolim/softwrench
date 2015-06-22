@@ -127,9 +127,6 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     //a blank array if nothing exists, scenario for selfcompositions
                     scope.compositiondata = arr;
 
-                    if ("true" == metadata.schema.renderer.parameters["startwithentry"]) {
-                        scope.compositiondata.push({});
-                    }
                 }
 
                 scope.compositionschemadefinition = metadata.schema;
@@ -138,6 +135,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     "compositionschemadefinition='compositionschemadefinition'" +
                     "relationship='{{relationship}}'" +
                     "compositiondata='compositiondata'" +
+                    "metadatadeclaration='metadata'" +
                     "parentschema='parentschema'" +
                     "parentdata='parentdata'" +
                     "cancelfn='cancel(data,schema)'" +
@@ -183,6 +181,8 @@ app.directive('compositionList', function (contextService, formatService, schema
             previousschema: '=',
             previousdata: '=',
             parentschema: '=',
+            //the composition declaration tag, of the parent schema
+            metadatadeclaration:'=',
             mode: '@',
             ismodal: '@'
         },
@@ -213,7 +213,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             $scope.initField = function (fieldMetadata, item) {
                 var idx = $scope.compositionData().indexOf(item);
-                crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx),idx);
+                crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx), idx);
             };
 
             function init() {
@@ -235,19 +235,22 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
 
-                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
+                
+
+
                 if (!$scope.isBatch()) {
                     $scope.clonedCompositionData = [];
                     $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
-                } else if (!$scope.isNoRecords) {
-                    crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[0]", $scope.compositionlistschema.displayables);
+                } else if ($scope.metadatadeclaration.schema.renderer.parameters && "true" == $scope.metadatadeclaration.schema.renderer.parameters["startwithentry"]) {
+                    $scope.addBatchItem();
                 }
-                
+
+                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
 
                 $scope.detailData = {};
                 $scope.clonedData = {};
 
-                $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
+                $scope.noupdateallowed = !$scope.isBatch() && !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
                 $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
@@ -268,7 +271,10 @@ app.directive('compositionList', function (contextService, formatService, schema
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
             };
 
-
+            $scope.$on('sw_compositiondataresolved', function (event, datamap) {
+                $scope.compositiondata = datamap[$scope.relationship];
+                init();
+            });
 
 
 
@@ -457,6 +463,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return $scope.compositiondetailschema != null;
             }
 
+            $scope.expansionAllowed = function (item) {
+                var compositionId = item[$scope.compositionlistschema.idFieldName];
+                //we cannot expand an item that doesn´t have an id
+                return compositionId != null;
+            }
+
             /// <summary>
             ///  Method called when an entry of the composition is clicked
             /// </summary>
@@ -502,7 +514,8 @@ app.directive('compositionList', function (contextService, formatService, schema
 
 
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
-                if (!needServerFetching) {
+                if (!needServerFetching || this.isBatch()) {
+                    //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
                     doToggle(compositionId, item, item);
                     return;
                 }
@@ -542,8 +555,14 @@ app.directive('compositionList', function (contextService, formatService, schema
             /***************Batch functions **************************************/
 
             $scope.addBatchItem = function () {
-                $scope.compositionData().push({});
-                var idx =$scope.compositionData().length - 1;
+                var idx = $scope.compositionData().length;
+                var newItem = {
+                    //used to make a differentiation between a compositionitem datamap and a regular datamap
+                    '#datamaptype': "compositionitem",
+                    '#datamapidx': idx
+                };
+                fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+                $scope.compositionData().push(newItem);
                 crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables);
             }
 

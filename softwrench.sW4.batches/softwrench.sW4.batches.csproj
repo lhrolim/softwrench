@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchResult.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchConfigurationException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\migration\Migration201506062320BatOffLine.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionData.cs" />

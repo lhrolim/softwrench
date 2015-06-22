@@ -77,12 +77,13 @@
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_commons.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invtransfer_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\focus_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\application_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invissue_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\person_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\profile_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\user_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\readme.txt" />
     <Content Include="web_content\webcommons\scripts\softwrench\sharedservices_module.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\object_util.js" />
@@ -119,7 +120,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\glcomponent_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\i18n_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\icon_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\inventory_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\labtrans_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\localstorage_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\matusetrans_service.js" />

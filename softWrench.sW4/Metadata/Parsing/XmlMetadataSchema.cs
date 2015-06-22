@@ -88,6 +88,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         //<association label="Location" value="location" labelfield="location.description" />
         public const string ApplicationAssociationElement = "association";
+        public const string ApplicationAssociationDetailsElement = "details";
         public const string ApplicationSectionElement = "section";
         public const string ApplicationAssociationLabelAttribute = "label";
         public const string ApplicationAssociationExtraProjectionFieldsAttribute = "extraprojectionvalues";
