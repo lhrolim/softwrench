@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using cts.commons.persistence;
-using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -23,28 +17,22 @@ using cts.commons.simpleinjector;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
     public class BatchItemSubmissionService : ISingletonComponent {
 
-        private const string MissingConverter = "missing batch submission converter for application {0}";
-        private const string MultipleBatchConverters = "Multiple batch converters where found for application {0} schema {1}";
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly MaximoConnectorEngine _maximoEngine;
         private IEnumerable<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>> _converters;
         private readonly IContextLookuper _contextLookuper;
-        private readonly BatchReportEmailService _batchReportEmailService;
         private readonly ProblemManager _problemManager;
 
 
-        public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, BatchReportEmailService batchReportEmailService,
-            BatchSubmissionProvider submissionProvider, BatchConfigurerProvider configurerProvider, ProblemManager problemManager) {
+        public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, ProblemManager problemManager) {
             _dao = dao;
             _maximoEngine = maximoEngine;
             _contextLookuper = contextLookuper;
-            _batchReportEmailService = batchReportEmailService;
             _problemManager = problemManager;
         }
 
