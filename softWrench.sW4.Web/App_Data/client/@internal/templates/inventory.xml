@@ -650,9 +650,9 @@
       </schemas>
     </application>
 
-    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfers">
+    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfer">
       <schemas>
-        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfers">
+        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/InventoryTransfer/ScanBar"/>
           </properties>

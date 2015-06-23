@@ -12,7 +12,7 @@
             afterChangeFromBin: afterChangeFromBin,
             afterChangeFromStoreLoc: afterChangeFromStoreLoc,
             afterChangeTransferQuantity: afterChangeTransferQuantity,
-            cancelTransfer: cancelTransfer
+            cancel: cancel
         };
 
         return service;
@@ -113,7 +113,7 @@
                 });
         }
 
-        function cancelTransfer() {
+        function cancel() {
             redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList");
         }
     }
