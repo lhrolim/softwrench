@@ -174,6 +174,21 @@ namespace softwrench.sw4.Hapag.Security {
             };
             var result = result1;
             user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] = result;
+            
+            if (user.IsInGroup(HapagPersonGroupConstants.XITC) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
+                //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
+                //TODO: move to a better place...
+                var allGroups = GetLocationsOfLoggedUser();
+                var xitcgroups = new HashSet<string>();
+                foreach (var hlagGroupedLocation in allGroups) {
+                    var descriptions = hlagGroupedLocation.GetGroupDescriptions();
+                    foreach (var description in descriptions) {
+                        xitcgroups.Add(description);
+                    }
+                }
+                user.Genericproperties[HapagPersonGroupConstants.HlagLocationXITCProperty] = xitcgroups;
+            }
+
 
             return result;
         }
