@@ -36,7 +36,7 @@ namespace softwrench.sw4.Hapag.Data {
             var hlagGroupedLocations = locations as HlagGroupedLocation[] ?? locations.ToArray();
             if (CollectionExtensions.IsNullOrEmpty(hlagGroupedLocations)) {
                 Log.WarnFormat("no locations found for region {0}, excluding everything from the filter", regionName);
-                return "1=2";
+                return "1=0";
             }
             return AssetWhereClauseFromLocations(hlagGroupedLocations.ToArray());
         }
