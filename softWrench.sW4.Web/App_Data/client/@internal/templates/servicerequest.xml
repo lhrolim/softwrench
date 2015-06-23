@@ -17,8 +17,8 @@
         </relationship>
         <relationship to="person" qualifier="reportedbyp">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
-          <relationshipAttribute from="reportedphone" to="phone_.phonenum"/>
-          <relationshipAttribute from="reportedemail" to="email_.emailaddress"/>
+<!--          <relationshipAttribute from="reportedphone" to="phone_.phonenum"/>-->
+<!--          <relationshipAttribute from="reportedemail" to="email_.emailaddress"/>-->
         </relationship>
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
