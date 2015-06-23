@@ -21,11 +21,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     w.SetValueIfNull(integrationObject, "USETYPE", "TRANSFER");
                     w.SetValueIfNull(integrationObject, "LINETYPE", "ITEM");
                     w.SetValueIfNull(integrationObject, "CONVERSION", 1);
+                  
                     var unitcost = w.GetRealValue(integrationObject, "unitcost");
                     var quantity = w.GetRealValue(integrationObject, "quantity");
                     var linecost = Convert.ToDouble(unitcost) * Convert.ToDouble(quantity);
                     w.SetValue(integrationObject, "LINECOST", linecost);
                     w.SetValueIfNull(integrationObject, "PHYSCNT", 0);
+
+                    //required for maximo 7.6
+                    w.SetValueIfNull(integrationObject, "ACTUALDATE", DateTime.Now);
+                    w.SetValueIfNull(integrationObject, "PHYSCNTDATE", DateTime.Now);
 
                     ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
                 });
