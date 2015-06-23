@@ -155,6 +155,7 @@
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />

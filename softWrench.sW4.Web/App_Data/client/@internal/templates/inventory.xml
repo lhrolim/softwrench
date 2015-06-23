@@ -24,7 +24,7 @@
     </entity>
 
 
-    <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
+    <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="@physicalCountWhereClauseProvider.PhysicalCountQuery">
       <relationships>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>

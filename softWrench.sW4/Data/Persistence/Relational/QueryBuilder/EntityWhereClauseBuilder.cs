@@ -8,13 +8,19 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
-    class EntityWhereClauseBuilder : IWhereBuilder {
+    class EntityWhereClauseBuilder : Basic.BaseQueryBuilder, IWhereBuilder {
 
 
         public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
             var entityMetadata = MetadataProvider.Entity(entityName);
+
+            
             //double check
-            return entityMetadata.HasWhereClause ? EntityUtil.GetQueryReplacingMarker(entityMetadata.Schema.WhereClause,entityName) : null;
+            var queryReplacingMarker = EntityUtil.GetQueryReplacingMarker(entityMetadata.Schema.WhereClause,entityName);
+            if (queryReplacingMarker.StartsWith("@")) {
+                queryReplacingMarker = GetServiceQuery(queryReplacingMarker);
+            }
+            return entityMetadata.HasWhereClause ? queryReplacingMarker : null;
         }
 
         public IDictionary<string, object> GetParameters() {
