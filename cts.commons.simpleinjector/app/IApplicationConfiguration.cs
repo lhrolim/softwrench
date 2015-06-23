@@ -6,5 +6,6 @@ namespace cts.commons.simpleinjector.app
     {
         bool IsDB2(DBType maximo);
         DBMS? LookupDBMS(DBType dbtype);
+        bool IsOracle(DBType maximo);
     }
 }

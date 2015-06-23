@@ -16,5 +16,9 @@ namespace softWrench.sW4.Util {
         public DBMS? LookupDBMS(DBType dbtype) {
             return ApplicationConfiguration.ToUse(dbtype);
         }
+
+        public bool IsOracle(DBType maximo) {
+            return ApplicationConfiguration.IsOracle(maximo);
+        }
     }
 }
