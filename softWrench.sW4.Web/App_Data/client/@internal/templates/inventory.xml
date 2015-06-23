@@ -188,7 +188,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="matrectransTransfers" parententity="matrectrans" idAttribute="matrectransid" whereclause="issuetype='TRANSFER'"/>
+    <entity name="matrectransTransfers" parententity="matrectrans" idAttribute="matrectransid" useridAttribute="matrectransid" whereclause="issuetype='TRANSFER'"/>
   </entities>
 
   <applications>
@@ -692,6 +692,8 @@
         </schema>
 
         <schema id="detail" title="View Inventory Transfer">
+          <field attribute="matrectransid" label="Transfer:" hidden="true"></field>
+          
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
           </field>
