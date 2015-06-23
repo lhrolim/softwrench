@@ -12,10 +12,12 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
         link: function (scope, element, attr) {
             log.debug(scope.menu);
 
-            scope.$watch('title', function () {
+            scope.$watch('title', function (newValue,oldValue) {
                 var template = (getBreadCrumbHTML(log, scope.menu, scope.title));
-                var content = $compile(template)(scope);
-                element.html(content);
+                if (template != null) {
+                    var content = $compile(template)(scope);
+                    element.html(content);
+                }
             });
         },
 
@@ -94,6 +96,8 @@ function getBreadCrumbHTML(log, menu, current) {
         if (foundPath) {
             path += seperator;
             path += foundPath;
+        } else {
+            return null;
         }
     }
 

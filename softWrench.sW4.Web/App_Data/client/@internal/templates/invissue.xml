@@ -101,7 +101,7 @@
       </components>
 
       <schemas>
-        <schema stereotype="list" id="invIssueList" title="Issues and Returns">
+        <schema stereotype="list" id="invIssueList" title="Issues and Returns Grid">
           <properties>
             <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
