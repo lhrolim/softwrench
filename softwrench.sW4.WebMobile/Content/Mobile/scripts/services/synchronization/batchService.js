@@ -211,26 +211,24 @@
             var detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
 
             return swdbDAO.findByQuery('DataEntry', "isDirty = 1 and pending=0 and application = '{0}'".format(applicationName))
-                .then(function (items) {
+                .then(function(items) {
                     if (items.length <= 0) {
                         log.debug('no items to submit to the server. returning null batch');
                         //nothing to do, interrupting chain
-                        return $q.reject();
+                        return null;
                     }
                     var batchItemPromises = [];
-                    var length = items.length;
-                    for (var i = 0; i < length; i++) {
-                        var entry = items[i];
+                    angular.forEach(items, function(entry) {
                         entry.pending = true;
                         entry.isDirty = false;
-                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function (dataEntry, batchItem) {
+                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
                             batchItem.crudoperation = dataEntry.crudoperation;
                             return batchItem;
                         }));
-                    }
+                    });
                     var batchPromise = swdbDAO.instantiate('Batch');
                     log.debug('creating db promises');
                     var dbPromises = [];
@@ -238,9 +236,10 @@
                     dbPromises.push($q.when(items));
                     dbPromises = dbPromises.concat(batchItemPromises);
                     return $q.all(dbPromises);
-                }).catch(function (err) {
-                    return $q.reject(err);
-                }).then(function (items) {
+                }).then(function(items) {
+                    if (!items) {
+                        return items;
+                    }
                     var batch = items[0];
                     var dataEntries = items[1];
                     var batchItemsToCreate = items.subarray(2, length + 1);
@@ -254,12 +253,6 @@
                         item.batch = batch;
                     }
                     return saveBatch(batch, batchItemsToCreate, dataEntries);
-                }).catch(function (error) {
-                    if (!error) {
-                        //it was interrupted due to an abscence of items, but it should resolve to the outer calls!
-                        return $q.when();
-                    }
-                    return $q.reject();
                 });
         }
 

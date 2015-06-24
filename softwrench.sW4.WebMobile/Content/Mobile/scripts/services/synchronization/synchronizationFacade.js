@@ -13,6 +13,23 @@
 
         return api;
 
+        function getDownloadDataCount(dataDownloadResult) {
+            var count = 0;
+            angular.forEach(dataDownloadResult, function (result) {
+                
+                if (!angular.isArray(result)) {
+                    count += result;
+                    return;
+                }
+                // in some cases, each result is an array of numbers
+                // in that case we need to iterate through each number of result
+                angular.forEach(result, function (element) {
+                    count += element;
+                });
+            });
+            return count;
+        }
+
         /**
          * Executes a full download (data, metadata and association data) and creates a SyncOperation
          * reflecting the execution.
@@ -37,10 +54,8 @@
                     var metadataDownloadedResult = results[0];
                     var associationDataDownloaded = results[1];
                     var dataDownloadedResult = results.subarray(2);
-                    var totalNumber = 0;
-                    for (var j = 0; j < dataDownloadedResult.length; j++) {
-                        totalNumber += dataDownloadedResult[j];
-                    }
+                    var totalNumber = getDownloadDataCount(dataDownloadedResult);
+                    
                     synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
                 });
         }
@@ -88,10 +103,7 @@
                             // sync case: download ONLY data and create a SyncOperation indicating both a Batch submission and a download
                             return associationDataSynchronizationService.syncData()
                                 .then(function(downloadResults) {
-                                    var dataCount = 0;
-                                    angular.forEach(downloadResults, function (result) {
-                                        dataCount += result;
-                                    });
+                                    var dataCount = getDownloadDataCount(downloadResults);
                                     return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                                 });
                         });
