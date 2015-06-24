@@ -42,6 +42,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\southern_reg\styles\branding.css">
+      <DependentUpon>branding.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\southern_reg\styles\branding.min.css">
+      <DependentUpon>branding.css</DependentUpon>
+    </Content>
     <EmbeddedResource Include="metadata\southern_reg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -55,7 +61,10 @@
     <Content Include="web_content\southern_reg\images\signin-sm.jpg" />
     <Content Include="web_content\southern_reg\images\signin-xs.jpg" />
     <Content Include="web_content\southern_reg\images\signin-xxs.jpg" />
-    <Content Include="web_content\southern_reg\styles\branding.css" />
+    <None Include="web_content\southern_reg\styles\branding.css.map">
+      <DependentUpon>branding.css</DependentUpon>
+    </None>
+    <None Include="web_content\southern_reg\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />

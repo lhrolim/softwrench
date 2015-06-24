@@ -1,0 +1,205 @@
+﻿.advanced-filter-toogle {
+    cursor: pointer;
+    text-align: center;
+}
+
+.advanced-filter > div.advanced-filter-item {
+    float: left;
+    margin: 4px;
+    margin-right: 14px;
+
+    .filter-label {
+        color: black;
+    }
+
+    .filter-input {
+        float: left;
+    }
+
+    div.text-input {
+        width: 150px;
+    }
+
+    div.datetime-input {
+        width: 140px;
+    }
+}
+
+.input-group .glyphicon, .grid-filter-button {
+    cursor: pointer;
+    color: black;
+}
+
+.filter-row {
+    .grid-filter-button {
+        font-weight: bold;
+    }
+
+    .dropdown {
+        text-align: left;
+    }
+
+    .input-group {
+        width: 100%;
+
+        .dropdown {
+            padding: 0;
+
+            .dropdown-toggle {
+                padding: 5px 8px;
+            }
+        }
+    }
+}
+
+#listgrid {
+    color: #000;
+    width: 100%;
+    border-spacing: 0px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+
+
+    thead {
+        background-color: #fff;
+
+        tr {
+            &.header-row {
+                background-color: #fff;
+                color: #000;
+                border: none;
+
+                &:after {
+                    content: " ";
+                }
+
+                th {
+                    cursor: pointer;
+                }
+            }
+
+            &.filter-row {
+                background-color: #fff;
+                color: #000;
+
+                &:after {
+                    content: " ";
+                }
+            }
+        }
+    }
+}
+
+/*SWWEB-841 ~ fix header width for Firefox*/
+@-moz-document url-prefix() {
+    #listgrid thead tr.filter-row .input-group-sm > .form-control {
+        font-size: 14px;
+    }
+}
+
+.table tbody > tr > td {
+    border-top: none;
+}
+
+#listgrid, #compositionlistgrid {
+    tbody tr {
+        cursor: pointer;
+
+        &.odd {
+            background: #ebebeb;
+        }
+    }
+}
+
+.table-hover > tbody > tr:hover {
+    & > td, & > th {
+        background-color: #d6d6d6;
+    }
+}
+
+#listgrid th {
+    word-break: break-word;
+}
+
+#listgrid, #compositionlistgrid {
+    td {
+        word-break: break-all;
+        word-break: break-word;
+        padding: 10px 8px 6px;
+    }
+}
+
+#listgrid {
+    td {
+
+        .input-group, .input-group .glyphicon {
+            position: initial;
+        }
+
+        &.select-multiple {
+            text-align: center;
+        }
+    }
+}
+
+.gridcolumnvalue {
+    color: black;
+    padding-left: 8px;
+    word-wrap: break-word;
+}
+
+@media only screen and (min-width: 1200px) {
+    .gridcolumnvalue {
+        max-width: 135px;
+    }
+}
+
+@media only screen and (max-width: 1199px) {
+    .gridcolumnvalue {
+        max-width: 100px;
+    }
+}
+
+#scanConfigTable thead tr td {
+    &:nth-child(1) {
+        width: 30%;
+    }
+
+    &:nth-child(2) {
+        width: 45%;
+    }
+
+    &:nth-child(3) {
+        width: 25%;
+    }
+}
+
+#listgrid {
+    .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+        pointer-events: initial;
+        opacity: 1.0;
+        filter: alpha(opacity=100);
+        color: #ddd;
+        background: #fff;
+        border-color: #ddd;
+    }
+}
+
+table .detaildata {
+    display: table-cell !important;
+}
+
+#compositionlistgrid tbody tr {
+    &:hover {
+        background: #f5f5f5;
+    }
+
+    a {
+        color: #000;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}

@@ -1,0 +1,123 @@
+﻿.affix-pagination {
+    width: 100%;
+
+    .pagination-pager a:hover {
+        text-decoration: none;
+    }
+}
+
+.container {
+
+    .context {
+        width: 100%;
+        background: #eee;
+        border-bottom: #000 1px solid;
+        padding: 5px 40px 10px 10px;
+
+        .group {
+            margin: 5px 10px 0;
+
+            &.pagesize {
+                padding-top: 5px;
+            }
+
+            &.pagination {
+                padding-top: 3px;
+            }
+
+            &.total {
+                margin-top: 10px;
+            }
+        }
+
+        button {
+            margin-bottom: 5px;
+        }
+
+        label {
+            font-weight: normal;
+        }
+    }
+
+    &.mobile .context .group.pagination a {
+        padding: 8px 6px;
+    }
+}
+
+@media all and (min-width: 480px) {
+    .container {
+        .context {
+            padding: 5px 40px 5px 10px;
+
+            .group {
+                float: left;
+                min-height: 34px;
+            }
+        }
+    }
+
+    #crudbodyform .context {
+        padding: 5px 20px 5px 5px;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .container {
+        .context {
+            .hidden-xs {
+                display: inline-block !important;
+            }
+
+            .group {
+                margin: 5px 10px 0;
+
+                &.total {
+                    height: auto;
+
+                    label {
+                        margin: 0;
+                    }
+                }
+            }
+
+            .right .group {
+                float: right;
+            }
+        }
+    }
+}
+
+@media all and (min-width: 992px) {
+    .container {
+
+        .context {
+            .group {
+                margin: 5px 0 0 20px;
+
+                &:first-child {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+
+    #crudbodyform .context .group:first-child {
+        margin-left: 0;
+    }
+}
+
+@media all and (min-width: 1170px) {
+    .container .context .group.total {
+        display: block;
+    }
+}
+
+.gridtop .applicationcommand {
+    display: none;
+}
+
+@media all and (min-width: 480px) {
+    .gridtop .applicationcommand {
+        display: inline-block;
+    }
+}

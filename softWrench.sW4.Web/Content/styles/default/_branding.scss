@@ -1,15 +1,14 @@
-﻿@import url('branding.css');
-.page-signin {
+﻿.page-signin {
     background: #0780c9 url(../../Images/signin-lg.jpg) no-repeat center center fixed;
 }
 
 .container header {
     background: #0780c9 url(../../Images/header.jpg) no-repeat center left;
-}
 
-    .container header .branding {
+    .branding {
         background: url(../../Images/branding.png) no-repeat top left;
     }
+}
 
 /* Extra Small Devices, Phones */
 @media all and (min-width: 1px) and (max-width: 479px) {

@@ -1,12 +1,11 @@
-﻿/*start reset bootstrap styles*/
-.row {
+﻿.row {
     margin-right: 0;
     margin-left: 0;
 }
 
-    fieldset.hasheader {
-        clear: both;
-    }
+fieldset.hasheader {
+    clear: both;
+}
 
 .form-horizontal .form-group {
     margin-right: 0;
@@ -20,8 +19,9 @@
 
 .control-label {
     padding-right: 30px;
+    color: #000;
+    word-wrap: break-word;
 }
-/*start end bootstrap styles*/
 
 .form-group.haschildren {
     margin-bottom: 0;
@@ -32,19 +32,19 @@
     padding: 0 15px;
 }
 
-fieldset .form-group.sidebyside:first-child {
-    padding-left: 0;
+fieldset .form-group.sidebyside {
+    &:first-child {
+        padding-left: 0;
+    }
+
+    &:last-child {
+        padding-right: 0;
+    }
 }
 
-fieldset .form-group.sidebyside:last-child {
-    padding-right: 0;
-}
-
-/*SWWEB-1186*/
 fieldset.newrow {
     clear: both;
 }
-/*SWWEB-1186*/
 
 input:focus, select:focus, textarea:focus {
     outline: none;
@@ -70,25 +70,22 @@ input:focus, select:focus, textarea:focus {
     margin-bottom: 0;
 }
 
-.combobox-container:before, .combobox-container:after {
-    content: none;
+.combobox-container {
+    &:before, &:after {
+        content: none;
+    }
 }
 
 .combobox-aux {
     background-image: url('../../Images/icon-combobox.png');
-}
 
-    .combobox-aux i:hover {
+    i:hover {
         height: 33px !important;
     }
+}
 
 span.combobox-clear {
     height: 26px;
-}
-
-.control-label {
-    color: #000;
-    word-wrap: break-word;
 }
 
 .commandButton {
@@ -109,25 +106,23 @@ textarea .readonly {
 
 .richtextbox {
     width: 100%;
+
+    .btn-toolbar .btn-group {
+        margin-bottom: 5px;
+        margin-right: 5px;
+    }
 }
 
-.richtext .btn-toolbar .btn-group {
-    margin-bottom: 5px;
-    margin-right: 5px;
-}
+.richtext {
+    .btn-toolbar > .btn + .btn, .btn-toolbar > .btn-group + .btn, .btn-toolbar > .btn + .btn-group, .btn-toolbar > .btn-group + .btn-group {
+        margin-left: 0;
+    }
 
-.richtext .btn-toolbar > .btn + .btn, .richtext .btn-toolbar > .btn-group + .btn, .richtext .btn-toolbar > .btn + .btn-group, .richtext .btn-toolbar > .btn-group + .btn-group {
-    margin-left: 0;
-}
-
-.richtext .ta-editor {
-    /*max-width: 859px;*/ /*add max-width to stop richtext from moving off the screen horizontally*/
-}
-
-    .richtext .ta-editor p {
+    .ta-editor p {
         word-break: break-all;
         word-break: break-word;
     }
+}
 
 .ui-spinner {
     position: relative;
@@ -136,6 +131,14 @@ textarea .readonly {
     padding: 0;
     vertical-align: middle;
     width: 100%;
+
+    .ui-icon {
+        position: absolute;
+        margin-top: -5px;
+        top: 50%;
+        left: 40%;
+        color: #000;
+    }
 }
 
 .ui-spinner-input {
@@ -158,14 +161,6 @@ textarea .readonly {
     border: 1px solid #ccc;
 }
 
-.ui-spinner .ui-icon {
-    position: absolute;
-    margin-top: -5px;
-    top: 50%;
-    left: 40%;
-    color: #000;
-}
-
 .ui-spinner-up {
     top: 0;
     border-bottom: none;
@@ -184,21 +179,21 @@ textarea .readonly {
     margin: 10px;
     cursor: pointer;
     font-size: 12px;
-}
 
-    .fileUpload input.upload {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 0;
-        padding: 0;
-        opacity: 0;
-        filter: alpha(opacity=0);
-    }
-
-    .fileUpload input {
+    input {
         cursor: pointer;
+
+        &.upload {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
     }
+}
 
 label.form-control {
     height: auto;
@@ -219,15 +214,14 @@ input[type=search] {
     text-align: left;
     word-break: break-all;
     word-break: break-word;
-}
 
-    .crud_output .field label img {
+    img {
         max-width: 100%;
         height: auto;
         width: auto;
     }
+}
 
-/*SM - SWWEB-724*/
 .issue-items [ng-switch-when="ApplicationCompositionDefinition"] {
     background-image: -webkit-gradient(linear,left 0,left 100%,from(#d9edf7),to(#b9def0));
     background-image: -webkit-linear-gradient(top,#d9edf7,0%,#b9def0,100%);
@@ -246,12 +240,10 @@ input[type=search] {
     border-radius: 4px;
 }
 
-    .issue-items [ng-switch-when="ApplicationCompositionDefinition"] .table thead > tr > th {
-        border-bottom: 2px solid #fff;
-    }
-/*SM - SWWEB-724*/
+.issue-items [ng-switch-when="ApplicationCompositionDefinition"] .table thead > tr > th {
+    border-bottom: 2px solid #fff;
+}
 
-/*SM - SWML-10*/
 .compositiontoolbar button {
     margin-bottom: 5px;
     width: 100%;
@@ -262,13 +254,6 @@ input[type=search] {
         width: auto;
     }
 }
-/*SM - SWML-10*/
-
-/*SM - SWWEB-732*/
-.form-group.samelinepickers {
-    /*margin-bottom: 0;*/
-}
-/*SM - SWWEB-732*/
 
 input[type="date"], input[type="time"] {
     -webkit-appearance: none;
