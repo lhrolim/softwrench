@@ -1,0 +1,17 @@
+<metadata xmlns="http://www.controltechnologysolutions.com/deploymetadata">
+
+  <globalproperties>
+
+    <!--MAximo Properties-->
+    <environment key="dev">
+      <property key="iispath" value="SW4/sw4" />
+      <property key="msdeploy_url" value="https://66.235.236.8:8172/msdeploy.axd,username=HAP7MAX\maxadmin,password=M@xadm1n" />
+    </environment>
+    <environment key="qa">
+      <property key="iispath" value="SW4QA/sw4qa" />
+      <property key="msdeploy_url" value="https://66.235.236.8:8172/msdeploy.axd,username=HAP7MAX\maxadmin,password=M@xadm1n" />
+    </environment>
+
+  </globalproperties>
+
+</metadata>
