@@ -223,7 +223,7 @@
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           
-          <field label="Details:" attribute="longdescription_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
 
