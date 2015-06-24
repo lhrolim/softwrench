@@ -7,6 +7,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -108,13 +109,11 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpPost]
-        public void SubmitBatch([FromUri]String application, [FromUri]String remoteId, JObject batchContent) {
+        public Batch SubmitBatch([FromUri]String application, [FromUri]String remoteId, JObject batchContent) {
             Log.InfoFormat("Creating batch for application {0}", application);
-            _offLineBatchService.SubmitBatch(application, remoteId, batchContent);
-          
-
-
-            //TODO: implement
+            // return the generated Batch to be serialized
+            var batch = _offLineBatchService.SubmitBatch(application, remoteId, batchContent);
+            return batch;
         }
 
      

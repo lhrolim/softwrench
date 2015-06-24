@@ -17,6 +17,8 @@ entities.DataEntry = persistence.define('DataEntry', {
     //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
     isDirty: 'BOOL',
     rowstamp: 'INT',
+    // marks the CRUD operation being executed: update, create, etc
+    crudoperation: "TEXT"
 });
 
 
@@ -38,8 +40,8 @@ entities.DataEntry.insertionQueryPattern = "insert into DataEntry (application,o
 entities.DataEntry.updateQueryPattern = "update DataEntry set originaldatamap='{0}',datamap='{0}',pending=0,rowstamp='{1}' where remoteId='{2}' and application='{3}'";
 entities.DataEntry.deleteQueryPattern = "delete from DataEntry where remoteId in({0}) and application='{1}'";
 
-entities.DataEntry.updateLocalPattern = "update DataEntry set datamap='{0}', isDirty=1 where id ='{1}'";
-entities.DataEntry.insertLocalPattern = "insert into DataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',1,null,null,'{2}')";
+entities.DataEntry.updateLocalPattern = "update DataEntry set datamap='{0}',isDirty=1,crudoperation='crud_update' where id ='{1}'";
+entities.DataEntry.insertLocalPattern = "insert into DataEntry (application,datamap,isDirty,remoteId,rowstamp,id,crudoperation) values ('{0}','{1}',1,null,null,'{2}','crud_create')";
 
 //here because of the order of the files
 entities.BatchItem.hasOne('dataentry', entities.DataEntry);

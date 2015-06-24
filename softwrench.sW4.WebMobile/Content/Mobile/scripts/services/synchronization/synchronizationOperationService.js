@@ -16,30 +16,34 @@
             lastPageLoaded: 1
         }
 
-        this.createBatchOperation = function(startdate, relatedBatches) {
-            var log = $log.get("synchronizationOperationService#createBatchOperation");
-            var operation = {
-                startdate: startdate,
-                status: "PENDING",
-                items: 0
-            };
-            // return promise chain initiated with the creation of SyncOperation
+        var saveBatchOperation = function (operation, relatedBatches) {
             return swdbDAO.instantiate("SyncOperation", operation)
-                .then(function(operationEntity) {
-                    relatedBatches.forEach(function(batch) {
+                .then(function (operationEntity) {
+                    // all batches need to be complete in order for the syncoperation to be complete
+                    var isComplete = relatedBatches.every(function (batch) {
+                        return batch.status === "COMPLETE";
+                    });
+                    // add relationships
+                    relatedBatches.forEach(function (batch) {
                         operationEntity.batches.add(batch);
                         if (batch.loadeditems && batch.loadeditems !== null && batch.loadeditems.length > 0) {
                             operationEntity.items += batch.loadeditems.length;
                         }
                         batch.syncoperation = operationEntity;
                     });
+                    if (isComplete) {
+                        operationEntity.status = "COMPLETE";
+                        operationEntity.enddate = new Date().getTime();
+                    } else {
+                        operationEntity.status = "PENDING";
+                    }
                     var deferred = $q.defer();
-                    persistence.transaction(function(tx) {
+                    persistence.transaction(function (tx) {
                         try {
                             swdbDAO.bulkSave(relatedBatches, tx);
                             swdbDAO.save(operationEntity, tx);
                             // flushing transaction
-                            persistence.flush(tx, function() {
+                            persistence.flush(tx, function () {
                                 // resolve promise with the syncOperation
                                 deferred.resolve(operationEntity);
                             });
@@ -50,6 +54,24 @@
                     });
                     return deferred.promise;
                 });
+        }
+
+        this.createBatchOperation = function(startdate, relatedBatches) {
+            var operation = {
+                startdate: startdate,
+                items: 0
+            };
+            // return promise chain initiated with the creation of SyncOperation
+            return saveBatchOperation(operation, relatedBatches);
+        };
+
+        this.createSynchronousBatchOperation = function (startdate, numberofdownloadeditems, relatedBatches) {
+            var operation = {
+                startdate: startdate,
+                numberofdownloadeditems: numberofdownloadeditems,
+                numberofdownloadedsupportdata: 0
+            };
+            return saveBatchOperation(operation, relatedBatches);
         };
 
         this.createNonBatchOperation = function(startdate, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange) {

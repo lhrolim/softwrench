@@ -233,7 +233,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 return promise;
             } else {
                 persistence.flush(function () {
-                    deferred.resolve();
+                    deferred.resolve(obj);
                 });
             }
             return promise;

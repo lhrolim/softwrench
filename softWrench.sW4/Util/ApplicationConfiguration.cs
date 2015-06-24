@@ -338,7 +338,7 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public static DBMS? _swdbType = null;
+        private static DBMS? _swdbType = null;
         public static DBMS? _maximodbType = null;
 
         public static Boolean IsMif() {
