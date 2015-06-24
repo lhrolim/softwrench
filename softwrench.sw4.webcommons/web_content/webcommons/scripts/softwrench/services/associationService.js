@@ -300,6 +300,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
         updateAssociations: function (association, scope, options) {
+            options = options || {};
+
             var log = $log.getInstance('sw4.associationservice#updateAssociations');
 
             var triggerFieldName = association.attribute;
@@ -327,7 +329,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 fields = scope.datamap.fields;
             }
 
-            if (options && options.datamap) {
+            if (options.datamap) {
                 fields = options.datamap;
             }
 

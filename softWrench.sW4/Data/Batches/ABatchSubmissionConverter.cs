@@ -25,7 +25,11 @@ namespace softWrench.sW4.Data.Batches {
             if (!ApplicationConfiguration.IsUnitTest) {
                 //TODO: rethink
                 var appName = ApplicationName();
-                var application = MetadataProvider.Application(appName);
+                var application = MetadataProvider.Application(appName, false);
+                if (application == null) {
+                    return;
+                }
+
                 var entityName = application.Entity;
                 _entityMetadata = MetadataProvider.Entity(entityName);
             }
