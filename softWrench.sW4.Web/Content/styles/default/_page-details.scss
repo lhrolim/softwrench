@@ -1,0 +1,127 @@
+﻿.detail-body {
+    padding-top: 20px;
+}
+
+.detail-header {
+    margin-bottom: 30px;
+
+    .nav-tabs {
+        border-bottom: none;
+        margin-bottom: 10px;
+
+        & > li {
+            float: none;
+
+            &.active > a, & > a {
+                border: 1px solid #999;
+                border-radius: 0;
+            }
+
+            &:first-child > a {
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            &:last-child > a {
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+        }
+
+        & > li.active > a, & > li.active > a:hover, & > li.active > a:focus {
+            color: #fff;
+            background-image: -webkit-gradient(linear, left 0, left 100%, from(#34a7e0), to(#008fc7));
+            background-image: -webkit-linear-gradient(top, #34a7e0, 0%, #008fc7, 100%);
+            background-image: -moz-linear-gradient(top, #34a7e0 0, #008fc7 100%);
+            background-image: linear-gradient(to bottom, #34a7e0 0, #008fc7 100%);
+            background-repeat: repeat-x;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff34a7e0', endColorstr='#ff008fc7', GradientType=0);
+        }
+
+        & > li.active > a:hover, & > li > a:hover {
+            border-color: #999;
+        }
+    }
+
+    .buttons {
+        margin-right: 4px;
+
+        .btn {
+            margin-top: 10px;
+            width: 32%;
+        }
+    }
+}
+
+@media all and (min-width: 480px) {
+    .detail-header .buttons .btn {
+        width: auto;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .detail-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #999;
+
+        .nav-tabs > li {
+            float: left;
+
+            & > a {
+                margin-right: 0;
+                border: 1px solid #ddd;
+                border-bottom: 1px solid #999;
+                border-left: none;
+                border-radius: 0;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            &:last-child > a {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            &.active > a, &.active > a:hover, &.active > a:focus {
+                border: 1px solid #999;
+                border-bottom: 1px solid #34a7e0;
+            }
+
+            & > a:hover {
+                border-color: #ddd #ddd #999;
+            }
+        }
+
+        .nav-tabs {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        .buttons {
+            float: right;
+
+            .btn {
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+.ticketid_spacer {
+    height: 1px;
+}
+
+.ticketid {
+    margin-top: 20px;
+
+    &.well {
+        margin-bottom: 0;
+    }
+
+    & h5 {
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        word-wrap: break-word; /*make sure title wraps if summary is really long and doesn't have any spaces*/
+    }
+}

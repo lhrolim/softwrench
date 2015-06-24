@@ -12,21 +12,15 @@
     width: 500px;
 }
 
-.smallmodal,
-.mediummodal {
+.smallmodal, .mediummodal {
     top: 20%;
     margin: 0 auto;
-}
 
-    .smallmodal .modal-dialog,
-    .mediummodal .modal-dialog {
+    .modal-dialog {
         overflow: hidden;
         padding: 0;
         width: 100%;
     }
-
-.modal-content .context, .modal-content .listgrid-table {
-    /*display: none;*/
 }
 
 #crudmodal {
@@ -64,9 +58,9 @@
     outline: none;
 }
 
-    .printModal .modal-dialog {
-        width: 300px;
-    }
+.printModal .modal-dialog {
+    width: 300px;
+}
 
 @media all and (min-width: 480px) {
     .smallmodal {
@@ -77,8 +71,7 @@
         width: 560px;
     }
 
-    .smallmodal,
-    .mediummodal {
+    .smallmodal, .mediummodal {
         top: 30%;
     }
 }

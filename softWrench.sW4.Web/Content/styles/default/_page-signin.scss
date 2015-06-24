@@ -1,0 +1,112 @@
+﻿input:focus, select:focus, textarea:focus {
+    outline: none;
+}
+
+.page-signin .shadow {
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
+}
+
+.page-signin {
+    .form-signin {
+        padding: 40px 15px;
+        background-color: rgba(1, 62, 91, 0.5);
+
+        .logo {
+            text-align: center;
+
+            img {
+                max-width: 100%;
+                height: auto;
+                width: auto;
+            }
+        }
+
+        .divider {
+            height: 60px;
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background: none;
+            border: #fff 2px solid;
+            color: #fff;
+            border-radius: 40px;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .user-links {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        a {
+            color: #fff;
+
+            &:hover {
+                color: #fff;
+            }
+        }
+
+        .logo.main img {
+            padding: 0 20px;
+        }
+
+        .branding {
+            margin: 0 auto;
+        }
+
+        .logo.byline img {
+            padding: 0 5px;
+        }
+
+        .text-danger {
+            padding: 10px 20px;
+        }
+
+        .alert-warning, .text-danger {
+            background: rgba(255, 0, 0, 0.75);
+            color: #fff;
+        }
+
+        .alert, .text-danger {
+            text-shadow: none;
+            box-shadow: none;
+            margin-bottom: 40px;
+            border: none;
+            border-left: 5px solid #f00;
+            border-radius: 0;
+        }
+    }
+}
+
+@media all and (min-width: 768px) {
+    .page-signin {
+        padding-top: 40px;
+
+        .logo.main img {
+            padding: 0;
+        }
+
+        .form-signin .user-links {
+            margin-bottom: 0;
+        }
+    }
+}
+
+@media all and (min-width: 992px) {
+    .page-signin {
+        padding-top: 60px;
+    }
+}

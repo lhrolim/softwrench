@@ -297,7 +297,7 @@
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicalcountList"/>
-            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
+            <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
@@ -373,7 +373,7 @@
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
-            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
+            <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
@@ -531,7 +531,7 @@
             </commandgroup>
           </commandbars>
           <properties>
-            <property key="detail.titleexpression" value="'Request: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
+            <property key="detail.titleexpression" value="'Reservation: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
           </properties>
         </schema>
       </schemas>

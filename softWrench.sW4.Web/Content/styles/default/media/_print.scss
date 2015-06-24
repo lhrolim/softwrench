@@ -15,6 +15,7 @@
     #listgrid {
         border: none;
         font-size: 10px;
+        display: block;
     }
 
     .hapag-topbar {
@@ -28,25 +29,17 @@
     }
 
     .hapag-body-loaded {
-        border: 0px;
-        border: 0px;
+        border: 0;
         margin: auto;
     }
 
     .hapag-body {
-        margin: 0px 0px 0px 0px;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
+        margin: 0;
         box-shadow: none;
     }
 
     .hiddenonprint {
         display: none !important;
-    }
-
-    #listgrid {
-        /*margin-left: -120px; SWWEB-244: Had to comment for the margin to show correctly and print the total grid */
-        display: block;
     }
 
     .listgrid-firefox {
@@ -64,15 +57,15 @@
     }
 
     .container {
-        margin-top: 0px !important;
+        margin-top: 0 !important;
+
+        .content {
+            margin-top: 0 !important;
+        }
     }
 
-        .container .content {
-            margin-top: 0px !important;
-        }
-
     html, body {
-        margin-top: 0px !important;
+        margin-top: 0 !important;
         overflow: visible !important;
         float: none !important;
         position: relative;
@@ -101,23 +94,23 @@
         width: 70%;
     }
 
-        #rootprintdiv .field .samelinepickers {
-            margin-top: -6px;
-        }
+    #rootprintdiv .field .samelinepickers {
+        margin-top: -6px;
+    }
 
-            #rootprintdiv .field .samelinepickers .col-md-6 {
-                padding-left: 0;
-            }
+    #rootprintdiv .field .samelinepickers .col-md-6 {
+        padding-left: 0;
+    }
 
-            #rootprintdiv .field .samelinepickers input {
-                padding-left: 0;
-                padding-right: 20px;
-            }
+    #rootprintdiv .field .samelinepickers input {
+        padding-left: 0;
+        padding-right: 20px;
+    }
 
-        #rootprintdiv .field label {
-            padding: 0;
-            font-weight: normal;
-        }
+    #rootprintdiv .field label {
+        padding: 0;
+        font-weight: normal;
+    }
 
     .container header {
         position: initial;
@@ -139,11 +132,11 @@
     }
 
     .listgrid-table {
-         margin-top: initial !important;
+        margin-top: initial !important;
     }
 
     .content {
-         margin-top: initial !important;
+        margin-top: initial !important;
     }
 
     .tooltip {

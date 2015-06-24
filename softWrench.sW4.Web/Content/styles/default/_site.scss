@@ -9,10 +9,9 @@ body {
     font-size: 13px;
 }
 
-    .btn:focus {
-        outline: none;
-        outline-style: none;
-    }
+.btn:focus {
+    outline: none;
+}
 
 .clear {
     clear: both;
@@ -25,7 +24,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 }
 
 .spinner {
-    position: fixed; /*HAP-508 T-EU-044 fix*/
+    position: fixed;
     top: 50%;
     left: 50%;
     z-index: 9999;
@@ -52,14 +51,13 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     padding-right: 15px;
 }
 
-#top .navbar-nav > li:last-child > a {
-    text-align: center;
-}
-
 #top .navbar-nav > li:last-child {
     width: 90px;
-    border-width: 1px;
-    border-color: #003878;
+    border: 1px solid #003878;
+
+    & > a {
+        text-align: center;
+    }
 }
 
 .divAuxTable {
@@ -70,16 +68,15 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 .schemachoosingcombo {
     width: 50%;
     margin: 5px auto;
-    margin-bottom: 5px;
 }
 
 .commandbar {
     margin-top: 60px;
-}
 
-    .commandbar .print {
+    .print {
         display: none;
     }
+}
 
 @media all and (min-width: 768px) {
     .commandbar .print {
@@ -133,12 +130,12 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     margin-top: 10px;
 }
 
-.expanded-item-composition button {
-    display: none;
-}
-
 .expanded-item-composition {
     background-color: white;
+
+    button {
+        display: none;
+    }
 }
 
 .detail-output {
@@ -150,23 +147,21 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     margin-top: -15px !important;
 }
 
-
-
 .col-horizontal-orientation {
     float: left;
-    margin-right: 0px !important;
-    margin-left: 0px !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
     padding-left: 5px;
     padding-right: 5px;
+
+    &:first-child {
+        text-align: left;
+    }
+
+    &:last-child {
+        padding-right: 0;
+    }
 }
-
-    .col-horizontal-orientation:first-child {
-        text-align: : left;
-    }
-
-    .col-horizontal-orientation:last-child {
-        padding-right: 0px;
-    }
 
 .container button {
     text-transform: uppercase;
@@ -177,25 +172,27 @@ input.ng-dirty.ng-invalid, .not-found:focus {
         margin-top: 0;
     }
 
-    messagesection .alerts {
-        position: relative;
-        z-index: 1000;
-        width: 100%;
-    }
+    messagesection {
+        .alerts {
+            position: relative;
+            z-index: 1000;
+            width: 100%;
+        }
 
-    messagesection .alert {
-        margin-bottom: 0;
+        .alert {
+            margin-bottom: 0;
+        }
     }
 
     .affix-pagination {
         position: relative;
         z-index: 1000;
         box-sizing: border-box;
-    }
 
-        .affix-pagination + br, .affix-pagination + br + br {
+        & + br, & + br + br {
             display: none;
         }
+    }
 
     .affix-thead {
         position: relative;
@@ -213,15 +210,16 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 @media all and (min-width: 768px) {
     .desktop messagesection .alerts {
         position: fixed;
-        /*width: 100%;*/
     }
 
-    .container.desktop .affix-pagination {
-        position: fixed;
-    }
+    .container.desktop {
+        .affix-pagination {
+            position: fixed;
+        }
 
-    .container.desktop .listgrid-thead {
-        position: fixed;
+        .listgrid-thead {
+            position: fixed;
+        }
     }
 }
 
@@ -248,7 +246,6 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     width: 100%;
 }
 
-/*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
 .red {
     color: red;
 }
@@ -272,9 +269,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 .gray {
     color: gray;
 }
-/*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
 
-/*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
 .envelopeYellow {
     color: rgb(239, 198, 99);
 }
@@ -282,4 +277,3 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 .fa-question-circle {
     color: #3276b1;
 }
-/*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
