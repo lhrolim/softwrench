@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
+using softWrench.sW4.Exceptions;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -20,7 +22,7 @@ namespace softWrench.sW4.Metadata {
 
         public MetadataProviderInternalCache() {
             var applications = MetadataProvider.Applications();
-            var watch =Stopwatch.StartNew();
+            var watch = Stopwatch.StartNew();
             foreach (var metadata in applications) {
                 foreach (var schema in metadata.Schemas().Values) {
                     if (schema.Stereotype != SchemaStereotype.Detail && schema.Stereotype != SchemaStereotype.DetailNew) {
@@ -36,6 +38,10 @@ namespace softWrench.sW4.Metadata {
 
                     var associations = schema.Associations;
                     foreach (var association in associations) {
+                        if (association.EntityAssociation == null) {
+                            throw new MetadataException("Missing entity relationship for association {0}. review your metadata".Fmt(association));
+                        }
+
                         if (!RelationshipsByNameCache.ContainsKey(association.EntityAssociation.Qualifier)) {
                             RelationshipsByNameCache.Add(association.EntityAssociation.Qualifier, new List<ApplicationRelationshipDefinition>());
                         }
