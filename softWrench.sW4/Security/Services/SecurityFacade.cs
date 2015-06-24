@@ -93,6 +93,7 @@ namespace softWrench.sW4.Security.Services {
             } catch {
                 Log.Warn("Duplicate user should not happen here " + inMemoryUser.Login);
             }
+            LogicalThreadContext.SetData("user", dbUser.UserName);
             _eventDispatcher.Dispatch(new UserLoginEvent(inMemoryUser));
             if (Log.IsDebugEnabled) {
                 Log.Debug(String.Format("user:{0} logged in with roles {1}; profiles {2}; locations {3}",

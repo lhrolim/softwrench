@@ -68,7 +68,7 @@ namespace softWrench.sW4.Web.Controllers {
            key, "offering", "dashboardList",
            _i18Nresolver.I18NValue("dashboard.actionrequiredopenrequests", c.GetDefaultI18NValue(key)),
            _i18Nresolver.I18NValue("dashboard.actionrequiredopenrequests_tooltip",
-               c.GetDefaultI18NValue(key, true)));
+               c.GetDefaultI18NValue(key, true)), "list", "servicerequest.detail");
 
             key = c.EUOpenRequests;
             _dashboards[key] = DashboardDefinition.Get5ElementsInstance(

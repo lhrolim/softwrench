@@ -1124,7 +1124,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </schema>
 
-        <schema id="dashboardList">
+        <schema id="dashboardList" stereotype="list">
           <field attribute="reportdate" label="Creation Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
