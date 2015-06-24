@@ -115,7 +115,7 @@
           <section>
             <header displacement="ontop" label="Incident Details" params="fieldset=true" />
             <field attribute="description" label="Summary:"/>
-            <field label="Details:" attribute="longdescription_.ldtext">
+            <field label="Details:" attribute="ld_.ldtext">
               <renderer type="textarea"/>
             </field>
             <field attribute="statusdate" hidden="true" />

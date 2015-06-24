@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('compositionService', function ($log, $http,$rootScope,$timeout, submitService) {
+app.factory('compositionService', function ($log, $http, $rootScope, $timeout, submitService, schemaService) {
 
     var nonInlineCompositionsDict = function (schema) {
         if (schema.nonInlineCompositionsDict != undefined) {
@@ -78,6 +78,7 @@ app.factory('compositionService', function ($log, $http,$rootScope,$timeout, sub
                     mode: schema.mode,
                     platform: platform(),
                 },
+                id: schemaService.getId(datamap, schema)
             };
             var urlToUse = url("/api/generic/ExtendedData/GetCompositionData?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);

@@ -1,0 +1,67 @@
+.new-button {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+#profiles .buttons, #roles .buttons {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.adminlogs {
+    .textarealog.form-control {
+        height: 368px;
+    }
+
+    .log-select {
+        padding-top: 20px;
+
+        label {
+            display: block;
+        }
+
+        .options {
+            margin-top: 5px;
+        }
+    }
+
+    table a {
+        cursor: pointer;
+    }
+
+    .appender {
+        margin-bottom: 20px;
+
+        .btn {
+            margin-top: 10px;
+        }
+    }
+}
+
+.metadataeditor {
+    padding-bottom: 30px;
+
+    #editor, .comments {
+        margin: 30px 0;
+    }
+}
+
+.about.page {
+    input {
+        font-weight: bold;
+    }
+
+    label.form-control {
+        background: #eee;
+    }
+
+    .key.buttons {
+        margin-top: 10px;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .about.page .key.buttons {
+        margin-top: 0;
+    }
+}

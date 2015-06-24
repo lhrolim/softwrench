@@ -74,7 +74,7 @@ namespace softWrench.sW4.Web.Security {
             MemoryContext.Remove(key);
         }
 
-        public T GetFromMemoryContext<T>(string key) {
+        public T GetFromMemoryContext<T>(string key,bool userSpecific = false) {
             var user = SecurityFacade.CurrentUser();
             var userKey = new UserKey(user.Login, key);
             if (!MemoryContext.ContainsKey(key)) {

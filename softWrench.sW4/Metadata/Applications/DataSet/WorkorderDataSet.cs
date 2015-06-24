@@ -10,6 +10,7 @@ using softWrench.sW4.Data.Search;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 using System;
+using cts.commons.persistence;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
@@ -78,7 +79,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         public IEnumerable<IAssociationOption> GetWOPriorityType(OptionFieldProviderParameters parameters)
         {
-            var query = @"SELECT [description] AS LABEL,
+            var query = @"SELECT description AS LABEL,
 	                             CAST(value AS INT) AS VALUE 
                           FROM numericdomain
                           WHERE domainid = 'WO PRIORITY'";
@@ -130,6 +131,32 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                                         parameters.OriginalEntity.Attributes["orgid"],
                                         parameters.OriginalEntity.Attributes["siteid"],
                                         parameters.OriginalEntity.Attributes["woclass"] == "" ? parameters.OriginalEntity.Attributes["woclass"] : "WORKORDER");
+
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo))
+            {
+                query = string.Format(@"SELECT c.classstructureid AS ID,
+                                               p3.classificationid AS CLASS_5,
+                                               p2.classificationid AS CLASS_4,
+                                               p1.classificationid AS CLASS_3,
+                                               p.classificationid AS CLASS_2,
+                                               c.classificationid AS CLASS_1
+                                        from classstructure  c
+                                        left join classstructure  p on p.classstructureid = c.parent
+                                        left join classstructure  p1 on p1.classstructureid = p.parent
+                                        left join classstructure  p2 on p2.classstructureid = p1.parent
+                                        left join classstructure  p3 on p3.classificationid = p2.parent
+                                        where
+                                        c.haschildren = 0
+                                        and (c.orgid is null or (c.orgid is not null and c.orgid = '{0}' ))
+                                        and (c.siteid is null or (c.siteid is not null and c.siteid = '{1}' ))
+                                        and c.classstructureid in (select classusewith.classstructureid
+                                        from classusewith
+                                        where classusewith.classstructureid=c.classstructureid
+                                        and objectname= '{2}')",
+                                        parameters.OriginalEntity.Attributes["orgid"],
+                                        parameters.OriginalEntity.Attributes["siteid"],
+                                        parameters.OriginalEntity.Attributes["woclass"] == "" ? parameters.OriginalEntity.Attributes["woclass"] : "WORKORDER");
+            }
 
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();

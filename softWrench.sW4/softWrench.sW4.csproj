@@ -106,6 +106,7 @@
     <Reference Include="NHibernate.Mapping.Attributes">
       <HintPath>..\packages\NHibernate.Mapping.Attributes.3.2.0.0\lib\NHibernate.Mapping.Attributes.dll</HintPath>
     </Reference>
+    <Reference Include="Oracle.DataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Quartz">
@@ -158,6 +159,7 @@
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />

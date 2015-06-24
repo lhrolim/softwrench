@@ -24,7 +24,7 @@
     </entity>
 
 
-    <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
+    <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="@physicalCountWhereClauseProvider.PhysicalCountQuery">
       <relationships>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
@@ -188,7 +188,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="matrectransTransfers" parententity="matrectrans" idAttribute="matrectransid" whereclause="issuetype='TRANSFER'"/>
+    <entity name="matrectransTransfers" parententity="matrectrans" idAttribute="matrectransid" useridAttribute="matrectransid" whereclause="issuetype='TRANSFER'"/>
   </entities>
 
   <applications>
@@ -297,7 +297,7 @@
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicalcountList"/>
-            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
+            <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
@@ -373,7 +373,7 @@
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
-            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
+            <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
@@ -531,7 +531,7 @@
             </commandgroup>
           </commandbars>
           <properties>
-            <property key="detail.titleexpression" value="'Request: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
+            <property key="detail.titleexpression" value="'Reservation: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
           </properties>
         </schema>
       </schemas>
@@ -650,9 +650,9 @@
       </schemas>
     </application>
 
-    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfers">
+    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfer">
       <schemas>
-        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfers">
+        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/InventoryTransfer/ScanBar"/>
           </properties>
@@ -692,6 +692,8 @@
         </schema>
 
         <schema id="detail" title="View Inventory Transfer">
+          <field attribute="matrectransid" label="Transfer:" hidden="true"></field>
+          
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
           </field>

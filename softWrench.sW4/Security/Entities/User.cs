@@ -108,20 +108,20 @@ namespace softWrench.sW4.Security.Entities {
             Profiles = new HashedSet<UserProfile>();
         }
 
-        public User(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc) {
-            UserName = userName;
-            Person = new Person();
-            Person.FirstName = firstName;
-            Person.LastName = lastName;
-            Person.SiteId = siteId;
-            Person.OrgId = orgId;
-            IsActive = true;
-            Person.Department = department;
-            Person.Phone = phone;
-            Person.Language = language;
-            Person.Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null;
-            Person.Storeloc = storeloc;
+        public static User CreateAdminUser(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc) {
+            return new User() {
+                UserName = userName,
+                Person = new Person(),
+                FirstName = firstName,
+                LastName = lastName,
+                SiteId = siteId,
+                OrgId = orgId,
+                IsActive = true,
+                Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null
+            };
         }
+
+        
 
         public void MergeFromDBUser(User dbUSer) {
             //keep password unchanged

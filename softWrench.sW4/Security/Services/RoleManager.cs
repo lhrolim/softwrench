@@ -25,7 +25,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public static IList<String> ActiveFieldRoles() {
-            return (from activeRole in _activeRoles where activeRole.Name.Contains(".") select activeRole.Name).ToList();
+            return (from activeRole in _activeRoles select activeRole.Name).ToList();
         }
 
         public static IList<String> ActiveApplicationRoles() {

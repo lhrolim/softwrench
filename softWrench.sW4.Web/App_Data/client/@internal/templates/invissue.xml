@@ -10,7 +10,7 @@
 
   <entities>
     <!-- INVISSUE.ITEMNUM is not NULL in whereclause it to prevent showing materials. -->
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL" >
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL and INVISSUE.STORELOC in not NULL " >
       <relationships>
         <relationship to="asset" qualifier="rotatingasset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -72,7 +72,7 @@
 
         <componentdisplayable id="site">
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid" hideDescription="true">
-            <renderer type="lookup"/>
+            <renderer type="lookup"/>b
           </association>
         </componentdisplayable>
 
@@ -101,7 +101,7 @@
       </components>
 
       <schemas>
-        <schema stereotype="list" id="invIssueList" title="Issues and Returns">
+        <schema stereotype="list" id="invIssueList" title="Issues and Returns Grid">
           <properties>
             <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
@@ -316,10 +316,12 @@
 
         <schema title="New Issue and Return" id="newInvIssueDetail" mode="input" stereotype="detailnew">
 
-          <optionfield attribute="mode" label="Mode" qualifier="batchselector">
-            <option label="Single Item" value="single"/>
-            <option label="Batch" value="batch"/>
-          </optionfield>
+          <field attribute="mode" label="Mode" qualifier="batchselector" hidden="true" default="batch"></field>
+
+<!--          <optionfield  attribute="mode" label="Mode" qualifier="batchselector">-->
+<!--            <option label="Single Item" value="single"/>-->
+<!--            <option label="Batch" value="batch"/>-->
+<!--          </optionfield>-->
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />

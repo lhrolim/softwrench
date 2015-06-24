@@ -35,8 +35,9 @@ namespace softWrench.sW4.Security.Context {
         /// Retrieves an object from the memory context
         /// </summary>
         /// <param name="key"></param>
+        /// <param name="userSpecific"></param>
         /// <returns></returns>
-        T GetFromMemoryContext<T>(string key);
+        T GetFromMemoryContext<T>(string key,bool userSpecific = false);
 
     }
 }

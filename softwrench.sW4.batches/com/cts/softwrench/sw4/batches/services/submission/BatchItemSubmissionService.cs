@@ -49,7 +49,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         public Batch Submit(Batch batch, BatchOptions options) {
             var submissionData = BuildSubmissionData(batch);
             var user = SecurityFacade.CurrentUser();
-            _contextLookuper.SetMemoryContext(batch.RemoteId, batch);
+            _contextLookuper.SetMemoryContext(batch.RemoteId, batch,true);
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                 var originalItem = itemToSubmit.OriginalItem;
                 try {
@@ -68,7 +68,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             batch.Status = BatchStatus.COMPLETE;
             if (options.Synchronous) {
                 //if asynchronous then the removal should be performed by the polling service
-                _contextLookuper.RemoveFromMemoryContext(batch.RemoteId);
+                _contextLookuper.RemoveFromMemoryContext(batch.RemoteId, true);
             } else {
                 _dao.Save(batch);
             }

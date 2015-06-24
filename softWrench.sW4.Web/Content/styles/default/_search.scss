@@ -1,0 +1,28 @@
+div.inputdata {
+    border: thin solid gray;
+    padding: 0.1em;
+    margin: 0.1em;
+
+    label {
+        float: left;
+        margin-right: 10px;
+        padding: 5px 0;
+        color: gray;
+    }
+
+    span {
+        display: block;
+        overflow: hidden;
+    }
+
+    input {
+        width: 100%;
+        padding-top: 8px;
+        border: none;
+        background: none;
+    }
+}
+
+.clear {
+    clear: both;
+}

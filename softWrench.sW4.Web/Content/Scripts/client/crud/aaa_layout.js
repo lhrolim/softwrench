@@ -121,6 +121,10 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         }
     });
 
+    $scope.isDesktop = function () {
+        return isDesktop();
+    };
+
     $rootScope.$on('sw_ajaxend', function (data) {
         if (spin != undefined) {
             spin.stop();
