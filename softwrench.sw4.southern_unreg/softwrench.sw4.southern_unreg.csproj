@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="metadata\southern_unreg\deploy.xml" />
     <Content Include="web_content\southern_unreg\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>

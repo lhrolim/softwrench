@@ -300,6 +300,8 @@ function ApplicationController($scope, $http, $log, $timeout,
 
 
     $scope.toListSchema = function (data, schema) {
+        contextService.setActiveTab(null);
+
         var log = $log.getInstance('application#toListSchema');
         $scope.multipleSchema = false;
         $scope.schemas = null;
