@@ -1078,10 +1078,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="servicename" value="Windows"/>
           </properties>
           <section id="diskdata">
-            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec" required="true" tooltip="Bitte deinieren Sie die gewünschte Größe der Partition E">
+            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
               <renderer type="default" params="append=GB"/>
             </field>
-            <field label="Disk (E:)" attribute="disksizee" required="true" tooltip="Bitte deinieren Sie die gewünschte Größe der Partition E">
+            <field label="Disk (E:)" attribute="disksizee" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
               <renderer type="default" params="append=GB"/>
             </field>
           </section>
