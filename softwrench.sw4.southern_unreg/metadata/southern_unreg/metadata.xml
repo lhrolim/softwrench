@@ -15,6 +15,17 @@
   </entities>
 
   <applications>
+    <application entity="SR" name="servicerequest" title="Service Request" >
+      <schemas>
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
+          <customization position="saddresscode">
+            <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" showexpression="false">
+              <renderer type="lookup" />
+            </association>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
     <application name="invreturn" title="Return Inventory" entity="invreturn">
       <schemas>
         <schema stereotype="list" id="invReturnList" title="Outstanding Returns">
