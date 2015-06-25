@@ -298,7 +298,7 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="targetstart" label="Target Finish Date:">
+            <field attribute="targetstart" label="Target Start Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
             <field attribute="targetfinish" label="Target Finish Date:">
