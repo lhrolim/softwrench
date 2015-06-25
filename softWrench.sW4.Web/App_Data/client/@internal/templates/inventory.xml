@@ -101,7 +101,6 @@
         </relationship>
         <relationship to="invbalances">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
-          <relationshipAttribute from="itemnum" to="itemnum"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="location" to="location"/>
@@ -502,7 +501,7 @@
             <renderer type="default" params="childinputsize=medium" />
               <field attribute="siteid" label="Site" readonly="true" />
               <field attribute="location" label="Storeroom" readonly="true" />
-              <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
+              <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
                 <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
                 <dataprovider prefilterfunction="FilterBins"/>
               </association>
@@ -632,9 +631,6 @@
           <field attribute="location" hidden="true"/>
           <field attribute="binnum" label="Bin"/>
           <field attribute="lotnum" label="Lot"/>
-          <field attribute="location" hidden="true"/>
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="itemsetid" hidden="true"/>
           <field attribute="curbal" label="Current Balance"/>
         </schema>
 
