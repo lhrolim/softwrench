@@ -10,7 +10,7 @@
 
   <entities>
     <!-- INVISSUE.ITEMNUM is not NULL in whereclause it to prevent showing materials. -->
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL and INVISSUE.STORELOC in not NULL " >
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL and INVISSUE.STORELOC is not NULL " >
       <relationships>
         <relationship to="asset" qualifier="rotatingasset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
