@@ -83,6 +83,7 @@
                     }
                     // save problems and update batch status
                     if (problemEntities.length > 0) {
+                        batch.hasProblems = true;
                         return saveBatch(batch, batch.loadeditems, problemEntities);
                     }
                     // just update statuses

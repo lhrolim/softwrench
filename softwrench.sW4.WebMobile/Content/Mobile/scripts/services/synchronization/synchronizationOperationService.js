@@ -32,8 +32,13 @@
                         batch.syncoperation = operationEntity;
                     });
                     if (isComplete) {
+                        var hasProblem = relatedBatches.some(function (result) {
+                            //if every batch returned as complete than we have a synchronous case and can close the sync operation
+                            return result.hasProblems;
+                        });
                         operationEntity.status = "COMPLETE";
                         operationEntity.enddate = new Date().getTime();
+                        operation.hasProblems = hasProblem;
                     } else {
                         operationEntity.status = "PENDING";
                     }
@@ -66,10 +71,17 @@
         };
 
         this.createSynchronousBatchOperation = function (startdate, numberofdownloadeditems, relatedBatches) {
+
+            var hasProblem = relatedBatches.some(function (result) {
+                //if every batch returned as complete than we have a synchronous case and can close the sync operation
+                return result.hasProblems;
+            });
+
             var operation = {
                 startdate: startdate,
                 numberofdownloadeditems: numberofdownloadeditems,
-                numberofdownloadedsupportdata: 0
+                numberofdownloadedsupportdata: 0,
+                hasProblems: hasProblem
             };
             return saveBatchOperation(operation, relatedBatches);
         };
@@ -88,9 +100,8 @@
             });
         }
 
-        this.hasProblems = function() {
-            //TODO:implement
-            return false;
+        this.hasProblems = function (operation) {
+            return operation.hasProblems;
         };
 
         this.getSyncList = function () {

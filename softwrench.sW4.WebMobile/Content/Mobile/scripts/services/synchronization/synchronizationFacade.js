@@ -93,7 +93,7 @@
                     return batchService.submitBatches(batches)
                         .then(function (batchResults) {
                             // check for synchronous or asynchronous case
-                            var hasSyncResponse = batchResults.some(function(result) {
+                            var hasSyncResponse = batchResults.some(function (result) {
                                 return result.status === "COMPLETE";
                             });
                             // async case: create batch/offline SyncOperation
@@ -102,7 +102,8 @@
                             }
                             // sync case: download ONLY data and create a SyncOperation indicating both a Batch submission and a download
                             return associationDataSynchronizationService.syncData()
-                                .then(function(downloadResults) {
+                                .then(function (downloadResults) {
+                                    log.debug("Batch returned synchronously --> performing download");
                                     var dataCount = getDownloadDataCount(downloadResults);
                                     return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                                 });
