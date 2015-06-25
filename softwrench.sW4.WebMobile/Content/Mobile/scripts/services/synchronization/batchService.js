@@ -1,13 +1,13 @@
 ﻿(function() {
     'use strict';
 
-    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService'];
+    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService','operationService'];
 
 
     mobileServices.factory('batchService', service);
 
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService) {
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService) {
 
         var api = {
             getIdsFromBatch: getIdsFromBatch,
@@ -184,11 +184,13 @@
                     angular.forEach(dataEntries, function(entry) {
                         entry.pending = true;
                         entry.isDirty = false;
+                        
+
                         batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
-                            batchItem.crudoperation = dataEntry.crudoperation;
+                            batchItem.crudoperation = operationService.getCrudOperation(dataEntry);
                             return batchItem;
                         }));
                     });
