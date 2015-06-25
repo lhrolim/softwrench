@@ -178,6 +178,7 @@
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\js\ionic.bundle.min.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\js\ionic.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\js\ionic.min.js" />
+    <Content Include="Content\Vendor\downloadedvendor\persistence.js" />
     <Content Include="Content\Vendor\downloadedvendor\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\angular-animate.js" />
     <Content Include="Content\Vendor\scripts\angular-sanitize.js" />
