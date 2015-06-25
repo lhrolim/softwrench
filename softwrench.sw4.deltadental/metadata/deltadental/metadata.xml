@@ -463,13 +463,7 @@
               <renderer type="lookup" />
             </association>
           </customization>
-           <customization position="assetnum">
-             <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" showexpression="1!=1">
-               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-               <dataprovider prefilterfunction="FilterAssets"/>
-               <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-            </association>
-          </customization>
+          <customization position="assetnum"/>
           <customization position="problemcode"/>
         </schema>
         
