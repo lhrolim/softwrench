@@ -127,6 +127,7 @@
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudFilterContextService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
+    <Content Include="Content\Mobile\scripts\services\data\operationService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineSaveService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />
     <Content Include="Content\Mobile\scripts\services\db\Batch.js" />
@@ -178,6 +179,7 @@
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\js\ionic.bundle.min.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\js\ionic.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0\js\ionic.min.js" />
+    <Content Include="Content\Vendor\downloadedvendor\persistence.js" />
     <Content Include="Content\Vendor\downloadedvendor\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\angular-animate.js" />
     <Content Include="Content\Vendor\scripts\angular-sanitize.js" />

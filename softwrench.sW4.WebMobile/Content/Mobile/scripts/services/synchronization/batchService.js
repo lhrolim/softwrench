@@ -1,13 +1,13 @@
 ﻿(function() {
     'use strict';
 
-    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService'];
+    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService','operationService'];
 
 
     mobileServices.factory('batchService', service);
 
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService) {
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService) {
 
         var api = {
             getIdsFromBatch: getIdsFromBatch,
@@ -83,6 +83,7 @@
                     }
                     // save problems and update batch status
                     if (problemEntities.length > 0) {
+                        batch.hasProblems = true;
                         return saveBatch(batch, batch.loadeditems, problemEntities);
                     }
                     // just update statuses
@@ -105,8 +106,10 @@
                         itemId: batchItem.dataentry.remoteId,
                         //local id becomes remote from the server perspective
                         remoteId: batchItem.id,
-                        application: batch.application
-                    };
+                        application: batch.application,
+                        operation: batchItem.crudoperation
+
+                };
                 });
                 // put the batch submission promise in the array
                 promises.push(doSubmitBatch(batch, items));
@@ -150,54 +153,16 @@
             var deferred = $q.defer();
             persistence.transaction(function (tx) {
                 log.debug("executing batching db tx");
-                /* In this configuration: results[n].dataentry.datamap is always null
-                var dbPromise = managedEntities ? swdbDAO.bulkSave(managedEntities) : $q.when();
-                dbPromise.then(function() {
-                    return batchItems ? swdbDAO.bulkSave(batchItems) : $q.when();
-                }).then(function() {
-                    return swdbDAO.save(batch);
-                }).then(function(savedBatch) {
-                    savedBatch.items.list(null, function (results) {
-                        savedBatch.loadeditems = results;
-                        deferred.resolve(savedBatch);
+                //save managed entities before the batchItems so that datamap is not null for loaded items
+                swdbDAO.bulkSave(managedEntities, tx);
+                swdbDAO.bulkSave(batchItems, tx);
+                swdbDAO.save(batch, tx);
+                persistence.flush(tx, function () {
+                    batch.items.list(null, function (results) {
+                        batch.loadeditems = results;
+                        return deferred.resolve(batch);
                     });
-                }).catch(function(err) {
-                    deferred.reject(err);
                 });
-                */
-                /* in this configuration: results[n].problem is always null
-                swdbDAO.save(batch)
-                    .then(function () {
-                        return managedEntities ? swdbDAO.bulkSave(managedEntities) : $q.when();
-                    })
-                    .then(function () {
-                        return batchItems ? swdbDAO.bulkSave(batchItems) : $q.when();
-                    })
-                    .then(function() {
-                        batch.items.list(null, function (results) {
-                            batch.loadeditems = results;
-                            deferred.resolve(batch);
-                        });
-                    }).catch(function(err) {
-                        deferred.reject(err);
-                    });*/
-
-                // in this configuration: not fetching list from db, setting from memory
-                swdbDAO.save(batch)
-                    .then(function(savedBatch) {
-                        return managedEntities ? swdbDAO.bulkSave(managedEntities) : $q.when();
-                    })
-                    .then(function(savedEntities) {
-                        return batchItems ? swdbDAO.bulkSave(batchItems) : $q.when();
-                    })
-                    .then(function(items) {
-                        if (items) {
-                            batch.loadeditems = items;
-                        };
-                        deferred.resolve(batch);
-                    }).catch(function(err) {
-                        deferred.reject(err);
-                    });
             });
             return deferred.promise;
         }
@@ -211,29 +176,30 @@
             var detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
 
             return swdbDAO.findByQuery('DataEntry', "isDirty = 1 and pending=0 and application = '{0}'".format(applicationName))
-                .then(function(items) {
-                    if (items.length <= 0) {
+                .then(function(dataEntries) {
+                    if (dataEntries.length <= 0) {
                         log.debug('no items to submit to the server. returning null batch');
                         //nothing to do, interrupting chain
                         return null;
                     }
                     var batchItemPromises = [];
-                    angular.forEach(items, function(entry) {
+                    angular.forEach(dataEntries, function(entry) {
                         entry.pending = true;
                         entry.isDirty = false;
+
                         batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
-                            batchItem.crudoperation = dataEntry.crudoperation;
+                            batchItem.crudoperation = operationService.getCrudOperation(dataEntry);
                             return batchItem;
                         }));
                     });
-                    var batchPromise = swdbDAO.instantiate('Batch');
-                    log.debug('creating db promises');
                     var dbPromises = [];
+                    log.debug('creating db promises');
+                    var batchPromise = swdbDAO.instantiate('Batch');
                     dbPromises.push(batchPromise);
-                    dbPromises.push($q.when(items));
+                    dbPromises.push($q.when(dataEntries));
                     dbPromises = dbPromises.concat(batchItemPromises);
                     return $q.all(dbPromises);
                 }).then(function(items) {

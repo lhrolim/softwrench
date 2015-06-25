@@ -49,13 +49,14 @@
         },
 
 
-        loadComposition: function (mainDatamap, displayable) {
+        loadComposition: function (mainItem, displayable) {
+            var mainDatamap = mainItem.datamap;
             if (!displayable) {
                 throw new Error("field displayable is required");
             }
             //TODO: cache...
             var log = $log.get("offlineCompositionService#loadComposition");
-            var localId = mainDatamap[constants.localIdKey];
+            var localId = mainItem.id;
             var baseQuery = "application = '{0}' and ( (".format(displayable.associationKey);
             var entityDeclarationAttributes = displayable.entityAssociation.attributes;
 
@@ -75,7 +76,7 @@
                 }
             }
             baseQuery += ")";
-            baseQuery += " or ( parentId = '{0}') )".format(localId);
+            baseQuery += " or ( parentlocalId = '{0}') )".format(localId);
             log.debug("fetching composition {0} using query {1}".format(displayable.associationKey, baseQuery));
             return swdbDAO.findByQuery("CompositionDataEntry", baseQuery, { projectionFields: ["remoteId", "datamap"] }).then(function (results) {
                 var resultCompositions = [];

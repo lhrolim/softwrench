@@ -9,6 +9,7 @@ entities.SyncOperation = persistence.define('SyncOperation', {
     status: 'TEXT',
     numberofdownloadeditems: "INT",
     numberofdownloadedsupportdata: "INT",
+    hasProblems: "BOOL",
     metadatachange: "BOOL",
     items: "INT" // batches.items.length
 });

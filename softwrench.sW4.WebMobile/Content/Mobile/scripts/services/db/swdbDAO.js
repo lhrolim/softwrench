@@ -1,5 +1,5 @@
 ﻿var entities = entities || {};
-mobileServices.factory('swdbDAO', function (dispatcherService) {
+mobileServices.factory('swdbDAO', function ($q,dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
 
@@ -254,6 +254,10 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         },
 
         bulkSave: function (objArray, tx) {
+            if (objArray == null) {
+                return $q.when();
+            }
+
             for (var i = 0; i < objArray.length; i++) {
                 persistence.add(objArray[i]);
             }

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace softwrench.sw4.offlineserver.services.util {
     public class OfflineConstants {
         
-        public const string AsyncBatchMinSize = "/Offline/Batch/MinSize";
+        //TODO: allow other paths other than global
+        public const string AsyncBatchMinSize = "/Global/Offline/Batch/MinSize";
 
     }
 }
