@@ -373,16 +373,16 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="targetstart" label="Target Start Date:" hidden="true">
+            <field attribute="targetstart" label="Target Start Date:" >
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
-            <field attribute="targetfinish" label="Target Finish Date:" hidden="true">
+            <field attribute="targetfinish" label="Target Finish Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
-            <field attribute="actualstart" label="Actual Start Date:" hidden="true">
+            <field attribute="actualstart" label="Actual Start Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
-            <field attribute="actualfinish" label="Actual Finish Date:" hidden="true">
+            <field attribute="actualfinish" label="Actual Finish Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
             <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime" hidden="true">
