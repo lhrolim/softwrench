@@ -200,10 +200,20 @@ label.form-control {
     min-height: 34px;
 }
 
-.input-group-addon.last {
-    border-left: none;
-    border-top-right-radius: 3px !important;
-    border-bottom-right-radius: 3px !important;
+.input-group-addon {
+    cursor: pointer;
+
+    &.ng-hide ~ .form-control {
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+    }
+
+
+    &.last {
+        border-left: none;
+        border-top-right-radius: 3px !important;
+        border-bottom-right-radius: 3px !important;
+    }
 }
 
 input[type=search] {
