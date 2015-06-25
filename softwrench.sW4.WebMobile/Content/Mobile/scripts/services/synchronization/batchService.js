@@ -106,8 +106,10 @@
                         itemId: batchItem.dataentry.remoteId,
                         //local id becomes remote from the server perspective
                         remoteId: batchItem.id,
-                        application: batch.application
-                    };
+                        application: batch.application,
+                        operation: batchItem.crudoperation
+
+                };
                 });
                 // put the batch submission promise in the array
                 promises.push(doSubmitBatch(batch, items));
@@ -184,7 +186,6 @@
                     angular.forEach(dataEntries, function(entry) {
                         entry.pending = true;
                         entry.isDirty = false;
-                        
 
                         batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;

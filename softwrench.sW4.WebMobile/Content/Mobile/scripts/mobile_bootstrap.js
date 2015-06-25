@@ -34,8 +34,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
 
 
-.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService",
-    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService","crudContextService",
+    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService,crudContextService) {
 
     initContext();
 
@@ -50,6 +50,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
 
         var isCookieAuthenticated = loginService.checkCookieCredentials();
+        crudContextService.restoreState();
         routeService.loadInitialState(isCookieAuthenticated);
     });
 
@@ -74,6 +75,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             }
 
         });
+        
 
     }
 

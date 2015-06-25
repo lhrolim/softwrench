@@ -75,7 +75,7 @@ namespace softwrench.sw4.offlineserver.services.util {
                     Status = BatchStatus.SUBMITTING,
                     UpdateDate = DateTime.Now,
                     Schema = "detail",
-                    Operation = item.crudoperation
+                    Operation = item.operation
                 };
                 result.Add(batchItem);
             }

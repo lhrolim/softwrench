@@ -7,7 +7,7 @@ mobileServices.factory('crudFilterContextService', function ($q, $log,contextSer
 
     var filterContext = {
         showPending: false,
-        showDirty: false,
+        showDirty: true,
         showProblems: false,
     }
 
