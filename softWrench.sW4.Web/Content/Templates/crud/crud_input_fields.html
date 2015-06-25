@@ -434,10 +434,10 @@
                     </ng-switch>
                 </div>
                 
-
                 <div class="row" ng-if="fieldMetadata.type == 'ApplicationAssociationDefinition' && fieldMetadata.detailSection != null" 
                      ng-hide="isFieldHidden(schema,fieldMetadata.detailSection) || !detailsExpanded(fieldMetadata)">
-                    <section-element-input extraparameters="extraparameters"
+                    <section-element-input class="expandeddetails"
+                                           extraparameters="extraparameters"
                                            schema="schema"
                                            datamap="datamap"
                                            is-dirty="isDirty"
