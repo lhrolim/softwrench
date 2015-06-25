@@ -1031,12 +1031,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="16" value="16"/>
             </optionfield>
 
-            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec" required="true" tooltip="Bitte deinieren Sie die gewünschte Größe der Partition E">
-              <renderer type="default" params="append=GB"/>
-            </field>
-            <field label="Disk (E:)" attribute="disksizee" required="true" tooltip="Bitte deinieren Sie die gewünschte Größe der Partition E">
-              <renderer type="default" params="append=GB"/>
-            </field>
+            <section id="diskdata"></section>
+            
             <field label="Host Name" attribute="hostname" required="true" tooltip="Tragen Sie hier den gewünschten Names für den Server KFDC**** ein (ohne KFDC). Hierfür stehen Ihnen 4 Zeichen zur Verfügung.  Die ersten beiden sollte Buchstaben sein welche den Zweck des Servers beschreiben (Beispielsweise LY für Lync, BI für Business Intelligence etc.) darauf sollten 2 Zahlen folgen.">
               <renderer type="default" params="prepend=KFDC;maxlength=4"/>
             </field>
@@ -1062,8 +1058,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <section resourcepath="/Content/templates/hapag/embeddedofferingpdf.html" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null" required="true"/>
-
-            <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." tooltip="Platz für zusätzliche Angaben / Wünsche.Bitte beachten Sie: Sonderwünsche sind nicht Teil des Factory-Ansatzen und können möglicherweise nicht im vereinarten Zeitraum umgesetzt werden." showexpression="@hasinternet!=null">
+         
+            <field attribute="comments" label="Weitere Anmerkungen:" tooltip="Platz für zusätzliche Angaben / Wünsche.Bitte beachten Sie: Sonderwünsche sind nicht Teil des Factory-Ansatzen und können möglicherweise nicht im vereinarten Zeitraum umgesetzt werden." showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>
 
@@ -1081,6 +1077,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="servicename" value="Windows"/>
           </properties>
+          <section id="diskdata">
+            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
+              <renderer type="default" params="append=GB"/>
+            </field>
+            <field label="Disk (E:)" attribute="disksizee" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
+              <renderer type="default" params="append=GB"/>
+            </field>
+          </section>
           <section id="specificdata">
             <optionfield label="OS" attribute="os" tooltip="Wählen Sie hier das gewünschte Betriebssystem." required="true">
               <option label="Windows Server 2008 Standard Edition" value="2008se"/>
@@ -1098,8 +1102,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="servicename" value="Linux"/>
           </properties>
+          <section id="diskdata">
+            <field label="Disk Size für 
+Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" required="true" tooltip="Bitte definieren Sie wie viel Disk Size Sie zusätzlich zur Grundinstallation benötigen.">
+              <renderer type="default" params="append=GB"/>
+            </field>
+           
+          </section>
           <section id="specificdata">
-            <optionfield label="OS" attribute="os" tooltip="Please choose an operating system.">
+            <optionfield label="OS" attribute="os" tooltip="Wählen Sie hier das gewünschte Betriebssystem.">
               <option label="SUSE Linux Enterprise Server 11" value="suse11"/>
             </optionfield>
           </section>
