@@ -448,7 +448,7 @@ input[type=search] {
   width: auto;
 }
 
-.issue-items [ng-switch-when="ApplicationCompositionDefinition"], .expandeddetails {
+.issue-items [ng-switch-when="ApplicationCompositionDefinition"], .expandeddetails, .expanded-item-composition {
   background-image: -webkit-gradient(linear, left 0, left 100%, from(#fcfcfc), to(#f7f7f7));
   background-image: -webkit-linear-gradient(top, #fcfcfc, 0%, #f7f7f7, 100%);
   background-image: -moz-linear-gradient(top, #fcfcfc 0, #f7f7f7 100%);
@@ -469,10 +469,10 @@ input[type=search] {
   border-bottom: 2px solid #fff;
 }
 
-.expandeddetails {
+.expandeddetails, .expanded-item-composition {
   margin-top: 5px;
 }
-.expandeddetails .legend-label {
+.expandeddetails .legend-label, .expanded-item-composition .legend-label {
   padding-top: 10px;
 }
 
