@@ -305,8 +305,27 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
           
-          <section id="statussection"/>
-
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field label="Details:" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+          
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <renderer type="lookup"/>
+          </association>
+          
+         <section id="statussection">
+          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
+              <renderer type="combo" />
+            </association>
+          </section>
+          
+           <!--COMSW-1-->
+          <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_SRClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+          
           <!--COMSW 24 required field for population purposes-->
           <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
           <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
@@ -319,6 +338,17 @@
           </association>
           <!-- SWWEB 173-->
 
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeowner"/>
+          </association>
+
+          <!-- Added the Owner Group field-->
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+          </association>
+          
           <association target="reportedby" label="Reported By:" labelfield="reportedbyp_.displayname" default="@username" extraprojectionvalues="email_.emailaddress,phone_.phonenum,altdisplayname,altphone,altemail,displayname" enableexpression="true" showexpression="true">
             <renderer type="lookup" />
           </association>
@@ -338,41 +368,17 @@
           <field attribute="person_.phone_.phonenum" label="Affected Person Phone:" readonly="true" attributeToServer="affectedphone"/>
           <field attribute="person_.email_.emailaddress" label="Affected Person Email:" readonly="true" attributeToServer="affectedemail"/>
 
-          <!--COMSW-1-->
-          <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_SRClassStructureType">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+          <!--DDCA-39 hide asset -->
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location"  showexpression="1!=1">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
-          
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <renderer type="lookup"/>
-          </association>
-
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          
-          <field label="Details:" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-
+        
           <!--SWWEB-342-->
           <field attribute="changeby" default="@username" hidden="true"/>
           
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
-          </association>
-
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
+           
 
           <section id="attachmentsection" />
 
@@ -457,6 +463,7 @@
               <renderer type="lookup" />
             </association>
           </customization>
+          <customization position="assetnum"/>
           <customization position="problemcode"/>
         </schema>
         
