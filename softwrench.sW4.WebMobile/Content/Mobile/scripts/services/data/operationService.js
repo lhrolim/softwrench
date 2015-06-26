@@ -14,10 +14,7 @@
 
         function getCrudOperation(dataEntry) {
             var isNew = schemaService.getId(dataEntry.datamap, detailSchema) == null;
-            if (isNew) {
-                return "crud_create";
-            }
-            return "crud_update";
+            return isNew ? "crud_create" : "crud_update";
         }
 
     }

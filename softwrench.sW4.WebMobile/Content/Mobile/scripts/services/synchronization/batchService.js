@@ -81,12 +81,17 @@
                         // add to array
                         problemEntities.push(problemEntity);
                     }
-                    // save problems and update batch status
+                    // update items's DataEntries's flags
+                    batch.loadeditems.forEach(function(item) {
+                        item.dataentry.pending = false;
+                        item.dataentry.isDirty = !item.problem;
+                    });
+                    // save problems, update statuses and flags
                     if (problemEntities.length > 0) {
                         batch.hasProblems = true;
                         return saveBatch(batch, batch.loadeditems, problemEntities);
                     }
-                    // just update statuses
+                    // no problems found: just update statuses and flags
                     return saveBatch(batch, batch.loadeditems);
                 });
         };
@@ -108,8 +113,7 @@
                         remoteId: batchItem.id,
                         application: batch.application,
                         operation: batchItem.crudoperation
-
-                };
+                    };
                 });
                 // put the batch submission promise in the array
                 promises.push(doSubmitBatch(batch, items));
@@ -134,7 +138,6 @@
 
             //TODO: implement the diff, passing also the ID + siteid all the time
             return datamap;
-
         };
 
         /**
@@ -153,9 +156,9 @@
             var deferred = $q.defer();
             persistence.transaction(function (tx) {
                 log.debug("executing batching db tx");
-                //save managed entities before the batchItems so that datamap is not null for loaded items
-                swdbDAO.bulkSave(managedEntities, tx);
-                swdbDAO.bulkSave(batchItems, tx);
+                //save managed entities before the batchItems so that their properties are not null for loaded items
+                if(managedEntities) swdbDAO.bulkSave(managedEntities, tx);
+                if(batchItems) swdbDAO.bulkSave(batchItems, tx);
                 swdbDAO.save(batch, tx);
                 persistence.flush(tx, function () {
                     batch.items.list(null, function (results) {
@@ -185,7 +188,7 @@
                     var batchItemPromises = [];
                     angular.forEach(dataEntries, function(entry) {
                         entry.pending = true;
-                        entry.isDirty = false;
+                        //entry.isDirty = false;
 
                         batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
