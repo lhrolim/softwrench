@@ -84,12 +84,15 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
                 };
 
+                //SM - Don't add Manage Dashboard to submenu (click any of the save dashbaord will take you to the same place)
+                //Maybe needed if we build a manage dashboard function
+
                 // Only display manage dashboard option if user has access to do so
-                if (canCreateDashBoards) {
-                    var manageAction = ManageDashboardAction();
-                    container.AddLeaf(manageAction);
-                    container.AddLeaf(new DividerMenuItem());
-                }
+                //if (canCreateDashBoards) {
+                //    var manageAction = ManageDashboardAction();
+                //    container.AddLeaf(manageAction);
+                //    container.AddLeaf(new DividerMenuItem());
+                //}
 
                 foreach (var dashboard in enumerable) {
                     var action = new ActionMenuItemDefinition {
@@ -97,12 +100,14 @@ namespace softwrench.sw4.dashboard.classes.controller {
                         Action = "LoadDashboard",
                         Parameters = new Dictionary<string, object> { { "dashboardid", dashboard.Id } },
                         Title = dashboard.Title,
+                        Icon = "fa fa-bar-chart",
                     };
                     container.AddLeaf(action);
                 }
                 dashBoardMenu = container;
             }
             dashBoardMenu.Icon = "fa fa-tachometer";
+            dashBoardMenu.Title = "Dashboards";
             leafs.Add(dashBoardMenu);
             leafs.AddRange(securedMenu.Leafs);
             securedMenu.Leafs = leafs;

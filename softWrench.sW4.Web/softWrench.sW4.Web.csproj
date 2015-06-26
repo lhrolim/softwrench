@@ -545,8 +545,9 @@
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
     <Content Include="Content\Customers\readme.txt" />
-    <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
-    <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
+    <Content Include="Content\font-awesome-4.3.0\css\font-awesome.css" />
+    <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
+    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
@@ -705,6 +706,11 @@
     <Content Include="Content\styles\default\vendor\vendor.css.map">
       <DependentUpon>vendor.css</DependentUpon>
     </Content>
+    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\font-awesome-4.3.0\fonts\FontAwesome.otf" />
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
@@ -926,10 +932,6 @@
     <Content Include="Content\Controller\Scheduler.html" />
     <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
     <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
     <Content Include="Content\Shared\readme.txt" />
     <Content Include="Content\Templates\otb\profiles.html" />
     <Content Include="Content\styles\default\_branding.scss" />
