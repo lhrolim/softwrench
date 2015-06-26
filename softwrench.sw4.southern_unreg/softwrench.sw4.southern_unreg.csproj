@@ -81,6 +81,7 @@
     <Folder Include="classes\com\cts\southern\connector\" />
     <Folder Include="classes\com\cts\southern\dataset\" />
     <Folder Include="classes\com\cts\southern\migration\" />
+    <Folder Include="Dependencies\" />
     <Folder Include="web_content\southern_unreg\htmls\" />
     <Folder Include="web_content\southern_unreg\scripts\" />
   </ItemGroup>
