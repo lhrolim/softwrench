@@ -1,4 +1,4 @@
-﻿softwrench.controller('SettingsController', function ($scope, $state, swdbDAO, contextService) {
+﻿softwrench.controller('SettingsController', function ($scope, routeService, swdbDAO, contextService) {
 
     function init() {
         //at this point was already loaded from swdb
@@ -6,7 +6,9 @@
         $scope.settings = settings;
     }
 
-
+    $scope.goToLogin = function () {
+        routeService.go("login");
+    };
 
     $scope.save = function () {
         //TODO: handle settings method correctly, appending http, testing, etc...
@@ -16,7 +18,7 @@
             swdbDAO.save(settingsToSave);
             contextService.insertIntoContext("settings", $scope.settings);
             contextService.insertIntoContext("serverurl", $scope.settings.serverurl);
-            $state.go("login");
+            routeService.go("login");
         });
     }
 

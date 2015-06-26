@@ -111,7 +111,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         })
         .state('settings', {
             url: '/settings',
-            templateUrl: 'Content/Mobile/templates/settings.html',
+            templateUrl: 'Content/Mobile/templates/settings_nomenu.html',
             controller: 'SettingsController'
         })
 
