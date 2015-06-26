@@ -2,8 +2,8 @@
 
     return {
 
-        loginURL: function (userName, password) {
-            return contextService.getFromContext("serverurl") + "/SignIn/SignInReturningUserData?username={0}&password={1}".format(userName, password);
+        loginURL: function () {
+            return contextService.getFromContext("serverurl") + "/SignIn/SignInReturningUserData";
         },
 
         downloadMetadataURL: function () {
