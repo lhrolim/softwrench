@@ -271,18 +271,6 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
-        #region Dashboards Functionality
-
-        public static bool EnableDashboardFlag {
-            get {
-                var flagStr = MetadataProvider.GlobalProperty("dashboard.enabled");
-                var flag = false;
-                Boolean.TryParse(flagStr, out flag);
-                return flag;
-            }
-        }
-
-        #endregion
 
         #region Attachments
 

@@ -30,8 +30,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             //}
 
             // If the dashboards are not enabled, do not load the dashboards.
-            if (!ApplicationConfiguration.EnableDashboardFlag)
-            {
+            if ("false".Equals(MetadataProvider.GlobalProperty("dashboard.enabled"))) {
                 return securedMenu;
             }
 
