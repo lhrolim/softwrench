@@ -1,0 +1,216 @@
+﻿.container header .menu-admin {
+    padding: 0 60px 0 20px !important;
+}
+
+#activitystream {
+    background: #f2f2f2;
+    position: fixed;
+    z-index: 1030;
+    width: 0;
+    top: 0;
+    right: 0;
+    float: right;
+    border-left: 1px solid #bfbfbf;
+    -webkit-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+    -moz-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+    box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+
+    &.open {
+        width: 325px;
+    }
+
+    .handle {
+        -ms-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        background: #f2f2f2;
+        text-align: center;
+        display: inline-block;
+        position: absolute;
+        top: 80px;
+        left: -102px;
+        min-width: 170px;
+        padding: 12px 15px 5px;
+        text-transform: uppercase;
+        border-top: 1px solid #bfbfbf;
+        border-left: 1px solid #bfbfbf;
+        border-right: 1px solid #bfbfbf;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .unread {
+        position: absolute;
+        top: 4px;
+        left: -46px;
+    }
+
+    .badge {
+        background: #cf4044;
+    }
+
+    .pane {
+        padding: 20px 20px 0 20px;
+        display: none;
+
+        .scroll {
+            width: 100%;
+            outline: none;
+        }
+    }
+
+    &.open .pane {
+        display: block;
+    }
+
+    header {
+
+        h2 {
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 0;
+        }
+
+        .buttons {
+            margin-top: -13px;
+
+            &.togglehide {
+                margin-left: -8px;
+            }
+        }
+
+        .buttons.controls {
+            margin-right: -12px;
+        }
+    }
+
+    .button {
+        cursor: pointer;
+        padding: 10px 8px;
+    }
+
+    header .button {
+        float: left;
+    }
+
+    .hide-toggle .button {
+        padding: 10px 11px;
+        position: absolute;
+        right: 12px;
+        margin-top: -10px;
+        color: #ccc;
+        width: 14px;
+    }
+
+    .mobile header .button {
+        padding: 10px 12px;
+    }
+
+    header {
+        .button.off {
+            color: #999;
+        }
+
+        .filter {
+            margin-bottom: 5px;
+        }
+
+        .filter .button {
+            padding: 0;
+        }
+
+        .filter .clearer {
+            position: absolute;
+            top: 46px;
+            right: 18px;
+            width: 34px;
+            height: 34px;
+            line-height: 34px;
+            text-align: center;
+        }
+    }
+
+    .messages {
+        clear: both;
+    }
+
+    .message {
+        padding: 10px 15px;
+        border-bottom: 1px solid #e5e5e5;
+        line-height: normal;
+        background: #fff;
+
+
+        &.even {
+            background: none;
+        }
+
+        &:first-child {
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .read {
+            width: 20px;
+            color: #428bca;
+            font-size: 8px;
+            margin-top: 3px;
+        }
+
+        .icon {
+            width: 25px;
+            color: #999;
+        }
+
+        .text {
+            width: 50%;
+            width: -moz-calc(100% - 60px);
+            width: -webkit-calc(100% - 60px);
+            width: calc(100% - 60px);
+
+            .info {
+                a, .by {
+                    font-weight: bold;
+                }
+            }
+
+            .date {
+                color: #999;
+                font-size: 12px;
+                margin-top: 8px;
+            }
+        }
+    }
+
+    .messages .nomessages {
+        font-weight: bold;
+        color: #999;
+        margin-top: 40px;
+    }
+}
+
+.no-touch #activitystream {
+    header .button {
+        &:hover {
+            color: #666;
+        }
+
+        &.off:hover {
+            color: #000;
+        }
+    }
+
+    .hide-toggle .button:hover {
+        color: #000;
+    }
+}
+
+@media all and (min-width: 330px) {
+    #activitystream header .buttons.togglehide {
+        display: none;
+        margin-left: 0px;
+    }
+}

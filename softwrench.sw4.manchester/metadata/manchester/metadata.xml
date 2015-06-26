@@ -529,6 +529,13 @@
               <renderer type="lookup"/>
             </association>
           </customization>
+           <!--COMSW-96-->
+          <customization position="lotnum"/>
+          <customization position="binnum"/>
+          <customization position="unitcost"/>
+          <customization position="costtype"/>
+          <customization position="conditioncode"/>
+          <customization position="curbal"/>
       </detail>
       </schemas>
     </application>

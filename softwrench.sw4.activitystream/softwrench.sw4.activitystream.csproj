@@ -121,7 +121,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\activitystream\scripts\activitystream.js" />
-    <Content Include="web_content\activitystream\styles\activitystream.css" />
+    <None Include="web_content\activitystream\styles\activitystream.css.map">
+      <DependentUpon>activitystream.css</DependentUpon>
+    </None>
+    <None Include="web_content\activitystream\styles\activitystream.scss" />
+    <Content Include="web_content\activitystream\styles\activitystream.css">
+      <DependentUpon>activitystream.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\activitystream\styles\activitystream.min.css">
+      <DependentUpon>activitystream.css</DependentUpon>
+    </Content>
     <Content Include="web_content\activitystream\templates\activitystream.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -203,5 +203,194 @@
         </schema>
       </schemas>
     </application>
+
+    <application entity="SR" name="servicerequest" title="Service Request">
+      <properties>
+        <property key="mobile.disabled" value="true"/>
+      </properties>
+      <schemas>
+        <list title="Service Request Grid">
+          <field attribute="ticketid" label="SR No">
+            <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="#color" label="">
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+          </properties>
+        </list>
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="ticketid" label="SR No:" readonly="true"/>
+          </section>
+
+          <section>
+            <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+            <field label="Details:" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <section id ="siteidsection"/>
+
+            <field attribute="ticketuid" label="SR No:" hidden="true"/>
+            <field attribute="class" label="" hidden="true"/>
+            <field attribute="actlabcost" hidden="true" />
+            <field attribute="actlabhrs" hidden="true"/>
+            <field attribute="siteid" hidden="true" />
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="createby" hidden="true"/>
+
+            <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            </association>
+            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            </association>
+            <section id="statussection"/>
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="changeby" default="@username" hidden="true"/>
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeowner"/>
+            </association>
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            </association>
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
+              <renderer type="lookup" params="columnlabel=Name;"/>
+            </association>
+            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
+              <renderer type="lookup" params="columnlabel=Name"/>
+            </association>
+          </section>
+          
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="targetstart" label="Target Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="targetfinish" label="Target Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="actualstart" label="Actual Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="actualfinish" label="Actual Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+          </section>
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+            <!--<renderer type="default" params="childinputsize=medium" />-->
+            <section id="attachmentsection" />
+          <!--</section>-->
+          
+            <!--COMSW 24 required field for population purposes-->
+            <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+            <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+            <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+            <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+            <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+            <!--COMSW 24 association field used for lazy lookup-->
+            <!--<association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" showexpression="1!=1">
+              <renderer type="lookup" />
+            </association>-->
+          </section>
+          
+          <section id="compositions"/>
+        </schema>
+
+        <schema parentschema="adetail" id="newdetail" title="New Service Request" >
+          <section id="siteidsection">
+            <field attribute="ticketid" label="Request #:" hidden="true"/>
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+              <!-- removed default='@usersite' from the above association label-->
+              <renderer type="lookup"/>
+            </association>
+          </section>
+          <section id="statussection">
+            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
+          </section>
+          <!--SSWEB 173-->
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+          </section>
+        </schema>
+
+        <schema parentschema="adetail" id="editdetail" title="Service Request Details">
+          <section id="siteidsection">
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
+              <renderer type="combo" />
+            </association>
+          </section>
+
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+            </composition>
+
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+            </composition>
+
+            <composition relationship="attachment" label="Attachments" printenabled="false">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+
+            </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+            </composition>
+          </section>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>

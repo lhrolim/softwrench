@@ -127,7 +127,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var action = new ActionMenuItemDefinition {
                 Controller = "Dashboard",
                 Action = "Manage",
-                Title = "Manage Dashboards",
+                Title = "Dashboards",
                 Tooltip = "Click here to manage your dashboards"
             };
             return action;

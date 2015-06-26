@@ -125,8 +125,17 @@ function findCurrentPage(log, leafs, current, parent) {
                 if (newPath) {
                     path += '<a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                    path += '<a>';
+                       path += '<a ng-click="';
+
+                    if (leafs[id].type == 'ActionMenuItemDefinition') {
+                        path += 'doAction';
+                    } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
+                        path += 'goToApplication';
+                    }
+                    
+                    path += '(\'' + leafs[id].title + '\')">';
                 }
+
 
                 //add the icon and title
                 path += icon + leafs[id].title;

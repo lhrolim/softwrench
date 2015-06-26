@@ -124,6 +124,22 @@
       </connectorParameters>
     </entity>
 
+    <entity name="ALNDOMAIN" idAttribute="domainid">
+      <attributes>
+        <attribute name="domainid" type="varchar" required="true" />
+        <attribute name="value" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="alndomainid" type="bigint" required="true" />
+        <attribute name="valueid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ALNDOMAIN" />
+      </connectorParameters>
+    </entity>
+
     <entity name="email" idAttribute="emailid">
       <attributes>
         <attribute name="emailaddress" type="varchar" required="true" />
@@ -133,6 +149,12 @@
         <attribute name="rowstamp" type="integer" required="true" />
         <attribute name="type" type="varchar" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute query="!@domainid = 'EMAILTYPE'" primary="true"/>
+          <relationshipAttribute from="type" to="value"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="email" />
       </connectorParameters>
@@ -147,12 +169,18 @@
         <attribute name="rowstamp" type="integer" required="true" />
         <attribute name="type" type="varchar" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute query="!@domainid = 'PHONETYPE'" primary="true"/>
+          <relationshipAttribute from="type" to="value"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="phone" />
       </connectorParameters>
     </entity>
 
-    <entity name="person" idAttribute="personuid">
+    <entity name="person" idAttribute="personid">
       <attributes>
         <attribute name="personid" type="varchar" required="true" />
         <attribute name="status" type="varchar" required="true" />
@@ -215,22 +243,57 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="dfltapp" type="varchar" required="false" />
         <attribute name="deviceclass" type="smallint" required="false" />
+
       </attributes>
       <relationships>
         <relationship to="maxuser">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
-        <relationship to="email">
+        <relationship to="email" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
-        <relationship to="phone">
+        <relationship to="phone" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="locationsite" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="organization">
+          <relationshipAttribute from="locationorg" to="orgid" primary="true"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute to="type" query="!@type != 'STOREROOM'"/>
         </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />
+        <connectorParameter key="integration_interface" value="SWPERSON" />
       </connectorParameters>
+    </entity>
 
+    <entity name="organization" idAttribute="orgid">
+      <attributes>
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="basecurrency1" type="varchar" required="true" />
+        <attribute name="basecurrency2" type="varchar" required="false" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="companysetid" type="varchar" required="true" />
+        <attribute name="organizationid" type="bigint" required="true" />
+        <attribute name="clearingacct" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="dfltitemstatus" type="varchar" required="true" />
+        <attribute name="category" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="organization" />
+      </connectorParameters>
     </entity>
 
     <entity name="synonymdomain" idAttribute="synonymdomainid">
@@ -831,7 +894,7 @@
         <attribute name="modifydate" type="datetime" required="true"/>
       </attributes>
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="wld">
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />

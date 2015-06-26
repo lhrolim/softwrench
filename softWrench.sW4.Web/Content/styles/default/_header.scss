@@ -2,6 +2,10 @@
     header {
         width: 100%;
 
+        [data-toggle=dropdown] {
+            cursor: pointer;
+        }
+
         .admin-area {
             background-color: rgba(52, 167, 224, 0.5);
             border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
@@ -10,8 +14,6 @@
             .text {
                 float: left;
                 color: #fff;
-                margin-top: 16px;
-
                 a {
                     color: #fff;
 
@@ -81,6 +83,22 @@
             .submenu li a {
                 text-align: left;
             }
+
+            .menu-expand {
+                color: #fff;
+                padding: 15px 20px 10px;
+                cursor: pointer;
+                background-color: #878787;
+                border-bottom: #000 1px solid;
+            }
+
+            div.menu-open + .menu-items {
+                display: block;
+            }
+
+            div.menu-open {
+                border-bottom: none;
+            }
         }
     }
 }
@@ -103,6 +121,14 @@
 
                 button .non-isolate {
                     width: 100%;
+                }
+
+                .menu-expand {
+                    display: block;
+                }
+
+                .menu-items {
+                    display: none;
                 }
             }
         }
@@ -134,11 +160,21 @@
 
     .container {
         header {
-            .menu-grid li {
-                width: auto;
+            .menu-grid {
+                li {
+                    width: auto;
 
-                &:last-child .dropdown, &:last-child a {
-                    margin-bottom: 0;
+                    &:last-child .dropdown, &:last-child a {
+                        margin-bottom: 0;
+                    }
+                }
+
+                .menu-expand {
+                    display: none;
+                }
+
+                .menu-items {
+                    display: block;
                 }
             }
         }

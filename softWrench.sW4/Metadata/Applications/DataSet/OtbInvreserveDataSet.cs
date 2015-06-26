@@ -104,6 +104,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.ProjectionFields.Add(new ProjectionField("binnum", "COALESCE(invbalances.binnum, '')"));
             filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
             filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
+            if (!filter.SearchParams.Contains("itemnum")) {
+                filter.AppendSearchParam("itemnum");
+            }
+            if (!filter.SearchValues.Contains(parameters.OriginalEntity.GetAttribute("itemnum").ToString())) {
+                filter.AppendSearchValue(parameters.OriginalEntity.GetAttribute("itemnum").ToString());
+            }
             filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
 

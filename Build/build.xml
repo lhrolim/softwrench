@@ -54,7 +54,7 @@
   </if>
 
 
-  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,deploy"/>
+  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,explodexmlfiles,deploy"/>
 
   <target name="fullbuildlocal" depends="compile,zip"/>
 

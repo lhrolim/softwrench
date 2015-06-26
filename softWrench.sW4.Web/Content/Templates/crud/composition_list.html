@@ -49,8 +49,8 @@
                 ng-init="rowindex = $index">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,true,$event)" ng-show="expansionAllowed(compositionitem)">
-                        <i class="fa right-caret" ng-hide="isItemExpanded(compositionitem)"></i>
-                        <i class="fa bottom-caret" ng-show="isItemExpanded(compositionitem)"></i>
+                        <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
+                        <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>
                     </button>
                 </td>
 
