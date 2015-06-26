@@ -10,7 +10,7 @@
   </templates>
 
   <entities>
-    <entity name="invreturn" parententity="invissue" idAttribute="matusetransid" whereclause="issuetype='ISSUE' and INVRETURN.ITEMNUM is not NULL">
+    <entity name="invreturn" parententity="invissue" idAttribute="matusetransid" whereclause="issuetype='ISSUE' and INVRETURN.ITEMNUM is not NULL and INVRETURN.STORELOC is not NULL">
     </entity>
   </entities>
 
