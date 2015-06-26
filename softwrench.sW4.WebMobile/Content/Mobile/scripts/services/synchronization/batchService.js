@@ -84,7 +84,7 @@
                     // update items's DataEntries's flags
                     batch.loadeditems.forEach(function(item) {
                         item.dataentry.pending = false;
-                        item.dataentry.isDirty = !item.problem;
+                        item.dataentry.isDirty = !!item.problem;
                     });
                     // save problems, update statuses and flags
                     if (problemEntities.length > 0) {
@@ -178,19 +178,43 @@
 
             var detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
 
-            return swdbDAO.findByQuery('DataEntry', "isDirty = 1 and pending=0 and application = '{0}'".format(applicationName))
+            return swdbDAO.findByQuery('DataEntry', "isDirty=1 and pending=0 and application='{0}'".format(applicationName))
                 .then(function(dataEntries) {
                     if (dataEntries.length <= 0) {
                         log.debug('no items to submit to the server. returning null batch');
                         //nothing to do, interrupting chain
                         return null;
                     }
+                    // determine which entries are not problematic
+                    var entryIds = dataEntries.map(function(entry) {
+                        return "'{0}'".format(entry.id);
+                    });
+                    // first: all batchitems that point to the previous fetched dataentries and are problematic
+                    return swdbDAO.findByQuery("BatchItem", "dataentry in ({0}) and problem is not null".format(entryIds))
+                        .then(function (items) { // then: filter entries that are not problematic
+                            // no batchitems found: entries are problem free
+                            if (!items || items.length <= 0) {
+                                return dataEntries;
+                            }
+                            // ids of the entries that are problematic
+                            var problematicEntryIds = items.map(function(item) {
+                                return item.dataentry.id;
+                            });
+                            var entriesToUse = dataEntries.filter(function(entry) {
+                                // entry.id not in the problematic array: use it in the batch
+                                return problematicEntryIds.indexOf(entry.id) < 0;
+                            });
+                            // resolve: entries that are not problematic
+                            return entriesToUse;
+                        });
+                }).then(function (dataEntries) {
+                    if (!dataEntries || dataEntries.length <= 0) {
+                        return null;
+                    }
                     var batchItemPromises = [];
-                    angular.forEach(dataEntries, function(entry) {
+                    angular.forEach(dataEntries, function (entry) {
                         entry.pending = true;
-                        //entry.isDirty = false;
-
-                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
+                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function (dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
@@ -205,7 +229,7 @@
                     dbPromises.push($q.when(dataEntries));
                     dbPromises = dbPromises.concat(batchItemPromises);
                     return $q.all(dbPromises);
-                }).then(function(items) {
+                }).then(function (items) {
                     if (!items) {
                         return items;
                     }

@@ -38,7 +38,7 @@
                         });
                         operationEntity.status = "COMPLETE";
                         operationEntity.enddate = new Date().getTime();
-                        operation.hasProblems = hasProblem;
+                        operationEntity.hasProblems = hasProblem;
                     } else {
                         operationEntity.status = "PENDING";
                     }
