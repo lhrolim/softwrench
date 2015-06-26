@@ -28,6 +28,7 @@ module.exports = function (grunt) {
                     'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.js',
                     'angular-animate.js': 'angular-animate/angular-animate.js',
                     'angular.js': 'angular/angular.js',
+                    'angular-cookies.js': 'angular-cookies/angular-cookies.js',
 
                     'jquery.js': 'jquery/dist/jquery.js',
                     'ng-cordova.js': 'ngCordova/dist/ng-cordova.js',
@@ -64,6 +65,7 @@ module.exports = function (grunt) {
                     'angular-sanitize.js': 'angular-sanitize/angular-sanitize.min.js',
                     'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.min.js',
                     'angular-animate.js': 'angular-animate/angular-animate.min.js',
+                    'angular-cookies.js': 'angular-cookies/angular-cookies.min.js',
 
                     'jquery.js': 'jquery/dist/jquery.min.js',
                     'ng-cordova.js': 'ngCordova/dist/ng-cordova.min.js',

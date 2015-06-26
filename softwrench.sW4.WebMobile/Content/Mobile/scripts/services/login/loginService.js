@@ -1,32 +1,29 @@
-﻿mobileServices.factory('loginService', function ($http,$log, $q, routeService, dispatcherService) {
+﻿
+(function (serviceModule) {
+    "use strict";
 
-    return {
+    var LoginService = function ($http, $log, $q, routeService, $cookies) {
 
-        checkCookieCredentials: function () {
-            //todo:implement
-            return true;
-        },
+        this.$cookies = $cookies;
 
-        login: function (userName, password) {
-            var deferred = dispatcherService.loadBaseDeferred();
-            var promise = deferred.promise;
-
-            
+        this.login = function(userName, password) {
             //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
-            var loginUrl = routeService.loginURL(userName, password);
-            $http.post(loginUrl).success(function(userdata) {
-                if (userdata.Found) {
+            var loginUrl = routeService.loginURL();
+            return $http.post(loginUrl, { username: userName, password: password })
+                .success(function (userdata) {
+                    if (userdata.Found) {
+                        return userdata;
+                    }
+                    return $q.reject(new Error("Invalid username or password"));
+                });
+        };
 
-                    deferred.resolve();
-                } else {
-                    deferred.reject();
-                }
-            }).error(function(errorData) {
-                deferred.reject();
-            });
-            return promise;
-        }
+        this.checkCookieCredentials = function() {
+            return !!$cookies[".ASPXAUTH"];
+        };
 
     };
 
-});
+    serviceModule.service("loginService", ["$http", "$log", "$q", "routeService", "$cookies", LoginService]);
+
+})(mobileServices);

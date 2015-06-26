@@ -1,10 +1,10 @@
-﻿softwrench.controller('LoginController', function($scope, $ionicPopup, $state,loginService) {
+﻿softwrench.controller('LoginController', function($scope, $ionicPopup, routeService, loginService) {
     $scope.data = {};
 
     $scope.login = function () {
         
         loginService.login($scope.data.username, $scope.data.password).success(function(data) {
-            $state.go('main.home');
+            routeService.go('main.home');
         }).error(function(data) {
             var alertPopup = $ionicPopup.alert({
                 title: 'Login failed!',
@@ -15,6 +15,6 @@
 
 
     $scope.settings = function () {
-        $state.go('settings');
+        routeService.go("settings");
     }
 })

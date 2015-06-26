@@ -29,7 +29,7 @@ var $s = function (element) {
     return scope.$parent;
 };
 
-var mobileServices = angular.module('sw_mobile_services', ['webcommons_services']);
+var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'ngCookies']);
 var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
 
 
@@ -111,7 +111,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         })
         .state('settings', {
             url: '/settings',
-            templateUrl: 'Content/Mobile/templates/settings.html',
+            templateUrl: 'Content/Mobile/templates/settings_nomenu.html',
             controller: 'SettingsController'
         })
 

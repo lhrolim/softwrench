@@ -247,7 +247,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var encryptedData = FormsAuthentication.Encrypt(ticket);
 
                 var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedData) {
-                    HttpOnly = true,
+                    HttpOnly = false, // make cookie available to client-side scripts
                     Path = FormsAuthentication.FormsCookiePath,
                     Secure = FormsAuthentication.RequireSSL
                 };

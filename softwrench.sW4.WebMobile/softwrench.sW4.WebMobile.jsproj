@@ -164,6 +164,7 @@
     <Content Include="Content\Mobile\templates\directives\option_field_item.html" />
     <Content Include="Content\Mobile\templates\directives\option_field.html" />
     <Content Include="Content\Mobile\templates\home.html" />
+    <Content Include="Content\Mobile\templates\settings_nomenu.html" />
     <Content Include="Content\Mobile\templates\syncdetail.html" />
     <Content Include="Content\Vendor\css\ionautocomplete.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionautocomplete.js" />
