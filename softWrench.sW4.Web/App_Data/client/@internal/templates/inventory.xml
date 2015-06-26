@@ -712,6 +712,11 @@
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
           </section>
+        <commandbars>
+            <commandgroup position="detailform" removeundeclared="false">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
