@@ -10,6 +10,8 @@
   <property key="maxAttachmentSize" value="10"/>
   <!--in MB-->
   <property key="maxScreenshotSize" value="5"/>
+<!--  <property key="user.persontoquery" value="person.personid in (select personid from maxuser where userid in (select userid from  GROUPUSER where groupname = 'C2_SOFTWRENCH'))"/>-->
+  
   <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>

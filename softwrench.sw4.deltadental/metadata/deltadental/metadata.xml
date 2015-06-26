@@ -597,7 +597,7 @@
       </schemas>
     </application>
 
-    <application name="person" title="Person" entity="localPerson">
+    <application name="person" title="Person" entity="person">
       <schemas>
         <schema id="personlookup" stereotype="list" title="Person Lookup">
           <field attribute="displayname" label="Display Name"/>

@@ -269,6 +269,7 @@
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />
         <connectorParameter key="integration_interface" value="SWPERSON" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePersonCrudConnector" />
       </connectorParameters>
 
     </entity>

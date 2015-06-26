@@ -23,7 +23,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         private const string EntityName = "person";
         private static IProblemManager _problemManager;
 
-        private static String DefaultWhereClause ="personid in (select personid from maxuser)";
+        private static String DefaultWhereClause = "personid in (select personid from maxuser)";
 
         public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository, IProblemManager problemManager)
             : base(dao, facade, repository) {
@@ -70,6 +70,11 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             var dto = new SearchRequestDto {
                 WhereClause = (" person.personid = '" + swUser.UserName + "'").ToUpper()
             };
+            var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
+            if (query != null) {
+                dto.WhereClause = query;
+            }
+
             dto = BuildDTO(dto);
             var entityMetadata = MetadataProvider.Entity(EntityName);
             var maximoUsers = EntityRepository.Get(entityMetadata, dto);

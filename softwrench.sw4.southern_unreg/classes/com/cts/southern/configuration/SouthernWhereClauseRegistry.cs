@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 
@@ -19,8 +20,9 @@ namespace softwrench.sw4.southern_unreg.classes.com.cts.southern.configuration {
         }
 
         private void RegisterQueries() {
-            _facade.Register("person", "personid in (select personid from maxuser where userid in (select userid from  GROUPUSER where groupname = 'C2_SOFTWRENCH'))", new WhereClauseRegisterCondition {
-                AppContext = new ApplicationLookupContext { MetadataId = "userpersons" }
+            _facade.Register("person", "person.personid in (select personid from maxuser where userid in (select userid from  GROUPUSER where groupname = 'C2_SOFTWRENCH'))", new WhereClauseRegisterCondition {
+                Alias = SwUserConstants.PersonUserMetadataId,
+                AppContext = new ApplicationLookupContext { MetadataId = SwUserConstants.PersonUserMetadataId }
             });
         }
 
@@ -29,7 +31,7 @@ namespace softwrench.sw4.southern_unreg.classes.com.cts.southern.configuration {
                 return;
             }
 
-            RegisterQueries();
+//            RegisterQueries();
         }
     }
 }
