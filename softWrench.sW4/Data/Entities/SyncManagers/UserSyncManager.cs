@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Util;
@@ -22,10 +23,11 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         private const string EntityName = "person";
         private static IProblemManager _problemManager;
 
-        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository, IProblemManager ProblemManager)
-            : base(dao, facade, repository)
-        {
-            _problemManager = ProblemManager;
+        private static String DefaultWhereClause ="personid in (select personid from maxuser)";
+
+        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository, IProblemManager problemManager)
+            : base(dao, facade, repository) {
+            _problemManager = problemManager;
         }
 
         [CanBeNull]
@@ -106,6 +108,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.rowstamp"));
             dto.AppendProjectionField(ProjectionField.Default("email_.rowstamp"));
             dto.AppendProjectionField(ProjectionField.Default("phone_.rowstamp"));
+            dto.Context = new ApplicationLookupContext {
+                MetadataId = SwUserConstants.PersonUserMetadataId
+            };
+
             return dto;
         }
 
@@ -127,8 +133,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             return maximoUsers.Select(maximoUser => new User {
                 UserName = (string)maximoUser.GetAttribute("maxuser_.loginid") ?? (string)maximoUser.GetAttribute("personid"),
                 Password = null,
-                IsActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",   
-                Person = new Person{
+                IsActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",
+                Person = new Person {
                     FirstName = (string)maximoUser.GetAttribute("firstname"),
                     LastName = (string)maximoUser.GetAttribute("lastname"),
                     OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
@@ -140,7 +146,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 },
                 CriptoProperties = string.Empty,
                 MaximoPersonId = (string)maximoUser.GetAttribute("personid"),
-                
+
             });
         }
 
@@ -184,8 +190,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     !string.IsNullOrEmpty(userToIntegrate.Person.LastName) &&
                     !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)
                 );
-            if (!isValid)
-            {
+            if (!isValid) {
                 //var jsonUser = JsonConvert.SerializeObject(userToIntegrate);
                 //_problemManager.Register("UserSync", "", jsonUser, DateTime.Now, 
                 //    "SWADMIN", "", 1, "", "Error syncing user", "", "", "OPEN");

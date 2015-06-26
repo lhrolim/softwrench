@@ -49,7 +49,7 @@
 		<property key="basewsURL" value="http://66.235.236.8/meaweb/wsdl/" />
 		<property key="swdb_url" value="server=66.235.236.8;database=swdb_hapagdev;UID=sw;Pwd=sw;" />
 		<property key="swdb_provider" value="MySql.Data.MySqlClient" />
-		<property key="ldap.synceverytime" value="true"/>
+		<property key="ldap.syncalways" value="true"/>
 		<property key="ldap.allownonmaximousers" value="true"/>
 		<property key="ismcredentials.user" value="hl2tkbrg"/>
 		<property key="ismcredentials.password" value="xK7AgFqJJQ"/>
@@ -72,7 +72,7 @@
 		<property key="ldapPortNumber" value="389"/>
 		<property key="ldapBaseDn" value="dc=ww,dc=hl,dc=lan"/>
 		<property key="targetmapping" value="ism"/>
-		<property key="ldap.synceverytime" value="true"/>
+		<property key="ldap.syncalways" value="true"/>
 		<property key="ldap.allownonmaximousers" value="true"/>
 		<property key="basewsURL" value="C:\ServiceIT\config\mifwsdl\PROD\" />
 		<property key="mifcredentials.user" value="dey99msy@ww.hl.lan"/>
@@ -93,7 +93,7 @@
 		<property key="ldapPortNumber" value="389"/>
 		<property key="ldapBaseDn" value="dc=ww,dc=hl,dc=lan"/>
 		<property key="targetmapping" value="ism"/>
-		<property key="ldap.synceverytime" value="true"/>
+		<property key="ldap.syncalways" value="true"/>
 		<property key="ldap.allownonmaximousers" value="true"/>
 		<property key="basewsURL" value="C:\ServiceIT\config\mifwsdl\UAT\" />
 		<property key="mifcredentials.user" value="dey99msy@ww.hl.lan"/>

@@ -37,7 +37,7 @@ namespace softWrench.sW4.Data.Search {
 
         public Boolean SearchAscending { get; set; }
 
-        private ISet<ProjectionField> _projectionFields = new HashSet<ProjectionField>();
+        private readonly ISet<ProjectionField> _projectionFields = new HashSet<ProjectionField>();
 
         public String WhereClause { get; set; }
 

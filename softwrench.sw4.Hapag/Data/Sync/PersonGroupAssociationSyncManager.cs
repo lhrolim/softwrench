@@ -228,7 +228,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         public int Order { get { return 3; } }
         public void HandleEvent(UserLoginEvent eventToDispatch) {
             var user = eventToDispatch.InMemoryUser;
-            if ("true".Equals(MetadataProvider.GlobalProperty("ldap.synceverytime")) && !string.IsNullOrEmpty(user.MaximoPersonId) && !string.IsNullOrEmpty(user.Login)) {
+            if ("true".Equals(MetadataProvider.GlobalProperty("ldap.syncalways")) && !string.IsNullOrEmpty(user.MaximoPersonId) && !string.IsNullOrEmpty(user.Login)) {
                 SyncUser(user);
             }
         }

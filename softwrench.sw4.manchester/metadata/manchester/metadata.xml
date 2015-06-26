@@ -500,7 +500,7 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
-          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate" default="@user.defaultcraft">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
           <field label="Start Date:" requiredexpression="true" attribute="startdate" default="@currentdatetime">
