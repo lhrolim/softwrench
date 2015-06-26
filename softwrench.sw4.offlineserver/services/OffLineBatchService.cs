@@ -39,14 +39,15 @@ namespace softwrench.sw4.offlineserver.services {
                 Status = BatchStatus.SUBMITTING
             };
             batch.Items = ClientStateJsonConverter.GetBatchItems(batchContent);
+            var isSynchronous = batch.Items.Count <= minSize;
             var batchOptions = new BatchOptions {
                     GenerateProblems = true,
                     GenerateReport = false,
                     SendEmail = false,
-                    Synchronous = batch.Items.Count < minSize
+                    Synchronous = isSynchronous
                 };
 
-            if (batch.Items.Count < minSize) {
+            if (isSynchronous) {
                 return _batchItemSubmissionService.Submit(batch, batchOptions);
             }
             _swdbHibernateDAO.Save(batch);
