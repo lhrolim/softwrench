@@ -159,6 +159,8 @@
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
+    <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
+    <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
@@ -360,15 +362,6 @@
     <Compile Include="Data\Configuration\ConfigurationRegistry.cs" />
     <Compile Include="Data\Entities\AttachmentDao.cs" />
     <Compile Include="Data\Entities\SyncManagers\UserSyncManager.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\ApplicationEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\AffectedDeviceEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PrinterIssueEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PhoneProblemBehaviorEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PhoneCallTypeEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PhoneCallDirectionEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PhoneSymptomDescriptionEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PhoneProblemEnum.cs" />
-    <Compile Include="Data\Entities\ServiceRequest\PrinterLocationEnum.cs" />
     <Compile Include="Data\Entities\MaxPropValueDao.cs" />
     <Compile Include="Data\Persistence\DefaultValuesBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolver.cs" />
@@ -845,6 +838,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Entities\Attachment\" />
+    <Folder Include="Data\Entities\ServiceRequest\" />
     <Folder Include="Data\Persistence\Sync\" />
     <Folder Include="Data\Persistence\WS\Gric\" />
     <Folder Include="Data\Persistence\WS\Manchester\" />

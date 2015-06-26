@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Quartz.Util;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
@@ -101,7 +102,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private ActionResult AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
-            var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty("ldap.synceverytime"));
+            var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty(SwUserConstants.LdapSyncAlways));
             if (syncEveryTime) {
                 user.DBUser = UserManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
