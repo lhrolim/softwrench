@@ -39,7 +39,7 @@ namespace softWrench.sW4.Web {
 
 
             bundles.Add(new StyleBundle("~/Content/themes/base/font-awesome").Include(
-                "~/Content/font-awesome-4.1.0/css/font-awesome.css"
+                "~/Content/font-awesome-4.3.0/css/font-awesome.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/fonts").Include(
