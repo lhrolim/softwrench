@@ -3,11 +3,11 @@
     'use strict';
 
 
-    var doSave = function (applicationName, datamap, messageEntry) {
-        var localId = datamap[constants.localIdKey];
-        datamap[constants.isDirty] = true;
+    var doSave = function (applicationName, item, messageEntry) {
+        var localId = item.id;
+        item.isDirty = true;
         var queryToExecute = "";
-        var jsonString = JSON.stringify(datamap);
+        var jsonString = JSON.stringify(item.datamap);
         if (!localId) {
             queryToExecute = entities.DataEntry.insertLocalPattern.format(applicationName, jsonString, persistence.createUUID());
         } else {
@@ -24,8 +24,8 @@
 
 
 
-        saveItem: function (applicationName, datamap) {
-            return doSave(applicationName, datamap, applicationName);
+        saveItem: function (applicationName, item) {
+            return doSave(applicationName, item, applicationName);
         },
 
         addAndSaveComposition: function (applicationName, datamap, compositionItem, compositionMetadata) {
