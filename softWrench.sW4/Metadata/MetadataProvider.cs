@@ -179,8 +179,7 @@ namespace softWrench.sW4.Metadata {
 
 
 
-        [NotNull]
-        public static EntityMetadata Entity([NotNull] string name) {
+        public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");
             ICollection<EntityMetadata> entityMetadata;
             if (name.StartsWith("_")) {
@@ -188,10 +187,11 @@ namespace softWrench.sW4.Metadata {
             } else {
                 entityMetadata = _metadataXmlInitializer != null ? _metadataXmlInitializer.Entities : _entityMetadata;
             }
-
-            return entityMetadata.FirstWithException(a => String.Equals(a.Name, name, StringComparison.CurrentCultureIgnoreCase), "entity {0} not found", name);
-
-
+            if (throwException) {
+                return entityMetadata.FirstWithException(a => String.Equals(a.Name, name, StringComparison.CurrentCultureIgnoreCase), "entity {0} not found", name);
+            }
+            var entity = entityMetadata.FirstOrDefault(a => String.Equals(a.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            return entity;
         }
 
 
@@ -442,7 +442,8 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-
-
+        public static bool IsApplicationEnabled(string application) {
+            return Application(application, false) != null;
+        }
     }
 }

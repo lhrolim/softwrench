@@ -93,9 +93,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             var log = $log.getInstance('cmpfacade#refresh');
             var rendererType = displayable.rendererType;
             if (fromDigestAndRefresh) {
-                log.debug('calling digest and refresh for field {0}, component {1}'.format(displayable.attribute, rendererType));
+                log.debug('calling digest and refresh for field {0}, component {1} | value {2}'.format(displayable.attribute, rendererType, scope.datamap[displayable.target]));
             } else {
-                log.debug('calling refresh for field {0}, component {1}'.format(displayable.attribute, rendererType));
+                log.debug('calling refresh for field {0}, component {1} | value {2}'.format(displayable.attribute, rendererType, scope.datamap[displayable.target]));
             }
 
             if (rendererType == 'autocompleteclient') {

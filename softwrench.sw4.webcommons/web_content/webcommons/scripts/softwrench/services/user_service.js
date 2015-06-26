@@ -1,14 +1,45 @@
-﻿var app = angular.module('sw_layout');
+﻿
+(function () {
+    'use strict';
 
-app.factory('userService', function (contextService) {
+    angular.module('sw_layout').factory('userService', ['contextService', userService]);
 
-    return {
-        //using sessionstorage instead of rootscope, as the later would be lost upon F5.
-        //see SWWEB-239
+    function userService(contextService) {
 
+        var service = {
+            HasRole: hasRole,
+            InGroup: inGroup,
+            readProperty: readProperty
+        };
 
-        //determines whether the current user has one of the roles specified on the array
-        HasRole: function (roleArray) {
+        return service;
+
+        function readProperty(propertyExpression) {
+            if (propertyExpression == null) {
+                return null;
+            }
+            if (!propertyExpression.startsWith("@")) {
+                return propertyExpression;
+            }
+
+            var user = contextService.getUserData();
+
+            if (propertyExpression.startsWith("@user")) {
+                var propName = propertyExpression.substring(6);
+                return user.genericproperties[propName];
+            }
+            else if (propertyExpression.startsWith("@userid")) {
+                return user.username;
+            }
+            else if (propertyExpression.startsWith("@personid")) {
+                return user.maximopersonid;
+            }
+            //TODO: finish this;
+            return propertyExpression;
+
+        };
+
+        function hasRole(roleArray) {
             if (roleArray == null) {
                 return true;
             }
@@ -24,9 +55,9 @@ app.factory('userService', function (contextService) {
                 });
             });
             return result;
-        },
+        }
 
-        InGroup: function (groupName) {
+        function inGroup(groupName) {
             if (group == null) {
                 return true;
             }
@@ -41,14 +72,10 @@ app.factory('userService', function (contextService) {
                 }
             }
             return false;
-        },
+        };
 
+    }
+})();
 
-
-    };
-
-
-
-});
 
 

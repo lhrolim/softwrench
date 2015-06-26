@@ -9,6 +9,7 @@ using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
@@ -31,22 +32,25 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     public class BasePersonDataSet : MaximoApplicationDataSet {
-        private IConnectorEngine _maxConnectorEngine;
-        private IConnectorEngine _swConnectorEngine;
-        private SecurityFacade _securityFacade;
-        private ISWDBHibernateDAO _dao;
 
-        protected override IConnectorEngine Engine() {
-            if (_maxConnectorEngine == null) {
-                _maxConnectorEngine = SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(typeof(MaximoConnectorEngine));
-            }
-            return _maxConnectorEngine;
+        private ISWDBHibernateDAO _swdbDAO;
+
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO) {
+            _swdbDAO = swdbDAO;
         }
 
+
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
+            if (query != null) {
+                searchDto.WhereClause = query;
+            }
             // get is active for each of the users
             var result = base.GetList(application, searchDto);
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
+            if (!usernames.Any()) {
+                return result;
+            }
             var swusers = UserManager.GetUsersByUsername(usernames);
             foreach (var record in result.ResultObject) {
                 var swuser = swusers.Where(user => user.UserName.EqualsIc(record.GetAttribute("personid").ToString()));
@@ -59,28 +63,26 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var id = request.Id;
-            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            DataMap dataMap;
-            if (id != null) {
-                dataMap = (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas);
-                if (request.InitialValues != null) {
-                    var initValDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application,
-                        request.InitialValues, entityMetadata.Schema.MappingType);
-                    dataMap = DefaultValuesBuilder.AddMissingInitialValues(dataMap, initValDataMap);
+            var detail = base.GetApplicationDetail(application, user, request);
+            var personId = detail.ResultObject.GetAttribute("personid") as string;
+            var swUser = new User();
+            var dataMap = detail.ResultObject;
+            if (personId != null) {
+                swUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
+                if (swUser == null) {
+                    //lets try with username then
+                    swUser = _swdbDAO.FindSingleByQuery<User>(User.UserByUserName, personId);
+                    if (swUser == null) {
+                        swUser = new User {
+                            MaximoPersonId = personId,
+                            UserName = personId
+                        };
+                    } else {
+                        swUser.MaximoPersonId = personId;
+                    }
+                    swUser = _swdbDAO.Save(swUser);
                 }
             } else {
-                dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
-            }
-            // get isactive for person from swdb
-            var swUser = new User();
-            if (dataMap.GetAttribute("personid") != null)
-            {
-                swUser = SecurityFacade.GetInstance().FetchUser(dataMap.Value("personid"));
-            }
-            else
-            {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
                 swUser.Profiles = new HashedSet<UserProfile>();
@@ -97,13 +99,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             // Hide the password inputs if using LDAP
             var ldapEnabled = ApplicationConfiguration.LdapServer != null;
             dataMap.SetAttribute("ldapEnabled", ldapEnabled);
-
-            var associationResults = BuildAssociationOptions(dataMap, application, request);
-            var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
-            return detailResult;
+            return detail;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,bool isBatch) {
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
 
@@ -114,8 +113,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             JToken password;
             json.TryGetValue("#password", out password);
-            if (password != null)
-            {
+            if (password != null) {
                 var passwordString = password.ToString();
                 user.Password = AuthUtils.GetSha1HashData(passwordString);
             }

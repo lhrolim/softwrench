@@ -8,16 +8,8 @@
     <template path="@phone.xml"/>
   </templates>
     
-  <entities>
-    <entity name="localPerson" parententity="person" idAttribute="personid">
-      <connectorParameters>
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePersonCrudConnector" />
-      </connectorParameters>
-    </entity>
-  </entities>
-
   <applications>
-    <application name="person" title="Person" entity="localPerson">
+    <application name="person" title="Person" entity="person">
       <properties>
         <property key="list.defaultorderby" value="personid asc"/>
         <property key="detail.navigationbuttons.disabled" value="true"/>

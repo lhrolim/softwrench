@@ -1,5 +1,5 @@
 ﻿
-modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService) {
+modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService,userService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -113,7 +113,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
                     }
                     if (expressionResult == null && value.defaultValue != null) {
                         //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                        datamap[target] = value.defaultValue;
+                        datamap[target] = userService.readProperty(value.defaultValue);
                     }
                 }
             });

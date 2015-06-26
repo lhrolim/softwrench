@@ -178,12 +178,18 @@
       <if test="${projectname == client}">
         
         <copy todir="${deploypath}/Content/Customers/${projectname}">
-
           <fileset basedir="../softWrench.sW4.${client}/web_content/${projectname}">
             <include name="**/*" />
             <exclude name="**/*.${platformtoexclude}.*"/>
           </fileset>
         </copy>
+
+        <copy todir="${deploypath}/bin/">
+          <fileset basedir="../softWrench.sW4.${client}/Dependencies">
+            <include name="**/*" />
+          </fileset>
+        </copy>
+        
         <echo message="Copied files for ${client}" />
       </if>
 
