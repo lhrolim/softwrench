@@ -12,3 +12,16 @@
 .page-syncdetail .operation-details .detail-section.upload-section .item-list .icon {
     padding-right: 5px;
 }
+.page-syncdetail .operation-details .detail-section.upload-section .problem-button {
+    background-color:  rgb(229, 147, 35);
+    color: white;
+    border: none;
+    margin-top: 10px;
+}
+.page-syncdetail .operation-status h4 {
+    margin-bottom: 0;
+}
+.page-syncdetail .operation-status h5 {
+    margin-bottom: 0;
+    margin-top: 0;
+}

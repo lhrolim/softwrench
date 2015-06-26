@@ -5,6 +5,9 @@ namespace cts.commons.Util {
     public class CompressionUtil {
 
         public static byte[] Compress(byte[] plainData) {
+            if (plainData == null) {
+                return null;
+            }
             byte[] compressesData = null;
             using (var outputStream = new MemoryStream()) {
                 using (var zip = new GZipStream(outputStream, CompressionMode.Compress)) {
@@ -20,6 +23,9 @@ namespace cts.commons.Util {
         }
 
         public static byte[] Decompress(byte[] zippedData) {
+            if (zippedData == null) {
+                return null;
+            }
             byte[] decompressedData = null;
             using (var outputStream = new MemoryStream()) {
                 using (var inputStream = new MemoryStream(zippedData)) {

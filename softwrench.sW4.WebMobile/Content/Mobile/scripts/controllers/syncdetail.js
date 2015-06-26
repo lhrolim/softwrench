@@ -17,12 +17,25 @@
                         return syncopService.getBatchItems(operation);
                     })
                     .then(function (items) {
+                        if (!items) return items;
+                        return items.map(function (item) {
+                            if (item.problem) {
+                                item.simpleproblem = { message: item.problem.message };
+                            }
+                            return item;
+                        });
+                    })
+                    .then(function(items) {
                         $scope.batchItems = items;
                     });
             };
 
             $scope.goBack = function() {
                 routes.go("main.home");
+            };
+
+            $scope.solveProblems = function() {
+                // TODO: resubmit $scope.operation's Batches
             };
 
             loadSyncOperation();

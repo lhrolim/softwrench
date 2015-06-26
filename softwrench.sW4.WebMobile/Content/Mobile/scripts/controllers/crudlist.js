@@ -36,11 +36,11 @@
     };
 
     $scope.isDirty = function (item) {
-        return item[constants.isDirty];
+        return item.isDirty;
     }
 
     $scope.isPending = function (item) {
-        return item[constants.isPending];
+        return item.pending;
     }
 
     $scope.showFilterOptions = function ($event) {

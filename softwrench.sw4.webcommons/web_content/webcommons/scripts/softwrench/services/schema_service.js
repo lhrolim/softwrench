@@ -112,10 +112,14 @@
                 return schema.title;
             }
             var result;
+            var idValue = fields[schema.userIdFieldName];
+            if (!idValue) {
+                idValue= "New ";
+            }
             if (smallDevices) {
-                result = fields[schema.userIdFieldName];
+                result = idValue;
             } else {
-                result = titleId + " " + fields[schema.userIdFieldName];
+                result = titleId + " " + idValue;
             }
             if (fields.description != null) {
                 if (smallDevices) {

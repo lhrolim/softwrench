@@ -29,7 +29,8 @@ entities.BatchItem = persistence.define('BatchItem', {
     label:'TEXT',
     //either pending, or completed
     status: 'TEXT',
-    problemId: 'TEXT',
+    // marks the CRUD operation being executed: update, create, etc
+    crudoperation: "TEXT"
 });
 
 entities.Batch.hasMany('items', entities.BatchItem, 'batch');

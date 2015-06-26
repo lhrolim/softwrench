@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using cts.commons.persistence;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.problem.classes;
 
@@ -27,8 +28,10 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
         [Property]
         public int? CreatedBy { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         [Property(TypeType = typeof(BatchStatusType))]
         public BatchStatus Status { get; set; }
+        
         [Property]
         public String RemoteId { get; set; }
 

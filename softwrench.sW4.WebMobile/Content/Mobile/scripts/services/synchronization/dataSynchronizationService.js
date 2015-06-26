@@ -16,15 +16,8 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
     };
 
     return api;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="workbatchs"></param>
-    /// <returns type="promise"></returns>
-    function syncData (workbatchs) {
-
-
+   
+    function syncData () {
         var currentApps = metadataModelService.getApplicationNames();
         var firstTime = currentApps.length == 0;
         var params;

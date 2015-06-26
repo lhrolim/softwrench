@@ -1,5 +1,5 @@
 ﻿var entities = entities || {};
-mobileServices.factory('swdbDAO', function (dispatcherService) {
+mobileServices.factory('swdbDAO', function ($q,dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
 
@@ -18,6 +18,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         var pageSize = queryoptions.pagesize;
         var projectionFields = queryoptions.projectionFields || [];
         var queryToUse = queryoptions.fullquery;
+        var prefetch = queryoptions.prefetch;
 
         var filter = getInstance(entity).all();
        
@@ -36,6 +37,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         }
         if (projectionFields.length > 0) {
             filter._projectionFields = projectionFields;
+        }
+        if (prefetch) {
+            filter = filter.prefetch(prefetch);
         }
         if (orderProperty) {
             filter=filter.order(orderProperty, orderascending);
@@ -233,7 +237,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 return promise;
             } else {
                 persistence.flush(function () {
-                    deferred.resolve();
+                    deferred.resolve(obj);
                 });
             }
             return promise;
@@ -254,6 +258,10 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         },
 
         bulkSave: function (objArray, tx) {
+            if (objArray == null) {
+                return $q.when();
+            }
+
             for (var i = 0; i < objArray.length; i++) {
                 persistence.add(objArray[i]);
             }

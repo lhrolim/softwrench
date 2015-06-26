@@ -16,6 +16,7 @@
                 </div>
                 <div class="col col-80">
                     <h4>{{operation.formattedstatus}}</h4>
+                    <h5 ng-if="!operation.ispending">{{operation.elapsedtime}}&nbsp;seconds</h5>
                 </div>
             </div>
         </div>
@@ -32,9 +33,10 @@
                     <h5>Application Uploads: {{batchItems.length}}</h5>
                     <ul class="item-list">
                         <li ng-repeat="item in batchItems">
-                            <i class="icon ion-checkmark"></i>{{item.label}}
+                            <i class="icon" ng-class="{'ion-alert-circled': item.simpleproblem, 'ion-checkmark': !item.simpleproblem}"></i>{{item.label}}
                         </li>
                     </ul>
+                    <button ng-if="operation.hasproblems" class="button problem-button" ng-click="solveProblems()">Fix Issues</button>
                 </div>
             </div>
         </div>

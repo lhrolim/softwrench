@@ -46,15 +46,15 @@
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
-                        <button class="button button-status" ng-style="{background:getStatusColor(item),color:getTextColor(item)}">{{getStatusText(item)}}</button>
+                        <button class="button button-status" ng-style="{background:getStatusColor(item.datamap),color:getTextColor(item.datamap)}">{{getStatusText(item.datamap)}}</button>
                         <i class="icon ion-refresh" ng-show="isDirty(item) && !isPending(item)"></i>
                         <i class="icon ion-android-cloud" ng-show="isPending(item)"></i>
                     </div>
                     <div class="col-75">
                         <ul>
-                            <li>{{itemTitle(item)}} {{itemFeatured(item)}}</li>
-                            <li>{{itemSubTitle(item)}}</li>
-                            <li>{{itemExcerpt(item)}}</li>
+                            <li>{{itemTitle(item.datamap)}} {{itemFeatured(item.datamap)}}</li>
+                            <li>{{itemSubTitle(item.datamap)}}</li>
+                            <li>{{itemExcerpt(item.datamap)}}</li>
                         </ul>
                     </div>
                 </div>

@@ -20,7 +20,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         itemlist: null,
         filteredList: null,
 
-        originalDetailItem: null,
+        originalDetailItemDatamap: null,
         currentDetailItem: null,
         currentDetailSchema: null,
 
@@ -31,7 +31,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             itemlist: null,
 
             currentDetailItem: null,
-            originalDetailItem: null,
+            originalDetailItemDatamap: null,
             currentDetailSchema: null,
 
 
@@ -43,16 +43,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
     }
 
-    if (isRippleEmulator()) {
-        //this is used for F5 (refresh) upon development mode, so that we can return to the page we were before quickier
-        var savedCrudContext = contextService.getFromContext("crudcontext");
-        if (savedCrudContext) {
-            crudContext = JSON.parse(savedCrudContext);
-            crudContext.originalDetailItem = angular.copy(crudContext.currentDetailItem);
-            setPreviousAndNextItems(savedCrudContext.currentDetailItem);
-        }
-        $log.get("crudContextService#factory").debug("restoring state of crudcontext");
-    }
+
 
 
     function loadDetailSchema() {
@@ -83,6 +74,31 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
     }
 
     return {
+
+        restoreState: function () {
+            if (!isRippleEmulator()) {
+                return; //this is used for F5 (refresh) upon development mode, so that we can return to the page we were before quickier
+            }
+            var savedCrudContext = contextService.getFromContext("crudcontext");
+            if (savedCrudContext) {
+                crudContext = JSON.parse(savedCrudContext);
+                if (crudContext.itemlist) {
+                    crudContext.itemlist = [];
+                    if (!crudContext.currentDetailItem) {
+                        this.refreshGrid();
+                    }
+                }
+                if (crudContext.originalDetailItemDatamap) {
+                    // the persistence entries do not get serialized correctly
+                    crudContext.originalDetailItemDatamap = angular.copy(crudContext.originalDetailItemDatamap);
+                    crudContext.currentDetailItem.datamap = crudContext.originalDetailItemDatamap;
+                    setPreviousAndNextItems(savedCrudContext.currentDetailItem);
+                }
+                
+            }
+            $log.get("crudContextService#factory").debug("restoring state of crudcontext");
+            return savedCrudContext;
+        },
 
         isList: function () {
             return crudContext.currentDetailItem == null;
@@ -116,6 +132,14 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
         currentDetailItem: function () {
             return crudContext.currentDetailItem;
+        },
+
+        currentDetailItemDataMap: function () {
+            if (crudContext.composition.currentDetailItem) {
+                return crudContext.composition.currentDetailItem;
+            }
+
+            return crudContext.currentDetailItem.datamap;
         },
 
         itemlist: function () {
@@ -159,6 +183,11 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             crudContext.composition.currentTab = null;
         },
 
+        leavingCompositionDetail: function () {
+            crudContext.composition.currentDetailItem = null;
+        },
+
+
         loadTab: function (tab) {
             if (tab == null) {
                 //let´s return to the main tab
@@ -177,16 +206,17 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 crudContext.composition.itemlist = compositionItems;
                 crudContext.composition.currentListSchema = tab.schema.schemas.list;
                 crudContext.composition.currentDetailSchema = tab.schema.schemas.detail;
+                crudContext.composition.currentDetailItem = null;
                 contextService.insertIntoContext("crudcontext", crudContext);
                 return routeService.go("main.cruddetail.compositionlist");
             });
         },
 
         loadCompositionDetail: function (item) {
-
+            //for compositions item will be the datamap itself
 
             crudContext.composition.currentDetailItem = item;
-            crudContext.composition.originalDetailItem = angular.copy(item);
+            crudContext.composition.originalDetailItemDatamap = angular.copy(item);
             contextService.insertIntoContext("crudcontext", crudContext);
             return routeService.go("main.cruddetail.compositiondetail");
         },
@@ -194,7 +224,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         createNewCompositionItem: function () {
             crudContext.composition.currentDetailItem = {};
             offlineSchemaService.fillDefaultValues(crudContext.composition.currentDetailSchema, crudContext.composition.currentDetailItem);
-            crudContext.composition.originalDetailItem = {
+            crudContext.composition.originalDetailItemDatamap = {
                 //to make this new item always dirty!!!
                 "_newitem#$": true
             };
@@ -228,33 +258,34 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
         hasDirtyChanges: function () {
             if (crudContext.composition.currentDetailItem) {
-                return crudContext.composition.currentDetailItem && (!angular.equals(crudContext.composition.originalDetailItem, crudContext.composition.currentDetailItem));
+                return crudContext.composition.currentDetailItem && (!angular.equals(crudContext.composition.originalDetailItemDatamap, crudContext.composition.currentDetailItem));
             }
 
-            return crudContext.currentDetailItem && (!angular.equals(crudContext.originalDetailItem, crudContext.currentDetailItem));
+            return crudContext.currentDetailItem && (!angular.equals(crudContext.originalDetailItemDatamap, crudContext.currentDetailItem.datamap));
         },
 
         cancelChanges: function () {
             if (crudContext.composition.currentDetailItem) {
-                crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItem);
+                crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItemDatamap);
                 return routeService.go("main.cruddetail.compositionlist");
             }
-            crudContext.currentDetailItem = angular.copy(crudContext.originalDetailItem);
+            crudContext.currentDetailItem.datamap = angular.copy(crudContext.originalDetailItemDatamap);
         },
 
         saveChanges: function () {
 
-            var datamap = crudContext.currentDetailItem;
+            var datamap = crudContext.currentDetailItem.datamap;
             var that = this;
             if (crudContext.composition && crudContext.composition.currentDetailItem) {
                 var compositionItem = crudContext.composition.currentDetailItem;
                 return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, datamap, compositionItem, crudContext.composition.currentTab).then(function () {
+                    crudContext.composition.originalDetailItemDatamap = crudContext.composition.currentDetailItem;
                     that.loadTab(crudContext.composition.currentTab);
                 });
             }
 
-            return offlineSaveService.saveItem(crudContext.currentApplicationName, datamap).then(function () {
-                crudContext.originalDetailItem = angular.copy(datamap);
+            return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(function () {
+                crudContext.originalDetailItemDatamap = angular.copy(datamap);
                 contextService.insertIntoContext("crudcontext", crudContext);
             });
         },
@@ -265,7 +296,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
 
         filterList: function (text) {
-            
+
             internalListContext.searchQuery = text;
             if (text == null) {
                 return;
@@ -281,7 +312,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             crudContext.itemlist = [];
             internalListContext.lastPageLoaded = 0;
             internalListContext.pageNumber = 1;
-            this.loadMorePromise().then(function() {
+            this.loadMorePromise().then(function () {
                 routeService.go("main.crudlist");
                 contextService.insertIntoContext("crudcontext", crudContext);
             });
@@ -308,9 +339,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 }
                 var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
                 for (var i = 0; i < results.length; i++) {
-                    listToPush.push(results[i].datamap);
-                    results[i].datamap[constants.localIdKey] = results[i].id;
-                    results[i].datamap[constants.isPending] = results[i].pending;
+                    listToPush.push(results[i]);
                 }
                 return $q.when(results);
             });
@@ -364,7 +393,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         createDetail: function () {
             crudContext.currentDetailItem = {};
             offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem);
-            crudContext.originalDetailItem = {
+            crudContext.originalDetailItemDatamap = {
                 //to make this new item always dirty!!!
                 "_newitem#$": true
             };
@@ -381,7 +410,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
             crudContext.currentDetailItem = item;
-            crudContext.originalDetailItem = angular.copy(crudContext.currentDetailItem);
+            crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
             setPreviousAndNextItems(item);
             contextService.insertIntoContext("crudcontext", crudContext);
             return routeService.go("main.cruddetail.maininput");

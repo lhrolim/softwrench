@@ -3,7 +3,7 @@
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
         $scope.schema= crudContextService.currentDetailSchema();
-        $scope.datamap = crudContextService.currentDetailItem();
+        $scope.datamap = crudContextService.currentDetailItemDataMap();
     }
 
     $ionicPopover.fromTemplateUrl('Content/Mobile/templates/compositionmenu.html', {
@@ -45,7 +45,7 @@
         confirmPopup.then(function (res) {
             if (res) {
                 crudContextService.cancelChanges();
-                $scope.datamap = crudContextService.currentDetailItem();
+                $scope.datamap = crudContextService.currentDetailItemDataMap();
             } 
         });
     }
@@ -85,16 +85,20 @@
 
     $scope.navigateNext = function () {
         crudContextService.navigateNext().then(function () {
-            $scope.datamap = crudContextService.currentDetailItem();
+            $scope.datamap = crudContextService.currentDetailItemDataMap();
         });
     }
 
     $scope.navigatePrevious = function () {
         crudContextService.navigatePrevious();
-        $scope.datamap = crudContextService.currentDetailItem();
+        $scope.datamap = crudContextService.currentDetailItemDataMap();
     }
     $rootScope.$on('$stateChangeSuccess',
           function (event, toState, toParams, fromState, fromParams) {
+              if (fromState.name == "main.cruddetail.compositiondetail") {
+                  crudContextService.leavingCompositionDetail();
+              }
+
               if (toState.name.startsWith("main.cruddetail")) {
                   //needs to refresh the displayables and datamap everytime the detail page is loaded.
                   init();
