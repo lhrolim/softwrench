@@ -61,6 +61,7 @@
 .container header .admin-area .breadcrumb .dropdown-submenu > .dropdown-menu {
   left: 100%;
   top: 0;
+  border-radius: 6px;
 }
 .container header .admin-area .breadcrumb .dropdown-submenu > a:after {
   margin-right: -20px;
@@ -449,19 +450,19 @@ input[type=search] {
 }
 
 .issue-items [ng-switch-when="ApplicationCompositionDefinition"], .expandeddetails, .expanded-item-composition {
-  background-image: -webkit-gradient(linear, left 0, left 100%, from(#fcfcfc), to(#f7f7f7));
-  background-image: -webkit-linear-gradient(top, #fcfcfc, 0%, #f7f7f7, 100%);
-  background-image: -moz-linear-gradient(top, #fcfcfc 0, #f7f7f7 100%);
-  background-image: linear-gradient(to bottom, #fcfcfc 0, #f7f7f7 100%);
+  background-image: -webkit-gradient(linear, left 0, left 100%, from(#f7f7f7), to(#ebebeb));
+  background-image: -webkit-linear-gradient(top, #f7f7f7, 0%, #ebebeb, 100%);
+  background-image: -moz-linear-gradient(top, #f7f7f7 0, #ebebeb 100%);
+  background-image: linear-gradient(to bottom, #f7f7f7 0, #ebebeb 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffcfcfc',endColorstr='#fff7f7f7',GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff7f7f7',endColorstr='#ffebebeb',GradientType=0);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
   color: #3a87ad;
-  background-color: #fafafa;
+  background-color: #f7f7f7;
   padding: 15px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
 }
 
