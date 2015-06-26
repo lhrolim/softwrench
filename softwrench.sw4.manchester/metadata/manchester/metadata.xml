@@ -535,8 +535,7 @@
           <customization position="unitcost"/>
           <customization position="costtype"/>
           <customization position="conditioncode"/>
-          <customization position="curbal"/>
-      </detail>
+        </detail>
       </schemas>
     </application>
 
