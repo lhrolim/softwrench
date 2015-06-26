@@ -284,7 +284,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 });
             }
 
-            return offlineSaveService.saveItem(crudContext.currentApplicationName, datamap).then(function () {
+            return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(function () {
                 crudContext.originalDetailItemDatamap = angular.copy(datamap);
                 contextService.insertIntoContext("crudcontext", crudContext);
             });
