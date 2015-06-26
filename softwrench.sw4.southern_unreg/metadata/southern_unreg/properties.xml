@@ -27,7 +27,7 @@
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
-  <property key="notifications.activityStream.enabled" value="true"/>
+  <property key="notifications.activityStream.enabled" value="false"/>
 
   <environment key="dev">
     <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
