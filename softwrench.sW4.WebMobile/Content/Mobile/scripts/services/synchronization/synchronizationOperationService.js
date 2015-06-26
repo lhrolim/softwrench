@@ -188,7 +188,7 @@
                     var batchids = batches.map(function(batch) {
                         return "'{0}'".format(batch.id);
                     });
-                    return swdbDAO.findByQuery("BatchItem", "batch in ({0})".format(batchids));
+                    return swdbDAO.findByQuery("BatchItem", "batch in ({0})".format(batchids), { prefetch: "problem" });
                 });
         };
     };
