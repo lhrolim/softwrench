@@ -413,7 +413,9 @@
         <schema parentschema="adetail" id="newdetail" title="New Service Request" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
-            <field attribute="siteid" label="Site:" default="DPW" readonly="true"/>
+            <association target="siteid" label="Site:" labelfield="site_.description" default="DPW">
+              <renderer type="lookup"/>
+            </association>
           </section>
           <section id="statussection">
             <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
@@ -428,7 +430,9 @@
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Details">
           <section id="siteidsection">
-           <field label="Site:" attribute="siteid" default="DPW" readonly="true"/>
+            <association target="siteid" label="Site:" labelfield="site_.description">
+              <renderer type="lookup"/>
+            </association>
           </section>
           <section id="statussection">
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
@@ -485,6 +489,14 @@
           </customization>
           <customization position="assetnum"/>
           <customization position="problemcode"/>
+          <customization position="siteid">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
+              <renderer type="lookup" />
+            </association>
+            <field label="Site:" attribute="siteid" readonly="true" hidden="true">
+              <renderer type="default" />
+            </field>
+          </customization>
         </schema>
         
         <schema id="newdetail" platform="web" redeclaring="false">
