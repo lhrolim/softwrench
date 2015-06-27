@@ -70,7 +70,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
             }
             throw new InvalidOperationException(String.Format("schema {0} not found", request.Key));
         }
-
+        [ValidateInput(false)]
         public ActionResult Input([NotNull] string application, string json, ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey) {
 
             var user = SecurityFacade.CurrentUser();
@@ -198,13 +198,14 @@ namespace softWrench.sW4.Web.Controllers.Application {
                                 //yet still another workaround for ie9
                                 attachmentList.Remove(1);
                             }
-
                             attachment.Remove(fileKey);
                             attachment.Remove(fileKey + "_path");
+                        } else {
+                            attachmentList.Add(attachment);
                         }
                         attachment.Add(fileKey, formattedAttachmentString);
                         attachment.Add(fileKey + "_path", fileName);
-                        attachmentList.Add(attachment);
+
                     }
                 }
             }
