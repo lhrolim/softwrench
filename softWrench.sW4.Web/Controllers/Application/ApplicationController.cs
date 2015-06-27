@@ -189,6 +189,11 @@ namespace softWrench.sW4.Web.Controllers.Application {
                         datamap["attachment_"] = new JArray();
                     }
                     if (attachmentList != null) {
+                        if (attachmentList.Any()){
+                            //workaround for ie9 COM-SW-56
+                            attachmentList.Clear();
+                        }
+
                         var attachment = new JObject();
                         Log.DebugFormat("adding file for update. Key: {0} path: {1} content {2} ", fileKey, fileName, formattedAttachmentString);
                         attachment.Add(fileKey, formattedAttachmentString);

@@ -22,11 +22,11 @@ namespace softWrench.sW4.Web {
         }
 
         private static void ConfigRoutes(HttpConfiguration config) {
-            
+
             config.Routes.MapHttpRoute(
-                "DataApi",
-                "api/data/crud/",
-                new { controller = "Data" });
+               "DataApi",
+               "api/data/crud/{application}/{id}",
+               new { id = RouteParameter.Optional, application = RouteParameter.Optional, controller = "Data" });
 
             config.Routes.MapHttpRoute(
                 "SyncApi",
