@@ -2,9 +2,9 @@
 (function () {
     'use strict';
 
-    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', submitService]);
+    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService','attachmentService', submitService]);
 
-    function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService) {
+    function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService, attachmentService) {
 
         var service = {
             submitForm: submitForm,
@@ -98,7 +98,7 @@
                 }
             });
 
-            var isValidfn = this.isValidAttachment;
+            var isValidfn = attachmentService.isValid;
 
             $('input[type="file"]', form).each(function () {
                 if (this.value != null && this.value != "" && isValidfn(this.value)) {

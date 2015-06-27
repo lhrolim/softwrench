@@ -40,6 +40,7 @@
                 if (isIe9() || changeEvent.target.files.length == 0) {
                     // if we´re on ie9 we need to submit the files using a form since it doesnt have the FileReader object present (HTML5+)
                     scope.fileread = "xxx";
+                    scope.$digest();
                     return;
                 }
 
