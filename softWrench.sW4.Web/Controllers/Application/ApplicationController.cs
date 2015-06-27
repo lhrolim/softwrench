@@ -194,6 +194,8 @@ namespace softWrench.sW4.Web.Controllers.Application {
                         if (attachmentList.Any()) {
                             //workaround for ie9 COM-SW-56
                             attachment = (JObject)attachmentList[0];
+                            attachment.Remove(fileKey);
+                            attachment.Remove(fileKey + "_path");
                         }
                         attachment.Add(fileKey, formattedAttachmentString);
                         attachment.Add(fileKey + "_path", fileName);
