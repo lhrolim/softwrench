@@ -332,6 +332,7 @@
           <arg value="/c"/>
           <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
         </exec>
+        
 
         <if test="${customerlinkcreated =='0'}">
           <echo message="created symbolic link for ${clientname}" />

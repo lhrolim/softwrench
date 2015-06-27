@@ -137,7 +137,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
         controller: function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup, layoutservice) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup, layoutservice, attachmentService) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
 
@@ -224,9 +224,20 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 $('.datetimereadonly').datepicker("remove");
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
-                    if (this != null) {
-                        $('#uploadFile').attr("value", this.value);
+                    var fileName = this.value.match(/[^\/\\]+$/);
+                    var isValid = attachmentService.isValid(this.value);
+                    if (!isValid) {
+                        $('#uploadFile').attr("value", "");
+                        if (isIe9()) {
+                            //hacky around ie9 -- HAP-894
+                            $('#uploadFile').attr("value", "");
+                            $(this).replaceWith($(this).clone(true));
+                        } else {
+                            $('#uploadFile').val('');
+                        }
+                        return;
                     }
+                    $('#uploadFile').attr("value", fileName);
                 });
             });
 

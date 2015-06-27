@@ -1,22 +1,27 @@
-﻿var app = angular.module('sw_layout');
+﻿
+(function () {
+    'use strict';
 
-app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService, alertService,schemaService) {
+    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', submitService]);
 
-    function addSchemaDataToParameters(parameters, schema, nextSchema) {
-        parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
-        if (nextSchema != null && nextSchema.schemaId != null) {
-            parameters.routeParametersDTO["nextSchemaKey"] = nextSchema.schemaId + ".";
-            if (nextSchema.mode != null) {
-                parameters.routeParametersDTO["nextSchemaKey"] += nextSchema.mode;
-            }
-            parameters.routeParametersDTO["nextSchemaKey"] += "." + platform();
-        }
-        return parameters;
-    }
+    function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService) {
 
-    return {
+        var service = {
+            submitForm: submitForm,
+            removeNullInvisibleFields: removeNullInvisibleFields,
+            translateFields: translateFields,
+            getFormToSubmitIfHasAttachement: getFormToSubmitIfHasAttachement,
+            removeExtraFields: removeExtraFields,
+            createSubmissionParameters: createSubmissionParameters,
+            handleDatamapForMIF: handleDatamapForMIF,
+            submitConfirmation: submitConfirmation
+        };
+
+        return service;
+
+
         ///used for ie9 form submission
-        submitForm: function (formToSubmit, parameters, jsonString, applicationName) {
+        function submitForm(formToSubmit, parameters, jsonString, applicationName) {
             // remove from session the redirect url... the redirect url will be returned when the form submit response comes from server
             sessionStorage.removeItem("swGlobalRedirectURL");
 
@@ -40,10 +45,23 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
             // submit form
             formToSubmit.attr("action", url("/Application/Input"));
             formToSubmit.submit();
-        },
+        };
+
+        function addSchemaDataToParameters(parameters, schema, nextSchema) {
+            parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
+            if (nextSchema != null && nextSchema.schemaId != null) {
+                parameters.routeParametersDTO["nextSchemaKey"] = nextSchema.schemaId + ".";
+                if (nextSchema.mode != null) {
+                    parameters.routeParametersDTO["nextSchemaKey"] += nextSchema.mode;
+                }
+                parameters.routeParametersDTO["nextSchemaKey"] += "." + platform();
+            }
+            return parameters;
+        };
+
 
         ///return if a field which is not on screen (but is not a hidden instance), and whose value is null from the datamap, avoiding sending useless (and wrong) data
-        removeNullInvisibleFields: function (displayables, datamap) {
+        function removeNullInvisibleFields(displayables, datamap) {
             var fn = this;
             $.each(displayables, function (key, value) {
                 if (fieldService.isNullInvisible(value, datamap)) {
@@ -54,9 +72,22 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
                 }
 
             });
-        },
+        }
 
-        getFormToSubmitIfHasAttachement: function (displayables, datamap) {
+
+
+        function translateFields(displayables, datamap) {
+            var fieldsToTranslate = $.grep(displayables, function (e) {
+                return e.attributeToServer != null;
+            });
+            for (var i = 0; i < fieldsToTranslate.length; i++) {
+                var field = fieldsToTranslate[i];
+                datamap[field.attributeToServer] = datamap[field.attribute];
+                delete datamap[field.attribute];
+            }
+        }
+
+        function getFormToSubmitIfHasAttachement(displayables, datamap) {
 
             var form = $("#crudbodyform");
             var formId = null;
@@ -67,16 +98,17 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
                 }
             });
 
+            var isValidfn = this.isValidAttachment;
+
             $('input[type="file"]', form).each(function () {
-                if (this.value != null && this.value != "") {
+                if (this.value != null && this.value != "" && isValidfn(this.value)) {
                     formId = $(this).closest('form');
                 }
             });
             return formId;
-        },
+        }
 
-
-        removeExtraFields: function (datamap, clone, schema) {
+        function removeExtraFields(datamap, clone, schema) {
             if (!datamap.extrafields) {
                 return datamap;
             }
@@ -97,20 +129,10 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
             });
             delete data.extrafields;
             return data;
-        },
+        }
 
-        translateFields: function (displayables, datamap) {
-            var fieldsToTranslate = $.grep(displayables, function (e) {
-                return e.attributeToServer != null;
-            });
-            for (var i = 0; i < fieldsToTranslate.length; i++) {
-                var field = fieldsToTranslate[i];
-                datamap[field.attributeToServer] = datamap[field.attribute];
-                delete datamap[field.attribute];
-            }
-        },
 
-        createSubmissionParameters: function (datamap,schema,nextSchemaObj,id) {
+        function createSubmissionParameters(datamap, schema, nextSchemaObj, id) {
             var parameters = {};
             if (sessionStorage.mockmaximo == "true") {
                 //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
@@ -135,31 +157,33 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
                 parameters.batch = datamap[batchAttribute].equalsAny("batch", "true");
             }
 
-            
+
             parameters.platform = platform();
             return parameters;
-        },
+        }
+
+
 
         //Updates fields that were "removed" from an existing record. If the value was originally not null, but is now null,
         //then we update the datamap to " ". This is because the MIF will ignore nulls, causing no change to that field on the ticket.
-        handleDatamapForMIF: function (schema, originalDatamap, datamap) {
+        function handleDatamapForMIF(schema, originalDatamap, datamap) {
             var displayableFields = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             for (var i = 0, len = displayableFields.length; i < len; i++) {
                 var key = displayableFields[i].target == null ? displayableFields[i].attribute : displayableFields[i].target;
-                
+
                 if ((datamap[key] == null || datamap[key] == undefined) && datamap[key] != originalDatamap[key]) {
                     datamap[key] = " ";
                 }
             }
-        },
+        }
 
-        submitConfirmation: function (event, datamap, parameters) {
+        function submitConfirmation(event, datamap, parameters) {
             var message = "Are you sure you want to save changes to this record?";
-            return alertService.confirm(null, null, function() {
+            return alertService.confirm(null, null, function () {
                 parameters.continue();
             }, message);
         }
 
-    };
+    }
+})();
 
-});
