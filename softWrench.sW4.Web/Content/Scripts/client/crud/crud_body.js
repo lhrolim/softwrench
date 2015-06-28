@@ -133,14 +133,18 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-                var log = $log.getInstance('on#sw_bodyrenderedevent');
-                log.debug('enter');
-
+            $scope.$on('sw_compositiondataresolved', function(event) {
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
+            });
+
+            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                var log = $log.getInstance('on#sw_bodyrenderedevent');
+                log.debug('enter');
+
+                
 
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
