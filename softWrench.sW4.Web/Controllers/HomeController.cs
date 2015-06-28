@@ -146,7 +146,9 @@ namespace softWrench.sW4.Web.Controllers {
 
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(),null, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, windowTitle, message));
+            var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), menuModel, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), 
+                ApplicationConfiguration.ClientName, windowTitle, message));
         }
 
         public ActionResult MakeSWAdmin() {
