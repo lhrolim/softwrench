@@ -208,7 +208,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var sb = new StringBuilder();
             foreach (var dictionary in (IEnumerable<Dictionary<string, object>>)list) {
                 sb.Append("<p>");
-                sb.Append(dictionary["docinfo_.description"]);
+                sb.Append(dictionary["urldescription"]);
                 sb.Append("</p>");
             }
             resultObject.Attributes.Add("#attachmentsummary", sb.ToString());
