@@ -1,4 +1,4 @@
-﻿using cts.commons.portable.Util;
+using cts.commons.portable.Util;
 using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
@@ -191,7 +191,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
                     if (attachmentList != null) {
                         var attachment = new JObject();
                         Log.DebugFormat("adding file for update. Key: {0} path: {1} content {2} ", fileKey, fileName, formattedAttachmentString);
-                        if (attachmentList.Any()) {
+                         if (attachmentList.Any()) {
                             //workaround for ie9 COM-SW-56
                             attachment = (JObject)attachmentList[0];
                             attachment.Remove(fileKey);
@@ -200,7 +200,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
                             attachmentList.Add(attachment);
                         }
                         attachment.Add(fileKey, formattedAttachmentString);
-                        attachment.Add(fileKey + "_path", fileName);
+                        attachment.Add(fileKey + "_path", fileName);;
 
                     }
                 }
