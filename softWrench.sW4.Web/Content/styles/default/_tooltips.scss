@@ -1,4 +1,12 @@
-﻿.tooltip {
+﻿.tooltip-inner {
+    color: #000;
+    background-color: #eee;
+    border: 1px solid #a1a1a1;
+    min-width: 140px;
+    max-width: 140px;
+}
+
+.tooltip {
     font-size: 11px;
     z-index: 9999;
     position: fixed;
@@ -7,16 +15,7 @@
         filter: alpha(opacity=100);
         opacity: 1;
     }
-}
 
-.tooltip-inner {
-    color: #000;
-    background-color: #eee;
-    border: 1px solid #a1a1a1;
-    max-width: 140px;
-}
-
-.tooltip {
     &.top .tooltip-arrow {
         border-top-color: #a1a1a1;
     }
