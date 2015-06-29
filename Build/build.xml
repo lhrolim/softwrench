@@ -211,9 +211,9 @@
   </target>
 
   
-  <target name="releaseprepare">
+  <target name="releaseprepare" >
 
-    <xmlpoke file="${deploypath}/Web.config"
+    <xmlpoke file="../softWrench.sW4.Web/Web.config"
                xpath="/configuration/appSettings/add[@key = 'version']/@value"
                value="${version}" failonerror="true"/>
 
