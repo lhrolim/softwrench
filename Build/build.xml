@@ -206,7 +206,14 @@
     </foreach>
   </target>
 
+  
+  <target name="releaseprepare">
 
+    <xmlpoke file="${deploypath}/Web.config"
+               xpath="/configuration/appSettings/add[@key = 'version']/@value"
+               value="${version}" failonerror="true"/>
+
+  </target>
 
 
   <target name="setclient">
