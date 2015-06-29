@@ -33,7 +33,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     public class BasePersonDataSet : MaximoApplicationDataSet {
 
-        private ISWDBHibernateDAO _swdbDAO;
+        private readonly ISWDBHibernateDAO _swdbDAO;
 
         public BasePersonDataSet(ISWDBHibernateDAO swdbDAO) {
             _swdbDAO = swdbDAO;
@@ -75,7 +75,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     if (swUser == null) {
                         swUser = new User {
                             MaximoPersonId = personId,
-                            UserName = personId
+                            UserName = personId,
+                            Password = MetadataProvider.GlobalProperty(SwUserConstants.DefaultUserPassword)
                         };
                     } else {
                         swUser.MaximoPersonId = personId;
