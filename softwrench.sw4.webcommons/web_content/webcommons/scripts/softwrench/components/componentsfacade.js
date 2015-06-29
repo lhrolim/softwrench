@@ -87,19 +87,18 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             log.debug('change focus to {0}'.format(attribute));
         },
 
-        refresh: function (displayable, scope, fromDigestAndRefresh) {
+        refresh: function (displayable, scope, fromDigestAndRefresh,newValue) {
             var attribute = displayable.attribute;
 
             var log = $log.getInstance('cmpfacade#refresh');
             var rendererType = displayable.rendererType;
-            if (fromDigestAndRefresh) {
-                log.debug('calling digest and refresh for field {0}, component {1} | value {2}'.format(displayable.attribute, rendererType, scope.datamap[displayable.target]));
-            } else {
-                log.debug('calling refresh for field {0}, component {1} | value {2}'.format(displayable.attribute, rendererType, scope.datamap[displayable.target]));
-            }
+            var msg = fromDigestAndRefresh ? 'calling digest and refresh for field {0}, component {1} | value {2}' : 'calling refresh for field {0}, component {1} | value {2}';
+            var valueToLog = newValue ? newValue : scope.datamap[displayable.target];
+
+            log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType == 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(attribute);
+                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue);
             } else if (rendererType == 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType == 'combodropdown') {

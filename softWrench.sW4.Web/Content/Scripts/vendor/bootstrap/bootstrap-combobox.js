@@ -418,12 +418,13 @@
         this.$source.trigger('change');
     }
 
-    , refresh: function () {
+    , refresh: function (newValue) {
         this.source = this.parse();
         this.options.items = this.source.length;
 
-        
-        if (this.source && this.source.length == 1) {
+        if (newValue) {
+            this.$element.val(newValue);
+        }else if (this.source && this.source.length == 1) {
             this.$element.val(this.source[0]);
         }
         var val = this.$element.val();

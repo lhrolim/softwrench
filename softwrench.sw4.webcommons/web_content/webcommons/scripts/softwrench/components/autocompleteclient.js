@@ -28,10 +28,10 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
             }
         },
 
-        refreshFromAttribute: function (attribute) {
+        refreshFromAttribute: function (attribute,value) {
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
             if (combo != undefined) {
-                combo.refresh();
+                combo.refresh(value);
             }
         },
 

@@ -116,7 +116,7 @@
                         }
                     };
                     associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
-                    cmpfacade.digestAndrefresh(association, $scope);
+                    cmpfacade.digestAndrefresh(association, $scope, newValue);
                 });
                 $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
                     if (newvalue == old) {
