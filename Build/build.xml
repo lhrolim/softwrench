@@ -41,6 +41,10 @@
     <property name="version" value="${environment::get-variable('tag')}" />
   </if>
 
+  <if test="${environment::variable-exists('version')}">
+    <property name="version" value="${environment::get-variable('version')}" />
+  </if>
+
   <if test="${property::exists('platform')==false}">
     <property name="platform" value="web" />
   </if>
