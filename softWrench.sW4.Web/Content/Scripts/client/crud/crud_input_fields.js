@@ -185,8 +185,10 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
             }
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
-                //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
-                $scope.associationOptions = associationoptions;
+                if (!$scope.associationOptions) {
+                    //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
+                    $scope.associationOptions = associationoptions;
+                }
             });
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {

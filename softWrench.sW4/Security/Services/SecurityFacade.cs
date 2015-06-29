@@ -166,7 +166,11 @@ namespace softWrench.sW4.Security.Services {
 
 
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
-            if (!fetchFromDB || string.IsNullOrEmpty(currLogin) || _users.ContainsKey(currLogin)) {
+            if (string.IsNullOrEmpty(currLogin)) {
+                return null;
+            }
+
+            if (!fetchFromDB || _users.ContainsKey(currLogin)) {
                 return _users[currLogin];
             }
             //cookie authenticated already 

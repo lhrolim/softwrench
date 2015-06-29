@@ -422,6 +422,10 @@
         this.source = this.parse();
         this.options.items = this.source.length;
 
+        
+        if (this.source && this.source.length == 1) {
+            this.$element.val(this.source[0]);
+        }
         var val = this.$element.val();
         if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
             this.clearElement();
