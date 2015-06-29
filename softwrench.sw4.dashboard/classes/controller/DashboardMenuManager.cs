@@ -106,7 +106,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 dashBoardMenu = container;
             }
             dashBoardMenu.Icon = "fa fa-tachometer";
-            dashBoardMenu.Title = "Dashboards";
+            dashBoardMenu.Title = "Dashboard";
             leafs.Add(dashBoardMenu);
             leafs.AddRange(securedMenu.Leafs);
             securedMenu.Leafs = leafs;
@@ -131,7 +131,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var action = new ActionMenuItemDefinition {
                 Controller = "Dashboard",
                 Action = "Manage",
-                Title = "Dashboards",
+                Title = "Dashboard",
                 Tooltip = "Click here to manage your dashboards"
             };
             return action;
