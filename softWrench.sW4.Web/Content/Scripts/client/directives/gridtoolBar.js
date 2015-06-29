@@ -60,7 +60,9 @@
     }
 
     $scope.executeService = function (command) {
-        var log =$log.get("gridtoolBar#executeService");
+        var log = $log.get("gridtoolBar#executeService");
+
+        $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
         $('.no-touch [rel=tooltip]').tooltip('hide');
 
         if (command.service == "$scope") {

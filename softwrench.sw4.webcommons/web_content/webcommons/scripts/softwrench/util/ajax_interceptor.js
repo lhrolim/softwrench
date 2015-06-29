@@ -28,7 +28,9 @@ app.config(['$httpProvider', function ($httpProvider) {
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
+            $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
             $('.no-touch [rel=tooltip]').tooltip('hide');
+
             activeRequests--;
             var log = $log.getInstance('sw4.ajaxint#endedok');
             log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
@@ -61,7 +63,9 @@ app.config(['$httpProvider', function ($httpProvider) {
 
         var endederror = function (rejection) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
+            $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
             $('.no-touch [rel=tooltip]').tooltip('hide');
+
             if (rejection.status == 401) {
                 window.location = url('');
                 return;

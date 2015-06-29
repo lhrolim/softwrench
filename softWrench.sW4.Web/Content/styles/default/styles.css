@@ -1403,8 +1403,8 @@ input.ng-dirty.ng-invalid, .not-found:focus {
   color: #000;
   background-color: #eee;
   border: 1px solid #a1a1a1;
-  min-width: 120px;
-  max-width: 120px;
+  min-width: 140px;
+  max-width: 140px;
 }
 
 .tooltip {
