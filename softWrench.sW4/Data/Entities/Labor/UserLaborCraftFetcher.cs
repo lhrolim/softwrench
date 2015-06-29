@@ -24,7 +24,7 @@ namespace softWrench.sW4.Data.Entities.Labor {
 
         public UserLaborCraftFetcher(EntityRepository repository) {
             _repository = repository;
-            _entity = MetadataProvider.Entity("laborcraftrate");
+            _entity = MetadataProvider.Entity("laborcraftrate",false);
 
         }
 

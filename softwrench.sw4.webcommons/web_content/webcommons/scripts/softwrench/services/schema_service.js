@@ -102,6 +102,9 @@
         },
 
         getTitle: function (schema, datamap, smallDevices) {
+            if (!datamap) {
+                return "New " + schema.title;
+            }
             var fields = datamap.fields ? datamap.fields : datamap;
 
             if (schema.properties['detail.titleexpression'] != null) {

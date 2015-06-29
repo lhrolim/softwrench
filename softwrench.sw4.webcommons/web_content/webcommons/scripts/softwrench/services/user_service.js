@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    angular.module('sw_layout').factory('userService', ['contextService', userService]);
+    angular.module('webcommons_services').factory('userService', ['contextService', userService]);
 
     function userService(contextService) {
 

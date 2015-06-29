@@ -73,6 +73,21 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         }
     }
 
+    var enforceNumericType = function (datamap, displayables) {
+        if (!datamap || !displayables) {
+            return;
+        }
+        angular.forEach(displayables, function (field) {
+            if (field.rendererType !== "numericinput") {
+                return;
+            }
+            if (!datamap[field.attribute]) {
+                return;
+            }
+            datamap[field.attribute] = parseInt(datamap[field.attribute]);
+        });
+    };
+
     return {
 
         restoreState: function () {
@@ -213,8 +228,9 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         },
 
         loadCompositionDetail: function (item) {
+            var fields = this.getCompositionDetailSchema().displayables;
+            enforceNumericType(item, fields);
             //for compositions item will be the datamap itself
-
             crudContext.composition.currentDetailItem = item;
             crudContext.composition.originalDetailItemDatamap = angular.copy(item);
             contextService.insertIntoContext("crudcontext", crudContext);
@@ -409,6 +425,10 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             if (!crudContext.currentDetailSchema) {
                 crudContext.currentDetailSchema = loadDetailSchema();
             }
+
+            var fields = this.mainDisplayables();
+            enforceNumericType(item.datamap, fields);
+
             crudContext.currentDetailItem = item;
             crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
             setPreviousAndNextItems(item);
