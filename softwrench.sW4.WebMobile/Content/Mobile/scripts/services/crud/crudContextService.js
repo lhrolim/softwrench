@@ -303,7 +303,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             var that = this;
             if (crudContext.composition && crudContext.composition.currentDetailItem) {
                 var compositionItem = crudContext.composition.currentDetailItem;
-                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, datamap, compositionItem, crudContext.composition.currentTab).then(function () {
+                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(function () {
                     crudContext.originalDetailItemDatamap = datamap;
                     crudContext.composition.originalDetailItemDatamap = crudContext.composition.currentDetailItem;
                     that.loadTab(crudContext.composition.currentTab);
