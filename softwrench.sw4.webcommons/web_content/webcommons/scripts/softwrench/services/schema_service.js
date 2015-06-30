@@ -117,7 +117,8 @@
             var result;
             var idValue = fields[schema.userIdFieldName];
             if (!idValue) {
-                idValue= "New ";
+
+                idValue= "New " + schema.title;
             }
             if (smallDevices) {
                 result = idValue;

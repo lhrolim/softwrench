@@ -355,7 +355,7 @@
           </composition>
         </schema>
 
-        <detail platform="mobile" title="Work Orders">
+        <detail platform="mobile" title="Work Order">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid" hidden="true" />
           <field attribute="siteid" hidden="true"/>

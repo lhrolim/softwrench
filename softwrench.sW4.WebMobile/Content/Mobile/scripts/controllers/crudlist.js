@@ -62,7 +62,7 @@
         var listSchema = crudContextService.currentListSchema();
         var title = item[offlineSchemaService.locateAttributeByQualifier(listSchema, "title")];
         if (title == null) {
-            return schemaService.getTitle(listSchema, item, true);
+            return "New " + crudContextService.currentTitle();
         }
         return title;
     }
