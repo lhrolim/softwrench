@@ -104,19 +104,23 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
                 //Only continues if datmap for the current attribute is null
                 if (target != undefined && datamap[target] == null) {
                     var expressionResult = null;
-                    if (displayables[key].evalExpression != null) {
-                        expressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
+                    var displayable = displayables[key];
+                    if (displayable.evalExpression != null) {
+                        expressionResult = expressionService.evaluate(displayable.evalExpression, datamap, scope);
                         datamap[target] = expressionResult;
-                    } else if (displayables[key].defaultExpression != null) {
-                        expressionResult = expressionService.evaluate(displayables[key].defaultExpression, datamap, scope);
+                    } else if (displayable.defaultExpression != null) {
+                        expressionResult = expressionService.evaluate(displayable.defaultExpression, datamap, scope);
                         datamap[target] = expressionResult;
                     }
                     if (expressionResult == null && value.defaultValue != null) {
                         if (value.defaultValue == "@now") {
                             datamap[target] = new Date();
                         } else {
-                            //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                            datamap[target] = userService.readProperty(value.defaultValue);
+                            var parsedUserValue = userService.readProperty(value.defaultValue);
+                            if (displayable.rendererType == "numericinput" && parsedUserValue) {
+                                parsedUserValue = parseInt(parsedUserValue);
+                            }
+                            datamap[target] = parsedUserValue;
                         }
                     }
                 }
