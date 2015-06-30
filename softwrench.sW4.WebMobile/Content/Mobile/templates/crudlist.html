@@ -7,7 +7,7 @@
     <ion-nav-title>
         <div ng-show="!isSearching()">{{title()}}
             
-            <div class="buttons" style="position: absolute; right: 5px; top:5px">
+            <div class="buttons" style="position: absolute; right: 5px; top:5px" ng-show="isList()">
                 <button class="button icon ion-android-more-vertical" ng-click="showFilterOptions($event)"></button>
             </div>
         </div>

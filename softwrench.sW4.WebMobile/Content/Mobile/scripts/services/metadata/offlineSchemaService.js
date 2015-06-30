@@ -1,29 +1,31 @@
-﻿mobileServices.factory('offlineSchemaService', function ($log,fieldService) {
+﻿
+(function () {
+    'use strict';
 
-    /// <summary>
-    /// builds a cache of the grid qualified displayables to show on small grids
-    /// </summary>
-    /// <param name="schema"></param>
-    function buildQualifierCache(schema) {
-        schema.jscache = schema.jscache || {};
-        if (schema.jscache.griddisplayables) {
-            //already cached
-            return;
-        }
-        schema.jscache.qualifiercache = {};
-        var displayables = schema.displayables;
-        for (var i = 0; i < displayables.length; i++) {
-            var displayable = displayables[i];
-            if (displayable.qualifier) {
-                schema.jscache.qualifiercache[displayable.qualifier] = displayable;
+    angular.module('sw_mobile_services').factory('offlineSchemaService', ['$log', 'fieldService', 'schemaService', offlineSchemaService]);
+
+    function offlineSchemaService($log, fieldService, schemaService) {
+
+        var service = {
+            loadDetailSchema: loadDetailSchema,
+            locateSchema: locateSchema,
+            locateSchemaByStereotype: locateSchemaByStereotype,
+            fillDefaultValues: fillDefaultValues,
+            locateAttributeByQualifier: locateAttributeByQualifier
+        };
+
+        return service;
+
+        function loadDetailSchema(currentListSchema, currentApplication) {
+            var detailSchemaId = "detail";
+            var overridenSchema = schemaService.getProperty(currentListSchema, "list.click.schema");
+            if (overridenSchema) {
+                detailSchemaId = overridenSchema;
             }
-        }
-    };
+            return this.locateSchema(currentApplication, detailSchemaId);
+        };
 
-
-    return {
-
-        locateSchema: function (application, schemaId) {
+        function locateSchema(application, schemaId) {
             var schemasList = application.data.schemasList;
 
             for (var i = 0; i < schemasList.length; i++) {
@@ -37,9 +39,26 @@
                 }
             }
             return null;
-        },
+        };
 
-        locateSchemaByStereotype: function (application, stereotype) {
+
+        function buildQualifierCache(schema) {
+            schema.jscache = schema.jscache || {};
+            if (schema.jscache.griddisplayables) {
+                //already cached
+                return;
+            }
+            schema.jscache.qualifiercache = {};
+            var displayables = schema.displayables;
+            for (var i = 0; i < displayables.length; i++) {
+                var displayable = displayables[i];
+                if (displayable.qualifier) {
+                    schema.jscache.qualifiercache[displayable.qualifier] = displayable;
+                }
+            }
+        };
+
+        function locateSchemaByStereotype(application, stereotype) {
             var schemasList = application.data.schemasList;
 
             for (var i = 0; i < schemasList.length; i++) {
@@ -56,14 +75,14 @@
                 }
             }
             return null;
-        },
+        };
 
 
-        fillDefaultValues: function (schema, item) {
+        function fillDefaultValues(schema, item) {
             fieldService.fillDefaultValues(schema.displayables, item, {});
-        },
+        };
 
-        locateAttributeByQualifier: function (schema, qualifier) {
+        function locateAttributeByQualifier(schema, qualifier) {
             schema.jscache = schema.jscache || {};
             if (schema.jscache.qualifiercache) {
                 //already cached
@@ -74,4 +93,7 @@
         }
 
     }
-});
+})();
+
+
+
