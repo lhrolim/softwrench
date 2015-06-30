@@ -108,8 +108,9 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
             ContextLookuper.FillContext(request.Key);
-            return DataSetProvider.LookupDataSet(application,applicationMetadata.Schema.SchemaId)
+            var compositionData = DataSetProvider.LookupDataSet(application,applicationMetadata.Schema.SchemaId)
                 .GetCompositionData(applicationMetadata, request, currentData);
+            return compositionData;
         }
 
 

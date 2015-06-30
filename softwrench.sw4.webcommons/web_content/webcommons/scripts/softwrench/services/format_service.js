@@ -72,7 +72,7 @@
             }
 
             var dateFormat;
-            if (field.rendererType == "datetime" || field.rendererType == 'date' || field.rendererType == 'time' || field.rendererParameters['formatter'] == "datetime") {
+            if ( (field.rendererType == "datetime" || field.rendererType == 'date' || field.rendererType == 'time') && (field.rendererParameters['formatter']==null || field.rendererParameters['formatter'] == "datetime")) {
                 if (value != null) {
                     dateFormat = field.rendererParameters['format'];
                     if (dateFormat == null) {

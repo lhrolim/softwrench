@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using cts.commons.portable.Util;
+using log4net;
+using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
+using softwrench.sw4.Shared2.Metadata.Exception;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -17,6 +20,7 @@ namespace softWrench.sW4.Data.Entities {
 
         private const string RelationshipNotFound = "relationship {0} not found on entity {1}";
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EntityBuilder));
 
 
 
@@ -52,7 +56,15 @@ namespace softWrench.sW4.Data.Entities {
                     return;
                 }
                 if (attribute != null && !attributes.ContainsKey(property.Name)) {
-                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value));
+                    var type = GetType(metadata, attribute);
+                    try {
+                        var valueFromJson = GetValueFromJson(type, property.Value);
+                        attributes.Add(property.Name, valueFromJson);
+                    } catch (Exception e) {
+                        Log.Error("error casting object", e);
+                        throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value));
+                    }
+
                 } else if (property.Value.Type == JTokenType.Array) {
                     var array = property.Value.ToObject<Object[]>();
                     entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));

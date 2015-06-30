@@ -3,6 +3,7 @@
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log) {
         var activeRequests = 0;
+        var activeRequestsArr = [];
         var started = function (config) {
             lockCommandBars();
             lockTabs();
@@ -16,25 +17,30 @@ app.config(['$httpProvider', function ($httpProvider) {
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
                 }
-                spinAvoided = $rootScope.avoidspin || config.avoidspin;
+                spinAvoided = config.avoidspin;
                 if (!spinAvoided) {
+                    activeRequests++;
                     $rootScope.$broadcast('sw_ajaxinit');
+                    activeRequestsArr.push(config.url);
                 }
             }
             log.trace("url: {0} | current module:{1} | current metadata:{2} | spin avoided:{3} "
                .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata'], spinAvoided));
-            activeRequests++;
-
+            
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
             $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
             $('.no-touch [rel=tooltip]').tooltip('hide');
-
-            activeRequests--;
+            var spinAvoided = false;
+            spinAvoided = response.config.avoidspin;
+            if (!spinAvoided) {
+                activeRequests--;
+            }
             var log = $log.getInstance('sw4.ajaxint#endedok');
             log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
-            if (activeRequests == 0) {
+            if (activeRequests <= 0) {
+                activeRequests = 0;
                 unLockCommandBars();
                 unLockTabs();
                 log.info("Requests ended");
@@ -42,6 +48,10 @@ app.config(['$httpProvider', function ($httpProvider) {
                 successMessageHandler(response.data);
                 //this has to be renewed per operation
                 contextService.insertIntoContext("avoidspin", null, true);
+            }
+            var idx = activeRequestsArr.indexOf(response.config.url);
+            if (idx != -1) {
+                activeRequestsArr.splice(idx,1);
             }
         };
 

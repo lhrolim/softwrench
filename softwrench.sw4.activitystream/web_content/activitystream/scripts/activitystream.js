@@ -180,16 +180,16 @@ app.directive('activitystream', function(contextService) {
                 var parameters = {};
                 parameters.role = 'allRole';
 
-                //turn off spinner, if not alread off
-                if (!$rootScope.avoidspin) {
-                    rootAvoidingSpin = false;
-                    $rootScope.avoidspin = silent;
-                } else {
-                    rootAvoidingSpin = true;
-                }
+//                //turn off spinner, if not alread off
+//                if (!$rootScope.avoidspin) {
+//                    rootAvoidingSpin = false;
+//                    $rootScope.avoidspin = silent;
+//                } else {
+//                    rootAvoidingSpin = true;
+//                }
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
-                $http.get(rawUrl).success(
+                $http.get(rawUrl, { avoidspin: true }).success(
                     function (data) {
                         $scope.readCount = data.readCount;
                         $scope.activities = data.notifications;
@@ -202,7 +202,6 @@ app.directive('activitystream', function(contextService) {
                         }
 
                         //restore spinner to orginal value
-                        $rootScope.avoidspin = rootAvoidingSpin;
                         log.debug($scope.activities);
                     }).error(
                     function(data) {
@@ -212,7 +211,6 @@ app.directive('activitystream', function(contextService) {
                         }
                         
                         //restore spinner to orginal value
-                        $rootScope.avoidspin = rootAvoidingSpin;
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
                     }
                 );

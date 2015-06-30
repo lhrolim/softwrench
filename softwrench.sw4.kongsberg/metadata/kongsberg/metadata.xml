@@ -1437,7 +1437,7 @@
             <renderer type="checkbox" params="inputsize=small"/>
           </field>
           <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            <renderer type="default" params="format=MM/dd/yyyy HH:mm;inputsize=small;formatter=doubleToTime"/>
           </field>
           <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
@@ -1805,7 +1805,7 @@
             <renderer type="checkbox" params="inputsize=small" />
           </field>
           <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
+            <renderer type="default" params="format=MM/dd/yyyy HH:mm;inputsize=small;formatter=doubleToTime" />
           </field>
           <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
