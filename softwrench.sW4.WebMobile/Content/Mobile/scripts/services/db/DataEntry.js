@@ -40,7 +40,7 @@ entities.DataEntry.updateQueryPattern = "update DataEntry set originaldatamap='{
 entities.DataEntry.deleteQueryPattern = "delete from DataEntry where remoteId in({0}) and application='{1}'";
 
 entities.DataEntry.updateLocalPattern = "update DataEntry set datamap='{0}',isDirty=1 where id ='{1}'";
-entities.DataEntry.insertLocalPattern = "insert into DataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',1,null,null,'{2}')";
+entities.DataEntry.insertLocalPattern = "insert into DataEntry (application,datamap,isDirty,pending,remoteId,rowstamp,id) values ('{0}','{1}',1,0,null,null,'{2}')";
 
 //here because of the order of the files
 entities.BatchItem.hasOne('dataentry', entities.DataEntry);

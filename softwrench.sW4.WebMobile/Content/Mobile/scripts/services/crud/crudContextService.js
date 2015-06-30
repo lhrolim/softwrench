@@ -407,7 +407,9 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         },
 
         createDetail: function () {
-            crudContext.currentDetailItem = {};
+            crudContext.currentDetailItem = {
+                datamap:{}
+            };
             offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem);
             crudContext.originalDetailItemDatamap = {
                 //to make this new item always dirty!!!
