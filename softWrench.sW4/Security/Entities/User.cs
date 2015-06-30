@@ -92,6 +92,8 @@ namespace softWrench.sW4.Security.Entities {
 
         public User() {
             Person = new Person();
+            Profiles = new HashedSet<UserProfile>();
+            CustomRoles = new HashedSet<UserCustomRole>();
         }
         /// <summary>
         /// used for nhibernate to generate a "view" of user entity to list screen

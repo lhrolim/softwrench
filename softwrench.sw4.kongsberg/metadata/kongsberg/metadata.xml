@@ -5,6 +5,7 @@
     <template path="@person.xml"/>
     <template path="@worklogs.xml"/>
     <template path="@solution.xml"/>
+    <template path="@person.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketid">
@@ -2270,21 +2271,7 @@
       </schemas>
     </application>
 
-    <application name="person" title="Person" entity="person" id="00000000-0000-0000-0000-000000000012">
-      <properties>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-        <property key="mobile.fetchlimit" value="100"/>
-      </properties>
-      <schemas>
-        <list>
-          <field attribute="displayname" label="Display Name" qualifier="title"/>
-        </list>
-        <detail>
-          <field attribute="personid" hidden="true" />
-          <field attribute="displayname" label="Display Name:" requiredexpression="true" />
-        </detail>
-      </schemas>
-    </application>
+   
 
     <application name="labor" title="Labor" entity="labor" id="00000000-0000-0000-0000-000000000013">
       <properties>

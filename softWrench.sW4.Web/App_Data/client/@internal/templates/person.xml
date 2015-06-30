@@ -3,11 +3,11 @@
   <templates>
     <!--Email-->
     <template path="@email.xml"/>
-    
+
     <!--Phone-->
     <template path="@phone.xml"/>
   </templates>
-    
+
   <applications>
     <application name="person" title="Person" entity="person">
       <properties>
@@ -15,6 +15,17 @@
         <property key="detail.navigationbuttons.disabled" value="true"/>
       </properties>
       <schemas>
+
+
+        <schema id="compositionlist" stereotype="compositionlist">
+          <field attribute="displayname" label="Display Name" qualifier="title"/>
+        </schema>
+        <schema id="compositiondetail" stereotype="compositiondetail">
+          <field attribute="personid" hidden="true" />
+          <field attribute="displayname" label="Display Name:" requiredexpression="true" />
+        </schema>
+
+
         <schema id="list" stereotype="list" title="Person List">
           <field attribute="personuid" hidden="true"/>
           <field attribute="personid" label="Username"/>
@@ -23,8 +34,9 @@
           <field attribute="#isactive" label="Active" enableexpression="false">
             <renderer type="checkbox"/>
           </field>
+          <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
         </schema>
-        
+
         <schema id="detail" stereotype="detail" title="Person Detail">
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
@@ -50,7 +62,7 @@
           <section attribute="profilessection" resourcepath="/Content/Templates/otb/profiles.html" role="sysadmin">
             <header displacement="ontop" label="Profiles" showexpression="true"/>
           </section>
-          
+
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
@@ -86,11 +98,11 @@
           <field attribute="#isactive" label="Active">
             <renderer type="checkbox"/>
           </field>
-          
+
           <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html" role="sysadmin">
             <header displacement="ontop" label="Profiles" showexpression="true"/>
           </section>
-          
+
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
