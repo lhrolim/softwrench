@@ -5,9 +5,17 @@
     </ion-nav-buttons>
 
     <ion-nav-title>
-        <div ng-show="!isSearching()">{{title()}}</div>
+        <div ng-show="!isSearching()">{{title()}}
+            
+            <div class="buttons" style="position: absolute; right: 5px; top:5px">
+                <button class="button icon ion-android-more-vertical" ng-click="showFilterOptions($event)"></button>
+            </div>
+        </div>
 
         <div class="bar bar-header item-input-inset" ng-show="isSearching() && isList()">
+            
+            
+
             <label class="item-input-wrapper">
                 <i class="icon ion-navicon ion-search placeholder-icon"></i>
                 <input type="search" class="ion-autocomplete-search" ng-model="searchQuery" ng-change="filter(this)" placeholder="Search" />
@@ -15,21 +23,7 @@
         </div>
     </ion-nav-title>
 
-    <ion-header-bar class="bar-subheader bar-assertive" align-title="left">
-
-        <div class="buttons" style="padding-left: 5px">
-
-
-        </div>
-
-
-
-        <div class="buttons" style="position: absolute; right: 5px; top:5px">
-            <button class="button icon ion-android-more-vertical" ng-click="showFilterOptions($event)"></button>
-        </div>
-
-    </ion-header-bar>
-
+   
     <ion-nav-buttons side="right">
 
         <button class="button-icon ion-android-cancel" ng-show="isList() && isSearching()" ng-click="disableSearch()"></button>
