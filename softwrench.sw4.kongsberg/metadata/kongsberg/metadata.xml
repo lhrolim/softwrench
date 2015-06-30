@@ -1328,10 +1328,10 @@
 
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true"/>
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
               <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
             </association>            
-            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
+            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
               <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
             </association>
           </section>
@@ -1702,11 +1702,11 @@
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true" />
             
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
               <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
             </association>
             
-            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" hideDescription="true">
+            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" hideDescription="false">
               <renderer type="lookup" params="inputsize=medium" />
             </association>
           </section>
