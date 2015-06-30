@@ -1,31 +1,47 @@
-﻿softwrench.controller('CrudInputController', function ($log, $scope, $rootScope, schemaService, crudContextService, fieldService, offlineAssociationService, $ionicPopover) {
+﻿
+(function () {
+    "use strict";
+
+    angular.module("softwrench").controller("CrudInputController", ['$log', '$scope', 'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', 'expressionService', function ($log, $scope, crudContextService, fieldService, offlineAssociationService, $ionicPopover, expressionService) {
+
+        $ionicPopover.fromTemplateUrl('Content/Mobile/templates/compositionmenu.html', {
+            scope: $scope,
+        }).then(function (popover) {
+            $scope.compositionpopover = popover;
+        });
 
 
-    $ionicPopover.fromTemplateUrl('Content/Mobile/templates/compositionmenu.html', {
-        scope: $scope,
-    }).then(function (popover) {
-        $scope.compositionpopover = popover;
-    });
+        $scope.$on("sw_validationerrors", function (event, validationArray) {
 
-  
+        });
 
-    $scope.associationSearch = function (queryparameters) {
-        return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
-    }
+     
 
-    $scope.getAssociationLabelField = function (fieldMetadata) {
-        return 'datamap.' + fieldMetadata.labelFields[0];
-    }
+        $scope.associationSearch = function (queryparameters) {
+            return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
+        }
 
-    $scope.getAssociationValueField = function (fieldMetadata) {
-        return 'datamap.' + fieldMetadata.valueField;
-    }
+        $scope.getAssociationLabelField = function (fieldMetadata) {
+            return 'datamap.' + fieldMetadata.labelFields[0];
+        }
 
-    $scope.isFieldHidden = function (fieldMetadata) {
-        return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
-    }
-  
+        $scope.getAssociationValueField = function (fieldMetadata) {
+            return 'datamap.' + fieldMetadata.valueField;
+        }
+
+        $scope.isFieldHidden = function (fieldMetadata) {
+            return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
+        }
+
+        $scope.isFieldRequired = function (requiredExpression) {
+            if (requiredExpression != undefined) {
+                return expressionService.evaluate(requiredExpression, $scope.datamap);
+            }
+            return requiredExpression;
+        };
+
+    }]);
+
+})();
 
 
-}
-);

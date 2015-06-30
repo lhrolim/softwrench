@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover) {
+﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover,schemaService) {
 
     'use strict';
 
@@ -60,7 +60,11 @@
 
     $scope.itemTitle = function (item) {
         var listSchema = crudContextService.currentListSchema();
-        return item[offlineSchemaService.locateAttributeByQualifier(listSchema, "title")];
+        var title = item[offlineSchemaService.locateAttributeByQualifier(listSchema, "title")];
+        if (title == null) {
+            return schemaService.getTitle(listSchema, item, true);
+        }
+        return title;
     }
 
     $scope.itemSubTitle = function (item) {

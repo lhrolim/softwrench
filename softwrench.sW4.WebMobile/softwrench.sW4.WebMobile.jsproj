@@ -121,6 +121,7 @@
     <Content Include="Content\Mobile\scripts\controllers\syncdetail.js" />
     <Content Include="Content\Mobile\scripts\directives\crud\crud_output_fields.js" />
     <Content Include="Content\Mobile\scripts\directives\crud\crud_input_fields.js" />
+    <Content Include="Content\Mobile\scripts\directives\messagesection.js" />
     <Content Include="Content\Mobile\scripts\directives\option_field.js" />
     <Content Include="Content\Mobile\scripts\directives\swoperationicon.js" />
     <Content Include="Content\Mobile\scripts\directives\swpage.js" />
@@ -150,6 +151,7 @@
     <Content Include="Content\Mobile\styles\directives\swoperationicon.css" />
     <Content Include="Content\Mobile\styles\home.css" />
     <Content Include="Content\Mobile\styles\list.css" />
+    <Content Include="Content\Mobile\templates\directives\messagesection.html" />
     <Content Include="Content\Mobile\templates\directives\swoperationicon.html" />
     <Content Include="Content\Mobile\templates\directives\swpage.html" />
     <Content Include="Content\Mobile\templates\filteroptionsmenu.html" />

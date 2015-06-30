@@ -1,0 +1,15 @@
+﻿<div>
+    
+    <div ng-show="hasValidationError">
+       
+        <div>
+            <ul>
+                <li class="item item-assertive" ng-repeat="error in validationArray">
+                    {{error}}
+                    <a class="ion ion-close" ng-click="removeValidationAlert()"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

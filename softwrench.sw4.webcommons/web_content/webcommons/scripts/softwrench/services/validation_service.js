@@ -1,12 +1,22 @@
-var app = angular.module('sw_layout');
 
-app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService) {
+(function () {
+    'use strict';
 
+    angular.module('webcommons_services').factory('validationService', ['i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', validationService]);
 
+    function validationService(i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService) {
 
-    return {
+        var service = {
+            getInvalidLabels: getInvalidLabels,
+            validate: validate,
+            setDirty: setDirty,
+            getDirty:getDirty,
+            clearDirty: clearDirty
+        };
 
-        getInvalidLabels: function (displayables, datamap) {
+        return service;
+
+        function getInvalidLabels(displayables, datamap) {
             /// <summary>
             ///  Similar to the validate method, but only returning the array of items, for custom handling
             /// </summary>
@@ -36,18 +46,17 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
             }
 
             return validationArray;
-        },
+        };
 
-
-        validate: function (schema, displayables, datamap, angularformerrors, innerValidation) {
+        function validate(schema, displayables, datamap, angularformerrors, innerValidation) {
             angularformerrors = instantiateIfUndefined(angularformerrors);
 
             var validationArray = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
                 var label = displayable.label;
-                if (fieldService.isNullInvisible(displayable,datamap)) {
-                     continue;
+                if (fieldService.isNullInvisible(displayable, datamap)) {
+                    continue;
                 }
                 var isRequired = false;
                 if (displayable.requiredExpression != null) {
@@ -60,7 +69,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                     validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Invalid email at field {0} for {1}', [label, applicationName]));
                     continue;
                 }
-                
+
                 if (isRequired && nullOrEmpty(datamap[displayable.attribute])) {
                     if (!nullOrEmpty(datamap.docinfoid)) {
                         //Existing Attachment
@@ -79,7 +88,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 }
                 if (displayable.displayables != undefined) {
                     //validating section
-                    var innerArray = this.validate(schema, displayable.displayables, datamap,angularformerrors, true);
+                    var innerArray = this.validate(schema, displayable.displayables, datamap, angularformerrors, true);
                     validationArray = validationArray.concat(innerArray);
                 }
             }
@@ -93,26 +102,26 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 }
             }
             return validationArray;
-        },
+        };
 
-        setDirty: function () {
+
+        function setDirty() {
             $rootScope.isDirty = true;
+        };
 
-        },
-
-        getDirty: function () {
+        function getDirty() {
             return $rootScope.isDirty;
+        };
 
-        },
-
-        clearDirty: function () {
+        function clearDirty() {
             $rootScope.isDirty = false;
-
         }
 
 
-    };
 
-});
+    }
+})();
+
+
 
 

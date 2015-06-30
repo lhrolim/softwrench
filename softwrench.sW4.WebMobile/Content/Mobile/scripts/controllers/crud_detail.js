@@ -2,7 +2,7 @@
 
     function init() {
         $scope.displayables = crudContextService.mainDisplayables();
-        $scope.schema= crudContextService.currentDetailSchema();
+        $scope.schema = crudContextService.currentDetailSchema();
         $scope.datamap = crudContextService.currentDetailItemDataMap();
     }
 
@@ -12,6 +12,7 @@
         $scope.compositionpopover = popover;
     });
 
+ 
 
     $scope.expandCompositions = function ($event) {
         $scope.compositionpopover.show($event);
@@ -21,14 +22,14 @@
         $scope.compositionpopover.hide();
     });
 
- 
+
 
     $scope.loadMainTab = function () {
         $ionicScrollDelegate.scrollTop();
         crudContextService.loadTab(null);
     }
 
-    $scope.tabTitle = function() {
+    $scope.tabTitle = function () {
         return crudContextService.tabTitle();
     }
 
@@ -46,23 +47,23 @@
             if (res) {
                 crudContextService.cancelChanges();
                 $scope.datamap = crudContextService.currentDetailItemDataMap();
-            } 
+            }
         });
     }
 
-    $scope.saveChanges = function() {
-        crudContextService.saveChanges().then(function() {
+    $scope.saveChanges = function () {
+        crudContextService.saveChanges().then(function () {
             init();
         });
     }
 
-  
+
 
     $scope.hasDirtyChanges = function () {
         return crudContextService.hasDirtyChanges();
     }
 
-    $scope.shouldShowBack = function() {
+    $scope.shouldShowBack = function () {
         return !this.hasDirtyChanges() && $ionicHistory.viewHistory().backView;
     }
 

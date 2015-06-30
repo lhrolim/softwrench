@@ -4,7 +4,7 @@
 mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService) {
+    crudFilterContextService,validationService) {
     'use strict';
 
     var internalListContext = {
@@ -23,6 +23,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         originalDetailItemDatamap: null,
         currentDetailItem: null,
         currentDetailSchema: null,
+        newItem :false,
 
         //composition
         composition: {
@@ -285,12 +286,27 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItemDatamap);
                 return routeService.go("main.cruddetail.compositionlist");
             }
-            crudContext.currentDetailItem.datamap = angular.copy(crudContext.originalDetailItemDatamap);
+            if (crudContext.newItem) {
+                this.refreshGrid();
+                crudContext.newItem = false;
+            } else {
+                crudContext.currentDetailItem.datamap = angular.copy(crudContext.originalDetailItemDatamap);
+            }
+            
         },
 
-        saveChanges: function () {
+        saveChanges: function (crudForm) {
 
+            crudForm = crudForm || {};
+            var detailSchema = crudContext.currentDetailSchema;
             var datamap = crudContext.currentDetailItem.datamap;
+
+            var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
+            if (validationErrors.length > 0) {
+                //interrupting here, can´t be done inside service
+                return $q.when();
+            }
+
             var that = this;
             if (crudContext.composition && crudContext.composition.currentDetailItem) {
                 var compositionItem = crudContext.composition.currentDetailItem;
@@ -303,6 +319,10 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(function () {
                 crudContext.originalDetailItemDatamap = angular.copy(datamap);
                 contextService.insertIntoContext("crudcontext", crudContext);
+                if (crudContext.newItem) {
+                    crudContext.newItem = false;
+                    this.refreshGrid();
+                } 
             });
         },
 
@@ -415,6 +435,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 //to make this new item always dirty!!!
                 "_newitem#$": true
             };
+            crudContext.newItem = true;
             return routeService.go("main.cruddetail.maininput");
         },
 
