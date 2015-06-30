@@ -321,7 +321,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 contextService.insertIntoContext("crudcontext", crudContext);
                 if (crudContext.newItem) {
                     crudContext.newItem = false;
-                    this.refreshGrid();
+                    that.refreshGrid();
                 } 
             });
         },
@@ -430,7 +430,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             crudContext.currentDetailItem = {
                 datamap:{}
             };
-            offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem);
+            offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem.datamap);
             crudContext.originalDetailItemDatamap = {
                 //to make this new item always dirty!!!
                 "_newitem#$": true

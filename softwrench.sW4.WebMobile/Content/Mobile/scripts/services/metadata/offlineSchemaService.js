@@ -1,4 +1,4 @@
-﻿mobileServices.factory('offlineSchemaService', function ($log) {
+﻿mobileServices.factory('offlineSchemaService', function ($log,fieldService) {
 
     /// <summary>
     /// builds a cache of the grid qualified displayables to show on small grids
@@ -60,7 +60,7 @@
 
 
         fillDefaultValues: function (schema, item) {
-
+            fieldService.fillDefaultValues(schema.displayables, item, {});
         },
 
         locateAttributeByQualifier: function (schema, qualifier) {

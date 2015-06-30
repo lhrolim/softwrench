@@ -1,4 +1,4 @@
-﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover,schemaService) {
+﻿softwrench.controller('CrudListController', function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover, schemaService) {
 
     'use strict';
 
@@ -95,7 +95,8 @@
     }
 
     $scope.getStatusText = function (item) {
-        return item["status"].charAt(0);
+        var status = item["status"];
+        return status==null ? "N" : status.charAt(0);
     }
 
     $scope.getTextColor = function (item) {

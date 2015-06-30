@@ -112,8 +112,12 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
                         datamap[target] = expressionResult;
                     }
                     if (expressionResult == null && value.defaultValue != null) {
-                        //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                        datamap[target] = userService.readProperty(value.defaultValue);
+                        if (value.defaultValue == "@now") {
+                            datamap[target] = new Date();
+                        } else {
+                            //TODO: extract a service here, to be able to use @user, @person, @date, etc...
+                            datamap[target] = userService.readProperty(value.defaultValue);
+                        }
                     }
                 }
             });

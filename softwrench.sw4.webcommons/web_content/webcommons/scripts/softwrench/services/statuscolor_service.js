@@ -28,6 +28,10 @@
     return {
 
         getColor: function (status, applicationname) {
+            if (!status) {
+                return "transparent";
+            }
+
             var statuscolorJson = $rootScope.statusColor;
             if (statuscolorJson === undefined) {
                 //cache

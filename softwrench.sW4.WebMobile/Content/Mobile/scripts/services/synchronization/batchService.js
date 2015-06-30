@@ -1,7 +1,7 @@
-﻿(function() {
+﻿(function () {
     'use strict';
 
-    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService','operationService'];
+    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService'];
 
 
     mobileServices.factory('batchService', service);
@@ -42,7 +42,7 @@
                 application: batch.application,
                 remoteId: batch.id
             }
-            var jsonToSend = angular.toJson({ items : items });
+            var jsonToSend = angular.toJson({ items: items });
             // performing the request
             log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
             return restService
@@ -82,7 +82,7 @@
                         problemEntities.push(problemEntity);
                     }
                     // update items's DataEntries's flags
-                    batch.loadeditems.forEach(function(item) {
+                    batch.loadeditems.forEach(function (item) {
                         item.dataentry.pending = false;
                         item.dataentry.isDirty = !!item.problem;
                     });
@@ -105,7 +105,7 @@
                 if (!batch || !batch.loadeditems) {
                     return;
                 }
-                var items = batch.loadeditems.map(function(batchItem) {
+                var items = batch.loadeditems.map(function (batchItem) {
                     return {
                         datamap: generateDatamapDiff(batchItem),
                         itemId: batchItem.dataentry.remoteId,
@@ -157,8 +157,8 @@
             persistence.transaction(function (tx) {
                 log.debug("executing batching db tx");
                 //save managed entities before the batchItems so that their properties are not null for loaded items
-                if(managedEntities) swdbDAO.bulkSave(managedEntities, tx);
-                if(batchItems) swdbDAO.bulkSave(batchItems, tx);
+                if (managedEntities) swdbDAO.bulkSave(managedEntities, tx);
+                if (batchItems) swdbDAO.bulkSave(batchItems, tx);
                 swdbDAO.save(batch, tx);
                 persistence.flush(tx, function () {
                     batch.items.list(null, function (results) {
@@ -179,31 +179,39 @@
             var detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
 
             return swdbDAO.findByQuery('DataEntry', "isDirty=1 and pending=0 and application='{0}'".format(applicationName))
-                .then(function(dataEntries) {
+                .then(function (dataEntries) {
                     if (dataEntries.length <= 0) {
                         log.debug('no items to submit to the server. returning null batch');
                         //nothing to do, interrupting chain
                         return null;
                     }
                     // determine which entries are not problematic
-                    var entryIds = dataEntries.map(function(entry) {
+                    var entryIds = dataEntries.map(function (entry) {
                         return "'{0}'".format(entry.id);
                     });
                     // first: all batchitems that point to the previous fetched dataentries and are problematic
                     return swdbDAO.findByQuery("BatchItem", "dataentry in ({0}) and problem is not null".format(entryIds))
                         .then(function (items) { // then: filter entries that are not problematic
+                            if (true) {
+                                //TODO: fix the overall logic, where 2 batches need to be returned one for the new items, and one for each of the Batches that had problems
+                                //then, on result we should "distribute" the problematic items results across the referenced SyncOperations
+                                return dataEntries;
+                            }
+
+
                             // no batchitems found: entries are problem free
                             if (!items || items.length <= 0) {
                                 return dataEntries;
                             }
                             // ids of the entries that are problematic
-                            var problematicEntryIds = items.map(function(item) {
+                            var problematicEntryIds = items.map(function (item) {
                                 return item.dataentry.id;
                             });
-                            var entriesToUse = dataEntries.filter(function(entry) {
+                            var entriesToUse = dataEntries.filter(function (entry) {
                                 // entry.id not in the problematic array: use it in the batch
                                 return problematicEntryIds.indexOf(entry.id) < 0;
                             });
+                            $log.get("batchService#createBatch").debug("filtering items with problems for main batch");
                             // resolve: entries that are not problematic
                             return entriesToUse;
                         });

@@ -365,7 +365,7 @@
           <field attribute="origrecordclass" hidden="true"/>
           
           <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="reportdate" label="Reported On" hidden="true"/>
+          <field attribute="reportdate" label="Reported On" hidden="true" default="@now"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
           <field attribute="owner" label="Owner"  readonly="true"/>
 
