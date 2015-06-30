@@ -691,7 +691,7 @@ table .detaildata {
 }
 .container header .admin-area .admin-menu {
   float: right;
-  margin-top: 2px;
+  font-size: 14px;
 }
 .container header .admin-area .admin-menu i.fa-cog {
   color: #fff;

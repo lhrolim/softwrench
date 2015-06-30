@@ -30,16 +30,31 @@
                         <i class="fa fa-gear"></i>&ensp;Admin
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" ng-click="loadApplication('Person','newPersonDetail')">{{i18N('_headermenu.usersetup','New User')}}</a></li>
-                        <li><a href="#" ng-click="loadApplication('Person','list')">{{i18N('_headermenu.usersetup','Users')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)">{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)">{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)">{{i18N('_headermenu.schedulersetup','Scheduler Setup')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)">{{i18N('_headermenu.configuration','Configuration')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)">{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
-                        <li><a href="#" ng-click="loadApplication('_SoftwrenchError','list')">{{i18N('_headermenu.softwrenchError','Softwrench Errors')}}</a></li>
-                        <li><a href="#" ng-click="loadApplication('_audit','auditList')">{{i18N('_headermenu.audit','Audit Trail')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'LogAdmin','Index')">{{i18N('_headermenu.logadmin','Administrate Logs')}}</a></li>
+                        <li class="dropdown-submenu">
+                            <a data-toggle="dropdown" aria-expanded="false">Security</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" ng-click="loadApplication('Person','newPersonDetail')">{{i18N('_headermenu.usersetup','New User')}}</a></li>
+                                <li><a href="#" ng-click="loadApplication('Person','list')">{{i18N('_headermenu.usersetup','Users')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)">{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)">{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a data-toggle="dropdown" aria-expanded="false">Setup</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)">{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)">{{i18N('_headermenu.configuration','Configuration')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)">{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a data-toggle="dropdown" aria-expanded="false">Support</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" ng-click="loadApplication('_SoftwrenchError','list')">{{i18N('_headermenu.softwrenchError','Softwrench Errors')}}</a></li>
+                                <li><a href="#" ng-click="loadApplication('_audit','auditList')">{{i18N('_headermenu.audit','Audit Trail')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'LogAdmin','Index')">{{i18N('_headermenu.logadmin','Administrate Logs')}}</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#" ng-click="doAction(null,'EntityMetadata','Refresh',null,$event.target)">{{i18N('_headermenu.refreshmetadata','Refresh Metadata')}}</a></li>
                     </ul>
                 </li>
