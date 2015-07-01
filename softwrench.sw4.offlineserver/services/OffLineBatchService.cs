@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
@@ -55,6 +56,31 @@ namespace softwrench.sw4.offlineserver.services {
             Task.Factory.NewThread(() => _batchItemSubmissionService.Submit(batch, batchOptions));
             return batch;
             //async call here
+        }
+        
+        /// <summary>
+        /// Fetches the Batches with matching RemoteId and formats them (fill in SuccessItems and Problems accordingly).
+        /// </summary>
+        /// <param name="remoteIds"></param>
+        /// <returns></returns>
+        public IList<Batch> GetBatchesByRemoteIds(IList<String> remoteIds) {
+            IList<Batch> batches = _swdbHibernateDAO.FindByQuery<Batch>("from Batch where RemoteId in (?)", remoteIds);
+            FormatBatches(batches);
+            return batches;
+        }
+
+        private void FormatBatches(IList<Batch> batches) {
+            foreach (var batch in batches) {
+                Iesi.Collections.Generic.ISet<BatchItem> items = batch.Items;
+                foreach (var item in items) {
+                    var problem = item.Problem;
+                    if (problem == null) {
+                        batch.SuccessItems.Add(item.RemoteId);
+                    } else {
+                        batch.Problems.Add(item.RemoteId, problem);
+                    }
+                }
+            }
         }
 
     }

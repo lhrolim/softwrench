@@ -103,6 +103,10 @@
       <Project>{653D15FD-96CA-4E5D-B147-39AD01E59006}</Project>
       <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062DCE9-1422-4CA7-8004-FFA7794A6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
