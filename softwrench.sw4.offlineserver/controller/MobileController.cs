@@ -118,10 +118,9 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpGet]
-        public IList<Batch> BatchStatus([FromUri] IList<String> ids) {
+        public IList<Batch> BatchStatus([FromUri]IList<String> ids) {
             return _offLineBatchService.GetBatchesByRemoteIds(ids);
         } 
-
      
     }
 }

@@ -4,7 +4,7 @@
     /**
      * @constructor 
      */
-    var AsyncSynchronizationService = function ($q, restService, $log) {
+    var AsyncSynchronizationService = function ($q, restService, $log, swdbDAO) {
 
         // Batches indexed by their id
         var batchRegistry = {};
@@ -12,6 +12,8 @@
         var completionCallBacks = [];
         // polling interval in milliseconds
         var pollingDelay = 60 * 1000; // TODO: get from config
+
+        var self = this;
 
         var getBatchIds = function() {
             var ids = [];
@@ -59,10 +61,6 @@
                 });
         };
 
-        var startPolling = function() {
-            setInterval(fetchBatchStatus, pollingDelay);
-        };
-
         /**
          * Registers a Batch to be asynchronously processed i.e. it's "status" will be fetched asynchronously from the server.
          * If the Batch was already registered it won't be registered again (checks equality by Batch#id).
@@ -71,11 +69,23 @@
          * 
          * @param Batch batch 
          */
-        this.registerForAsyncProcessing = function (batch) {
+        this.registerForAsyncProcessing = function(batch) {
             if (batchRegistry[batch.id]) {
                 return;
             }
             batchRegistry[batch.id] = batch;
+        };
+
+        /**
+         * Registers a list of Batches to be asynchronously processed.
+         * Calls {@link AsyncSynchronizationService#registerForAsyncProcessing} on each element of the list
+         * 
+         * @param [Batch] batches 
+         */
+        this.registerListForAsyncProcessing = function(batches) {
+            angular.forEach(batches, function(batch) {
+                self.registerForAsyncProcessing(batch);
+            });
         };
 
         /**
@@ -104,10 +114,43 @@
             completionCallBacks.push(callback);
         };
 
+        /**
+         * Fills the batchRegistry with initial data.
+         */
+        var loadBatchesForProcessing = function () {
+            var ids = getBatchIds();
+            ids = ids.map(function(id) {
+                return "'{0}'".format(id);
+            });
+            var query = "status!='COMPLETE'";
+            if (ids.length > 0) query += " and id not in ({0})".format(ids);
+            swdbDAO.findByQuery("Batch", query)
+                .then(function(batches) {
+                    var promises = [];
+                    angular.forEach(batches, function (batch) {
+                        var deferred = $q.defer();
+                        batch.items.prefetch("dataentry").prefetch("problem").list(null, function(items) {
+                            batch.loadeditems = items;
+                            deferred.resolve(batch);
+                        });
+                        promises.push(deferred.promise);
+                    });
+                    return $q.all(promises);
+                })
+                .then(function (batches) {
+                    self.registerListForAsyncProcessing(batches);
+                });
+        };
+
+        var startPolling = function () {
+            setInterval(fetchBatchStatus, pollingDelay);
+        };
+
+        loadBatchesForProcessing();
         startPolling();
 
     };
 
-    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", AsyncSynchronizationService]);
+    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", AsyncSynchronizationService]);
 
 })(mobileServices);

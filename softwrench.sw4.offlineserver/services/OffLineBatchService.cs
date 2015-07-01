@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
@@ -64,7 +65,7 @@ namespace softwrench.sw4.offlineserver.services {
         /// <param name="remoteIds"></param>
         /// <returns></returns>
         public IList<Batch> GetBatchesByRemoteIds(IList<String> remoteIds) {
-            IList<Batch> batches = _swdbHibernateDAO.FindByQuery<Batch>("from Batch where RemoteId in (?)", remoteIds);
+            IList<Batch> batches = _swdbHibernateDAO.FindByQuery<Batch>("from Batch where RemoteId in (?)", remoteIds.ToArray() as String[]);
             FormatBatches(batches);
             return batches;
         }

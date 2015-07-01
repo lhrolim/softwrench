@@ -33,7 +33,9 @@
                     <h5>Application Uploads: {{batchItems.length}}</h5>
                     <ul class="item-list">
                         <li ng-repeat="item in batchItems">
-                            <i class="icon" ng-class="{'ion-alert-circled': item.simpleproblem, 'ion-checkmark': !item.simpleproblem}"></i>{{item.label}}
+                            <i class="icon" ng-class="{'ion-alert-circled': item.simpleproblem, 'ion-checkmark': !item.simpleproblem}"></i>
+                            {{item.label}}
+                            <span ng-if="item.simpleproblem">:&nbsp;{{item.simpleproblem.message}}</span>
                         </li>
                     </ul>
                     <button ng-if="operation.hasproblems" class="button problem-button" ng-click="solveProblems()">Fix Issues</button>
