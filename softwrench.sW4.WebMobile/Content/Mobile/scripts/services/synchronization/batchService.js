@@ -71,7 +71,19 @@
             return deferred.promise;
         }
 
+        /**
+         * Updates a local Batch entity according to a Batch response from the server.
+         * The updates includes: updating related BatchItem's problems, updating related DataEntries's flags
+         * and updating status of the Batch and the realted entities. 
+         * The method also checks if the remoteBatch is a synchronous/asynchronous response 
+         * and takes the correct action flow.
+         * 
+         * @param Batch batch entity 
+         * @param Object remoteBatch Batch response from server 
+         * @returns Promise: resolved with the updated Batch. 
+         */
         function updateBatch(batch, remoteBatch) {
+            var log = $log.get("batchService#updateBatch");
             var returnedBatchStatus = remoteBatch.status;
             batch.status = returnedBatchStatus; // always update status
             var indexedItems = {}; // items indexed by their id
@@ -81,7 +93,7 @@
                 // indexing items
                 indexedItems[item.id] = item;
             });
-            log.info("Batch response received (id='{0}') with Batch.status = '{1}'".format(batch.id, returnedBatchStatus));
+            log.info("Batch response received (id='{0}') with Batch.status = '{1}'".format(remoteBatch.remoteId, returnedBatchStatus));
             // assynchronous case: awaiting to be processed
             if (returnedBatchStatus !== "COMPLETE") {
                 // update batch status
@@ -103,14 +115,20 @@
                 // add to array
                 problemEntities.push(problemEntity);
             }
+            var successItems = remoteBatch.successItems;
+            angular.forEach(successItems, function(successId) {
+                var successItem = indexedItems[successId.toUpperCase()]; // uppercasing in case the server camelcased the keys
+                if (successItem.problem) successItem.problem = null; // problem shouldn't be deleted for history purposes
+            });
             // update items's DataEntries's flags
             batch.loadeditems.forEach(function (item) {
                 item.dataentry.pending = false;
                 item.dataentry.isDirty = !!item.problem;
             });
             // save problems, update statuses and flags
-            if (problemEntities.length > 0) {
-                batch.hasProblems = true;
+            var hasProblems = problemEntities.length;
+            batch.hasProblems = hasProblems;
+            if (hasProblems > 0) {
                 return saveBatch(batch, batch.loadeditems, problemEntities);
             }
             // no problems found: just update statuses and flags

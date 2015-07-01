@@ -1,11 +1,11 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService"];
+    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "$ionicPopup", "routeService"];
 
     mobileServices.factory('synchronizationFacade', service);
 
-    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService) {
+    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, $ionicPopup, routeService) {
         
         function getDownloadDataCount(dataDownloadResult) {
             var count = 0;
@@ -90,7 +90,7 @@
                             var asyncBatches = batchResults.filter(function(batch) {
                                 return batch.status !== "COMPLETE";
                             });
-                            // async case: 
+                            // async case
                             if (asyncBatches.length > 0) {
                                 // register async Batches for async processing
                                 angular.forEach(asyncBatches, function (asyncBatch) {
@@ -110,7 +110,13 @@
                 });
         }
 
-        asyncSynchronizationService.onBatchesCompleted(function(completionResult) {
+        /**
+         * Updates the Batches and creates a SyncOperation.
+         * 
+         * @param Object completionResult 
+         */
+        function onBatchesCompleted(completionResult) {
+            var log = $log.get("dataSynchronizationService#onBatchesCompleted");
             var start = completionResult.start;
             var batchTuples = completionResult.batchTuples;
             var promises = [];
@@ -119,15 +125,29 @@
                 var batch = tuple.local;
                 promises.push(batchService.updateBatch(batch, remoteBatch));
             });
-            $q.all(promises).then(function(batches) {
-                return associationDataSynchronizationService.syncData().then(function (downloadResults) {
-                    var dataCount = getDownloadDataCount(downloadResults);
-                    return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
+            $q.all(promises)
+                .then(function (batches) {
+                    return associationDataSynchronizationService.syncData().then(function (downloadResults) {
+                        var dataCount = getDownloadDataCount(downloadResults);
+                        return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
+                    });
+                })
+                .then(function (operation) {
+                    log.info("created SyncOperation for async Batch Processing");
+                    $ionicPopup.confirm({
+                        title: "Synchronization Result",
+                        template: "A synchronization result has been received. Would you like to check it?"
+                    }).then(function (res) {
+                        if (res) routeService.go("main.syncdetail", { id: operation.id });
+                    });
+                })
+                .catch(function (error) {
+                    log.error(error);
                 });
-            }).then(function(operation) {
-                //TODO: local notification
-            });
-        });
+        }
+
+        // registering completion callback on the asyncSynchronizationService
+        asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
         var api = {
             fullDownload: fullDownload,
