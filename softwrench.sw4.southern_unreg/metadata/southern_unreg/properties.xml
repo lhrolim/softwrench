@@ -10,8 +10,8 @@
   <property key="maxAttachmentSize" value="10"/>
   <!--in MB-->
   <property key="maxScreenshotSize" value="5"/>
-<!--  <property key="user.persontoquery" value="person.personid in (select personid from maxuser where userid in (select userid from  GROUPUSER where groupname = 'C2_SOFTWRENCH'))"/>-->
   
+
   <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>
@@ -50,4 +50,14 @@
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
   </environment>
+
+  <environment key="prod">
+    <property value="Oracle.DataAccess.Client" key="maximo_DB_provider"/>
+    <property value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.30.220)(PORT=3201))(CONNECT_DATA=(SERVICE_NAME=DKHSPCMX)));User Id=mxesread;Password=XXXXXX;" key="maximo_DB_url"/>
+    <property value="Data Source=10.10.16.181;Initial Catalog=swdb;User Id=sw;password=XXXXX;" key="swdb_url"/>
+    <property value="spcdvmaxadmin" key="mifcredentials.user"/>
+    <property value="XXXXXX" key="mifcredentials.password"/>
+    <property key="user.persontoquery" value="person.personid in (select personid from maxuser where userid in (select userid from  GROUPUSER where groupname = 'C2_SOFTWRENCH'))"/>
+  </environment>
+
 </Properties>
