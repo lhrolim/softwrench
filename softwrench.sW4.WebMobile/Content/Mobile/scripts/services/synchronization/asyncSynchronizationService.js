@@ -4,7 +4,7 @@
     /**
      * @constructor 
      */
-    var AsyncSynchronizationService = function ($q, restService, $log, swdbDAO) {
+    var AsyncSynchronizationService = function ($q, restService, $log, swdbDAO, $interval) {
 
         // Batches indexed by their id
         var batchRegistry = {};
@@ -18,7 +18,9 @@
         var getBatchIds = function() {
             var ids = [];
             for (var id in batchRegistry) {
-                if (!batchRegistry.hasOwnProperty(id)) continue;
+                if (!batchRegistry.hasOwnProperty(id)) {
+                    continue;
+                }
                 ids.push(id);
             }
             return ids;
@@ -27,7 +29,9 @@
         var fetchBatchStatus = function() {
             var log = $log.get("asyncSynchronizationService#fetchBatchStatus");
             var ids = getBatchIds();
-            if (ids.length <= 0 || completionCallBacks.length <= 0) return;
+            if (ids.length <= 0 || completionCallBacks.length <= 0) {
+                return;
+            }
             var now = new Date();
             log.info("Polling request started at {0}".format(now));
             restService.getPromise("Mobile", "BatchStatus", { ids: ids })
@@ -123,7 +127,9 @@
                 return "'{0}'".format(id);
             });
             var query = "status!='COMPLETE'";
-            if (ids.length > 0) query += " and id not in ({0})".format(ids);
+            if (ids.length > 0) {
+                query += " and id not in ({0})".format(ids);
+            }
             swdbDAO.findByQuery("Batch", query)
                 .then(function(batches) {
                     var promises = [];
@@ -143,7 +149,7 @@
         };
 
         var startPolling = function () {
-            setInterval(fetchBatchStatus, pollingDelay);
+            $interval(fetchBatchStatus, pollingDelay);
         };
 
         loadBatchesForProcessing();
@@ -151,6 +157,6 @@
 
     };
 
-    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", AsyncSynchronizationService]);
+    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", "$interval", AsyncSynchronizationService]);
 
 })(mobileServices);
