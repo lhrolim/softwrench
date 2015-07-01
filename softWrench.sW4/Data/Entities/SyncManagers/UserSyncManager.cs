@@ -139,16 +139,16 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 UserName = (string)maximoUser.GetAttribute("maxuser_.loginid") ?? (string)maximoUser.GetAttribute("personid"),
                 Password = MetadataProvider.GlobalProperty(SwUserConstants.DefaultUserPassword),
                 IsActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",
-//                Person = new Person {
-//                    FirstName = (string)maximoUser.GetAttribute("firstname"),
-//                    LastName = (string)maximoUser.GetAttribute("lastname"),
-//                    OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
-//                    SiteId = (string)maximoUser.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
-//                    Email = (string)maximoUser.GetAttribute("email_.emailaddress"),
-//                    Department = (string)maximoUser.GetAttribute("department"),
-//                    Phone = (string)maximoUser.GetAttribute("phone_.phonenum"),
-//                    Language = (string)maximoUser.GetAttribute("language")
-//                },
+                Person = new Person {
+                    FirstName = (string)maximoUser.GetAttribute("firstname"),
+                    LastName = (string)maximoUser.GetAttribute("lastname"),
+                    OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
+                    SiteId = (string)maximoUser.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
+                    Email = (string)maximoUser.GetAttribute("email_.emailaddress"),
+                    Department = (string)maximoUser.GetAttribute("department"),
+                    Phone = (string)maximoUser.GetAttribute("phone_.phonenum"),
+                    Language = (string)maximoUser.GetAttribute("language")
+                },
                 CriptoProperties = string.Empty,
                 MaximoPersonId = (string)maximoUser.GetAttribute("personid"),
 
