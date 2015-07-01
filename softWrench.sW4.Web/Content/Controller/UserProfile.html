@@ -1,7 +1,7 @@
 ﻿<article class="container" ng-controller="UserProfileController">
     <section ng-show="isList">
         <button type="button" class="btn btn-primary new-button" ng-click="new();">
-            <i style="margin-right: 0.5em" class="glyphicon glyphicon-plus"></i>{{i18N('general.newuserprofile','New User Profile')}}
+            <i style="margin-right: 0.5em" class="glyphicon glyphicon-plus"></i>{{i18N('general.newuserprofile','New Security Group')}}
         </button>
 
         <div id="dvUserList">
@@ -28,9 +28,9 @@
         <div id="dvDetail" class="form-horizontal container">
             <div class="form-group">
 
-                <label class="control-label col-lg-2">{{i18N('general.profile','Profile')}}</label>
+                <label class="control-label col-lg-2">{{i18N('general.profile','Security Group')}}</label>
                 <div class="col-lg-10">
-                    <input type="text" id="txtUserName" ng-model="profile.name" placeholder="{{i18N('placeholder.required.profilename','Profile name is required')}}!" class="form-control"></input>
+                    <input type="text" id="txtUserName" ng-model="profile.name" placeholder="{{i18N('placeholder.required.profilename','Security Group name is required')}}!" class="form-control"></input>
                 </div>
             </div>
             <div class="form-group">
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div id="roles" class="form-group">
-                <label class="control-label col-lg-2">Available Roles</label>
+                <label class="control-label col-lg-2">Available Permissions</label>
                 <div class="col-lg-10">
                     <div class="select-left-right">
 
@@ -51,7 +51,7 @@
                             <button type="button" class="btn btn-sm btn-defualt" ng-click="addSelectedRoles(availablerolesselected)"><i class="fa fa-plus"></i>&ensp;ADD</button>
                             <button type="button" class="btn btn-sm btn-defualt" ng-click="removeSelectedRoles(selectedroles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
                         </div>
-                        <label>{{i18N('general.selectedroles','Selected Roles')}}</label>
+                        <label>{{i18N('general.selectedroles','Selected Permissions')}}</label>
 
                         <select multiple="multiple" ng-model="selectedroles" ng-options="role.name for role in profile.roles"
                                 class="form-control hidden-phone input-block-level" />

@@ -28,12 +28,13 @@
             return doSave(applicationName, item, applicationName);
         },
 
-        addAndSaveComposition: function (applicationName, datamap, compositionItem, compositionMetadata) {
+        addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata) {
+            var datamap = item.datamap;
             var associationKey = compositionMetadata.associationKey;
             datamap[associationKey] = datamap[associationKey] || [];
             compositionItem[constants.localIdKey] = persistence.createUUID();
             datamap[associationKey].push(compositionItem);
-            return doSave(applicationName, datamap, compositionMetadata.label);
+            return doSave(applicationName, item, compositionMetadata.label);
         },
     }
 

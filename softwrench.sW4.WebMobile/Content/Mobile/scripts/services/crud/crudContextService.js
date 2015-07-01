@@ -12,6 +12,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
     }
 
     var crudContext = {
+
         currentApplicationName: null,
         currentApplication: null,
         currentTitle: null,
@@ -23,6 +24,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         originalDetailItemDatamap: null,
         currentDetailItem: null,
         currentDetailSchema: null,
+        currentNewDetailSchema:null,
         newItem :false,
 
         //composition
@@ -42,18 +44,6 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         previousItem: null,
         nextItem: null,
 
-    }
-
-
-
-
-    function loadDetailSchema() {
-        var detailSchemaId = "detail";
-        var overridenSchema = schemaService.getProperty(crudContext.currentListSchema, "list.click.schema");
-        if (overridenSchema) {
-            detailSchemaId = overridenSchema;
-        }
-        return offlineSchemaService.locateSchema(crudContext.currentApplication, detailSchemaId);
     }
 
     function setPreviousAndNextItems(item) {
@@ -143,6 +133,9 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         },
 
         currentDetailSchema: function () {
+            if (crudContext.newItem) {
+                return crudContext.currentNewDetailSchema ? crudContext.currentNewDetailSchema : crudContext.currentDetailSchema;
+            }
             return crudContext.currentDetailSchema;
         },
 
@@ -167,14 +160,14 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
 
         mainDisplayables: function () {
-            return schemaService.nonTabFields(crudContext.currentDetailSchema);
+            return schemaService.nonTabFields(this.currentDetailSchema());
         },
 
 
         /*******************************************COMPOSITIONS******************************************************/
 
         currentCompositionsToShow: function () {
-            var detailSchema = crudContext.currentDetailSchema;
+            var detailSchema = this.currentDetailSchema();
             var allDisplayables = tabsService.tabsDisplayables(detailSchema);
             return allDisplayables;
         },
@@ -298,7 +291,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         saveChanges: function (crudForm) {
 
             crudForm = crudForm || {};
-            var detailSchema = crudContext.currentDetailSchema;
+            var detailSchema = this.currentDetailSchema();
             var datamap = crudContext.currentDetailItem.datamap;
 
             var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
@@ -310,7 +303,8 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             var that = this;
             if (crudContext.composition && crudContext.composition.currentDetailItem) {
                 var compositionItem = crudContext.composition.currentDetailItem;
-                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, datamap, compositionItem, crudContext.composition.currentTab).then(function () {
+                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(function () {
+                    crudContext.originalDetailItemDatamap = datamap;
                     crudContext.composition.originalDetailItemDatamap = crudContext.composition.currentDetailItem;
                     that.loadTab(crudContext.composition.currentTab);
                 });
@@ -383,17 +377,23 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
 
         loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
-            crudContext.currentTitle = applicationTitle;
-            var application = metadataModelService.getApplicationByName(applicationName);
-
-            crudContext.currentApplicationName = applicationName;
-            crudContext.currentApplication = application;
-            crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
-
-
-            crudContext.currentDetailSchema = loadDetailSchema();
+            //cleaning up
             crudContext.currentDetailItem = null;
             crudContext.composition = {};
+
+            var application = metadataModelService.getApplicationByName(applicationName);
+
+            crudContext.currentTitle = applicationTitle;
+            crudContext.currentApplicationName = applicationName;
+            crudContext.currentApplication = application;
+
+
+
+            crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
+            crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication);
+            crudContext.currentNewDetailSchema = offlineSchemaService.locateSchemaByStereotype(crudContext.currentApplication, "detailnew");
+
+            
             this.refreshGrid();
         },
 
@@ -430,12 +430,12 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             crudContext.currentDetailItem = {
                 datamap:{}
             };
+            crudContext.newItem = true;
             offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem.datamap);
             crudContext.originalDetailItemDatamap = {
                 //to make this new item always dirty!!!
                 "_newitem#$": true
             };
-            crudContext.newItem = true;
             return routeService.go("main.cruddetail.maininput");
         },
 
@@ -446,7 +446,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             /// <param name="item"></param>
             /// <returns type=""></returns>
             if (!crudContext.currentDetailSchema) {
-                crudContext.currentDetailSchema = loadDetailSchema();
+                crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema,crudContext.currentApplication);
             }
 
             var fields = this.mainDisplayables();

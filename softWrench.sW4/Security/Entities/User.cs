@@ -137,7 +137,7 @@ namespace softWrench.sW4.Security.Entities {
 
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
-            Profiles = Profiles ?? dbUSer.Profiles;
+            Profiles = !Profiles.IsEmpty ? Profiles : dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
         }
 
