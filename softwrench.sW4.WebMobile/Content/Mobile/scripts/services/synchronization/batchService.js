@@ -7,13 +7,15 @@
     mobileServices.factory('batchService', service);
 
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService) {
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, asyncSynchronizationService) {
 
         var api = {
             getIdsFromBatch: getIdsFromBatch,
             submitBatches: submitBatches,
             generateDatamapDiff: generateDatamapDiff,
-            createBatch: createBatch
+            createBatch: createBatch,
+            saveBatch: saveBatch,
+            updateBatch: updateBatch,
         };
 
         return api;
@@ -26,107 +28,6 @@
                 ids.push(batchItem['remoteId']);
             }
             return ids;
-        };
-
-        /**
-         * Executes a request to submit a Batch and handles the returned response.
-         * 
-         * @param Batch batch 
-         * @param [Object] items to be sent as payload
-         * @returns Promise: resolved with updated Batch; rejected with Http or Database error 
-         */
-        function doSubmitBatch(batch, items) {
-            var log = $log.getInstance('batchService#doSubmitBatch');
-            // preparing the request
-            var batchParams = {
-                application: batch.application,
-                remoteId: batch.id
-            }
-            var jsonToSend = angular.toJson({ items: items });
-            // performing the request
-            log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
-            return restService
-                .postPromise("Mobile", "SubmitBatch", batchParams, jsonToSend)
-                .then(function (response) {
-                    var returnedBatch = response.data;
-                    var returnedBatchStatus = returnedBatch.status;
-                    batch.status = returnedBatchStatus; // always update status
-                    var indexedItems = {}; // items indexed by their id
-                    batch.loadeditems.forEach(function (item) {
-                        // status update
-                        item.status = returnedBatchStatus;
-                        // indexing items
-                        indexedItems[item.id] = item;
-                    });
-                    log.info("Batch response received (id='{0}') with Batch.status = '{1}'".format(batch.id, returnedBatchStatus));
-                    // assynchronous case: awaiting to be processed
-                    if (returnedBatchStatus !== "COMPLETE") {
-                        // update batch status
-                        // TODO: register for polling
-                        return saveBatch(batch, batch.loadeditems);
-                    }
-                    // synchronous case: request already processed
-                    // has to update with problems and/or success
-                    var problems = returnedBatch.problems; // indexed by related batchItem.id
-                    var problemEntities = [];
-                    for (var itemId in problems) {
-                        if (!problems.hasOwnProperty(itemId)) continue;
-                        // instantiate Problem (synchronously actually helps in this case)
-                        var problem = problems[itemId];
-                        var problemEntity = new entities.Problem();
-                        problemEntity.message = problem.message;
-                        // item pointing to Problem and status update
-                        var problematicItem = indexedItems[itemId.toUpperCase()]; // uppercasing in case the server camelcased the keys
-                        problematicItem.problem = problemEntity;
-                        // add to array
-                        problemEntities.push(problemEntity);
-                    }
-                    // update items's DataEntries's flags
-                    batch.loadeditems.forEach(function (item) {
-                        item.dataentry.pending = false;
-                        item.dataentry.isDirty = !!item.problem;
-                    });
-                    // save problems, update statuses and flags
-                    if (problemEntities.length > 0) {
-                        batch.hasProblems = true;
-                        return saveBatch(batch, batch.loadeditems, problemEntities);
-                    }
-                    // no problems found: just update statuses and flags
-                    return saveBatch(batch, batch.loadeditems);
-                });
-        };
-
-        function submitBatches(batches) {
-
-            var log = $log.getInstance('batchService#submitBatches');
-
-            var promises = []; // parallel requests promises
-            batches.forEach(function (batch) {
-                if (!batch || !batch.loadeditems) {
-                    return;
-                }
-                var items = batch.loadeditems.map(function (batchItem) {
-                    return {
-                        datamap: generateDatamapDiff(batchItem),
-                        itemId: batchItem.dataentry.remoteId,
-                        //local id becomes remote from the server perspective
-                        remoteId: batchItem.id,
-                        application: batch.application,
-                        operation: batchItem.crudoperation
-                    };
-                });
-                // put the batch submission promise in the array
-                promises.push(doSubmitBatch(batch, items));
-            });
-
-            // no batches were submitted: reject it
-            if (promises.length <= 0) {
-                log.info("no batches submitted");
-                return $q.when();
-            }
-
-            // joined promises: resolves with array of Batch
-            return $q.all(promises);
         };
 
         function generateDatamapDiff(batchItem) {
@@ -170,6 +71,112 @@
             return deferred.promise;
         }
 
+        function updateBatch(batch, remoteBatch) {
+            var returnedBatchStatus = remoteBatch.status;
+            batch.status = returnedBatchStatus; // always update status
+            var indexedItems = {}; // items indexed by their id
+            batch.loadeditems.forEach(function (item) {
+                // status update
+                item.status = returnedBatchStatus;
+                // indexing items
+                indexedItems[item.id] = item;
+            });
+            log.info("Batch response received (id='{0}') with Batch.status = '{1}'".format(batch.id, returnedBatchStatus));
+            // assynchronous case: awaiting to be processed
+            if (returnedBatchStatus !== "COMPLETE") {
+                // update batch status
+                return saveBatch(batch, batch.loadeditems);
+            }
+            // synchronous case: request already processed
+            // has to update with problems and/or success
+            var problems = remoteBatch.problems; // indexed by related batchItem.id
+            var problemEntities = [];
+            for (var itemId in problems) {
+                if (!problems.hasOwnProperty(itemId)) continue;
+                // instantiate Problem (synchronously actually helps in this case)
+                var problem = problems[itemId];
+                var problemEntity = new entities.Problem();
+                problemEntity.message = problem.message;
+                // item pointing to Problem and status update
+                var problematicItem = indexedItems[itemId.toUpperCase()]; // uppercasing in case the server camelcased the keys
+                problematicItem.problem = problemEntity;
+                // add to array
+                problemEntities.push(problemEntity);
+            }
+            // update items's DataEntries's flags
+            batch.loadeditems.forEach(function (item) {
+                item.dataentry.pending = false;
+                item.dataentry.isDirty = !!item.problem;
+            });
+            // save problems, update statuses and flags
+            if (problemEntities.length > 0) {
+                batch.hasProblems = true;
+                return saveBatch(batch, batch.loadeditems, problemEntities);
+            }
+            // no problems found: just update statuses and flags
+            return saveBatch(batch, batch.loadeditems);
+        }
+
+        /**
+         * Executes a request to submit a Batch and handles the returned response.
+         * 
+         * @param Batch batch 
+         * @param [Object] items to be sent as payload
+         * @returns Promise: resolved with updated Batch; rejected with Http or Database error 
+         */
+        function doSubmitBatch(batch, items) {
+            var log = $log.getInstance('batchService#doSubmitBatch');
+            // preparing the request
+            var batchParams = {
+                application: batch.application,
+                remoteId: batch.id
+            }
+            var jsonToSend = angular.toJson({ items: items });
+            // performing the request
+            log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
+            return restService
+                .postPromise("Mobile", "SubmitBatch", batchParams, jsonToSend)
+                .then(function (response) {
+                    var returnedBatch = response.data;
+                    return updateBatch(batch, returnedBatch);
+                });
+        };
+
+        function submitBatches(batches) {
+
+            var log = $log.getInstance('batchService#submitBatches');
+
+            var promises = []; // parallel requests promises
+            batches.forEach(function (batch) {
+                if (!batch || !batch.loadeditems) {
+                    return;
+                }
+                var items = batch.loadeditems.map(function (batchItem) {
+                    return {
+                        datamap: generateDatamapDiff(batchItem),
+                        itemId: batchItem.dataentry.remoteId,
+                        //local id becomes remote from the server perspective
+                        remoteId: batchItem.id,
+                        application: batch.application,
+                        operation: batchItem.crudoperation
+                    };
+                });
+                // put the batch submission promise in the array
+                promises.push(doSubmitBatch(batch, items));
+            });
+
+            // no batches were submitted: reject it
+            if (promises.length <= 0) {
+                log.info("no batches submitted");
+                return $q.when();
+            }
+
+            // joined promises: resolves with array of Batch
+            return $q.all(promises);
+        };
+
+        
+
 
         function createBatch(dbapplication) {
             var applicationName = dbapplication.application;
@@ -180,43 +187,8 @@
 
             return swdbDAO.findByQuery('DataEntry', "isDirty=1 and pending=0 and application='{0}'".format(applicationName))
                 .then(function (dataEntries) {
-                    if (dataEntries.length <= 0) {
-                        log.debug('no items to submit to the server. returning null batch');
-                        //nothing to do, interrupting chain
-                        return null;
-                    }
-                    // determine which entries are not problematic
-                    var entryIds = dataEntries.map(function (entry) {
-                        return "'{0}'".format(entry.id);
-                    });
-                    // first: all batchitems that point to the previous fetched dataentries and are problematic
-                    return swdbDAO.findByQuery("BatchItem", "dataentry in ({0}) and problem is not null".format(entryIds))
-                        .then(function (items) { // then: filter entries that are not problematic
-                            if (true) {
-                                //TODO: fix the overall logic, where 2 batches need to be returned one for the new items, and one for each of the Batches that had problems
-                                //then, on result we should "distribute" the problematic items results across the referenced SyncOperations
-                                return dataEntries;
-                            }
-
-
-                            // no batchitems found: entries are problem free
-                            if (!items || items.length <= 0) {
-                                return dataEntries;
-                            }
-                            // ids of the entries that are problematic
-                            var problematicEntryIds = items.map(function (item) {
-                                return item.dataentry.id;
-                            });
-                            var entriesToUse = dataEntries.filter(function (entry) {
-                                // entry.id not in the problematic array: use it in the batch
-                                return problematicEntryIds.indexOf(entry.id) < 0;
-                            });
-                            $log.get("batchService#createBatch").debug("filtering items with problems for main batch");
-                            // resolve: entries that are not problematic
-                            return entriesToUse;
-                        });
-                }).then(function (dataEntries) {
                     if (!dataEntries || dataEntries.length <= 0) {
+                        log.debug("no items to submit to the server. returning null batch");
                         return null;
                     }
                     var batchItemPromises = [];

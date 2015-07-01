@@ -142,6 +142,7 @@
     <Content Include="Content\Mobile\scripts\services\metadata\offlineAssociationService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\offlineSchemaService.js" />
     <Content Include="Content\Mobile\scripts\services\routes\routesService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\asyncSynchronizationService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\synchronizationOperationService.js" />
