@@ -11,9 +11,9 @@
             var params = parameters == null ? {} : parameters;
             var serverUrl = contextService.getFromContext("serverurl");
             if (serverUrl) {
-                return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params);
+                return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params, true);
             }
-            return url("/api/generic/" + controller + "/" + action + "?" + $.param(params));
+            return url("/api/generic/" + controller + "/" + action + "?" + $.param(params, true));
         },
 
         invokePost: function (controller, action, queryParameters, json, successCbk, failureCbk) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
@@ -116,6 +117,10 @@ namespace softwrench.sw4.offlineserver.controller {
             return batch;
         }
 
+        [HttpGet]
+        public IList<Batch> BatchStatus([FromUri]IList<String> ids) {
+            return _offLineBatchService.GetBatchesByRemoteIds(ids);
+        } 
      
     }
 }

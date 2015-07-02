@@ -1,18 +1,12 @@
-﻿(function() {
+﻿(function (mobileServices) {
     "use strict";
 
-    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService"];
+    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "$ionicPopup", "routeService"];
 
     mobileServices.factory('synchronizationFacade', service);
 
-    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService) {
-        var api = {
-            fullDownload: fullDownload,
-            fullSync: fullSync
-        }
-
-        return api;
-
+    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, $ionicPopup, routeService) {
+        
         function getDownloadDataCount(dataDownloadResult) {
             var count = 0;
             angular.forEach(dataDownloadResult, function (result) {
@@ -93,11 +87,16 @@
                     return batchService.submitBatches(batches)
                         .then(function (batchResults) {
                             // check for synchronous or asynchronous case
-                            var hasSyncResponse = batchResults.some(function (result) {
-                                return result.status === "COMPLETE";
+                            var asyncBatches = batchResults.filter(function(batch) {
+                                return batch.status !== "COMPLETE";
                             });
-                            // async case: create batch/offline SyncOperation
-                            if (!hasSyncResponse) {
+                            // async case
+                            if (asyncBatches.length > 0) {
+                                // register async Batches for async processing
+                                angular.forEach(asyncBatches, function (asyncBatch) {
+                                    asyncSynchronizationService.registerForAsyncProcessing(asyncBatch);
+                                });
+                                // create batch/offline SyncOperation
                                 return synchronizationOperationService.createBatchOperation(start, batchResults);
                             }
                             // sync case: download ONLY data and create a SyncOperation indicating both a Batch submission and a download
@@ -110,6 +109,52 @@
                         });
                 });
         }
+
+        /**
+         * Updates the Batches and creates a SyncOperation.
+         * 
+         * @param Object completionResult 
+         */
+        function onBatchesCompleted(completionResult) {
+            var log = $log.get("dataSynchronizationService#onBatchesCompleted");
+            var start = completionResult.start;
+            var batchTuples = completionResult.batchTuples;
+            var promises = [];
+            angular.forEach(batchTuples, function (tuple) {
+                var remoteBatch = tuple.remote;
+                var batch = tuple.local;
+                promises.push(batchService.updateBatch(batch, remoteBatch));
+            });
+            $q.all(promises)
+                .then(function (batches) {
+                    return associationDataSynchronizationService.syncData().then(function (downloadResults) {
+                        var dataCount = getDownloadDataCount(downloadResults);
+                        return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
+                    });
+                })
+                .then(function (operation) {
+                    log.info("created SyncOperation for async Batch Processing");
+                    $ionicPopup.confirm({
+                        title: "Synchronization Result",
+                        template: "A synchronization result has been received. Would you like to check it?"
+                    }).then(function (res) {
+                        if (res) routeService.go("main.syncdetail", { id: operation.id });
+                    });
+                })
+                .catch(function (error) {
+                    log.error(error);
+                });
+        }
+
+        // registering completion callback on the asyncSynchronizationService
+        asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
+
+        var api = {
+            fullDownload: fullDownload,
+            fullSync: fullSync
+        }
+
+        return api;
     }
 
-})();
+})(mobileServices);
