@@ -182,7 +182,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             previousdata: '=',
             parentschema: '=',
             //the composition declaration tag, of the parent schema
-            metadatadeclaration:'=',
+            metadatadeclaration: '=',
             mode: '@',
             ismodal: '@'
         },
@@ -204,8 +204,15 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return $scope.clonedCompositionData;
             }
 
+            $scope.isFieldRequired = function (item, requiredExpression) {
+                if (requiredExpression != undefined && item) {
+                    return expressionService.evaluate(requiredExpression, item);
+                }
+                return requiredExpression;
+            };
+
             $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
-                var datamap = item == null ? $scope.parentdata : this.buildSearchDatamap(item, $scope.parentdata);
+                var datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
 
                 return fieldService.isFieldHidden(datamap, application, fieldMetadata);
             };
@@ -235,7 +242,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
 
-                
+
 
 
                 if (!$scope.isBatch()) {
@@ -296,23 +303,12 @@ app.directive('compositionList', function (contextService, formatService, schema
 
 
 
-            $scope.buildSearchDatamap = function (datamap, parentdata) {
-                var clonedDataMap = angular.copy(parentdata);
-                if (datamap) {
-                    var item = datamap;
-                    for (var prop in item) {
-                        if (item.hasOwnProperty(prop)) {
-                            clonedDataMap[prop] = item[prop];
-                        }
-                    }
-                }
-                return clonedDataMap;
-            },
 
-              $scope.isModifiableEnabled = function (fieldMetadata, item) {
-                  var result = expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata), $scope);
-                  return result;
-              };
+
+            $scope.isModifiableEnabled = function (fieldMetadata, item) {
+                var result = expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
+                return result;
+            };
 
             $scope.isSelectEnabled = function (fieldMetadata, item) {
                 var key = fieldMetadata.associationKey;
@@ -320,7 +316,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 if (key == undefined) {
                     return true;
                 }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata), $scope);
+                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
                 if (result != $scope.disabledassociations[key]) {
                     //                    cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                     $scope.disabledassociations[key] = result;
@@ -342,7 +338,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.lookupObj.parentdata = $scope.parentdata;
                 $scope.datamap = item;
 
-                var searchDatamap = this.buildSearchDatamap(item, $scope.parentdata);
+                var searchDatamap = compositionService.buildMergedDatamap(item, $scope.parentdata);
 
                 cmplookup.updateLookupObject($scope, fieldMetadata, code, searchDatamap);
             };
@@ -555,7 +551,17 @@ app.directive('compositionList', function (contextService, formatService, schema
             /***************Batch functions **************************************/
 
             $scope.addBatchItem = function () {
+
+
                 var idx = $scope.compositionData().length;
+                if (idx != 0) {
+                    var itemMap = $scope.compositionData()[idx - 1];
+                    var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
+                    var arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
+                    if (arr != null) {
+                        return;
+                    }
+                }
                 var newItem = {
                     //used to make a differentiation between a compositionitem datamap and a regular datamap
                     '#datamaptype': "compositionitem",

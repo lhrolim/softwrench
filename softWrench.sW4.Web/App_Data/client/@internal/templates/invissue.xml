@@ -92,7 +92,8 @@
         </componentdisplayable>
 
         <componentdisplayable id="rotasset">
-          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" 
+                       requiredexpression="@inventory_.item_.rotating==1">
             <dataprovider prefilterfunction="FilterAssets"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="invissueService" method="afterChangeRotAsset"/>
@@ -295,7 +296,7 @@
         <schema id="batchitemline">
           <reference id="issuestoreloc"/>
           <reference id="issuebin"/>
-          <reference id="rotasset" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1"/>
+          <reference id="rotasset" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" />
 
           <field attribute="binbalances_.curbal" label="Current Balance" readonly="true"/>
 
@@ -511,7 +512,8 @@
               <event type="afterchange" service="inventoryService" method="invIssueBatch_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
-            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" requiredexpression="@inventory_.item_.rotating==1">
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; 
+              @inventory_.item_.rotating==1" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
