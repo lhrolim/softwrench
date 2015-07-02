@@ -66,13 +66,14 @@
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" requiredexpression="true"
                        enableexpression="(@mode=='batch' &amp;&amp; @itemnum!=null) || (@mode!='batch' &amp;&amp; @siteid!=null)">
             <renderer type="lookup"/>
+            <event type="afterchange" service="invissueService" method="afterChangeStoreloc"/>
             <dataprovider prefilterfunction="FilterStoreRooms"/>
           </association>
         </componentdisplayable>
 
         <componentdisplayable id="site">
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid" hideDescription="true">
-            <renderer type="lookup"/>b
+            <renderer type="lookup"/>
           </association>
         </componentdisplayable>
 
@@ -299,8 +300,6 @@
           <field attribute="binbalances_.curbal" label="Current Balance" readonly="true"/>
 
           <reference id="issuequantity"/>
-
-
         </schema>
 
         <schema id="batchitemlinedetail">
@@ -512,7 +511,7 @@
               <event type="afterchange" service="inventoryService" method="invIssueBatch_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
-            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" requiredexpression="@inventory_.item_.rotating==1">
               <renderer type="lookup"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
