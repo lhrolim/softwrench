@@ -563,6 +563,7 @@
     <attribute name="label" type="string" use="required"></attribute>
     <attribute name="inline" type="boolean" default="true"></attribute>
     <attribute name="hidden" type="boolean"></attribute>
+    <attribute name="fetchtype" type="tns:FetchType"/>
     <attribute name="detailschema" type="string">
       <annotation>
         <documentation>
@@ -666,6 +667,14 @@
       </extension>
     </complexContent>
   </complexType>
+
+  <simpleType name="FetchType">
+    <restriction base="string">
+      <enumeration value="eager"></enumeration>
+      <enumeration value="lazy"></enumeration>
+      <enumeration value="manual"></enumeration>
+    </restriction>
+  </simpleType>
 
   <simpleType name="StereotypeType">
     <restriction base="string">

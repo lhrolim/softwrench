@@ -108,6 +108,9 @@ app.directive('lookupModal', function (contextService) {
 
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
+                if ($scope.lookupObj) {
+                    $scope.lookupObj.description = null;
+                }
 
                 if ($scope.lookupObj.fieldMetadata == null) {
                     return;
@@ -133,6 +136,7 @@ app.directive('lookupModal', function (contextService) {
 
             $scope.hideLookupModal = function (target) {
                 $scope.modalCanceled = true;
+                $scope.lookupObj.description = null;
                 var modals = $('[data-attribute="{0}"]'.format(target));
                 modals.modal('hide');
             };

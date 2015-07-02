@@ -28,7 +28,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         private ISet<ApplicationEvent> _eventsSet;
 
         public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer, 
-            string printSchema, string dependantfields, ISet<ApplicationEvent> events = null ) {
+            string printSchema, string dependantfields,FetchType fetchType, ISet<ApplicationEvent> events = null ) {
             _inline = inline;
             Renderer = renderer;
             _detailSchema = detailSchema;

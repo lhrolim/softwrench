@@ -379,6 +379,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             var inline = composition.Attribute(XmlMetadataSchema.ApplicationCompositionInlineAttribute).ValueOrDefault(false);
             var schemaId = composition.Attribute(XmlMetadataSchema.ApplicationCompositionSchemaIdAttribute).ValueOrDefault("detail");
             var printSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionPrintAttribute).ValueOrDefault("detail");
+            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault("eager");
+            var fetchType = (FetchType) Enum.Parse(typeof(FetchType), fetchTypeStr, true);
+
             var dependantfields = composition.Attribute(XmlMetadataSchema.ApplicationCompositionDependantFieldsAttribute).ValueOrDefault((string)null);
             var modeAttr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionRenderModeAttribute).ValueOrDefault((string)null);
             var mode = SchemaMode.None;
@@ -403,10 +406,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var applicationEvents = ParseEvents(composition);
             if (collectionProperties != null || isCollection) {
                 return new ApplicationCompositionCollectionSchema(inline, schemaId, collectionProperties, mode,
-                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, applicationEvents);
+                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType, applicationEvents);
             }
             return new ApplicationCompositionSchema(inline, schemaId, mode,
-                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, applicationEvents);
+                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType,applicationEvents);
 
         }
 
