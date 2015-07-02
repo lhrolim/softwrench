@@ -218,7 +218,7 @@
               <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
             </association>
           </section>
-          
+
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
@@ -257,7 +257,7 @@
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
             </field>
           </section>
-          
+
           <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
@@ -318,21 +318,20 @@
             <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <!--            <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="">-->
-            <!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
-            <!--            </composition>-->
-            <!--            <composition relationship="locationmeter" label="Location Meter Reading" detailschema="">-->
-            <!--              <collectionproperties allowcreation="false" listschema="composition"/>-->
-            <!--            </composition>-->
+            <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="" hidden="true" fetchtype="manual">
+              <collectionproperties allowcreation="false" listschema="composition"/>
+            </composition>
+            <composition relationship="locationmeter" label="Location Meter Reading" detailschema="" hidden="true" fetchtype="manual">
+              <collectionproperties allowcreation="false" listschema="composition"/>
+            </composition>
           </section>
-<!--          <commandbars>-->
-<!--            <commandgroup position="actions">-->
-<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-<!--                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>-->
-<!--              </container>-->
-<!--            </commandgroup>-->
-<!---->
-<!--          </commandbars>-->
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
+              </container>
+            </commandgroup>
+          </commandbars>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
@@ -355,7 +354,7 @@
           </composition>
         </schema>
 
-        
+
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
           <field attribute="reportdate" label="Reported On" hidden="true" default="@now"/>
           <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
@@ -378,7 +377,7 @@
             <renderer type="richtext"/>
           </field>
         </schema>
-        
+
         <detail platform="mobile" title="Work Order">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid" hidden="true" />
@@ -387,7 +386,7 @@
           <field attribute="hasfollowupwork" hidden="true"/>
           <field attribute="origrecordid" hidden="true"/>
           <field attribute="origrecordclass" hidden="true"/>
-          
+
           <field attribute="wonum" label="Number" hidden="true" />
           <field attribute="reportdate" label="Reported On" hidden="true" default="@now"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
@@ -403,7 +402,7 @@
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>
-          
+
 
           <association label="Location" target="location" labelfield="location.description" />
 

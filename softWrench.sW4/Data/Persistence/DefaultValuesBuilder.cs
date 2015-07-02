@@ -1,4 +1,5 @@
 ﻿using cts.commons.portable.Util;
+using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -21,7 +22,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         public const string DBDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
-        public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues, Type mappingType) {
+        public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues, [CanBeNull]Type mappingType) {
 
             var displayables = application.Schema.GetDisplayable<IDefaultValueApplicationDisplayable>(typeof(IDefaultValueApplicationDisplayable));
             var fields = application.Schema.Fields;

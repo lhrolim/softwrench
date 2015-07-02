@@ -32,6 +32,18 @@
             var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters);
             return $http.get(url);
         },
+
+
+        getApplicationWithInitialDataPromise: function (applicationName, schemaId, parameters, initialData) {
+            if (initialData && !isString(initialData)) {
+                if (initialData.fields) {
+                    initialData = initialData.fields;
+                }
+                initialData = angular.toJson(initialData);
+            }
+            var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters, initialData);
+            return $http.post(url,initialData);
+        },
     };
 
 

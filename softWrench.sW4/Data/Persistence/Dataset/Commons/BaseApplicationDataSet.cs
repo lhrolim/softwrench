@@ -168,12 +168,24 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+
+            if (request.CompositionList != null) {
+                foreach (var compositionKey in request.CompositionList.Where(applicationCompositionSchemas.ContainsKey)) {
+                    //use only the passed compositions amongst the original list
+                    compostionsToUse.Add(compositionKey, applicationCompositionSchemas[compositionKey]);
+                }
+            } else {
+                //use them all
+                compostionsToUse = (Dictionary<string, ApplicationCompositionSchema>)applicationCompositionSchemas;
+            }
+
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
 
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
                application, currentData, request.Id);
 
-            var result =_collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
+            var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata);
 
             return new CompositionFetchResult(result);
         }
@@ -341,7 +353,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
 
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,Boolean isBatch) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
             if (isBatch) {

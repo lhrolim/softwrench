@@ -79,7 +79,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
                         application = scope.schema.applicationName;
                     }
                     var id = schemaService.getId(scope.datamap, scope.schema);
-                    applicationService.getApplicationDataPromise(application, ob.schemaId, { id: id }).then(function (result) {
+                    applicationService.getApplicationWithInitialDataPromise(application, ob.schemaId, { id: id }, scope.datamap).then(function (result) {
                         var title = result.data.schema.title;
                         if (result.data.extraParameters['exception']) {
                             alertService.alert(result.data.extraParameters['exception']);
