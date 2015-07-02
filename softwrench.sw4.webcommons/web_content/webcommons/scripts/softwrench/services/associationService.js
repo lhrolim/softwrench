@@ -163,6 +163,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             var afterchangeEvent = {
                 fields: fields,
                 scope: scope,
+                parentdata:scope.parentdata,
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));

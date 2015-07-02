@@ -87,6 +87,7 @@
                         oldValue: oldValue,
                         newValue: newValue,
                         fields: $scope[datamappropertiesName],
+                        parentdata: $scope.parentdata,
                         displayables: displayables,
                         scope: $scope,
                         'continue': function () {
