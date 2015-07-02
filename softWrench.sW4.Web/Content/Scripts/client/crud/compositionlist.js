@@ -558,7 +558,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     var itemMap = $scope.compositionData()[idx - 1];
                     var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
                     var arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
-                    if (arr != null) {
+                    if (arr != null && arr.length!=0) {
                         return;
                     }
                 }
