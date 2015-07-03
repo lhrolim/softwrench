@@ -10,7 +10,7 @@
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
-            <property key="list.click.service" value="attachmentService.downloadFile"/>
+            <property key="list.selectionstyle" value="single"/>
           </properties>
 
           <field attribute="assetnum" label="Asset"></field>

@@ -465,20 +465,39 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return compositionId != null;
             }
 
+            $scope.handleSingleSelectionClick = function (item) {
+                if (!this.isSingleSelection()) {
+                    return;
+                }
+                var items = this.compositionData();
+                var previousValue = item["#selected"];
+                for (var i = 0; i < items.length; i++) {
+                    items[i]["#selected"] = "false";
+                }
+                if (previousValue == undefined || "false" == previousValue) {
+                    item["#selected"] = "true";
+                }
+
+            }
+
+
             /// <summary>
             ///  Method called when an entry of the composition is clicked
             /// </summary>
             /// <param name="item">the row entry, datamap</param>
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
-            $scope.toggleDetails = function (item, column, usingArrowButton, $event) {
+            $scope.toggleDetails = function (item, column, columnMode, $event) {
 
-                if (usingArrowButton) {
+                if (columnMode == "arrow" || columnMode == "singleselection") {
+                    //to avoid second call
                     $event.stopImmediatePropagation();
                 }
+                this.handleSingleSelectionClick(item);
+
 
                 var log = $log.get("compositionlist#toggleDetails");
 
-                if ((this.isBatch() && !usingArrowButton)) {
+                if ((this.isBatch() && !columnMode == "arrow")) {
                     //For batch mode, as the items will be edited on the lines, 
                     //we cannot allow the details to be expanded unless the button is clicked on the left side of the table.
                     return;
@@ -488,6 +507,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
 
                 var updating = $scope.collectionproperties.allowUpdate;
+
 
                 var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
                 if (fullServiceName != null) {
@@ -558,7 +578,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     var itemMap = $scope.compositionData()[idx - 1];
                     var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
                     var arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
-                    if (arr != null && arr.length!=0) {
+                    if (arr != null && arr.length != 0) {
                         return;
                     }
                 }
@@ -606,6 +626,10 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             $scope.isBatch = function () {
                 return "batch" == $scope.compositionschemadefinition.rendererParameters["mode"];
+            }
+
+            $scope.isSingleSelection = function () {
+                return "single" == schemaService.getProperty($scope.compositionlistschema, "list.selectionstyle")
             }
 
             $scope.hasModified = function (key, displayables) {
