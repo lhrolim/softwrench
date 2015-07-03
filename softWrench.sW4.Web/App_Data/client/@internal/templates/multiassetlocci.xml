@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="multiassetlocci" title="Multi Asset Locci" entity="multiassetlocci">
+      
+      <schemas>
+
+        <list stereotype="compositionlist" platform="web">
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
+            <property key="list.click.service" value="attachmentService.downloadFile"/>
+          </properties>
+
+          <field attribute="assetnum" label="Asset"></field>
+          <field attribute="location" label="Location"></field>
+          <field attribute="cinum" label="Configuration Item"></field>
+          <field attribute="sequence" label="Sequence"></field>
+          <field attribute="targetdesc" label="Target Description"></field>
+<!--          <commandbars>-->
+<!--            <commandgroup position="compositionbottom" removeundeclared="true">-->
+<!--              <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>-->
+<!--              <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />-->
+<!--              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>-->
+<!--            </commandgroup>-->
+<!--          </commandbars>-->
+        </list>
+
+
+      </schemas>
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>

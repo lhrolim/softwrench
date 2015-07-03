@@ -71,7 +71,8 @@
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
         <!--Please updated it to use lazy method loading, huge performance impact-->
-        <relationship to ="glcomponents" ignoreprimary="true">
+        <relationship to ="glcomponents" collection="true">
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 

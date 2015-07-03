@@ -7,6 +7,8 @@
     <template path="@servicerequest.xml"/>
     <!--Inventory-->
     <template path="@inventory.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@multiassetlocci.xml"/>
   </templates>
 
   <entities>
@@ -368,6 +370,8 @@
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
             </composition>
+            
+            
 
             <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
@@ -381,6 +385,7 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
+            
           </section>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <commandbars>
@@ -392,5 +397,18 @@
         </schema>
       </schemas>
     </application>
+
+    <application entity="workorder" name="workorder" title="Work Order">
+      <schemas>
+        <schema id="editdetail" redeclaring="false">
+          <customization position="+worklog">
+              <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="">
+                <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+              </composition>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+    
   </applications>
 </metadata>
