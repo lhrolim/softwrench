@@ -5,8 +5,10 @@ using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata.Security;
 
@@ -14,10 +16,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
     class WorkorderReadingDataSet : MaximoApplicationDataSet {
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var datamapToUse = LocateDataMap(request.InitialValues);
+
+
             var currentData = new JObject
             {
-                {"assetnum", request.InitialValues.GetAttribute("assetnum") as string},
-                {"location", request.InitialValues.GetAttribute("location") as string}
+                {"assetnum", datamapToUse.GetAttribute("assetnum") as string},
+                {"location", datamapToUse.GetAttribute("location") as string}
             };
             var compositionData = base.GetCompositionData(application, new CompositionFetchRequest {
                 Id = request.Id,
@@ -34,6 +39,26 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 detail.ExtraParameters.Add("exception", "The asset and location do not have any active meters associated with them.");
             }
             return detail;
+        }
+
+        /// <summary>
+        /// We´ll either use the workorder itself, or a multiassetlocci if any selected
+        /// </summary>
+        /// <param name="initialValues"></param>
+        /// <returns></returns>
+        private Entity LocateDataMap(Entity initialValues) {
+
+            var relationship = (IEnumerable<Entity>)initialValues.GetRelationship("multiassetlocci");
+            if (relationship == null) {
+                return initialValues;
+            }
+            foreach (var multiAssetLocci in relationship) {
+                if ("true".Equals(multiAssetLocci.GetUnMappedAttribute("#selected"))) {
+                    return multiAssetLocci;
+                }
+            }
+
+            return initialValues;
         }
 
 

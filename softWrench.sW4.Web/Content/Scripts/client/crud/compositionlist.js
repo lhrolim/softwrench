@@ -465,7 +465,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return compositionId != null;
             }
 
-            $scope.handleSingleSelectionClick = function (item) {
+            $scope.handleSingleSelectionClick = function (item, rowIndex) {
                 if (!this.isSingleSelection()) {
                     return;
                 }
@@ -473,9 +473,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 var previousValue = item["#selected"];
                 for (var i = 0; i < items.length; i++) {
                     items[i]["#selected"] = "false";
+                    $scope.compositiondata[i]["#selected"] = "false";
                 }
                 if (previousValue == undefined || "false" == previousValue) {
                     item["#selected"] = "true";
+                    //updating the original item, to make it possible to send custom action selection to server-side
+                    $scope.compositiondata[rowIndex]["#selected"] = "true";
                 }
 
             }
@@ -486,13 +489,13 @@ app.directive('compositionList', function (contextService, formatService, schema
             /// </summary>
             /// <param name="item">the row entry, datamap</param>
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
-            $scope.toggleDetails = function (item, column, columnMode, $event) {
+            $scope.toggleDetails = function (item, column, columnMode, $event,rowIndex) {
 
                 if (columnMode == "arrow" || columnMode == "singleselection") {
                     //to avoid second call
                     $event.stopImmediatePropagation();
                 }
-                this.handleSingleSelectionClick(item);
+                this.handleSingleSelectionClick(item, rowIndex);
 
 
                 var log = $log.get("compositionlist#toggleDetails");
