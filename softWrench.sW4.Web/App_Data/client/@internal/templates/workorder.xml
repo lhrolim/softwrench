@@ -70,9 +70,9 @@
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
-        <!--Please updated it to use lazy method loading, huge performance impact-->
+        <!-- this collection = true here forces realtionship to be ignored on detail loading, which is what we need. that primary attribute is a fake one-->
         <relationship to ="glcomponents" collection="true">
-          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="glaccount" to="comptext" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 
