@@ -318,10 +318,20 @@ app.directive('crudBody', function (contextService) {
                 var log = $log.getInstance('crudbody#save');
                 parameters = instantiateIfUndefined(parameters);
 
+                var schemaToSave = $scope.schema;
+                if (parameters.schema) {
+                    schemaToSave = parameters.schema;
+                }
+
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
                     if ($scope.$parent.$parent.originalsavefn) {
+                        var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap.fields, $scope.crudform.$error);
+                        if (validationErrors.length > 0) {
+                            //interrupting here, can´t be done inside service
+                            return;
+                        }
                         $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
                         return;
                     }
@@ -338,10 +348,7 @@ app.directive('crudBody', function (contextService) {
                     originalDatamap = parameters.originalDatamap;
                 }
 
-                var schemaToSave = $scope.schema;
-                if (parameters.schema) {
-                    schemaToSave = parameters.schema;
-                }
+             
 
                 //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
                 //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure

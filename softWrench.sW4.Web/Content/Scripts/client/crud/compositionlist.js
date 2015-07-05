@@ -141,6 +141,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     "cancelfn='cancel(data,schema)'" +
                     "previousschema='previousschema' previousdata='previousdata'/>");
                 $compile(element.contents())(scope);
+                //controls tab lazy loading
                 scope.loaded = true;
             }
 
@@ -198,7 +199,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             $scope.compositionData = function () {
-                if (this.isBatch()) {
+                if (this.isBatch() || !this.hasDetailSchema()) {
                     return $scope.compositiondata;
                 }
                 return $scope.clonedCompositionData;
@@ -246,9 +247,18 @@ app.directive('compositionList', function (contextService, formatService, schema
 
 
                 if (!$scope.isBatch()) {
-                    $scope.clonedCompositionData = [];
-                    $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
-                } else if ($scope.metadatadeclaration.schema.renderer.parameters && "true" == $scope.metadatadeclaration.schema.renderer.parameters["startwithentry"]) {
+                    if ($scope.hasDetailSchema()) {
+                        //we shall just clone the composition array if we´re dealing with a non batch operation, 
+                        //because then the original datamap shall only be updated on server return
+                        $scope.clonedCompositionData = [];
+                        $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
+                    }
+                    if (compositionService.hasEditableProperty($scope.compositionlistschema)) {
+                        $.each($scope.compositionData(), function(key, value) {
+                            fieldService.fillDefaultValues($scope.compositionlistschema.displayables, value, $scope);
+                        });
+                    }
+                } else if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "startwithentry")) {
                     $scope.addBatchItem();
                 }
 
@@ -276,6 +286,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                 parameters.parentdata = $scope.parentdata;
                 eventService.onload($scope, $scope.compositionlistschema, $scope.datamap, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
+            
+
             };
 
             $scope.$on('sw_compositiondataresolved', function (event, datamap) {
@@ -675,7 +687,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 var updatedCompositionData = [];
-                if ($scope.collectionproperties.allowUpdate === "true") {
+                if (this.hasDetailSchema() && $scope.collectionproperties.allowUpdate === "true") {
                     for (var key in $scope.detailData) {
                         if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, detailSchema.displayables)) {
                             updatedCompositionData.push($scope.detailData[key].data);
@@ -690,7 +702,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
-                if ($scope.collectionproperties.allowUpdate) {
+                if (this.hasDetailSchema() &&  $scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
                     //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
                     $scope.parentdata.fields[$scope.relationship] = updatedCompositionData;
@@ -712,9 +724,11 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //this will disable success message, since we know we´ll need to refresh the screen
                     contextService.insertIntoContext("refreshscreen", true, true);
                 }
+                var compositionData = this.compositionData();
 
+                //TODO: refactor this, using promises
                 $scope.$emit("sw_submitdata", {
-                    successCbk: function (data) {
+                    successCbk: function(data) {
                         var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
                         if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
                             window.location.reload();
@@ -734,13 +748,14 @@ app.directive('compositionList', function (contextService, formatService, schema
                         }
                         $scope.selecteditem = null;
                     },
-                    failureCbk: function (data) {
+                    failureCbk: function(data) {
                         var idx = $scope.compositiondata.indexOf(selecteditem);
                         if (idx != -1) {
                             $scope.compositiondata.splice(idx, 1);
                         }
                         $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                     },
+                    compositionData: compositionData,
                     isComposition: true,
                     nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
                     refresh: alwaysrefresh,

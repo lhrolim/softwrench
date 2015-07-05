@@ -64,6 +64,8 @@
             return result;
         }
 
+
+
         function validate(schema, displayables, datamap, angularformerrors, innerValidation) {
             angularformerrors = instantiateIfUndefined(angularformerrors);
             var log = $log.get("validationService#validate");
@@ -89,7 +91,7 @@
                     continue;
                 }
 
-                if (fieldService.isInlineComposition(displayable)) {
+                if (fieldService.isInlineComposition(displayable) || (fieldService.isListOnlyComposition(displayable) && compositionService.hasEditableProperty(displayable.schema.schemas.list))) {
                     validationArray = validationArray.concat(this.validateInlineComposition(displayable, datamap));
                 }
 
@@ -122,7 +124,7 @@
                     validationArray = validationArray.concat(customErrorArray);
                 }
                 if (validationArray.length > 0) {
-                    $rootScope.$broadcast('sw_validationerrors', validationArray);
+                    $rootScope.$broadcast('sw_validationerrors', validationArray,$rootScope.showingModal);
                 }
             }
             return validationArray;

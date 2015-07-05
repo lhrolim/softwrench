@@ -1,5 +1,5 @@
 ﻿
-modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService, userService) {
+modules.webcommons.factory('fieldService', function ($injector, $log,$filter, expressionService, eventService, userService,formatService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -114,7 +114,8 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
                     }
                     if (expressionResult == null && value.defaultValue != null) {
                         if (value.defaultValue == "@now") {
-                            datamap[target] = new Date();
+                            datamap[target] = formatService.format("@now", value, null);
+//                            datamap[target] = $filter('date')(new Date(), dateFormat)
                         } else {
                             var parsedUserValue = userService.readProperty(value.defaultValue);
                             if (displayable.rendererType == "numericinput" && parsedUserValue) {
@@ -141,6 +142,11 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
         isInlineComposition: function (displayable) {
             var type = displayable.type;
             return type == "ApplicationCompositionDefinition" && displayable.inline;
+        },
+
+        isListOnlyComposition: function (displayable) {
+            var type = displayable.type;
+            return type == "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
         },
 
         isTab: function (displayable) {

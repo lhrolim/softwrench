@@ -3,7 +3,7 @@
 
   <applications>
     <application name="multiassetlocci" title="Multi Asset Locci" entity="multiassetlocci">
-      
+
       <schemas>
 
         <list stereotype="compositionlist" platform="web">
@@ -18,13 +18,12 @@
           <field attribute="cinum" label="Configuration Item"></field>
           <field attribute="sequence" label="Sequence"></field>
           <field attribute="targetdesc" label="Target Description"></field>
-<!--          <commandbars>-->
-<!--            <commandgroup position="compositionbottom" removeundeclared="true">-->
-<!--              <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>-->
-<!--              <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />-->
-<!--              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>-->
-<!--            </commandgroup>-->
-<!--          </commandbars>-->
+          <commandbars>
+            <commandgroup position="compositionbottom" removeundeclared="true">
+              <removecommand id="additem"/>
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </list>
 
 

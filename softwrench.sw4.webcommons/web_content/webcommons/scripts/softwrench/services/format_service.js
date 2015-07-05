@@ -5,7 +5,7 @@
             return null;
         }
 
-        if (value == "@currentdatetime" || value == "@currentdate") {
+        if (value.equalsAny("@now", "@currentdatetime", "@currentdate")) {
             return $filter('date')(new Date(), dateFormat);
         }
 

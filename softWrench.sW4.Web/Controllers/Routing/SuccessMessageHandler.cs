@@ -1,5 +1,6 @@
 ﻿using System;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Command;
 using softWrench.sW4.Scheduler;
@@ -9,14 +10,20 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers.Routing {
     public class SuccessMessageHandler : IComponent {
         private static readonly I18NResolver Resolver = new I18NResolver();
-        public String FillSuccessMessage(ApplicationMetadata applicationMetadata, string userId, string operation) {
+        public String FillSuccessMessage(ApplicationMetadata applicationMetadata, TargetResult maximoResult, string operation) {
             string successMessage = null;
             var applicationCommand = ApplicationCommandUtils.GetApplicationCommand(applicationMetadata, operation);
+            String userId = null;
+            if (maximoResult != null)
+            {
+                userId = maximoResult.UserId == null ? " " : " " + maximoResult.UserId + " ";    
+            }
+            
             if (applicationCommand != null) {
                 successMessage = applicationCommand.SuccessMessage;
             } else {
                 //TODO: refactor this
-                var baseMessage = applicationMetadata.Title + (userId == null ? " " : " " + userId + " ");
+                var baseMessage = applicationMetadata.Title + (userId);
                 switch (operation) {
                     case OperationConstants.CRUD_CREATE:
                         return baseMessage + Resolver.I18NValue("messagesection.success.created", "successfully created");

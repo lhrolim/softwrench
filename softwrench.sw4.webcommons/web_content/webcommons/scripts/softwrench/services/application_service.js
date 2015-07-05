@@ -11,6 +11,7 @@
                 mode: mode,
                 platform: platform()
             };
+            parameters.currentSchemaKey = schemaId;
 
 
             if (parameters.popupmode == "browser") {
@@ -25,6 +26,19 @@
                 parameters.application = applicationName;
                 return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
             }
+        },
+
+
+        invokeOperation: function (applicationName, schemaId, operation, datamap, extraParameters) {
+            var fields = datamap;
+            if (datamap.fields) {
+                fields = datamap.fields;
+            }
+
+            var parameters = extraParameters ? extraParameters : {};
+            parameters.Operation = operation;
+            var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters);
+            return $http.put(url, angular.toJson(fields));
         },
 
 

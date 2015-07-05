@@ -96,6 +96,11 @@ app.directive('messagesection', function (contextService) {
             });
 
             $scope.$on('sw_ajaxerror', function (event, errordata) {
+
+                if ($rootScope.showingModal && !event.currentScope.modalshown) {
+                    return;
+                }
+
                 log.debug('sw_ajaxerror#enter');
                 var innerException;
                 var limit = 3; // to avoid unwanted infinite recursion
@@ -135,8 +140,11 @@ app.directive('messagesection', function (contextService) {
 //                }
             });
 
-            $scope.$on('sw_validationerrors', function (event, validationArray) {
+            $scope.$on('sw_validationerrors', function (event, validationArray,modal) {
                 log.debug('sw_validationerrors#enter');
+                if (modal && !event.currentScope.modalshown) {
+                    return;
+                }
 
                 if (validationArray == null || validationArray.length == 0) {
                     return;

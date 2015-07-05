@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('compositionService', function ($log, $http, $rootScope, $timeout, submitService, schemaService) {
+app.factory('compositionService', function ($log, $http, $rootScope, $timeout, submitService,fieldService, schemaService) {
 
     var nonInlineCompositionsDict = function (schema) {
         if (schema.nonInlineCompositionsDict != undefined) {
@@ -30,6 +30,25 @@ app.factory('compositionService', function ($log, $http, $rootScope, $timeout, s
 
 
     return {
+
+        hasEditableProperty: function (listSchema) {
+            listSchema.jscache = listSchema.jscache || {};
+            if (listSchema.jscache.editable) {
+                return listSchema.jscache.editable;
+            }
+
+            var displayables = listSchema.displayables;
+            for (var i = 0; i < displayables.length; i++) {
+                var dis = displayables[i];
+                if (fieldService.isPropertyTrue(dis, "editable")) {
+                    listSchema.jscache.editable = true;
+                    return true;
+                }
+            }
+            listSchema.jscache.editable = false;
+            return false;
+        },
+
 
         buildMergedDatamap: function (datamap, parentdata) {
             var clonedDataMap = angular.copy(parentdata);
@@ -75,7 +94,7 @@ app.factory('compositionService', function ($log, $http, $rootScope, $timeout, s
             return [];
         },
 
-        
+
 
         /*
         * this method will hit the server to fetch associated composition data on a second request making the detail screens faster
@@ -98,8 +117,8 @@ app.factory('compositionService', function ($log, $http, $rootScope, $timeout, s
             var log = $log.getInstance('compositionservice#populateWithCompositionData');
             log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
 
-            
-            return $http.post(urlToUse, jsonString,{avoidspin:true}).success(function(data) {
+
+            return $http.post(urlToUse, jsonString, { avoidspin: true }).success(function (data) {
 
                 var compositionArray = data.resultObject;
                 for (var composition in compositionArray) {
@@ -109,7 +128,7 @@ app.factory('compositionService', function ($log, $http, $rootScope, $timeout, s
                     datamap[composition] = compositionArray[composition].resultList;
                 }
                 log.info('compositions returned');
-                $timeout(function() {
+                $timeout(function () {
                     $rootScope.$broadcast("sw_compositiondataresolved", datamap);
 
                 }, 100, false);

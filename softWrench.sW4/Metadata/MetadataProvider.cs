@@ -255,7 +255,7 @@ namespace softWrench.sW4.Metadata {
         /// </summary>
         /// <param name="commandId"></param>
         [NotNull]
-        public static ICommandDisplayable Command(string commandId) {
+        public static ICommandDisplayable Command(string commandId, bool throwException = false) {
             Validate.NotNull(commandId, "commandId");
             if (commandId.StartsWith("crud_")) {
                 //TODO: This is workaround to avoid exception when crud_
@@ -263,6 +263,9 @@ namespace softWrench.sW4.Metadata {
             }
             var commandParts = commandId.Split('.');
             if (commandParts.Length != 2) {
+                if (!throwException) {
+                    return null;
+                }
                 throw new InvalidOperationException("command Id should be in the form 'bar.command'");
             }
             var barKey = commandParts[0];

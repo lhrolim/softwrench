@@ -42,6 +42,9 @@ namespace softWrench.sW4.Data.Entities {
             get { return _associationAttributes; }
         }
 
+        public EntityMetadata Metadata {
+            get { return _metadata; }
+        }
 
 
         public object GetRelationship(string attributeName) {
@@ -66,6 +69,10 @@ namespace softWrench.sW4.Data.Entities {
             get { return _unmappedAttributes; }
         }
 
+        public string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
+            return GetAttribute(attributeName, remove, throwException) as string;
+        }
+
         public override object GetAttribute(string attributeName, bool remove = false, bool throwException = false) {
             if (UnmappedAttributes.ContainsKey(attributeName)) {
                 return GetUnMappedAttribute(attributeName);
@@ -83,7 +90,7 @@ namespace softWrench.sW4.Data.Entities {
                     return null;
                 }
             }
-            return base.GetAttribute(attributeName,remove,throwException);
+            return base.GetAttribute(attributeName, remove, throwException);
         }
 
         public override bool ContainsAttribute(string attributeName) {
