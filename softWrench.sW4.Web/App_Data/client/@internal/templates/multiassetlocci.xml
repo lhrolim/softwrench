@@ -13,11 +13,15 @@
             <property key="list.selectionstyle" value="single"/>
           </properties>
 
+          <field attribute="siteid" hidden="true"></field>
           <field attribute="assetnum" label="Asset"></field>
           <field attribute="location" label="Location"></field>
           <field attribute="cinum" label="Configuration Item"></field>
           <field attribute="sequence" label="Sequence"></field>
           <field attribute="targetdesc" label="Target Description"></field>
+          <field attribute="progress" label="Complete">
+            <renderer type="checkbox" params="editable=true;clickservice=meterReadingService.markComplete"/>
+          </field>
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
               <removecommand id="additem"/>

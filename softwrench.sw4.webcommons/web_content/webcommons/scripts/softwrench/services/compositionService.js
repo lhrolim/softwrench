@@ -130,8 +130,7 @@ app.factory('compositionService', function ($log, $http, $rootScope, $timeout, s
                 log.info('compositions returned');
                 $timeout(function () {
                     $rootScope.$broadcast("sw_compositiondataresolved", datamap);
-
-                }, 100, false);
+                });
 
             });
         }

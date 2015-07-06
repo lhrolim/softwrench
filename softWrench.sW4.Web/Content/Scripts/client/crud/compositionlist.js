@@ -188,9 +188,9 @@ app.directive('compositionList', function (contextService, formatService, schema
             ismodal: '@'
         },
 
-        controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
-            formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
+        controller: function ($scope,$q, $log,$timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
+            formatService, fieldService, commandService, compositionService, validationService,dispatcherService,
+            expressionService,modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
 
             $scope.lookupObj = {};
 
@@ -295,7 +295,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 init();
             });
 
-
+            $scope.getBooleanClass=function(compositionitem, attribute) {
+                if (compositionitem[attribute] == "true" || compositionitem[attribute] == 1) {
+                    return 'fa-check-square-o';
+                }
+                return 'fa-square-o';
+            }
 
             $scope.safeCSSselector = function (name) {
                 return safeCSSselector(name);
@@ -313,6 +318,13 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return false;
             }
 
+            $scope.invokeCustomCheckBoxService=function(fieldMetadata,datamap) {
+                if (fieldMetadata.rendererParameters["clickservice"] == null) {
+                    return;
+                }
+                var customfn = dispatcherService.loadServiceByString(fieldMetadata.rendererParameters["clickservice"]);
+                $q.when(customfn(fieldMetadata,$scope.parentdata, datamap));
+            }
 
 
 
@@ -724,8 +736,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //this will disable success message, since we know we´ll need to refresh the screen
                     contextService.insertIntoContext("refreshscreen", true, true);
                 }
-                var compositionData = this.compositionData();
-
                 //TODO: refactor this, using promises
                 $scope.$emit("sw_submitdata", {
                     successCbk: function(data) {
@@ -755,7 +765,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                         }
                         $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                     },
-                    compositionData: compositionData,
                     isComposition: true,
                     nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
                     refresh: alwaysrefresh,

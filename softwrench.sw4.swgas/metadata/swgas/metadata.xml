@@ -100,7 +100,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
 

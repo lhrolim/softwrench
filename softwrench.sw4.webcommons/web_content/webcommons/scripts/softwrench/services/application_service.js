@@ -1,8 +1,47 @@
-﻿modules.webcommons.factory('applicationService', function ($http) {
+﻿
+(function () {
+    'use strict';
 
-    return {
+    angular.module('webcommons_services').factory('applicationService', ['$http', '$rootScope', applicationService]);
 
-        getApplicationUrl: function (applicationName, schemaId, mode, title, parameters, jsonData) {
+    function applicationService($http, $rootScope) {
+
+        var service = {
+            getApplicationUrl: getApplicationUrl,
+            invokeOperation: invokeOperation,
+            getApplicationDataPromise: getApplicationDataPromise,
+            getApplicationWithInitialDataPromise: getApplicationWithInitialDataPromise,
+            submitData: submitData
+        };
+
+        return service;
+
+
+        /// <summary>
+        ///  refactor to use promises
+        /// </summary>
+        /// <param name="successCallBack"></param>
+        /// <param name="failureCallback"></param>
+        /// <param name="extraParameters"></param>
+        function submitData(successCallBack, failureCallback, extraParameters) {
+
+            extraParameters = extraParameters || {};
+            var isComposition = extraParameters.isComposition;
+            var nextSchemaObj = extraParameters.nextSchemaObj;
+            var refresh = extraParameters.refresh;
+
+            //TODO: refactor it entirely to use promises instead
+            $rootScope.$broadcast("sw_submitdata",{
+                successCbk: successCallBack,
+                failureCbk: failureCallback,
+                isComposition: isComposition,
+                nextSchemaObj: nextSchemaObj,
+                refresh: refresh
+
+            });
+        }
+
+        function getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData) {
             if (parameters === undefined || parameters == null) {
                 parameters = {};
             }
@@ -26,10 +65,9 @@
                 parameters.application = applicationName;
                 return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
             }
-        },
+        };
 
-
-        invokeOperation: function (applicationName, schemaId, operation, datamap, extraParameters) {
+        function invokeOperation(applicationName, schemaId, operation, datamap, extraParameters) {
             var fields = datamap;
             if (datamap.fields) {
                 fields = datamap.fields;
@@ -39,16 +77,15 @@
             parameters.Operation = operation;
             var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters);
             return $http.put(url, angular.toJson(fields));
-        },
+        }
 
-
-        getApplicationDataPromise: function (applicationName, schemaId, parameters) {
+        function getApplicationDataPromise(applicationName, schemaId, parameters) {
             var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters);
             return $http.get(url);
-        },
+        };
 
 
-        getApplicationWithInitialDataPromise: function (applicationName, schemaId, parameters, initialData) {
+        function getApplicationWithInitialDataPromise(applicationName, schemaId, parameters, initialData) {
             if (initialData && !isString(initialData)) {
                 if (initialData.fields) {
                     initialData = initialData.fields;
@@ -56,11 +93,11 @@
                 initialData = angular.toJson(initialData);
             }
             var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters, initialData);
-            return $http.post(url,initialData);
-        },
-    };
+            return $http.post(url, initialData);
+        };
 
+    }
+})();
 
-});
 
 

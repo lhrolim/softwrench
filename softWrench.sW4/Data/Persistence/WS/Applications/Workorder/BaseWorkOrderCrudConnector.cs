@@ -1,18 +1,16 @@
-using Newtonsoft.Json;
-﻿using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
-using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.API;
-using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
-using softWrench.sW4.wsWorkorder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using r = softWrench.sW4.Util.ReflectionUtil;
+using Newtonsoft.Json;
+using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
+using softWrench.sW4.Data.Persistence.WS.Commons;
+using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
     class BaseWorkOrderCrudConnector : CrudConnectorDecorator {
         //        private const string _dbwostatusKey = "dbwostatus";
@@ -61,12 +59,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // This will prevent multiple action on these items
             WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            MultiAssetLocciHandler.HandleMultiAssetLoccis((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
             HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
             HandleLabors((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
             HandleTools((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            
             
             base.BeforeUpdate(maximoTemplateData);
         }

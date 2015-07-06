@@ -22,7 +22,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var currentData = new JObject
             {
                 {"assetnum", datamapToUse.GetAttribute("assetnum") as string},
-                {"location", datamapToUse.GetAttribute("location") as string}
+                {"location", datamapToUse.GetAttribute("location") as string},
+                {"siteid", datamapToUse.GetAttribute("siteid") as string}
             };
             var compositionData = base.GetCompositionData(application, new CompositionFetchRequest {
                 Id = request.Id,
