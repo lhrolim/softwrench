@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             // Workorder id used for data association
             var recordKey = entity.UserId;
 
-            var dirtyEntries = ((IEnumerable<CrudOperationData>)entity.GetRelationship("multiassetlocci_")).Where(w => w.GetStringAttribute("#isDirty").EqualsIc("true")).ToArray();
+            var dirtyEntries = ((IEnumerable<CrudOperationData>)entity.GetRelationship("multiassetlocci_")).Where(w => "true".EqualsIc(w.GetStringAttribute("#isDirty"))).ToArray();
 
             WsUtil.CloneArray(dirtyEntries, rootObject, "MULTIASSETLOCCI", delegate(object integrationObject, CrudOperationData crudData) {
 

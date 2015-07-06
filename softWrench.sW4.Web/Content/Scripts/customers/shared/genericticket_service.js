@@ -129,6 +129,20 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 alertService.alert("You cannot submit this ticket because it is already closed");
                 return false;
             }
+
+            if (schema.applicationName == "workorder" && datamap['status'].equalIc('COMP')) {
+                //TODO: extract this to a customer specific service
+                if (!datamap["multiassetlocci_"]) {
+                    return true;
+                }
+                var anyIncomplete = datamap["multiassetlocci_"].some(function(currentValue) {
+                    return (currentValue.progress == "0" || currentValue.progress == 0);
+                });
+                if (anyIncomplete) {
+                    alertService.alert("You must complete all tasks before changing WO status to Complete.");
+                    return false;
+                }
+            }
         },
 
     };

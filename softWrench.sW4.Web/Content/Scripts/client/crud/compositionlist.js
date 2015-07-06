@@ -296,6 +296,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.compositiondata = datamap[$scope.relationship].list;
                 $scope.paginationData = datamap[$scope.relationship].paginationData;
                 init();
+                $scope.$digest();
             });
 
             $scope.getBooleanClass=function(compositionitem, attribute) {

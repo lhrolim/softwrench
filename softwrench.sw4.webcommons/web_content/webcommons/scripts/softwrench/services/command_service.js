@@ -98,13 +98,10 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                     return;
                 }
                 var modalclass = 'modalsmall';
-                if (command.parameters && command.parameters['modalclass']) {
-                    modalclass = command.parameters['modalclass'];
+                if (command.properties && command.properties['modalclass']) {
+                    modalclass = command.properties['modalclass'];
                 }
-
-                if (command.parameters['modalclass']) {
-                    modalclass = command.parameters['modalclass'];
-                }
+     
 
                 log.debug("executing modal default implementation for command {0}".format(command.id));
                 var ob = schemaService.parseAppAndSchema(command.nextSchemaId);

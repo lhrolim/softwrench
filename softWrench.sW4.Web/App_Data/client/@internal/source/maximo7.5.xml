@@ -11,6 +11,7 @@
         <attribute name="cinum" type="varchar" required="false" />
         <attribute name="sequence" type="int" required="false" />
         <attribute name="progress" type="smallint" required="true" />
+        <attribute name="progress2" type="smallint" query="!@progress" />
         <attribute name="isprimary" type="smallint" required="true" />
         <attribute name="workorgid" type="varchar" required="false" />
         <attribute name="worksiteid" type="varchar" required="false" />

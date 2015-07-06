@@ -22,8 +22,8 @@
             //this method is invoked before angular sets the model, so we need to mark the progress flag properly
 
 
-            var completeMsg = "Are you sure you want to mark this Operation as Completed?";
-            var incompleteMsg = "Are you sure you want to mark this Operation as Incompleted?";
+            var completeMsg = "Are you sure you want to mark this Operation as Complete?";
+            var incompleteMsg = "Are you sure you want to mark this Operation as Incomplete?";
 
             var originalValue = ""+compositionitem["progress"];
             var msg = originalValue == "0" ? completeMsg : incompleteMsg;

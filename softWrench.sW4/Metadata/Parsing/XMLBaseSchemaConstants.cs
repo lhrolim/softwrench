@@ -23,6 +23,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string BaseDisplayableIdAttribute = "id";
         public const string BaseDisplayableRequiredExpressionAttribute = "requiredexpression";
         public const string BaseParametersAttribute = "parameters";
+        public const string BasePropertiesAttribute = "properties";
         public const string IconAttribute = "icon";
 
 

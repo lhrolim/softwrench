@@ -712,7 +712,13 @@
         </documentation>
       </annotation>
     </attribute>
-
+    <attribute name="properties" type="string" use="optional">
+      <annotation>
+        <documentation>
+          extra properties of the command, not related to the invocation per si, like a class for instance
+        </documentation>
+      </annotation>
+    </attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="enableexpression" type="string"></attribute>
     <attribute name="role" type="string" use="optional"></attribute>
