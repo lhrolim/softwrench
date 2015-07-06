@@ -1,144 +1,232 @@
-﻿var app = angular.module('sw_layout');
+﻿(function(angular) {
+    "use strict";
 
-app.factory('compositionService', function ($log, $http, $rootScope, $timeout, submitService,fieldService, schemaService) {
+var app = angular.module('sw_layout');
 
-    var nonInlineCompositionsDict = function (schema) {
-        if (schema.nonInlineCompositionsDict != undefined) {
-            //caching
-            return schema.nonInlineCompositionsDict;
-        }
-        var resultDict = {};
-        for (var i = 0; i < schema.nonInlineCompositionIdxs.length; i++) {
-            var idx = schema.nonInlineCompositionIdxs[i];
-            var composition = schema.displayables[idx];
-            resultDict[composition.relationship] = composition;
-        }
-        schema.nonInlineCompositionsDict = resultDict;
-        return resultDict;
-    };
+app.factory('compositionService',
+    ["$log", "$http", "$rootScope", "$timeout", "submitService", "schemaService", "searchService", "$q", "fieldService",
+    function ($log, $http, $rootScope, $timeout, submitService, schemaService, searchService, $q, fieldService) {
 
-    var getCompositionSchema = function (baseSchema, compositionKey, schemaId) {
-        var schemas = nonInlineCompositionsDict(baseSchema);
-        var thisSchema = schemas[compositionKey];
-        schemas = thisSchema.schema.schemas;
-        return schemaId == "print" ? schemas.print : schemas.list;
-    };
+        var __deafultPageSize__ = 10;
 
-    var getCompositionIdName = function (baseSchema, compositionKey, schemaId) {
-        return getCompositionSchema(baseSchema, compositionKey, schemaId).idFieldName;
-    };
-
-
-    return {
-
-        hasEditableProperty: function (listSchema) {
-            listSchema.jscache = listSchema.jscache || {};
-            if (listSchema.jscache.editable) {
-                return listSchema.jscache.editable;
+        var nonInlineCompositionsDict = function (schema) {
+            if (schema.nonInlineCompositionsDict != undefined) {
+                //caching
+                return schema.nonInlineCompositionsDict;
             }
-
-            var displayables = listSchema.displayables;
-            for (var i = 0; i < displayables.length; i++) {
-                var dis = displayables[i];
-                if (fieldService.isPropertyTrue(dis, "editable")) {
-                    listSchema.jscache.editable = true;
-                    return true;
-                }
+            var resultDict = {};
+            for (var i = 0; i < schema.nonInlineCompositionIdxs.length; i++) {
+                var idx = schema.nonInlineCompositionIdxs[i];
+                var composition = schema.displayables[idx];
+                resultDict[composition.relationship] = composition;
             }
-            listSchema.jscache.editable = false;
-            return false;
-        },
+            schema.nonInlineCompositionsDict = resultDict;
+            return resultDict;
+        };
 
-
-        buildMergedDatamap: function (datamap, parentdata) {
-            var clonedDataMap = angular.copy(parentdata);
-            if (datamap) {
-                var item = datamap;
-                for (var prop in item) {
-                    if (item.hasOwnProperty(prop)) {
-                        clonedDataMap[prop] = item[prop];
-                    }
-                }
-            }
-            return clonedDataMap;
-        },
-
-        locatePrintSchema: function (baseSchema, compositionKey) {
+        var getCompositionSchema = function (baseSchema, compositionKey, schemaId) {
             var schemas = nonInlineCompositionsDict(baseSchema);
             var thisSchema = schemas[compositionKey];
+            schemas = thisSchema.schema.schemas;
+            return schemaId === "print" ? schemas.print : schemas.list;
+        };
 
-            if (thisSchema.schema.schemas.print != null) {
-                return thisSchema.schema.schemas.print;
-            } else if (thisSchema.schema.schemas.list != null) {
-                return thisSchema.schema.schemas.list;
-            } else {
-                return thisSchema.schema.schemas.detail;
-            }
-        },
+        var getCompositionIdName = function (baseSchema, compositionKey, schemaId) {
+            return getCompositionSchema(baseSchema, compositionKey, schemaId).idFieldName;
+        };
 
-        getTitle: function (baseSchema, compositionKey) {
-            var schemas = nonInlineCompositionsDict(baseSchema);
-            var thisSchema = schemas[compositionKey];
-            return thisSchema.label;
-        },
+        var buildPaginatedSearchDTO = function(pageNumber) {
+            var dto = searchService.buildSearchDTO();
+            dto.pageNumber = pageNumber || 1;
+            dto.pageSize = __deafultPageSize__;
+            dto.totalCount = 0;
+            // dto.paginationOptions = [__deafultPageSize__];
+            return dto;
+        };
 
-        getListCommandsToKeep: function (compositionSchema) {
-            var listSchema = compositionSchema.schemas.list;
-            if (listSchema == null) {
+        var getCompositions = function(schema) {
+            if (!schema || !schema["cachedCompositions"]) {
                 return null;
             }
-            var toKeepProperty = listSchema.properties["composition.mainbuttonstoshow"];
-            if (!nullOrEmpty(toKeepProperty)) {
-                return toKeepProperty.split(';');
+            var compositions = [];
+            var cachedCompositions = schema.cachedCompositions;
+            for (var composition in cachedCompositions) {
+                if (!cachedCompositions.hasOwnProperty(composition)) {
+                    continue;
+                }
+                compositions.push(composition);
             }
-            return [];
-        },
+            return compositions;
+        };
 
+        var fetchCompositions = function (requestDTO, datamap, showLoading) {
+            var urlToUse = url("/api/generic/ExtendedData/GetCompositionData");
+            return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
+                .then(function (response) {
+                    var data = response.data;
+                    var compositionArray = data.resultObject;
+                    for (var composition in compositionArray) {
+                        if (!compositionArray.hasOwnProperty(composition)) {
+                            continue;
+                        }
+                        datamap[composition] = {
+                            list: compositionArray[composition].resultList,
+                            paginationData: compositionArray[composition].paginationData
+                        };
+                    }
+                    return datamap;
+                });
+        };
 
+        var doPopulateWithCompositionData = function (requestDTO, datamap) {
+            var log = $log.getInstance('compositionservice#populateWithCompositionData');
+            return fetchCompositions(requestDTO, datamap)
+                .then(function (result) {
+                    log.info('compositions returned');
+                    $timeout(function () {
+                        $rootScope.$broadcast("sw_compositiondataresolved", result);
+                    });
+                    return result;
+                });
+        };
 
-        /*
-        * this method will hit the server to fetch associated composition data on a second request making the detail screens faster
-        *
-        */
-        populateWithCompositionData: function (schema, datamap) {
-            var fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
+        var buildFetchRequestDTO = function (schema, datamap, compositions, paginatedSearch) {
             var applicationName = schema.applicationName;
+            // sanitizing data to submit
+            var fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
+            var compositionNames = getCompositions(schema);
+            angular.forEach(compositionNames, function(composition) {
+                if (!fieldsTosubmit[composition] || !fieldsTosubmit.hasOwnProperty(composition)) {
+                    return;
+                }
+                delete fieldsTosubmit[composition];
+            });
             var parameters = {
-                application: applicationName,
                 key: {
                     schemaId: schema.schemaId,
                     mode: schema.mode,
-                    platform: platform(),
+                    platform: platform()
                 },
-                id: schemaService.getId(datamap, schema)
+                id: schemaService.getId(datamap, schema),
+                paginatedSearch: paginatedSearch || buildPaginatedSearchDTO()
             };
-            var urlToUse = url("/api/generic/ExtendedData/GetCompositionData?" + $.param(parameters));
-            var jsonString = angular.toJson(fieldsTosubmit);
-            var log = $log.getInstance('compositionservice#populateWithCompositionData');
-            log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
+            if (compositions && compositions.length > 0) {
+                parameters.compositionList = compositions;
+            }
+            return {
+                application: applicationName,
+                request: parameters,
+                data: fieldsTosubmit
+            };
+        };
 
+        return {
+            locatePrintSchema: function(baseSchema, compositionKey) {
+                var schemas = nonInlineCompositionsDict(baseSchema);
+                var thisSchema = schemas[compositionKey];
 
-            return $http.post(urlToUse, jsonString, { avoidspin: true }).success(function (data) {
-
-                var compositionArray = data.resultObject;
-                for (var composition in compositionArray) {
-                    if (!compositionArray.hasOwnProperty(composition)) {
-                        continue;
-                    }
-                    datamap[composition] = compositionArray[composition].resultList;
+                if (thisSchema.schema.schemas.print != null) {
+                    return thisSchema.schema.schemas.print;
+                } else if (thisSchema.schema.schemas.list != null) {
+                    return thisSchema.schema.schemas.list;
+                } else {
+                    return thisSchema.schema.schemas.detail;
                 }
-                log.info('compositions returned');
-                $timeout(function () {
-                    $rootScope.$broadcast("sw_compositiondataresolved", datamap);
+            },
+
+            getTitle: function(baseSchema, compositionKey) {
+                var schemas = nonInlineCompositionsDict(baseSchema);
+                var thisSchema = schemas[compositionKey];
+                return thisSchema.label;
+            },
+
+            getListCommandsToKeep: function(compositionSchema) {
+                var listSchema = compositionSchema.schemas.list;
+                if (listSchema == null) {
+                    return null;
+                }
+                var toKeepProperty = listSchema.properties["composition.mainbuttonstoshow"];
+                if (!nullOrEmpty(toKeepProperty)) {
+                    return toKeepProperty.split(';');
+                }
+                return [];
+            },
+
+ 			hasEditableProperty: function (listSchema) {
+            	listSchema.jscache = listSchema.jscache || {};
+            	if (listSchema.jscache.editable) {
+                	return listSchema.jscache.editable;
+            	}
+
+            	var displayables = listSchema.displayables;
+            	for (var i = 0; i < displayables.length; i++) {
+                	var dis = displayables[i];
+                	if (fieldService.isPropertyTrue(dis, "editable")) {
+                    	listSchema.jscache.editable = true;
+                    	return true;
+                	}
+            	}
+            	listSchema.jscache.editable = false;
+            	return false;
+        	},
+
+        	buildMergedDatamap: function (datamap, parentdata) {
+            	var clonedDataMap = angular.copy(parentdata);
+            	if (datamap) {
+                	var item = datamap;
+                	for (var prop in item) {
+                    	if (item.hasOwnProperty(prop)) {
+                        	clonedDataMap[prop] = item[prop];
+                    	}
+                	}
+            	}
+            	return clonedDataMap;
+        	},
+
+            /*
+            * this method will hit the server to fetch associated composition data on a second request making the detail screens faster
+            *
+            */
+            populateWithCompositionData: function(schema, datamap) {
+                var applicationName = schema.applicationName;
+
+                var log = $log.getInstance('compositionservice#populateWithCompositionData');
+                log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
+
+                var compositions = getCompositions(schema);
+                // couldn't resolve compositions's names: fetch all
+                if (!compositions || compositions.length <= 0) {
+                    var dto = buildFetchRequestDTO(schema, datamap);
+                    return doPopulateWithCompositionData(dto, datamap);
+                }
+                // if compositions's names are resolved: one request per composition
+                var promises = compositions.map(function (composition) {
+                    var localDTO = buildFetchRequestDTO(schema, datamap, [composition]);
+                    return doPopulateWithCompositionData(localDTO, datamap);
                 });
+                return $q.all(promises);
+            },
 
-            });
-        }
-
-
+            /**
+             * Fetches a paginated list of associated compositions with relationship name matching composition
+             * 
+             * @param String composition name of the composition relationship
+             * @param Object schema composition's parent's schema
+             * @param Object datamap composition's parent's datamap
+             * @param Integer pageNumber number of the requested page
+             * @returns Promise 
+             *              resolved with parent's datamap populated with the fetched composition list 
+             *              and pagination data (datamap[composition] = { list: [Object], paginationData: Object });
+             *              rejected with HTTP error 
+             */
+            getCompositionList: function(composition, schema, datamap, pageNumber) {
+                var pageRequest = buildPaginatedSearchDTO(pageNumber);
+                var dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
+                return fetchCompositions(dto, datamap, true);
+            }
 
     };
 
-});
+}]);
 
-
+})(angular);

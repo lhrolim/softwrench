@@ -243,27 +243,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
 
-
-
-
-                if (!$scope.isBatch()) {
-                    if ($scope.hasDetailSchema()) {
-                        //we shall just clone the composition array if we´re dealing with a non batch operation, 
-                        //because then the original datamap shall only be updated on server return
-                        $scope.clonedCompositionData = [];
-                        $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
-                    }
-                    if (compositionService.hasEditableProperty($scope.compositionlistschema)) {
-                        $.each($scope.compositionData(), function(key, value) {
-                            fieldService.fillDefaultValues($scope.compositionlistschema.displayables, value, $scope);
-                        });
-                    }
-                } else if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "startwithentry")) {
-                    $scope.addBatchItem();
-                }
-
-                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
-
                 $scope.detailData = {};
                 $scope.clonedData = {};
 
@@ -288,10 +267,34 @@ app.directive('compositionList', function (contextService, formatService, schema
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
             
 
+                // wasn't set by $event listener (directive not yet loaded): set synchronously
+                if ((!$scope.compositiondata || !angular.isArray($scope.compositiondata) || $scope.compositiondata.length <= 0) && $scope.parentdata.fields[$scope.relationship]) {
+                    $scope.compositiondata = $scope.parentdata.fields[$scope.relationship].list;
+                    $scope.paginationData = $scope.parentdata.fields[$scope.relationship].paginationData;
+                }
+
+                if (!$scope.isBatch()) {
+                    if ($scope.hasDetailSchema()) {
+                        //we shall just clone the composition array if we're dealing with a non batch operation, 
+                        //because then the original datamap shall only be updated on server return
+                        $scope.clonedCompositionData = [];
+                        $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
+                    }
+                    if (compositionService.hasEditableProperty($scope.compositionlistschema)) {
+                        $.each($scope.compositionData(), function(key, value) {
+                            fieldService.fillDefaultValues($scope.compositionlistschema.displayables, value, $scope);
+                        });
+                    }
+                } else if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "startwithentry")) {
+                    $scope.addBatchItem();
+                }
+
+                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
             };
 
             $scope.$on('sw_compositiondataresolved', function (event, datamap) {
-                $scope.compositiondata = datamap[$scope.relationship];
+                $scope.compositiondata = datamap[$scope.relationship].list;
+                $scope.paginationData = datamap[$scope.relationship].paginationData;
                 init();
                 $scope.$digest();
             });
@@ -888,6 +891,27 @@ app.directive('compositionList', function (contextService, formatService, schema
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
+
+            /* pagination */
+
+            $scope.selectPage = function(pageNumber, pageSize, printMode) {
+                if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
+                    $scope.paginationData.pageNumber = pageNumber;
+                    return;
+                }
+                compositionService
+                    .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber)
+                    .then(function (result) {
+                        // clear lists
+                        $scope.compositiondata = [];
+                        $scope.clonedCompositionData = [];
+                        // reset parent and re-initialize the page 
+                        $scope.parentdata.fields = result;
+                        init();
+                    });
+            };
+
+            /* end pagination */
 
             init();
         }

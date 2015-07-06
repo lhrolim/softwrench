@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Data.API;
@@ -20,7 +16,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 
@@ -93,23 +88,25 @@ namespace softWrench.sW4.Web.Controllers {
         /// <summary>
         ///  Returns the datamap populated with composition data
         /// </summary>
-        /// <param name="application"></param>
-        /// <param name="request"></param>
-        /// <param name="currentData"></param>
-        /// <returns></returns>
+        /// <param name="dto"></param>
+        /// <returns>datamap populated with composition data</returns>
         [NotNull]
         [HttpPost]
-        public IGenericResponseResult GetCompositionData(string application, [FromUri] CompositionFetchRequest request, JObject currentData) {
+        public IGenericResponseResult GetCompositionData(CompositionRequestWrapperDTO dto) {
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
+            var application = dto.Application;
+            var request = dto.Request;
+            var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(request.Key, user, ClientPlatform.Web);
+            
             ContextLookuper.FillContext(request.Key);
-            var compositionData = DataSetProvider.LookupDataSet(application,applicationMetadata.Schema.SchemaId)
-                .GetCompositionData(applicationMetadata, request, currentData);
+            
+            var compositionData = DataSetProvider
+                .LookupDataSet(application, applicationMetadata.Schema.SchemaId)
+                .GetCompositionData(applicationMetadata, request, dto.Data);
+            
             return compositionData;
         }
 

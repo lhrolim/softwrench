@@ -10,6 +10,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Data.Pagination;
 
 namespace softwrench.sw4.offlineserver.services {
     public class OffLineCollectionResolver : CollectionResolver {
@@ -20,8 +21,8 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         protected override SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
-          CollectionMatchingResultWrapper matchingResultWrapper) {
-            var dto = base.BuildSearchRequestDto(parameter, matchingResultWrapper);
+          CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
+            var dto = base.BuildSearchRequestDto(parameter, matchingResultWrapper, paginatedSearch);
 
             return dto;
         }
