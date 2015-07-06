@@ -20,7 +20,7 @@ namespace softwrench.sw4.offlineserver.services {
         private const string AllNewTemplate = "{0} in ({1})";
 
 
-        protected override PaginatedSearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
+        protected override SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
           CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
             var dto = base.BuildSearchRequestDto(parameter, matchingResultWrapper, paginatedSearch);
 

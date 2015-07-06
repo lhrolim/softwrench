@@ -137,7 +137,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
                 var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.Schema, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
-                searchRequestDto = (PaginatedSearchRequestDto) PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
+                searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 
             EntityRepository.EntityRepository.SearchEntityResult queryResult = null;
@@ -190,7 +190,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        protected virtual PaginatedSearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
+        protected virtual SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
             CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
             var collectionAssociation = parameter.CollectionAssociation;
 

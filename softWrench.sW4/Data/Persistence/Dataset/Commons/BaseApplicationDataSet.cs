@@ -219,7 +219,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //query
             tasks[1] = Task.Factory.NewThread(c => {
-                var dto = searchDto.ShallowCopy();
+                var dto = (PaginatedSearchRequestDto) searchDto.ShallowCopy();
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 // Only fetch the compositions schemas if indicated on searchDTO
                 var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
