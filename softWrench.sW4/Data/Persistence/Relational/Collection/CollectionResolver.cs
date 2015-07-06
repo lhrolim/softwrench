@@ -136,23 +136,27 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 var dataSet = DataSetProvider.GetInstance().LookupDataSet(entityMetadata.ApplicationName, entityMetadata.AppSchema.SchemaId);
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
-                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.Schema, searchRequestDto,
-                    firstAttributeHolder, applicationCompositionSchema);
-                searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
+                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.Schema, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
+                searchRequestDto = (PaginatedSearchRequestDto) PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 
             EntityRepository.EntityRepository.SearchEntityResult queryResult = null;
             // one thread to fetch results
+            var ctx = ContextLookuper.LookupContext();
             var tasks = new Task[2];
-            tasks[0] = Task.Factory.NewThread(() => {
-                queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto, offLineMode);
-            });
+            tasks[0] = Task.Factory.NewThread(c => {
+                var dto = searchRequestDto.ShallowCopy();
+                Quartz.Util.LogicalThreadContext.SetData("context", c);
+                queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
+            }, ctx);
             // one thread to count results for paginations
-            tasks[1] = Task.Factory.NewThread(() => {
+            tasks[1] = Task.Factory.NewThread(c => {
+                var dto = searchRequestDto.ShallowCopy();
+                Quartz.Util.LogicalThreadContext.SetData("context", c);
                 if (paginatedSearch != null) {
-                    paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, searchRequestDto);
+                    paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, dto);
                 }
-            });
+            }, ctx);
             Task.WaitAll(tasks);
             // add paginationData to result 
             if (paginatedSearch != null) {
@@ -186,7 +190,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        protected virtual SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
+        protected virtual PaginatedSearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
             CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
             var collectionAssociation = parameter.CollectionAssociation;
 
