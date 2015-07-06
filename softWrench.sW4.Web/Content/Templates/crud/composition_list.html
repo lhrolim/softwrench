@@ -30,7 +30,7 @@
                 <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
                 </th>
-                <th data-attribute="{{safeCSSselector(column.attribute)}}"
+                <th class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
                     <span ng-show="isFieldRequired(compositionitem,column.requiredExpression)" class="requiredfieldmark">* </span>
@@ -68,7 +68,7 @@
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <input type="radio" ng-model="compositionitem['#selected']" value="true" name="radio" ng-click="toggleDetails(compositionitem,column,'singleselection',$event,rowindex)">
                 </td>
-                <td data-attribute="{{safeCSSselector(column.attribute)}}"
+                <td class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)">
                     <ng-switch on="column.type">

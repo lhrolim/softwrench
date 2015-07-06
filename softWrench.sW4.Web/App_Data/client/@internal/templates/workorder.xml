@@ -336,7 +336,8 @@
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" 
-                         parameters="modalclass=readingsmodal,schema,datamap" service="meterReadingService" method="read"/>
+                         properties="modalclass=readingsmodal"
+                         parameters="schema,datamap" service="meterReadingService" method="read"/>
               </container>
             </commandgroup>
           </commandbars>

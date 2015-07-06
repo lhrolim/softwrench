@@ -22,6 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         public List<string> ScopeParameters { get; set; }
 
         public IDictionary<string, object> Parameters { get; set; }
+        public IDictionary<string, object> Properties { get; set; }
 
         private readonly string _role;
         private readonly string _showExpression;
@@ -33,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         private readonly ApplicationCommandStereotype _stereotype;
 
         public ApplicationCommand(string id, string label, string service, string method, string role, string stereotype, string showExpression, string enableExpression, string successMessage,
-            string nextSchemaId, string scopeParameters, string defaultPosition, string icon, string tooltip) {
+            string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon, string tooltip) {
             _id = id;
             _label = label;
             Service = service;
@@ -48,7 +49,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             _nextSchemaId = nextSchemaId;
             if (scopeParameters != null) {
                 ScopeParameters = new List<string>(scopeParameters.Split(','));
-                Parameters = PropertyUtil.ConvertToDictionary(scopeParameters,false);
+                Parameters = PropertyUtil.ConvertToDictionary(scopeParameters, false);
+            }
+            if (properties != null) {
+                Properties = PropertyUtil.ConvertToDictionary(properties, false);
             }
             Position = defaultPosition;
             Icon = icon;
@@ -112,7 +116,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
         public static ApplicationCommand TestInstance(String id, string position = "", string label = "") {
-            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, position, null, null);
+            return new ApplicationCommand(id, label, null, null, null, null, null, null,null, null, null, null, position, null, null);
         }
     }
 }

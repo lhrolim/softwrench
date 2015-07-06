@@ -293,6 +293,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             $scope.$on('sw_compositiondataresolved', function (event, datamap) {
                 $scope.compositiondata = datamap[$scope.relationship];
                 init();
+                $scope.$digest();
             });
 
             $scope.getBooleanClass=function(compositionitem, attribute) {

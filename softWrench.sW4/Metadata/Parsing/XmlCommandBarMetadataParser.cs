@@ -113,9 +113,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var successMessage = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandSuccessMessage);
             var nextSchemaId = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandNextSchemaId);
             var scopeParameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
+            var properties = xElement.AttributeValue(XmlBaseSchemaConstants.BasePropertiesAttribute);
             
             var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression,enableExpression,
-                successMessage, nextSchemaId, scopeParameters, position, icon, tooltip);
+                successMessage, nextSchemaId, scopeParameters,properties, position, icon, tooltip);
             return applicationCommand;
         }
     }
