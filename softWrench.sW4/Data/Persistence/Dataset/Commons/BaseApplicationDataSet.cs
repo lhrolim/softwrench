@@ -185,7 +185,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
                application, currentData, request.Id);
 
-            var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata);
+            var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
             return new CompositionFetchResult(result);
         }

@@ -7,16 +7,15 @@ using cts.commons.simpleinjector;
 using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.Collection {
@@ -56,8 +55,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
         public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
-            compositionSchemas, AttributeHolder attributeHolders) {
-            return DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders }));
+            compositionSchemas, AttributeHolder attributeHolders, PaginatedSearchRequestDto paginatedSearch = null) {
+            return DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders }), paginatedSearch);
         }
 
 
@@ -65,7 +64,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             return DoResolveCollections(parameters);
         }
 
-        private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(CollectionResolverParameters parameters) {
+        private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(CollectionResolverParameters parameters, PaginatedSearchRequestDto paginatedSearch = null) {
             var compositionSchemas = parameters.CompositionSchemas;
             var compositionRowstamps = parameters.RowstampMap;
             var entityMetadata = parameters.SlicedEntity;
@@ -103,7 +102,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                     Results = results,
                     Rowstamp = rowstamp
                 };
-                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter));
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, paginatedSearch));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
@@ -112,7 +111,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        private void FetchAsync(InternalCollectionResolverParameter parameter) {
+        private void FetchAsync(InternalCollectionResolverParameter parameter, PaginatedSearchRequestDto paginatedSearch = null) {
 
             var entityMetadata = parameter.EntityMetadata;
 
@@ -128,11 +127,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
             var offLineMode = parameter.Ctx.OfflineMode;
 
-
-
             var matchingResultWrapper = GetResultWrapper();
 
-            var searchRequestDto = BuildSearchRequestDto(parameter, matchingResultWrapper);
+            var searchRequestDto = BuildSearchRequestDto(parameter, matchingResultWrapper, paginatedSearch);
 
             var firstAttributeHolder = attributeHolders.First();
             if (applicationCompositionSchema.PrefilterFunction != null) {
@@ -144,15 +141,36 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 
-
-            var queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto, offLineMode);
+            EntityRepository.EntityRepository.SearchEntityResult queryResult = null;
+            // one thread to fetch results
+            var tasks = new Task[2];
+            tasks[0] = Task.Factory.NewThread(() => {
+                queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto, offLineMode);
+            });
+            // one thread to count results for paginations
+            tasks[1] = Task.Factory.NewThread(() => {
+                if (paginatedSearch != null) {
+                    paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, searchRequestDto);
+                }
+            });
+            Task.WaitAll(tasks);
+            // add paginationData to result 
+            if (paginatedSearch != null) {
+                // creating a new pagination data in order to have everything calculated correctly
+                queryResult.PaginationData = new PaginatedSearchRequestDto(
+                    paginatedSearch.TotalCount, 
+                    paginatedSearch.PageNumber, 
+                    paginatedSearch.PageSize, 
+                    paginatedSearch.SearchValues,
+                    new List<int>(1) { paginatedSearch.PageSize }
+                    );
+            }
 
             if (offLineMode) {
                 //If on offline mode, we don´t need to match the collections back, we´ll simply return the plain list
                 parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
                 return;
             }
-
 
             if (attributeHolders.Count() == 1) {
                 //default scenario, we have just one entity here
@@ -169,12 +187,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
 
         protected virtual SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
-            CollectionMatchingResultWrapper matchingResultWrapper) {
+            CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
             var collectionAssociation = parameter.CollectionAssociation;
 
 
             var lookupAttributes = collectionAssociation.Attributes;
-            var searchRequestDto = new SearchRequestDto();
+            var searchRequestDto = new PaginatedSearchRequestDto();
 
             var lookupContext = ContextLookuper.LookupContext();
             var printMode = lookupContext.PrintMode;
@@ -199,6 +217,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             if (orderByField != null) {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
+            }
+            // merging the search dto's
+            if (paginatedSearch != null) {
+                searchRequestDto.PageNumber = paginatedSearch.PageNumber;
+                searchRequestDto.PageSize = paginatedSearch.PageSize;
+                searchRequestDto.TotalCount = paginatedSearch.TotalCount;
             }
             return searchRequestDto;
         }

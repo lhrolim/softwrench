@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
-using softWrench.sW4.Data.Persistence.WS.Mea;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;

@@ -1,9 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.Pagination;
 
 namespace softWrench.sW4.Data.API.Composition {
     public class CompositionFetchRequest {
@@ -18,6 +18,11 @@ namespace softWrench.sW4.Data.API.Composition {
         /// </summary>
         [CanBeNull]
         public List<String> CompositionList { get; set; }
+
+        /// <summary>
+        /// DTO to paginate the composition request result
+        /// </summary>
+        public PaginatedSearchRequestDto PaginatedSearch { get; set; }
 
 
     }

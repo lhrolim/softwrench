@@ -237,16 +237,6 @@ app.directive('compositionList', function (contextService, formatService, schema
 
                 
 
-
-                if (!$scope.isBatch()) {
-                    $scope.clonedCompositionData = [];
-                    $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
-                } else if ($scope.metadatadeclaration.schema.renderer.parameters && "true" == $scope.metadatadeclaration.schema.renderer.parameters["startwithentry"]) {
-                    $scope.addBatchItem();
-                }
-
-                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
-
                 $scope.detailData = {};
                 $scope.clonedData = {};
 
@@ -269,10 +259,27 @@ app.directive('compositionList', function (contextService, formatService, schema
                 parameters.parentdata = $scope.parentdata;
                 eventService.onload($scope, $scope.compositionlistschema, $scope.datamap, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
+
+                // wasn't set by $event listener (directive not yet loaded): set synchronously
+                if ((!$scope.compositiondata || !angular.isArray($scope.compositiondata) || $scope.compositiondata.length <= 0) && $scope.parentdata.fields[$scope.relationship]) {
+                    $scope.compositiondata = $scope.parentdata.fields[$scope.relationship].list;
+                    $scope.paginationData = $scope.parentdata.fields[$scope.relationship].paginationData;
+                }
+
+                if (!$scope.isBatch()) {
+                    $scope.clonedCompositionData = [];
+                    $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
+                } else if ($scope.metadatadeclaration.schema.renderer.parameters && "true" == $scope.metadatadeclaration.schema.renderer.parameters["startwithentry"]) {
+                    $scope.addBatchItem();
+                }
+
+                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
+
             };
 
             $scope.$on('sw_compositiondataresolved', function (event, datamap) {
-                $scope.compositiondata = datamap[$scope.relationship];
+                $scope.compositiondata = datamap[$scope.relationship].list;
+                $scope.paginationData = datamap[$scope.relationship].paginationData;
                 init();
             });
 
@@ -830,6 +837,27 @@ app.directive('compositionList', function (contextService, formatService, schema
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
+
+            /* pagination */
+
+            $scope.selectPage = function(pageNumber, pageSize, printMode) {
+                if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
+                    $scope.paginationData.pageNumber = pageNumber;
+                    return;
+                }
+                compositionService
+                    .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber)
+                    .then(function (result) {
+                        // clear lists
+                        $scope.compositiondata = [];
+                        $scope.clonedCompositionData = [];
+                        // reset parent and re-initialize the page 
+                        $scope.parentdata.fields = result;
+                        init();
+                    });
+            };
+
+            /* end pagination */
 
             init();
         }
