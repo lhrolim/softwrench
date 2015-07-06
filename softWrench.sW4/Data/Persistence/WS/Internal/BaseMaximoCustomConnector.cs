@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
         }
 
-        protected MaximoOperationExecutionContext GetContext(OperationData operationData) {
+        protected MaximoOperationExecutionContext GetContext(IOperationData operationData) {
             return MaximoOperationExecutionContext.GetInstance(operationData, null);
         }
 

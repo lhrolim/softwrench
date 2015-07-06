@@ -70,23 +70,30 @@
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
-        <!--Please updated it to use lazy method loading, huge performance impact-->
-        <relationship to ="glcomponents" ignoreprimary="true">
+        <!-- this collection = true here forces realtionship to be ignored on detail loading, which is what we need. that primary attribute is a fake one-->
+        <relationship to ="glcomponents" collection="true">
+          <relationshipAttribute from="glaccount" to="comptext" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 
         <relationship to="locationmeter" collection="true" >
           <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1"/>
         </relationship>
 
         <relationship to="assetmeter" collection="true" >
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1"/>
         </relationship>
 
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+        <connectorParameter key="entermeter_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.MeterReadingOperationHandler" />
+<!--        <connectorParameter key="markmultiassetcomplete_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.ProgressMultiAssetHandler" />-->
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
   </entities>
@@ -328,7 +335,8 @@
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" parameters="modalclass=readingsmodal"/>
+                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" 
+                         parameters="modalclass=readingsmodal,schema,datamap" service="meterReadingService" method="read"/>
               </container>
             </commandgroup>
           </commandbars>

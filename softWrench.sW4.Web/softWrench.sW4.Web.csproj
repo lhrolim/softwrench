@@ -354,6 +354,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\asset.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\multiassetlocci.xml" />
     <Content Include="App_Data\Client\%40internal\templates\attachments.xml" />
     <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml" />
     <Content Include="App_Data\Client\%40internal\templates\commlogs.xml" />

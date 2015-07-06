@@ -17,7 +17,8 @@
             afterChangeLotnum: afterChangeLotnum,
             afterChangeLaborCode: afterChangeLaborCode,
             invissuelistclick: invissuelistclick,
-            validateInvIssue: validateInvIssue
+            validateInvIssue: validateInvIssue,
+            afterChangeStoreloc: afterChangeStoreloc
         };
 
         return service;
@@ -292,9 +293,30 @@
             } else {
                 fields['binnum'] = fields['inventory_.binnum'];
             }
-
-            inventoryServiceCommons.doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         };
+
+        function afterChangeStoreloc(parameters) {
+            var fields = parameters['fields'];
+            var parentdata = parameters['parentdata'];
+            fields['lotnum'] = null;
+            fields['#curbal'] = null;
+
+            var searchData = {
+                itemnum: parentdata['itemnum'],
+                location: fields['storeloc'],
+                siteid: parentdata['siteid']
+            };
+            searchService.searchWithData("invcost", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var resultFields = resultObject[0].fields;
+                var costtype = parentdata['inventory_.costtype'];
+                if (costtype === 'STANDARD') {
+                    fields['unitcost'] = resultFields.stdcost;
+                } else if (costtype === 'AVERAGE') {
+                    fields['unitcost'] = resultFields.avgcost;
+                }
+            });
+        }
     }
 })();
 

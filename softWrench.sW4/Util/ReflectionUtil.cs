@@ -9,6 +9,7 @@ using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
+using Quartz.Util;
 
 namespace softWrench.sW4.Util {
     public static class ReflectionUtil {
@@ -78,7 +79,7 @@ namespace softWrench.sW4.Util {
                 return false;
             }
             try {
-                if (value==null){
+                if (value == null) {
                     prop.SetValue(baseObject, null);
                     return true;
                 }
@@ -87,7 +88,7 @@ namespace softWrench.sW4.Util {
                     value = Enum.Parse(prop.PropertyType, stvalue);
                 }
                 //Add an other case for boolean
-                if ("boolean".EqualsIc(prop.PropertyType.Name) && (!value.ToString().EqualsAny("true","false"))) {
+                if ("boolean".EqualsIc(prop.PropertyType.Name) && (!value.ToString().EqualsAny("true", "false"))) {
                     if (stvalue == "0") {
                         value = false;
                     }
@@ -95,11 +96,21 @@ namespace softWrench.sW4.Util {
                         value = true;
                     }
                 }
-                prop.SetValue(baseObject, "Int64".EqualsIc(prop.PropertyType.Name) ? Convert.ToInt64(value) : value);
+                var castedValue = HandleCasting(prop, value);
+
+                prop.SetValue(baseObject, castedValue);
             } catch (Exception e) {
                 throw new InvalidOperationException(String.Format("Error setting property {0} of object {1}. {2}", propertyName, baseObject, e.Message), e);
             }
             return true;
+        }
+
+        private static object HandleCasting(PropertyDescriptor prop, object value) {
+            if ("DateTime".EqualsIc(prop.PropertyType.Name) && !(value is DateTime)) {
+                return ConversionUtil.HandleDateConversion(value as string);
+            }
+
+            return "Int64".EqualsIc(prop.PropertyType.Name) ? Convert.ToInt64(value) : value;
         }
 
         public static void SetProperty(object baseObject, dynamic innerPropertyValues) {
@@ -126,7 +137,7 @@ namespace softWrench.sW4.Util {
             if (value != null) {
                 return value;
             }
-            value= InstantiateProperty(baseObject, propertyName, new { });
+            value = InstantiateProperty(baseObject, propertyName, new { });
             SetProperty(baseObject, propertyName, value);
             return value;
         }

@@ -141,6 +141,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     "cancelfn='cancel(data,schema)'" +
                     "previousschema='previousschema' previousdata='previousdata'/>");
                 $compile(element.contents())(scope);
+                //controls tab lazy loading
                 scope.loaded = true;
             }
 
@@ -182,14 +183,14 @@ app.directive('compositionList', function (contextService, formatService, schema
             previousdata: '=',
             parentschema: '=',
             //the composition declaration tag, of the parent schema
-            metadatadeclaration:'=',
+            metadatadeclaration: '=',
             mode: '@',
             ismodal: '@'
         },
 
-        controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
-            formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
+        controller: function ($scope,$q, $log,$timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
+            formatService, fieldService, commandService, compositionService, validationService,dispatcherService,
+            expressionService,modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
 
             $scope.lookupObj = {};
 
@@ -198,14 +199,21 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             $scope.compositionData = function () {
-                if (this.isBatch()) {
+                if (this.isBatch() || !this.hasDetailSchema()) {
                     return $scope.compositiondata;
                 }
                 return $scope.clonedCompositionData;
             }
 
+            $scope.isFieldRequired = function (item, requiredExpression) {
+                if (requiredExpression != undefined && item) {
+                    return expressionService.evaluate(requiredExpression, item);
+                }
+                return requiredExpression;
+            };
+
             $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
-                var datamap = item == null ? $scope.parentdata : this.buildSearchDatamap(item, $scope.parentdata);
+                var datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
 
                 return fieldService.isFieldHidden(datamap, application, fieldMetadata);
             };
@@ -235,8 +243,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
 
-                
-
                 $scope.detailData = {};
                 $scope.clonedData = {};
 
@@ -259,6 +265,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 parameters.parentdata = $scope.parentdata;
                 eventService.onload($scope, $scope.compositionlistschema, $scope.datamap, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
+            
 
                 // wasn't set by $event listener (directive not yet loaded): set synchronously
                 if ((!$scope.compositiondata || !angular.isArray($scope.compositiondata) || $scope.compositiondata.length <= 0) && $scope.parentdata.fields[$scope.relationship]) {
@@ -267,14 +274,22 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 if (!$scope.isBatch()) {
-                    $scope.clonedCompositionData = [];
-                    $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
-                } else if ($scope.metadatadeclaration.schema.renderer.parameters && "true" == $scope.metadatadeclaration.schema.renderer.parameters["startwithentry"]) {
+                    if ($scope.hasDetailSchema()) {
+                        //we shall just clone the composition array if we're dealing with a non batch operation, 
+                        //because then the original datamap shall only be updated on server return
+                        $scope.clonedCompositionData = [];
+                        $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
+                    }
+                    if (compositionService.hasEditableProperty($scope.compositionlistschema)) {
+                        $.each($scope.compositionData(), function(key, value) {
+                            fieldService.fillDefaultValues($scope.compositionlistschema.displayables, value, $scope);
+                        });
+                    }
+                } else if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "startwithentry")) {
                     $scope.addBatchItem();
                 }
 
                 $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
-
             };
 
             $scope.$on('sw_compositiondataresolved', function (event, datamap) {
@@ -283,7 +298,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 init();
             });
 
-
+            $scope.getBooleanClass=function(compositionitem, attribute) {
+                if (compositionitem[attribute] == "true" || compositionitem[attribute] == 1) {
+                    return 'fa-check-square-o';
+                }
+                return 'fa-square-o';
+            }
 
             $scope.safeCSSselector = function (name) {
                 return safeCSSselector(name);
@@ -301,25 +321,21 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return false;
             }
 
-
-
-            $scope.buildSearchDatamap = function (datamap, parentdata) {
-                var clonedDataMap = angular.copy(parentdata);
-                if (datamap) {
-                    var item = datamap;
-                    for (var prop in item) {
-                        if (item.hasOwnProperty(prop)) {
-                            clonedDataMap[prop] = item[prop];
-                        }
-                    }
+            $scope.invokeCustomCheckBoxService=function(fieldMetadata,datamap) {
+                if (fieldMetadata.rendererParameters["clickservice"] == null) {
+                    return;
                 }
-                return clonedDataMap;
-            },
+                var customfn = dispatcherService.loadServiceByString(fieldMetadata.rendererParameters["clickservice"]);
+                $q.when(customfn(fieldMetadata,$scope.parentdata, datamap));
+            }
 
-              $scope.isModifiableEnabled = function (fieldMetadata, item) {
-                  var result = expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata), $scope);
-                  return result;
-              };
+
+
+
+            $scope.isModifiableEnabled = function (fieldMetadata, item) {
+                var result = expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
+                return result;
+            };
 
             $scope.isSelectEnabled = function (fieldMetadata, item) {
                 var key = fieldMetadata.associationKey;
@@ -327,7 +343,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 if (key == undefined) {
                     return true;
                 }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, this.buildSearchDatamap(item, $scope.parentdata), $scope);
+                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
                 if (result != $scope.disabledassociations[key]) {
                     //                    cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                     $scope.disabledassociations[key] = result;
@@ -349,7 +365,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.lookupObj.parentdata = $scope.parentdata;
                 $scope.datamap = item;
 
-                var searchDatamap = this.buildSearchDatamap(item, $scope.parentdata);
+                var searchDatamap = compositionService.buildMergedDatamap(item, $scope.parentdata);
 
                 cmplookup.updateLookupObject($scope, fieldMetadata, code, searchDatamap);
             };
@@ -476,20 +492,42 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return compositionId != null;
             }
 
+            $scope.handleSingleSelectionClick = function (item, rowIndex) {
+                if (!this.isSingleSelection()) {
+                    return;
+                }
+                var items = this.compositionData();
+                var previousValue = item["#selected"];
+                for (var i = 0; i < items.length; i++) {
+                    items[i]["#selected"] = "false";
+                    $scope.compositiondata[i]["#selected"] = "false";
+                }
+                if (previousValue == undefined || "false" == previousValue) {
+                    item["#selected"] = "true";
+                    //updating the original item, to make it possible to send custom action selection to server-side
+                    $scope.compositiondata[rowIndex]["#selected"] = "true";
+                }
+
+            }
+
+
             /// <summary>
             ///  Method called when an entry of the composition is clicked
             /// </summary>
             /// <param name="item">the row entry, datamap</param>
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
-            $scope.toggleDetails = function (item, column, usingArrowButton, $event) {
+            $scope.toggleDetails = function (item, column, columnMode, $event,rowIndex) {
 
-                if (usingArrowButton) {
+                if (columnMode == "arrow" || columnMode == "singleselection") {
+                    //to avoid second call
                     $event.stopImmediatePropagation();
                 }
+                this.handleSingleSelectionClick(item, rowIndex);
+
 
                 var log = $log.get("compositionlist#toggleDetails");
 
-                if ((this.isBatch() && !usingArrowButton)) {
+                if ((this.isBatch() && !columnMode == "arrow")) {
                     //For batch mode, as the items will be edited on the lines, 
                     //we cannot allow the details to be expanded unless the button is clicked on the left side of the table.
                     return;
@@ -499,6 +537,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
 
                 var updating = $scope.collectionproperties.allowUpdate;
+
 
                 var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
                 if (fullServiceName != null) {
@@ -562,7 +601,17 @@ app.directive('compositionList', function (contextService, formatService, schema
             /***************Batch functions **************************************/
 
             $scope.addBatchItem = function () {
+
+
                 var idx = $scope.compositionData().length;
+                if (idx != 0) {
+                    var itemMap = $scope.compositionData()[idx - 1];
+                    var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
+                    var arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
+                    if (arr != null && arr.length != 0) {
+                        return;
+                    }
+                }
                 var newItem = {
                     //used to make a differentiation between a compositionitem datamap and a regular datamap
                     '#datamaptype': "compositionitem",
@@ -609,6 +658,10 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return "batch" == $scope.compositionschemadefinition.rendererParameters["mode"];
             }
 
+            $scope.isSingleSelection = function () {
+                return "single" == schemaService.getProperty($scope.compositionlistschema, "list.selectionstyle")
+            }
+
             $scope.hasModified = function (key, displayables) {
                 for (var index = 0; index < displayables.length; index++) {
                     var attribute = displayables[index].attribute;
@@ -649,7 +702,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 var updatedCompositionData = [];
-                if ($scope.collectionproperties.allowUpdate === "true") {
+                if (this.hasDetailSchema() && $scope.collectionproperties.allowUpdate === "true") {
                     for (var key in $scope.detailData) {
                         if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, detailSchema.displayables)) {
                             updatedCompositionData.push($scope.detailData[key].data);
@@ -664,7 +717,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
-                if ($scope.collectionproperties.allowUpdate) {
+                if (this.hasDetailSchema() &&  $scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
                     //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
                     $scope.parentdata.fields[$scope.relationship] = updatedCompositionData;
@@ -686,9 +739,9 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //this will disable success message, since we know we´ll need to refresh the screen
                     contextService.insertIntoContext("refreshscreen", true, true);
                 }
-
+                //TODO: refactor this, using promises
                 $scope.$emit("sw_submitdata", {
-                    successCbk: function (data) {
+                    successCbk: function(data) {
                         var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
                         if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
                             window.location.reload();
@@ -708,7 +761,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                         }
                         $scope.selecteditem = null;
                     },
-                    failureCbk: function (data) {
+                    failureCbk: function(data) {
                         var idx = $scope.compositiondata.indexOf(selecteditem);
                         if (idx != -1) {
                             $scope.compositiondata.splice(idx, 1);

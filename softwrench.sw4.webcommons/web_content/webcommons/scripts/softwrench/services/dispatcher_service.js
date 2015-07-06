@@ -19,6 +19,15 @@
         return fn;
     };
     return {
+
+        loadServiceByString:function(serviceString) {
+            var serviceArray = serviceString.split(".");
+            if (serviceArray.length != 2) {
+                throw new Error("wrong metadata configuration. service string should be 'servicexxx.methodxxx'".format(serviceString));
+            }
+            return this.loadService(serviceArray[0], serviceArray[1]);
+        },
+
         loadService: function(service, method) {
             return loadService(service, method);
         },

@@ -38,7 +38,7 @@
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;allowFreeText=true;inputsize=small"/>
           </association>
 
-          <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="false"
+          <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="true"
                                     extraprojectionvalues="binnum,lotnum" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" >
             <renderer type="lookup" />
           </association>

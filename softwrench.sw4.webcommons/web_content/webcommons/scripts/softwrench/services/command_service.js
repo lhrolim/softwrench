@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('commandService', function (i18NService, $injector, expressionService, contextService,schemaService,modalService,applicationService, $log,alertService) {
+app.factory('commandService', function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService) {
 
 
 
@@ -49,6 +49,37 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             return !eval(expressionToEval);
         },
 
+        doExecuteService: function (scope, clientFunction, command,overridenDatamap) {
+            var service = $injector.get(command.service);
+            if (service == undefined) {
+                //this should not happen, it indicates a metadata misconfiguration
+                return $q.when();
+            }
+
+            var method = service[clientFunction];
+            if (method == null) {
+                log.warn('method {0} not found on service {1}'.format(clientFunction, command.service));
+                return $q.when();
+            }
+
+            var args = [];
+            if (command.scopeParameters != null) {
+                $.each(command.scopeParameters, function (key, parameterName) {
+                    var arg = scope[parameterName];
+                    if (parameterName == "datamap") {
+                        arg = overridenDatamap;
+                    }
+                    if (arg) {
+                        args.push(arg);
+                    }
+                    
+                });
+            }
+
+            return $q.when(method.apply(this, args));
+        },
+
+
         doCommand: function (scope, command) {
             var log = $log.getInstance("commandService#doCommand");
             var clientFunction = command.method;
@@ -59,73 +90,57 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             if (nullOrUndef(clientFunction)) {
                 clientFunction = command.id;
             }
-            if (command.service == undefined) {
 
-                if ("modal".equalIc(command.stereotype) && !command.service) {
-                    //TODO: move this whole thing to modal_service.js extracting a bit
-                    if (!command.nextSchemaId) {
-                        log.warn("missing nextschemaId for command {0} declaration".format(command.id));
+            if ("modal".equalIc(command.stereotype)) {
+                //TODO: move this whole thing to modal_service.js extracting a bit
+                if (!command.nextSchemaId) {
+                    log.warn("missing nextschemaId for command {0} declaration".format(command.id));
+                    return;
+                }
+                var modalclass = 'modalsmall';
+                if (command.parameters && command.parameters['modalclass']) {
+                    modalclass = command.parameters['modalclass'];
+                }
+
+                if (command.parameters['modalclass']) {
+                    modalclass = command.parameters['modalclass'];
+                }
+
+                log.debug("executing modal default implementation for command {0}".format(command.id));
+                var ob = schemaService.parseAppAndSchema(command.nextSchemaId);
+                var application = ob.application;
+                if (!application) {
+                    application = scope.schema.applicationName;
+                }
+                var id = schemaService.getId(scope.datamap, scope.schema);
+                var that = this;
+
+                applicationService.getApplicationWithInitialDataPromise(application, ob.schemaId, { id: id }, scope.datamap).then(function (result) {
+                    var title = result.data.schema.title;
+                    if (result.data.extraParameters['exception']) {
+                        alertService.alert(result.data.extraParameters['exception']);
                         return;
                     }
-                    var modalclass = 'modalsmall';
-                    if (command.parameters && command.parameters['modalclass']) {
-                        modalclass = command.parameters['modalclass'];
-                    }
-                    
-                    log.debug("executing modal default implementation for command {0}".format(command.id));
-                    var ob = schemaService.parseAppAndSchema(command.nextSchemaId);
-                    var application = ob.application;
-                    if (!application) {
-                        application = scope.schema.applicationName;
-                    }
-                    var id = schemaService.getId(scope.datamap, scope.schema);
-                    applicationService.getApplicationWithInitialDataPromise(application, ob.schemaId, { id: id }, scope.datamap).then(function (result) {
-                        var title = result.data.schema.title;
-                        if (result.data.extraParameters['exception']) {
-                            alertService.alert(result.data.extraParameters['exception']);
-                            return;
-                        }
-                        
-                        modalService.show(result.data.schema, result.data.resultObject.fields, { title: title, cssclass: modalclass }, function (modalData) {
-                            //TODO: implement this part properly
+
+
+                    modalService.show(result.data.schema, result.data.resultObject.fields, { title: title, cssclass: modalclass }, function (modalData) {
+                        that.doExecuteService(scope, clientFunction, command,modalData).then(function () {
                             modalService.hide();
                         });
                     });
-
-                    return;
-                }
-
-                return;
-            }
-            
-            var service = $injector.get(command.service);
-            if (service == undefined) {
-                //this should not happen, it indicates a metadata misconfiguration
-                return;
-            }
-
-            var method = service[clientFunction];
-            if (method == null) {
-                log.warn('method {0} not found on service {1}'.format(clientFunction, command.service));
-                return;
-            }
-
-            var args = [];
-            if (command.scopeParameters != null) {
-                $.each(command.scopeParameters, function (key, parameterName) {
-                    args.push(scope[parameterName]);
                 });
+
+                return;
             }
 
-            method.apply(this, args);
-            return;
 
+            this.doExecuteService(scope, clientFunction, command);
         },
 
 
 
         //TODO: make it generic
-        executeClickCustomCommand: function (fullServiceName, rowdm, column,schema) {
+        executeClickCustomCommand: function (fullServiceName, rowdm, column, schema) {
             var idx = fullServiceName.indexOf(".");
             var serviceName = fullServiceName.substring(0, idx);
             var methodName = fullServiceName.substring(idx + 1);
@@ -162,7 +177,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             var commandKey = hasPossibilityOfbeingOverriden ? "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, schema.mode.toLowerCase(), position) : fallbackKey;
             var commandbar = bar[commandKey];
             if (commandbar == null) {
-                if (hasPossibilityOfbeingOverriden && schema.mode.toLocaleLowerCase()!="none") {
+                if (hasPossibilityOfbeingOverriden && schema.mode.toLocaleLowerCase() != "none") {
                     //let´s give the none schema a shot
                     commandKey = "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, "none", position);
                     commandbar = bar[commandKey];

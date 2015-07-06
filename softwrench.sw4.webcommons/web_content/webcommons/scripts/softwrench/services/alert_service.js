@@ -9,7 +9,7 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
         },
 
         confirm: function (applicationName, applicationId, callbackFunction, msg, cancelcallback) {
-            //TODO: refactor
+            //TODO: refactor to use promises
             var defaultConfirmMsg = "Are you sure you want to delete {0} {1}?".format(applicationName, applicationId);
             bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
             var defaultDeleteMsg = i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]);

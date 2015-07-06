@@ -37,7 +37,8 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     application metadata stored in a XML file.
     /// </summary>
     internal sealed class XmlApplicationMetadataParser : IXmlMetadataParser<IEnumerable<CompleteApplicationMetadataDefinition>> {
-        private const string MissingRelationship = "application {0} references unknown entity {1}";
+        private const string MissingRelationship = "application {0} references unknown relationship {1}";
+        private const string MissingEntity = "application {0} references unknown entity {1}";
         private const string MissingParentSchema = "Error building schema {0} for application {1}.parentSchema {2} not found. Please assure its declared before the concrete schema";
         //        private static readonly int? Infinite = null;
 
@@ -390,12 +391,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             var e = MetadataProvider.Entity(entityName);
             if (e == null) {
-                throw new InvalidOperationException(String.Format(MissingRelationship, applicationName, relationship));
+                throw new InvalidOperationException(String.Format(MissingEntity, applicationName, relationship));
             }
             var isCollection = false;
             if (!relationship.StartsWith("#")) {
                 //# would mean a self relationship
-                var entityAssociation = e.Associations.FirstOrDefault(a => a.Qualifier == EntityUtil.GetRelationshipName(relationship));
+                var entityAssociation = e.Associations.FirstOrDefault(a => a.Qualifier.EqualsIc(EntityUtil.GetRelationshipName(relationship)));
                 if (entityAssociation == null) {
                     throw new InvalidOperationException(String.Format(MissingRelationship, applicationName, relationship));
                 }
@@ -678,7 +679,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 entity = "_" + entity;
             }
             var service = application.Attribute(XmlMetadataSchema.ApplicationServiceAttribute).ValueOrDefault((String)null);
-            var metadata = entityMetadata.FirstOrDefault(e => e.Name == entity);
+            var metadata = entityMetadata.FirstOrDefault(e => e.Name.EqualsIc(entity));
             if (metadata == null) {
                 if (!entity.StartsWith("_")) {
                     throw new InvalidOperationException("entity {0} not found".Fmt(entity));

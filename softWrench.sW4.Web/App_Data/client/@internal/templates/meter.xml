@@ -3,33 +3,45 @@
 
 
   <entities>
-    
+    <entity name="METERREADING" idAttribute="METERREADINGID">
+      <!--This entity is declared just to use the wsdl out of it, it´s not indeed used for querying-->
+      <attributes>
+        <attribute name="METERREADINGID" type="int"/>
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="METERREADING" />
+        <connectorParameter key="integration_interface" value="SWMETERDATA" />
+      </connectorParameters>
+    </entity>
   </entities>
 
   <applications>
+    
+    
     <application name="assetmeter" title="Asset Meter" entity="assetmeter">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>
         <schema id="composition" stereotype="compositionlist" title="Asset Meter Readings">
+          <field attribute="assetmeterid" hidden="true"/>
           <field label="Meter" attribute="metername"/>
           <field label="Meter Type" attribute="meter_.metertype"/>
           <field label="Last Reading" attribute="lastreading"/>
           <field label="Last Reading Date" attribute="lastreadingdate">
             <renderer type="datetime"/>
           </field>
-          <field label="New Reading" attribute="#newreading" requiredexpression="true">
+          <field label="New Reading" attribute="newreading" requiredexpression="true">
             <renderer type="default" params="editable=true"/>
           </field>
-          <field label="New Reading Date" attribute="#newreadingdate" requiredexpression="true">
+          <field label="New Reading Date" attribute="newreadingdate" requiredexpression="true" default="@now">
             <renderer type="datetime" params="editable=true"/>
           </field>
           <field label="Rollover" attribute="disabledrollover" enableexpression="false">
             <renderer type="checkbox" params="editable=true"/>
           </field>
           <field attribute="rollover" hidden="true"/>
-          <association labelfield="person_.displayname" valuefield="personid" target="#inspector" label="Inspector" requiredexpression="true">
+          <association labelfield="person_.displayname" valuefield="personid" target="inspector" label="Inspector" requiredexpression="true" default="@username">
             <renderer type="lookup" params="editable=true"/>
           </association>
           <commandbars>
@@ -48,16 +60,17 @@
       </properties>
       <schemas>
         <schema id="composition" stereotype="compositionlist" title="Location Meter Readings">
+          <field attribute="locationmeterid" hidden="true"/>
           <field label="Meter" attribute="metername"/>
           <field label="Meter Type" attribute="meter_.metertype"/>
           <field label="Last Reading" attribute="lastreading"/>
           <field label="Last Reading Date" attribute="lastreadingdate">
             <renderer type="datetime"/>
           </field>
-          <field label="New Reading" attribute="#newreading" requiredexpression="true">
+          <field label="New Reading" attribute="newreading" requiredexpression="true">
             <renderer type="default" params="editable=true"/>
           </field>
-          <field label="New Reading Date" attribute="#newreadingdate" requiredexpression="true">
+          <field label="New Reading Date" attribute="newreadingdate" requiredexpression="true">
             <renderer type="datetime" params="editable=true"/>
           </field>
           <field label="Rollover" attribute="disabledrollover" enableexpression="false">
@@ -65,7 +78,7 @@
           </field>
           <field attribute="rollover" hidden="true"/>
             
-          <association labelfield="person_.displayname" target="#inspector" valuefield="personid" label="Inspector" requiredexpression="true">
+          <association labelfield="person_.displayname" target="inspector" valuefield="personid" label="Inspector" requiredexpression="true">
             <renderer type="lookup"  params="editable=true"/>
           </association>
           <commandbars>

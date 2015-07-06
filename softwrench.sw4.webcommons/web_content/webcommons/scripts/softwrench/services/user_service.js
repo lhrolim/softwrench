@@ -24,15 +24,15 @@
 
             var user = contextService.getUserData();
 
-            if (propertyExpression.startsWith("@user")) {
+            if (propertyExpression.startsWith("@user.")) {
                 var propName = propertyExpression.substring(6);
                 return user.genericproperties[propName];
             }
-            else if (propertyExpression.startsWith("@userid")) {
+            else if (propertyExpression.equalsAny("@userid")) {
                 return user.username;
             }
-            else if (propertyExpression.startsWith("@personid")) {
-                return user.maximopersonid;
+            else if (propertyExpression.equalsAny("@personid","@username")) {
+                return user.maximoPersonId;
             }
             //TODO: finish this;
             return propertyExpression;

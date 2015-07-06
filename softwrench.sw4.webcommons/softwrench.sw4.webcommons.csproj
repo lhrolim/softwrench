@@ -79,6 +79,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_commons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invtransfer_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\meterreading\meterreading_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\attachmentService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\focus_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\application_service.js" />
@@ -187,6 +188,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\" />
     <Folder Include="web_content\webcommons\scripts\vendor\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

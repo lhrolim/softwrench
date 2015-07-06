@@ -5,6 +5,10 @@
     <application id="SR" icon="fa fa-table" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
     <application id="NSR" icon="fa fa-plus" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
   </container>
+  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
+    <application id="WO" icon="fa fa-table" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
+    <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
+  </container>
   <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
     <application id="IN" icon="fa fa-table" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" />
     <container title="Issues and Returns" tooltip="Click to access your issues and returns" icon="fa fa-exchange" id="IssuesAndReturns" role="issuesandreturns" >

@@ -1,12 +1,12 @@
 ﻿
-modules.webcommons.factory('fieldService', function ($injector, $log, expressionService, eventService,userService) {
+modules.webcommons.factory('fieldService', function ($injector, $log,$filter, expressionService, eventService, userService,formatService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
         if (fieldMetadata.jscache.isHidden != undefined) {
             return fieldMetadata.jscache.isHidden;
         }
-        var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" && isIdFieldAndNotReadOnly(fieldMetadata,schema));
+        var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" && isIdFieldAndNotReadOnly(fieldMetadata, schema));
         var isTabComposition = fieldMetadata.type == "ApplicationCompositionDefinition" && !fieldMetadata.inline;
         if (baseHidden || isTabComposition) {
             fieldMetadata.jscache.isHidden = true;
@@ -28,7 +28,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
         return result;
     };
 
-    var isIdField = function(fieldMetadata, schema) {
+    var isIdField = function (fieldMetadata, schema) {
         return fieldMetadata.attribute == schema.idFieldName;
     };
 
@@ -114,7 +114,8 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
                     }
                     if (expressionResult == null && value.defaultValue != null) {
                         if (value.defaultValue == "@now") {
-                            datamap[target] = new Date();
+                            datamap[target] = formatService.format("@now", value, null);
+//                            datamap[target] = $filter('date')(new Date(), dateFormat)
                         } else {
                             var parsedUserValue = userService.readProperty(value.defaultValue);
                             if (displayable.rendererType == "numericinput" && parsedUserValue) {
@@ -128,7 +129,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
             return datamap;
         },
 
-        isAssociation:function(displayable) {
+        isAssociation: function (displayable) {
             var type = displayable.type;
             return type == "ApplicationAssociationDefinition";
         },
@@ -136,6 +137,16 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
         isTabComposition: function (displayable) {
             var type = displayable.type;
             return type == "ApplicationCompositionDefinition" && !displayable.inline;
+        },
+
+        isInlineComposition: function (displayable) {
+            var type = displayable.type;
+            return type == "ApplicationCompositionDefinition" && displayable.inline;
+        },
+
+        isListOnlyComposition: function (displayable) {
+            var type = displayable.type;
+            return type == "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
         },
 
         isTab: function (displayable) {
@@ -267,7 +278,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log, expression
             return result;
         },
 
-     
+
 
         getNextVisibleDisplayableIdx: function (datamap, schema, key) {
 

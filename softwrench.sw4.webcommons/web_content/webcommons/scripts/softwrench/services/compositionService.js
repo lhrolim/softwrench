@@ -3,45 +3,46 @@
 
 var app = angular.module('sw_layout');
 
-app.factory('compositionService', ["$log", "$http", "$rootScope", "$timeout", "submitService", "schemaService", "searchService", "$q",
-    function ($log, $http, $rootScope, $timeout, submitService, schemaService, searchService, $q) {
+app.factory('compositionService',
+    ["$log", "$http", "$rootScope", "$timeout", "submitService", "schemaService", "searchService", "$q", "fieldService",
+    function ($log, $http, $rootScope, $timeout, submitService, schemaService, searchService, $q, fieldService) {
 
-    var __deafultPageSize__ = 10;
+        var __deafultPageSize__ = 10;
 
-    var nonInlineCompositionsDict = function (schema) {
-        if (schema.nonInlineCompositionsDict != undefined) {
-            //caching
-            return schema.nonInlineCompositionsDict;
-        }
-        var resultDict = {};
-        for (var i = 0; i < schema.nonInlineCompositionIdxs.length; i++) {
-            var idx = schema.nonInlineCompositionIdxs[i];
-            var composition = schema.displayables[idx];
-            resultDict[composition.relationship] = composition;
-        }
-        schema.nonInlineCompositionsDict = resultDict;
-        return resultDict;
-    };
+        var nonInlineCompositionsDict = function (schema) {
+            if (schema.nonInlineCompositionsDict != undefined) {
+                //caching
+                return schema.nonInlineCompositionsDict;
+            }
+            var resultDict = {};
+            for (var i = 0; i < schema.nonInlineCompositionIdxs.length; i++) {
+                var idx = schema.nonInlineCompositionIdxs[i];
+                var composition = schema.displayables[idx];
+                resultDict[composition.relationship] = composition;
+            }
+            schema.nonInlineCompositionsDict = resultDict;
+            return resultDict;
+        };
 
-    var getCompositionSchema = function (baseSchema, compositionKey, schemaId) {
-        var schemas = nonInlineCompositionsDict(baseSchema);
-        var thisSchema = schemas[compositionKey];
-        schemas = thisSchema.schema.schemas;
-        return schemaId == "print" ? schemas.print : schemas.list;
-    };
+        var getCompositionSchema = function (baseSchema, compositionKey, schemaId) {
+            var schemas = nonInlineCompositionsDict(baseSchema);
+            var thisSchema = schemas[compositionKey];
+            schemas = thisSchema.schema.schemas;
+            return schemaId === "print" ? schemas.print : schemas.list;
+        };
 
-    var getCompositionIdName = function (baseSchema, compositionKey, schemaId) {
-        return getCompositionSchema(baseSchema, compositionKey, schemaId).idFieldName;
-    };
+        var getCompositionIdName = function (baseSchema, compositionKey, schemaId) {
+            return getCompositionSchema(baseSchema, compositionKey, schemaId).idFieldName;
+        };
 
-    var buildPaginatedSearchDTO = function(pageNumber) {
-        var dto = searchService.buildSearchDTO();
-        dto.pageNumber = pageNumber || 1;
-        dto.pageSize = __deafultPageSize__;
-        dto.totalCount = 0;
-        // dto.paginationOptions = [__deafultPageSize__];
-        return dto;
-    };
+        var buildPaginatedSearchDTO = function(pageNumber) {
+            var dto = searchService.buildSearchDTO();
+            dto.pageNumber = pageNumber || 1;
+            dto.pageSize = __deafultPageSize__;
+            dto.totalCount = 0;
+            // dto.paginationOptions = [__deafultPageSize__];
+            return dto;
+        };
 
         var getCompositions = function(schema) {
             if (!schema || !schema["cachedCompositions"]) {
@@ -150,6 +151,37 @@ app.factory('compositionService', ["$log", "$http", "$rootScope", "$timeout", "s
                 }
                 return [];
             },
+
+ 			hasEditableProperty: function (listSchema) {
+            	listSchema.jscache = listSchema.jscache || {};
+            	if (listSchema.jscache.editable) {
+                	return listSchema.jscache.editable;
+            	}
+
+            	var displayables = listSchema.displayables;
+            	for (var i = 0; i < displayables.length; i++) {
+                	var dis = displayables[i];
+                	if (fieldService.isPropertyTrue(dis, "editable")) {
+                    	listSchema.jscache.editable = true;
+                    	return true;
+                	}
+            	}
+            	listSchema.jscache.editable = false;
+            	return false;
+        	},
+
+        	buildMergedDatamap: function (datamap, parentdata) {
+            	var clonedDataMap = angular.copy(parentdata);
+            	if (datamap) {
+                	var item = datamap;
+                	for (var prop in item) {
+                    	if (item.hasOwnProperty(prop)) {
+                        	clonedDataMap[prop] = item[prop];
+                    	}
+                	}
+            	}
+            	return clonedDataMap;
+        	},
 
             /*
             * this method will hit the server to fetch associated composition data on a second request making the detail screens faster
