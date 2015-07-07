@@ -27,7 +27,7 @@ app.factory('userService', function (contextService) {
         },
 
         InGroup: function (groupName) {
-            if (group == null) {
+            if (groupName == null) {
                 return true;
             }
             var user = contextService.getUserData();
