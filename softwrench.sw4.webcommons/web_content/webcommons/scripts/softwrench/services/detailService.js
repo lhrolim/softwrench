@@ -17,6 +17,7 @@
 
         function fetchRelationshipData(scope, result) {
 
+
             var associationPromise = handleAssociations(scope, result);
             var compositionPromise = handleCompositions(scope, result);
             $q.all([associationPromise, compositionPromise]).then(function (results) {
@@ -24,7 +25,6 @@
                 $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
                 scope.$broadcast("sw_configuredirtywatcher");
             });
-
         };
 
         function isEditDetail(schema, datamap) {

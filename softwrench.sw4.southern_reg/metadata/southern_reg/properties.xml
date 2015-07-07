@@ -28,7 +28,11 @@
   <property key="notifications.activityStream.enabled" value="true"/>
 
   <environment key="dev">
-    <property key="swdb_url" value="Data Source=10.50.100.101;Initial Catalog=SWDB_CTS75MAX_SC;User Id=sw;password=softwrench;" />
+    <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
+    <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.53)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=SCR75DEV)));User Id=MAXIMO;Password=MAXIMO;" />
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_SCR75DEV;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.216/meaweb/wsdl/" />
   </environment>
 
   <environment key="qa">
@@ -40,13 +44,5 @@
   </environment>
 
 
-  <environment key="dev-activity">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_ActStr;User Id=sw;password=softwrench;" />
-  </environment>
-
-  <environment key="dev-76">
-    <property key="basewsURL" value="http://10.50.100.147:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
-  </environment>
+ 
 </Properties>

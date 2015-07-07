@@ -180,6 +180,13 @@ app.directive('crudBody', function (contextService) {
                 return datamap.fields[schema.userIdFieldName];
             };
 
+            $scope.shouldShowComposition=function(composition){
+                if (composition.hidden) {
+                    return false;
+                }
+                return expressionService.evaluate(composition.showExpression, $scope.datamap, $scope);
+            }
+
             $scope.toConfirmBack = function (data, schema) {
                 $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
             };

@@ -96,7 +96,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var i = 0;
             foreach (var collectionAssociation in collectionAssociations) {
                 var internalParameter = BuildInternalParameter(parameters, collectionAssociation, results);
-                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, paginatedSearch));
+                var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto) paginatedSearch.ShallowCopy();
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, perThreadPaginatedSearch));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys)));
