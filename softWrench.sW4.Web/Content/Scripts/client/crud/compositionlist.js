@@ -188,9 +188,9 @@ app.directive('compositionList', function (contextService, formatService, schema
             ismodal: '@'
         },
 
-        controller: function ($scope,$q, $log,$timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
-            formatService, fieldService, commandService, compositionService, validationService,dispatcherService,
-            expressionService,modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
+        controller: function ($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
+            formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
+            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
 
             $scope.lookupObj = {};
 
@@ -225,7 +225,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             function init() {
-                if (!$scope.compositionschemadefinition.schemas) {p
+                if (!$scope.compositionschemadefinition.schemas) {
                     //this means that we recevived only the list schema, for inline compositions
                     $scope.compositionschemadefinition.schemas = {};
                     $scope.compositionschemadefinition.schemas.list = $scope.compositionschemadefinition;
@@ -265,14 +265,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 parameters.parentdata = $scope.parentdata;
                 eventService.onload($scope, $scope.compositionlistschema, $scope.datamap, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
-            
 
-                // wasn't set by $event listener (directive not yet loaded): set synchronously
-                if ((!$scope.compositiondata || !angular.isArray($scope.compositiondata) || $scope.compositiondata.length <= 0) && $scope.parentdata.fields[$scope.relationship]) {
-                    $scope.compositiondata = $scope.parentdata.fields[$scope.relationship].list;
-                    $scope.paginationData = $scope.parentdata.fields[$scope.relationship].paginationData;
-                    $scope.parentdata.fields[$scope.relationship] = $scope.compositiondata;
+                if (!$scope.paginationData) {
+                    //case the tab is loaded after the event result, the event would not be present on the screen
+                    $scope.paginationData = contextService.get("compositionpagination_{0}".format($scope.relationship), true, true);
                 }
+                
 
                 if (!$scope.isBatch()) {
                     if ($scope.hasDetailSchema()) {
@@ -282,7 +280,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                         $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
                     }
                     if (compositionService.hasEditableProperty($scope.compositionlistschema)) {
-                        $.each($scope.compositionData(), function(key, value) {
+                        $.each($scope.compositionData(), function (key, value) {
                             fieldService.fillDefaultValues($scope.compositionlistschema.displayables, value, $scope);
                         });
                     }
@@ -298,13 +296,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //this is not the data this tab is interested
                     return;
                 }
-                $scope.compositiondata = datamap[$scope.relationship].list;
-                $scope.paginationData = datamap[$scope.relationship].paginationData;
+                $scope.paginationData = compositiondata[$scope.relationship].paginationData;
                 init();
                 $scope.$digest();
             });
 
-            $scope.getBooleanClass=function(compositionitem, attribute) {
+            $scope.getBooleanClass = function (compositionitem, attribute) {
                 if (compositionitem[attribute] == "true" || compositionitem[attribute] == 1) {
                     return 'fa-check-square-o';
                 }
@@ -327,12 +324,12 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return false;
             }
 
-            $scope.invokeCustomCheckBoxService=function(fieldMetadata,datamap) {
+            $scope.invokeCustomCheckBoxService = function (fieldMetadata, datamap) {
                 if (fieldMetadata.rendererParameters["clickservice"] == null) {
                     return;
                 }
                 var customfn = dispatcherService.loadServiceByString(fieldMetadata.rendererParameters["clickservice"]);
-                $q.when(customfn(fieldMetadata,$scope.parentdata, datamap));
+                $q.when(customfn(fieldMetadata, $scope.parentdata, datamap));
             }
 
 
@@ -522,7 +519,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             /// </summary>
             /// <param name="item">the row entry, datamap</param>
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
-            $scope.toggleDetails = function (item, column, columnMode, $event,rowIndex) {
+            $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
                 if (columnMode == "arrow" || columnMode == "singleselection") {
                     //to avoid second call
@@ -723,7 +720,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
-                if (this.hasDetailSchema() &&  $scope.collectionproperties.allowUpdate) {
+                if (this.hasDetailSchema() && $scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
                     //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
                     $scope.parentdata.fields[$scope.relationship] = updatedCompositionData;
@@ -747,7 +744,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
                 //TODO: refactor this, using promises
                 $scope.$emit("sw_submitdata", {
-                    successCbk: function(data) {
+                    successCbk: function (data) {
                         var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
                         if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
                             window.location.reload();
@@ -767,7 +764,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                         }
                         $scope.selecteditem = null;
                     },
-                    failureCbk: function(data) {
+                    failureCbk: function (data) {
                         var idx = $scope.compositiondata.indexOf(selecteditem);
                         if (idx != -1) {
                             $scope.compositiondata.splice(idx, 1);
@@ -899,7 +896,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             /* pagination */
 
-            $scope.selectPage = function(pageNumber, pageSize, printMode) {
+            $scope.selectPage = function (pageNumber, pageSize, printMode) {
                 if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
                     $scope.paginationData.pageNumber = pageNumber;
                     return;
@@ -907,11 +904,10 @@ app.directive('compositionList', function (contextService, formatService, schema
                 compositionService
                     .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber)
                     .then(function (result) {
-                        // clear lists
-                        $scope.compositiondata = [];
                         $scope.clonedCompositionData = [];
-                        // reset parent and re-initialize the page 
-                        $scope.parentdata.fields = result;
+                        // clear lists
+                        $scope.compositiondata = result[$scope.relationship].list;
+                        $scope.paginationData = result[$scope.relationship].paginationData;
                         init();
                     });
             };

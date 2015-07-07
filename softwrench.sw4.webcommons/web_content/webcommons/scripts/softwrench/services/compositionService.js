@@ -4,8 +4,8 @@
     var app = angular.module('sw_layout');
 
     app.factory('compositionService',
-        ["$log", "$http", "$rootScope", "$timeout", "submitService", "schemaService", "searchService", "$q", "fieldService",
-        function ($log, $http, $rootScope, $timeout, submitService, schemaService, searchService, $q, fieldService) {
+        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService",
+        function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService) {
 
             var __deafultPageSize__ = 10;
 
@@ -78,6 +78,8 @@
                             log.info('composition {0} returned with {1} entries'.format(composition, resultList.length));
                             //this datamap entry is bound to the whole screen, so we need to set it here as well
                             datamap[composition] = resultList;
+                            //setting this case the tabs have not yet been loaded so that they can fetch from here
+                            contextService.insertIntoContext("compositionpagination_{0}".format(composition), compositionArray[composition].paginationData,true);
                             result[composition] = {
                                 relationship: composition,
                                 list: resultList,
