@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dependencies\Oracle.DataAccess.dll" />
+    <Content Include="metadata\southern_reg\deploy.xml" />
     <Content Include="metadata\southern_reg\menu.mobile.xml" />
     <EmbeddedResource Include="metadata\southern_reg\menu.web.xml">
       <SubType>Designer</SubType>
