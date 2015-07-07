@@ -225,7 +225,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             function init() {
-                if (!$scope.compositionschemadefinition.schemas) {
+                if (!$scope.compositionschemadefinition.schemas) {p
                     //this means that we recevived only the list schema, for inline compositions
                     $scope.compositionschemadefinition.schemas = {};
                     $scope.compositionschemadefinition.schemas.list = $scope.compositionschemadefinition;
@@ -271,6 +271,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 if ((!$scope.compositiondata || !angular.isArray($scope.compositiondata) || $scope.compositiondata.length <= 0) && $scope.parentdata.fields[$scope.relationship]) {
                     $scope.compositiondata = $scope.parentdata.fields[$scope.relationship].list;
                     $scope.paginationData = $scope.parentdata.fields[$scope.relationship].paginationData;
+                    $scope.parentdata.fields[$scope.relationship] = $scope.compositiondata;
                 }
 
                 if (!$scope.isBatch()) {
@@ -292,7 +293,11 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
             };
 
-            $scope.$on('sw_compositiondataresolved', function (event, datamap) {
+            $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
+                if (!compositiondata[$scope.relationship]) {
+                    //this is not the data this tab is interested
+                    return;
+                }
                 $scope.compositiondata = datamap[$scope.relationship].list;
                 $scope.paginationData = datamap[$scope.relationship].paginationData;
                 init();

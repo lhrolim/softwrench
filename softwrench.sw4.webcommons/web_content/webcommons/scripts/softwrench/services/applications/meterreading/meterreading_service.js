@@ -25,14 +25,14 @@
             var completeMsg = "Are you sure you want to mark this Operation as Complete?";
             var incompleteMsg = "Are you sure you want to mark this Operation as Incomplete?";
 
-            var originalValue = ""+compositionitem["progress"];
+            var originalValue = ""+compositionitem["progress2"];
             var msg = originalValue == "0" ? completeMsg : incompleteMsg;
             
             var reverseValue = originalValue == "0" ? "1" : "0";
 
             return alertService.confirmMsg(msg, function () {
                 compositionitem["#isDirty"] = true;
-                compositionitem["progress"] = reverseValue;
+                compositionitem["progress2"] = reverseValue;
                 //sending minimum amount of data
                 var crudData = {
                     'wonum': parentdata.fields['wonum'],
@@ -44,10 +44,10 @@
                 return applicationService.invokeOperation("workorder", "readings", null, crudData).then(function (data) {
                     compositionitem["#isDirty"] = false;
                 }).catch(function (data) {
-                    compositionitem["progress"] = originalValue;
+                    compositionitem["progress2"] = originalValue;
                 });
             }, function () {
-                compositionitem["progress"] = originalValue;
+                compositionitem["progress2"] = originalValue;
                 compositionitem["#isDirty"] = false;
                 $rootScope.$digest();
             });

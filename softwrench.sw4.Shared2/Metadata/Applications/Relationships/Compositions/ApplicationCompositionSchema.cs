@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using System.Collections.Generic;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -26,6 +28,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
         private ISet<ApplicationEvent> _eventsSet;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public FetchType FetchType { get; set;}
 
         public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer, 
             string printSchema, string dependantfields,FetchType fetchType, ISet<ApplicationEvent> events = null ) {
@@ -35,6 +39,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             PrintSchema = printSchema;
             RenderMode = renderMode;
             _eventsSet = events;
+            FetchType = fetchType;
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
             }

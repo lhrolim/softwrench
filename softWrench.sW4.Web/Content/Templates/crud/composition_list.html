@@ -204,7 +204,7 @@
         </tbody>
     </table>
 	
- 	<div class="context clearfix" ng-if="!isNoRecords && paginationData">
+    <div class="context clearfix" ng-if="!isNoRecords && paginationData && paginationData.pageCount > 1">
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>
 
