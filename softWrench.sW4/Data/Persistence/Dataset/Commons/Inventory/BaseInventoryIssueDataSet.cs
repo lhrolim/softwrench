@@ -160,7 +160,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
         }
 
         public override string ClientFilter() {
-            return "bering,pae,southern_unreg";
+            return "bering,pae,southern_unreg,southern_reg";
         }
     }
 }

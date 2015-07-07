@@ -27,7 +27,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
         }
 
         public override string ClientFilter() {
-            return "southern_unreg";
+            return "southern_unreg,southern_reg";
         }
     }
 }
