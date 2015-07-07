@@ -21,7 +21,7 @@
                 nextSchemaId: "readings",
                 stereotype: "modal",
                 properties: {
-                    modalclass: "readingmodal"
+                    modalclass: "readingsmodal"
                 },
                 scopeParameters: {
                     schema: schema,

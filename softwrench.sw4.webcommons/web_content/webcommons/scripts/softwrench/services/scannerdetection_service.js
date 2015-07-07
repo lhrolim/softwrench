@@ -343,7 +343,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                 nextSchemaId: "readings",
                                 stereotype: "modal",
                                 properties: {
-                                    modalclass: "readingmodal"
+                                    modalclass: "readingsmodal"
                                 },
                                 scopeParameters: {
                                     schema: schema,
