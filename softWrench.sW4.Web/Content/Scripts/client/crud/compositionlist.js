@@ -531,7 +531,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
                 var log = $log.get("compositionlist#toggleDetails");
 
-                if ((this.isBatch() && !columnMode == "arrow")) {
+                if ((this.isBatch() && columnMode != "arrow")) {
                     //For batch mode, as the items will be edited on the lines, 
                     //we cannot allow the details to be expanded unless the button is clicked on the left side of the table.
                     return;
