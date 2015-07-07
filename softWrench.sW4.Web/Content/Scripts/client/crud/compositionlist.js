@@ -325,12 +325,13 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return false;
             }
 
-            $scope.invokeCustomCheckBoxService = function (fieldMetadata, datamap) {
+            $scope.invokeCustomCheckBoxService = function (fieldMetadata, datamap, $event) {
                 if (fieldMetadata.rendererParameters["clickservice"] == null) {
                     return;
                 }
                 var customfn = dispatcherService.loadServiceByString(fieldMetadata.rendererParameters["clickservice"]);
                 $q.when(customfn(fieldMetadata, $scope.parentdata, datamap));
+                $event.stopImmediatePropagation();
             }
 
 
