@@ -2,7 +2,7 @@
 
 app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
-                                                 fieldService, submitService, validationService, meterReadingService) {
+                                                 fieldService, submitService, validationService, commandService) {
     var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
 
     var validateAssocationLookupFn = function (result, searchObj) {
@@ -333,7 +333,21 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         if (assets.hasOwnProperty(asset)) {
                             if (assets[asset].assetnum.equalIc(data)) {
                                 redirectService.redirectToTab("multiassetlocci_");
-                                //meterReadingService.read(null, assets[asset]);
+                                assets[asset]['#selected'] = "true";
+                                var command = {
+                                    service: "meterReadingService",
+                                    method: "read",
+                                    nextSchemaId: "readings",
+                                    stereotype: "modal",
+                                    properties: {
+                                        modalclass: "readingmodal"
+                                    },
+                                    scopeParameters: {
+                                        schema: schema,
+                                        datamap: assets[asset]
+                                    }
+                                };
+                                commandService.doCommand(scope, command);
                             }
                         }
                     }
