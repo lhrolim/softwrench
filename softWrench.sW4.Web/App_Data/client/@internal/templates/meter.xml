@@ -25,6 +25,7 @@
       <schemas>
         <schema id="composition" stereotype="compositionlist" title="Asset Meter Readings">
           <field attribute="assetmeterid" hidden="true"/>
+          <field attribute="metername" hidden="true"/>
           <field label="Meter" attribute="meter_.description"/>
           <field label="Meter Type" attribute="meter_.metertype"/>
           <field label="Last Reading" attribute="lastreading"/>
@@ -61,6 +62,7 @@
       <schemas>
         <schema id="composition" stereotype="compositionlist" title="Location Meter Readings">
           <field attribute="locationmeterid" hidden="true"/>
+          <field attribute="metername" hidden="true"/>
           <field label="Meter" attribute="meter_.description"/>
           <field label="Meter Type" attribute="meter_.metertype"/>
           <field label="Last Reading" attribute="lastreading"/>

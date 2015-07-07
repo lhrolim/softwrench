@@ -345,10 +345,9 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                 properties: {
                                     modalclass: "readingsmodal"
                                 },
-                                scopeParameters: {
-                                    schema: schema,
-                                    datamap: assets[asset]
-                                }
+
+                                scopeParameters: ['schema','datamap']
+
                             };
                             commandService.doCommand(scope, command);
                         }

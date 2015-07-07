@@ -2,9 +2,9 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('meterReadingService', ['$rootScope','applicationService', 'alertService','commandService', meterReadingService]);
+    angular.module('maximo_applications').factory('meterReadingService', ['$rootScope', 'applicationService', 'alertService', 'commandService', meterReadingService]);
 
-    function meterReadingService($rootScope,applicationService, alertService,commandService) {
+    function meterReadingService($rootScope, applicationService, alertService, commandService) {
 
         var service = {
             read: read,
@@ -14,7 +14,11 @@
 
         return service;
 
-        function openReadingModal(datamap,fieldmetadata,schema) {
+        function openReadingModal(datamap, fieldmetadata, schema) {
+            var datamapToSend = {};
+            angular.copy(datamap, datamapToSend)
+            datamapToSend['multiassetlocci_']=[datamap]
+            
             var command = {
                 service: "meterReadingService",
                 method: "read",
@@ -23,22 +27,19 @@
                 properties: {
                     modalclass: "readingsmodal"
                 },
-                scopeParameters: {
-                    schema: schema,
-                    datamap: datamap
-                }
+                scopeParameters: ['schema', 'datamap']
             };
             var clonedSchema = {};
             angular.copy(schema, clonedSchema)
 
-           
+
             var scope = {
-                datamap: datamap,
+                datamap: datamapToSend,
                 schema: clonedSchema
             }
             scope.schema.applicationName = "workorder";
-            
-            
+
+
             commandService.doCommand(scope, command);
 
         }
@@ -55,9 +56,9 @@
             var completeMsg = "Are you sure you want to mark this Operation as Complete?";
             var incompleteMsg = "Are you sure you want to mark this Operation as Incomplete?";
 
-            var originalValue = ""+compositionitem["progress2"];
+            var originalValue = "" + compositionitem["progress2"];
             var msg = originalValue == "0" ? completeMsg : incompleteMsg;
-            
+
             var reverseValue = originalValue == "0" ? "1" : "0";
 
             return alertService.confirmMsg(msg, function () {
