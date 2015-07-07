@@ -133,9 +133,9 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.$on('sw_compositiondataresolved', function(event) {
+            $scope.$on('sw_compositiondataresolved', function(event,data) {
                 var tab = contextService.getActiveTab();
-                if (tab != null) {
+                if (tab != null && data[tab]!=null) {
                     redirectService.redirectToTab(tab);
                 }
             });

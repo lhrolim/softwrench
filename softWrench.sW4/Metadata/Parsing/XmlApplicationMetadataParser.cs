@@ -380,7 +380,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var inline = composition.Attribute(XmlMetadataSchema.ApplicationCompositionInlineAttribute).ValueOrDefault(false);
             var schemaId = composition.Attribute(XmlMetadataSchema.ApplicationCompositionSchemaIdAttribute).ValueOrDefault("detail");
             var printSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionPrintAttribute).ValueOrDefault("detail");
-            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault("eager");
+            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault("lazy");
             var fetchType = (FetchType) Enum.Parse(typeof(FetchType), fetchTypeStr, true);
 
             var dependantfields = composition.Attribute(XmlMetadataSchema.ApplicationCompositionDependantFieldsAttribute).ValueOrDefault((string)null);
