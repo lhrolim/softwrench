@@ -201,22 +201,14 @@
                 */
                 populateWithCompositionData: function (schema, datamap) {
                     var applicationName = schema.applicationName;
-
                     var log = $log.getInstance('compositionservice#populateWithCompositionData');
                     log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
 
-                    var compositions = getLazyCompositions(schema);
-                    // couldn't resolve compositions's names: fetch all
-                    if (!compositions || compositions.length <= 0) {
-                        var dto = buildFetchRequestDTO(schema, datamap);
-                        return doPopulateWithCompositionData(dto, datamap);
-                    }
-                    // if compositions's names are resolved: one request per composition
-                    var promises = compositions.map(function (composition) {
-                        var localDTO = buildFetchRequestDTO(schema, datamap, [composition]);
-                        return doPopulateWithCompositionData(localDTO, datamap);
-                    });
-                    return $q.all(promises);
+                    // fetching all compositions in a single http request:
+                    // browser limits simultaneous client requests (usually 6).
+                    // doing in a single request so it doesn't impact static files fetching and page loading              
+                    var dto = buildFetchRequestDTO(schema, datamap);
+                    return doPopulateWithCompositionData(dto, datamap);
                 },
 
                 /**
