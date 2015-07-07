@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using log4net;
+using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
@@ -66,48 +67,58 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
         private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(CollectionResolverParameters parameters, PaginatedSearchRequestDto paginatedSearch = null) {
             var compositionSchemas = parameters.CompositionSchemas;
-            var compositionRowstamps = parameters.RowstampMap;
             var entityMetadata = parameters.SlicedEntity;
 
             if (!compositionSchemas.Any()) {
                 return new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
             }
-            if (compositionRowstamps == null) {
-                compositionRowstamps = new Dictionary<string, long?>();
-            }
 
             var before = Stopwatch.StartNew();
             _log.DebugFormat("Init Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys));
 
-            var collectionAssociations = new List<EntityAssociation>();
-            foreach (var entityListAssociation in entityMetadata.ListAssociations()) {
-                if (compositionSchemas.Keys.Contains(entityListAssociation.Qualifier)) {
-                    collectionAssociations.Add(entityListAssociation);
-                }
+            var collectionAssociations = entityMetadata
+                .ListAssociations()
+                .Where(entityAssociation =>
+                    compositionSchemas.Keys.Contains(entityAssociation.Qualifier))
+                .ToList();
+
+            var results = new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
+            // only a single composition being fetched: do it in the same Thread
+            if (collectionAssociations.Count == 1) {
+                var entityAssociation = collectionAssociations[0];
+                var internalParameter = BuildInternalParameter(parameters, entityAssociation, results);
+                FetchAsync(internalParameter, paginatedSearch);
+                _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", entityAssociation.Qualifier));
+                return results;
             }
+            // multiple compositions being fetched: each in a new Thread
             var tasks = new Task[collectionAssociations.Count];
             var i = 0;
-            var ctx = ContextLookuper.LookupContext();
-            var results = new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
             foreach (var collectionAssociation in collectionAssociations) {
-                long? rowstamp = null;
-                if (compositionRowstamps.ContainsKey(collectionAssociation.Qualifier)) {
-                    rowstamp = compositionRowstamps[collectionAssociation.Qualifier];
-                }
-
-                var internalParameter = new InternalCollectionResolverParameter {
-                    ExternalParameters = parameters,
-                    CollectionAssociation = collectionAssociation,
-                    Ctx = ctx,
-                    Results = results,
-                    Rowstamp = rowstamp
-                };
+                var internalParameter = BuildInternalParameter(parameters, collectionAssociation, results);
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, paginatedSearch));
             }
             Task.WaitAll(tasks);
-            _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
-                String.Join(",", compositionSchemas.Keys)));
+            _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys)));
             return results;
+        }
+
+        private InternalCollectionResolverParameter BuildInternalParameter(CollectionResolverParameters parameters, EntityAssociation collectionAssociation, Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> results) {
+            var ctx = ContextLookuper.LookupContext();
+            var compositionRowstamps = parameters.RowstampMap ?? new Dictionary<string, long?>();
+            long? rowstamp = null;
+            if (compositionRowstamps.ContainsKey(collectionAssociation.Qualifier)) {
+                rowstamp = compositionRowstamps[collectionAssociation.Qualifier];
+            }
+
+            var internalParameter = new InternalCollectionResolverParameter {
+                ExternalParameters = parameters,
+                CollectionAssociation = collectionAssociation,
+                Ctx = ctx,
+                Results = results,
+                Rowstamp = rowstamp
+            };
+            return internalParameter;
         }
 
 
