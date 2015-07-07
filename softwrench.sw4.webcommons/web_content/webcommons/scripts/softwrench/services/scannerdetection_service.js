@@ -334,7 +334,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             continue;
                         }
                         
-                        if (assets[asset].assetnum.equalIc(data)) {
+                        if (assets[asset].assetnum && assets[asset].assetnum.equalIc(data)) {
                             redirectService.redirectToTab("multiassetlocci_");
                             assets[asset]['#selected'] = "true";
                             var command = {

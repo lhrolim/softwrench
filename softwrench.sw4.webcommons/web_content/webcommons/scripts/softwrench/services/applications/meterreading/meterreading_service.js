@@ -2,16 +2,46 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('meterReadingService', ['$rootScope','applicationService', 'alertService', meterReadingService]);
+    angular.module('maximo_applications').factory('meterReadingService', ['$rootScope','applicationService', 'alertService','commandService', meterReadingService]);
 
-    function meterReadingService($rootScope,applicationService, alertService) {
+    function meterReadingService($rootScope,applicationService, alertService,commandService) {
 
         var service = {
             read: read,
-            markComplete: markComplete
+            markComplete: markComplete,
+            openReadingModal: openReadingModal,
         };
 
         return service;
+
+        function openReadingModal(datamap,fieldmetadata,schema) {
+            var command = {
+                service: "meterReadingService",
+                method: "read",
+                nextSchemaId: "readings",
+                stereotype: "modal",
+                properties: {
+                    modalclass: "readingmodal"
+                },
+                scopeParameters: {
+                    schema: schema,
+                    datamap: datamap
+                }
+            };
+            var clonedSchema = {};
+            angular.copy(schema, clonedSchema)
+
+           
+            var scope = {
+                datamap: datamap,
+                schema: clonedSchema
+            }
+            scope.schema.applicationName = "workorder";
+            
+            
+            commandService.doCommand(scope, command);
+
+        }
 
         function read(schema, datamap) {
             var crudData = { crud: datamap };

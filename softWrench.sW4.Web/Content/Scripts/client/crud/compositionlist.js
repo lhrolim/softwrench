@@ -546,7 +546,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
                 if (fullServiceName != null) {
                     var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
-                    var shouldToggle = commandService.executeClickCustomCommand(fullServiceName, item, column, compositionschema);
+                    var shouldToggle = commandService.executeClickCustomCommand(fullServiceName, item, column, $scope.compositionlistschema);
                     if (shouldToggle && this.hasDetailSchema()) {
                         doToggle(compositionId, item, item);
                     }

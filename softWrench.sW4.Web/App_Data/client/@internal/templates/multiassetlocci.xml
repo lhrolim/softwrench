@@ -11,6 +11,7 @@
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
             <property key="list.selectionstyle" value="single"/>
+            <property key="list.click.service" value="meterReadingService.openReadingModal"/>
           </properties>
 
           <field attribute="siteid" hidden="true"></field>
