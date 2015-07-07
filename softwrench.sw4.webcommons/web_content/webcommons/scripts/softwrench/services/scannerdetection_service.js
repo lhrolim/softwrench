@@ -2,7 +2,7 @@
 
 app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
-                                                 fieldService, submitService, validationService) {
+                                                 fieldService, submitService, validationService, commandService) {
     var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
 
     var validateAssocationLookupFn = function (result, searchObj) {
@@ -320,6 +320,37 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                     param.scanmode = true;
                     // Redirect to the detail page for that record
                     redirectService.goToApplicationView(application, detail, mode, null, param, null);
+                }
+            });
+        },
+
+        initSouthernOperatorRounds: function(scope, schema, datamap, parameters) {
+            $(document).scannerDetection({
+                avgTimeByChar: timeBetweenCharacters,
+                onComplete: function (data) {
+                    var assets = datamap.multiassetlocci_;
+                    for (var asset in assets) {
+                        if (assets.hasOwnProperty(asset)) {
+                            if (assets[asset].assetnum.equalIc(data)) {
+                                redirectService.redirectToTab("multiassetlocci_");
+                                assets[asset]['#selected'] = "true";
+                                var command = {
+                                    service: "meterReadingService",
+                                    method: "read",
+                                    nextSchemaId: "readings",
+                                    stereotype: "modal",
+                                    properties: {
+                                        modalclass: "readingmodal"
+                                    },
+                                    scopeParameters: {
+                                        schema: schema,
+                                        datamap: assets[asset]
+                                    }
+                                };
+                                commandService.doCommand(scope, command);
+                            }
+                        }
+                    }
                 }
             });
         },
