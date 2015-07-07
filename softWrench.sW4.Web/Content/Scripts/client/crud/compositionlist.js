@@ -297,6 +297,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     return;
                 }
                 $scope.paginationData = compositiondata[$scope.relationship].paginationData;
+                $scope.compositiondata = compositiondata[$scope.relationship].list;
                 init();
                 $scope.$digest();
             });

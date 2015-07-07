@@ -136,7 +136,7 @@ app.factory('genericTicketService', function (alertService, associationService, 
                     return true;
                 }
                 var anyIncomplete = datamap["multiassetlocci_"].some(function(currentValue) {
-                    return (currentValue.progress == "0" || currentValue.progress == 0);
+                    return (currentValue.progress2 == "0" || currentValue.progress2 == 0);
                 });
                 if (anyIncomplete) {
                     alertService.alert("You must complete all tasks before changing WO status to Complete.");
