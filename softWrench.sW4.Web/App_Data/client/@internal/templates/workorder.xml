@@ -163,6 +163,7 @@
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="workorderid"  readonly="true" hidden="true"/>
+          <field attribute="route"  readonly="true" hidden="true"/>
           <section id="realfields"/>
         </schema>
 

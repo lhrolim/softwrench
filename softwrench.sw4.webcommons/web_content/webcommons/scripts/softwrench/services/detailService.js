@@ -17,14 +17,15 @@
 
         function fetchRelationshipData(scope, result) {
 
-            var associationPromise = handleAssociations(scope, result);
-            var compositionPromise = handleCompositions(scope, result);
-            $q.all([associationPromise, compositionPromise]).then(function (results) {
-                //ready to listen for dirty watchers
-                $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
-                scope.$broadcast("sw_configuredirtywatcher");
-            });
-
+            $timeout(function() {
+                var associationPromise = handleAssociations(scope, result);
+                var compositionPromise = handleCompositions(scope, result);
+                $q.all([associationPromise, compositionPromise]).then(function(results) {
+                    //ready to listen for dirty watchers
+                    $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
+                    scope.$broadcast("sw_configuredirtywatcher");
+                });
+            }, 300);
         };
 
         function isEditDetail(schema, datamap) {

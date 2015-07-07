@@ -402,7 +402,7 @@
       <schemas>
         <schema id="editdetail" redeclaring="false">
           <customization position="+worklog">
-              <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="">
+              <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="" showexpression="@route != null">
                 <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
               </composition>
           </customization>
