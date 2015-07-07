@@ -58,7 +58,8 @@
             }
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var mergedDatamap =compositionService.buildMergedDatamap(row, mainDatamap);
+                var mergedDatamap = compositionService.buildMergedDatamap(row, mainDatamap);
+                mergedDatamap["#rownum"] = i;
                 result = result.concat(this.validate(listSchema, listSchema.displayables, mergedDatamap, null, true));
             }
             return result;
@@ -100,15 +101,20 @@
                         //Existing Attachment
                         continue;
                     }
+                    var qualifier = "";
+                    if (datamap["#rownum"]) {
+                        qualifier = "(" + datamap["#rownum"] + ")";
+                    }
+
                     if (displayable.rendererType == "upload" && nullOrEmpty(datamap.newattachment_path)) {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} is required', [label]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0}{1} is required', [label, qualifier]));
                         continue;
                     }
 
                     if (label.endsWith('s') || label.endsWith('S')) {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} are required', [label]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0}{1} are required', [label, qualifier]));
                     } else {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} is required', [label]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0}{1} is required', [label, qualifier]));
                     }
                 }
                 if (displayable.displayables != undefined) {
@@ -124,7 +130,7 @@
                     validationArray = validationArray.concat(customErrorArray);
                 }
                 if (validationArray.length > 0) {
-                    $rootScope.$broadcast('sw_validationerrors', validationArray,$rootScope.showingModal);
+                    $rootScope.$broadcast('sw_validationerrors', validationArray, $rootScope.showingModal);
                 }
             }
             return validationArray;
