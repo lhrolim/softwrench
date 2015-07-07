@@ -330,25 +330,27 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                 onComplete: function (data) {
                     var assets = datamap.multiassetlocci_;
                     for (var asset in assets) {
-                        if (assets.hasOwnProperty(asset)) {
-                            if (assets[asset].assetnum.equalIc(data)) {
-                                redirectService.redirectToTab("multiassetlocci_");
-                                assets[asset]['#selected'] = "true";
-                                var command = {
-                                    service: "meterReadingService",
-                                    method: "read",
-                                    nextSchemaId: "readings",
-                                    stereotype: "modal",
-                                    properties: {
-                                        modalclass: "readingmodal"
-                                    },
-                                    scopeParameters: {
-                                        schema: schema,
-                                        datamap: assets[asset]
-                                    }
-                                };
-                                commandService.doCommand(scope, command);
-                            }
+                        if (!assets.hasOwnProperty(asset)) {
+                            continue;
+                        }
+                        
+                        if (assets[asset].assetnum.equalIc(data)) {
+                            redirectService.redirectToTab("multiassetlocci_");
+                            assets[asset]['#selected'] = "true";
+                            var command = {
+                                service: "meterReadingService",
+                                method: "read",
+                                nextSchemaId: "readings",
+                                stereotype: "modal",
+                                properties: {
+                                    modalclass: "readingmodal"
+                                },
+                                scopeParameters: {
+                                    schema: schema,
+                                    datamap: assets[asset]
+                                }
+                            };
+                            commandService.doCommand(scope, command);
                         }
                     }
                 }
