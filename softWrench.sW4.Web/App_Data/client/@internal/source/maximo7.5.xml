@@ -60,6 +60,8 @@
         <attribute name="featurelabel" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
+      
+      
       <connectorParameters>
         <connectorParameter key="dbtable" value="MULTIASSETLOCCI" />
       </connectorParameters>
@@ -4332,8 +4334,8 @@
         <relationship to="meter">
           <relationshipAttribute from="metername" to="metername" primary="true"/>
         </relationship>
-         <relationship to="person" ignoreprimary="true">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        <relationship to="person" qualifier="inspector">
+          <relationshipAttribute from="inspector" to="personid" primary="true"/>
         </relationship>
         
       </relationships>
@@ -4380,8 +4382,8 @@
         <relationship to="meter">
           <relationshipAttribute from="metername" to="metername" primary="true"/>
         </relationship>
-        <relationship to="person" ignoreprimary="true">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        <relationship to="person" qualifier="inspector">
+          <relationshipAttribute from="inspector" to="personid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>

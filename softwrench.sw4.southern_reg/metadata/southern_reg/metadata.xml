@@ -400,6 +400,11 @@
 
     <application entity="workorder" name="workorder" title="Work Order">
       <schemas>
+
+        <schema id="readings" title="Enter Meter Readings" platform="web" redeclaring="false">
+          <customization position="locationmeter"/>
+        </schema>
+        
         <schema id="editdetail" redeclaring="false">
           <customization position="+worklog">
               <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="">

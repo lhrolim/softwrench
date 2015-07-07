@@ -401,12 +401,18 @@
     <application entity="workorder" name="workorder" title="Work Order">
       <schemas>
         <schema id="editdetail" redeclaring="false">
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <customization position="+worklog">
               <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="" >
                 <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
               </composition>
           </customization>
         </schema>
+
+        <schema id="readings" title="Enter Meter Readings" platform="web" redeclaring="false">
+          <customization position="locationmeter"/>
+        </schema>
+        
       </schemas>
     </application>
     

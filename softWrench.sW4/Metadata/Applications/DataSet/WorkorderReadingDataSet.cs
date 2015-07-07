@@ -29,10 +29,19 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 Id = request.Id,
                 CompositionList = new List<string> { "locationmeter_", "assetmeter_" }
             }, currentData);
-            var locationMeter = (List<Dictionary<string, object>>)compositionData.ResultObject["locationmeter_"].ResultList;
-            var assetMeter = (List<Dictionary<string, object>>)compositionData.ResultObject["assetmeter_"].ResultList;
             var datamap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, null);
-            datamap.SetAttribute("locationmeter_", locationMeter);
+
+            var locationMeter = new List<Dictionary<string, object>>();
+
+            if (compositionData.ResultObject.ContainsKey("locationmeter_")) {
+                //might be turned off
+                locationMeter = (List<Dictionary<string, object>>)compositionData.ResultObject["locationmeter_"].ResultList;
+                datamap.SetAttribute("locationmeter_", locationMeter);
+            }
+
+            var assetMeter = (List<Dictionary<string, object>>)compositionData.ResultObject["assetmeter_"].ResultList;
+
+
             datamap.SetAttribute("assetmeter_", assetMeter);
             var compositions = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var detail = new ApplicationDetailResult(datamap, null, application.Schema, compositions, request.Id);
