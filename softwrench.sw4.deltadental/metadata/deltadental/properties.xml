@@ -24,6 +24,7 @@
   <property key="notifications.activityStream.enabled" value="true"/>
 
   <environment key="dev">
+    <property key="basewsURL" value="http://10.50.100.153:9080/meaweb/wsdl/" />
     <property key="swdb_provider" value="System.Data.SQL"/>
     <property key="maximo_DB_provider" value="System.Data.SQL"/>
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
