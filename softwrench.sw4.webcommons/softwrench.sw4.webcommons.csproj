@@ -80,6 +80,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_commons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invtransfer_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\meterreading\meterreading_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\servicerequest\dispatch_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\attachmentService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\focus_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\application_service.js" />
