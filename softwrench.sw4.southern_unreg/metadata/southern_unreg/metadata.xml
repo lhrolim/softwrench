@@ -402,11 +402,16 @@
       <schemas>
         <schema id="editdetail" redeclaring="false">
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
-          <customization position="+worklog">
-              <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="" >
-                <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-              </composition>
+          <!--STHRNUNREG -11 rename Work Log to be Post Work and hide Tool tab-->
+          <customization position="worklog">
+            <composition relationship="worklog" label="Post Work" detailschema="" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="multiassetlocci" label="Operator Rounds" detailschema="" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
           </customization>
+           <customization position="tooltrans"/>
         </schema>
 
         <schema id="readings" title="Enter Meter Readings" platform="web" redeclaring="false">
