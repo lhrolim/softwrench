@@ -2,9 +2,9 @@
 (function () {
     'use strict';
 
-    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionService', validationService]);
+    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', validationService]);
 
-    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionService) {
+    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService) {
 
         var service = {
             getInvalidLabels: getInvalidLabels,
@@ -58,7 +58,7 @@
             }
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var mergedDatamap = compositionService.buildMergedDatamap(row, mainDatamap);
+                var mergedDatamap = compositionCommons.buildMergedDatamap(row, mainDatamap);
                 mergedDatamap["#rownum"] = i;
                 result = result.concat(this.validate(listSchema, listSchema.displayables, mergedDatamap, null, true));
             }
@@ -92,7 +92,7 @@
                     continue;
                 }
 
-                if (fieldService.isInlineComposition(displayable) || (fieldService.isListOnlyComposition(displayable) && compositionService.hasEditableProperty(displayable.schema.schemas.list))) {
+                if (fieldService.isInlineComposition(displayable) || (fieldService.isListOnlyComposition(displayable) && schemaService.hasEditableProperty(displayable.schema.schemas.list))) {
                     validationArray = validationArray.concat(this.validateInlineComposition(displayable, datamap));
                 }
 
@@ -149,9 +149,8 @@
             $rootScope.isDirty = false;
         }
 
-
-
     }
+
 })();
 
 
