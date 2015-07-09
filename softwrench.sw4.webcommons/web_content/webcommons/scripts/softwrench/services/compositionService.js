@@ -4,8 +4,8 @@
     var app = angular.module('sw_layout');
 
     app.factory('compositionService',
-        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService",
-        function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService) {
+        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService", "compositionCommons",
+        function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons) {
 
             var __deafultPageSize__ = 10;
 
@@ -164,35 +164,18 @@
                     return [];
                 },
 
+                /**
+                 * @deprecated use schemaService#hasEditableProperty instead
+                 */
                 hasEditableProperty: function (listSchema) {
-                    listSchema.jscache = listSchema.jscache || {};
-                    if (listSchema.jscache.editable) {
-                        return listSchema.jscache.editable;
-                    }
-
-                    var displayables = listSchema.displayables;
-                    for (var i = 0; i < displayables.length; i++) {
-                        var dis = displayables[i];
-                        if (fieldService.isPropertyTrue(dis, "editable")) {
-                            listSchema.jscache.editable = true;
-                            return true;
-                        }
-                    }
-                    listSchema.jscache.editable = false;
-                    return false;
+                    return schemaService.hasEditableProperty(listSchema);
                 },
 
+                /**
+                 * @deprecated use compositionCommons#buildMergedDatamap instead 
+                 */
                 buildMergedDatamap: function (datamap, parentdata) {
-                    var clonedDataMap = angular.copy(parentdata);
-                    if (datamap) {
-                        var item = datamap;
-                        for (var prop in item) {
-                            if (item.hasOwnProperty(prop)) {
-                                clonedDataMap[prop] = item[prop];
-                            }
-                        }
-                    }
-                    return clonedDataMap;
+                    return compositionCommons.buildMergedDatamap(datamap, parentdata);
                 },
 
                 /*
