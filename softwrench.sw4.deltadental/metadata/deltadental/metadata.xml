@@ -93,6 +93,7 @@
         <attribute name="floor" type="varchar"/>
         <!--<attribute name="LOCATION" type="varchar"/>-->
         <attribute name="room" type="varchar"/>
+        <attribute name="cubical" type="varchar"/>
       </attributes>
       <relationships>
         <relationship to="maxuser">
@@ -629,6 +630,7 @@
               <renderer type="lookup"/>
             </association>
             <field attribute="room" label="Room"/>
+            <field attribute="cubicle" label="Cubicle"/>
           </customization>
           <customization position="+langcode">
             <field attribute="altdisplayname" hidden="true"/>
@@ -656,6 +658,7 @@
               <renderer type="lookup"/>
             </association>
             <field attribute="room" label="Room"/>
+            <field attribute="cubicle" label="Cubicle"/>
           </customization>
           <customization position="+langcode">
             <field attribute="altdisplayname" hidden="true"/>
