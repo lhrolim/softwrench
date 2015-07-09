@@ -341,7 +341,7 @@
 
         <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
-          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
         
 
@@ -357,7 +357,7 @@
 
         <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
-          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${customerlinkcreated =='0'}">
@@ -390,7 +390,7 @@
 
         <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
-          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${customerlinkcreated =='0'}">
@@ -405,7 +405,7 @@
 
         <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
-          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${customerlinkcreated =='0'}">

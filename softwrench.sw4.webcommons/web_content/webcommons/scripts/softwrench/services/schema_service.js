@@ -144,10 +144,28 @@
             }
             buildQualifierCache(schema);
             return schema.jscache.qualifiercache[qualifier];
+        },
+
+        hasEditableProperty: function (schema) {
+            if (schema.mode === "input") {
+                return true;
+            }
+            schema.jscache = schema.jscache || {};
+            if (schema.jscache.editable) {
+                return schema.jscache.editable;
+            }
+
+            var displayables = schema.displayables;
+            for (var i = 0; i < displayables.length; i++) {
+                var dis = displayables[i];
+                if (fieldService.isPropertyTrue(dis, "editable")) {
+                    schema.jscache.editable = true;
+                    return true;
+                }
+            }
+            schema.jscache.editable = false;
+            return false;
         }
-
-
-
 
     };
 

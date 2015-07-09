@@ -1,5 +1,9 @@
-﻿var entities = entities || {};
-mobileServices.factory('swdbDAO', function ($q,dispatcherService) {
+﻿(function(entities) {
+    "use strict";
+
+entities = entities || {};
+
+mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
 
@@ -336,4 +340,6 @@ mobileServices.factory('swdbDAO', function ($q,dispatcherService) {
 
     };
 
-});
+}]);
+
+})(entities);
