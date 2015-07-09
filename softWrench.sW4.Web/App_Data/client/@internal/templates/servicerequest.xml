@@ -42,6 +42,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
+        <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
   </entities>
@@ -227,6 +228,12 @@
           </section>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id ="dispatchwo" icon="fa-tachometer" label="Dispatch Work Order"
+                          parameters="schema,scope" service="dispatchService" method="dispatch"/>
+              </container>
+            </commandgroup>
             <commandgroup position="detailform">
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                        showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>

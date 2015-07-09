@@ -163,6 +163,7 @@
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\ServiceRequest\DispatchOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\ProgressMultiAssetHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
