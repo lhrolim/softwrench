@@ -66,7 +66,7 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
             if (command.scopeParameters != null) {
                 $.each(command.scopeParameters, function (key, parameterName) {
                     var arg = scope[parameterName];
-                    if (parameterName == "datamap") {
+                    if (parameterName == "datamap" && overridenDatamap) {
                         arg = overridenDatamap;
                     }
                     if (arg) {

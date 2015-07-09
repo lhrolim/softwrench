@@ -29,6 +29,17 @@
           <field attribute="relatedrecclass" label="Related Record Class:" />
           <field attribute="siteid" hidden="true" />
         </detail>
+        <schema id="newdetail" title="New Related Record" stereotype="detailnew" platform="web">
+          <field attribute="recordkey" label="Record Key" hidden="true"/>
+          <field attribute="class" label="Class" hidden="true"/>
+          <field attribute="relatedreckey" label="Related Record Key" hidden="true"/>
+          <field attribute="relatedrecclass" label="Related Record Class" hidden="true"/>
+          <field attribute="relatedrecsiteid" label="Related Record Site ID" hidden="true"/>
+          <field attribute="relatedrecorgid" label="Related Record Org ID" hidden="true"/>
+          <field attribute="siteid" label="Site ID" hidden="true"/>
+          <field attribute="orgid" label="Org ID" hidden="true"/>
+          <field attribute="relatetype" label="Related Record Type" hidden="true"/>
+        </schema>
       </schemas>
     </application>
 
