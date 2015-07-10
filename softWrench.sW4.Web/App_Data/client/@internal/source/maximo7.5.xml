@@ -60,13 +60,13 @@
         <attribute name="featurelabel" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
-      
-      
+
+
       <connectorParameters>
         <connectorParameter key="dbtable" value="MULTIASSETLOCCI" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="maxpropvalue" idAttribute="maxpropvalueid">
       <attributes>
         <attribute name="changeby" type="varchar" required="true" />
@@ -188,7 +188,7 @@
         <connectorParameter key="dbtable" value="maxuser" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="ALNDOMAIN" idAttribute="domainid">
       <attributes>
         <attribute name="domainid" type="varchar" required="true" />
@@ -308,7 +308,7 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="dfltapp" type="varchar" required="false" />
         <attribute name="deviceclass" type="smallint" required="false" />
-        
+
       </attributes>
       <relationships>
         <relationship to="maxuser">
@@ -2109,6 +2109,24 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="wochange" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="routes" idAttribute="routesid">
+      <attributes>
+        <attribute name="route" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="parentchgsstatus" type="smallint" required="true" />
+        <attribute name="routesid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="routestopsbecome" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="routes" />
       </connectorParameters>
     </entity>
 
@@ -4337,10 +4355,10 @@
         <relationship to="person" qualifier="inspector">
           <relationshipAttribute from="inspector" to="personid" primary="true"/>
         </relationship>
-        
+
       </relationships>
-      
-      
+
+
       <connectorParameters>
         <connectorParameter key="dbtable" value="assetmeter" />
       </connectorParameters>
@@ -4389,9 +4407,9 @@
       <connectorParameters>
         <connectorParameter key="dbtable" value="locationmeter" />
       </connectorParameters>
-      
-      
-      
+
+
+
     </entity>
 
   </entities>

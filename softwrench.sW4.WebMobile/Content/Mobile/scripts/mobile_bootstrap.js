@@ -29,18 +29,19 @@ var $s = function (element) {
     return scope.$parent;
 };
 
-var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'ngCookies']);
-var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
+var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'ngCookies', 'maximo_applications']);
+var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications'])
 
 
 
 .run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService","crudContextService",
     function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService,crudContextService) {
 
-    initContext();
+    
 
     $ionicPlatform.ready(function () {
 
+        initContext();
 
         //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         //            WebView.setWebContentsDebuggingEnabled(true);

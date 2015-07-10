@@ -1,9 +1,14 @@
 ﻿softwrench.controller('SettingsController', function ($scope, routeService, swdbDAO, contextService) {
 
     function init() {
-        //at this point was already loaded from swdb
         var settings = contextService.fetchFromContext("settings", true);
-        $scope.settings = settings;
+        if (settings) {
+            $scope.settings = settings;
+        } else {
+            $scope.settings = {};
+        }
+        
+        
     }
 
     $scope.goToLogin = function () {
