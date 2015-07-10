@@ -414,7 +414,7 @@
         <schema parentschema="adetail" id="newdetail" title="New Service Request" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
-            <association target="siteid" label="Site:" labelfield="site_.description" default="DPW">
+            <association target="siteid" label="Site:" labelfield="site_.description" default="DPW" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
           </section>
@@ -431,7 +431,7 @@
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Details">
           <section id="siteidsection">
-            <association target="siteid" label="Site:" labelfield="site_.description">
+            <association target="siteid" label="Site:" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
           </section>
