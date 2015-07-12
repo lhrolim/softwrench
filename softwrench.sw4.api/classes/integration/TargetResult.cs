@@ -7,6 +7,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public string Id { get; set; }
         public string UserId { get; set; }
         public object ResultObject { get; set; }
+        public string SuccessMessage { get; set; }
 
         public ApplicationMetadata NextApplication { get; set; }
 
@@ -14,10 +15,11 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
         public string NextAction { get; private set; }
 
-        public TargetResult(string id, string userId, object resultObject) {
+        public TargetResult(string id, string userId, object resultObject, string successMessage = null) {
             Id = id;
             UserId = userId;
             ResultObject = resultObject;
+            SuccessMessage = successMessage;
         }
     }
 }
