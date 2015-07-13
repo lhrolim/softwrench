@@ -308,6 +308,11 @@
             };
             searchService.searchWithData("invcost", searchData).success(function (data) {
                 var resultObject = data.resultObject;
+                if (!resultObject || resultObject.length ==0) {
+                    fields['unitcost'] = 0;
+                    return;
+                }
+
                 var resultFields = resultObject[0].fields;
                 var costtype = parentdata['inventory_.costtype'];
                 if (costtype === 'STANDARD') {
