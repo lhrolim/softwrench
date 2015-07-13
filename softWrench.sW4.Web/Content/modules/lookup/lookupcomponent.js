@@ -1,12 +1,12 @@
-(function(angular) {
+(function (angular) {
     'use strict';
 
-    
+
     service.$inject = ['$rootScope', '$timeout', '$log', 'associationService'];
-    
+
     angular.module("sw_lookup").factory('cmplookup', service);
 
-    
+
 
     function service($rootScope, $timeout, $log, associationService) {
 
@@ -70,7 +70,7 @@
                 return;
             }
 
-            var optionSearch = $.grep(options, function(e) {
+            var optionSearch = $.grep(options, function (e) {
                 return e.value == optionValue;
             });
 
@@ -106,16 +106,25 @@
         };
 
         function handleMultipleLookupOptionsFn(result, lookupObj, scope, datamap) {
+            var log = $log.get("cmplookup#handleMultipleLookupOptionsFn");
+
             var associationResult = result[lookupObj.fieldMetadata.associationKey];
             lookupObj.schema = associationResult.associationSchemaDefinition;
             lookupObj.options = associationResult.associationData;
             if (Object.keys(result).length == 1 && hasSingleElement(associationResult.associationData)) {
                 var firstOption = lookupObj.options[0];
                 var firstElementEqualsCode = firstOption.value != null && lookupObj.code != null && firstOption.value.toUpperCase() == lookupObj.code.toUpperCase();
-                var datamapIsChanging = datamap[lookupObj.fieldMetadata.attribute] != firstOption.value;
+                var attribute = lookupObj.fieldMetadata.attribute;
+                var datamapIsChanging = datamap[attribute] != firstOption.value;
                 if (firstElementEqualsCode && datamapIsChanging) {
+                    log.debug("exact match {0} found for modal/ avoid opening it".format(lookupObj.code));
                     associationService.updateUnderlyingAssociationObject(lookupObj.fieldMetadata, firstOption, scope);
                     //this will prevent modal from opening, since there´s just one option available
+                    if (lookupObj.item) {
+                        lookupObj.item[attribute] = firstOption.value;
+                    } else {
+                        datamap[attribute] = firstOption.value;
+                    }
                     return true;
                 }
             }
