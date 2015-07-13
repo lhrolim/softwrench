@@ -420,7 +420,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-
     <Content Include="App_Data\Client\tva\deploy.xml" />
     <Content Include="App_Data\Client\%40internal\target\tvamaximo_target.xml">
       <SubType>Designer</SubType>
@@ -487,6 +486,11 @@
     <Content Include="Content\Images\tva\logo-byline.png" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
+    <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
+    <Content Include="Content\modules\lookup\lookupcomponent.js" />
+    <Content Include="Content\modules\lookup\templates\lookupinput.html" />
+    <Content Include="Content\modules\lookup\lookupInput.js" />
+    <Content Include="Content\modules\lookup\lookupModal.js" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\adminresources\profile.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
@@ -780,7 +784,7 @@
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />
     <Content Include="Content\Templates\printModal.html" />
-    <Content Include="Content\Templates\lookupModal.html" />
+    <Content Include="Content\modules\lookup\templates\lookupModal.html" />
     <Content Include="Content\Templates\usefulFaqLinks.html" />
     <Content Include="Content\Templates\message_section.html" />
     <None Include="Content\styles\default\_treeview.scss" />

@@ -40,14 +40,14 @@
                     <button class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
                 </th>
             </tr>
-            
+
         </thead>
         <tbody ng-show="compositionData().length > 0">
             <tr ng-repeat-start="compositionitem in compositionData()"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
                 ng-click="toggleDetails(compositionitem,column,null,$event,rowindex)"
                 ng-class="$odd ? 'odd' : 'even'"
-                ng-init="rowindex = $index">
+                ng-init="rowindex = $index;lookupAssociationsCode[rowindex]={}">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
@@ -76,24 +76,13 @@
                         <div ng-switch-when="ApplicationAssociationDefinition">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="lookup" class="row">
-                                    <div class="col-lg-12">
-                                        <div class="input-group">
-                                            <input type="text" placeholder="{{column.label}}" class="form-control"
-                                                   ng-enabled="isSelectEnabled(column,compositionitem)"
-                                                   ng-model="compositionitem[column.attribute]"
-                                                   ng-change="lookupCodeChange(column)"
-                                                   ng-blur="lookupCodeBlur(column)"
-                                                   ng-enter="showLookupModal(column,compositionitem)"
-                                                   rel="tooltip" data-original-title="Enter {{column.label}} id to lookup " />
-                                            <span class="input-group-addon last" ng-click="showLookupModal(column,compositionitem)"
-                                                  rel="tooltip" data-original-title="Open the lookup popup"
-                                                  ng-enabled="isSelectEnabled(column,compositionitem)">
-                                                <i class="glyphicon glyphicon-search" style="cursor: pointer"></i>
-                                            </span>
-                                            <div></div><!--stop addon from moving on hover-->
-                                        </div>
-                                    </div>
-                                    <input type="hidden" ng-model="datamap[column.target]" />
+                                    <lookup-input parentdata="parentdata"
+                                                  datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
+                                                  disabledassociations="disabledassociations" blockedassociations="blockedassociations"
+                                                  lookup-associations-code="lookupAssociationsCode[rowindex]"
+                                                  lookup-associations-description="lookupAssociationsDescription[rowindex]"
+                                                  mode="composition"
+                                                  />
                                 </div>
                             </ng-switch>
                         </div>
@@ -102,7 +91,7 @@
                         </div>
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
-                                <div ng-switch-when="checkbox" >
+                                <div ng-switch-when="checkbox">
                                     <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
@@ -203,7 +192,7 @@
             </tr>
         </tbody>
     </table>
-	
+
     <div class="context clearfix" ng-if="!isNoRecords && paginationData && paginationData.pageCount > 1">
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>
@@ -252,15 +241,6 @@
                             previousschema="parentschema" />
         </form>
     </div>
-    
-    <div ng-if="haslookupModal(compositionlistschema)">
-        <lookup-modal-wrapper lookup-obj="lookupObj"
-                              lookup-associations-code="lookupAssociationsCode"
-                              lookup-associations-description="lookupAssociationsDescription"
-                              association-options="associationOptions"
-                              schema="compositionlistschema"
-                              datamap="parentdata">
-        </lookup-modal-wrapper>
-    </div>
+
 
 </div>

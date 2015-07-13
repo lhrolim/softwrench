@@ -70,7 +70,7 @@
                         var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
                         if (ignoreWatchIdx != -1) {
                             shouldDoWatch = false;
-                            $scope[datamappropertiesName][association.attribute] = newValue.substring(0, ignoreWatchIdx);
+                            $parse(datamappropertiesName)($scope)[association.attribute] = newValue.substring(0, ignoreWatchIdx);
                             try {
                                 $scope.$digest();
                                 shouldDoWatch = true;
@@ -86,7 +86,7 @@
                     var eventToDispatch = {
                         oldValue: oldValue,
                         newValue: newValue,
-                        fields: $scope[datamappropertiesName],
+                        fields: $parse(datamappropertiesName)($scope),
                         parentdata: $scope.parentdata,
                         displayables: displayables,
                         scope: $scope,
@@ -98,7 +98,12 @@
                             if (result != undefined && result == false) {
                                 var resolved = contextService.fetchFromContext("associationsresolved", false, true);
                                 var phase = resolved ? 'configured' : 'initial';
-                                var dispatchedbytheuser = $scope.associationsResolved ? true : false;
+                                var dispatchedbytheuser = resolved ? true : false;
+                                if ($scope.compositionlistschema) {
+                                    //workaround for compositions
+                                    $scope.datamap = $parse(datamappropertiesName)($scope);
+                                    $scope.schema = $scope.compositionlistschema;
+                                }
                                 associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
                             }
                             try {
@@ -108,7 +113,7 @@
                             }
                         },
                         interrupt: function () {
-                            $scope[datamappropertiesName][association.attribute] = oldValue;
+                            $parse(datamappropertiesName)($scope)[association.attribute] = oldValue;
                             //to avoid infinite recursion here.
                             shouldDoWatch = false;
                             cmpfacade.digestAndrefresh(association, $scope);

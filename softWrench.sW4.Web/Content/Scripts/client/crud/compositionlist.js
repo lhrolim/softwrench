@@ -194,6 +194,9 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             $scope.lookupObj = {};
 
+            $scope.lookupAssociationsCode = [];
+            $scope.lookupAssociationsDescriptions = [];
+
             $scope.setForm = function (form) {
                 $scope.crudform = form;
             };
@@ -342,38 +345,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return result;
             };
 
-            $scope.isSelectEnabled = function (fieldMetadata, item) {
-                var key = fieldMetadata.associationKey;
-                $scope.disabledassociations = instantiateIfUndefined($scope.disabledassociations);
-                if (key == undefined) {
-                    return true;
-                }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
-                if (result != $scope.disabledassociations[key]) {
-                    //                    cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
-                    $scope.disabledassociations[key] = result;
-                }
-                return result;
-            };
-
-            $scope.showLookupModal = function (fieldMetadata, item) {
-                if (!$scope.isSelectEnabled(fieldMetadata, item)) {
-                    return;
-                }
-                var code = '';
-                //                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
-                //                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                //                }
-                $scope.schema = $scope.compositionlistschema;
-                $scope.lookupObj.element = $element;
-                $scope.lookupObj.item = item;
-                $scope.lookupObj.parentdata = $scope.parentdata;
-                $scope.datamap = item;
-
-                var searchDatamap = compositionService.buildMergedDatamap(item, $scope.parentdata);
-
-                cmplookup.updateLookupObject($scope, fieldMetadata, code, searchDatamap);
-            };
+         
+            
 
             $scope.compositionProvider = function () {
                 var localCommands = {};

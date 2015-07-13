@@ -298,6 +298,12 @@
         function afterChangeStoreloc(parameters) {
             var fields = parameters['fields'];
             var parentdata = parameters['parentdata'];
+
+            if (fields['storeloc'] == null) {
+                nullifyProperties(fields, ['unitcost', 'binnum', 'inventory_.issueunit', '#curbal', 'matusetransid']);
+                return;
+            }
+
             fields['lotnum'] = null;
             fields['#curbal'] = null;
 
