@@ -123,7 +123,10 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 }
             }
 
-            eventService.onload(scope, scope.schema, scope.datamap);
+            var parameters = {
+                element: element
+            };
+            eventService.onload(scope, scope.schema, scope.datamap, parameters);
 
             scope.getInputType = function (fieldMetadata) {
                 if (fieldMetadata.rendererType == "email") {

@@ -175,12 +175,26 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                 },
             });
         },
+
+
+
         initInvuseTransferDetailListener: function (schema, datamap) {
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
                 onComplete: function (data) {
                     datamap['invuseline_.itemnum'] = data;
+                    $rootScope.$digest();
+                },
+            });
+        },
+
+        initMaterialScanningListener: function (scope,schema, datamap,paremeters) {
+            // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
+            paremeters.element.scannerDetection({
+                avgTimeByChar: timeBetweenCharacters,
+                onComplete: function (data) {
+                    datamap['itemnum'] = data;
                     $rootScope.$digest();
                 },
             });
