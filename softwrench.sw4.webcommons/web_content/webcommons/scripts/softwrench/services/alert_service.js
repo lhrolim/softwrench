@@ -83,6 +83,10 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
                     $rootScope.$broadcast('sw_successmessage', data);
                 }, timeout);
             }
+        },
+
+        error: function (message) {
+            $rootScope.$broadcast('sw_ajaxerror', { errorMessage: message });
         }
 
     };

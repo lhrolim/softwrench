@@ -301,26 +301,14 @@
             fields['lotnum'] = null;
             fields['#curbal'] = null;
 
-            var searchData = {
+            var invParams = {
                 itemnum: parentdata['itemnum'],
-                location: fields['storeloc'],
-                siteid: parentdata['siteid']
+                storeloc: fields['storeloc'],
+                siteid: parentdata['siteid'],
+                orgid: parentdata['orgid'],
+                itemsetid: fields['itemsetid']
             };
-            searchService.searchWithData("invcost", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                if (!resultObject || resultObject.length ==0) {
-                    fields['unitcost'] = 0;
-                    return;
-                }
-
-                var resultFields = resultObject[0].fields;
-                var costtype = parentdata['inventory_.costtype'];
-                if (costtype === 'STANDARD') {
-                    fields['unitcost'] = resultFields.stdcost;
-                } else if (costtype === 'AVERAGE') {
-                    fields['unitcost'] = resultFields.avgcost;
-                }
-            });
+            inventoryServiceCommons.updateInventoryCosttype({ fields: invParams }, 'storeloc');
         }
     }
 })();

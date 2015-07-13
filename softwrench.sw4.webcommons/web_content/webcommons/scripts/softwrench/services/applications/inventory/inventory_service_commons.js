@@ -47,6 +47,11 @@
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
                 var costtype = fields['costtype'];
+                if (costtype.equalIc("fifo") || costtype.equalIc("lifo")) {
+                    // TODO: Add support for FIFO / LIFO cost types
+                    alertService.error("FIFO and LIFO cost types are not supported at this time");
+                    return;
+                }
                 parameters['fields']['inventory_.costtype'] = costtype;
                 that.doUpdateUnitCostFromInventoryCost(parameters, "unitcost", storelocation);
             });
