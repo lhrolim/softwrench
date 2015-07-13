@@ -339,7 +339,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         },
 
         initSouthernOperatorRounds: function(scope, schema, datamap, parameters) {
-            $(document).scannerDetection({
+            parameters.element.scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
                 onComplete: function (data) {
                     var assets = datamap.multiassetlocci_;
