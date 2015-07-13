@@ -16,7 +16,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         return true;
     };
 
-    var navigateToAsset = function(data) {
+    var navigateToAsset = function (data) {
         var user = contextService.getUserData();
         var searchData = {
             siteid: user.siteId,
@@ -189,7 +189,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             });
         },
 
-        initMaterialScanningListener: function (scope,schema, datamap,paremeters) {
+        initMaterialScanningListener: function (scope, schema, datamap, paremeters) {
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             paremeters.element.scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
@@ -209,11 +209,11 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                     //will be called using the default submit functions/process
                     if (data == '%SUBMIT%') {
                         var parameters = {};
-                        
-                       scope.$emit('sw_submitdata', {
+
+                        scope.$emit('sw_submitdata', {
                             isComposition: false,
                             selecteditem: scope.datamap
-                       });
+                        });
                         return;
                     }
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
@@ -258,7 +258,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         },
 
         initAssetDetailListener: function (scope, schema, datamap, parameters) {
-            
+
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
@@ -338,7 +338,8 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             });
         },
 
-        initSouthernOperatorRounds: function(scope, schema, datamap, parameters) {
+        initSouthernOperatorRounds: function (scope, schema, datamap, parameters) {
+
             parameters.element.scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
                 onComplete: function (data) {
@@ -347,10 +348,15 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         if (!assets.hasOwnProperty(asset)) {
                             continue;
                         }
-                        
+
                         if (assets[asset].assetnum && assets[asset].assetnum.equalIc(data)) {
-                            redirectService.redirectToTab("multiassetlocci_");
+
                             assets[asset]['#selected'] = "true";
+
+                            var datamapToSend = {};
+                            angular.copy(datamap, datamapToSend);
+//                            datamapToSend['multiassetlocci_'] = [datamap];
+
                             var command = {
                                 service: "meterReadingService",
                                 method: "read",
@@ -359,10 +365,18 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                 properties: {
                                     modalclass: "readingsmodal"
                                 },
-
-                                scopeParameters: ['schema','datamap']
-
+                                scopeParameters: ['schema', 'datamap']
                             };
+                            var clonedSchema = {};
+                            angular.copy(parameters.parentschema, clonedSchema);
+
+
+                            var scope = {
+                                datamap: datamapToSend,
+                                schema: clonedSchema
+                            }
+                            scope.schema.applicationName = "workorder";
+
                             commandService.doCommand(scope, command);
                         }
                     }
