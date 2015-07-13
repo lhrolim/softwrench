@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+﻿var app = angular.module('sw_lookup');
 
 app.directive('lookupModalWrapper', function ($compile) {
     return {
@@ -15,9 +15,9 @@ app.directive('lookupModalWrapper', function ($compile) {
         template: "<div></div>",
         link: function (scope, element, attrs) {
             if (!scope.datamap) {
-                scope.datamap =  {};
+                scope.datamap = {};
             }
-            
+
 
             element.append(
             "<lookup-modal lookup-obj='lookupObj'" +
@@ -36,7 +36,7 @@ app.directive('lookupModal', function (contextService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: contextService.getResourceUrl('/Content/Templates/lookupModal.html'),
+        templateUrl: contextService.getResourceUrl('/Content/modules/lookup/templates/lookupModal.html'),
         scope: {
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
@@ -47,12 +47,12 @@ app.directive('lookupModal', function (contextService) {
         },
 
         controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
-                              formatService, expressionService,focusService) {
+                              formatService, expressionService, focusService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
-                focusService.resetFocusToCurrent($scope.schema,$scope.lookupObj.fieldMetadata.attribute);
+                focusService.resetFocusToCurrent($scope.schema, $scope.lookupObj.fieldMetadata.attribute);
 
-                associationService.getAssociationOptions($scope.schema,$scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
+                associationService.getAssociationOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).success(function (data) {
                     var result = data.resultObject;
                     $scope.populateModal(result);
                 }).error(function (data) {
@@ -77,7 +77,7 @@ app.directive('lookupModal', function (contextService) {
                     }
                 }
             };
-          
+
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
@@ -92,14 +92,10 @@ app.directive('lookupModal', function (contextService) {
             $scope.lookupModalSelect = function (option) {
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
                 $scope.selectedOption = option;
-                if ($scope.lookupObj.item) {
-                    //if using inside lists
-                    $scope.lookupObj.item[fieldMetadata.target] = option.value;
-                } else {
-                    $scope.datamap[fieldMetadata.target] = option.value;
-                    $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
-                    $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
-                }
+
+                $scope.datamap[fieldMetadata.target] = option.value;
+                $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
+                $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
                 associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
                 $element.modal('hide');
             };

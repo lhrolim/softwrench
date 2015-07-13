@@ -1,10 +1,10 @@
-(function() {
+(function(angular) {
     'use strict';
 
     
     service.$inject = ['$rootScope', '$timeout', '$log', 'associationService'];
     
-    app.factory('cmplookup', service);
+    angular.module("sw_lookup").factory('cmplookup', service);
 
     
 
@@ -135,7 +135,7 @@
             showModal(element);
         };
     }
-})();
+})(angular);
 
 
 

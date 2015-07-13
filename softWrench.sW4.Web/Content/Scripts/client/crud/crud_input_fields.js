@@ -322,70 +322,14 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             /* LOOKUP functions */
 
-            $scope.showLookupModal = function (fieldMetadata) {
-                if (!$scope.isSelectEnabled(fieldMetadata)) {
-                    return;
-                }
+          
 
-                var code = '';
-                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
-                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                }
-
-                $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata, code, $scope.datamap);
-            };
-
-            $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
-                if (fieldMetadata.rendererParameters['schema'] != undefined) {
-                    var service = fieldMetadata.rendererParameters['onsave'];
-                    var savefn = function () { };
-                    if (service != null) {
-                        var servicepart = service.split('.');
-                        savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
-                    }
-
-                    var modaldatamap = null;
-
-                    var onloadservice = fieldMetadata.rendererParameters['onload'];
-                    var onloadfn = function () { };
-                    if (onloadservice != null) {
-                        var onloadservicepart = onloadservice.split('.');
-                        onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
-                        modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
-                    }
-
-                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function (selecteditem) {
-                        savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
-                    }, null, datamap, schema);
-
-                    return;
-                }
-            };
-
-            $scope.lookupCodeChange = function (fieldMetadata) {
-                var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-                if (allowFreeText == "true") {
-                    var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                    $scope.datamap[fieldMetadata.target] = code;
-                }
-            };
+    
+          
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
-            $scope.lookupCodeBlur = function (fieldMetadata) {
-                var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                var targetValue = $scope.datamap[fieldMetadata.target];
-                var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-
-                if (code != targetValue) {
-                    if (code == null || code == '') {
-                        $scope.datamap[fieldMetadata.target] = null;
-                    } else if (allowFreeText != "true") {
-                        $scope.showLookupModal(fieldMetadata);
-                    }
-                }
-            };
+         
 
             $scope.configureNumericInput = function () {
                 var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);

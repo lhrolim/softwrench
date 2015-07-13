@@ -307,6 +307,9 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
+            if (!schema) {
+                schema = scope.compositionlistschema;
+            }
             if (triggerFieldName != "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) == -1) {
                 //no other asociation depends upon this first association, return here.
                 //false is to indicate that no value has been updated
