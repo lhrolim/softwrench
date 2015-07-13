@@ -1,4 +1,13 @@
-﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload', "xeditable", 'webcommons_services','maximo_applications']);
+﻿var app = angular.module('sw_layout',
+    ['pasvaz.bindonce',
+     'angularTreeview',
+     'ngSanitize',
+     'textAngular',
+     'angularFileUpload',
+     "xeditable",
+     'sw_lookup',
+     'webcommons_services',
+     'maximo_applications']);
 
 //angular 1.3 migration reference
 //app.config(['$controllerProvider', function ($controllerProvider) {
@@ -153,12 +162,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     });
 
     $scope.$on('ngLoadFinished', function (ngLoadFinishedEvent) {
-        $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+        $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
         menuService.adjustHeight();
     });
 
     $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-        $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+        $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
 
         var sidebarWidth = $('.col-side-bar').width();
         if (sidebarWidth != null) {
@@ -224,7 +233,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
 
 
-    $scope.resourceUrl = function(path) {
+    $scope.resourceUrl = function (path) {
         return contextService.getResourceUrl(path);
     }
 
@@ -243,7 +252,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $rootScope.environment = config.environment;
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
-        contextService.insertIntoContext("activityStreamFlag",config.activityStreamFlag, true);
+        contextService.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;
@@ -260,8 +269,8 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             return;
         }
 
-        $scope.$on("sw_loadmenu", function(event, menuModel) {
-            $scope.$on('sw_indexPageLoaded', function(event, url) {
+        $scope.$on("sw_loadmenu", function (event, menuModel) {
+            $scope.$on('sw_indexPageLoaded', function (event, url) {
                 if (url != null) {
                     menuService.setActiveLeafByUrl(menuModel.menu, url);
                 }
@@ -275,28 +284,28 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         });
 
 
-//        $http({
-//            method: "GET",
-//            url: url("/api/menu?" + platformQS()),
-//            cache: $templateCache
-//        })
-//        .success(function (menuAndNav) {
-//            $scope.$on('sw_indexPageLoaded', function (event, url) {
-//                if (url != null) {
-//                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
-//                }
-//            });
-//            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
-//            $rootScope.menu = menuAndNav.menu;
-//            $scope.menu = menuAndNav.menu;
-//            $scope.isSysAdmin = menuAndNav.isSysAdmin;
-//            $scope.isClientAdmin = menuAndNav.isClientAdmin;
-//            $('.hapag-body').addClass('hapag-body-loaded');
-//        })
-//        .error(function (data) {
-//            data.prependMessage = "retrieving menu";
-//            $rootScope.$broadcast('sw_ajaxerror', data);
-//        });
+        //        $http({
+        //            method: "GET",
+        //            url: url("/api/menu?" + platformQS()),
+        //            cache: $templateCache
+        //        })
+        //        .success(function (menuAndNav) {
+        //            $scope.$on('sw_indexPageLoaded', function (event, url) {
+        //                if (url != null) {
+        //                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
+        //                }
+        //            });
+        //            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
+        //            $rootScope.menu = menuAndNav.menu;
+        //            $scope.menu = menuAndNav.menu;
+        //            $scope.isSysAdmin = menuAndNav.isSysAdmin;
+        //            $scope.isClientAdmin = menuAndNav.isClientAdmin;
+        //            $('.hapag-body').addClass('hapag-body-loaded');
+        //        })
+        //        .error(function (data) {
+        //            data.prependMessage = "retrieving menu";
+        //            $rootScope.$broadcast('sw_ajaxerror', data);
+        //        });
     }
 
     $scope.i18N = function (key, defaultValue, paramArray) {

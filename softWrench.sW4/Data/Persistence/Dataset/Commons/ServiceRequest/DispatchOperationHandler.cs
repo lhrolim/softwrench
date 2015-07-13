@@ -15,6 +15,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using cts.commons.simpleinjector;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using Quartz.Util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Applications;
@@ -23,14 +24,10 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.ServiceRequest {
     class DispatchOperationHandler : BaseMaximoCustomConnector {
-        private EntityMetadata _rrEntity;
-        private ApplicationMetadata _rrApplication;
         private EntityMetadata _woEntity;
         private ApplicationMetadata _woApplication;
 
         public DispatchOperationHandler() {
-            _rrEntity = MetadataProvider.Entity("RELATEDRECORD", false);
-            _rrApplication = MetadataProvider.Application("RELATEDRECORD").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
             _woEntity = MetadataProvider.Entity("WORKORDER", false);
             _woApplication = MetadataProvider.Application("WORKORDER").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
         }
@@ -65,7 +62,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.ServiceRequest {
             woCrudData.SetAttribute("siteid", srCrudData.GetStringAttribute("siteid"));
             woCrudData.SetAttribute("orgid", srCrudData.GetStringAttribute("orgid"));
 
-            return Maximoengine.Create(woCrudData);
+            TargetResult result = (TargetResult)Maximoengine.Create(woCrudData);
+
+            result.SuccessMessage = "Work Order {0} sucessfully dispatched".FormatInvariant(result.Id);
+
+            return result;
         }
     }
 }

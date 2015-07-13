@@ -37,10 +37,11 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 .run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService","crudContextService", "$q",
     function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService, crudContextService, $q) {
 
-    initContext();
+    
 
     $ionicPlatform.ready(function () {
 
+        initContext();
 
         //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         //            WebView.setWebContentsDebuggingEnabled(true);

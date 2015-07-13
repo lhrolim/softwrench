@@ -42,7 +42,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Dependencies\Oracle.DataAccess.dll" />
     <Content Include="metadata\southern_reg\deploy.xml" />
     <Content Include="metadata\southern_reg\menu.mobile.xml" />
     <EmbeddedResource Include="metadata\southern_reg\menu.web.xml">
@@ -69,6 +68,7 @@
     <Content Include="web_content\southern_reg\images\signin-sm.jpg" />
     <Content Include="web_content\southern_reg\images\signin-xs.jpg" />
     <Content Include="web_content\southern_reg\images\signin-xxs.jpg" />
+    <None Include="Dependencies\Oracle.DataAccess.dll.64bck" />
     <None Include="web_content\southern_reg\styles\branding.css.map">
       <DependentUpon>branding.css</DependentUpon>
     </None>

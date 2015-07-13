@@ -18,8 +18,10 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             {
                 userId = maximoResult.UserId == null ? " " : " " + maximoResult.UserId + " ";    
             }
-            
-            if (applicationCommand != null) {
+            if (maximoResult.SuccessMessage != null)
+            {
+                successMessage = maximoResult.SuccessMessage;
+            } else if (applicationCommand != null) {
                 successMessage = applicationCommand.SuccessMessage;
             } else {
                 //TODO: refactor this

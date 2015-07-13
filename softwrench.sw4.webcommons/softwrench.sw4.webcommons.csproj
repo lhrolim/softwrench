@@ -99,9 +99,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\autocompleteserver.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\combodropdown.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\componentsfacade.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\components\lookupcomponent.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\datetime.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\components\lookupModal.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\alert_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applicationFacade.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\associationService.js" />

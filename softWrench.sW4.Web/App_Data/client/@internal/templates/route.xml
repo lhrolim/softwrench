@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+
+  <entities>
+    <entity name="routes" idAttribute="routesid">
+      <attributes>
+        <attribute name="route" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="parentchgsstatus" type="smallint" required="true" />
+        <attribute name="routesid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="routestopsbecome" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="routes" />
+      </connectorParameters>
+    </entity>
+  </entities>
+
+  <applications>
+
+    <application name="routes" title="Route" entity="routes">
+      <schemas>
+        <schema id="selection" stereotype="list" title="Routes Selection">
+          <field attribute="route" label="Route"/>
+          <field attribute="description" label="Description"/>
+        </schema>
+      </schemas>
+    </application>
+
+  </applications>
+
+</metadata>

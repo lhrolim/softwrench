@@ -298,24 +298,23 @@
         function afterChangeStoreloc(parameters) {
             var fields = parameters['fields'];
             var parentdata = parameters['parentdata'];
+
+            if (fields['storeloc'] == null) {
+                nullifyProperties(fields, ['unitcost', 'binnum', 'inventory_.issueunit', '#curbal', 'matusetransid']);
+                return;
+            }
+
             fields['lotnum'] = null;
             fields['#curbal'] = null;
 
-            var searchData = {
+            var invParams = {
                 itemnum: parentdata['itemnum'],
-                location: fields['storeloc'],
-                siteid: parentdata['siteid']
+                storeloc: fields['storeloc'],
+                siteid: parentdata['siteid'],
+                orgid: parentdata['orgid'],
+                itemsetid: fields['itemsetid']
             };
-            searchService.searchWithData("invcost", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var resultFields = resultObject[0].fields;
-                var costtype = parentdata['inventory_.costtype'];
-                if (costtype === 'STANDARD') {
-                    fields['unitcost'] = resultFields.stdcost;
-                } else if (costtype === 'AVERAGE') {
-                    fields['unitcost'] = resultFields.avgcost;
-                }
-            });
+            inventoryServiceCommons.updateInventoryCosttype({ fields: invParams }, 'storeloc');
         }
     }
 })();
