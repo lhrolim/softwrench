@@ -36,7 +36,7 @@
           <field label="New Reading" attribute="newreading" requiredexpression="true" showexpression="@meter_.domainid == null">
             <renderer type="default" params="editable=true"/>
           </field>
-          <association label="New Reading" target="newreading" labelfield="meter_.alndomain_.description" requiredexpression="true" 
+          <association label="New Reading" target="newreading" valuefield="meter_.alndomain_.value" labelfield="meter_.alndomain_.description" requiredexpression="true" 
                        showexpression="@meter_.domainid != null">
             <renderer type="lookup" />
             <dataprovider whereClause="metername = !@metername"/>
@@ -44,13 +44,14 @@
           <field label="New Reading Date" attribute="newreadingdate" requiredexpression="true" default="@now">
             <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm:ss;widthXS=30%;widthSM=20%;widthMD=15%;widthLG=20%"/>
           </field>
-          <field label="Rollover" attribute="disabledrollover" enableexpression="false">
+          <field label="Rollover" attribute="disabledrollover" enableexpression="false" hidden="true">
             <renderer type="checkbox" params="editable=true;widthXS=5%;widthSM=5%;widthMD=5%;widthLG=5%"/>
           </field>
           <field attribute="rollover" hidden="true"/>
-          <association labelfield="inspector_.displayname" valuefield="personid" target="inspector" label="Inspector" requiredexpression="true" default="@username">
-            <renderer type="lookup" params="editable=true;widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%"/>
-          </association>
+          <field attribute="inspector" default="@username" hidden="true"></field>
+<!--          <association labelfield="inspector_.displayname" valuefield="personid" target="inspector" label="Inspector" requiredexpression="true" default="@username">-->
+<!--            <renderer type="lookup" params="editable=true;widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%"/>-->
+<!--          </association>-->
           <commandbars>
             <commandgroup position="compositionbottom">
               <removecommand id="additem"/>

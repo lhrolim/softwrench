@@ -68,7 +68,7 @@
     <Content Include="web_content\southern_reg\images\signin-sm.jpg" />
     <Content Include="web_content\southern_reg\images\signin-xs.jpg" />
     <Content Include="web_content\southern_reg\images\signin-xxs.jpg" />
-    <None Include="Dependencies\Oracle.DataAccess.dll.64bck" />
+    <Content Include="Dependencies\Oracle.DataAccess.dll" />
     <None Include="web_content\southern_reg\styles\branding.css.map">
       <DependentUpon>branding.css</DependentUpon>
     </None>
