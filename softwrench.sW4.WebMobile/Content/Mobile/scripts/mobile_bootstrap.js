@@ -34,8 +34,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
 
 
-.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService","crudContextService",
-    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService,crudContextService) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService","crudContextService", "$q",
+    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService, crudContextService, $q) {
 
     
 
@@ -76,8 +76,29 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             }
 
         });
-        
 
+        // adding some functionalities to persistence
+        persistence.runSql = function (query, params) {
+            var deferred = $q.defer();
+            persistence.transaction(function (tx) {
+                tx.executeSql(query, params,
+                    function (results) {
+                        deferred.resolve(results);
+                    }, function (cause) {
+                        var msg = "An error ocurred when executing the query '{0}'".format(query);
+                        if (params && params.length > 0) msg += " with parameters {0}".format(params);
+                        var error = new Error(msg);
+                        error.cause = cause;
+                        deferred.reject(error);
+                    });
+            });
+            return deferred.promise;
+        };
+
+        // DataBase debug mode: set swdbDAO service as global variable
+        if (!!persistence.debug) {
+            window.swdbDAO = swdbDAO;
+        }
     }
 
     function initCordovaPlugins() {

@@ -152,7 +152,18 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
                     }
                     successFn(results);
                 }
-            }, errorFn);
+            }, function (err) {
+                if (errorFn) {
+                    // error callback provided: execute it passing the error object
+                    errorFn(err);
+                } else {
+                    // otherwise use default error handling: logs a rich message in 'ERROR' level
+                    var msg = "Failed to execute query \"" + query + "\"";
+                    if (args && args.length > 0) msg += " with arguments " + args;
+                    msg += " resulting in the error " + err;
+                    console.error(msg);
+                }
+            });
         };
         return that;
     };
