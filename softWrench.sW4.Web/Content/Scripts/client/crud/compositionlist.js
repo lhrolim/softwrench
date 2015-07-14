@@ -266,8 +266,9 @@ app.directive('compositionList', function (contextService, formatService, schema
                 var parameters = {};
                 parameters.clonedCompositionData = $scope.compositionData();
                 parameters.parentdata = $scope.parentdata;
+                parameters.parentschema = $scope.parentschema;
                 parameters.element = $element;
-                eventService.onload($scope, $scope.compositionlistschema, $scope.datamap, parameters);
+                eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata.fields, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
 
                 if (!$scope.paginationData) {
