@@ -3,9 +3,7 @@
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://10.50.100.101:9080/meaweb/wsdl/" />
-  <property key="maximo_DB_url" value="Data Source=10.50.100.101;Initial Catalog=CTS75MAX;User Id=MAXIMO;password=maximo1;" />
-  <property key="maximo_DB_provider" value="System.Data.SQL"/>
+  <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/>
   <!--in MB-->
@@ -27,7 +25,6 @@
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
-
   <environment key="dev">
     <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
     <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.55)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=SCREG)));User Id=MAXIMO;Password=MAXIMO;" />
@@ -44,22 +41,13 @@
     <property key="basewsURL" value="http://10.50.100.208/meaweb/wsdl/" />
   </environment>
 
-<!--  <environment key="dev">-->
-<!--    <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>-->
-<!--    <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.55)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=SCREG)));User Id=MAXIMO;Password=MAXIMO;" />-->
-<!--    <property key="swdb_provider" value="System.Data.SQL"/>-->
-<!--    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_SCR75DEV;User Id=sw;password=softwrench;" />-->
-<!--    <property key="basewsURL" value="http://10.50.100.208/meaweb/wsdl/" />-->
-<!--  </environment>-->
-<!---->
-<!--  <environment key="qa">-->
-<!--    <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>-->
-<!--    <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.53)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=SCR75DEV)));User Id=MAXIMO;Password=MAXIMO;" />-->
-<!--    <property key="swdb_provider" value="System.Data.SQL"/>-->
-<!--    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_SCR75DEV;User Id=sw;password=softwrench;" />-->
-<!--    <property key="basewsURL" value="http://10.50.100.216/meaweb/wsdl/" />-->
-<!--  </environment>-->
-
+  <environment key="prod">
+    <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
+    <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=xxx.xxx.xxx.xxx)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XXXXXX)));User Id=XXXXXX;Password=XXXXXX;" />
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="swdb_url" value="Data Source=xxx.xxx.xxx.xxx;Initial Catalog=SWDB_XXXXXX;User Id=xx;password=xxxx;" />
+    <property key="basewsURL" value="http://xxx.xxx.xxx.xxx/meaweb/wsdl/" />
+  </environment>
 
  
 </Properties>
