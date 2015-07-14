@@ -60,6 +60,9 @@ namespace softWrench.sW4.Data.Entities {
             return relationship;
         }
 
+        public static Entity TestInstance([NotNull] IDictionary<string, object> attributes) {
+            return new Entity(null, attributes, null, null);
+        }
 
         protected virtual object BlankList() {
             return new List<Entity>();

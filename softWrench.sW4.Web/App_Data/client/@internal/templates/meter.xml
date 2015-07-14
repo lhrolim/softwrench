@@ -26,15 +26,21 @@
         <schema id="composition" stereotype="compositionlist" title="Asset Meter Readings">
           <field attribute="assetmeterid" hidden="true"/>
           <field attribute="metername" hidden="true"/>
+          <field attribute="meter_.domainid" hidden="true"/>
           <field label="Meter" attribute="meter_.description"/>
           <field label="Meter Type" attribute="meter_.metertype"/>
           <field label="Last Reading" attribute="lastreading"/>
           <field label="Last Reading Date" attribute="lastreadingdate">
             <renderer type="datetime"/>
           </field>
-          <field label="New Reading" attribute="newreading" requiredexpression="true">
+          <field label="New Reading" attribute="newreading" requiredexpression="true" showexpression="@meter_.domainid == null">
             <renderer type="default" params="editable=true"/>
           </field>
+          <association label="New Reading" target="newreading" labelfield="meter_.alndomain_.description" requiredexpression="true" 
+                       showexpression="@meter_.domainid != null">
+            <renderer type="lookup" />
+            <dataprovider whereClause="metername = !@metername"/>
+          </association>
           <field label="New Reading Date" attribute="newreadingdate" requiredexpression="true" default="@now">
             <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm:ss;widthXS=30%;widthSM=20%;widthMD=15%;widthLG=20%"/>
           </field>

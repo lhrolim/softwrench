@@ -19,6 +19,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
 
@@ -90,6 +91,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (prefilterFunctionName != null) {
                 var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
                 associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
+            }
+
+            if (association.Schema.DataProvider.WhereClause != null) {
+                associationFilter.AppendWhereClause(EntityUtil.EvaluateQuery(association.Schema.DataProvider.WhereClause, originalEntity));
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);

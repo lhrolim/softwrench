@@ -4227,6 +4227,11 @@
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute from="domainid" to="domainid" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="meter" />
       </connectorParameters>

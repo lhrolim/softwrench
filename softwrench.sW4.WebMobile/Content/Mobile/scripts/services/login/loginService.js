@@ -6,7 +6,7 @@
 
         this.$cookies = $cookies;
 
-        this.login = function(userName, password) {
+        this.login = function (userName, password) {
             //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
             var loginUrl = routeService.loginURL();
             return $http.post(loginUrl, { username: userName, password: password })
@@ -15,11 +15,14 @@
                         return userdata;
                     }
                     return $q.reject(new Error("Invalid username or password"));
+                }).catch(function (error) {
+                    $log.error(error);
                 });
         };
 
-        this.checkCookieCredentials = function() {
-            return !!$cookies[".ASPXAUTH"];
+        this.checkCookieCredentials = function () {
+            return true;
+            //return !!$cookies[".ASPXAUTH"];
         };
 
     };

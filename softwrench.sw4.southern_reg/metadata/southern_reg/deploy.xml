@@ -6,7 +6,7 @@
     <environment key="dev">
       <!--http://10.50.100.150:8081/southern/-->
       <property key="iispath" value="sw_dev/sw_dev" />
-      <property key="msdeploy_url" value="https://10.50.100.208:8172/msdeploy.axd,username=cts\lrolim,password=$@$Pass7" />
+      <property key="msdeploy_url" value="https://10.50.100.208:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
     <environment key="qa">
       <property key="iispath" value="sw_qa/sw_qa" />
