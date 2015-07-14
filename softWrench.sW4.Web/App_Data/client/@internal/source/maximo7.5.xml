@@ -61,6 +61,11 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
 
+      <relationships>
+        <relationship to="assetmeter">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+      </relationships>
 
       <connectorParameters>
         <connectorParameter key="dbtable" value="MULTIASSETLOCCI" />
