@@ -122,6 +122,8 @@
                     id: schemaService.getId(datamap, schema),
                     paginatedSearch: paginatedSearch || buildPaginatedSearchDTO()
                 };
+                parameters.compositionList = compositionNames;
+
                 if (compositions && compositions.length > 0) {
                     parameters.compositionList = compositions;
                 }

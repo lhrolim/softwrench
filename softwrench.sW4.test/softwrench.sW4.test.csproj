@@ -124,6 +124,7 @@
     <Compile Include="Util\HibernateUtilTest.cs" />
     <Compile Include="Util\LoggingUtilTest.cs" />
     <Compile Include="Util\DateExtensionUtilTest.cs" />
+    <Compile Include="Util\EntityUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

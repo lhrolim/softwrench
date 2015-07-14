@@ -6,7 +6,12 @@
     var service = function () {
 
         var buildMergedDatamap = function (datamap, parentdata) {
-            var clonedDataMap = angular.copy(parentdata);
+            var toClone = parentdata;
+            if (parentdata.fields) {
+                toClone = parentdata.fields;
+            }
+
+            var clonedDataMap = angular.copy(toClone);
             if (datamap) {
                 var item = datamap;
                 for (var prop in item) {

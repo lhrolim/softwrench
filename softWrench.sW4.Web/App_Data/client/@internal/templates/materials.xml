@@ -199,6 +199,7 @@
         </list>
 
         <detail platform="web">
+          <event type="onload" service="scannerdetectionService" method="initMaterialScanningListener" />
           <field attribute="matusetransid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
           <field attribute="siteid" defaultexpression="$.previousdata.fields['siteid']" hidden="true" />

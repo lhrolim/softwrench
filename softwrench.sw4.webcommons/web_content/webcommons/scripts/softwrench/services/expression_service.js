@@ -337,6 +337,10 @@
             placeholder = placeholder || "datamap.";
 
             var variables = this.getVariablesBeforeJordanFuckedUp(expression);
+            if (variables == null) {
+                return null;
+            }
+
             var collWatch = '[';
             for (var i = 0; i < variables.length; i++) {
                 collWatch += placeholder + variables[i];

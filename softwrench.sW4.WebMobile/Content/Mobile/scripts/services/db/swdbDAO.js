@@ -109,7 +109,8 @@ mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, disp
                 data: "JSON"
             });
 
-            persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
+//            persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
+            persistence.debug = true;
             persistence.schemaSync();
 
         },

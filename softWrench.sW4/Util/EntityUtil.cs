@@ -1,4 +1,8 @@
-﻿namespace softWrench.sW4.Util {
+﻿using System;
+using cts.commons.portable.Util;
+using softwrench.sW4.Shared2.Data;
+
+namespace softWrench.sW4.Util {
 
     class EntityUtil {
         public static bool IsRelationshipNameEquals(string firstName, string secondName) {
@@ -35,6 +39,31 @@
 
         public static string GetQueryReplacingMarker(string query, string entityName) {
             return query.Replace("!@", entityName + ".");
+        }
+
+        public static string EvaluateQuery(string query, AttributeHolder holder) {
+            if (!query.Contains("!@")) {
+                return query;
+            }
+
+            var substrings = StringUtil.GetSubStrings(query, "!@");
+
+            foreach (var keyword in substrings) {
+                var value = holder.GetAttribute(keyword.Substring(2));
+
+                if (value == null) {
+                    //TODO: improve this to allow spaces, using a regex instead
+                    query = query.Replace(" = " + keyword, " is null ");
+                } else if (value is string) {
+                    query = query.Replace("'" + keyword + "'", "'" + value + "'").Replace(keyword, "'" + value + "'");
+                } else if (value is Int32) {
+                    query = query.Replace("'" + keyword + "'", "" + value).Replace(keyword, "" + value);
+                }
+            }
+
+            return query;
+
+
         }
 
 

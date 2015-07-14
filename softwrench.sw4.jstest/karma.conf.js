@@ -26,6 +26,7 @@ module.exports = function (config) {
             '..//softWrench.sW4.Web//Content//Templates/**/*.js',
             '..//softWrench.sW4.Web//Content//Templates/**/*.html',
             '..//softWrench.sW4.Web//Content//Scripts//customers/**/*.js',
+            '..//softWrench.sW4.Web//Content//modules//**/*.js',
             '..//softWrench.sW4.Webcommons//web_content//webcommons//scripts//softwrench//sharedservices_module.js',
             '..//softWrench.sW4.Webcommons//web_content//webcommons//scripts//softwrench/**/*.js',
             '..//softWrench.sW4.dashboard//web_content//dashboard//scripts//**/*.js',
