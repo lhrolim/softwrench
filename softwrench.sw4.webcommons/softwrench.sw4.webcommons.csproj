@@ -77,6 +77,7 @@
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\spin_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_commons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invtransfer_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\meterreading\meterreading_service.js" />

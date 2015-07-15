@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService) {
     /// <summary>
     /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
     /// 
@@ -37,7 +37,9 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                         var tabId = $(this).data('tabid');
 
                         log.trace('lazy loading tab {0}'.format(tabId));
+                        spinService.stop({ compositionSpin: true });
                         $rootScope.$broadcast('sw_lazyloadtab', tabId);
+                        
                     });
 
                 });
