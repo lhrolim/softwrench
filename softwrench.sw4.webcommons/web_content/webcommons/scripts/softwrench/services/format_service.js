@@ -1,11 +1,14 @@
-﻿modules.webcommons.factory('formatService', function ($filter, i18NService, dispatcherService) {
+﻿(function(angular) {
+    "use strict";
+
+modules.webcommons.factory('formatService', function ($filter, i18NService, dispatcherService) {
 
     var doFormatDate = function (value, dateFormat, forceConversion) {
         if (value == null) {
             return null;
         }
 
-        if (value.equalsAny("@now", "@currentdatetime", "@currentdate")) {
+        if (angular.isString(value) && value.equalsAny("@now", "@currentdatetime", "@currentdate")) {
             return $filter('date')(new Date(), dateFormat);
         }
 
@@ -177,3 +180,5 @@
     };
 
 });
+
+})(angular);
