@@ -289,7 +289,6 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 return;
             }
 
-            //            $rootScope.avoidspin = true;
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
@@ -369,7 +368,6 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, and so the listeners
                         contextService.insertIntoContext("associationsresolved", true, true);
                     }, 100, false);
-                    $rootScope.avoidspin = false;
                     scope.$broadcast("sw_associationsupdated", scope.associationOptions);
 
                     //TODO: Is this needed, I couldn't find where it's used, I was not able to test if needed

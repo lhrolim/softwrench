@@ -91,7 +91,7 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
     }
 });
 
-app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope) {
+app.directive('compositionListWrapper', function ($compile, i18NService, $log, compositionService,spinService) {
     return {
         restrict: 'E',
         replace: true,
@@ -149,6 +149,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             var isInline = scope.metadata.inline;
 
             if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
+                //inline compositions should load automatically
                 doLoad();
             }
 
@@ -157,9 +158,16 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             }
 
             scope.$on("sw_lazyloadtab", function (event, tabid) {
-                if (scope.tabid == tabid && !scope.loaded) {
-                    doLoad();
+                if (scope.tabid == tabid) {
+                    if (!compositionService.isCompositionLodaded(scope.tabid)) {
+                        spinService.start({ compositionSpin: true });
+                    }
+                    if (!scope.loaded) {
+                        doLoad();
+                    }
+
                 }
+
             });
 
         }
@@ -190,7 +198,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
         controller: function ($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
-            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons) {
+            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService) {
 
             $scope.lookupObj = {};
 
@@ -275,7 +283,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //case the tab is loaded after the event result, the event would not be present on the screen
                     $scope.paginationData = contextService.get("compositionpagination_{0}".format($scope.relationship), true, true);
                 }
-                
+
 
                 if (!$scope.isBatch()) {
                     if ($scope.hasDetailSchema()) {
@@ -301,6 +309,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //this is not the data this tab is interested
                     return;
                 }
+                spinService.stop({compositionSpin:true});
                 $scope.paginationData = compositiondata[$scope.relationship].paginationData;
                 $scope.compositiondata = compositiondata[$scope.relationship].list;
                 init();
@@ -347,8 +356,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return result;
             };
 
-         
-            
+
+
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
