@@ -117,17 +117,15 @@ app.directive("ngEnabled", function () {
     };
 });
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService) {
 
     $scope.$name = 'LayoutController';
     var log = $log.getInstance('sw4.LayoutController');
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
-        if (!$rootScope.avoidspin && !$rootScope.showingspin) {
-            spin = startSpin(savingMain);
-            $rootScope.showingspin = true;
-        }
+        spinService.start({ savingDetail: savingMain });
+
     });
 
     $scope.isDesktop = function () {
@@ -135,25 +133,19 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     };
 
     $rootScope.$on('sw_ajaxend', function (data) {
-        if (spin != undefined) {
-            spin.stop();
-            $rootScope.showingspin = false;
-        }
+        spinService.stop();
         $rootScope.savingMain = undefined;
         fixHeaderService.callWindowResize();
     });
 
     $rootScope.$on('sw_ajaxerror', function (data) {
-        if (spin != undefined) {
-            spin.stop();
-        }
+        spinService.stop();
         $rootScope.savingMain = undefined;
         fixHeaderService.callWindowResize();
     });
 
     $scope.$on('sw_titlechanged', function (titlechangedevent, title) {
         $scope.title = title;
-
         if (title) {
             window.document.title = title + ' | softWrench';
         } else {

@@ -180,13 +180,6 @@ app.directive('activitystream', function(contextService) {
                 var parameters = {};
                 parameters.role = 'allRole';
 
-//                //turn off spinner, if not alread off
-//                if (!$rootScope.avoidspin) {
-//                    rootAvoidingSpin = false;
-//                    $rootScope.avoidspin = silent;
-//                } else {
-//                    rootAvoidingSpin = true;
-//                }
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl, { avoidspin: true }).success(
