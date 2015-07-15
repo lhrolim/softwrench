@@ -101,6 +101,7 @@ persistence.get = function(arg1, arg2) {
 };
 
 
+
 (function () {
     var entityMeta = {};
     var entityClassCache = {};
@@ -384,6 +385,20 @@ persistence.get = function(arg1, arg2) {
             }
           });
       }
+    };
+
+    /**
+     * Logs a rich message in 'ERROR' level
+     * 
+     * @param String query 
+     * @param [Object] args 
+     * @param Object error 
+     */
+    persistence.defaultTransactionErrorHandler = function(query, args, error) {
+        var msg = "Failed to execute query \"" + query + "\"";
+        if (!!args) msg += " with arguments " + args;
+        msg += " resulting in the error " + error;
+        console.error(msg);
     };
 
     /**

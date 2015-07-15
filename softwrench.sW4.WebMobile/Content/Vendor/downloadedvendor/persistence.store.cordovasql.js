@@ -81,19 +81,6 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
         return that;
     };
 
-    /**
-     * Logs a rich message in 'ERROR' level
-     * 
-     * @param String query 
-     * @param [Object] args 
-     * @param Object error 
-     */
-    var defaultTransactionErrorHandler = function (query, args, error) {
-        var msg = "Failed to execute query \"" + query + "\"";
-        if (args && args.length > 0) msg += " with arguments " + args;
-        msg += " resulting in the error " + error;
-        console.error(msg);
-    }
 
     /**
      * Run transaction on Sqlite plugin database
@@ -121,7 +108,7 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
                     errorFn(err);
                 } else {
                     // otherwise use default error handling: logs a rich message in 'ERROR' level
-                    defaultTransactionErrorHandler(query, args, err);
+                    persistence.defaultTransactionErrorHandler(query, args, err);
                 }
             });
         };
@@ -180,7 +167,7 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
                     errorFn(err);
                 } else {
                     // otherwise use default error handling: logs a rich message in 'ERROR' level
-                    defaultTransactionErrorHandler(query, args, err);
+                    persistence.defaultTransactionErrorHandler(query, args, err);
                 }
             });
         };

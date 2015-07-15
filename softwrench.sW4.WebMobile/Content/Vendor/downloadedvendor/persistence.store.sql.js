@@ -440,21 +440,26 @@ function config(persistence, dialect) {
      */
     function executeQueriesSeq(tx, queries, callback) {
         // queries.reverse();
-        var callbackArgs = [];
-        for (var i = 3; i < arguments.length; i++) {
-            callbackArgs.push(arguments[i]);
-        }
-        persistence.asyncForEach(queries, function (queryTuple, callback) {
-            tx.executeSql(queryTuple[0], queryTuple[1], callback, function (_, err) {
-                console.log(err.message);
-                callback(_, err);
-            });
+        //var callbackArgs = [];
+        //for (var i = 3; i < arguments.length; i++) {
+        //    callbackArgs.push(arguments[i]);
+        //}
+        persistence.asyncForEach(queries, function (queryTuple, next) {
+            var statement = queryTuple[0];
+            var args = queryTuple[1];
+            tx.executeSql(statement, args,
+                next, // success fn: go to next element
+                function (err) { // error fn
+                    persistence.defaultTransactionErrorHandler(statement, args, err);
+                    next(null, err); // next element with null result
+                });
         }, function (result, err) {
-            if (err && callback) {
-                callback(result, err);
-                return;
-            }
-            if (callback) callback.apply(null, callbackArgs);
+            //if (err && callback) {
+            //    callback(result, err);
+            //    return;
+            //}
+            //if (callback) callback.apply(null, callbackArgs);
+            if (callback) callback(result, err);
         });
     }
 

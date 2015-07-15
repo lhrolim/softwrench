@@ -23,21 +23,18 @@
                 var application = compositionDataReturned[i];
                 var newDataMaps = application.newdataMaps;
                 log.debug("inserting {0} new compositions for {1}".format(newDataMaps.length, application.applicationName));
-                var idsToDelete = "";
+                var idsToDelete = [];
                 var tempArray = [];
                 for (var j = 0; j < newDataMaps.length; j++) {
                     var datamap = newDataMaps[j];
                     var id = persistence.createUUID();
-                    var query = entities.CompositionDataEntry.insertionQueryPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
-                    idsToDelete += ("'" + datamap.id + "'");
-                    if (j != newDataMaps.length - 1) {
-                        idsToDelete += ",";
-                    }
+                    var query = {query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id]};
+                    idsToDelete.push("'" + datamap.id + "'");
                     queryArray.push(query);
                 }
                 //let´s delete the old compositions first, to avoid any chance of errors due to server side updates
                 //however persistence.js reverts the array... damn it
-                queryArray.push(entities.CompositionDataEntry.syncdeletionQuery.format(idsToDelete));
+                queryArray.push({ query: entities.CompositionDataEntry.syncdeletionQuery, args: [idsToDelete] });
             }
             return queryArray;
         },

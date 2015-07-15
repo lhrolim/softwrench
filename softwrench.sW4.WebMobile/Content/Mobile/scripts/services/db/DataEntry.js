@@ -34,13 +34,13 @@ entities.DataEntry.hasMany('operations', entities.Operation, 'entry');
 entities.DataEntry.index(['application', 'remoteid'], { unique: true });
 
 //query to be performed after synchronization has occurred, for new items
-entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','originaldatamap','datamap','pending','isDirty','remoteId','rowstamp','id') values ('{0}','{1}','{1}',0,0,'{2}','{3}','{4}')";
+entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','originaldatamap','datamap','pending','isDirty','remoteId','rowstamp','id') values (:p0,:p1,:p1,0,0,:p2,:p3,:p4)";
 //query to be performed after synchronization has occurred, for existing items
-entities.DataEntry.updateQueryPattern = "update DataEntry set 'originaldatamap'='{0}','datamap'='{0}','pending'=0,'rowstamp'='{1}' where 'remoteId'='{2}' and 'application'='{3}'";
-entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in({0}) and 'application'='{1}'";
+entities.DataEntry.updateQueryPattern = "update DataEntry set 'originaldatamap'=:p0,'datamap'=:p0,'pending'=0,'rowstamp'=':p1 where 'remoteId'=:p2 and 'application'=:p3";
+entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in(?) and 'application'=?";
 
-entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'='{0}','isDirty'=1 where id ='{1}'";
-entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id') values ('{0}','{1}',1,0,null,null,'{2}')";
+entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1 where id =?";
+entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id') values (?,?,1,0,null,null,?)";
 
 //here because of the order of the files
 entities.BatchItem.hasOne('dataentry', entities.DataEntry);
