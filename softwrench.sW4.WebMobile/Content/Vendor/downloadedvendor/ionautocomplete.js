@@ -168,9 +168,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         }
                     };
 
-                    // watcher on the search field model to update the list according to the input
-                    compiledTemplate.scope.$watch('searchQuery', function (query) {
-
+                    function doQuery(query) {
                         // right away return if the query is undefined to not call the items method for nothing
                         if (query === undefined) {
                             return;
@@ -218,6 +216,11 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                                 return $q.reject(error);
                             });
                         }
+                    }
+
+                    // watcher on the search field model to update the list according to the input
+                    compiledTemplate.scope.$watch('searchQuery', function (query) {
+                        doQuery(query);
                     });
 
                     var displaySearchContainer = function () {
@@ -245,7 +248,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     var onTouchStart = function (e) {
                         scrolling.moved = false;
                         // Use originalEvent when available, fix compatibility with jQuery
-                        if (typeof (e.originalEvent) !== 'undefined') {
+                        if (typeof(e.originalEvent) !== 'undefined') {
                             e = e.originalEvent;
                         }
                         scrolling.startX = e.touches[0].clientX;
@@ -255,7 +258,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     // check if the finger moves more than 10px and set the moved flag to true
                     var onTouchMove = function (e) {
                         // Use originalEvent when available, fix compatibility with jQuery
-                        if (typeof (e.originalEvent) !== 'undefined') {
+                        if (typeof(e.originalEvent) !== 'undefined') {
                             e = e.originalEvent;
                         }
                         if (Math.abs(e.touches[0].clientX - scrolling.startX) > 10 ||
@@ -275,13 +278,10 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         event.preventDefault();
                         event.stopPropagation();
 
-                        // set the searchquery to blank if nothing selected so shows full list.
-                        if (this.value == "") {
-                            compiledTemplate.scope.searchQuery = "";
-                        }
-
                         // show the ionic backdrop and the search container
                         displaySearchContainer();
+
+                        doQuery("");
 
                         // focus on the search input field
                         if (searchInputElement.length > 0) {
@@ -307,7 +307,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     // function to call the model to item method and select the item
                     var resolveAndSelectModelItem = function (modelValue) {
                         // convert the given function to a $q promise to support promises too
-                        var promise = $q.when(compiledTemplate.scope.modelToItemMethod({ modelValue: modelValue }));
+                        var promise = $q.when(compiledTemplate.scope.modelToItemMethod({modelValue: modelValue}));
 
                         promise.then(function (promiseData) {
                             // select the item which are returned by the model to item method
@@ -348,9 +348,9 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     if (scope.itemValueKey) {
                         element.val(scope.getItemValue(ngModel.$viewValue, scope.itemValueKey));
                     } else {
-                        element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
+                    element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
                     }
-
+                    
                 };
 
                 // set the view value of the model
