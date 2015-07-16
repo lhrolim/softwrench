@@ -71,7 +71,9 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                     }
                     if (arg) {
                         args.push(arg);
-                    }
+                    } else {
+                        args.push(parameterName);
+                    } 
                     
                 });
             }

@@ -35,6 +35,13 @@
             <renderer type="checkbox"/>
           </field>
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
+
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="&lt;filter"/>
+            </commandgroup>
+
+          </commandbars>
         </schema>
 
         <schema id="detail" stereotype="detail" title="Person Detail">
