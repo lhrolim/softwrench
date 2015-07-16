@@ -17,6 +17,7 @@
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@solution.xml"/>
   </templates>
 
   <entities>
