@@ -17,20 +17,15 @@ namespace softwrench.sw4.offlineserver.services {
         //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
         //TODO:(2) this won´t bring compositions whose joined tables were updated, should be a minor bug, since compositions are rarely updated after all.
         private const string BothQueryTemplate = "({0} in ({1}) and Cast({4}.rowstamp AS BIGINT)  > {2}) or ({0} in ({3}))";
+        private const string NewRowstampTemplate = "Cast({0}.rowstamp AS BIGINT)  > {1}";
         private const string AllNewTemplate = "{0} in ({1})";
 
 
-        protected override SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
-          CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
-            var dto = base.BuildSearchRequestDto(parameter, matchingResultWrapper, paginatedSearch);
-
-            return dto;
-        }
 
         protected override void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper,
-            InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute, SearchRequestDto searchRequestDto,string relationshipName) {
+            InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute, SearchRequestDto searchRequestDto, string relationshipName) {
             if (!lookupAttribute.Primary) {
-                base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto,relationshipName);
+                base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto, relationshipName);
                 return;
             }
 
@@ -41,20 +36,20 @@ namespace softwrench.sw4.offlineserver.services {
                 base.BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto, relationshipName);
                 //if no new parent entities were returned, we just need to bring these who have a bigger rowstamp than the client data.
                 if (parameter.Rowstamp != null) {
-                    searchRequestDto.AppendSearchEntry(RowStampUtil.RowstampColumnName, ">{0}".Fmt(parameter.Rowstamp));
+                    searchRequestDto.AppendWhereClauseFormat(NewRowstampTemplate, relationshipName, parameter.Rowstamp);
                 }
                 return;
             }
-            var newIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.NewEntities,lookupAttribute.From);
+            var newIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.NewEntities, lookupAttribute.From);
             var columnName = lookupAttribute.To;
 
-            if (!offParameter.ExistingEntities.Any()){
+            if (!offParameter.ExistingEntities.Any()) {
                 //first sync scenario
-                searchRequestDto.AppendWhereClauseFormat(AllNewTemplate,columnName, newIdsForQuery);
+                searchRequestDto.AppendWhereClauseFormat(AllNewTemplate, columnName, newIdsForQuery);
                 return;
             }
 
-            
+
             var rowstamp = parameter.Rowstamp;
 
 

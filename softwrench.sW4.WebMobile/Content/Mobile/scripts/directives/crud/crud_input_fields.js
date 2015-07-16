@@ -48,7 +48,7 @@ softwrench.directive('crudInputFields', function ($log, fieldService, crudContex
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/Content/Mobile/templates/directives/crud/crud_input_fields.html',
+        templateUrl: 'Content/Mobile/templates/directives/crud/crud_input_fields.html',
         scope: {
             schema: '=',
             datamap: '=',

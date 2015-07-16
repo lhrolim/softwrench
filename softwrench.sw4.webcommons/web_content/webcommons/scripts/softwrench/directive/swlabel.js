@@ -7,7 +7,7 @@ app.directive('swlabel', function (i18NService, contextService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: contextService.getResourceUrl('/Content/Shared/webcommons/templates/swlabel.html'),
+        templateUrl: contextService.getResourceUrl('Content/Shared/webcommons/templates/swlabel.html'),
         scope: {
             i18nKey: '@',
             i18nHelpKey: '@',

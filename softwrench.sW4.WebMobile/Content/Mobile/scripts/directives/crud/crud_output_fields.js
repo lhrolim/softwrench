@@ -3,7 +3,7 @@
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/Content/Mobile/templates/directives/crud/crud_output_fields.html',
+        templateUrl: 'Content/Mobile/templates/directives/crud/crud_output_fields.html',
         scope: {
             displayables: '=',
             datamap:'=',
