@@ -9,8 +9,6 @@
   <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
     <application id="WO" icon="fa fa-table" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
     <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
-    <link title="Uol" link="www.uol.com.br"/>
-
     <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
   </container>
   <container title="Solutions" icon="fa fa-book" role="solution" id="solution">
