@@ -148,17 +148,26 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             url: '/home',
             views: {
                 'main': {
-                    templateUrl: 'Content/Mobile/templates/home.html',
-                    controller: 'HomeController'
+                    templateUrl: 'Content/Mobile/templates/syncoperation_detail.html',
+                    controller: 'SyncOperationDetailController'
                 }
             }
         })
-        .state('main.syncdetail', {
-            url: '/syncdetail/{id}',
+        .state('main.syncoperationhistory', {
+            url: '/syncoperationhistory',
             views: {
                 'main': {
-                    templateUrl: 'Content/Mobile/templates/syncdetail.html',
-                    controller: 'SyncDetailController'
+                    templateUrl: 'Content/Mobile/templates/syncoperation_list.html',
+                    controller: 'SyncOperationHistoryController'
+                }
+            }
+        })
+        .state('main.syncoperationdetail', {
+            url: '/syncoperationdetail/{id}',
+            views: {
+                'main': {
+                    templateUrl: 'Content/Mobile/templates/syncoperation_detail.html',
+                    controller: 'SyncOperationDetailController'
                 }
             }
         })
