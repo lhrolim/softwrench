@@ -120,6 +120,7 @@
     <Compile Include="Metadata\FieldRendererMetadata.cs" />
     <Compile Include="Metadata\IDefinition.cs" />
     <Compile Include="Metadata\IPCLCloneable.cs" />
+    <Compile Include="Metadata\Menu\ExternalLinkMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ActionMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ApplicationMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\Containers\MenuContainerDefinition.cs" />

@@ -12,7 +12,7 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
         link: function (scope, element, attr) {
             log.debug(scope.menu);
 
-            scope.$watch('title', function (newValue,oldValue) {
+            scope.$watch('title', function (newValue, oldValue) {
                 var template = (getBreadCrumbHTML(log, scope.menu, scope.title));
                 if (template != null) {
                     var content = $compile(template)(scope);
@@ -125,14 +125,16 @@ function findCurrentPage(log, leafs, current, parent) {
                 if (newPath) {
                     path += '<a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                       path += '<a ng-click="';
+                    path += '<a ng-click="';
 
                     if (leafs[id].type == 'ActionMenuItemDefinition') {
                         path += 'doAction';
                     } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
                         path += 'goToApplication';
+                    } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
+                        path += '<a target="_blank" href="{0}"'.format(leaf.link);
                     }
-                    
+
                     path += '(\'' + leafs[id].title + '\')">';
                 }
 
@@ -204,8 +206,9 @@ function getChildMenu(log, leafs, parent) {
     if (searchLeafs != null) {
         path += '<ul class="dropdown-menu" role="menu" bc-menu>';
         for (var id in searchLeafs) {
-            if (searchLeafs[id].title != null) {
-                var childMenu = getChildMenu(log, searchLeafs[id].leafs, searchLeafs[id]);
+            var leaf = searchLeafs[id];
+            if (leaf.title != null) {
+                var childMenu = getChildMenu(log, leaf.leafs, leaf);
 
                 //if child menu found, display as submenu
                 if (childMenu) {
@@ -213,17 +216,23 @@ function getChildMenu(log, leafs, parent) {
                 } else {
                     path += '<li><a bc-menu-item ng-click="';
 
-                    if (searchLeafs[id].type == 'ActionMenuItemDefinition') {
+                    if (leaf.type == 'ActionMenuItemDefinition') {
                         path += 'doAction';
-                    } else if (searchLeafs[id].type == 'ApplicationMenuItemDefinition') {
+                    } else if (leaf.type == 'ApplicationMenuItemDefinition') {
                         path += 'goToApplication';
+                    } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
+                        if (!leaf.link.startsWith("http")) {
+                            leaf.link = "http://" + leaf.link;
+                        }
+
+                        path += '\" target="_blank" href="{0}"'.format(leaf.link);
                     }
-                    
-                    path += '(\'' + searchLeafs[id].title + '\')">';
+
+                    path += '(\'' + leaf.title + '\')">';
                 }
 
                 //build the menu item
-                path += '<i class="' + searchLeafs[id].icon + '"></i>&ensp;' + searchLeafs[id].title;
+                path += '<i class="' + leaf.icon + '"></i>&ensp;' + leaf.title;
                 path += '</a>';
 
                 //add the child menu items
