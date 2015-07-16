@@ -346,7 +346,18 @@ mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, disp
             return promise;
         },
 
-
+        findSingleByQuery: function(entity, query, options) {
+            var optionsToUse = angular.copy(options);
+            optionsToUse.pagesize = 1;
+            optionsToUse.pageNumber = 1;
+            return this.findByQuery(entity, query, options)
+                .then(function (results) {
+                    if (!results || results.length <= 0) {
+                        return null;
+                    }
+                    return results[0];
+                });
+        }
 
 
     };
