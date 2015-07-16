@@ -30,7 +30,7 @@
                     for (var j = 0; j < dataToInsert.length; j++) {
                         var datamap = dataToInsert[j];
                         var id = persistence.createUUID();
-                        var query = entities.AssociationData.InsertionPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
+                        var query = { query: entities.AssociationData.InsertionPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id] };
                         queryArray.push(query);
                     }
                 }

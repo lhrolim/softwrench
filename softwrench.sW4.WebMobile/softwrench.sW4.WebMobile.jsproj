@@ -128,6 +128,7 @@
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudFilterContextService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
+    <Content Include="Content\Mobile\scripts\services\data\datamapSanitizationService.js" />
     <Content Include="Content\Mobile\scripts\services\data\operationService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineSaveService.js" />
     <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />

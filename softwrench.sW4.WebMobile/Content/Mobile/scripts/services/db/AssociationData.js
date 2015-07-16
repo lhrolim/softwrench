@@ -50,7 +50,7 @@ entities.AssociationCache = persistence.define('AssociationCache', {
 ///
 /// Inserts or updates associationData based upon the uniqueness of the entries
 ///
-entities.AssociationData.InsertionPattern = "INSERT OR REPLACE INTO AssociationData (application,datamap,remoteId,rowstamp,id) values ('{0}','{1}','{2}','{3}','{4}')";
+entities.AssociationData.InsertionPattern = "INSERT OR REPLACE INTO AssociationData (application,datamap,remoteId,rowstamp,id) values (?,?,?,?,?)";
 
 entities.AssociationData.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from AssociationData group by application";
 

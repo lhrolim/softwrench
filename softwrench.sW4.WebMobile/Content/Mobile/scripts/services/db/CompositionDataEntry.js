@@ -17,9 +17,9 @@ entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
     rowstamp: 'INT',
 });
 
-entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',0,'{2}','{3}','{4}')";
+entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values (?,?,0,?,?,?)";
 entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry set datamap='{0}' rowstamp='{1}' where remoteId='{2}' and applicaton='{3}'";
-entities.CompositionDataEntry.syncdeletionQuery = "delete from CompositionDataEntry where remoteId in ({0})";
+entities.CompositionDataEntry.syncdeletionQuery = "delete from CompositionDataEntry where remoteId in (?)";
 
 
 entities.CompositionDataEntry.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from CompositionDataEntry  group by application";

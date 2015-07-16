@@ -109,8 +109,8 @@ mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, disp
                 data: "JSON"
             });
 
-//            persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
-            persistence.debug = true;
+            persistence.debug = "true" == (sessionStorage["logsql"]) || sessionStorage.loglevel=="debug" ;
+//            persistence.debug = true;
             persistence.schemaSync();
 
         },
@@ -308,29 +308,39 @@ mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, disp
 
         executeQuery: function (query, tx) {
             return this.executeQueries([query], tx);
-
         },
 
         executeQueries: function (queriesToExecute, tx) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
-            var queries = [];
-            for (var i = 0; i < queriesToExecute.length; i++) {
-                var query = queriesToExecute[i];
-                var queryTuple = [];
-                queryTuple.push(query);
-                queries.push(queryTuple);
-            }
+
+            var queries = queriesToExecute.map(function (query) {
+                if (angular.isString(query)) {
+                    // using a formatted query String: tuple as [formatted query String, undefined]
+                    // TODO: deprecate it
+                    return[query];
+                }
+                // using "prepared statement": tuple as [statement, query arguments]
+                return [query.query, query.args];
+            });
+            
             if (!tx) {
                 persistence.transaction(function (closureTx) {
-                    persistence.executeQueriesSeq(closureTx, queries, function () {
-                        deferred.resolve();
+                    persistence.executeQueriesSeq(closureTx, queries, function (res, err) {
+                        if (err) {
+                            deferred.reject(err);
+                        } else {
+                            deferred.resolve(res);
+                        }
                     });
                 });
             } else {
-
-                persistence.executeQueriesSeq(tx, queries, function () {
-                    deferred.resolve();
+                persistence.executeQueriesSeq(tx, queries, function (res, err) {
+                    if (err) {
+                        deferred.reject(err);
+                    } else {
+                        deferred.resolve(res);
+                    }
                 });
             }
             return promise;

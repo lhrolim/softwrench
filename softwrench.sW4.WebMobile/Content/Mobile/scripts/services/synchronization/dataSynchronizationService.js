@@ -1,120 +1,125 @@
-﻿var buildIdsString = function (deletedRecordIds) {
-    var ids = "";
-    for (var i = 0; i < deletedRecordIds.length; i++) {
-        ids += "'" + deletedRecordIds[i] + "'";
-        if (i != deletedRecordIds.length - 1) {
-            ids += ",";
-        }
-    }
-    return ids;
-};
+﻿(function (mobileServices) {
+    "use strict";
 
-mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService) {
-
-    var api = {
-        syncData : syncData
+    var buildIdsString = function (deletedRecordIds) {
+        var ids = [];
+        angular.forEach(deletedRecordIds, function(id) {
+            ids.push("'{0}'".format(id));
+        });
+        return ids;
     };
 
-    return api;
-   
-    function syncData () {
-        var currentApps = metadataModelService.getApplicationNames();
-        var firstTime = currentApps.length == 0;
-        var params;
-        if (firstTime) {
-            //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
-            params = {
-                clientCurrentTopLevelApps: currentApps,
-                returnNewApps: true
-            };
-            //single server call
-            return restService.postPromise("Mobile", "PullNewData", params).then(resultHandlePromise);
-        }
+    var service = function($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, datamapSanitizationService) {
 
-        return rowstampService.generateCompositionRowstampMap()
-            .then(function (compositionMap) {
-                var httpPromises = [];
-                for (var i = 0; i < currentApps.length; i++) {
-                    var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps, compositionMap);
-                    httpPromises.push(promise);
+
+        function syncData() {
+            var currentApps = metadataModelService.getApplicationNames();
+            var firstTime = currentApps.length == 0;
+            var params;
+            if (firstTime) {
+                //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
+                params = {
+                    clientCurrentTopLevelApps: currentApps,
+                    returnNewApps: true
+                };
+                //single server call
+                return restService.postPromise("Mobile", "PullNewData", params).then(resultHandlePromise);
+            }
+
+            return rowstampService.generateCompositionRowstampMap()
+                .then(function(compositionMap) {
+                    var httpPromises = [];
+                    for (var i = 0; i < currentApps.length; i++) {
+                        var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps, compositionMap);
+                        httpPromises.push(promise);
+                    }
+                    return $q.all(httpPromises);
+                });
+        };
+
+        function resultHandlePromise(result) {
+            var log = $log.get("dataSynchronizationService#createAppSyncPromise");
+            var topApplicationData = result.data.topApplicationData;
+            var compositionData = result.data.compositionData;
+            if (result.data.isEmpty) {
+                log.info("no new data returned from the server");
+                //interrupting async calls
+                return $q.reject();
+            }
+
+            log.info("receiving new topLevel data from the server");
+            var queryArray = [];
+            for (var i = 0; i < topApplicationData.length; i++) {
+                //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
+                var application = topApplicationData[i];
+                var newDataMaps = application.newdataMaps;
+                var updatedDataMaps = application.updatedDataMaps;
+                var deletedIds = application.deletedRecordIds;
+                log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
+                for (var j = 0; j < newDataMaps.length; j++) {
+                    var newDataMap = newDataMaps[j];
+                    var id = persistence.createUUID();
+                    var newJson = JSON.stringify(newDataMap.fields);
+                    //newJson = datamapSanitizationService.sanitize(newJson);
+
+                    var insertQuery = {query: entities.DataEntry.insertionQueryPattern, args:[newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id]};
+                    queryArray.push(insertQuery);
                 }
-                return $q.all(httpPromises);
+                for (j = 0; j < updatedDataMaps.length; j++) {
+                    var updateDataMap = updatedDataMaps[j];
+                    var updateJson = JSON.stringify(updateDataMap.fields);
+                    //updateJson = datamapSanitizationService.sanitize(updateJson);
+
+                    var updateQuery = {query: entities.DataEntry.updateQueryPattern, args:[updateJson, String(updateDataMap.approwstamp), updateDataMap.id, updateDataMap.application]};
+                    queryArray.push(updateQuery);
+                }
+
+                if (deletedIds.length > 0) {
+                    var deleteQuery = { query: entities.DataEntry.deleteQueryPattern, args: [buildIdsString(deletedIds), application.applicationName] };
+                    queryArray.push(deleteQuery);
+                }
+            }
+            //ignoring composition number to SyncOperation table
+            var numberOfDownloadedItems = queryArray.length;
+            queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
+            return swdbDAO.executeQueries(queryArray).then(function() {
+                return $q.when(numberOfDownloadedItems);
+            }).catch(function(err) {
+                if (!err) {
+                    //normal interruption
+                    return $q.when(0);
+                }
+                return $q.reject(err);
             });
+        };
 
 
-    }
+        function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
+            var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
-    function resultHandlePromise(result) {
-        var log = $log.get("dataSynchronizationService#createAppSyncPromise");
-        var topApplicationData = result.data.topApplicationData;
-        var compositionData = result.data.compositionData;
-        if (result.data.isEmpty) {
-            log.info("no new data returned from the server");
-            //interrupting async calls
-            return $q.reject();
-        }
-
-        log.info("receiving new topLevel data from the server");
-        var queryArray = [];
-        for (var i = 0; i < topApplicationData.length; i++) {
-            //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
-            var application = topApplicationData[i];
-            var newDataMaps = application.newdataMaps;
-            var updatedDataMaps = application.updatedDataMaps;
-            var deletedIds = application.deletedRecordIds;
-            log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
-            for (var j = 0; j < newDataMaps.length; j++) {
-
-                var datamap = newDataMaps[j];
-                var id = persistence.createUUID();
-                var query = entities.DataEntry.insertionQueryPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
-                queryArray.push(query);
+            var params = {
+                applicationName: app,
+                clientCurrentTopLevelApps: currentApps,
+                returnNewApps: firstInLoop
             }
-            for (j = 0; j < updatedDataMaps.length; j++) {
-                datamap = updatedDataMaps[j];
-                query = entities.DataEntry.updateQueryPattern.format(JSON.stringify(datamap.fields), '' + datamap.approwstamp, datamap.id, datamap.application);
-                queryArray.push(query);
-            }
+            return rowstampService.generateRowstampMap(app)
+                .then(function(rowstampMap) {
+                    //see samplerequest.json
+                    rowstampMap.compositionmap = compositionMap;
+                    log.debug("invoking service to get new data");
+                    return restService.postPromise("Mobile", "PullNewData", params, rowstampMap);
+                }).then(resultHandlePromise);
+        };
 
-            if (deletedIds.length > 0) {
-                query = entities.DataEntry.deleteQueryPattern.format(buildIdsString(deletedIds), application.applicationName);
-                queryArray.push(query);
-            }
-        }
-        //ignoring composition number to SyncOperation table
-        var numberOfDownloadedItems = queryArray.length;
-        queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
-        return swdbDAO.executeQueries(queryArray).then(function() {
-            return $q.when(numberOfDownloadedItems);
-        }).catch(function(err) {
-            if (!err) {
-                //normal interruption
-                return $q.when(0);
-            }
-            return $q.reject(err);
-        });
-    }
+        var api = {
+            syncData: syncData
+        };
 
+        return api;
+    };
 
-    function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
-        var log = $log.get("dataSynchronizationService#createAppSyncPromise");
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "restService", "metadataModelService", "rowstampService", "offlineCompositionService", "datamapSanitizationService"];
 
-        var params = {
-            applicationName: app,
-            clientCurrentTopLevelApps: currentApps,
-            returnNewApps: firstInLoop
-        }
-        return rowstampService.generateRowstampMap(app)
-            .then(function (rowstampMap) {
-            //see samplerequest.json
-            rowstampMap.compositionmap = compositionMap;
-            log.debug("invoking service to get new data");
-            return restService.postPromise("Mobile", "PullNewData", params, rowstampMap);
-        }).then(resultHandlePromise);
-    }
+    mobileServices.factory('dataSynchronizationService', service);
 
-
-    
-
-
-});
+})(mobileServices);
