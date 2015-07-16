@@ -28,6 +28,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
+        public SearchRequestDto filterSpareParts(AssociationPreFilterFunctionParameters preParams) {
+            var filter = preParams.BASEDto;
+            filter.AppendWhereClause(String.Format("(sparepart.ITEMNUM IN (SELECT ITEMNUM FROM invbalances WHERE siteid =  '{0}') )", preParams.OriginalEntity.GetAttribute("siteid")));
+
+            return filter;
+        }
+
         public IEnumerable<IAssociationOption> filterStoreLoc(AssociationPostFilterFunctionParameters postParams) {
             return filterMaterials(postParams).Distinct(new ValueComparer());
         }
