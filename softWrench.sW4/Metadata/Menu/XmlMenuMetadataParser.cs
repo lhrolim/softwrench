@@ -109,6 +109,24 @@ namespace softWrench.sW4.Metadata.Menu {
             return new ActionMenuItemDefinition(id, title, role, tooltip, icon, action, controller, target, PropertyUtil.ConvertToDictionary(parameters), moduleName);
         }
 
+        private static ExternalLinkMenuItemDefinition ParseLink(XElement xElement, List<ModuleDefinition> modules) {
+            var id = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIdAttribute).ValueOrDefault((string)null);
+            var title = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTitleAttribute).ValueOrDefault((string)null);
+            var tooltip = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTipAttribute).ValueOrDefault((string)null);
+            var icon = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIconAttribute).ValueOrDefault((string)null);
+            var role = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseRoleAttribute).ValueOrDefault((string)null);
+            var link = xElement.Attribute(XmlMenuMetadataSchema.LinkElement).Value;
+
+            var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
+            var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
+            if (moduleName != null) {
+                modules.Add(new ModuleDefinition(moduleName, moduleAlias));
+            }
+            var parameters =
+                xElement.Attribute(XmlMenuMetadataSchema.ActionMenuParametersAttribute).ValueOrDefault((string)null);
+            return new ExternalLinkMenuItemDefinition(id, title, role, tooltip, icon, link, PropertyUtil.ConvertToDictionary(parameters), moduleName);
+        }
+
         [NotNull]
         private static MenuBaseDefinition ParseDivider(XElement xElement) {
             var id = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIdAttribute).ValueOrDefault((string)null);
@@ -150,7 +168,7 @@ namespace softWrench.sW4.Metadata.Menu {
                 }
                 leafs.Add(leaf);
             }
-            return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action,hasMainAction, leafs);
+            return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, leafs);
         }
 
         [CanBeNull]
@@ -158,6 +176,8 @@ namespace softWrench.sW4.Metadata.Menu {
             switch (xName) {
                 case XmlMenuMetadataSchema.ActionElement:
                     return ParseAction(xElement, modules);
+                case XmlMenuMetadataSchema.LinkElement:
+                    return ParseLink(xElement, modules);
                 case XmlMenuMetadataSchema.ApplicationElement:
                     return ParseApplication(xElement, modules);
                 case XmlMenuMetadataSchema.ResourceRefElement:
@@ -167,6 +187,7 @@ namespace softWrench.sW4.Metadata.Menu {
             }
             return null;
         }
+
 
     }
 }

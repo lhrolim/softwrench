@@ -6,8 +6,8 @@
         <ng-switch on="field.type">
             <div ng-switch-when="ApplicationAssociationDefinition">
                 <ion-autocomplete ng-model="datamap[field.target]"
-                                  identifier="{{field.associationKey}}"
-                                  items-method="associationSearch(queryparameters)"
+                                  component-id="{{field.associationKey}}"
+                                  items-method="associationSearch(query,componentId)"
                                   item-value-key="{{getAssociationValueField(field)}}"
                                   item-view-value-key="{{getAssociationLabelField(field)}}" />
             </div>

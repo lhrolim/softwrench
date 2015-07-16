@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('breadcrumb', function ($rootScope, $log, $compile) {
+app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
@@ -12,8 +12,8 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
         link: function (scope, element, attr) {
             log.debug(scope.menu);
 
-            scope.$watch('title', function (newValue,oldValue) {
-                var template = (getBreadCrumbHTML(log, scope.menu, scope.title));
+            scope.$watch('title', function (newValue, oldValue) {
+                var template = (getBreadCrumbHTML(log, scope.menu, scope.title, menuService));
                 if (template != null) {
                     var content = $compile(template)(scope);
                     element.html(content);
@@ -24,24 +24,20 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile) {
     }
 });
 
-app.directive('bcMenu', function ($rootScope, $log, $compile) {
-    var log = $log.getInstance('sw4.breadcrumb Menu');
 
-    return {
-        link: function (scope, element, attr) {
-
-        }
-    }
-});
-
-app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
+app.directive('bcMenuItem', function ($rootScope, $log, $compile,menuService) {
     var log = $log.getInstance('sw4.breadcrumb Menu Item');
+
+
 
     return {
         link: function (scope, element, attr) {
             $compile(element.contents())(scope);
         },
-        controller: function ($scope, $rootScope, menuService, alertService, validationService) {
+        controller: function ($scope, alertService, validationService) {
+
+
+
             $scope.goToApplication = function (title) {
                 var leaf = findleafByTitle(log, $scope.menu.leafs, title);
                 var msg = "Are you sure you want to leave the page?";
@@ -76,9 +72,8 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile) {
     }
 });
 
-var seperator = '<span class="part seperator">/</span>';
 
-function getBreadCrumbHTML(log, menu, current) {
+function getBreadCrumbHTML(log, menu, current,menuService) {
     var path = '<div class="part main" bc-menu>';
     path += '<a data-toggle="dropdown" aria-expanded="false">';
     path += '<i class="fa fa-bars"></i>';
@@ -86,7 +81,7 @@ function getBreadCrumbHTML(log, menu, current) {
     path += '</a>';
 
     //add submenu
-    path += getChildMenu(log, menu.leafs, null);
+    path += getChildMenu(log, menu.leafs, null, menuService);
     path += '</div>';
 
     //append child parts
@@ -125,14 +120,16 @@ function findCurrentPage(log, leafs, current, parent) {
                 if (newPath) {
                     path += '<a data-toggle="dropdown" aria-expanded="false">';
                 } else {
-                       path += '<a ng-click="';
+                    path += '<a ng-click="';
 
                     if (leafs[id].type == 'ActionMenuItemDefinition') {
                         path += 'doAction';
                     } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
                         path += 'goToApplication';
+                    } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
+                        path += '<a target="_blank" href="{0}"'.format(leaf.link);
                     }
-                    
+
                     path += '(\'' + leafs[id].title + '\')">';
                 }
 
@@ -188,7 +185,7 @@ function findleafByTitle(log, leafs, title) {
     return found;
 }
 
-function getChildMenu(log, leafs, parent) {
+function getChildMenu(log, leafs, parent,menuService) {
     var path = '';
     var searchLeafs = null;
 
@@ -204,8 +201,9 @@ function getChildMenu(log, leafs, parent) {
     if (searchLeafs != null) {
         path += '<ul class="dropdown-menu" role="menu" bc-menu>';
         for (var id in searchLeafs) {
-            if (searchLeafs[id].title != null) {
-                var childMenu = getChildMenu(log, searchLeafs[id].leafs, searchLeafs[id]);
+            var leaf = searchLeafs[id];
+            if (leaf.title != null) {
+                var childMenu = getChildMenu(log, leaf.leafs, leaf, menuService);
 
                 //if child menu found, display as submenu
                 if (childMenu) {
@@ -213,17 +211,23 @@ function getChildMenu(log, leafs, parent) {
                 } else {
                     path += '<li><a bc-menu-item ng-click="';
 
-                    if (searchLeafs[id].type == 'ActionMenuItemDefinition') {
+                    if (leaf.type == 'ActionMenuItemDefinition') {
                         path += 'doAction';
-                    } else if (searchLeafs[id].type == 'ApplicationMenuItemDefinition') {
+                    } else if (leaf.type == 'ApplicationMenuItemDefinition') {
                         path += 'goToApplication';
+                    } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
+                        if (!leaf.link.startsWith("http")) {
+                            leaf.link = "http://" + leaf.link;
+                        }
+                        var externalLink = menuService.parseExternalLink(leaf);
+                        path += '\" target="_blank" href="{0}"'.format(externalLink);
                     }
-                    
-                    path += '(\'' + searchLeafs[id].title + '\')">';
+
+                    path += '(\'' + leaf.title + '\')">';
                 }
 
                 //build the menu item
-                path += '<i class="' + searchLeafs[id].icon + '"></i>&ensp;' + searchLeafs[id].title;
+                path += '<i class="' + leaf.icon + '"></i>&ensp;' + leaf.title;
                 path += '</a>';
 
                 //add the child menu items
@@ -239,3 +243,6 @@ function getChildMenu(log, leafs, parent) {
 
     return path;
 }
+
+var seperator = '<span class="part seperator">/</span>';
+

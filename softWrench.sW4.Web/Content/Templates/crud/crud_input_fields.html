@@ -23,8 +23,13 @@
                     class="legend-label">
                 {{i18NLabel(fieldMetadata)}}
             </legend>
+            
+            <!--Read only section-->
 
             <div ng-class="getInputClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
+                
+                
+
                 <input type="datetime" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
                        data-date-time
@@ -59,8 +64,9 @@
 
 
             </div>
-            <!--SM - 09-24 - SWWEB-441 Change column class
-                ng-class="getValueColumnClass(fieldMetadata)"-->
+            
+            
+
             <div ng-if="!fieldMetadata.isReadOnly"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
@@ -327,6 +333,7 @@
                 <div ng-switch-when="custom">
                     <div ng-include="contextPath(fieldMetadata.rendererParameters.resourcepath)" href="#" style="width: 100%" />
                 </div>
+
                 <div ng-switch-default>
                     <ng-switch on="fieldMetadata.type">
                         <div ng-switch-when="ApplicationSection">

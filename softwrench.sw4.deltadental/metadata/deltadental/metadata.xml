@@ -17,6 +17,7 @@
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@solution.xml"/>
   </templates>
 
   <entities>
@@ -645,7 +646,7 @@
             <field attribute="altdisplayname" hidden="true"/>
             <association target="altdisplayname" labelfield="altperson_.displayname" hideDescription="true" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
               <renderer type="lookup" params="application=person;schemaId=personlookup;"/>
-              <event service="personService" method="afterChangeAltDisplayname" type="afterchange"/>
+              <event service="deltadental_.personService" method="afterChangeAltDisplayname" type="afterchange"/>
             </association>
             <field attribute="altfirstname" label="Alt Contact First Name" readonly="true"/>
             <field attribute="altlastname" label="Alt Contact Last Name" readonly="true"/>
@@ -673,7 +674,7 @@
             <field attribute="altdisplayname" hidden="true"/>
             <association target="altdisplayname" labelfield="altperson_.displayname" hideDescription="true" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
               <renderer type="lookup" params="application=person;schemaId=personlookup;"/>
-              <event service="personService" method="afterChangeAltDisplayname" type="afterchange"/>
+              <event service="deltadental_.personService" method="afterChangeAltDisplayname" type="afterchange"/>
             </association>
             <field attribute="altfirstname" label="Alt Contact First Name" readonly="true"/>
             <field attribute="altlastname" label="Alt Contact Last Name" readonly="true"/>

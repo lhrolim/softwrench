@@ -13,6 +13,14 @@
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
+    
+    <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ExternalLinkMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
+       href="{{leaf.link}}"
+       target="_blank"
+       class="level{{level}}">
+        <i class="{{isMenuItemIcon(leaf)}}"> </i>
+        {{i18NMenuLabel(leaf,false)}}
+    </a>
 
     <div ng-switch-when="ResourceMenuItem">
         <div ng-include="contextPath(leaf.path)" href="#" class="level{{level}}" />

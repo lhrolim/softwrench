@@ -30,6 +30,16 @@
             </documentation>
           </annotation>
         </element>
+
+        <element name="link" type="tns:MenuLinkItem"
+        maxOccurs="unbounded" minOccurs="0">
+          <annotation>
+            <documentation>
+              Specifies an external link to be opened as a sepparate tab
+            </documentation>
+          </annotation>
+        </element>
+
         <element name="divider" type="tns:MenuDividerItem"
          maxOccurs="unbounded" minOccurs="0">
           <annotation>
@@ -211,6 +221,19 @@
     </complexContent>
   </complexType>
 
+  <complexType name="MenuLinkItem">
+    <annotation>
+      <documentation>a list of key=value pairs, separated by ;</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="tns:MenuBase">
+        <attribute name="link" type="string" use="required">
+        </attribute>
+        <attribute name="parameters" type="string"/>
+      </extension>
+    </complexContent>
+  </complexType>
+
   <complexType name="MenuDividerItem">
     <attribute name="role" type="string" use="optional">
     </attribute>
@@ -226,6 +249,9 @@
           <element name="application"
   					type="tns:MenuApplicationItem" maxOccurs="unbounded"
   					minOccurs="0" />
+          <element name="link"
+          type="tns:MenuLinkItem" maxOccurs="unbounded"
+          minOccurs="0" />
           <element name="resourceref"
   					type="tns:MenuResourceItem" maxOccurs="unbounded"
   					minOccurs="0">

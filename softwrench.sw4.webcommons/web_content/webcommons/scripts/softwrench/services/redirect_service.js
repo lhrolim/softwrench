@@ -133,6 +133,8 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 });
         },
 
+        
+
         goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             var log = $log.getInstance('redirectService#goToApplication');
 

@@ -1,82 +1,132 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService, securityService, checkpointService, $log) {
 
-    var cleanSelectedLeaf = function () {
-        var menu = $("#applicationmenu");
+(function () {
+    'use strict';
 
-        $("button", menu).removeClass("selected");
-        $("a", menu).removeClass("selected");
-    }
+    angular.module('sw_layout').factory('menuService', ['$rootScope', 'redirectService', 'contextService', 'i18NService', 'securityService', 'checkpointService', '$log','userService', menuService]);
 
-    var toggleSelectedLeaf = function (leaf) {
+    function menuService($rootScope, redirectService, contextService, i18NService, securityService, checkpointService, $log, userService) {
 
-        // look for parent container of the new active menu item and its button
-        var parentMenuContainer = $(leaf).parents('.dropdown-container').last();
-        var menuContainerToggle = $('button', parentMenuContainer).first();
+        var cleanSelectedLeaf = function () {
+            var menu = $("#applicationmenu");
 
-        if (menuContainerToggle.length == 0) {
-            $(leaf).addClass("selected");
-        } else {
-            menuContainerToggle.addClass("selected");
-        }
-    }
-
-    var locateLeafById = function (leafs, id) {
-
-        if (id == null) {
-            throw new Error("id cannot be null");
+            $("button", menu).removeClass("selected");
+            $("a", menu).removeClass("selected");
         }
 
-        if (leafs == null) {
-            return null;
-        }
+        var toggleSelectedLeaf = function (leaf) {
 
-        for (var i = 0; i < leafs.length; i++) {
-            var leaf = leafs[i];
-            if (id == leaf.id) {
-                return leaf;
-            }
-            if (leaf.type == "MenuContainerDefinition") {
-                var result = locateLeafById(leaf.leafs, id);
-                if (result != null) {
-                    return result;
-                }
+            // look for parent container of the new active menu item and its button
+            var parentMenuContainer = $(leaf).parents('.dropdown-container').last();
+            var menuContainerToggle = $('button', parentMenuContainer).first();
+
+            if (menuContainerToggle.length == 0) {
+                $(leaf).addClass("selected");
+            } else {
+                menuContainerToggle.addClass("selected");
             }
         }
-        return null;
-    };
 
-    var searchMenuLeafByUrl = function (leafs, url) {
+        var locateLeafById = function (leafs, id) {
 
-        var leafUrl;
+            if (id == null) {
+                throw new Error("id cannot be null");
+            }
 
-        if (leafs != null) {
+            if (leafs == null) {
+                return null;
+            }
+
             for (var i = 0; i < leafs.length; i++) {
-                var menuitem = leafs[i];
-                if (menuitem.type == "ApplicationMenuItemDefinition") {
-                    leafUrl = redirectService.getApplicationUrl(menuitem.application, menuitem.schema, menuitem.mode, i18NService.getI18nMenuLabel(menuitem.title, false));
-                } else if (menuitem.type == "ActionMenuItemDefinition") {
-                    leafUrl = redirectService.getActionUrl(menuitem.controller, menuitem.action, menuitem.parameters);
-                } else if (menuitem.type == "MenuContainerDefinition") {
-                    var leaf = searchMenuLeafByUrl(menuitem.leafs, url);
-                    if (leaf != null) {
-                        return leaf;
+                var leaf = leafs[i];
+                if (id == leaf.id) {
+                    return leaf;
+                }
+                if (leaf.type == "MenuContainerDefinition") {
+                    var result = locateLeafById(leaf.leafs, id);
+                    if (result != null) {
+                        return result;
                     }
                 }
+            }
+            return null;
+        };
 
-                if (leafUrl != null && decodeURI(leafUrl) == decodeURI(url)) {
-                    return menuitem;
+        var searchMenuLeafByUrl = function (leafs, url) {
+
+            var leafUrl;
+
+            if (leafs != null) {
+                for (var i = 0; i < leafs.length; i++) {
+                    var menuitem = leafs[i];
+                    if (menuitem.type == "ApplicationMenuItemDefinition") {
+                        leafUrl = redirectService.getApplicationUrl(menuitem.application, menuitem.schema, menuitem.mode, i18NService.getI18nMenuLabel(menuitem.title, false));
+                    } else if (menuitem.type == "ActionMenuItemDefinition") {
+                        leafUrl = redirectService.getActionUrl(menuitem.controller, menuitem.action, menuitem.parameters);
+                    } else if (menuitem.type == "MenuContainerDefinition") {
+                        var leaf = searchMenuLeafByUrl(menuitem.leafs, url);
+                        if (leaf != null) {
+                            return leaf;
+                        }
+                    }
+
+                    if (leafUrl != null && decodeURI(leafUrl) == decodeURI(url)) {
+                        return menuitem;
+                    }
                 }
             }
+        };
+
+
+        var service = {
+            executeById: executeById,
+            doAction: doAction,
+            goToApplication: goToApplication,
+            adjustHeight: adjustHeight,
+            setActiveLeaf: setActiveLeaf,
+            getI18nMenuLabel: getI18nMenuLabel,
+            getI18nMenuIcon: getI18nMenuIcon,
+            setActiveLeafByUrl: setActiveLeafByUrl,
+            parseExternalLink:parseExternalLink
+
+        };
+
+        return service;
+
+
+        function parseExternalLink(leaf) {
+            var parameters = leaf.parameters;
+            if (!leaf.link.startsWith("http")) {
+                leaf.link = "http://" + leaf.link;
+            }
+
+
+            if (parameters == null) {
+                return leaf.link;
+            }
+
+            var link = leaf.link;
+            if (!link.endsWith("?")) {
+                link = link + "?";
+            }
+
+            for (var parameter in parameters) {
+                if (!parameters.hasOwnProperty(parameter)) {
+                    continue;
+                }
+                var value = parameters[parameter];
+                //let´s give it a chance for user properties to be set
+                value =userService.readProperty(value);
+                link += parameter + "=" + value;
+                link += "&";
+            }
+
+
+            return link.substr(0,link.length-1);
         }
-    };
 
-    return {
-
-
-
-        executeById: function (menuId) {
+        function executeById(menuId) {
 
             var leafs = $rootScope.menu.leafs;
             var leaf = locateLeafById(leafs, menuId);
@@ -85,10 +135,9 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             } else if (leaf.type == "ActionMenuItemDefinition") {
                 this.doAction(leaf, null);
             }
-        },
+        };
 
-
-        doAction: function (leaf, target) {
+        function doAction(leaf, target) {
             if (!securityService.validateRoleWithErrorMessage(leaf.role)) {
                 return;
             }
@@ -102,9 +151,9 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
             checkpointService.clearCheckpoints();
             redirectService.redirectToAction(leaf.title, leaf.controller, leaf.action, leaf.parameters, leaf.target);
-        },
+        };
 
-        goToApplication: function (leaf, target) {
+        function goToApplication(leaf, target) {
             if (!securityService.validateRoleWithErrorMessage(leaf.role)) {
                 return;
             }
@@ -124,19 +173,19 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             }
             checkpointService.clearCheckpoints();
             redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);
-        },
+        };
 
 
-        adjustHeight: function (callbackFunction) {
+        function adjustHeight(callbackFunction) {
             var menu = $("#applicationmenu");
             if (($rootScope.clientName != undefined && $rootScope.clientName == 'hapag') || menu.data('displacement') != 'vertical') {
                 return;
             }
             var bodyHeight = $(".hapag-body").height();
             menu.children().first().css('min-height', bodyHeight + 4);
-        },
+        };
 
-        setActiveLeaf: function (leaf) {
+        function setActiveLeaf(leaf) {
             var menu = $("#applicationmenu");
             if (menu.data('displacement') == 'horizontal') {
                 cleanSelectedLeaf();
@@ -144,25 +193,28 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
                     toggleSelectedLeaf(leaf);
                 }
             }
-        },
+        };
 
-        getI18nMenuLabel: function (menuItem, tooltip) {
+
+        function getI18nMenuLabel(menuItem, tooltip) {
 
             if (menuItem.module != null) {
                 return menuItem.title;
             }
             return i18NService.getI18nMenuLabel(menuItem, tooltip);
-        },
-        getI18nMenuIcon: function (menuItem) {
+        };
+
+
+        function getI18nMenuIcon(menuItem) {
 
             if (menuItem.module != null) {
                 return menuItem.icon;
             }
             return i18NService.getI18nMenuIcon(menuItem);
-        },
+        };
 
 
-        setActiveLeafByUrl: function (menu, url) {
+        function setActiveLeafByUrl(menu, url) {
             if (menu.displacement == 'horizontal') {
                 var leaf = searchMenuLeafByUrl(menu.leafs, url);
 
@@ -177,8 +229,11 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
                 }
             }
         }
-    };
 
-});
+    }
+})();
+
+
+
 
 

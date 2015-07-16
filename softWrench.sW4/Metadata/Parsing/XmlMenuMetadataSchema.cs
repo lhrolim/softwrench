@@ -13,6 +13,7 @@
         public const string ApplicationElement = "application";
         public const string ResourceRefElement = "resourceref";
         public const string ActionElement = "action";
+        public const string LinkElement = "link";
         public const string DividerElement = "divider";
 
         public const string MenuBaseIdAttribute = "id";
@@ -28,6 +29,8 @@
         
         public const string ActionMenuControllerAttribute = "controller";
         public const string ActionMenuActionAttribute = "action";
+        
+        public const string LinkMenuActionAttribute = "link";
         
         public const string ActionMenuParametersAttribute = "parameters";
         public const string ActionMenuTargetAttribute = "target";
