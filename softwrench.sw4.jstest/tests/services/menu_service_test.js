@@ -20,11 +20,11 @@
         //creating mock user
         spyOn(contextService, 'getUserData').and.returnValue(mockedUser);
 
-        var leaf = { "link": "https://secure.spaceplanfm.com/deltadental/default.asp?", "parameters": { "email": "@user.email", "target": "Request.asp" }, "moduleName": null, "id": null, "title": "Move Request", "role": null, "tooltip": null, "icon": null, "roleDefinedByParent": false, "module": null, "type": "ExternalLinkMenuItemDefinition", "leaf": true };
+        var leaf = { "link": "https://secure.spaceplanfm.com/deltadental/default.asp?", "parameters": { "email": "@user.email", "target": "Request.asp" } };
         var link = menuService.parseExternalLink(leaf);
         expect(link).toBe("https://secure.spaceplanfm.com/deltadental/default.asp?email=lrolim@controltechnologysolutions.com&target=Request.asp");
 
-        leaf = { "link": "https://secure.spaceplanfm.com/deltadental/default.asp", "parameters": { "email": "@user.email", "target": "Request.asp" }, "moduleName": null, "id": null, "title": "Move Request", "role": null, "tooltip": null, "icon": null, "roleDefinedByParent": false, "module": null, "type": "ExternalLinkMenuItemDefinition", "leaf": true };
+        leaf = { "link": "https://secure.spaceplanfm.com/deltadental/default.asp", "parameters": { "email": "@user.email", "target": "Request.asp" }};
         link = menuService.parseExternalLink(leaf);
         expect(link).toBe("https://secure.spaceplanfm.com/deltadental/default.asp?email=lrolim@controltechnologysolutions.com&target=Request.asp");
 
@@ -35,7 +35,7 @@
 
         spyOn(contextService, 'getUserData').and.returnValue(mockedUser);
 
-        var leaf = { "link": "https://secure.spaceplanfm.com/deltadental/default.asp", "moduleName": null, "id": null, "title": "Move Request", "role": null, "tooltip": null, "icon": null, "roleDefinedByParent": false, "module": null, "type": "ExternalLinkMenuItemDefinition", "leaf": true };
+        var leaf = { "link": "https://secure.spaceplanfm.com/deltadental/default.asp"};
         var link = menuService.parseExternalLink(leaf);
         expect(link).toBe("https://secure.spaceplanfm.com/deltadental/default.asp");
     });
@@ -45,7 +45,7 @@
 
         spyOn(contextService, 'getUserData').and.returnValue(mockedUser);
 
-        var leaf = { "link": "www.secure.spaceplanfm.com/deltadental/default.asp", "moduleName": null, "id": null, "title": "Move Request", "role": null, "tooltip": null, "icon": null, "roleDefinedByParent": false, "module": null, "type": "ExternalLinkMenuItemDefinition", "leaf": true };
+        var leaf = { "link": "www.secure.spaceplanfm.com/deltadental/default.asp"};
         var link = menuService.parseExternalLink(leaf);
         expect(link).toBe("http://www.secure.spaceplanfm.com/deltadental/default.asp");
     });
