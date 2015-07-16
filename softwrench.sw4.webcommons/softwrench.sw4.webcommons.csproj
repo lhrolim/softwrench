@@ -77,6 +77,7 @@
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\person\person_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\spin_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_commons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invtransfer_service.js" />
@@ -87,7 +88,6 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\focus_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\application_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invissue_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\person_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\user_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\sharedservices_module.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />

@@ -38,10 +38,16 @@
         </schema>
 
         <schema id="detail" stereotype="detail" title="Person Detail">
+          <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
-          <field attribute="#password" label="Password" showexpression="!@ldapEnabled"/>
-          <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled"/>
+
+          <field attribute="#password" label="Password" showexpression="!@ldapEnabled">
+            <renderer type="password" params="placeholder=Blank to keep current stored password;avoidautofocus=true"/>
+          </field>
+          <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled">
+            <renderer type="password" params="placeholder=Blank to keep current stored password;avoidautofocus=true"/>
+          </field>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
           <association target="locationorg" labelfield="organization_.description" label="Org ID">
@@ -75,6 +81,7 @@
           <properties>
             <property key="detail.hidetitle" value="true"/>
           </properties>
+          <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
           <field attribute="personuid" label="Person ID" showexpression="false" default="-1"/>
           <field attribute="#personid" label="Username" requiredexpression="@personuid == -1" showexpression="@personuid == -1">
             <event type="afterchange" service="personService" method="afterChangeUsername"/>

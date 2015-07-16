@@ -132,6 +132,9 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 if (fieldMetadata.rendererType == "email") {
                     return "email";
                 }
+                else if (fieldMetadata.rendererType == "password") {
+                    return "password";
+                }
                 return "text";
             }
 
