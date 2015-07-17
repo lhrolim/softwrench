@@ -100,6 +100,8 @@
                         e.preventDefault();
                         focusedInput = e.target;
                         charBuffer = String.fromCharCode(e.which);
+                    } else {
+                        focusedInput = null;
                     }
 
                 
