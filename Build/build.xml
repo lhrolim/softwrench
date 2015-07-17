@@ -169,6 +169,14 @@
     </zip>
   </target>
 
+  <target name="releaseprepare" >
+
+    <xmlpoke file="../softWrench.sW4.Web/Web.config"
+               xpath="/configuration/appSettings/add[@key = 'version']/@value"
+               value="${version}" failonerror="true"/>
+
+  </target>
+
   <target name="zipsw" depends="copydllssw,setclient,setenv">
     <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4.zip">
       <fileset basedir="${OutputDir}/deploy/">
