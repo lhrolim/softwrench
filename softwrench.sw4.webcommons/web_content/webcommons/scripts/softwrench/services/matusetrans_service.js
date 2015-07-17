@@ -92,10 +92,14 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             var resultObject = data.resultObject;
 
             if (resultObject.length > 0) {
-                parameters.fields['costtype'] = resultObject[0].fields['costtype'];
-                parameters.fields['itemsetid'] = resultObject[0].fields['itemsetid'];
-                parameters.fields['storeloc'] = resultObject[0].fields['storeloc'];
-
+                var resultMap = resultObject[0].fields;
+                parameters.fields['costtype'] = resultMap['costtype'];
+                parameters.fields['itemsetid'] = resultMap['itemsetid'];
+                if (resultMap['storeloc']) {
+                    //TODO: Ken can you please review this? the initial item lookup had returned the right storeloc, but then it was switching it back to undefined afterwards
+                    // would this if make sense from a business perspective?
+                    parameters.fields['storeloc'] = resultMap['storeloc'];
+                }
                 doCommodityGroupAssociation(parameters);
                 doItemAssociation(parameters);
             } else {

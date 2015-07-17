@@ -226,7 +226,7 @@
           <association label="Item:" target="itemnum" labelfield="sparepart_.description" extraprojectionvalues="description" showexpression="@linetype == 'SPAREPART'">
             <dataprovider prefilterfunction="filterSpareParts"/>
             <renderer type="lookup" params="application=sparepart;schemaId=sparepartlist;"/>
-            <!--<event type="afterchange" service="matusetranService" method="afteritemchange"/>-->
+            <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
           <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
             <dataprovider prefilterfunction="filterItems"/>
