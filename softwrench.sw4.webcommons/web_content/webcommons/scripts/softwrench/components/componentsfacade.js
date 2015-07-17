@@ -38,23 +38,23 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
         },
 
 
-        digestAndrefresh: function (displayable, scope) {
+        digestAndrefresh: function (displayable, scope,newValue) {
             var rendererType = displayable.rendererType;
             if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup' && rendererType != 'modal') {
                 return;
             }
             try {
                 scope.$digest();
-                this.refresh(displayable, scope, true);
+                this.refresh(displayable, scope, true, newValue);
             } catch (e) {
                 //nothing to do, just checking if digest was already in place or not, because we need angular to update screen first of all
                 //if inside a digest already, exception would be thrown --> force a timeout with false flag
                 var fn = this;
                 $timeout(
                     function () {
-                        fn.refresh(displayable, scope, true);
+                        fn.refresh(displayable, scope, true, newValue);
                         try {
-                            scope.$digest()
+                            scope.$digest();
                         } catch (e) {
                             $log.getInstance('componentfacade#digestandrefresh').warn('validating this is actually being thrown. if u see this, remove this log' + e);
                             //nothing

@@ -166,7 +166,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 parentdata:scope.parentdata,
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
-            $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+            $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
+                .format(afterChangeEvent.service, afterChangeEvent.method, associationMetadata.target,associationMetadata.associationKey));
             fn(afterchangeEvent);
         },
 
@@ -193,6 +194,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 //this iterates for list of fields which were dependant of a first one. 
                 var array = serverOptions[dependantFieldName] || {};
                 var zeroEntriesFound = (array.associationData == null || array.associationData.length == 0);
+                var oneEntryFound = !zeroEntriesFound && array.associationData.length == 1;
 
                 log.debug('updating association from server {0} length {1}'.format(dependantFieldName, array.associationData == null ? 0 : array.associationData.length));
 
@@ -207,6 +209,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                     continue;
                 }
                 var fn = this;
+
                 $.each(associationFieldMetadatas, function (index, value) {
                     if (zeroEntriesFound && (value.rendererType == "lookup" || value.rendererType == "autocompleteserver")) {
                         //this should never be blocked, but the server might still be returning 0 entries due to a reverse association mapping
@@ -229,13 +232,27 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         datamap[value.target] = null;
                     }
 
+                    
 
-                    if (array.associationData == null || datamapTargetValue == null) {
+                    if (array.associationData == null) {
                         //if no options returned from the server, nothing else to do
                         return;
                     }
 
+                    if (oneEntryFound) {
+                        var entryReturned = array.associationData[0].value;
+                        if (datamapTargetValue != entryReturned) {
+                            datamap[value.target] = entryReturned;
+                        }
+                    }
 
+                    if (datamapTargetValue == null) {
+                        //if there was no previous selected value, we don´t need to restore it
+                        return;
+                    }
+
+
+                    //restoring previous selected value after the ng-options has changed
                     for (var j = 0; j < array.associationData.length; j++) {
                         var associationOption = array.associationData[j];
                         if (associationOption.value.toUpperCase() == datamapTargetValue.toUpperCase()) {

@@ -195,9 +195,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 WsUtil.SetValueIfNull(integrationObject, "QTYREQUESTED", 0);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
 
-                var itemtype = WsUtil.GetRealValue(integrationObject, "LINETYPE");
+                var itemtype = WsUtil.GetRealValue(integrationObject, "LINETYPE").ToString();
                 var quantity = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
                 var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
+
+                // Sparepart's are items, the linetype SPAREPART is only needed
+                // for front end and must be converted to a valid type for
+                // submission to the MIF
+                if (itemtype == "SPAREPART") {
+                    itemtype = "ITEM";
+                    WsUtil.SetValue(integrationObject, "LINETYPE", itemtype);
+                }
 
                 if (itemtype.Equals("ITEM")) {
                     WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
