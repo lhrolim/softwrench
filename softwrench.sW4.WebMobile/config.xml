@@ -11,4 +11,7 @@
   <vs:plugin name="org.apache.cordova.battery-status" version="0.2.11" />
   <vs:plugin name="com.brodysoft.sqlitePlugin" version="1.0.6" />
   <vs:platformSpecificValues />
+  <vs:features>
+    <vs:feature>https://github.com/katzer/cordova-plugin-local-notifications</vs:feature>
+  </vs:features>
 </widget>
