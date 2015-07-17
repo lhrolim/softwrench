@@ -115,10 +115,6 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         /* LOCAL NOTIFICATION */
         synchronizationNotificationService.prepareNotificationFeature();
-
-        // REMOVE THIS --
-        window.notifier = synchronizationNotificationService;
-        // --------------
     };
 
 }])
