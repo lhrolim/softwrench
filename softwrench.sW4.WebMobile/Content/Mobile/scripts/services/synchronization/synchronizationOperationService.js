@@ -11,10 +11,7 @@
      * @constructor 
      */
     var SynchronizationOperationService = function ($log, $q, swdbDAO, formatter) {
-
-        var internalListContext = {
-            lastPageLoaded: 1
-        }
+        var self = this;
 
         var saveBatchOperation = function (operation, relatedBatches) {
             return swdbDAO.instantiate("SyncOperation", operation)
@@ -104,9 +101,9 @@
             return operation.hasProblems;
         };
 
-        this.getSyncList = function () {
-            var self = this;
-            return swdbDAO.findByQuery("SyncOperation", null, { pagesize: 10, pagenumber: internalListContext.pageNumber, orderby: "startdate", orderbyascending: false })
+        this.getSyncList = function (pageNumber) {
+            var page = !pageNumber || pageNumber <= 0 ? 1 : pageNumber;
+            return swdbDAO.findByQuery("SyncOperation", null, { pagesize: 10, pageNumber: page, orderby: "startdate", orderbyascending: false })
                 .then(function(operations) {
                     if (!operations || operations.length <= 0) {
                         return operations;
@@ -125,7 +122,6 @@
          * @returns Promise: resolved with SyncOperation entity, rejected with database Error. 
          */
         this.getOperation = function (id) {
-            var self = this;
             return swdbDAO.findById("SyncOperation", id)
                 .then(function(operation) {
                     return self.formatOperation(operation);
@@ -189,6 +185,18 @@
                         return "'{0}'".format(batch.id);
                     });
                     return swdbDAO.findByQuery("BatchItem", "batch in ({0})".format(batchids), { prefetch: "problem" });
+                });
+        };
+
+        /**
+         * Fetches the most recent (highest 'startdate') SyncOperation from the database.
+         * 
+         * @returns Promise: resolved with most recent operation, rejected with database error 
+         */
+        this.getMostRecentOperation = function() {
+            return swdbDAO.findSingleByQuery("SyncOperation", null, { orderby: "startdate" })
+                .then(function(operation) {
+                    return self.formatOperation(operation);
                 });
         };
     };

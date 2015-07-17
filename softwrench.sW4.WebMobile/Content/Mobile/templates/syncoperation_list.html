@@ -1,17 +1,11 @@
-﻿<ion-view title="Synchronization" class="page-home">
+﻿<ion-view title="Synchronization" class="page-syncoperation-list">
     <!--    <search-bar></search-bar>-->
 
     <ion-nav-buttons side="left">
-        <button class="button button-clear" menu-toggle="left">
-            <i class="icon ion-navicon"></i>
-        </button>
-    </ion-nav-buttons>
-
-    <ion-nav-buttons side="right">
-        <button class="button button-clear sync-button" ng-click="fullSynchronize()">
-            <i class="icon ion-loop"></i>
-            Sync
-        </button>
+        <ion-nav-button class="button button-clear" ng-click="goBack()">
+            <i class="ion-chevron-left"></i>
+            Back
+        </ion-nav-button>
     </ion-nav-buttons>
 
     <ion-content class="has-header">
@@ -41,9 +35,9 @@
             </ion-item>
         </ion-list>
 
-    </ion-content>
-    <!-- TODO: empty list message (requires layout design) -->
+        <ion-infinite-scroll ng-if="paginationData.hasMoreAvailable" on-infinite="loadPagedList()" distance="10%"></ion-infinite-scroll>
 
+    </ion-content>
 
 </ion-view>
 
