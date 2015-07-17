@@ -124,7 +124,8 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             }
 
             var parameters = {
-                element: element
+                element: element,
+                tabid: contextService.getActiveTab()
             };
             eventService.onload(scope, scope.schema, scope.datamap, parameters);
 
@@ -204,7 +205,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                     return;
                 }
                 // Configure tooltips
-                $('.no-touch [rel=tooltip]', bodyElement).tooltip({container: 'body'});
+                $('.no-touch [rel=tooltip]', bodyElement).tooltip({ container: 'body' });
 
 
                 cmpfacade.init(bodyElement, $scope);
@@ -328,14 +329,14 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             /* LOOKUP functions */
 
-          
 
-    
-          
+
+
+
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
-         
+
 
             $scope.configureNumericInput = function () {
                 var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);

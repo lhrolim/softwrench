@@ -1,9 +1,14 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
+app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
                                                  fieldService, submitService, validationService, commandService) {
+
+
     var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
+    if ("true" == sessionStorage.debugscanner) {
+        timeBetweenCharacters = 30;
+    }
 
     var validateAssocationLookupFn = function (result, searchObj) {
         if (Object.keys(result).length != 1 ||
@@ -49,7 +54,34 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         });
     }
 
+    var scanCallbackMap = {
+
+    };
+
+    var registerScanCallBackOnSchema = function (parameters, callback) {
+
+        scanCallbackMap[parameters.tabid] = callback;
+
+        $(document).scannerDetection({
+            avgTimeByChar: timeBetweenCharacters,
+
+
+            onComplete: function(data) {
+                var tabId = contextService.getActiveTab();
+                var callbackFn = scanCallbackMap[tabId];
+                if (callbackFn) {
+                    callbackFn(data);
+                }
+            }
+        });
+    };
+
     return {
+
+
+       
+
+
         initInventoryGridListener: function (scope, schema, datamap, parameters) {
             var searchData = parameters.searchData;
 
@@ -189,14 +221,11 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             });
         },
 
-        initMaterialScanningListener: function (scope, schema, datamap, paremeters) {
-            // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
-            paremeters.element.scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
-                onComplete: function (data) {
-                    datamap['itemnum'] = data;
-                    $rootScope.$digest();
-                },
+        initMaterialScanningListener: function (scope, schema, datamap, parameters) {
+
+            registerScanCallBackOnSchema(parameters, function(data) {
+                datamap['itemnum'] = data;
+                $rootScope.$digest();
             });
         },
 
@@ -339,49 +368,49 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         },
 
         initSouthernOperatorRounds: function (scope, schema, datamap, parameters) {
-
-            parameters.element.scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
-                onComplete: function (data) {
-                    var assets = datamap.multiassetlocci_;
-                    for (var asset in assets) {
-                        if (!assets.hasOwnProperty(asset)) {
-                            continue;
-                        }
-
-                        if (assets[asset].assetnum && assets[asset].assetnum.equalIc(data)) {
-
-                            assets[asset]['#selected'] = "true";
-
-                            var datamapToSend = {};
-                            angular.copy(datamap, datamapToSend);
-//                            datamapToSend['multiassetlocci_'] = [datamap];
-
-                            var command = {
-                                service: "meterReadingService",
-                                method: "read",
-                                nextSchemaId: "readings",
-                                stereotype: "modal",
-                                properties: {
-                                    modalclass: "readingsmodal"
-                                },
-                                scopeParameters: ['schema', 'datamap']
-                            };
-                            var clonedSchema = {};
-                            angular.copy(parameters.parentschema, clonedSchema);
-
-
-                            var scope = {
-                                datamap: datamapToSend,
-                                schema: clonedSchema
-                            }
-                            scope.schema.applicationName = "workorder";
-
-                            commandService.doCommand(scope, command);
-                        }
+            registerScanCallBackOnSchema(parameters, function (data) {
+                $log.get("scan#initSouthernOperatorRounds").info('receiving operator round notifications');
+                var assets = datamap.multiassetlocci_;
+                for (var asset in assets) {
+                    if (!assets.hasOwnProperty(asset)) {
+                        continue;
                     }
+
+                    if (!assets[asset].assetnum || !assets[asset].assetnum.equalIc(data)) {
+                        alertService.alert("Asset record {0} not found".format(data));
+                        return;
+                    }
+
+                    assets[asset]['#selected'] = "true";
+
+                    var datamapToSend = {};
+                    angular.copy(datamap, datamapToSend);
+                    //                            datamapToSend['multiassetlocci_'] = [datamap];
+
+                    var command = {
+                        service: "meterReadingService",
+                        method: "read",
+                        nextSchemaId: "readings",
+                        stereotype: "modal",
+                        properties: {
+                            modalclass: "readingsmodal"
+                        },
+                        scopeParameters: ['schema', 'datamap']
+                    };
+                    var clonedSchema = {};
+                    angular.copy(parameters.parentschema, clonedSchema);
+
+
+                    var scope = {
+                        datamap: datamapToSend,
+                        schema: clonedSchema
+                    }
+                    scope.schema.applicationName = "workorder";
+
+                    commandService.doCommand(scope, command);
                 }
             });
+
         },
     };
 });

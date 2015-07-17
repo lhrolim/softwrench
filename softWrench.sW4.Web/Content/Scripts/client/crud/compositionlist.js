@@ -275,6 +275,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 parameters.clonedCompositionData = $scope.compositionData();
                 parameters.parentdata = $scope.parentdata;
                 parameters.parentschema = $scope.parentschema;
+                parameters.tabid = contextService.getActiveTab();
                 parameters.element = $element;
                 eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata.fields, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.compositionData(), true);
