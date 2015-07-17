@@ -34,28 +34,25 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
 
 
-.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "$state", "routeService","crudContextService", "$q",
-    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, $state, routeService, crudContextService, $q) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "$q", "synchronizationNotificationService", "$rootScope",
+    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, routeService, crudContextService, $q, synchronizationNotificationService, $rootScope) {
 
     
 
     $ionicPlatform.ready(function () {
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        //      WebView.setWebContentsDebuggingEnabled(true);
+        // }
 
         initContext();
-
-        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        //            WebView.setWebContentsDebuggingEnabled(true);
-        //        }
+        initDataBaseDebuggingHelpers();
 
         initCordovaPlugins();
-
 
         var isCookieAuthenticated = loginService.checkCookieCredentials();
         crudContextService.restoreState();
         routeService.loadInitialState(isCookieAuthenticated);
     });
-
-
 
     function initContext() {
         var log = $log.get("bootstrap#initContext");
@@ -63,7 +60,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         menuModelService.initAndCacheFromDB();
         metadataModelService.initAndCacheFromDB();
         swdbDAO.findAll("Settings").success(function (settings) {
-            if (settings.length == 0) {
+            if (settings.length <= 0) {
                 log.info('creating infos for the first time');
                 var ob = entities.Settings;
                 swdbDAO.save(new ob()).success(function () {
@@ -74,9 +71,10 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 contextService.insertIntoContext("settings", settings[0]);
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
-
         });
+    }
 
+    function initDataBaseDebuggingHelpers() {
         // adding some functionalities to persistence
         persistence.runSql = function (query, params) {
             var deferred = $q.defer();
@@ -109,15 +107,22 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
-        //        if (window.StatusBar) {
-        //            // org.apache.cordova.statusbar required
-        //            StatusBar.styleDefault();
-        //        }
+        // if (window.StatusBar) {
+        //      // org.apache.cordova.statusbar required
+        //      StatusBar.styleDefault();
+        // }
+
+
+        /* LOCAL NOTIFICATION */
+        synchronizationNotificationService.prepareNotificationFeature();
     };
 
 }])
 
-.config(["$stateProvider", "$urlRouterProvider", "$logProvider", function ($stateProvider, $urlRouterProvider, $logProvider) {
+.config(["$stateProvider", "$urlRouterProvider", "$logProvider", "$ionicConfigProvider", function ($stateProvider, $urlRouterProvider, $logProvider, $ionicConfigProvider) {
+
+    // center page titles
+    $ionicConfigProvider.navBar.alignTitle("center");
 
     $logProvider.debugEnabled(true);
 

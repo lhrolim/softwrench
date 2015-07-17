@@ -1,11 +1,11 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "$ionicPopup", "routeService"];
+    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "routeService"];
 
     mobileServices.factory('synchronizationFacade', service);
 
-    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, $ionicPopup, routeService) {
+    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, routeService) {
         
         function getDownloadDataCount(dataDownloadResult) {
             var count = 0;
@@ -134,12 +134,7 @@
                 })
                 .then(function (operation) {
                     log.info("created SyncOperation for async Batch Processing");
-                    $ionicPopup.confirm({
-                        title: "Synchronization Result",
-                        template: "A synchronization result has been received. Would you like to check it?"
-                    }).then(function (res) {
-                        if (res) routeService.go("main.syncdetail", { id: operation.id });
-                    });
+                    synchronizationNotificationService.notifySynchronizationReceived(operation);
                 })
                 .catch(function (error) {
                     log.error(error);
