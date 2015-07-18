@@ -471,7 +471,7 @@
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
           <relationshipAttribute to="ownertable" literal="SR" quoteLiteral="true"/>
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -990,7 +990,7 @@
       </attributes>
 
       <relationships>
-        <relationship to="longdescription" qualifier="worklogdesc" >
+        <relationship to="longdescription" qualifier="wld" >
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -1423,7 +1423,7 @@
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -1574,7 +1574,7 @@
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -2149,7 +2149,7 @@
         <attribute name="wosequence" type="integer" required="false" />
       </attributes>
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -4045,7 +4045,7 @@
         <relationship to="meter">
           <relationshipAttribute from="metername" to="metername" primary="true"/>
         </relationship>
-        <relationship to="person" ignoreprimary="true">
+        <relationship to="person" qualifier="inspector">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
 
@@ -4093,7 +4093,7 @@
         <relationship to="meter">
           <relationshipAttribute from="metername" to="metername" primary="true"/>
         </relationship>
-        <relationship to="person" ignoreprimary="true">
+        <relationship to="person" qualifier="inspector">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>

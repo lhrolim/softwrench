@@ -373,6 +373,7 @@
     <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
     <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />

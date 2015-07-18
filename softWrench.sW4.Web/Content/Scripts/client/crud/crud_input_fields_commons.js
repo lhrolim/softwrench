@@ -3,9 +3,9 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse'];
+    factory.$inject = ['$log','associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse'];
 
-    function factory(associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, $parse) {
+    function factory($log,associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, $parse) {
 
         var api = {
             configureAssociationChangeEvents: configureAssociationChangeEvents,
@@ -65,6 +65,16 @@
                     if (oldValue == newValue || !shouldDoWatch) {
                         return;
                     }
+
+                    var datamap = $parse(datamappropertiesName)($scope);
+
+                    if (!expressionService.evaluate(association.showExpression,datamap)) {
+                        //if the association is hidden, there´s no sense in executing any hook methods of it
+                        $log.get("crud_inputcommons#configureAssociationChangeEvents").debug("ignoring hidden association {0}".format(association.associationKey));
+                        return;
+                    }
+
+
                     if (newValue != null) {
                         //this is a hacky thing when we want to change a value of a field without triggering the watch
                         var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
@@ -101,7 +111,8 @@
                                 var dispatchedbytheuser = resolved ? true : false;
                                 if ($scope.compositionlistschema) {
                                     //workaround for compositions
-                                    $scope.datamap = $parse(datamappropertiesName)($scope);
+                                    
+                                    $scope.datamap = datamap;
                                     $scope.schema = $scope.compositionlistschema;
                                 }
                                 associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
@@ -122,6 +133,11 @@
                         }
                     };
                     associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
+                    if (newValue == undefined) {
+                        //we will distinguish between null or undefined to know when the call was made in the sense of really setting it to null, 
+                        //from the scenario where the list was changed first and the value was simply undefined due to the workflow
+                        newValue = null;
+                    }
                     cmpfacade.digestAndrefresh(association, $scope, newValue);
                 });
                 $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
