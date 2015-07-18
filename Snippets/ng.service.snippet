@@ -34,23 +34,39 @@
       <Code Language="JavaScript">
         <![CDATA[
 (function () {
-    'use strict';
+    "use strict";
     
-    angular.module('$module$').factory('$service$', ['$dependency$', $service$]);
-
     function $service$($dependency$) {
-    
+    		
+    		//#region Utils
+    		
+    		//#endregion
+
+    		//#region Public methods
+
+        function $member1$() {
+
+        }
+
+        //#endregion
+
+        //#region Service Instance
+
         var service = {
             $member1$: $member1$
         };
 
         return service;
 
-        function $member1$() {
-
-        }
-    
+        //#endregion
     }
+    
+    //#region Service registration
+
+    angular.module("$module$").factory("$service$", ["$dependency$", $service$]);
+
+    //#endregion
+
 })();
                 ]]>
       </Code>
