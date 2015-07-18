@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Newtonsoft.Json;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -62,6 +63,7 @@ namespace softWrench.sW4.Data.Search {
         }
 
         public string FilterFixedWhereClause { get; set; }
+        public string UnionFilterFixedWhereClause { get; set; }
 
 
 
@@ -103,10 +105,11 @@ namespace softWrench.sW4.Data.Search {
             return searchRequestDto;
         }
 
-        public void BuildUnionDTO(ApplicationSchemaDefinition originalSchema) {
+        public void BuildUnionDTO(SearchRequestDto searchDto, ApplicationSchemaDefinition originalSchema) {
             var unionSchema = MetadataProvider.FindSchemaDefinition(originalSchema.UnionSchema);
             unionDTO = new SearchRequestDto();
             unionDTO.BuildProjection(unionSchema);
+            unionDTO.FilterFixedWhereClause = searchDto.UnionFilterFixedWhereClause;
             if (String.IsNullOrWhiteSpace(SearchParams)) {
                 return;
             }
@@ -152,7 +155,9 @@ namespace softWrench.sW4.Data.Search {
 
             unionDTO.SearchParams = sb.ToString();
             unionDTO.SearchValues = SearchValues;
+            
             HandleUnionZeroedValueCases(unionDTO);
+            
         }
 
         private void HandleUnionZeroedValueCases(SearchRequestDto unionDto) {
@@ -299,8 +304,13 @@ namespace softWrench.sW4.Data.Search {
             SearchValues = sbValues.ToString();
         }
 
-        public void BuildFixedWhereClause(string entityName) {
+        public void BuildFixedWhereClause(SearchRequestDto requestDTO, string entityName) {
             FilterFixedWhereClause = SearchUtils.GetWhereReplacingParameters(this, entityName);
+            if (requestDTO.unionDTO != null) {
+                //TODO: make this more generic, but right now only one union so why bother?
+                UnionFilterFixedWhereClause = SearchUtils.GetWhereReplacingParameters(requestDTO.unionDTO, "srforchange");
+            }
+
         }
 
         public List<string> GetNestedFieldsToConsiderInRelationships {

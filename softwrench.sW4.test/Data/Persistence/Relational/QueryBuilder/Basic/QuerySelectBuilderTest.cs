@@ -85,7 +85,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
         [TestMethod]
         public void ChangeSRUnionSearch() {
             var dto = new SearchRequestDto();
-            dto.BuildUnionDTO(MetadataProvider.FindSchemaDefinition("change.list"));
+            dto.BuildUnionDTO(dto,MetadataProvider.FindSchemaDefinition("change.list"));
 
             var completeOne = MetadataProvider.Application("change");
             var metadata = completeOne.ApplyPolicies(new ApplicationMetadataSchemaKey("list"), InMemoryUser.TestInstance(),

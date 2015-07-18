@@ -164,7 +164,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
             if (schema.UnionSchema != null) {
-                searchDto.BuildUnionDTO(schema);
+                searchDto.BuildUnionDTO(searchDto,schema);
             }
             var propertyValue = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListSchemaOrderBy);
             if (searchDto.SearchSort == null && propertyValue != null) {

@@ -171,7 +171,7 @@ namespace softwrench.sW4.test.Data.Search {
         public void SearchWithFixedParam_Hapag_SEARCH_TEST() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description".Split(','), "%teste%");
-            searchRequestDto.BuildFixedWhereClause("SR");
+            searchRequestDto.BuildFixedWhereClause(searchRequestDto,"SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
             Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) like '%TESTE%' ) OR ( UPPER(COALESCE(SR.description,'')) like '%TESTE%' )", filterFixedWhereClause);
         }
@@ -179,7 +179,7 @@ namespace softwrench.sW4.test.Data.Search {
         public void SearchWithFixedParam_Hapag_SEARCH_TEST_NOTEQ() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "!=teste");
-            searchRequestDto.BuildFixedWhereClause("SR");
+            searchRequestDto.BuildFixedWhereClause(searchRequestDto,"SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
             Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != 'TESTE' OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", filterFixedWhereClause);
         }

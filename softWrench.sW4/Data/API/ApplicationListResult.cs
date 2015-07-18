@@ -19,6 +19,7 @@ namespace softWrench.sW4.Data.API {
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
             PageResultDto.SearchParams = searchDTO.SearchParams;
             PageResultDto.FilterFixedWhereClause = searchDTO.FilterFixedWhereClause;
+            PageResultDto.UnionFilterFixedWhereClause = searchDTO.UnionFilterFixedWhereClause;
         }
 
         public ApplicationSchemaDefinition Schema {
@@ -51,6 +52,8 @@ namespace softWrench.sW4.Data.API {
         public int PageCount { get { return PageResultDto.PageCount; } }
 
         public String FilterFixedWhereClause { get { return PageResultDto.FilterFixedWhereClause; } }
+
+        public String UnionFilterFixedWhereClause { get { return PageResultDto.UnionFilterFixedWhereClause; } }
 
 
         public IEnumerable<PageToShow> PagesToShow { get { return PageResultDto.PagesToShow; } }

@@ -130,7 +130,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             return resultString;
         },
 
-        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause) {
+        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, unionFilterFixedWhereClause) {
 
 
 
@@ -146,13 +146,14 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             searchDto.searchSort = buildSearchSortString(searchSort);
             searchDto.SearchAscending = searchSort.order == "asc";
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
+            searchDto.unionFilterFixedWhereClause = unionFilterFixedWhereClause;
             searchDto.needsCountUpdate = true;
             searchData.lastSearchedValues = searchDto.searchValues;
             return searchDto;
 
         },
 
-        buildReportSearchDTO: function (searchDto, searchData, searchSort, searchOperator, filterFixedWhereClause) {
+        buildReportSearchDTO: function (searchDto, searchData, searchSort, searchOperator, filterFixedWhereClause,unionFilterFixedWhereClause) {
             if (searchDto == null || searchDto == undefined) {
                 var searchDto = {};
                 searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
@@ -170,6 +171,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             searchDto.searchSort = buildSearchSortString(searchSort);
             searchDto.SearchAscending = searchSort.order == "asc";
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
+            searchDto.unionFilterFixedWhereClause = unionFilterFixedWhereClause;
             searchDto.needsCountUpdate = searchDto.searchValues != searchData.lastSearchedValues;
             searchData.lastSearchedValues = searchDto.searchValues;
             return searchDto;

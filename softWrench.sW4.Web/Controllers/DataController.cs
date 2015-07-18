@@ -243,7 +243,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var dataResponse = Get(application, new DataRequestAdapter() { Key = key, SearchDTO = searchRequestDto });
             //fixing the filter parameters used so that it is applied on next queries
-            ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(app.Entity);
+            ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(searchRequestDto,app.Entity);
             dataResponse.Title = appSchema.Title;
             dataResponse.Mode = SchemaMode.input.ToString().ToLower();
             return dataResponse;

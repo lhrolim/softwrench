@@ -248,6 +248,7 @@ app.directive('crudList', function (contextService) {
                 }
                 var totalCount = 0;
                 var filterFixedWhereClause = null;
+                var unionFilterFixedWhereClause = null;
                 if ($scope.paginationData != null) {
                     totalCount = $scope.paginationData.totalCount;
                     //if pageSize is specified, use it... this is used for printing function
@@ -256,6 +257,7 @@ app.directive('crudList', function (contextService) {
                         pageSize = $scope.paginationData.pageSize;
                     }
                     filterFixedWhereClause = $scope.paginationData.filterFixedWhereClause;
+                    unionFilterFixedWhereClause = $scope.paginationData.unionFilterFixedWhereClause;
                 }
                 if (pageSize === undefined) {
                     //if it remains undefined, use 100
@@ -270,7 +272,7 @@ app.directive('crudList', function (contextService) {
                     reportDto = $.parseJSON(reportDto);
                     searchDTO = searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);
                 } else {
-                    searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);
+                    searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, unionFilterFixedWhereClause);
                 }
 
                 searchDTO.pageNumber = pageNumber;

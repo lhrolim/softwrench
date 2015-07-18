@@ -83,6 +83,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             scope.paginationData.hasPrevious = data.hasPrevious;
             scope.paginationData.hasNext = data.hasNext;
             scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
+            scope.paginationData.unionFilterFixedWhereClause = data.unionFilterFixedWhereClause;
         }
         switchMode(false, scope);
     };
