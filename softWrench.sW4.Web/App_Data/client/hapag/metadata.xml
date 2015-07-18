@@ -988,10 +988,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <field label="Gewünschter Produktionstermin" attribute="startdate" required="true"
                    tooltip="Tragen Sie hier den gewünschten Produktionsstart des Systems ein. Bitte beachten Sie dass für den Aufbau 3 Werktage benötigt werden.">
-              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate"/>
+              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate;language=de"/>
             </field>
             <field label="Geplantes Produktionsende" attribute="enddate" tooltip="Sofern der Server nur temporär betrieben werden soll können Sie hier bereits das Produktionsende festlegen.">
-              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate"/>
+              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate;language=de"/>
             </field>
             <optionfield label="Betriebsart / LPAR-Typ" attribute="lpartype" tooltip="Wählen Sie hier, ob es sich um ein produktives System (7x24 oder 5x12) oder ein Testsystem (5x12) handelt." required="true">
               <option label="Produktion 7x24" value="prod247"/>

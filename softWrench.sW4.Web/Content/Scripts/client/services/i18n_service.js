@@ -22,11 +22,14 @@ app.factory('i18NService', function ($rootScope, contextService) {
         return catalogValue != null;
     };
 
-    var doGetValue = function (key, defaultValue, isMenu) {
-        if (!nullOrUndef(contextService.retrieveFromContext('currentmodule')) && !isMenu) {
+    var doGetValue = function (key, defaultValue, isMenu, languageToForce) {
+        if (!languageToForce && !nullOrUndef(contextService.retrieveFromContext('currentmodule')) && !isMenu) {
             return defaultValue;
         }
         var catalog = $rootScope['sw_currentcatalog'];
+        if (languageToForce && languageToForce != '') {
+            catalog = $rootScope['sw_i18ncatalogs'][languageToForce];
+        } 
         var catalogValue = null;
         if (catalog != null) {
             catalogValue = JsonProperty(catalog, key);
@@ -153,9 +156,9 @@ app.factory('i18NService', function ($rootScope, contextService) {
             return doGetValue(key, schema.title);
         },
 
-        get18nValue: function (key, defaultValue, paramArray) {
+        get18nValue: function (key, defaultValue, paramArray, languageToForce) {
             var isHeaderMenu = (key.indexOf("_headermenu") > -1) ? true : false;
-            var unformatted = doGetValue(key, defaultValue, isHeaderMenu);
+            var unformatted = doGetValue(key, defaultValue, isHeaderMenu, languageToForce);
             if (paramArray == undefined) {
                 return unformatted;
             }

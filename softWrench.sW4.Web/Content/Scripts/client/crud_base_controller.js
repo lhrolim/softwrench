@@ -15,8 +15,8 @@ function BaseController($scope, i18NService, fieldService,commandService) {
     };
 
 
-    $scope.i18N = function (key, defaultValue, paramArray) {
-        return i18NService.get18nValue(key, defaultValue, paramArray);
+    $scope.i18N = function (key, defaultValue, paramArray,languageToForce) {
+        return i18NService.get18nValue(key, defaultValue, paramArray, languageToForce);
     };
 
     $scope.i18NCommandLabel = function (command) {

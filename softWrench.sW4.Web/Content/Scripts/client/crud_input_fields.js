@@ -350,6 +350,11 @@ app.directive('crudInputFields', function (contextService) {
                 return result;
             };
 
+            $scope.getCalendarTooltip = function (redererParameters) {
+                //HAP-1052
+                this.i18N('calendar.date_tooltip', 'Open the calendar popup')
+            }
+
             $scope.haslookupModal = function (schema) {
                 return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
             }

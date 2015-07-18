@@ -44,7 +44,9 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             var originalAttribute = attrs.originalAttribute;
             var showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.dateFormat, showTime);
-            attrs.language = (userLanguage != '') ? userLanguage : "en-US";
+            if (!attrs.language || attrs.language == "") {
+                attrs.language = (userLanguage != '') ? userLanguage : "en-US";
+            }
             var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
             var isReadOnly = attrs.readonly == undefined ? false : (attrs.readonly);
