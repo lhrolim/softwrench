@@ -65,7 +65,7 @@ namespace softwrench.sw4.offlineserver.services {
         /// <param name="remoteIds"></param>
         /// <returns></returns>
         public IList<Batch> GetBatchesByRemoteIds(IList<String> remoteIds) {
-            IList<Batch> batches = _swdbHibernateDAO.FindByQuery<Batch>("from Batch where RemoteId in (?)", remoteIds.ToArray() as String[]);
+            var batches = _swdbHibernateDAO.FindByQuery<Batch>(Batch.BatchesByRemoteId, remoteIds);
             FormatBatches(batches);
             return batches;
         }

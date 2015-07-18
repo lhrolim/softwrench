@@ -16,6 +16,7 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
         public static string ActiveBatchesofApplication = "from Batch where Application =? and Status = 'INPROG' ";
         public static string OldSubmittedBatches = "from Batch where Application =? and Status = 'COMPLETE' ";
+        public static string BatchesByRemoteId = "from Batch where RemoteId in (:p0)";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
