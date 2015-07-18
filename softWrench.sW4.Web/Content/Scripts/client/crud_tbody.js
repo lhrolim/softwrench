@@ -5,6 +5,11 @@ function griditemclick(rowNumber, columnNumber, element) {
     //with this, we can generate the table without compiling it to angular, making it faster
     //first tests pointed a 100ms gain, but need to gather more data.
     var scope = angular.element(element).scope();
+    if (!scope.showDetail) {
+        //workaround for HAP-1006, if there are checkboxes present, then the crudlist scope is the parent
+        scope = scope.$parent;
+    }
+
     if (scope.showDetail) {
         scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
     }

@@ -863,9 +863,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema id="incidentdetail" stereotype="list" title="Incident Detail Report">
           <properties>
-            <property key ="list.click.popupmode"  value="report"/>
             <property key="command.select" value ="true"/>
-            <property key="list.click.mode" value="input"/>
             <property key="list.print.schema" value="detail"/>
           </properties>
           <optionfield attribute ="ticketid">
