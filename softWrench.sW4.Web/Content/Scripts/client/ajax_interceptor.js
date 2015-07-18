@@ -14,14 +14,16 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['requesttime'] = new Date().getTime();
             var log = $log.getInstance('sw4.ajaxint#started');
+            var spinAvoided = false;
             if (activeRequests == 0 || config.url.indexOf("/Content/")==-1) {
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
                 }
-                if (!$rootScope.avoidspin) {
+                spinAvoided = config.avoidspin;
+                if (!spinAvoided) {
+                    activeRequests++;
                     $rootScope.$broadcast('sw_ajaxinit');
                 }
-
             }
             log.trace("url: {0} | current module:{1} | current metadata:{2} "
                .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
@@ -33,7 +35,12 @@ app.config(['$httpProvider', function ($httpProvider) {
             activeRequests--;
             var log = $log.getInstance('sw4.ajaxint#endedok');
             log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
-            if (activeRequests == 0) {
+            var spinAvoided = false;
+            spinAvoided = response.config.avoidspin;
+            if (!spinAvoided) {
+                activeRequests--;
+            }
+            if (activeRequests <= 0) {
                 unLockCommandBars();
                 unLockTabs();
                 log.info("Requests ended");

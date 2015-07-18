@@ -503,7 +503,10 @@
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
     <Content Include="Content\Scripts\client\components\combobox.js" />
     <Content Include="Content\Scripts\client\responsive.js" />
+    <Content Include="Content\Scripts\client\services\compositioncommons.js" />
+    <Content Include="Content\Scripts\client\services\detailService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
+    <Content Include="Content\Scripts\client\services\spinService.js" />
     <Content Include="Content\Scripts\client\services\user_service.js" />
     <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
     <Content Include="Content\Scripts\client\each.js" />
@@ -1418,7 +1421,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>8080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8080/sw4</IISUrl>
+          <IISUrl>http://localhost:8081/sw4</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

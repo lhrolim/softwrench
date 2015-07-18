@@ -21,16 +21,19 @@
 
                 <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                     <li class="active">
-                        <a href="#main" data-tabid="{{main}}">{{schema.title}}</a>
+                        <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)">{{schema.title}}</a>
                     </li>
                     <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
                         <a ng-switch-when="ApplicationCompositionDefinition"
                            ng-href="#{{tab.tabId}}" ng-show="!composition.hidden"
-                           data-tabid="{{tab.tabId}}">
+                           data-tabid="{{tab.tabId}}" ng-click="setActiveTab(tab.tabId)">
                             {{i18N(tab.tabId + '._title',tab.label)}}
                         </a>
                         <a ng-switch-when="ApplicationTabDefinition"
-                           ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" data-tabid="{{tab.tabId}}">
+                           ng-href="#{{tab.tabId}}" ng-show="!composition.hidden"
+                           ng-click="setActiveTab(tab.tabId)"
+                           data-tabid="{{tab.tabId}}">
+
                             {{i18NTabLabel(tab)}}
                         </a>
                     </li>

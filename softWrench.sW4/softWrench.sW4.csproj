@@ -169,6 +169,9 @@
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\BlankApplicationResponse.cs" />
+    <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
+    <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
+    <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\Configuration\ComWhereClauseProvider.cs" />
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
@@ -222,6 +225,9 @@
     <Compile Include="Metadata\Applications\Association\AssociationHelper.cs" />
     <Compile Include="Metadata\Applications\Association\BaseDependableResolver.cs" />
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
+    <Compile Include="Metadata\Applications\DataSet\baseclasses\ApplicationFilterableProvider.cs" />
+    <Compile Include="Metadata\Applications\DataSet\baseclasses\ApplicationFiltereableKey.cs" />
+    <Compile Include="Metadata\Applications\DataSet\baseclasses\IApplicationFiltereable.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />
@@ -764,6 +770,7 @@
     <Folder Include="Data\Entities\Attachment\" />
     <Folder Include="Data\Persistence\Dataset\MEA\" />
     <Folder Include="Data\Persistence\Dataset\MIF\" />
+    <Folder Include="Data\Persistence\Relational\Collection\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
     <Folder Include="Metadata\API\" />

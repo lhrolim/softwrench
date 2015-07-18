@@ -8,7 +8,7 @@ using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
-    class WorkorderDataSet : IDataSet {
+    class WorkorderDataSet : BaseApplicationDataSet {
 
 
 

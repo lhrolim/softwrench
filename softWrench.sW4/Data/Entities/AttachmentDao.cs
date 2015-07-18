@@ -4,13 +4,24 @@ using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Data.Entities {
     public class AttachmentDao {
 
         private const string EntityName = "DOCINFO";
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
 
         public AttributeHolder ById(string documentId) {
             var entityMetadata = MetadataProvider.Entity(EntityName);
@@ -18,7 +29,7 @@ namespace softWrench.sW4.Data.Entities {
             searchRequestDto.AppendProjectionField(new ProjectionField("urlname", "urlname"));
             searchRequestDto.AppendProjectionField(new ProjectionField("document", "document"));
             searchRequestDto.AppendProjectionField(new ProjectionField("docinfoid", "docinfoid"));
-            var list = _entityRepository.Get(entityMetadata, searchRequestDto);
+            var list = EntityRepository.Get(entityMetadata, searchRequestDto);
             var result = list.FirstOrDefault();
             return result;
         }

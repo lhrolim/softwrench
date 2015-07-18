@@ -1,4 +1,6 @@
-﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
+﻿using softWrench.sW4.Data.Persistence;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
+using softwrench.sw4.Hapag.Security;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data;
@@ -17,11 +19,20 @@ using System.Text;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagNewChangeDataSet : HapagBaseApplicationDataSet {
 
+        public HapagNewChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+            : base(locationManager, entityRepository, maxDao) {
+        }
+
+
+
+
         #region PrefilterFunctions
+
+
 
         public IEnumerable<IAssociationOption> GetInfrastructureAssetToChange(OptionFieldProviderParameters parameters) {
             var entityMetadata = MetadataProvider.Entity("ci");
-            var result = new EntityRepository().Get(entityMetadata, new SearchRequestDto());
+            var result = EntityRepository.Get(entityMetadata, new SearchRequestDto());
             var attributeHolders = result as AttributeHolder[] ?? result.ToArray();
             var options = new HashSet<IAssociationOption>();
             foreach (var attributeHolder in attributeHolders) {

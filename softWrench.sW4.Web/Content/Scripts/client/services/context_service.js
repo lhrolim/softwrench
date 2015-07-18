@@ -18,13 +18,18 @@ app.factory('contextService', function ($rootScope) {
 
 
         },
+
+        get: function (key, isJson, userootscope) {
+            return this.fetchFromContext(key, isJson, userootscope);
+        },
+
         fetchFromContext: function (key, isJson, userootscope, removeentry) {
             //shortcut method
             var value = this.retrieveFromContext(key, userootscope, removeentry);
             if (value == "undefined") {
                 return undefined;
             }
-            if (value != null && isJson == true) {
+            if (value != null && isJson == true && isString(value)) {
                 return JSON.parse(value);
             }
             return value;

@@ -1,5 +1,8 @@
 ﻿using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational;
+using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.Shared2.Util;
@@ -10,15 +13,15 @@ using System;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagOfferingDataSet : HapagBaseApplicationDataSet {
 
-        private I18NResolver _resolver;
+        private readonly I18NResolver _resolver;
+
+        public HapagOfferingDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao, I18NResolver resolver)
+            : base(locationManager, entityRepository, maxDao) {
+            _resolver = resolver;
+        }
 
         public I18NResolver Resolver {
             get {
-                if (_resolver != null) {
-                    return _resolver;
-                }
-                _resolver =
-                    SimpleInjectorGenericFactory.Instance.GetObject<I18NResolver>(typeof(I18NResolver));
                 return _resolver;
             }
         }

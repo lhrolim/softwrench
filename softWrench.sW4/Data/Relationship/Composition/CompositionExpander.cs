@@ -22,12 +22,14 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
     public class CompositionExpander : ISingletonComponent {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private readonly EntityRepository _entityRepository;
 
-        private IContextLookuper _contextLookuper;
+        private readonly IContextLookuper _contextLookuper;
 
-        public CompositionExpander(IContextLookuper contextLookuper) {
+        public CompositionExpander(IContextLookuper contextLookuper, EntityRepository entityRepository)
+        {
             _contextLookuper = contextLookuper;
+            _entityRepository = entityRepository;
         }
 
         public IGenericResponseResult Expand(InMemoryUser user, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, CompositionExpanderHelper.CompositionExpansionOptions options) {
@@ -48,7 +50,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 searchDTO.AppendSearchParam(schema.IdFieldName);
                 searchDTO.AppendSearchValue(toExpand.Value);
                 var compositionExpanded = _entityRepository.GetAsRawDictionary(slicedEntityMetadata, searchDTO);
-                resultDict.Add(name, compositionExpanded);
+                resultDict.Add(name, compositionExpanded.ResultList);
             }
 
             return new GenericResponseResult<Dictionary<string, IEnumerable<IDictionary<string, object>>>>(resultDict);

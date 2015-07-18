@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
@@ -17,7 +18,18 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         private static ILog Log = LogManager.GetLogger(typeof(FaqUtils));
 
-        private EntityRepository _entityRepository = new EntityRepository();
+
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
 
         private static IEnumerable<FaqData> GetBuiltList(IEnumerable<FaqData> databaseFaqList, IEnumerable<UsefulFaqLinksUtils> faqsOfTemplate) {
             try {
@@ -102,7 +114,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
-            return _dataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, request);
+            return ((BaseApplicationDataSet)_dataSetProvider.LookupDataSet(application)).Get(applicationMetadata, user, request);
         }
 
         #region Public
@@ -153,10 +165,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             dto.AppendSearchEntry("status", "ACTIVE");
             dto.AppendProjectionField(ProjectionField.Default("solutionid"));
             dto.AppendProjectionField(ProjectionField.Default("description"));
-            var result = _entityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
-            Log.DebugFormat("db size {0}", result.Count());
+            var result = EntityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
+            var attributeHolders = result.ResultList;
+            Log.DebugFormat("db size {0}", attributeHolders.Count());
             var treeDataList = new List<FaqData>();
-            foreach (var attributeHolder in result) {
+            foreach (var attributeHolder in attributeHolders) {
                 var solutionId = (int)attributeHolder["solutionid"];
                 var description = (string)attributeHolder["description"];
                 treeDataList.Add(new FaqData(solutionId, description));

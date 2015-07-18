@@ -309,18 +309,17 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
 
 
-        getEagerAssociations: function (scope) {
+        getEagerAssociations: function (scope,options) {
             var associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             if (associations == undefined || associations.length == 0) {
                 //no need to hit server in that case
                 return;
             }
 
-            $rootScope.avoidspin = true;
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
-            return this.updateAssociations({ attribute: "#eagerassociations" }, scope);
+            return this.updateAssociations({ attribute: "#eagerassociations" }, scope, options);
         },
 
         //
@@ -328,7 +327,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         //of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         //Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
-        updateAssociations: function (association, scope) {
+        updateAssociations: function (association, scope, options) {
+            options = options || {};
+
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
             if (triggerFieldName != "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) == -1) {
@@ -364,7 +365,13 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             var log = $log.getInstance('associationService#updateAssociations');
             log.info('going to server for dependat associations of {0}'.format(triggerFieldName));
             log.debug('Content: \n {0}'.format(jsonString));
-            $http.post(urlToUse, jsonString).success(function (data) {
+
+            var config = {};
+            if (options.avoidspin) {
+                config.avoidspin = true;
+            }
+
+            $http.post(urlToUse, jsonString, config).success(function (data) {
                 var options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields);
@@ -372,7 +379,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     //this means we´re getting the eager associations, see method above
                     postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
                 } else {
-                    $rootScope.avoidspin = false;
                     $rootScope.$broadcast("sw_associationsupdated", scope.associationOptions);
                 }
                 //let´s restore after the hooks have been runned to avoid any stale data

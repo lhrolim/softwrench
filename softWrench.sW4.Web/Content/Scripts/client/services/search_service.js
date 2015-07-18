@@ -131,8 +131,16 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
         },
 
         buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause) {
+
+
+
             var btwFlag = false;
             var searchDto = {};
+            searchData = searchData || {};
+            searchSort = searchSort || {};
+            searchOperator = searchOperator || {};
+          
+
             searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
             searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
             searchDto.searchSort = buildSearchSortString(searchSort);

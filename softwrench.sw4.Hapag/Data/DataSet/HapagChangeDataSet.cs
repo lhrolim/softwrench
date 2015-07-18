@@ -1,11 +1,15 @@
-﻿using log4net;
+﻿using Newtonsoft.Json.Linq;
+using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.API;
+using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
-using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -15,29 +19,31 @@ using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
-        private static ILog Log = LogManager.GetLogger(typeof(HapagChangeDataSet));
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
-            InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
-            if (request.Id != null) {
-                //this means we´re viewing details of a change
-                PopulateApprovalsCompositions(result.ResultObject, user);
-            }
-
-            return result;
+        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+            : base(locationManager, entityRepository, maxDao) {
         }
 
-        private void PopulateApprovalsCompositions(DataMap result, InMemoryUser user) {
 
-            var approvals = result.GetAttribute("approvals_") as IEnumerable<IDictionary<string, object>>;
-            if (approvals == null) {
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+            JObject currentData) {
+            var compositionData = base.GetCompositionData(application, request, currentData);
+            var user = SecurityFacade.CurrentUser();
+            PopulateApprovalsCompositions(compositionData, user);
+            return compositionData;
+        }
+
+        private void PopulateApprovalsCompositions(CompositionFetchResult compositionData, InMemoryUser user) {
+
+            var compositions = compositionData.ResultObject;
+            if (!compositions.ContainsKey("approvals_")) {
                 return;
             }
-            var worklogs = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("worklog_");
-            var wftransactions = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("apprwftransaction_");
-            var wfassignment = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("wfassignment_");
-            var wostatus = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("wostatus_");
+            var approvals = compositions["approvals_"].ResultList as IEnumerable<IDictionary<string, object>>;
+            var worklogs = (IEnumerable<Dictionary<string, object>>)compositions["worklog_"].ResultList;
+            var wftransactions = (IEnumerable<Dictionary<string, object>>)compositions["apprwftransaction_"].ResultList;
+            var wfassignment = (IEnumerable<Dictionary<string, object>>)compositions["wfassignment_"].ResultList;
+            var wostatus = (IEnumerable<Dictionary<string, object>>)compositions["wostatus_"].ResultList;
             //let´s locate the first one which is marked as reject. 
             //it should always be the latest txlog, since no further operation is allowed after rejecting the workflow
             var rejectedTransaction = wftransactions.FirstOrDefault(w => w[ApproverConstants.TransTypeColumn].ToString().Equals("Reject"));
@@ -49,14 +55,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
                 } else {
-                    var needsApproval = HandleCustomerApprovers(user, result, approvalGroup, worklogs, approval, wostatus);
+                    var needsApproval = HandleCustomerApprovers(user, compositionData.Cruddata, approvalGroup, worklogs, approval);
                     if (needsApproval) {
                         numberOfActions++;
                     }
                 }
             }
-            Log.DebugFormat("Number of Actions {0}",numberOfActions);
-            result.SetAttribute("#numberofapprovalactions", numberOfActions);
+            Log.DebugFormat("Number of Actions {0}", numberOfActions);
+            compositionData.Cruddata.SetAttribute("#numberofapprovalactions", numberOfActions);
         }
 
         private Boolean HandleNonCustomerApprovers(InMemoryUser user, IEnumerable<Dictionary<string, object>> wfassignment, string approvalGroup,
@@ -82,33 +88,34 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return !approval.ContainsKey(c.StatusColumn) || !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus, c.RejectedStatus);
         }
 
-        private Boolean HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval,
-            IEnumerable<Dictionary<string, object>> wostatus) {
+        private Boolean HandleCustomerApprovers(InMemoryUser user, Entity result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval
+            ) {
 
-            var latestAuthStatusDate = FetchLatestWOStatusDate(wostatus);
+            var latestAuthStatusDate = result.GetAttribute("statusdate") as DateTime?;
             if (latestAuthStatusDate != null) {
                 //https://controltechnologysolutions.atlassian.net/browse/HAP-976
                 worklogs = FilterWorkLogsOlderThanLatestAuth(worklogs, latestAuthStatusDate);
             }
 
+            var wlEnumerable = worklogs as Dictionary<string, object>[] ?? worklogs.ToArray();
 
-        
             var apprDescription = c.GetWorkLogDescriptions(approvalGroup, true);
             var rejDescription = c.GetWorkLogDescriptions(approvalGroup, false);
 
-            var apprWl = worklogs.FirstOrDefault(w =>
+            
+            var apprWl = wlEnumerable.FirstOrDefault(w =>
                 apprDescription.EqualsIc(w["description"] as string)
                 && c.WlApprLogType.EqualsIc(w["logtype"] as string)
                 && w["recordkey"].Equals(result.GetAttribute("wonum"))
                 );
 
-            var rejWl = worklogs.FirstOrDefault(w =>
+            var rejWl = wlEnumerable.FirstOrDefault(w =>
                 rejDescription.EqualsIc(w["description"] as string)
                 && c.WlRejLogType.EqualsIc(w["logtype"] as string)
                 && w["recordkey"].Equals(result.GetAttribute("wonum"))
                 );
 
-            var anyrejWl = worklogs.FirstOrDefault(w =>
+            var anyrejWl = wlEnumerable.FirstOrDefault(w =>
                  (w["description"] != null && w["description"].ToString().StartsWith(c.RejectedWorklogDescription, StringComparison.CurrentCultureIgnoreCase))
               && w["logtype"].ToString().Equals(c.WlRejLogType)
               && w["recordkey"].Equals(result.GetAttribute("wonum"))
@@ -131,7 +138,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
             Log.DebugFormat("customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
             //if this group has not yet been approved or rejectd, it will still require some action (maybe not by this user)
-            return !approval.ContainsKey(c.StatusColumn)|| !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus,c.RejectedStatus);
+            return !approval.ContainsKey(c.StatusColumn) || !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus, c.RejectedStatus);
         }
 
         private IEnumerable<Dictionary<string, object>> FilterWorkLogsOlderThanLatestAuth(IEnumerable<Dictionary<string, object>> worklogs, DateTime? latestAuthStatusDate) {

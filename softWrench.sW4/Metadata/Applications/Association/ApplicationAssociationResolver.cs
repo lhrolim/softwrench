@@ -10,6 +10,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
+using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -26,7 +27,18 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string ValueKeyConst = "value";
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
+
 
         public static ApplicationMetadata GetAssociationApplicationMetadata(ApplicationAssociationDefinition association) {
 
@@ -77,12 +89,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
-            var queryResponse = _entityRepository.Get(entityMetadata, associationFilter);
+            var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
 
             if (associationFilter is PaginatedSearchRequestDto) {
                 var paginatedFilter = (PaginatedSearchRequestDto)associationFilter;
                 if (paginatedFilter.NeedsCountUpdate) {
-                    paginatedFilter.TotalCount = _entityRepository.Count(entityMetadata, associationFilter);
+                    paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, associationFilter);
                 }
             }
 

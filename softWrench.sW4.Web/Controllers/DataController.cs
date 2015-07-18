@@ -42,11 +42,11 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly SuccessMessageHandler _successMessageHandler = new SuccessMessageHandler();
         protected readonly CompositionExpander COMPOSITIONExpander;
         private readonly I18NResolver _i18NResolver;
-        private readonly IContextLookuper _contextLookuper;
+        protected readonly IContextLookuper ContextLookuper;
 
         public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper,CompositionExpander compositionExpander) {
             _i18NResolver = i18NResolver;
-            _contextLookuper = contextLookuper;
+            ContextLookuper = contextLookuper;
             COMPOSITIONExpander = compositionExpander;
         }
 
@@ -71,7 +71,7 @@ namespace softWrench.sW4.Web.Controllers {
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-            _contextLookuper.FillContext(request.Key);
+            ContextLookuper.FillContext(request.Key);
             var response = DataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
@@ -97,7 +97,7 @@ namespace softWrench.sW4.Web.Controllers {
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
-            _contextLookuper.FillContext(request.Key);
+            ContextLookuper.FillContext(request.Key);
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
@@ -119,7 +119,7 @@ namespace softWrench.sW4.Web.Controllers {
             ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey = null, bool mockmaximo = false) {
 
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            _contextLookuper.FillContext(schemaKey);
+            ContextLookuper.FillContext(schemaKey);
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             var response = DoExecute(application, new JObject(), id, OperationConstants.CRUD_DELETE, schemaKey, mockmaximo, nextschemaKey, platform);
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
@@ -136,7 +136,7 @@ namespace softWrench.sW4.Web.Controllers {
              ClientPlatform platform, string currentSchemaKey = null, string nextSchemaKey = null, bool mockmaximo = false) {
 
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            _contextLookuper.FillContext(schemaKey);
+            ContextLookuper.FillContext(schemaKey);
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             return DoExecute(application, json, id, OperationConstants.CRUD_UPDATE, schemaKey, mockmaximo, nextschemaKey, platform);
         }
@@ -154,7 +154,7 @@ namespace softWrench.sW4.Web.Controllers {
                 Log.DebugFormat("json received: " + json.ToString());
             }
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            _contextLookuper.FillContext(schemaKey);
+            ContextLookuper.FillContext(schemaKey);
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             var response = DoExecute(application, json, null, OperationConstants.CRUD_CREATE, schemaKey, mockmaximo, nextschemaKey, platform);
 

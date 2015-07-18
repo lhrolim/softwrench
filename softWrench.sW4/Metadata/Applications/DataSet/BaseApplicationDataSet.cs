@@ -1,6 +1,8 @@
 ﻿using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
+using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Persistence.Relational;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -40,12 +42,23 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         protected readonly ILog Log = LogManager.GetLogger(typeof(BaseApplicationDataSet));
 
-        protected readonly MaximoConnectorEngine _maximoConnectorEngine = new MaximoConnectorEngine();
+        //        protected readonly MaximoConnectorEngine _maximoConnectorEngine;
 
         private readonly ApplicationAssociationResolver _associationOptionResolver = new ApplicationAssociationResolver();
         private readonly DynamicOptionFieldResolver _dynamicOptionFieldResolver = new DynamicOptionFieldResolver();
 
         private IContextLookuper _contextLookuper;
+
+        private readonly CollectionResolver _collectionResolver = new CollectionResolver();
+
+
+        protected MaximoConnectorEngine _maximoConnectorEngine {
+            get {
+                return
+                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(
+                        typeof(MaximoConnectorEngine));
+            }
+        }
 
         protected IContextLookuper ContextLookuper {
             get {
@@ -109,10 +122,35 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(application.Schema,entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
+        }
+
+        public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+
+            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+
+            if (request.CompositionList != null) {
+                foreach (var compositionKey in request.CompositionList.Where(applicationCompositionSchemas.ContainsKey)) {
+                    //use only the passed compositions amongst the original list
+                    compostionsToUse.Add(compositionKey, applicationCompositionSchemas[compositionKey]);
+                }
+            } else {
+                //use them all
+                compostionsToUse = (Dictionary<string, ApplicationCompositionSchema>)applicationCompositionSchemas;
+            }
+
+            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
+
+            var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
+               application, currentData, request.Id);
+
+            var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
+
+            return new CompositionFetchResult(result,cruddata);
         }
 
 
@@ -151,7 +189,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 // Only fetch the compositions schemas if indicated on searchDTO
                 var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
-                var hasInlineComposition =schema.Compositions.Any(comp => comp.Inline);
+                var hasInlineComposition = schema.Compositions.Any(comp => comp.Inline);
                 if ((searchDto.CompositionsToFetch != null && searchDto.CompositionsToFetch.Count > 0) || hasInlineComposition) {
                     var allCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(schema);
                     foreach (var compositionSchema in allCompositionSchemas) {
@@ -429,7 +467,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
         protected virtual void Dispose(bool disposing) {
-            _maximoConnectorEngine.Dispose();
 
         }
 
@@ -447,6 +484,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public virtual string ClientFilter() {
+            return null;
+        }
+
+        public string SchemaId() {
             return null;
         }
     }

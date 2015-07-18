@@ -58,7 +58,6 @@ var BrowserDetect =
 };
 BrowserDetect.init();
 
-var spin;
 
 function instantiateIfUndefined(obj, nullcheck) {
     var shouldNullCheck = nullcheck === undefined || nullcheck == true;
@@ -479,71 +478,6 @@ function imgToBase64(img) {
 
     return dataURL;
 }
-
-
-
-var defaultOptions = {
-    lines: 13, // The number of lines to draw
-    length: 20, // The length of each line
-    width: 10, // The line thickness
-    radius: 30, // The radius of the inner circle
-    corners: 1, // Corner roundness (0..1)
-    rotate: 0, // The rotation offset
-    direction: 1, // 1: clockwise, -1: counterclockwise
-    color: '#000', // #rgb or #rrggbb or array of colors
-    speed: 1, // Rounds per second
-    trail: 60, // Afterglow percentage
-    shadow: false, // Whether to render a shadow
-    hwaccel: false, // Whether to use hardware acceleration
-    className: 'spinner', // The CSS class to assign to the spinner
-    zIndex: 2e9, // The z-index (defaults to 2000000000)
-    top: 'auto', // Top position relative to parent in px
-    left: 'auto', // Left position relative to parent in px,
-    opacity: 1 / 4
-};
-
-var smallOpts = {
-    lines: 13, // The number of lines to draw
-    length: 10, // The length of each line
-    width: 5, // The line thickness
-    radius: 15, // The radius of the inner circle
-    corners: 1, // Corner roundness (0..1)
-    rotate: 0, // The rotation offset
-    direction: 1, // 1: clockwise, -1: counterclockwise
-    color: '#000', // #rgb or #rrggbb or array of colors
-    speed: 1, // Rounds per second
-    trail: 60, // Afterglow percentage
-    shadow: false, // Whether to render a shadow
-    hwaccel: false, // Whether to use hardware acceleration
-    className: 'spinner', // The CSS class to assign to the spinner
-    zIndex: 2e9, // The z-index (defaults to 2000000000)
-    top: 'auto', // Top position relative to parent in px
-    left: 'auto', // Left position relative to parent in px,
-    opacity: 1 / 4
-};
-
-function startSpin(savingDetail) {
-    var spinDivId = savingDetail ? 'detailspinner' : 'mainspinner';
-    var optsToUse = savingDetail ? smallOpts : defaultOptions;
-    //    var spinners = $('[data-class=spinner]');
-    //    var spinner;
-    //    var spinnerId;
-    //    for (var i = spinners.length - 1; i >= 0; i--) {
-    //        spinnerId = '#' + spinners[i].id;
-    //        spinner = $(spinnerId);
-    //        var parents =spinner.parents('.ng-hide');
-    //        if (parents == null || parents.length==0) {
-    //            break;
-    //        }
-    //    }
-    //    if (spinner == null || spinnerId==null) {
-    //        return null;
-    //    }
-    //    var opts = small == undefined ? defaultOptions : smallOpts;
-    var spinner = document.getElementById(spinDivId);
-    return new Spinner(optsToUse).spin(spinner);
-}
-
 
 
 function printWindow() {

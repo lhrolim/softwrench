@@ -1,94 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using softWrench.sW4.Metadata.Applications.DataSet.baseclasses;
+using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
-    public class DataSetProvider {
+    public class DataSetProvider : ApplicationFiltereableProvider<IDataSet> {
 
         private static DataSetProvider _instance;
 
-        private readonly BaseApplicationDataSet _defaultSet = new BaseApplicationDataSet();
+        private readonly BaseApplicationDataSet _defaultMaximoDataSet;
 
-        private readonly IDictionary<DataSetKey, IDataSet> _dataSets = new Dictionary<DataSetKey, IDataSet>();
 
-        private DataSetProvider() {
-            var assemblies = AssemblyLocator.GetSWAssemblies();
-            var dataSets = new List<Type>();
-            foreach (var assembly in assemblies) {
-                dataSets.AddRange(assembly.GetTypes().Where(type => typeof(IDataSet).IsAssignableFrom(type)));
-            }
+        private readonly IDictionary<ApplicationFiltereableKey, IDataSet> _maximoDataSets = new Dictionary<ApplicationFiltereableKey, IDataSet>();
 
-            foreach (var dataSetType in dataSets) {
-                if (dataSetType.IsInterface) {
-                    continue;
-                }
-                var dataSet = (IDataSet)Activator.CreateInstance(dataSetType);
-                string applicationName = dataSet.ApplicationName();
-                if (applicationName == null) {
-                    //null stands for BaseApplicationDataSet only
-                    continue;
-                }
-                var clientFilter = dataSet.ClientFilter();
-                if (clientFilter != null) {
-                    var strings = clientFilter.Split(',');
-                    foreach (var client in strings) {
-                        _dataSets.Add(new DataSetKey(applicationName, client), dataSet);
-                    }
-                } else {
-                    _dataSets.Add(new DataSetKey(applicationName, null), dataSet);
-                }
-            }
+
+        public DataSetProvider(BaseApplicationDataSet defaultMaximoDataSet) {
+            _defaultMaximoDataSet = defaultMaximoDataSet;
         }
 
-        public IDataSet LookupDataSet(String applicationName) {
-            var key = new DataSetKey(applicationName, ApplicationConfiguration.ClientName);
-            if (!_dataSets.ContainsKey(key)) {
-                key = new DataSetKey(applicationName, null);
-            }
-            return _dataSets.ContainsKey(key) ? _dataSets[key] : _defaultSet;
+        public IDataSet LookupDataSet(String applicationName, string schemaId = null) {
+
+            var clientName = ApplicationConfiguration.ClientName;
+            return base.LookupItem(applicationName, schemaId, clientName);
         }
 
-        public BaseApplicationDataSet LookupAsBaseDataSet(String applicationName) {
-            var key = new DataSetKey(applicationName, ApplicationConfiguration.ClientName);
-            var dataSet = LookupDataSet(applicationName);
-            var resultSet = dataSet as BaseApplicationDataSet;
-            return resultSet ?? _defaultSet;
-        }
 
         public static DataSetProvider GetInstance() {
-            return _instance ?? (_instance = new DataSetProvider());
+            return _instance ??
+                   (_instance =
+                       SimpleInjectorGenericFactory.Instance.GetObject<DataSetProvider>(typeof(DataSetProvider)));
         }
 
-        class DataSetKey {
-            readonly string _application;
-            readonly string _client;
 
-            public DataSetKey(string application, string client) {
-                _application = application;
-                _client = client;
-            }
-
-            private bool Equals(DataSetKey other) {
-                var applicationEquals = string.Equals(_application, other._application);
-                var clientEquals = _client == null || string.Equals(_client, other._client);
-                return applicationEquals && clientEquals;
-            }
-
-            public override bool Equals(object obj) {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((DataSetKey)obj);
-            }
-
-            public override int GetHashCode() {
-                unchecked {
-                    return ((_application != null ? _application.GetHashCode() : 0) * 397) ^ (_client != null ? _client.GetHashCode() : 0);
-                }
-            }
+        protected override IDataSet LocateDefaultItem(string applicationName, string schemaId, string clientName) {
+            return _defaultMaximoDataSet;
         }
 
+        protected override IDictionary<ApplicationFiltereableKey, IDataSet> LocateStorage(IDataSet item) {
+
+            return _maximoDataSets;
+
+        }
+
+        protected override IDictionary<ApplicationFiltereableKey, IDataSet> LocateStorageByName(string applicationName) {
+            return _maximoDataSets;
+        }
+
+        public BaseApplicationDataSet LookupAsBaseDataSet(string applicationName) {
+            return (BaseApplicationDataSet)LookupDataSet(applicationName);
+        }
     }
 }

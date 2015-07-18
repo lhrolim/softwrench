@@ -41,6 +41,16 @@ namespace softWrench.sW4.SimpleInjector {
             }
         }
 
+        public IEnumerable<T> GetObjectsOfType<T>(Type type) {
+            try {
+                return _container.GetAllInstances<T>();
+            } catch (Exception ex) {
+                throw new Exception(
+                    "Problem instantiating class", ex);
+            }
+        }
+
+
 
 
         public static void RegisterNameAndType(Type type) {

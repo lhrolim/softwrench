@@ -56,7 +56,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService,contextService) {
+function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -227,16 +227,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
         var log = $log.getInstance("applicationcontroller#renderData");
         if (result.type == 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
-            if (!result.allassociatiosFetched) {
-                //if the server has already returned all the needed associations, we dont need to hit it again
-                $timeout(function () {
-                    log.info('fetching eager associations of {0}'.format(scope.schema.applicationName));
-                    associationService.getEagerAssociations(scope);
-                });
-            }
-            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
-            associationService.restorePreviousValues(scope, result.associationOptions, scope.datamap.fields);
-            scope.compositions = result.compositions;
+            detailService.fetchRelationshipData(scope, result);
             toDetail(scope);
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");

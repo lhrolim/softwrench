@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
@@ -24,60 +26,62 @@ using NHibernate.Linq;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagBaseApplicationDataSet : BaseApplicationDataSet {
 
-        private IHlagLocationManager _locationManager;
+        private readonly IHlagLocationManager _locationManager;
 
-        protected readonly EntityRepository EntityRepository = new EntityRepository();
+        private readonly EntityRepository _entityRepository;
 
-        private MaximoHibernateDAO maxDAO;
+        //        protected readonly EntityRepository EntityRepository = new EntityRepository();
+
+        private readonly MaximoHibernateDAO _maxDao;
+
+        public HapagBaseApplicationDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) {
+            _locationManager = locationManager;
+            _entityRepository = entityRepository;
+            _maxDao = maxDao;
+        }
+
+
 
         private readonly ISet<string> _applications = new HashSet<string>() { "ACTIVITY", "CHANGE", "INCIDENT", "PROBLEM", "SR", "WORKORDER" };
 
 
+        public EntityRepository EntityRepository {
+            get { return EntityRepository; }
+        }
+
         protected IHlagLocationManager LocationManager {
-            get {
-                if (_locationManager != null) {
-                    return _locationManager;
-                }
-                _locationManager =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IHlagLocationManager>(typeof(IHlagLocationManager));
-                return _locationManager;
-            }
+            get { return _locationManager; }
         }
 
 
 
         protected MaximoHibernateDAO MaxDAO {
-            get {
-                if (maxDAO != null) {
-                    return maxDAO;
-                }
-                maxDAO =
-                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
-                return maxDAO;
-            }
+            get { return _maxDao; }
         }
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
-            InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
-            var ob = result.ResultObject;
-            if (ob != null) {
-                var attachments = ob.GetAttribute("attachment_");
-                if (attachments != null) {
-                    foreach (var att in (IEnumerable<Dictionary<string, object>>)attachments) {
-                        var urlDescription = AttachmentHandler.BuildFileName(att["docinfo_.urlname"] as string);
-                        if (urlDescription == null) {
-                            //keep description
-                            att["urldescription"] = att["description"];
-                        } else {
-                            att["urldescription"] = urlDescription;
-                        }
+      
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application,
+            CompositionFetchRequest request,
+            JObject currentData) {
+            var compositionData = base.GetCompositionData(application, request, currentData);
+            if (!compositionData.ResultObject.ContainsKey("attachment_")) {
+                return compositionData;
+            }
 
-                    }
+            var attachments = compositionData.ResultObject["attachment_"].ResultList;
+
+            foreach (var att in attachments) {
+                var urlDescription = AttachmentHandler.BuildFileName(att["docinfo_.urlname"] as string);
+                if (urlDescription == null) {
+                    //keep description
+                    att["urldescription"] = att["description"];
+                } else {
+                    att["urldescription"] = urlDescription;
                 }
             }
-            return result;
+            return compositionData;
         }
+
 
         public virtual IEnumerable<IAssociationOption> GetHlagAllLocations(OptionFieldProviderParameters parameters) {
             return LocationManager.FindAllLocations();

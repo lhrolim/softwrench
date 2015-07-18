@@ -14,8 +14,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         
 
         public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, CompositionCollectionProperties collectionProperties, 
-            SchemaMode renderMode, CompositionFieldRenderer renderer,string printSchema, string dependantfield) :
-            base(inline, detailSchema, renderMode, renderer, printSchema, dependantfield) {
+            SchemaMode renderMode, CompositionFieldRenderer renderer,string printSchema, string dependantfield,FetchType fetchType) :
+            base(inline, detailSchema, renderMode, renderer, printSchema, dependantfield, fetchType) {
             _collectionProperties = collectionProperties;
         }
 

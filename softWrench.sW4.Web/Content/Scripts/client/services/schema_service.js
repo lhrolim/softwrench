@@ -20,6 +20,33 @@ app.factory('schemaService', function () {
             return { app: application, schemaId: schemaId, mode: mode };
         },
 
+        getProperty: function (schema, propertyName) {
+            if (!schema) {
+                return false;
+            }
+            schema.properties = schema.properties || {};
+            return schema.properties[propertyName];
+        },
+
+
+        isPropertyTrue: function (schema, propertyName) {
+            if (!schema) {
+                return false;
+            }
+            return schema.properties && "true" == schema.properties[propertyName];
+        },
+
+        getId: function (datamap, schema) {
+            if (datamap.fields) {
+                return datamap.fields[schema.idFieldName];
+            }
+            return datamap[schema.idFieldName];
+        },
+
+        nonTabFields: function (schema) {
+            return fieldService.nonTabFields(schema.displayables, true);
+        },
+
         
     };
 

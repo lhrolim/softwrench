@@ -1,4 +1,5 @@
-﻿using WcfSamples.DynamicProxy;
+﻿using softWrench.sW4.SimpleInjector;
+using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Entities;
@@ -7,7 +8,13 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
     public abstract class CrudConnectorDecorator : IMaximoCrudConnector {
         protected BaseMaximoCrudConnector _realCrudConnector;
 
-        protected MaximoConnectorEngine ConnectorEngine = new MaximoConnectorEngine();
+        internal MaximoConnectorEngine ConnectorEngine {
+            get {
+                return
+                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(
+                        typeof(MaximoConnectorEngine));
+            }
+        } 
 
         public BaseMaximoCrudConnector RealCrudConnector {
             get { return _realCrudConnector; }

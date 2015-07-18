@@ -1643,7 +1643,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="textarea"/>
           </field>
-          <composition relationship="attachment" label="Attachments" hidden="true"/>
+          <composition relationship="attachment" label="Attachments" hidden="true" fetchtype="eager"/>
           <field label="Attachment:" attribute="#attachmentsummary" />
 
           <commands>
@@ -1851,6 +1851,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="itdcreatedate" label="CR Activation Date/Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
+          <field attribute="statusdate" hidden="true"/>
           <field attribute="wopriority" label="Priority"/>
           <field attribute="status" label="Status"/>
           <field attribute="longdescription_.ldtext" label="Remarks"/>
@@ -2933,7 +2934,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             </composition>
           </tab>
 
-          <composition relationship="assetcustodian" label="Assigned User &amp; Custodians" detailschema="" printschema="asset_composition">
+          <composition relationship="assetcustodian" label="Assigned User &amp; Custodians" detailschema="" printschema="asset_composition" fetchtype="eager">
             <header displacement="ontop" label=""/>
             <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" />
           </composition>
@@ -3002,11 +3003,11 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
           </tab>
           <tab label="History" id="history">
-            <composition relationship="ticket" inline="true" label="" detailschema="">
+            <composition relationship="ticket" inline="true" label="" detailschema="" fetchtype="eager">
               <header label="Tickets" displacement="ontop"/>
               <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendMultiLocciTicketHistoryQuery"/>
             </composition>
-            <composition relationship="imac" inline="true" label="" detailschema="">
+            <composition relationship="imac" inline="true" label="" detailschema="" fetchtype="eager">
               <header label="IMAC" displacement="ontop"/>
               <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendImacMultiLocciTicketHistoryQuery"/>
             </composition>
@@ -3348,7 +3349,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="textarea"/>
           </field>
           <field label="Status:" attribute="status"/>
-          <composition relationship="attachment" label="Attachments" hidden="true"/>
+          <composition relationship="attachment" label="Attachments" hidden="true" fetchtype="eager"/>
           <field label="Attachment:" attribute="#attachmentsummary" />
 
           <commands>

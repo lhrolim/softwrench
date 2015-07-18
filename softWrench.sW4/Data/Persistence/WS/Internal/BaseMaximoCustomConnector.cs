@@ -3,10 +3,17 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCustomConnector : IMaximoConnector, IDisposable {
-        internal MaximoConnectorEngine Maximoengine = new MaximoConnectorEngine();
+        internal MaximoConnectorEngine Maximoengine {
+            get {
+                return
+                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(
+                        typeof(MaximoConnectorEngine));
+            }
+        }
 
         protected MaximoOperationExecutionContext GetContext(OperationData operationData) {
             return MaximoOperationExecutionContext.GetInstance(operationData, null);
@@ -17,7 +24,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public void Dispose() {
-            Maximoengine.Dispose();
         }
 
         class BaseOperationData : IOperationData {

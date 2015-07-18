@@ -1,4 +1,6 @@
-﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
+﻿using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
@@ -27,6 +29,9 @@ using System.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagImacDataSet : HapagBaseApplicationDataSet {
+        public HapagImacDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) : base(locationManager, entityRepository, maxDao)
+        {
+        }
 
         protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var result = base.GetList(application, searchDto);

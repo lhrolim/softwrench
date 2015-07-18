@@ -96,7 +96,7 @@ app.directive('newItemInput', function ($compile) {
     }
 });
 
-app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope) {
+app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope, spinService, compositionService) {
     return {
         restrict: 'E',
         replace: true,
@@ -144,6 +144,13 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             }
 
             scope.$on("sw_lazyloadtab", function (event, tabid) {
+                if (scope.tabid != tabid) {
+                    //not this tab
+                    return;
+                }
+                if (!compositionService.isCompositionLodaded(scope.tabid)) {
+                    spinService.start({ compositionSpin: true });
+                }
                 if (scope.tabid == tabid && !scope.loaded) {
                     doLoad();
                 }
@@ -157,7 +164,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
 });
 
 
-app.directive('compositionList', function (contextService) {
+app.directive('compositionList', function (contextService, spinService) {
 
     return {
         restrict: 'E',
@@ -198,12 +205,24 @@ app.directive('compositionList', function (contextService) {
                 $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
+
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
                     commandService: commandService
                 });
+
+                if (!$scope.paginationData) {
+                    //case the tab is loaded after the event result, the event would not be present on the screen
+                    $scope.paginationData = contextService.get("compositionpagination_{0}".format($scope.relationship), true, true);
+                    //workaround for hapag
+                    if ($scope.paginationData) {
+                        $scope.paginationData.selectedPage = $scope.paginationData.pageNumber;
+                    }
+                }
+
+
             };
 
             init();
@@ -300,6 +319,19 @@ app.directive('compositionList', function (contextService) {
                 }
                 return null;
             }
+
+            $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
+                if (!compositiondata[$scope.relationship]) {
+                    //this is not the data this tab is interested
+                    return;
+                }
+                spinService.stop({ compositionSpin: true });
+                $scope.paginationData = compositiondata[$scope.relationship].paginationData;
+                $scope.paginationData.selectedPage = $scope.paginationData.pageNumber;
+                $scope.compositiondata = compositiondata[$scope.relationship].list;
+                init();
+                $scope.$digest();
+            });
 
             $scope.cancelComposition = function () {
                 $scope.newDetail = false;
@@ -452,6 +484,27 @@ app.directive('compositionList', function (contextService) {
             //overriden function
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
+            };
+
+
+            /* pagination */
+
+            $scope.selectPage = function (pageNumber, pageSize, printMode) {
+                if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
+                    $scope.paginationData.pageNumber = pageNumber;
+                    return;
+                }
+                compositionService
+                    .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber)
+                    .then(function (result) {
+                        $scope.clonedCompositionData = [];
+                        // clear lists
+                        $scope.compositiondata = result[$scope.relationship].list;
+                        $scope.paginationData = result[$scope.relationship].paginationData;
+                        //workaround for hapag
+                        $scope.paginationData.selectedPage = $scope.paginationData.pageNumber;
+                        init();
+                    });
             };
 
 

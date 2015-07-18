@@ -20,13 +20,16 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
         protected readonly SWDBHibernateDAO DAO;
         protected readonly IConfigurationFacade ConfigFacade;
-        public readonly EntityRepository EntityRepository;
+        public static EntityRepository EntityRepository;
 
 
-        protected AMaximoRowstampManager(SWDBHibernateDAO dao, IConfigurationFacade facade) {
+
+
+
+        protected AMaximoRowstampManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository) {
             DAO = dao;
             ConfigFacade = facade;
-            EntityRepository = new EntityRepository();
+            EntityRepository = repository;
         }
 
         protected IEnumerable<AttributeHolder> FetchNew(long rowstamp, string entityName, SearchRequestDto searchDto = null) {

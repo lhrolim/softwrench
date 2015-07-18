@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
@@ -18,9 +19,10 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public new string Id { get; set; }
         public string Class { get { return EntityMetadata.GetTableName(); }  }
+        [JsonIgnore]
         public EntityMetadata EntityMetadata { get; set; }
         public OperationType OperationType { get; set; }
-
+        [JsonIgnore]
         public ApplicationMetadata ApplicationMetadata { get; set; }
 
         protected override object BlankList() {

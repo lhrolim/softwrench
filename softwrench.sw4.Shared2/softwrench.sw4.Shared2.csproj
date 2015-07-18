@@ -48,6 +48,7 @@
     <Compile Include="Data\Association\MultiValueAssociationOption.cs" />
     <Compile Include="Data\AttributeHolder.cs" />
     <Compile Include="Data\DataMapDefinition.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\FetchType.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSectionOrientation.cs" />

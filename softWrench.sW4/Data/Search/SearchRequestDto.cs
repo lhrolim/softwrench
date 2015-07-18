@@ -329,6 +329,10 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
+        public virtual SearchRequestDto ShallowCopy() {
+            return (SearchRequestDto)MemberwiseClone();
+        }
+
 
     }
 }

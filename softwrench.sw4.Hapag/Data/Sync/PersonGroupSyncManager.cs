@@ -5,6 +5,7 @@ using Iesi.Collections;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities.SyncManagers;
+using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softwrench.sw4.Hapag.Security;
@@ -19,8 +20,8 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
         private readonly HlagLocationManager _hlagLocationManager;
 
-        public PersonGroupSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, HlagLocationManager hlagLocationManager)
-            : base(dao, facade) {
+        public PersonGroupSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade,EntityRepository repository, HlagLocationManager hlagLocationManager)
+            : base(dao, facade, repository) {
             _hlagLocationManager = hlagLocationManager;
         }
 

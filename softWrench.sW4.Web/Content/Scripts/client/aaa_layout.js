@@ -68,7 +68,7 @@ app.directive("ngEnabled", function () {
 
 
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, $location, $window, logoutService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, $location, $window, logoutService, spinService) {
 
     $scope.$name = 'LayoutController';
 
@@ -76,27 +76,17 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
-        if (!$rootScope.avoidspin && !$rootScope.showingspin) {
-            spin = startSpin(savingMain);
-            $rootScope.showingspin = true;
-        }
+        spinService.start({ savingDetail: savingMain });
     });
 
     $rootScope.$on('sw_ajaxend', function (data) {
-        if (spin != undefined) {
-            $log.getInstance("layoutcontroller#onajaxend").debug('stop spinning due to success ajax');
-            spin.stop();
-            $rootScope.showingspin = false;
-        }
+        spinService.stop();
         $rootScope.savingMain = undefined;
 
     });
 
     $rootScope.$on('sw_ajaxerror', function (data) {
-        if (spin != undefined) {
-            $log.getInstance("layoutcontroller#onajaxerror").debug('stop spinning due to error ajax');
-            spin.stop();
-        }
+        spinService.stop();
         $rootScope.savingMain = undefined;
 
     });

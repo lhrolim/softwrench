@@ -1,25 +1,41 @@
 ﻿var app = angular.module('sw_layout');
 
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextService) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextService, spinService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            if (scope.$last === true) {
-                $timeout(function () {
-                    $('.compositiondetailtab li>a').each(function () {
-                        var $this = $(this);
-                        $this.click(function (e) {
-                            e.preventDefault();
-                            $this.tab('show');
-                            var tabId = $(this).data('tabid');
-                            $log.getInstance('tabsrendered').trace('lazy loading tab {0}'.format(tabId));
-                            $rootScope.$broadcast('sw_lazyloadtab', tabId);
-                            contextService.setActiveTab(tabId);
-                        });
-                    });
-                });
+            // Do not execute until the last iteration of ng-repeat has been reached,
+            // or if $last is undefined (this happens when the tabsrendered directive 
+            // is placed on something other than ng-repeat).
+            if (scope.$last === false) {
+                return;
             }
+
+            var log = $log.getInstance('tabsrendered');
+            log.debug("finished rendering tabs of detail screen");
+            $timeout(function () {
+                var firstTabId = null;
+                $('.compositiondetailtab li>a').each(function () {
+                    var $this = $(this);
+                    if (firstTabId == null) {
+                        firstTabId = $(this).data('tabid');
+                    }
+                    $this.click(function (e) {
+                        e.preventDefault();
+                        $this.tab('show');
+                        var tabId = $(this).data('tabid');
+
+                        log.trace('lazy loading tab {0}'.format(tabId));
+                        spinService.stop({ compositionSpin: true });
+                        $rootScope.$broadcast('sw_lazyloadtab', tabId);
+
+                    });
+
+                });
+                $rootScope.$broadcast("sw_alltabsloaded", firstTabId);
+
+            }, 0, false);
         }
     };
 });

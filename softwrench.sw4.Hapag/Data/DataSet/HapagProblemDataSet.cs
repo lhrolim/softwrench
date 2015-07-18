@@ -1,4 +1,7 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational;
+using softwrench.sw4.Hapag.Security;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Metadata.Applications;
@@ -6,7 +9,11 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagProblemDataSet : HapagBaseApplicationDataSet{
+    class HapagProblemDataSet : HapagBaseApplicationDataSet {
+        public HapagProblemDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+            : base(locationManager, entityRepository, maxDao) {
+        }
+
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var dbDetail = base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;

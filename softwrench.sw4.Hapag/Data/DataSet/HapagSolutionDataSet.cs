@@ -11,6 +11,7 @@ using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagSolutionDataSet : BaseApplicationDataSet {
+       
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var dataResponse = base.GetApplicationDetail(application, user, request);
             var lang = !string.IsNullOrEmpty(request.Lang) ? request.Lang : "E";

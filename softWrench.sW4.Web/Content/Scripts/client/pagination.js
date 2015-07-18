@@ -6,6 +6,7 @@
         scope: {
             renderfn: "&",
             paginationData: '=',
+            showactions: "@",
             schemaId: '@',
             applicationName: '@',
             mode: '@',

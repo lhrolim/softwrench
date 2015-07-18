@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using System.Collections.Generic;
 
@@ -16,15 +18,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public CompositionSchemas Schemas { get; set; }
 
-     
+        [JsonConverter(typeof(StringEnumConverter))]
+        public FetchType FetchType { get; set; }
 
         public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer, 
-            string printSchema, string dependantfields) {
+            string printSchema, string dependantfields,FetchType fetchType) {
             _inline = inline;
             Renderer = renderer;
             _detailSchema = detailSchema;
             PrintSchema = printSchema;
             RenderMode = renderMode;
+            FetchType = fetchType;
             if (dependantfields != null) {
                 var fields = dependantfields.Split(',');
                 foreach (var field in fields) {

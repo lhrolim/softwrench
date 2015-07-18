@@ -1,4 +1,5 @@
 ﻿using Iesi.Collections.Generic;
+using softWrench.sW4.Data.Persistence.Relational;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
@@ -28,9 +29,8 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
         private readonly HapagPersonGroupHelper _hapagHelper;
 
-        public PersonGroupAssociationSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, HlagLocationManager locationManager,
-            PersonGroupSyncManager personGroupSyncManager, softwrench.sw4.Hapag.Data.Sync.HapagPersonGroupHelper hapagHelper)
-            : base(dao, facade) {
+        public PersonGroupAssociationSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, HlagLocationManager locationManager, PersonGroupSyncManager personGroupSyncManager, HapagPersonGroupHelper hapagHelper, EntityRepository repository)
+            : base(dao, facade,repository) {
             _locationManager = locationManager;
             _personGroupSyncManager = personGroupSyncManager;
             _hapagHelper = hapagHelper;

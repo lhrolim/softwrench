@@ -47,7 +47,7 @@ namespace softWrench.sW4.Metadata {
             var before = Stopwatch.StartNew();
             InitializeMetadata();
             //force eager initialization to allow eager catching of errors.
-            DataSetProvider.GetInstance();
+//            DataSetProvider.GetInstance();
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
         }

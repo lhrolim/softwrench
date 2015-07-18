@@ -7,11 +7,22 @@ using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Data.Persistence.Sync {
     public class SyncItemHandler {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private EntityRepository _entityRepository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_entityRepository == null) {
+                    _entityRepository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _entityRepository;
+            }
+        }
 
         /// <summary>
         /// This delegate may be used to perform extra handling to a synchronized item
@@ -24,10 +35,10 @@ namespace softWrench.sW4.Data.Persistence.Sync {
             SyncedItemHandlerDelegate syncItemHandlerDelegate) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(appMetadata);
             var rowstamps = new Rowstamps(applicationSyncData.LowerLimitRowstamp, applicationSyncData.UpperLimitRowstamp);
-            var deletedRecordsId = DeletedRecordsId(rowstamps, entityMetadata);
+//            var deletedRecordsId = DeletedRecordsId(rowstamps, entityMetadata);
             IList<DataMap> dataMaps = new List<DataMap>();
             var rowStamps = new SortedSet<long>();
-            var enumerable = _entityRepository.GetSynchronizationData(entityMetadata, rowstamps);
+            var enumerable = EntityRepository.GetSynchronizationData(entityMetadata, rowstamps);
             if (!enumerable.Any()) {
                 return SynchronizationApplicationData.NoRecords(appMetadata);
             }
@@ -51,21 +62,21 @@ namespace softWrench.sW4.Data.Persistence.Sync {
 //            HandleRelationships(appMetadata, entitiesDictionary);
             var resultingRowstamps = new Rowstamps(rowStamps.First().ToString(CultureInfo.InvariantCulture), rowStamps.Last().ToString(CultureInfo.InvariantCulture));
             var synchronizationData = new SynchronizationApplicationData(appMetadata, dataMaps, entityMetadata.ListAssociations(), resultingRowstamps);
-            synchronizationData.DeletedRecordIds = deletedRecordsId;
+//            synchronizationData.DeletedRecordIds = deletedRecordsId;
             return synchronizationData;
         }
 
-        private IList<object> DeletedRecordsId(Rowstamps rowstamps, EntityMetadata entityMetadata) {
-            if (rowstamps.NotBound() || rowstamps.BothLimits()) {
-                return new List<object>();
-            }
-            var deletedRecordsIdQuery = RowStampUtil.DeletedRecordsIdQuery(entityMetadata);
-            IList<object> deletedRecordsId = new List<object>();
-            if (deletedRecordsIdQuery != null) {
-                deletedRecordsId = _entityRepository.FindByQuery(deletedRecordsIdQuery, rowstamps.Lowerlimit);
-            }
-            return deletedRecordsId;
-        }
+//        private IList<object> DeletedRecordsId(Rowstamps rowstamps, EntityMetadata entityMetadata) {
+//            if (rowstamps.NotBound() || rowstamps.BothLimits()) {
+//                return new List<object>();
+//            }
+//            var deletedRecordsIdQuery = RowStampUtil.DeletedRecordsIdQuery(entityMetadata);
+//            IList<object> deletedRecordsId = new List<object>();
+//            if (deletedRecordsIdQuery != null) {
+//                deletedRecordsId = EntityRepository.FindByQuery(deletedRecordsIdQuery, rowstamps.Lowerlimit);
+//            }
+//            return deletedRecordsId;
+//        }
 
     }
 }

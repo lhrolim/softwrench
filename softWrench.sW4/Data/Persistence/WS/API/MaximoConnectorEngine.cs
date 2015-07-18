@@ -1,4 +1,6 @@
-﻿using softwrench.sW4.Shared2.Data;
+﻿using System.Linq;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
@@ -11,6 +13,7 @@ using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using System;
@@ -19,11 +22,17 @@ using System.Collections.Generic;
 namespace softWrench.sW4.Data.Persistence.WS.API {
     public sealed class MaximoConnectorEngine : ISingletonComponent {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private readonly EntityRepository _entityRepository;
 
         private readonly SyncItemHandler _syncHandler = new SyncItemHandler();
 
-        private readonly CollectionResolver _collectionResolver = new CollectionResolver();
+        private readonly CollectionResolver _collectionResolver;
+
+        public MaximoConnectorEngine(EntityRepository entityRepository, CollectionResolver collectionResolver) {
+            _entityRepository = entityRepository;
+            _collectionResolver = collectionResolver;
+        }
+
 
         public MaximoResult Execute(OperationWrapper operationWrapper) {
             var entityMetadata = operationWrapper.EntityMetadata;
@@ -87,13 +96,25 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             return _entityRepository.Count(entityMetadata, searchDto);
         }
 
-        public AttributeHolder FindById(SlicedEntityMetadata entityMetadata, string id,
+        public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var mainEntity = _entityRepository.Get(entityMetadata, id);
             if (mainEntity == null) {
                 return null;
             }
-            _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
+            if ("true".EqualsIc(schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions))) {
+                _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
+            }
+            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+
+            foreach (var compositionEntry in compositionSchemas) {
+                if (FetchType.Eager.Equals(compositionEntry.Value.FetchType) || compositionEntry.Value.INLINE) {
+                    compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+                }
+            }
+            if (compostionsToUse.Any()) {
+                _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, mainEntity);
+            }
 
             return mainEntity;
         }
@@ -126,7 +147,6 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                 _crudConnector = crudConnector;
             }
 
-            private readonly EntityRepository _entityRepository = new EntityRepository();
 
             public MaximoResult Update(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.AddChange;
@@ -171,16 +191,11 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                 return maximoTemplateData.ResultObject;
             }
 
+
             public void Dispose() {
-                _entityRepository.Dispose();
             }
-
-
         }
 
-        public void Dispose() {
-            _entityRepository.Dispose();
-        }
 
 
     }

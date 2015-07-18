@@ -1,4 +1,5 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
@@ -18,13 +19,25 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
-    class CollectionResolver {
+    public class CollectionResolver : ISingletonComponent {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
 
         private readonly ILog _log = LogManager.GetLogger(typeof(CollectionResolver));
 
         private IContextLookuper _contextLookuper;
+
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
+
 
         protected IContextLookuper ContextLookuper {
             get {
@@ -37,15 +50,15 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             }
         }
 
-        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
-            AttributeHolder mainEntity) {
-            ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder>() { mainEntity });
+        public Dictionary<string, EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
+            AttributeHolder mainEntity, PaginatedSearchRequestDto paginatedSearch = null) {
+            return ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder>() { mainEntity },paginatedSearch);
         }
 
-        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
-            IReadOnlyList<AttributeHolder> entitiesList) {
+        public Dictionary<string, EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
+            IReadOnlyList<AttributeHolder> entitiesList, PaginatedSearchRequestDto paginatedSearch = null) {
             if (!compositionSchemas.Any()) {
-                return;
+                return new Dictionary<string, EntityRepository.SearchEntityResult>();
             }
             var before = Stopwatch.StartNew();
             _log.DebugFormat("Init Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys));
@@ -56,21 +69,29 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                     collectionAssociations.Add(entityListAssociation);
                 }
             }
+
+            var results = new Dictionary<string, EntityRepository.SearchEntityResult>();
+
             var tasks = new Task[collectionAssociations.Count];
             var i = 0;
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, ctx));
+                var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy();
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, ctx, results, perThreadPaginatedSearch));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
                 String.Join(",", compositionSchemas.Keys)));
+
+
+            return results;
+
         }
 
 
-        private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
-            IEnumerable<AttributeHolder> entitiesList, ContextHolder ctx) {
+        private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, IEnumerable<AttributeHolder> entitiesList,
+            ContextHolder ctx, Dictionary<string, EntityRepository.SearchEntityResult> results, PaginatedSearchRequestDto paginatedSearch) {
             Quartz.Util.LogicalThreadContext.SetData("context", ctx);
             var lookupAttributes = collectionAssociation.Attributes;
             var collectionEntityMetadata = MetadataProvider.Entity(collectionAssociation.To);
@@ -85,50 +106,62 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var attributeHolders = entitiesList as AttributeHolder[] ?? entitiesList.ToArray();
             var matchingResultWrapper = new CollectionMatchingResultWrapper();
 
-            var searchRequestDto = BuildSearchRequestDto(applicationCompositionSchema, lookupattributes, matchingResultWrapper, attributeHolders, collectionEntityMetadata);
+            var searchRequestDto = BuildSearchRequestDto(applicationCompositionSchema, lookupattributes, matchingResultWrapper, attributeHolders, collectionEntityMetadata, paginatedSearch);
 
             var firstAttributeHolder = attributeHolders.First();
             if (applicationCompositionSchema.PrefilterFunction != null) {
-                var dataSet = DataSetProvider.GetInstance().LookupAsBaseDataSet(entityMetadata.ApplicationName);
+                var dataSet = DataSetProvider.GetInstance().LookupDataSet(entityMetadata.ApplicationName);
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
                 var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.AppSchema, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 
+            EntityRepository.SearchEntityResult queryResult = null;
+            // one thread to fetch results
+            var tasks = new Task[2];
+            tasks[0] = Task.Factory.NewThread(() => {
+                queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
+            });
+            // one thread to count results for paginations
+            tasks[1] = Task.Factory.NewThread(() => {
+                if (paginatedSearch != null) {
+                    paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, searchRequestDto);
+                }
+            });
+            Task.WaitAll(tasks);
+            // add paginationData to result 
+            if (paginatedSearch != null) {
+                // creating a new pagination data in order to have everything calculated correctly
+                queryResult.PaginationData = new PaginatedSearchRequestDto(
+                    paginatedSearch.TotalCount,
+                    paginatedSearch.PageNumber,
+                    paginatedSearch.PageSize,
+                    paginatedSearch.SearchValues,
+                    new List<int>(1) { paginatedSearch.PageSize }
+                    );
+            }
 
-            var listOfCollections = _entityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
+            var listOfCollections = _repository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
             if (attributeHolders.Count() == 1) {
                 //default scenario, we have just one entity here
-                firstAttributeHolder.Attributes.Add(targetCollectionAttribute, listOfCollections);
+                results.Add(collectionAssociation.Qualifier, queryResult);
+                firstAttributeHolder.Attributes.Add(targetCollectionAttribute, listOfCollections.ResultList);
                 return;
             }
             MatchResults(listOfCollections, matchingResultWrapper, targetCollectionAttribute);
         }
 
-        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema,
-            IEnumerable<EntityAssociationAttribute> lookupattributes, CollectionMatchingResultWrapper matchingResultWrapper,
-            AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata) {
+        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema, IEnumerable<EntityAssociationAttribute> lookupattributes, CollectionMatchingResultWrapper matchingResultWrapper, AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata, PaginatedSearchRequestDto paginatedSearch) {
 
-            var searchRequestDto = new SearchRequestDto();
+            var searchRequestDto = new PaginatedSearchRequestDto();
 
             searchRequestDto.BuildProjection(applicationCompositionSchema, ContextLookuper.LookupContext().PrintMode);
 
             foreach (var lookupAttribute in lookupattributes) {
                 if (lookupAttribute.From != null) {
                     matchingResultWrapper.AddKey(lookupAttribute.To);
-                    var searchValues = new List<string>();
-                    foreach (var entity in attributeHolders) {
-                        var key = matchingResultWrapper.FetchKey(entity);
-                        var searchValue = SearchUtils.GetSearchValue(lookupAttribute, entity);
-                        if (!String.IsNullOrWhiteSpace(searchValue) && lookupAttribute.To != null) {
-                            searchValues.Add(searchValue);
-                            key.AppendEntry(lookupAttribute.To, searchValue);
-                        }
-                    }
-                    if (searchValues.Any()) {
-                        searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
-                    }
+                    BuildParentQueryConstraint(matchingResultWrapper, attributeHolders, lookupAttribute, searchRequestDto);
                 } else if (lookupAttribute.Literal != null) {
                     //if the from is a literal, don´t bother with the entities values
                     searchRequestDto.AppendSearchEntry(lookupAttribute.To, lookupAttribute.Literal);
@@ -142,11 +175,40 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
+            if (paginatedSearch != null) {
+                searchRequestDto.PageNumber = paginatedSearch.PageNumber;
+                searchRequestDto.PageSize = paginatedSearch.PageSize;
+                searchRequestDto.TotalCount = paginatedSearch.TotalCount;
+            }
+
             return searchRequestDto;
         }
 
-        private void MatchResults(IEnumerable<IDictionary<string, object>> resultCollections, CollectionMatchingResultWrapper matchingResultWrapper, string targetCollectionAttribute) {
-            foreach (var resultCollection in resultCollections) {
+        private static void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper,
+            AttributeHolder[] attributeHolders, EntityAssociationAttribute lookupAttribute,
+            PaginatedSearchRequestDto searchRequestDto) {
+            var searchValues = new List<string>();
+            var enumerable = attributeHolders as AttributeHolder[] ?? attributeHolders.ToArray();
+            var hasMainEntity = enumerable.Any();
+            foreach (var entity in attributeHolders) {
+                var key = matchingResultWrapper.FetchKey(entity);
+                var searchValue = SearchUtils.GetSearchValue(lookupAttribute, entity);
+                if (!String.IsNullOrWhiteSpace(searchValue) && lookupAttribute.To != null) {
+                    searchValues.Add(searchValue);
+                    key.AppendEntry(lookupAttribute.To, searchValue);
+                }
+            }
+            if (searchValues.Any()) {
+                searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
+            } else if (hasMainEntity && lookupAttribute.Primary) {
+                //if nothing was provided, it should return nothing, instead of all the values --> 
+                //if the main entity had a null on a primary element of the composition, nothing should be seen
+                searchRequestDto.AppendSearchEntry(lookupAttribute.To, new[] { "-1231231312" });
+            }
+        }
+
+        private void MatchResults(EntityRepository.SearchEntityResult resultCollections, CollectionMatchingResultWrapper matchingResultWrapper, string targetCollectionAttribute) {
+            foreach (var resultCollection in resultCollections.ResultList) {
                 var resultkey = new CollectionMatchingResultKey();
                 foreach (var key in matchingResultWrapper.Keys) {
                     object result;

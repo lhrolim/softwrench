@@ -1,5 +1,5 @@
 <div class="context clearfix hiddenonprint header-menu">
-    <div class="pagination-grid-left left">
+    <div class="pagination-grid-left left" >
         <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
         <select id="pagesize"
             ng-model="paginationData.pageSize"
@@ -33,7 +33,7 @@
                 <img ng-src="{{contextPath('/Content/Images/last.png')}}" alt="last" />
             </a>
         </span>
-        <span ng-if="isHapag()" class="pagination-actions">
+        <span ng-if="isHapag() && showactions!='false'" class="pagination-actions">
             <a ng-click="exportToPrint()" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
                 <img ng-src="{{contextPath('/Content/Images/print_small.gif')}}" alt="print" />
             </a>
