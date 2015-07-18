@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity idAttribute="sparepartid" name="sparepart">
+      <attributes>
+        <attribute name="assetnum" type="varchar" required="true"/>
+        <attribute name="description" type="varchar" required="false"/>
+        <attribute name="hasid" type="smallint" required="true"/>
+        <attribute name="issuedqty" type="decimal" required="true"/>
+        <attribute name="itemnum" type="varchar" required="true"/>
+        <attribute name="itemsetid" type="varchar" required="true"/>
+        <attribute name="langcode" type="varchar" required="true"/>
+        <attribute name="orgid" type="varchar" required="true"/>
+        <attribute name="quantity" type="decimal" required="true"/>
+        <attribute name="siteid" type="varchar" required="true"/>
+        <attribute name="sparepartid" type="bigint" required="false"/>
+        <attribute name="description" type="varchar" required="false"/>
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="SPAREPART" />
+      </connectorParameters>
+    </entity>
+  </entities>
+  
+  <applications>
+    <application entity="sparepart" name="sparepart" title="sparepart">
+      <schemas>
+        <schema id="sparepartlist" stereotype="list" mode="output">
+          <field attribute="sparepartid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="description" label="Description"/>
+        </schema>
+      </schemas>
+    </application>
+
+  </applications>
+</metadata>

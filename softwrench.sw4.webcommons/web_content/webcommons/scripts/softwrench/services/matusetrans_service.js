@@ -92,9 +92,9 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             var resultObject = data.resultObject;
 
             if (resultObject.length > 0) {
-                parameters.fields['costtype'] = resultObject[0].fields['costtype'];
-                parameters.fields['itemsetid'] = resultObject[0].fields['itemsetid'];
-
+                var resultMap = resultObject[0].fields;
+                parameters.fields['costtype'] = resultMap['costtype'];
+                parameters.fields['itemsetid'] = resultMap['itemsetid'];
                 doCommodityGroupAssociation(parameters);
                 doItemAssociation(parameters);
             } else {
@@ -122,7 +122,11 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
         },
 
         afteritemchange: function (event) {
-            event.fields['#description'] = event.fields['item_.description'];
+            if (event.fields['linetype'].equalIc("sparepart")) {
+                event.fields['#description'] = event.fields['sparepart_.description'];
+            } else {
+                event.fields['#description'] = event.fields['item_.description'];
+            }
 
             doItemLookup(event);
         },
