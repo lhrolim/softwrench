@@ -58,6 +58,10 @@ String.prototype.equalIc = String.prototype.f = function (other) {
     return s.toLowerCase() == other.toLowerCase();
 };
 
+String.prototype.equalsIc = String.prototype.f = function () {
+    return arguments[0].isEqual(this, true);
+};
+
 
 var nullOrEmpty = function (s) {
     return nullOrUndef(s) || String(s).trim().length == 0;

@@ -52,7 +52,7 @@
                 return dto;
             };
 
-            function getLazyCompositions(schema) {
+            function getLazyCompositions(schema,datamap) {
                 if (!schema || !schema["cachedCompositions"]) {
                     return null;
                 }
@@ -62,8 +62,10 @@
                     if (!cachedCompositions.hasOwnProperty(composition)) {
                         continue;
                     }
-                    if (cachedCompositions[composition].fetchType == "Lazy") {
+                    if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
                         compositions.push(composition);
+                    }else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
+                        compositionContext[composition] = datamap[composition];
                     }
                 }
                 return compositions;
@@ -115,7 +117,7 @@
                 var applicationName = schema.applicationName;
                 // sanitizing data to submit
                 var fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
-                var compositionNames = getLazyCompositions(schema);
+                var compositionNames = getLazyCompositions(schema,datamap);
                 angular.forEach(compositionNames, function (composition) {
                     if (!fieldsTosubmit[composition] || !fieldsTosubmit.hasOwnProperty(composition)) {
                         return;
