@@ -79,7 +79,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             activeRequests--;
             unLockCommandBars();
             unLockTabs();
-            if (activeRequests == 0) {
+            if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data,rejection.status);
               
             }
