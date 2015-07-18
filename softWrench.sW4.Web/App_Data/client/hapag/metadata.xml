@@ -2073,7 +2073,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <association target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
 								  extraprojectionvalues="primaryuser_.personid,primaryuser_person_.hlagdisplayname,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,
                   classification,location_.description,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,
-                  item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location,assetspeccomment_.alnvalue">
+                  item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location,assetspeccomment_.alnvalue,usage">
             <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
             <dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
             <event type="afterchange" service="imacservice" method="afterChangeAsset"/>

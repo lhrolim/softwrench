@@ -103,8 +103,13 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
             }
 
             event.fields['assetlocation'] = assetLocation;
-            event.fields['assetusage'] = assetUsage;
             var schemaId = event.scope.schema.schemaId;
+            if (schemaId.startsWith('update')) {
+                event.fields['usage'] = assetUsage;
+            }else {
+                event.fields['assetusage'] = assetUsage;    
+            }
+            
             var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser;
             if (schemaId.startsWith('install') || schemaId.startsWith('move')) {
                 //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
