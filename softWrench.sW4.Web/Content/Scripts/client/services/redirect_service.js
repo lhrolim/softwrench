@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService) {
+app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService) {
 
     var adjustCurrentModuleForNewWindow = function (currentModule) {
         var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
@@ -156,13 +156,15 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
 
             if (popupMode == "browser") {
-                if ($rootScope.isLocal && "true" != sessionStorage.defaultpopupsize) {
-                    //easier to debug on chrome like this
-                    var w = window.open(redirectURL);
-                    //                    w.moveto(0, 0);
-                } else {
-                    openPopup(redirectURL);
-                }
+                restService.getPromise("ExtendedData", "PingServer").then(function () {
+                    if ($rootScope.isLocal && "true" != sessionStorage.defaultpopupsize) {
+                        //easier to debug on chrome like this
+                        var w = window.open(redirectURL);
+                        //                    w.moveto(0, 0);
+                    } else {
+                        openPopup(redirectURL);
+                    }
+                });
                 return;
             }
 
@@ -192,36 +194,36 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
 
         redirectNewWindow: function (newWindowURL, needReload, initialData) {
-
-            if ($rootScope.isLocal) {
-                //easier to debug on chrome like this
-                var w = window.open(newWindowURL);
-                w.moveTo(0, 0);
-                return;
-            }
-
-            var cbk = function (view) {
-                var x = openPopup('');
-
-                x.document.open();
-                x.document.write(view);
-                x.document.close();
-
-                if (needReload == true) {
-                    x.location.reload();
-                }
-                x.focus();
+            restService.getPromise("ExtendedData", "PingServer").then(function () {
                 if ($rootScope.isLocal) {
-                    x.moveTo(0, 0);
+                    //easier to debug on chrome like this
+                    var w = window.open(newWindowURL);
+                    w.moveTo(0, 0);
+                    return;
                 }
-            };
-            if (initialData == undefined) {
-                $http.post(newWindowURL).success(cbk);
-            } else {
-                var jsonString = angular.toJson(initialData);
-                $http.post(newWindowURL, jsonString).success(cbk);
-            }
 
+                var cbk = function (view) {
+                    var x = openPopup('');
+
+                    x.document.open();
+                    x.document.write(view);
+                    x.document.close();
+
+                    if (needReload == true) {
+                        x.location.reload();
+                    }
+                    x.focus();
+                    if ($rootScope.isLocal) {
+                        x.moveTo(0, 0);
+                    }
+                };
+                if (initialData == undefined) {
+                    $http.post(newWindowURL).success(cbk);
+                } else {
+                    var jsonString = angular.toJson(initialData);
+                    $http.post(newWindowURL, jsonString).success(cbk);
+                }
+            });
         }
     };
 

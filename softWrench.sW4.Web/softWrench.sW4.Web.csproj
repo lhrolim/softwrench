@@ -506,6 +506,7 @@
     <Content Include="Content\Scripts\client\services\compositioncommons.js" />
     <Content Include="Content\Scripts\client\services\detailService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
+    <Content Include="Content\Scripts\client\services\restService.js" />
     <Content Include="Content\Scripts\client\services\spinService.js" />
     <Content Include="Content\Scripts\client\services\user_service.js" />
     <Content Include="Content\Scripts\client\services\dispatcher_service.js" />

@@ -1,34 +1,40 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService,contextService) {
+app.factory('submitService', function ($rootScope, fieldService,contextService,restService,spinService) {
 
 
     return {
         ///used for ie9 form submission
         submitForm: function (formToSubmit, parameters, jsonString, applicationName) {
-            // remove from session the redirect url... the redirect url will be returned when the form submit response comes from server
-            sessionStorage.removeItem("swGlobalRedirectURL");
 
-            for (var i in parameters) {
-                formToSubmit.append("<input type='hidden' name='" + i + "' value='" + parameters[i] + "' />");
-            }
-            if (sessionStorage.mockmaximo == "true") {
-                formToSubmit.append("<input type='hidden' name='%%mockmaximo' value='true'/>");
-            }
+            //this quick wrapper ajax call will validate if the user is still logged in or not
+            restService.getPromise("ExtendedData", "PingServer").then(function () {
+                
+
+                // remove from session the redirect url... the redirect url will be returned when the form submit response comes from server
+                sessionStorage.removeItem("swGlobalRedirectURL");
+
+                for (var i in parameters) {
+                    formToSubmit.append("<input type='hidden' name='" + i + "' value='" + parameters[i] + "' />");
+                }
+                if (sessionStorage.mockmaximo == "true") {
+                    formToSubmit.append("<input type='hidden' name='%%mockmaximo' value='true'/>");
+                }
 
 
-            formToSubmit.append("<input type='hidden' name='currentmodule' value='" + contextService.retrieveFromContext('currentmodule') + "' />");
+                formToSubmit.append("<input type='hidden' name='currentmodule' value='" + contextService.retrieveFromContext('currentmodule') + "' />");
 
-            formToSubmit.append("<input type='hidden' name='application' value='" + applicationName + "' />");
-            formToSubmit.append("<input type='hidden' name='json' value='" + replaceAll(jsonString,"'", "&apos;") + "' />");
+                formToSubmit.append("<input type='hidden' name='application' value='" + applicationName + "' />");
+                formToSubmit.append("<input type='hidden' name='json' value='" + replaceAll(jsonString, "'", "&apos;") + "' />");
 
-            // start spin befor submitting form
-            var savingMain = true === $rootScope.savingMain;
-            startSpin(savingMain);
+                // start spin befor submitting form
+                var savingMain = true === $rootScope.savingMain;
+                spinService.start(savingMain);
 
-            // submit form
-            formToSubmit.attr("action", url("/Application/Input"));
-            formToSubmit.submit();
+                // submit form
+                formToSubmit.attr("action", url("/Application/Input"));
+                formToSubmit.submit();
+            });
         },
 
         ///return if a field which is not on screen (but is not a hidden instance), and whose value is null from the datamap, avoiding sending useless (and wrong) data

@@ -5,7 +5,7 @@
 
 app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
     i18NService,userService,
-    redirectService, searchService, contextService, fileService, alertService) {
+    redirectService, searchService, contextService, fileService, alertService,restService) {
 
     function needsRegionSelection(mode) {
         if (mode != "assetlistreport") {
@@ -179,9 +179,13 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             searchDTO.pageSize = paginationData.pageSize;
 
             parameters.searchDTO = searchDTO;
-            fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function (html, url) { }, function (html, url) {
-                alertService.alert("Error generating the {0}.{1} report. Please contact your administrator".format(application, schemaToUse));
+            //this quick wrapper ajax call will validate if the user is still logged in or not
+            restService.getPromise("ExtendedData", "PingServer").then(function() {
+                fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function(html, url) {}, function(html, url) {
+                    alertService.alert("Error generating the {0}.{1} report. Please contact your administrator".format(application, schemaToUse));
+                });
             });
+
         }
     }
 

@@ -60,6 +60,16 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         /// <summary>
+        /// this method is used only to verify whether the user is still authenticated on the server or not, since for ie9 attachment submission no ajax would be made and then the logout screen would never appear.
+        /// </summary>
+        /// <returns></returns>
+        [ApplicationAuthorize]
+        [HttpGet]
+        public void PingServer() {
+            
+        }
+
+        /// <summary>
         ///  Returns the datamap populated with composition data
         /// </summary>
         /// <param name="dto"></param>

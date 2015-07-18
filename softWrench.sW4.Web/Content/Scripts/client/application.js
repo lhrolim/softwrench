@@ -56,7 +56,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService) {
+function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService,spinService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -278,7 +278,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
         window.onbeforeunload = function () {
-            spin.stop();
+            spinService.stop();
         };
 
         doInit();
