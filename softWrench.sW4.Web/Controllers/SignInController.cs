@@ -19,6 +19,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Oracle.DataAccess.Types;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
@@ -247,7 +248,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var encryptedData = FormsAuthentication.Encrypt(ticket);
 
                 var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedData) {
-                    HttpOnly = false, // make cookie available to client-side scripts
+                    HttpOnly = true,
                     Path = FormsAuthentication.FormsCookiePath,
                     Secure = FormsAuthentication.RequireSSL
                 };

@@ -1,4 +1,7 @@
-﻿mobileServices.factory('routeService', function ($state,contextService) {
+﻿(function (mobileServices) {
+    "use strict";
+
+mobileServices.factory('routeService', function ($state, contextService) {
 
     return {
 
@@ -29,10 +32,12 @@
                 return this.go(currentState);
             }
             return this.go("main.home");
-        }
+        },
 
-
+        $state: $state
 
     };
 
 });
+
+})(mobileServices)

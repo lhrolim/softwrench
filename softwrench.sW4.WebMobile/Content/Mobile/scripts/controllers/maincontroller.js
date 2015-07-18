@@ -1,4 +1,4 @@
-﻿softwrench.controller('MainController', function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService) {
+﻿softwrench.controller('MainController', function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, $ionicPopup, securityService) {
     $scope.data = {};
 
     function init() {
@@ -31,6 +31,20 @@
         routeService.go(action);
         $ionicSideMenuDelegate.toggleLeft();
     }
+
+    $scope.logout = function() {
+        $ionicPopup.confirm({
+            title: "Logout",
+            template: "Are you sure you want to logout?"
+        }).then(function (res) {
+            if (res) {
+                securityService.logout();
+                routeService.go("login");
+            }
+        }).finally(function(){
+            $ionicSideMenuDelegate.toggleLeft();
+        });
+    };
 
     init();
 
