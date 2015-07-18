@@ -422,7 +422,8 @@
         this.source = this.parse();
         this.options.items = this.source.length;
 
-        if (newValue) {
+        if (newValue !== undefined) {
+            //if null we should set it
             this.$element.val(newValue);
         }else if (this.source && this.source.length == 1) {
             this.$element.val(this.source[0]);
