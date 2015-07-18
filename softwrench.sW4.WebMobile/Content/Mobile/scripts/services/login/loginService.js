@@ -2,31 +2,28 @@
 (function (serviceModule) {
     "use strict";
 
-    var LoginService = function ($http, $log, $q, routeService, $cookies) {
+    var LoginService = function ($http, $log, $q, routeService, securityService) {
 
-        this.$cookies = $cookies;
-
-        this.login = function (userName, password) {
+        this.login = function (username, password) {
             //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
             var loginUrl = routeService.loginURL();
-            return $http.post(loginUrl, { username: userName, password: password })
-                .success(function (userdata) {
+            return $http.post(loginUrl, { username: username, password: password })
+                .then(function (response) {
+                    var userdata = response.data;
                     if (userdata.Found) {
+                        securityService.loginLocal(userdata.UserName);
                         return userdata;
                     }
                     return $q.reject(new Error("Invalid username or password"));
-                }).catch(function (error) {
-                    $log.error(error);
                 });
         };
 
         this.checkCookieCredentials = function () {
-            return true;
-            //return !!$cookies[".ASPXAUTH"];
+            return securityService.hasAuthenticatedUser();
         };
 
     };
 
-    serviceModule.service("loginService", ["$http", "$log", "$q", "routeService", "$cookies", LoginService]);
+    serviceModule.service("loginService", ["$http", "$log", "$q", "routeService", "securityService", LoginService]);
 
 })(mobileServices);

@@ -134,7 +134,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         .state('login', {
             url: '/login',
             templateUrl: 'Content/Mobile/templates/login.html',
-            controller: 'LoginController'
+            controller: 'LoginController',
+            params: { message: null }
         })
         .state('settings', {
             url: '/settings',

@@ -138,11 +138,13 @@
     <Content Include="Content\Mobile\scripts\services\db\Problem.js" />
     <Content Include="Content\Mobile\scripts\services\db\SyncOperation.js" />
     <Content Include="Content\Mobile\scripts\services\db\DataEntry.js" />
+    <Content Include="Content\Mobile\scripts\services\login\securityservice.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\offlineAssociationService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\offlineSchemaService.js" />
     <Content Include="Content\Mobile\scripts\services\routes\routesService.js" />
+    <Content Include="Content\Mobile\scripts\services\storage\localstorageservice.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\asyncSynchronizationService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\notificationPluginWrapper.js" />
