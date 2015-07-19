@@ -52,7 +52,7 @@
                 return dto;
             };
 
-            function getLazyCompositions(schema,datamap) {
+            function getLazyCompositions(schema, datamap) {
                 if (!schema || !schema["cachedCompositions"]) {
                     return null;
                 }
@@ -64,7 +64,7 @@
                     }
                     if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
                         compositions.push(composition);
-                    }else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
+                    } else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
                         compositionContext[composition] = datamap[composition];
                     }
                 }
@@ -77,6 +77,15 @@
                 return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                     .then(function (response) {
                         var data = response.data;
+                        var parentModifiedFields = data.parentModifiedFields;
+                        if (parentModifiedFields) {
+                            //server has replied that some fields should change on parent datamap as well
+                            for (var field in parentModifiedFields) {
+                                if (parentModifiedFields.hasOwnProperty(field)) {
+                                    datamap[field] = parentModifiedFields[field];
+                                }
+                            }
+                        }
                         var compositionArray = data.resultObject;
                         var result = {};
                         for (var composition in compositionArray) {
@@ -117,7 +126,7 @@
                 var applicationName = schema.applicationName;
                 // sanitizing data to submit
                 var fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
-                var compositionNames = getLazyCompositions(schema,datamap);
+                var compositionNames = getLazyCompositions(schema, datamap);
                 angular.forEach(compositionNames, function (composition) {
                     if (!fieldsTosubmit[composition] || !fieldsTosubmit.hasOwnProperty(composition)) {
                         return;

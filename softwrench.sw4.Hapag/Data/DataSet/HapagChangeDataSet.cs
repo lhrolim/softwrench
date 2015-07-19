@@ -55,14 +55,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
                 } else {
-                    var needsApproval = HandleCustomerApprovers(user, compositionData.Cruddata, approvalGroup, worklogs, approval);
+                    var needsApproval = HandleCustomerApprovers(user, compositionData.OriginalCruddata, approvalGroup, worklogs, approval);
                     if (needsApproval) {
                         numberOfActions++;
                     }
                 }
             }
             Log.DebugFormat("Number of Actions {0}", numberOfActions);
-            compositionData.Cruddata.SetAttribute("#numberofapprovalactions", numberOfActions);
+            compositionData.ParentModifiedFields["#numberofapprovalactions"] = numberOfActions;
         }
 
         private Boolean HandleNonCustomerApprovers(InMemoryUser user, IEnumerable<Dictionary<string, object>> wfassignment, string approvalGroup,
@@ -102,7 +102,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var apprDescription = c.GetWorkLogDescriptions(approvalGroup, true);
             var rejDescription = c.GetWorkLogDescriptions(approvalGroup, false);
 
-            
+
             var apprWl = wlEnumerable.FirstOrDefault(w =>
                 apprDescription.EqualsIc(w["description"] as string)
                 && c.WlApprLogType.EqualsIc(w["logtype"] as string)

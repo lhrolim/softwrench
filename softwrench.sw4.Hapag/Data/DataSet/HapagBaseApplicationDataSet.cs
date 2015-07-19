@@ -60,9 +60,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
       
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application,
-            CompositionFetchRequest request,
-            JObject currentData) {
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application,CompositionFetchRequest request,JObject currentData) {
             var compositionData = base.GetCompositionData(application, request, currentData);
             if (!compositionData.ResultObject.ContainsKey("attachment_")) {
                 return compositionData;
