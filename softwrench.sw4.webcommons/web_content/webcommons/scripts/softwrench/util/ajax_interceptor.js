@@ -10,6 +10,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmodule'] = config.headers['currentmodule'] || contextService.retrieveFromContext('currentmodule');
             config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
+            config.headers['requesttime'] = new Date().getTime();
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
             if (config.url.indexOf("/Content/") == -1) {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using cts.commons.portable.Util;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
@@ -44,6 +45,18 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             if ("true".EqualsIc(schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions))) {
                 _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
             }
+
+            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+
+            foreach (var compositionEntry in compositionSchemas) {
+                if (FetchType.Eager.Equals(compositionEntry.Value.FetchType) || compositionEntry.Value.INLINE) {
+                    compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+                }
+            }
+            if (compostionsToUse.Any()) {
+                _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, mainEntity);
+            }
+
 
             return mainEntity;
         }

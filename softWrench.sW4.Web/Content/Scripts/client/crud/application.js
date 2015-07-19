@@ -426,11 +426,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             var nextSchema = data.schema;
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
-        window.onbeforeunload = function () {
-            if (spin) {
-                spin.stop();
-            }
-        };
+        
 
         doInit();
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
