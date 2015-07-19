@@ -37,14 +37,14 @@ namespace cts.commons.persistence {
         }
 
 
-        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false) {
+        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false,string queryAlias=null) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
             queryst = result.query;
             parameters = result.Parameters;
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
             query.SetFlushMode(FlushMode.Never);
-            LogQuery(queryst, parameters);
+            LogQuery(queryst, queryAlias,parameters);
             if (result.Parameters == null) {
                 return query;
             }
@@ -84,13 +84,13 @@ namespace cts.commons.persistence {
             return query;
         }
 
-        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null) {
-            LogQuery(queryst, parameters);
+        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null,string queryAlias=null) {
+            LogQuery(queryst,queryAlias, parameters);
             if (paginationData != null && _applicationConfiguration.IsDB2(DBType.Maximo)) {
                 //nhibernate pagination breaks in some scenarios, at least in DB2, keeping others intact for now
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
-            LogPaginationQuery(queryst, parameters);
+            LogPaginationQuery(queryst,queryAlias, parameters);
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
 
@@ -151,7 +151,7 @@ namespace cts.commons.persistence {
         }
 
 
-        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, IPaginationData paginationData = null) {
+        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias=null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {
                 var query = BuildQuery(queryst, parameters, session, true, paginationData);
@@ -221,18 +221,18 @@ namespace cts.commons.persistence {
         protected abstract ILog GetLog();
 
 
-        private void LogQuery(string queryst, params object[] parameters) {
+        private void LogQuery(string queryst,string queryAlias, params object[] parameters) {
             if (!GetLog().IsDebugEnabled) {
                 return;
             }
-            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, parameters));
+            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst,queryAlias, parameters));
         }
 
-        private void LogPaginationQuery(string queryst, params object[] parameters) {
+        private void LogPaginationQuery(string queryst,string queryAlias, params object[] parameters) {
             if (!HibernateLog.IsDebugEnabled) {
                 return;
             }
-            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst, parameters));
+            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst,queryAlias, parameters));
         }
 
         public interface ISessionManager {

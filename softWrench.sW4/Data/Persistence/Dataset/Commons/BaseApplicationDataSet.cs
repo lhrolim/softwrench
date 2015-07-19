@@ -432,7 +432,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     }
 
                     tasks.Add(Task.Factory.NewThread(c => {
-                        Quartz.Util.LogicalThreadContext.SetData("context", c);
+                        var perThreadContext = ctx.ShallowCopy();
+                        Quartz.Util.LogicalThreadContext.SetData("context", perThreadContext);
+
                         var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
                             searchRequest);
 

@@ -33,7 +33,7 @@ namespace cts.commons.Util {
             return String.Format(msg, parameters) + "| Time ellapsed: " + MsDelta(before);
         }
 
-        public static string QueryStringForLogging(string queryst, params object[] parameters) {
+        public static string QueryStringForLogging(string queryst,string queryAlias, params object[] parameters) {
 
             if (parameters == null || !parameters.Any()) {
                 return queryst + " ";
@@ -60,7 +60,7 @@ namespace cts.commons.Util {
                     queryst = queryst.ReplaceFirstOccurrence("?", "'" + parameter + "'");
                 }
             }
-            return queryst;
+            return queryAlias == null ? queryst : queryAlias +": " + queryst;
         }
 
 
