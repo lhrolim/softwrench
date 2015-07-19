@@ -29,8 +29,8 @@ using System.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagImacDataSet : HapagBaseApplicationDataSet {
-        public HapagImacDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) : base(locationManager, entityRepository, maxDao)
-        {
+        public HapagImacDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+            : base(locationManager, entityRepository, maxDao) {
         }
 
         protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
@@ -56,7 +56,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (isCreationFromAsset) {
                 UpdateAssetDependants(application, result);
             }
-            result.AllassociatiosFetched = isCreationFromAsset;
+            result.AllassociationsFetched = isCreationFromAsset;
             if (request.Id != null) {
                 if (ContextLookuper.LookupContext().IsInModule(FunctionalRole.XItc) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
                     //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
@@ -85,8 +85,16 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 result.ResultObject.SetAttribute("asset_.location",
                     ((MultiValueAssociationOption)relatedAsset).Extrafields["location"]);
             }
-            var assetDependants = DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "asset" },
-                result.ResultObject);
+            //look for any dependencies from the location field, this simulates the code dispatched when the user changes the location on the screen
+            var locationDependentas = DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "fromlocation" }, result.ResultObject);
+            foreach (var dependants in locationDependentas) {
+                if (result.AssociationOptions.ContainsKey(dependants.Key)) {
+                    result.AssociationOptions.Remove(dependants.Key);
+                }
+                result.AssociationOptions[dependants.Key] = dependants.Value;
+            }
+
+            var assetDependants = DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "asset" }, result.ResultObject);
             foreach (var dependants in assetDependants) {
                 if (result.AssociationOptions.ContainsKey(dependants.Key)) {
                     result.AssociationOptions.Remove(dependants.Key);

@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using log4net;
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
@@ -22,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
-        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false) {
+        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false, string queryAlias=null) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
             queryst = result.query;
             parameters = result.Parameters;
@@ -32,7 +33,7 @@ namespace softWrench.sW4.Data.Persistence {
                 query.SetFlushMode(FlushMode.Never);
             }
             query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
-            LogQuery(queryst, parameters);
+            LogQuery(queryst,queryAlias, parameters);
             if (result.Parameters == null) {
                 return query;
             }
@@ -72,13 +73,13 @@ namespace softWrench.sW4.Data.Persistence {
             return query;
         }
 
-        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, PaginationData paginationData = null) {
-            LogQuery(queryst, parameters);
+        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, PaginationData paginationData = null, string queryAlias=null) {
+            LogQuery(queryst, queryAlias,parameters);
             if (paginationData != null && ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo)) {
                 //nhibernate pagination breaks in some scenarios, at least in DB2, keeping others intact for now
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
-            LogPaginationQuery(queryst, parameters);
+            LogPaginationQuery(queryst,queryAlias, parameters);
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
             query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
@@ -150,10 +151,10 @@ namespace softWrench.sW4.Data.Persistence {
             }
         }
 
-        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, PaginationData paginationData = null) {
+        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, PaginationData paginationData = null, string queryAlias=null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true, paginationData);
+                var query = BuildQuery(queryst, parameters, session, true, paginationData,queryAlias);
                 query.SetResultTransformer(NhTransformers.ExpandoObject);
                 var result = query.List<dynamic>();
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done query"));
@@ -168,7 +169,7 @@ namespace softWrench.sW4.Data.Persistence {
             var before = Stopwatch.StartNew();
 
             using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true);
+                var query = BuildQuery(queryst, parameters, session, native: true);
                 var result = (int)query.UniqueResult();
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done count query"));
                 return result;
@@ -207,18 +208,18 @@ namespace softWrench.sW4.Data.Persistence {
         protected abstract ILog GetLog();
 
 
-        private void LogQuery(string queryst, params object[] parameters) {
+        private void LogQuery(string queryst, string queryAlias,params object[] parameters) {
             if (!GetLog().IsDebugEnabled) {
                 return;
             }
-            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, parameters));
+            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias,parameters));
         }
 
-        private void LogPaginationQuery(string queryst, params object[] parameters) {
+        private void LogPaginationQuery(string queryst, string queryAlias, params object[] parameters) {
             if (!HibernateLog.IsDebugEnabled) {
                 return;
             }
-            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst, parameters));
+            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias,parameters));
         }
 
         public interface ISessionManager {

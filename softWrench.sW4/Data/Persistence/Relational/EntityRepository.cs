@@ -132,13 +132,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, SearchRequestDto searchDTO) {
             //TODO: hack to avoid garbage data and limit size of list queries.
             var paginationData = PaginationData.GetInstance(searchDTO, entityMetadata);
-            var rows = GetDao(entityMetadata).FindByNativeQuery(query.Sql, query.Parameters, paginationData);
+            var rows = GetDao(entityMetadata).FindByNativeQuery(query.Sql, query.Parameters, paginationData,searchDTO.QueryAlias);
             return rows;
         }
 
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, long rowstamp, SearchRequestDto searchDto) {
             var sqlAux = query.Sql.Replace("1=1", RowStampUtil.RowstampWhereCondition(entityMetadata, rowstamp, searchDto));
-            var rows = GetDao(entityMetadata).FindByNativeQuery(sqlAux, query.Parameters);
+            var rows = GetDao(entityMetadata).FindByNativeQuery(sqlAux, query.Parameters,null,searchDto.QueryAlias);
             return rows;
         }
 

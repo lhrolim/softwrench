@@ -122,7 +122,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(application.Schema,entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
@@ -150,7 +150,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
-            return new CompositionFetchResult(result,cruddata);
+            return new CompositionFetchResult(result, cruddata);
         }
 
 
@@ -164,7 +164,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
             if (schema.UnionSchema != null) {
-                searchDto.BuildUnionDTO(searchDto,schema);
+                searchDto.BuildUnionDTO(searchDto, schema);
             }
             var propertyValue = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListSchemaOrderBy);
             if (searchDto.SearchSort == null && propertyValue != null) {
@@ -249,7 +249,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 var association = applicationAssociation;
 
                 tasks.Add(Task.Factory.NewThread(c => {
-                    Quartz.Util.LogicalThreadContext.SetData("context", c);
+                    //this will avoid that one thread impacts any other, for ex: changing metadataid of the query
+                    var perThreadContext = ctx.ShallowCopy();
+                    Quartz.Util.LogicalThreadContext.SetData("context", perThreadContext);
                     var associationOptions = _associationOptionResolver.ResolveOptions(application, dataMap, association, search);
                     associationOptionsDictionary.Add(association.AssociationKey, new BaseAssociationUpdateResult(associationOptions));
                 }, ctx));

@@ -57,6 +57,20 @@ namespace softWrench.sW4.Data.Search {
 
         public SearchRequestDto unionDTO;
 
+
+        //used to indentify the query on the log better
+        private string _queryAlias;
+
+        public String QueryAlias {
+            get {
+                if (Context != null && Context.MetadataId != null) {
+                    return Context.MetadataId;
+                }
+                return _queryAlias;
+            }
+            set { _queryAlias = value; }
+        }
+
         public virtual bool ShouldPaginate {
             get { return false; }
             set { }
@@ -155,9 +169,9 @@ namespace softWrench.sW4.Data.Search {
 
             unionDTO.SearchParams = sb.ToString();
             unionDTO.SearchValues = SearchValues;
-            
+
             HandleUnionZeroedValueCases(unionDTO);
-            
+
         }
 
         private void HandleUnionZeroedValueCases(SearchRequestDto unionDto) {

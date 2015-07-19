@@ -78,7 +78,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
                 var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy();
-                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, ctx, results, perThreadPaginatedSearch));
+                //this will avoid that one thread impacts any other
+                var perThreadContext = ctx.ShallowCopy();
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, perThreadContext, results, perThreadPaginatedSearch));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
@@ -107,6 +109,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var matchingResultWrapper = new CollectionMatchingResultWrapper();
 
             var searchRequestDto = BuildSearchRequestDto(applicationCompositionSchema, lookupattributes, matchingResultWrapper, attributeHolders, collectionEntityMetadata, paginatedSearch);
+            searchRequestDto.QueryAlias = collectionAssociation.To;
 
             var firstAttributeHolder = attributeHolders.First();
             if (applicationCompositionSchema.PrefilterFunction != null) {
@@ -152,7 +155,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             MatchResults(listOfCollections, matchingResultWrapper, targetCollectionAttribute);
         }
 
-        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema, IEnumerable<EntityAssociationAttribute> lookupattributes, CollectionMatchingResultWrapper matchingResultWrapper, AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata, PaginatedSearchRequestDto paginatedSearch) {
+        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema, IEnumerable<EntityAssociationAttribute> lookupattributes, 
+            CollectionMatchingResultWrapper matchingResultWrapper, AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata, PaginatedSearchRequestDto paginatedSearch) {
 
             var searchRequestDto = new PaginatedSearchRequestDto();
 
@@ -180,6 +184,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 searchRequestDto.PageSize = paginatedSearch.PageSize;
                 searchRequestDto.TotalCount = paginatedSearch.TotalCount;
             }
+
+            
 
             return searchRequestDto;
         }

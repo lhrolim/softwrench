@@ -94,7 +94,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             } else if (application.Schema.Mode == SchemaMode.output) {
                 HandleClosedDate(resultObject, application);
             }
-            dbDetail.AllassociatiosFetched = isCreationFromAsset;
+            dbDetail.AllassociationsFetched = isCreationFromAsset;
             return dbDetail;
         }
 

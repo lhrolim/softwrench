@@ -117,5 +117,9 @@ namespace softWrench.sW4.Security.Context {
         }
 
 
+        public ContextHolder ShallowCopy() {
+            return (ContextHolder)MemberwiseClone();
+        }
+
     }
 }

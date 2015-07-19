@@ -19,16 +19,16 @@ namespace softWrench.sW4.Data.API {
                     = new Dictionary<string, BaseAssociationUpdateResult>();
 
 
-        private bool _allassociatiosFetched;
+        private bool _allassociationsFetched;
 
-        public bool AllassociatiosFetched {
+        public bool AllassociationsFetched {
             get {
-                if (!_allassociatiosFetched && Schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.PreFetchAssociations)) {
+                if (!_allassociationsFetched && Schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.PreFetchAssociations)) {
                     return "#all".Equals(Schema.Properties[ApplicationSchemaPropertiesCatalog.PreFetchAssociations]);
                 }
-                return _allassociatiosFetched;
+                return _allassociationsFetched;
             }
-            set { _allassociatiosFetched = value; }
+            set { _allassociationsFetched = value; }
         }
 
 

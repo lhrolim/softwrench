@@ -83,5 +83,7 @@ namespace softWrench.sW4.Security.Context {
         //            return (c != null) || (c == null && MetadataId == null && Schema == null && Mode == null && ParentApplication == null && ParentSchema == null && ParentMode == null && AttributeName == null);
         //        }
 
+     
+
     }
 }
