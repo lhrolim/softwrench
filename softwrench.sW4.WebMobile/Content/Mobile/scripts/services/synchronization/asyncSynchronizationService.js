@@ -11,7 +11,7 @@
         // list of callbacks to be called on Batch completion
         var completionCallBacks = [];
         // polling interval in milliseconds
-        var pollingDelay = 10 * 1000; // TODO: get from config
+        var pollingDelay = 60 * 1000; // TODO: get from config
 
         var self = this;
 
