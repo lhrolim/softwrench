@@ -32,7 +32,7 @@
         };
 
         function handleAssociations(scope, result) {
-            var shouldFetchAssociations = schemaService.getProperty(result.schema, "prefetchassociations") != "#all";
+            var shouldFetchAssociations = !result.allAssociationsFetched;
 
             //some associations might already been retrieved
             associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);

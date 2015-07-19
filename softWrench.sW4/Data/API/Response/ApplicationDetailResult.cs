@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using softWrench.sW4.Data.API.Association;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
@@ -57,6 +58,16 @@ namespace softWrench.sW4.Data.API.Response {
             get { return _main; }
         }
 
-        public bool AllassociatiosFetched { get; set; }
+        private bool _allassociationsFetched;
+
+        public bool AllAssociationsFetched {
+            get {
+                if (!_allassociationsFetched && Schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.PreFetchAssociations)) {
+                    return "#all".Equals(Schema.Properties[ApplicationSchemaPropertiesCatalog.PreFetchAssociations]);
+                }
+                return _allassociationsFetched;
+            }
+            set { _allassociationsFetched = value; }
+        }
     }
 }
