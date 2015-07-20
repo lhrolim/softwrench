@@ -57,6 +57,18 @@ namespace softWrench.sW4.Data.Search {
 
         public string FilterFixedWhereClause { get; set; }
 
+        //used to indentify the query on the log better
+        private string _queryAlias;
+
+        public String QueryAlias {
+            get {
+                if (Context != null && Context.MetadataId != null) {
+                    return Context.MetadataId;
+                }
+                return _queryAlias;
+            }
+            set { _queryAlias = value; }
+        }
 
 
         public void BuildProjection(ApplicationSchemaDefinition schema) {

@@ -62,7 +62,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (isCreationFromAsset) {
                 UpdateAssetDependants(application, result);
             }
-            result.AllassociatiosFetched = isCreationFromAsset;
+            result.AllAssociationsFetched = isCreationFromAsset;
             if (request.Id != null) {
                 //need to fill in service type from swdb
             }

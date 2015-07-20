@@ -98,6 +98,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
+            associationFilter.QueryAlias = association.AssociationKey;
             var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
 
             if (associationFilter is PaginatedSearchRequestDto) {

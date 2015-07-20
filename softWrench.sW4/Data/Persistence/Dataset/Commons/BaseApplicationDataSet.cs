@@ -182,12 +182,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
 
-            var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
+            var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
                application, currentData, request.Id);
 
             var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
-            return new CompositionFetchResult(result);
+            return new CompositionFetchResult(result,cruddata);
         }
 
 
@@ -432,7 +432,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     }
 
                     tasks.Add(Task.Factory.NewThread(c => {
-                        Quartz.Util.LogicalThreadContext.SetData("context", c);
+                        var perThreadContext = ctx.ShallowCopy();
+                        Quartz.Util.LogicalThreadContext.SetData("context", perThreadContext);
+
                         var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
                             searchRequest);
 

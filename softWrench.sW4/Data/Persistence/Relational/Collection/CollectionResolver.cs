@@ -115,7 +115,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var internalParameter = new InternalCollectionResolverParameter {
                 ExternalParameters = parameters,
                 CollectionAssociation = collectionAssociation,
-                Ctx = ctx,
+                Ctx = ctx.ShallowCopy(),
                 Results = results,
                 Rowstamp = rowstamp
             };
@@ -142,6 +142,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var matchingResultWrapper = GetResultWrapper();
 
             var searchRequestDto = BuildSearchRequestDto(parameter, matchingResultWrapper, paginatedSearch);
+
+            searchRequestDto.QueryAlias = collectionAssociation.To;
 
             var firstAttributeHolder = attributeHolders.First();
             if (applicationCompositionSchema.PrefilterFunction != null) {

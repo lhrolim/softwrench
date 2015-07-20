@@ -130,6 +130,8 @@ namespace softWrench.sW4.Security.Context {
                 OrgId, SiteId, userProfiles.ToString(), User, Mode, Platform, Environment, Module, ApplicationLookupContext);
         }
 
-
+        public ContextHolder ShallowCopy() {
+            return (ContextHolder)MemberwiseClone();
+        }
     }
 }
