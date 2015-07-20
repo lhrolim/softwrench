@@ -1,4 +1,5 @@
 ﻿using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
 using softwrench.sw4.Shared2.Data.Association;
@@ -68,6 +69,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var sb = new StringBuilder();
             foreach (var dictionary in (IEnumerable<Dictionary<string, object>>)list) {
                 sb.Append("<p>");
+                var urlDescription = AttachmentHandler.BuildFileName(dictionary["docinfo_.urlname"] as string);
+                if (urlDescription == null) {
+                    //keep description
+                    dictionary["urldescription"] = dictionary["description"];
+                } else {
+                    dictionary["urldescription"] = urlDescription;
+                }
                 sb.Append(dictionary["urldescription"]);
                 sb.Append("</p>");
             }
