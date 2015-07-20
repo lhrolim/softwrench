@@ -21,7 +21,7 @@
 
             var loadSyncOperation = function (initial) {
                 // show loading if initial page load
-                if (initial) {
+                if (!!initial) {
                     $ionicLoading.show(loadingOptions);
                 }
                 var loadPromise = $scope.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
@@ -64,7 +64,7 @@
                 synchronizationFacade.fullSync()
                     .then(function (message) {
                         $ionicPopup.alert({
-                            title: "Synchronization Suceeded",
+                            title: "Synchronization Succeeded",
                             template: message
                         });
                         loadSyncOperation();

@@ -125,6 +125,7 @@
     <Content Include="Content\Mobile\scripts\directives\option_field.js" />
     <Content Include="Content\Mobile\scripts\directives\swoperationicon.js" />
     <Content Include="Content\Mobile\scripts\directives\swpage.js" />
+    <Content Include="Content\Mobile\scripts\filters\linebreak.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudFilterContextService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />

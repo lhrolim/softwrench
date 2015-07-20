@@ -5,11 +5,14 @@
 //    angular.bootstrap(document, ['softwrench']);
 //});
 
+//#region 'deviceready' listener
 document.addEventListener("deviceready", function() {
     // retrieve the DOM element that had the ng-app attribute
     angular.bootstrap(document.body, ["softwrench"]);
 }, false);
+//#endregion
 
+//#region Global functions
 /**
  * Function that returns the angular $scope attached to an element.
  * It helps debug the app when deployed in Ripple (batarang's $scope inspection doesn't work in iframe);
@@ -28,14 +31,16 @@ var $s = function (element) {
     }
     return scope.$parent;
 };
+//#endregion
 
+//#region App Modules
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'ngCookies', 'maximo_applications']);
 var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications'])
+//#endregion
 
-
-
-.run(["$ionicPlatform", "swdbDAO", "$log", "loginService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "$q", "synchronizationNotificationService", "$rootScope",
-    function ($ionicPlatform, swdbDAO, $log, loginService, contextService, menuModelService, metadataModelService, routeService, crudContextService, $q, synchronizationNotificationService, $rootScope) {
+//#region App.run
+.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "$q", "synchronizationNotificationService", "$rootScope",
+    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, $q, synchronizationNotificationService, $rootScope) {
 
     
 
@@ -49,9 +54,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         initCordovaPlugins();
 
-        var isCookieAuthenticated = loginService.checkCookieCredentials();
+        var authenticated = securityService.hasAuthenticatedUser();
         crudContextService.restoreState();
-        routeService.loadInitialState(isCookieAuthenticated);
+        routeService.loadInitialState(authenticated);
     });
 
     function initContext() {
@@ -81,12 +86,14 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             persistence.transaction(function (tx) {
                 tx.executeSql(query, params,
                     function (results) {
+                        console.log(results);
                         deferred.resolve(results);
                     }, function (cause) {
                         var msg = "An error ocurred when executing the query '{0}'".format(query);
                         if (params && params.length > 0) msg += " with parameters {0}".format(params);
                         var error = new Error(msg);
                         error.cause = cause;
+                        console.error(error);
                         deferred.reject(error);
                     });
             });
@@ -118,7 +125,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     };
 
 }])
+//#endregion
 
+//#region App.config
 .config(["$stateProvider", "$urlRouterProvider", "$logProvider", "$ionicConfigProvider", function ($stateProvider, $urlRouterProvider, $logProvider, $ionicConfigProvider) {
 
     // center page titles
@@ -238,15 +247,5 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/main/home');
 
-}])
-
-.filter('linebreak', function () {
-    return function (value) {
-        if (value != null) {
-            value = value.toString();
-            return value.replace(/\n/g, '<br/>');
-        }
-        return value;
-    };
-});
-
+}]);
+//#endregion

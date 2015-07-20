@@ -17,11 +17,6 @@
                     return $q.reject(new Error("Invalid username or password"));
                 });
         };
-
-        this.checkCookieCredentials = function () {
-            return securityService.hasAuthenticatedUser();
-        };
-
     };
 
     serviceModule.service("loginService", ["$http", "$log", "$q", "routeService", "securityService", LoginService]);

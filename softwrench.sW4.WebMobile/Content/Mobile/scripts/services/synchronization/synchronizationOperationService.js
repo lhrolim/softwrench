@@ -194,7 +194,7 @@
          * @returns Promise: resolved with most recent operation, rejected with database error 
          */
         this.getMostRecentOperation = function() {
-            return swdbDAO.findSingleByQuery("SyncOperation", null, { orderby: "startdate" })
+            return swdbDAO.findSingleByQuery("SyncOperation", null, { orderby: "startdate", orderbyascending: false })
                 .then(function(operation) {
                     return self.formatOperation(operation);
                 });
