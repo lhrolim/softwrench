@@ -116,6 +116,13 @@ namespace softWrench.sW4.Data.Search {
             var j = 0;
 
             foreach (var parameter in parameters) {
+                if (parameter.StartsWith("null"))
+                {
+                    sb.Replace(parameter, "1=1");
+                    //ignore null parameters, as of union grids
+                    continue;
+                }
+
                 //need to fetch from here to keep order correct
                 var searchParameter = searchParameters[parameter];
 
@@ -195,7 +202,7 @@ namespace softWrench.sW4.Data.Search {
             foreach (var param in baseList) {
                 if (searchParameters.ContainsKey(i + param)) {
                     //if there are multiple parameters for the same column (ex: a fixed whereclause + a grid filter status&&status --> status&&1status)
-                    result.Add(i+param);
+                    result.Add(i + param);
                 } else {
                     result.Add(param);
                 }
