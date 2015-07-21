@@ -14,6 +14,8 @@
         <property key="list.defaultorderby" value="personid asc"/>
         <property key="detail.navigationbuttons.disabled" value="true"/>
       </properties>
+      
+      
       <schemas>
 
 
@@ -72,9 +74,7 @@
             <renderer type="checkbox"/>
           </field>
 
-          <section attribute="profilessection" resourcepath="/Content/Templates/otb/profiles.html" role="sysadmin">
-            <header displacement="ontop" label="Profiles" showexpression="true"/>
-          </section>
+         
 
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
@@ -82,6 +82,13 @@
           <composition relationship="email" label="Email Addresses" inline="false">
             <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
+
+          <tab label="Permissions" icon="fa-gear" id="permission" role="sysadmin">
+            <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html" >
+              <header displacement="ontop" label="Profiles" showexpression="true"/>
+            </section>
+          </tab>
+
         </schema>
 
         <schema id="newPersonDetail" stereotype="detail" title="New User" mode="input">
@@ -113,9 +120,7 @@
             <renderer type="checkbox"/>
           </field>
 
-          <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html" role="sysadmin">
-            <header displacement="ontop" label="Profiles" showexpression="true"/>
-          </section>
+        
 
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
@@ -123,6 +128,13 @@
           <composition relationship="email" label="Email Addresses" inline="false">
             <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
+
+          <tab label="Permissions" icon="fa-gear" showexpression="" role="sysadmin">
+            <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html">
+              <header displacement="ontop" label="Profiles" showexpression="true"/>
+            </section>
+          </tab>
+          
         </schema>
       </schemas>
     </application>

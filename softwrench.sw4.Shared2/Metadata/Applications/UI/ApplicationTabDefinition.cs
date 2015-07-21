@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 
@@ -14,21 +12,34 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         public string Icon { get; set; }
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
+        private string _role;
+
         public ApplicationTabDefinition(string id, string applicationName, string label, List<IApplicationDisplayable> displayables, string toolTip,
-            string showExpression) {
+            string showExpression, string icon, string role) {
             Id = id;
             ApplicationName = applicationName;
             Label = label;
             ToolTip = toolTip;
             ShowExpression = showExpression;
             _displayables = displayables;
-            Icon = "fa fa-lightbulb-o";
+            Icon = icon;
+            _role = role;
         }
 
 
         public string RendererType { get { return null; } }
         public string Type { get { return typeof(ApplicationTabDefinition).Name; } }
-        public string Role { get { return ApplicationName + "." + Id; } }
+
+        public string Role {
+            get {
+                if (_role != null) {
+                    return _role;
+                }
+                return ApplicationName + "." + Id;
+            }
+            set { _role = value; }
+        }
+
         public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
         public string IdFieldName { get; set; }
