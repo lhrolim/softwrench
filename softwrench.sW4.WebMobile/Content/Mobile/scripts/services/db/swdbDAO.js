@@ -1,9 +1,9 @@
-﻿(function(entities) {
+﻿(function (entities, persistence, mobileServices) {
     "use strict";
 
 entities = entities || {};
 
-mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, dispatcherService) {
+mobileServices.factory("swdbDAO", ["$q", "dispatcherService", function ($q, dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
 
@@ -357,11 +357,68 @@ mobileServices.factory('swdbDAO', ["$q", "dispatcherService", function ($q, disp
                     }
                     return results[0];
                 });
-        }
+        },
 
+        /**
+         * Deletes all entries for every entity in the database (every entity registered in window.entities).
+         * 
+         * @returns Promise 
+         */
+        resetDataBase: function () {
+            var queries = [];
+            for (var entity in entities) {
+                if (!entities.hasOwnProperty(entity)) continue;
+                queries.push("delete from {0}".format(entity));
+            }
+            return this.executeQueries(queries);
+        },
+
+        /**
+         * Deletes all entries of the entity in the database.
+         * 
+         * @param String entity 
+         * @returns Promise 
+         */
+        deleteTable: function(entity) {
+            if (!entities[entity]) {
+                throw new Error("entity {0} not found".format(entity));
+            }
+            return this.executeQuery("delete from {0}".format(entity));
+        },
+
+        /**
+         * Drops all entities in the database (every entity registered in window.entities).
+         * 
+         * @returns Promise 
+         */
+        dropDataBase: function() {
+            var queries = [];
+            for (var entity in entities) {
+                if (!entities.hasOwnProperty(entity)) continue;
+                queries.push("drop table if exists `{0}`".format(entity));
+            }
+            return this.executeQueries(queries);
+        },
+
+        /**
+         * Drops and recreates all entities in the database.
+         * 
+         * @returns Promise 
+         */
+        recreateDataBase: function () {
+            var deferred = $q.defer();
+            persistence.reset(null, function(res, err) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(res);
+                }
+            });
+            return deferred.promise;
+        }
 
     };
 
 }]);
 
-})(entities);
+})(entities, persistence, mobileServices);
