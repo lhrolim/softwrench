@@ -44,27 +44,37 @@
         }
         
         this.each(function(){
-            var self=this, $self=$(self), firstCharTime=0, lastCharTime=0, stringWriting='', callIsScanner=false, testTimer=false;
+            var self = this, $self = $(self), firstCharTime = 0, lastCharTime = 0, stringWriting = '', callIsScanner = false, testTimer = false;
+            var charBuffer = '';
+            var focusedInput;
             var initScannerDetection=function(){
                 firstCharTime=0;
                 stringWriting='';
+
             };
             self.scannerDetectionTest=function(s){
                 // If string is given, test it
                 if(s){
                     firstCharTime=lastCharTime=0;
-                    stringWriting=s;
+                    stringWriting = s;
                 }
                 // If all condition are good (length, time...), call the callback and re-initialize the plugin for next scanning
                 // Else, just re-initialize
                 if(stringWriting.length>=options.minLength && lastCharTime-firstCharTime<stringWriting.length*options.avgTimeByChar){
-                    if(options.onComplete) options.onComplete.call(self,stringWriting);
-                    $self.trigger('scannerDetectionComplete',{string:stringWriting});
+                    if (options.onComplete) options.onComplete.call(self, stringWriting);
+                    $self.trigger('scannerDetectionComplete', { string: stringWriting });
                     initScannerDetection();
                     return true;
                 }else{
-                    if(options.onError) options.onError.call(self,stringWriting);
+                    if (options.onError) {
+                        options.onError.call(self,stringWriting);
+                    }
                     $self.trigger('scannerDetectionError',{string:stringWriting});
+                    if (focusedInput) {
+                        var newValue = $(focusedInput).val() + stringWriting;
+                        $(focusedInput).val(newValue);
+                        charBuffer = '';
+                    }
                     initScannerDetection();
                     return false;
                 }
@@ -75,41 +85,55 @@
                 if(firstCharTime && options.endChar.indexOf(e.which)!==-1){
                     // Clone event, set type and trigger it
                     var e2=jQuery.Event('keypress',e);
-                    e2.type='keypress.scannerDetection';
-                    $self.triggerHandler(e2);
+                    e2.type = 'keypress.scannerDetection';
+                    if (!focusedInput) {
+                        $self.triggerHandler(e2);
+                    }
                     // Cancel default
                     e.preventDefault();
                     e.stopImmediatePropagation();
                 }
-            }).bind('keypress.scannerDetection',function(e){
-                if(options.stopPropagation) e.stopImmediatePropagation();
-                if(options.preventDefault) e.preventDefault();
+            }).bind('keypress.scannerDetection', function (e) {
 
-                if(firstCharTime && options.endChar.indexOf(e.which)!==-1){
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    callIsScanner=true;
-                }else{
-                    stringWriting+=String.fromCharCode(e.which);
-                    callIsScanner=false;
-                }
 
-                if(!firstCharTime){
-                    firstCharTime=Date.now();
-                }
-                lastCharTime=Date.now();
+                    if (e.target.type == "text") {
+                        e.preventDefault();
+                        focusedInput = e.target;
+                        charBuffer = String.fromCharCode(e.which);
+                    } else {
+                        focusedInput = null;
+                    }
 
-                if(testTimer) clearTimeout(testTimer);
-                if(callIsScanner){
-                    self.scannerDetectionTest();
-                    testTimer=false;
-                }else{
-                    testTimer=setTimeout(self.scannerDetectionTest,options.timeBeforeScanTest);
-                }
                 
-                if(options.onReceive) options.onReceive.call(self,e);
-                $self.trigger('scannerDetectionReceive',{evt:e});
-            });
+
+                    if(options.stopPropagation) e.stopImmediatePropagation();
+                    if(options.preventDefault) e.preventDefault();
+
+                    if(firstCharTime && options.endChar.indexOf(e.which)!==-1){
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        callIsScanner=true;
+                    }else{
+                        stringWriting+=String.fromCharCode(e.which);
+                        callIsScanner=false;
+                    }
+
+                    if(!firstCharTime){
+                        firstCharTime=Date.now();
+                    }
+                    lastCharTime=Date.now();
+
+                    if(testTimer) clearTimeout(testTimer);
+                    if (callIsScanner) {
+                        self.scannerDetectionTest();
+                        testTimer=false;
+                    } else {
+                        testTimer=setTimeout(self.scannerDetectionTest,options.timeBeforeScanTest);
+                    }
+                
+                    if(options.onReceive) options.onReceive.call(self,e);
+                    $self.trigger('scannerDetectionReceive',{evt:e});
+                });
         });
         return this;
     }
