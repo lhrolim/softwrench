@@ -42,6 +42,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="metadata\apachegold\deploy.xml" />
+    <Content Include="metadata\apachegold\readme.txt" />
     <Content Include="web_content\apachegold\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>
@@ -69,7 +71,6 @@
     <Folder Include="classes\com\cts\apachegold\connector\" />
     <Folder Include="classes\com\cts\apachegold\dataset\" />
     <Folder Include="classes\com\cts\apachegold\migration\" />
-    <Folder Include="metadata\apachegold\" />
     <Folder Include="web_content\apachegold\htmls\" />
     <Folder Include="web_content\apachegold\scripts\" />
   </ItemGroup>
