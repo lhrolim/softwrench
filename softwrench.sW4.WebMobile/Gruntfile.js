@@ -93,14 +93,14 @@ module.exports = function (grunt) {
             },
 
             build: {
-                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/filters/**/*.js","Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
                 dest: 'layout.html'
             }
         },
 
         concat: {
             mobileScripts: {
-                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/filters/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
                 dest: "scripts/dist/mobile_angular.js"
             },
         }

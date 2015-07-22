@@ -31,15 +31,15 @@
                 
                 <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly"
                        min="{{fieldMetadata.rendererParameters['min']}}"
-                       max="{{setMaxNumericInput(datamap,fieldMetadata)}}" ng-required="isFieldRequired(field.requiredExpression)">
+                       max="{{setMaxNumericInput(datamap,fieldMetadata)}}" ng-required="isFieldRequired(field.requiredExpression)"/>
                   
-                <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)">
+                <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter/>
                 
-                <input ng-switch-when="time" type="time" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)">
+                <input ng-switch-when="time" type="time" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter/>
                 
-                <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)">
+                <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
                 
-                <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)">
+                <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)"/>
             </div>
 
             
