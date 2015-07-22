@@ -21,7 +21,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
 
-        [SPFRedirect("Role Setup", "_headermenu.rolesetup")]
+        [SPFRedirect("Application Permissions", "_headermenu.rolesetup")]
         public GenericResponseResult<IList<Role>> Get() {
             var roles = _dao.FindByQuery<Role>("from Role order by name");
             return new GenericResponseResult<IList<Role>>(roles);

@@ -120,7 +120,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         }
 
         [HttpGet]
-        [SPFRedirect("About softWrench", "about.title", "About")]
+        [SPFRedirect("About", "about.title", "About")]
         public GenericResponseResult<IList<KeyValuePair<String, String>>> About() {
 
             IList<KeyValuePair<String, String>> aboutData = new List<KeyValuePair<String, String>>();

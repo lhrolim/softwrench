@@ -19,7 +19,7 @@ namespace softWrench.sW4.Web.Controllers.SchedulerSetup {
         }
 
         [HttpGet]
-        [SPFRedirect("Scheduler Setup", "_headermenu.schedulersetup")]
+        [SPFRedirect("Scheduler", "_headermenu.schedulersetup")]
         public GenericResponseResult<List<SchedulerSetupModel>> Index() {
             var listToUse = GetMocketList();
             return new GenericResponseResult<List<SchedulerSetupModel>>(listToUse);
