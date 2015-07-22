@@ -53,8 +53,8 @@ namespace softWrench.sW4.Security.Services {
             var dao = SWDBHibernateDAO.GetInstance();
             using (ISession session = SWDBHibernateDAO.CurrentSession()) {
                 using (ITransaction transaction = session.BeginTransaction()) {
-                    dao.ExecuteSql("delete from sw_userprofile_role");
-                    dao.ExecuteSql("delete from sw_user_customrole");
+                    dao.ExecuteSql("delete from sw_userprofile_role where role_id = ? ", role.Id);
+                    dao.ExecuteSql("delete from sw_user_customrole where role_id = ? ",role.Id);
                     dao.Delete(role);
                     Role oldRole = _activeRoles.FirstOrDefault(r => r.Id == role.Id);
                     if (oldRole != null) {

@@ -208,8 +208,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var label = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute).ValueOrDefault((String)null);
             var showExpression = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
             var toolTip = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault(label);
+            var icon = tabElement.Attribute(XmlBaseSchemaConstants.IconAttribute).ValueOrDefault((String)null);
+            var role = tabElement.Attribute(XmlBaseSchemaConstants.RoleAttribute).ValueOrDefault((String)null);
             var displayables = ParseDisplayables(applicationName, tabElement, entityName);
-            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression);
+            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression,icon,role);
         }
 
         private static ApplicationSection ParseSection(string applicationName, XElement sectionElement, EntityMetadata entityMetadata) {

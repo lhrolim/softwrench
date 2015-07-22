@@ -817,6 +817,8 @@
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
     <attribute name="label" type="string"></attribute>
+    <attribute name="icon" type="string"></attribute>
+    <attribute name="role" type="string"></attribute>
 
 
   </complexType>
