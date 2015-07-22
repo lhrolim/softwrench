@@ -62,9 +62,11 @@
         };
 
         /**
+         * Handles the case in which the current user is received an "unauthorized"
+         * response status (indicating the user requires remote authentication).
          * For now just calls logout.
          */
-        var handleForbiddenStatus = function() {
+        var handleUnauthorizedRemoteAccess = function() {
             logout();
         };
 
@@ -76,7 +78,7 @@
             loginLocal: loginLocal,
             hasAuthenticatedUser: hasAuthenticatedUser,
             logout: logout,
-            handleForbiddenStatus: handleForbiddenStatus
+            handleUnauthorizedRemoteAccess: handleUnauthorizedRemoteAccess
         };
 
         return service;

@@ -2,65 +2,65 @@
 
     <ion-nav-buttons side="left">
         <!-- detail of specif syncoperation: back button -->
-        <button ng-if="!isLatestOperation" class="button button-clear" ng-click="goBack()">
+        <button ng-if="!data.isLatestOperation" class="button button-clear" ng-click="goBack()">
             <i class="ion-chevron-left"></i>
             Back
         </button>
         <!-- detail of latest syncoperation: toggle left-menu button -->
-        <button ng-if="isLatestOperation" class="button button-clear" menu-toggle="left">
+        <button ng-if="data.isLatestOperation" class="button button-clear" menu-toggle="left">
             <i class="icon ion-navicon"></i>
         </button>
     </ion-nav-buttons>
     
     <ion-nav-buttons side="right">
         <!-- detail of latest syncoperation: full sync button -->
-        <button ng-if="isLatestOperation" class="button button-clear sync-button" ng-click="fullSynchronize()">
+        <button ng-if="data.isLatestOperation" class="button button-clear sync-button" ng-click="fullSynchronize()" ng-disabled="data.isSynching">
             <i class="icon ion-loop"></i>
             Sync
         </button>
     </ion-nav-buttons>
 
-    <ion-content class="has-header" ng-class="{ 'vertical-center' : !operation }">
+    <ion-content class="has-header" ng-class="{ 'vertical-center' : !data.operation }">
 
         <!-- has operation to display -->
-        <div ng-if="operation && operation !== null">
+        <div ng-if="!!data.operation">
 
             <div class="operation-status">
                 <div class="row">
                     <div class="col col-20">
-                        <sw-operation-icon sync-operation="operation"></sw-operation-icon>
+                        <sw-operation-icon sync-operation="data.operation"></sw-operation-icon>
                     </div>
                     <div class="col col-80">
-                        <h4>{{operation.formattedstatus}}</h4>
-                        <h5 ng-if="!operation.ispending">{{operation.elapsedtime}}&nbsp;seconds</h5>
+                        <h4>{{data.operation.formattedstatus}}</h4>
+                        <h5 ng-if="!data.operation.ispending">{{data.operation.elapsedtime}}&nbsp;seconds</h5>
                     </div>
                 </div>
             </div>
 
             <div class="operation-details row">
                 <div class="col col-offset-20">
-                    <div class="detail-section" ng-if="!operation.ispending">
-                        <h5>Application Downloads: {{operation.numberofdownloadeditems}}</h5>
+                    <div class="detail-section" ng-if="!data.operation.ispending">
+                        <h5>Application Downloads: {{data.operation.numberofdownloadeditems}}</h5>
                     </div>
-                    <div class="detail-section" ng-if="operation.issuccess">
-                        <h5>Support Data Downloads: {{operation.numberofdownloadedsupportdata}}</h5>
+                    <div class="detail-section" ng-if="data.operation.issuccess">
+                        <h5>Support Data Downloads: {{data.operation.numberofdownloadedsupportdata}}</h5>
                     </div>
                     <div class="detail-section upload-section">
-                        <h5>Application Uploads: {{batchItems.length}}</h5>
+                        <h5>Application Uploads: {{data.batchItems.length}}</h5>
                         <ul class="item-list">
-                            <li ng-repeat="item in batchItems">
+                            <li ng-repeat="item in data.batchItems">
                                 <i class="icon" ng-class="{'ion-alert-circled': item.simpleproblem, 'ion-checkmark': !item.simpleproblem}"></i>
                                 {{item.label}}
                                 <span ng-if="item.simpleproblem">:&nbsp;{{item.simpleproblem.message}}</span>
                             </li>
                         </ul>
-                        <button ng-if="operation.hasproblems" class="button problem-button" ng-click="solveProblems()">Fix Issues</button>
+                        <button ng-if="data.operation.hasproblems" class="button problem-button" ng-click="solveProblems()">Fix Issues</button>
                     </div>
                 </div>
             </div>
 
             <!-- detail of latest syncoperation: navigate to history button -->
-            <div ng-if="isLatestOperation" class="row">
+            <div ng-if="data.isLatestOperation" class="row">
                 <div class="col">
                     <button class="button button-positive button-full" ng-click="goToHistory()">
                         Synchronization History
@@ -71,8 +71,7 @@
         </div>
 
         <!-- no operation to display -->
-        <!--<div ng-if="operation && operation !== null" class="no-operation">-->
-        <div ng-if="!operation">
+        <div ng-if="!data.operation">
             <div class="row">
                 <div class="col">
                     <p>Click 'Sync' to start using the system</p>

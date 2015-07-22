@@ -1,8 +1,8 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "$ionicPopup", "routeService", "loginService", "$timeout", "$stateParams",
-        function($scope, $ionicPopup, routeService, loginService, $timeout, $stateParams) {
+    app.controller('LoginController', ["$scope", "$ionicPopup", "routeService", "loginService", "$timeout", "$stateParams", "$ionicLoading",
+        function($scope, $ionicPopup, routeService, loginService, $timeout, $stateParams, $ionicLoading) {
 
             $scope.data = {};
 
@@ -23,13 +23,19 @@
                 }
             };
 
-            $scope.login = function() {
+            $scope.login = function () {
+                $ionicLoading.show({
+                    template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>"
+                });
                 loginService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');
                     })
                     .catch(function () {
                         showAlert("Login failed!", "Please check your credentials!");
+                    })
+                    .finally(function() {
+                        $ionicLoading.hide();
                     });
             };
 

@@ -5,18 +5,17 @@
         ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "$ionicPopup", "$ionicLoading", "$stateParams", "$ionicHistory",
         function ($scope, service, routeService, synchronizationFacade, $ionicPopup, $ionicLoading, $stateParams, $ionicHistory) {
 
-            $scope.operation = null;
-
-            $scope.batchItems = [];
-
-            $scope.isLatestOperation = !$stateParams.id;
+            $scope.data = {
+                operation: null,
+                batchItems: [],
+                isLatestOperation: !$stateParams.id,
+                isSynching: false
+            }
 
             var loadingOptions = {
-                content: "<i class='icon ion-looping'></i> Loading",
-                animation: "fade-in",
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 10
+                //template: "<i class='icon ion-looping'></i> Loading", -> ionicon-animations not added; using spinner instead
+                template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>",
+                animation: "fade-in"
             };
 
             var loadSyncOperation = function (initial) {
@@ -24,10 +23,10 @@
                 if (!!initial) {
                     $ionicLoading.show(loadingOptions);
                 }
-                var loadPromise = $scope.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
+                var loadPromise = $scope.data.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
                 loadPromise.then(function (operation) {
                     if (!operation) return operation;
-                    $scope.operation = operation;
+                    $scope.data.operation = operation;
                     return service.getBatchItems(operation);
                 }).then(function (items) {
                     if (!items) return items;
@@ -38,7 +37,7 @@
                         return item;
                     });
                 }).then(function (items) {
-                    $scope.batchItems = items;
+                    $scope.data.batchItems = items;
                 })
                 .finally(function () {
                     if (initial) {
@@ -60,6 +59,7 @@
             };
 
             $scope.fullSynchronize = function () {
+                $scope.data.isSynching = true;
                 $ionicLoading.show(loadingOptions);
                 synchronizationFacade.fullSync()
                     .then(function (message) {
@@ -76,6 +76,7 @@
                     })
                     .finally(function () {
                         $ionicLoading.hide();
+                        $scope.data.isSynching = false;
                     });
             };
 
