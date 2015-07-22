@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
+
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
@@ -24,7 +25,7 @@
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
-  <property key="dashboard.enabled" value="true"/>
+  <property key="dashboard.enabled" value="false"/>
 
   <environment key="dev">
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
@@ -53,7 +54,3 @@
   </environment>
   
 </Properties>
-  
- 
-  
-

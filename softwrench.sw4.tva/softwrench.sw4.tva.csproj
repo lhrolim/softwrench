@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C987E2C2-A2D3-4D7B-B2FF-A5F1667B159A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>softwrench.sw4.tva</RootNamespace>
+    <AssemblyName>softwrench.sw4.tva</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="metadata\tva\deploy.xml" />
+    <Content Include="metadata\tva\properties.xml" />
+    <Content Include="metadata\tva\readme.txt" />
+    <Content Include="web_content\tva\images\branding.png" />
+    <Content Include="web_content\tva\images\header.jpg" />
+    <Content Include="web_content\tva\images\logo-byline.png" />
+    <Content Include="web_content\tva\images\logo-main.png" />
+    <Content Include="web_content\tva\images\name-softwrench.png" />
+    <Content Include="web_content\tva\images\signin.jpg" />
+    <Content Include="web_content\tva\styles\branding.css" />
+    <Content Include="web_content\tva\styles\branding.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="customer.placeholder" />
+    <None Include="web_content\tva\styles\branding.css.map" />
+    <None Include="web_content\tva\styles\branding.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="classes\com\cts\tva\configuration\" />
+    <Folder Include="classes\com\cts\tva\connector\" />
+    <Folder Include="classes\com\cts\tva\dataset\" />
+    <Folder Include="classes\com\cts\tva\migration\" />
+    <Folder Include="web_content\tva\htmls\" />
+    <Folder Include="web_content\tva\scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{A6A14991-81DD-45B5-B5C8-154E44D84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{CE228C26-938D-4D6F-95FA-12CC5241AFB5}</Project>
+      <Name>softWrench.sW4</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
