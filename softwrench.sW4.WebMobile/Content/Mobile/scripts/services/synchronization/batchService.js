@@ -44,7 +44,7 @@
 
         /**
          * Updates the entries added to the rollbackcontext
-         * setting their pending property to true.
+         * setting their pending property to false.
          * 
          * (?) If the rollbackk mechanism fails for any reason the entries 
          * will remain in the rollbackcontext. (?)
