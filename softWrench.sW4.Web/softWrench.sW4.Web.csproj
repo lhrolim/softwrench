@@ -461,9 +461,6 @@
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
-    <Content Include="Content\Images\hapag\login-header.jpg" />
-    <Content Include="Content\Images\hapag\login-header2.jpg" />
-    <Content Include="Content\Images\hapag\logo_hapag.gif" />
     <Content Include="Content\Images\header.jpg" />
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
@@ -474,7 +471,6 @@
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
     <Content Include="Content\Images\pagination-previous.png" />
-    <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin-lg.jpg" />
     <Content Include="Content\Images\signin-md.jpg" />
     <Content Include="Content\Images\signin-sm.jpg" />
@@ -483,11 +479,6 @@
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
-    <Content Include="Content\Images\tva\branding.png" />
-    <Content Include="Content\Images\tva\header.jpg" />
-    <Content Include="Content\Images\tva\logo-byline.png" />
-    <Content Include="Content\Images\tva\logo-main.png" />
-    <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
     <Content Include="Content\modules\lookup\lookupcomponent.js" />
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
@@ -741,14 +732,7 @@
     <Content Include="Content\Scripts\vendor\other\spin-min.js" />
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
     <None Include="Content\styles\default\_tooltips.scss" />
-    <Content Include="Content\styles\hapag\grid.css" />
-    <Content Include="Content\styles\hapag\signin.css" />
-    <Content Include="Content\styles\hapag\site.css" />
-    <Content Include="Content\styles\scottsdale\signin.css" />
-    <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <Content Include="Content\styles\tva\signin.css" />
-    <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
@@ -1367,7 +1351,6 @@
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
-    <Folder Include="Content\styles\otb\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
@@ -1401,6 +1384,10 @@
     <ProjectReference Include="..\softwrench.sw4.activitystream\softwrench.sw4.activitystream.csproj">
       <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
       <Name>softwrench.sw4.activitystream</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
+      <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
+      <Name>softwrench.sw4.apachegold</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>

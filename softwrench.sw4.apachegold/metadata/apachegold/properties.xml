@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
-
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
@@ -8,8 +7,10 @@
   <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
-  <property key="maxAttachmentSize" value="10"/> <!--in MB-->
-  <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
+  <property key="maxAttachmentSize" value="10"/>
+  <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/>
+  <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
@@ -52,5 +53,4 @@
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
   </environment>
-  
 </Properties>

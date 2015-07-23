@@ -24,7 +24,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
 
-        [SPFRedirect("User Profile Setup", "_headermenu.userprofilesetup")]
+        [SPFRedirect("Security Groups", "_headermenu.userprofilesetup")]
         public GenericResponseResult<UserProfileListDto> Get(Boolean refreshRoles = true) {
             //maybe if the number of profiles gets too big, we should lazy-fetch them, in a way to retrieve less data to the list screen
             var profiles = SecurityFacade.FetchAllProfiles(true);

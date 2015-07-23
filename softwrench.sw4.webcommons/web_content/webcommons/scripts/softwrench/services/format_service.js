@@ -1,55 +1,61 @@
-﻿(function(angular) {
+﻿
+(function (angular) {
     "use strict";
 
-modules.webcommons.factory('formatService', function ($filter, i18NService, dispatcherService) {
+    function formatService($filter, i18NService, dispatcherService) {
 
-    var doFormatDate = function (value, dateFormat, forceConversion) {
-        if (value == null) {
-            return null;
-        }
+        //#region Utils
 
-        if (angular.isString(value) && value.equalsAny("@now", "@currentdatetime", "@currentdate")) {
-            return $filter('date')(new Date(), dateFormat);
-        }
+        var doFormatDate = function (value, dateFormat, forceConversion) {
+            if (value == null) {
+                return null;
+            }
 
-        if (forceConversion) {
-            //this would be needed for applying the time formats
-            var date = new Date(value);
-            if (isNaN(date)) {
+            if (angular.isString(value) && value.equalsAny("@now", "@currentdatetime", "@currentdate")) {
+                return $filter('date')(new Date(), dateFormat);
+            }
+
+            if (forceConversion) {
+                //this would be needed for applying the time formats
+                var date = new Date(value);
+                if (isNaN(date)) {
+                    return $filter('date')(value, dateFormat);
+                } else {
+                    return $filter('date')(date, dateFormat);
+                }
+            }
+
+            try {
                 return $filter('date')(value, dateFormat);
-            } else {
-                return $filter('date')(date, dateFormat);
+            } catch (e) {
+                value = new Date(value);
+                return $filter('date')(value, dateFormat);
             }
-        }
+        };
 
-        try {
-            return $filter('date')(value, dateFormat);
-        } catch (e) {
-            value = new Date(value);
-            return $filter('date')(value, dateFormat);
-        }
-    };
-
-    var descriptionDataHandler = function (value, column) {
-        if (value == null) {
-            return "";
-        }
-        try {
-            var unformatteddate = value.split('Logged Date:')[1];
-            if (!nullOrUndef(unformatteddate)) {
-                var unformatteddatenospaces = unformatteddate.replace(/ /g, '');
-                var dateFormat = column.rendererParameters['format'];
-                var formatteddate = doFormatDate(unformatteddatenospaces, dateFormat, false);
-                value = value.replace(unformatteddatenospaces, formatteddate);
+        var descriptionDataHandler = function (value, column) {
+            if (value == null) {
+                return "";
             }
-        } catch (e) {
+            try {
+                var unformatteddate = value.split('Logged Date:')[1];
+                if (!nullOrUndef(unformatteddate)) {
+                    var unformatteddatenospaces = unformatteddate.replace(/ /g, '');
+                    var dateFormat = column.rendererParameters['format'];
+                    var formatteddate = doFormatDate(unformatteddatenospaces, dateFormat, false);
+                    value = value.replace(unformatteddatenospaces, formatteddate);
+                }
+            } catch (e) {
+                return value;
+            }
             return value;
-        }
-        return value;
-    };
+        };
 
-    return {
-        format: function (value, field, datamap) {
+        //#endregion
+
+        //#region Public methods
+
+        function format (value, field, datamap) {
             if (field == undefined) {
                 return value;
             }
@@ -75,7 +81,8 @@ modules.webcommons.factory('formatService', function ($filter, i18NService, disp
             }
 
             var dateFormat;
-            if ( (field.rendererType == "datetime" || field.rendererType == 'date' || field.rendererType == 'time') && (field.rendererParameters['formatter']==null || field.rendererParameters['formatter'] == "datetime")) {
+            if ((field.rendererType == "datetime" || field.rendererType == 'date' || field.rendererType == 'time')
+                && (field.rendererParameters['formatter'] == null || field.rendererParameters['formatter'] == "datetime")) {
                 if (value != null) {
                     dateFormat = field.rendererParameters['format'];
                     if (dateFormat == null) {
@@ -131,23 +138,27 @@ modules.webcommons.factory('formatService', function ($filter, i18NService, disp
             }
 
             return value;
-        },
+        };
 
-        formatDate: function (value, dateFormat) {
+
+        function formatDate(value, dateFormat) {
+            if (!dateFormat) {
+                dateFormat = "MM/dd/yyyy hh:mm";
+            }
             return doFormatDate(value, dateFormat, true);
-        },
+        };
 
-        adjustDateFormatForAngular: function (dateFormat, showTime) {
+        function adjustDateFormatForAngular (dateFormat, showTime) {
             if (dateFormat == undefined || dateFormat == '') {
                 //default ==> should be client specific
                 return showTime ? "MM/dd/yyyy hh:mm" : "MM/dd/yyyy";
             } else {
                 return dateFormat.trim();
             }
-        },
+        };
 
 
-        adjustDateFormatForPicker: function (dateFormat, showTime) {
+        function adjustDateFormatForPicker (dateFormat, showTime) {
             /// <summary>
             ///  Bootstrap picker uses mm for month, and ii for minutes.
             ///  Angular, however, uses MM for month and hh mm for minutes.
@@ -168,17 +179,41 @@ modules.webcommons.factory('formatService', function ($filter, i18NService, disp
                 }
                 return dateFormat.trim();
             }
-        },
+        };
 
-        doContentStringConversion: function (datamap) {
+        function doContentStringConversion (datamap) {
             for (var record in datamap) {
                 datamap[record] = datamap[record] == null ? null : datamap[record].toString();
             }
 
             return datamap;
         }
-    };
 
-});
+        //#endregion
+
+        //#region Service Instance
+
+        var service = {
+            format: format,
+            formatDate: formatDate,
+            adjustDateFormatForAngular: adjustDateFormatForAngular,
+            adjustDateFormatForPicker: adjustDateFormatForPicker,
+            doContentStringConversion: doContentStringConversion
+        };
+
+        return service;
+
+
+        //#endregion
+    }
+
+    //#region Service registration
+
+    angular.module("webcommons_services").factory("formatService", ['$filter', 'i18NService', 'dispatcherService', formatService]);
+
+    //#endregion
 
 })(angular);
+
+
+

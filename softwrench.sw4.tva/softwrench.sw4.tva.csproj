@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CBF64EA8-97DF-43B4-97CB-477769F9941C}</ProjectGuid>
+    <ProjectGuid>{C987E2C2-A2D3-4D7B-B2FF-A5F1667B159A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.apachegold</RootNamespace>
-    <AssemblyName>softwrench.sw4.apachegold</AssemblyName>
+    <RootNamespace>softwrench.sw4.tva</RootNamespace>
+    <AssemblyName>softwrench.sw4.tva</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,38 +42,30 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\apachegold\deploy.xml" />
-    <EmbeddedResource Include="metadata\apachegold\properties.xml" />
-    <Content Include="metadata\apachegold\readme.txt" />
-    <Content Include="web_content\apachegold\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\apachegold\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
-    <Content Include="web_content\apachegold\images\header.jpg" />
-    <Content Include="web_content\apachegold\images\logo-byline.png" />
-    <Content Include="web_content\apachegold\images\logo-main.png" />
-    <Content Include="web_content\apachegold\images\signin-lg.jpg" />
-    <Content Include="web_content\apachegold\images\signin-md.jpg" />
-    <Content Include="web_content\apachegold\images\signin-sm.jpg" />
-    <Content Include="web_content\apachegold\images\signin-xs.jpg" />
-    <Content Include="web_content\apachegold\images\signin-xxs.jpg" />
+    <Content Include="metadata\tva\deploy.xml" />
+    <Content Include="metadata\tva\properties.xml" />
+    <Content Include="metadata\tva\readme.txt" />
+    <Content Include="web_content\tva\images\branding.png" />
+    <Content Include="web_content\tva\images\header.jpg" />
+    <Content Include="web_content\tva\images\logo-byline.png" />
+    <Content Include="web_content\tva\images\logo-main.png" />
+    <Content Include="web_content\tva\images\name-softwrench.png" />
+    <Content Include="web_content\tva\images\signin.jpg" />
+    <Content Include="web_content\tva\styles\branding.css" />
+    <Content Include="web_content\tva\styles\branding.min.css" />
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />
-    <None Include="web_content\apachegold\styles\branding.css.map">
-      <DependentUpon>branding.css</DependentUpon>
-    </None>
-    <None Include="web_content\apachegold\styles\branding.scss" />
+    <None Include="web_content\tva\styles\branding.css.map" />
+    <None Include="web_content\tva\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\apachegold\configuration\" />
-    <Folder Include="classes\com\cts\apachegold\connector\" />
-    <Folder Include="classes\com\cts\apachegold\dataset\" />
-    <Folder Include="classes\com\cts\apachegold\migration\" />
-    <Folder Include="web_content\apachegold\htmls\" />
-    <Folder Include="web_content\apachegold\scripts\" />
+    <Folder Include="classes\com\cts\tva\configuration\" />
+    <Folder Include="classes\com\cts\tva\connector\" />
+    <Folder Include="classes\com\cts\tva\dataset\" />
+    <Folder Include="classes\com\cts\tva\migration\" />
+    <Folder Include="web_content\tva\htmls\" />
+    <Folder Include="web_content\tva\scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">

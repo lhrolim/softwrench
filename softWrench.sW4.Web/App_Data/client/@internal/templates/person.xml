@@ -28,7 +28,7 @@
         </schema>
 
 
-        <schema id="list" stereotype="list" title="Person List">
+        <schema id="list" stereotype="list" title="Users">
           <field attribute="personuid" hidden="true"/>
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>

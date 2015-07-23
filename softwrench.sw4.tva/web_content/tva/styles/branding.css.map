@@ -1,0 +1,1 @@
+{"version":3,"mappings":"AAAA,YAAa;EACT,UAAU,EAAE,4DAA4D;EACxE,eAAe,EAAE,KAAK;;;AAG1B,yBAA0B;EACtB,gBAAgB,EAAE,oBAAoB;;;AAG1C,iBAAkB;EACd,UAAU,EAAE,oDAAoD;EAChE,eAAe,EAAE,KAAK;;;AAG1B,2BAA4B;EACxB,UAAU,EAAE,8CAA8C;;;AAG9D,qCAAsC;EAClC,KAAK,EAAE,KAAK","sources":["./branding.scss"],"names":[],"file":"branding.css"}
