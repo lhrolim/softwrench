@@ -1,33 +1,84 @@
-﻿(function () {
+﻿(function (mobileServices, angular, persistence) {
     'use strict';
 
-    service.$inject = ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService'];
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService) {
 
+        //#region Utils
 
-    mobileServices.factory('batchService', service);
-
-
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, asyncSynchronizationService) {
-
-        var api = {
-            getIdsFromBatch: getIdsFromBatch,
-            submitBatches: submitBatches,
-            generateDatamapDiff: generateDatamapDiff,
-            createBatch: createBatch,
-            saveBatch: saveBatch,
-            updateBatch: updateBatch,
+        /**
+         * internal rollback context
+         */
+        var rollbackContext = {
+            // Queue: DataEntry instances currently being submitted to the server
+            submittingEntries: []
         };
 
-        return api;
-
-        function getIdsFromBatch(batch) {
-            var items = batch.items;
-            var ids = [];
-            for (var i = 0; i < items.length; i++) {
-                var batchItem = items[i];
-                ids.push(batchItem['remoteId']);
+        var logIdsIfEnabled = function (logger, level, entities, messageTemplate) {
+            // just so it doesn't waste time and memory creating a message that won't be logged
+            if (!logger.isLevelEnabled(level)) {
+                return;
             }
-            return ids;
+            var ids = entities.map(function (e) {
+                return "'{0}'".format(e.id);
+            });
+            logger[level](messageTemplate.format(ids));
+        };
+
+        /**
+         * Adds the dataentry to the rollbackcontext.
+         * 
+         * @param [DataEntry] dataentry either an array of entries or a single entry
+         */
+        var addToRollbackContext = function (dataentry) {
+            var log = $log.get("BatchService#rollback");
+            if (angular.isArray(dataentry)) {
+                logIdsIfEnabled(log, "debug", dataentry, "marking DataEntries {0} to rollback");
+                angular.forEach(dataentry, function(e) {
+                    rollbackContext.submittingEntries.push(e);
+                });
+            } else {
+                log.debug("marking DataEntry '{0}' to rollback".format(dataentry.id));
+                rollbackContext.submittingEntries.push(dataentry);
+            }
+        };
+
+        /**
+         * Updates the entries added to the rollbackcontext
+         * setting their pending property to true.
+         * 
+         * (?) If the rollbackk mechanism fails for any reason the entries 
+         * will remain in the rollbackcontext. (?)
+         */
+        var rollBackSubmittingDataEntries = function () {
+            var log = $log.get("BatchService#rollback");
+            log.debug("executing rollback");
+            var nonPendingEntries = [];
+            while (rollbackContext.submittingEntries.length > 0) {
+                // evicting entries from internal state
+                var entry = rollbackContext.submittingEntries.shift();
+                if (!entry) continue;
+                // mark as not pending
+                entry.pending = false;
+                // pushing to this function scoped state
+                nonPendingEntries.push(entry);
+            }
+            swdbDAO.bulkSave(nonPendingEntries)
+                .then(function (entries) {
+                    logIdsIfEnabled(log, "debug", entries, "DataEntries {0} rolledback successfully");
+                }).catch(function (error) {
+                    logIdsIfEnabled(log, "warn", nonPendingEntries, "Failed to rollback DataEntries {0} due to " + error);
+                    // (?) addToRollbackContext(nonPendingEntries); (?)
+                });
+        };
+
+        /**
+         * Empties the rollbackcontext.
+         * 
+         * (?) Maybe do a per-entry eviction: only remove those passed as arguments. 
+         * Useful if we decide to maintain the entries in the context if their rollback fail (?)
+         */
+        var evictRollBackContext = function() {
+            rollbackContext.submittingEntries = [];
         };
 
         function generateDatamapDiff(batchItem) {
@@ -39,6 +90,20 @@
 
             //TODO: implement the diff, passing also the ID + siteid all the time
             return datamap;
+        };
+
+        //#endregion
+
+        //#region Public methods
+
+        function getIdsFromBatch(batch) {
+            var items = batch.items;
+            var ids = [];
+            for (var i = 0; i < items.length; i++) {
+                var batchItem = items[i];
+                ids.push(batchItem['remoteId']);
+            }
+            return ids;
         };
 
         /**
@@ -190,10 +255,18 @@
             }
 
             // joined promises: resolves with array of Batch
-            return $q.all(promises);
+            return $q.all(promises)
+                .then(function (results) {
+                    evictRollBackContext();
+                    return results;
+                })
+                .catch(function (error) {
+                    // rollback DataEntries update
+                    rollBackSubmittingDataEntries();
+                    // still reject the error to communicate it along the promise chain
+                    return $q.reject(error);
+                });
         };
-
-        
 
 
         function createBatch(dbapplication) {
@@ -211,7 +284,9 @@
                     }
                     var batchItemPromises = [];
                     angular.forEach(dataEntries, function (entry) {
+                        // if batch submission fails, remember to rollback this state (otherwise dataentry will be in limbo)
                         entry.pending = true;
+                        addToRollbackContext(entry);
                         batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function (dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
@@ -247,9 +322,29 @@
                 });
         }
 
+        //#endregion
+        
+        //#region Service instance
 
-    }
-})();
+        var api = {
+            getIdsFromBatch: getIdsFromBatch,
+            submitBatches: submitBatches,
+            generateDatamapDiff: generateDatamapDiff,
+            createBatch: createBatch,
+            saveBatch: saveBatch,
+            updateBatch: updateBatch,
+        };
+
+        return api;
+
+        //#endregion
+    };
+    
+    //#region Service registration
+    mobileServices.factory('batchService', ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', service]);
+    //#endregion
+
+})(mobileServices, angular, persistence);
 
 
 
