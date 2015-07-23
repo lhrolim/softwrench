@@ -1,9 +1,10 @@
-﻿.login-button {
-    display: initial;
-    width: 84% !important;
-    clear: none;
-}
-
-.login-settings {
+﻿.page-login .login-settings {
     margin-top: 10px;   
+}
+.page-login .action-bar {
+    padding: 0;
+}
+.page-login .action-bar .action-button {
+    padding: 0;
+    text-align: center;
 }

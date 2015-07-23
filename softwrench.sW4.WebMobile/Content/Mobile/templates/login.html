@@ -1,6 +1,4 @@
-﻿
-
-<ion-view view-title="Login" name="login-view">
+﻿<ion-view view-title="Login" name="login-view" class="page-login">
     <ion-content class="padding">
         <div class="list list-inset">
             <label class="item item-input">
@@ -9,8 +7,14 @@
             <label class="item item-input">
                 <input type="password" placeholder="Password" ng-model="data.password">
             </label>
-            <button class="button button-calm button-block login-button" ng-click="login()">Login</button>
-            <a class="button button-icon icon ion-gear-a login-settings" ng-click="settings()"></a>
+            <div class="row action-bar">
+                <div class="col col-80 action-button">
+                    <button class="button button-calm button-full" ng-click="login()">Login</button>
+                </div>
+                <div class="col col-20 action-button">
+                    <a class="button button-icon icon ion-gear-a login-settings" ng-click="settings()"></a>
+                </div>
+            </div>
         </div>
 
     </ion-content>

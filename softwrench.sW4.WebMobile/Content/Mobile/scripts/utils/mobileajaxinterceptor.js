@@ -24,7 +24,7 @@
                 if (rejection.status === 401) {
                     // getting around circular dependency problem ($state -> $http -> ... -> securityService -> routeService -> $state)
                     if(!securityService) securityService = $injector.get("securityService");
-                    securityService.handleForbiddenStatus();
+                    securityService.handleUnauthorizedRemoteAccess();
                     return;
                 }
             };

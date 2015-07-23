@@ -2,49 +2,62 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "$ionicPopup", "$ionicLoading", "$stateParams", "$ionicHistory",
-        function ($scope, service, routeService, synchronizationFacade, $ionicPopup, $ionicLoading, $stateParams, $ionicHistory) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "$ionicPopup", "$ionicLoading", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate",
+        function ($scope, service, routeService, synchronizationFacade, $ionicPopup, $ionicLoading, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate) {
 
-            $scope.operation = null;
-
-            $scope.batchItems = [];
-
-            $scope.isLatestOperation = !$stateParams.id;
+            $scope.data = {
+                operation: null,
+                batchItems: [],
+                isLatestOperation: !$stateParams.id,
+                isSynching: false,
+                currentApplicationState: null,
+                applicationStateCollapsed: true,
+            }
 
             var loadingOptions = {
-                content: "<i class='icon ion-looping'></i> Loading",
-                animation: "fade-in",
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 10
+                //template: "<i class='icon ion-looping'></i> Loading", -> ionicon-animations not added; using spinner instead
+                template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>",
+                animation: "fade-in"
             };
 
-            var loadSyncOperation = function (initial) {
-                // show loading if initial page load
-                if (!!initial) {
-                    $ionicLoading.show(loadingOptions);
-                }
-                var loadPromise = $scope.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
-                loadPromise.then(function (operation) {
+            var loadSyncOperation = function () {
+                var loadPromise = $scope.data.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
+                return loadPromise.then(function(operation) {
                     if (!operation) return operation;
-                    $scope.operation = operation;
+                    $scope.data.operation = operation;
                     return service.getBatchItems(operation);
-                }).then(function (items) {
+                }).then(function(items) {
                     if (!items) return items;
-                    return items.map(function (item) {
+                    return items.map(function(item) {
                         if (item.problem) {
                             item.simpleproblem = { message: item.problem.message };
                         }
                         return item;
                     });
-                }).then(function (items) {
-                    $scope.batchItems = items;
-                })
-                .finally(function () {
-                    if (initial) {
-                        $ionicLoading.hide();
-                    }
+                }).then(function(items) {
+                    $scope.data.batchItems = items;
                 });
+            };
+
+            var loadCurrentApplicationState = function() {
+                return applicationStateService.currentState().then(function(state) {
+                    $scope.data.currentApplicationState = state;
+                });
+            };
+
+            var loadData = function(initial) {
+                // show loading if initial page load
+                if (!!initial) {
+                    $ionicLoading.show(loadingOptions);
+                }
+                var operationPromise = loadSyncOperation();
+                var currentStatePromise = loadCurrentApplicationState();
+                return $q.all([operationPromise, currentStatePromise])
+                    .finally(function () {
+                        if (!!initial) {
+                            $ionicLoading.hide();
+                        }
+                    });
             };
 
             $scope.goToHistory = function() {
@@ -60,6 +73,7 @@
             };
 
             $scope.fullSynchronize = function () {
+                $scope.data.isSynching = true;
                 $ionicLoading.show(loadingOptions);
                 synchronizationFacade.fullSync()
                     .then(function (message) {
@@ -67,7 +81,7 @@
                             title: "Synchronization Succeeded",
                             template: message
                         });
-                        loadSyncOperation();
+                        return loadData();
                     })
                     .catch(function () {
                         $ionicPopup.alert({
@@ -75,12 +89,22 @@
                         });
                     })
                     .finally(function () {
+                        $scope.data.isSynching = false;
                         $ionicLoading.hide();
                     });
             };
 
+            $scope.toggleApplicationStateCollapsed = function() {
+                $scope.data.applicationStateCollapsed = !$scope.data.applicationStateCollapsed;
+                if ($scope.data.applicationStateCollapsed) {
+                    $ionicScrollDelegate.scrollTop(true);
+                } else {
+                    $ionicScrollDelegate.scrollBottom(true);
+                }
+            }
+
             // initialize
-            loadSyncOperation(true);
+            loadData(true);
 
     }]);
 

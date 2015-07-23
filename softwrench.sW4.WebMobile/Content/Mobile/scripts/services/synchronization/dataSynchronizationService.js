@@ -11,10 +11,16 @@
 
     var service = function($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, datamapSanitizationService) {
 
+        var errorHandlePromise = function(error) {
+            if (!error) {
+                return $q.when();
+            }
+            return $q.reject(error);
+        };
 
         function syncData() {
             var currentApps = metadataModelService.getApplicationNames();
-            var firstTime = currentApps.length == 0;
+            var firstTime = currentApps.length === 0;
             var params;
             if (firstTime) {
                 //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
@@ -23,14 +29,16 @@
                     returnNewApps: true
                 };
                 //single server call
-                return restService.postPromise("Mobile", "PullNewData", params).then(resultHandlePromise);
+                return restService.postPromise("Mobile", "PullNewData", params)
+                    .then(resultHandlePromise)
+                    .catch(errorHandlePromise);
             }
 
             return rowstampService.generateCompositionRowstampMap()
                 .then(function(compositionMap) {
                     var httpPromises = [];
                     for (var i = 0; i < currentApps.length; i++) {
-                        var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps, compositionMap);
+                        var promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap).catch(errorHandlePromise);
                         httpPromises.push(promise);
                     }
                     return $q.all(httpPromises);
@@ -44,7 +52,7 @@
             if (result.data.isEmpty) {
                 log.info("no new data returned from the server");
                 //interrupting async calls
-                return $q.reject();
+                return 0;
             }
 
             log.info("receiving new topLevel data from the server");
@@ -84,12 +92,6 @@
             queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
             return swdbDAO.executeQueries(queryArray).then(function() {
                 return $q.when(numberOfDownloadedItems);
-            }).catch(function(err) {
-                if (!err) {
-                    //normal interruption
-                    return $q.when(0);
-                }
-                return $q.reject(err);
             });
         };
 
