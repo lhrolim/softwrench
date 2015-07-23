@@ -257,6 +257,7 @@
             // joined promises: resolves with array of Batch
             return $q.all(promises)
                 .then(function (results) {
+                    // entries can be removed from rollbackcontext
                     evictRollBackContext();
                     return results;
                 })
