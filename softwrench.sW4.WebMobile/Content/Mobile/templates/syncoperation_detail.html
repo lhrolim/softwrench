@@ -59,12 +59,46 @@
                 </div>
             </div>
 
-            <!-- detail of latest syncoperation: navigate to history button -->
-            <div ng-if="data.isLatestOperation" class="row">
-                <div class="col">
-                    <button class="button button-positive button-full" ng-click="goToHistory()">
-                        Synchronization History
-                    </button>
+            <!-- detail of latest syncoperation: navigate to history button + recent application state-->
+            <div ng-if="data.isLatestOperation">
+
+                <div class="row">
+                    <div class="col">
+                        <button class="button button-positive button-full" ng-click="goToHistory()">
+                            Synchronization History
+                        </button>
+                    </div>
+                </div>
+
+                <div class="list">
+                    <div class="item item-divider item-icon-left app-summary-title" ng-click="toggleApplicationStateCollapsed()">
+                        <i class="icon" ng-class="{'ion-arrow-down-b': data.applicationStateCollapsed, 'ion-arrow-up-b': !data.applicationStateCollapsed}"></i>
+                        Application summary
+                    </div>
+                </div>
+
+                <div ng-show="!data.applicationStateCollapsed">
+                    <div class="list card" ng-repeat="app in data.currentApplicationState">
+                        <div class="item item-divider">
+                            {{app.application | capitalize}}
+                        </div>
+                        <div class="item item-text-wrap item-icon-left">
+                            <i class="icon ion-checkmark"></i>
+                            Number of items:&nbsp;{{app.all}}
+                        </div>
+                        <div class="item item-text-wrap item-icon-left">
+                            <i class="icon ion-loop"></i>
+                            Number of pending items:&nbsp;{{app.pending}}
+                        </div>
+                        <div class="item item-text-wrap item-icon-left">
+                            <i class="icon ion-asterisk"></i>
+                            Number of dirty items:&nbsp;{{app.dirty}}
+                        </div>
+                        <div class="item item-text-wrap item-icon-left">
+                            <i class="icon ion-alert-circled"></i>
+                            Number of problematic items:&nbsp;{{app.problematic}}
+                        </div>
+                    </div>
                 </div>
             </div>
 

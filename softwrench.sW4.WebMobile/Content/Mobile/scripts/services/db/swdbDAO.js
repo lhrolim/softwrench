@@ -11,7 +11,8 @@ mobileServices.factory("swdbDAO", ["$q", "dispatcherService", function ($q, disp
         if (!entities[entity]) {
             throw new Error("entity {0} not found".format(entity));
         }
-        return persistence.define(entity);
+        //return persistence.define(entity);
+        return entities[entity];
     }
 
     function createFilter(entity, queryString, queryoptions) {
@@ -357,6 +358,29 @@ mobileServices.factory("swdbDAO", ["$q", "dispatcherService", function ($q, disp
                     }
                     return results[0];
                 });
+        },
+
+        /**
+         * Counts the number of results the querry would return.
+         * (it uses a count statement, it doesn't actually perform the query to measure the array length).
+         * 
+         * @param String entity 
+         * @param String query 
+         * @returns Promise resolved with the count value 
+         */
+        countByQuery: function (entity, query) {
+            var deferred = $q.defer();
+            var filter = createFilter(entity, query);
+            console.log("before:");
+            console.log(query);
+            console.log(filter._additionalWhereSqls);
+            filter.count(function (count) {
+                console.log("after:");
+                console.log(query);
+                console.log(filter._additionalWhereSqls);
+                deferred.resolve(count);
+            });
+            return deferred.promise;
         },
 
         /**

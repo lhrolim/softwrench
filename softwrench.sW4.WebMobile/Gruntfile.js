@@ -2,6 +2,14 @@
 module.exports = function (grunt) {
 
     // Project configuration.
+    var scripts = [
+        "Content/Mobile/scripts/controllers/**/*.js",
+        "Content/Mobile/scripts/services/**/*.js",
+        "Content/Mobile/scripts/directives/**/*.js",
+        "Content/Mobile/scripts/utils/**/*.js",
+        "Content/Mobile/scripts/filters/**/*.js"
+    ];
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -93,14 +101,14 @@ module.exports = function (grunt) {
             },
 
             build: {
-                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+                src: scripts,
                 dest: 'layout.html'
             }
         },
 
         concat: {
             mobileScripts: {
-                src: ["Content/Mobile/scripts/controllers/**/*.js", "Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/directives/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+                src: scripts,
                 dest: "scripts/dist/mobile_angular.js"
             },
         }
