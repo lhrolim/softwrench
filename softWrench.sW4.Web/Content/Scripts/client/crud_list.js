@@ -205,6 +205,10 @@ app.directive('crudList', function (contextService) {
                 var schemaid = $scope.schema.properties['list.click.schema'];
                 var fullServiceName = $scope.schema.properties['list.click.service'];
 
+                if (column.rendererType == "checkbox") {
+                    return;
+                }
+
                 if (popupmode == "report") {
                     return;
                 }
