@@ -174,7 +174,9 @@
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
+    <Compile Include="Email\Email.cs" />
     <Compile Include="Extension\MigrationExtensions.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BasePhoneDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryReturnDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseEmailDataSet.cs" />
