@@ -16,7 +16,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 	        and apprwo.ITDCREATEDATE > wochange.statusdate
 	        and ( (apprwo.logtype = 'APPROVAL OBTAINED' and DESCRIPTION in ('Approved by group ' || dashapprovals_.approvergroup)  )
                 or
-                (apprwo.logtype = 'REASON REJECTING' and DESCRIPTION in ({0})  )))
+                (apprwo.logtype = 'REASON REJECTING' and DESCRIPTION like ('Rejected by group%')  )))
 	    ";
 
 
@@ -64,6 +64,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             } else {
                 return "''";
             }
+        }
+
+        public static string GetRejectDescription() {
+            return "'"+ RejectedWorklogDescription + "%" + "'";
         }
 
         public static string GetWorkLogDescriptions(string groupName, bool approval) {
