@@ -22,7 +22,7 @@ namespace softwrench.sw4.Hapag.Security {
 
         IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId = null);
 
-        HlagGroupedLocation[] GetLocationsOfLoggedUser();
+        HlagGroupedLocation[] GetLocationsOfLoggedUser(Boolean forceXITCContext=false);
 
 
     }
