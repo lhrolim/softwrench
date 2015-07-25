@@ -178,7 +178,7 @@ namespace softwrench.sw4.Hapag.Security {
             if (user.IsInGroup(HapagPersonGroupConstants.XITC) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
                 //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
                 //TODO: move to a better place...
-                var allGroups = GetLocationsOfLoggedUser();
+                var allGroups = GetLocationsOfLoggedUser(true);
                 var xitcgroups = new HashSet<string>();
                 foreach (var hlagGroupedLocation in allGroups) {
                     var descriptions = hlagGroupedLocation.GetGroupDescriptions();
@@ -422,7 +422,7 @@ namespace softwrench.sw4.Hapag.Security {
             return options;
         }
 
-        public HlagGroupedLocation[] GetLocationsOfLoggedUser() {
+        public HlagGroupedLocation[] GetLocationsOfLoggedUser(bool forceXITCContext=false) {
             var user = SecurityFacade.CurrentUser();
             var locations = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
             Log.DebugFormat("locations of user {0}: {1}", user.Login, locations);
@@ -431,7 +431,7 @@ namespace softwrench.sw4.Hapag.Security {
                 return null;
             }
             //            var groupedLocations = locations.GroupedLocations;
-            if (ctx.IsInModule(FunctionalRole.XItc)) {
+            if (forceXITCContext || ctx.IsInModule(FunctionalRole.XItc)) {
                 if (user.IsWWUser()) {
                     HlagGroupedLocation[] hlagGroupedLocations;
                     if (ctx.MetadataParameters.ContainsKey("region")) {
