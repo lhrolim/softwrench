@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data {
                 if (pair.Key == RowStampUtil.RowstampColumnName || pair.Key.Contains("." + RowStampUtil.RowstampColumnName)) {
                     value = RowStampUtil.Convert(pair.Value);
                 } else {
-                    value = Convert.ToString(pair.Value);
+                    value = pair.Value == null ? null : Convert.ToString(pair.Value);
                 }
                 attributes[pair.Key] = value;
             }
