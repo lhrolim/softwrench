@@ -362,7 +362,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 baseQuery += ' and isDirty = 0 ';
             }
 
-            return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pagenumber: internalListContext.pageNumber }).then(function (results) {
+            return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded }).then(function (results) {
                 internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
                 if (filteredMode) {
                     crudContext.filteredList = [];

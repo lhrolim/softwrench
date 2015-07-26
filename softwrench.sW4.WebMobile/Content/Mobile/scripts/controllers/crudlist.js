@@ -125,6 +125,7 @@
         log.debug("fetching more items");
         crudContextService.loadMorePromise().then(function (results) {
             $scope.$broadcast('scroll.infiniteScrollComplete');
+            $scope.moreItemsAvailable = results.length > 0;
         });
     }
 
