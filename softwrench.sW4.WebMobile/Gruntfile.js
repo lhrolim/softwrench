@@ -6,6 +6,7 @@ module.exports = function (grunt) {
         "Content/Mobile/scripts/controllers/**/*.js",
         "Content/Mobile/scripts/services/**/*.js",
         "Content/Mobile/scripts/directives/**/*.js",
+        "Content/Mobile/scripts/maximoservices/**/*.js",
         "Content/Mobile/scripts/utils/**/*.js",
         "Content/Mobile/scripts/filters/**/*.js"
     ];

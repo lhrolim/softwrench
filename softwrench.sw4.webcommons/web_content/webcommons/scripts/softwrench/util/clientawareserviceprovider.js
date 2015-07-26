@@ -1,10 +1,9 @@
 ﻿//base idea: http://blog.projectnibble.org/2013/12/23/enhance-logging-in-angularjs-the-simple-way/
 
-var app = angular.module('sw_layout');
-app.run(['$injector', 'contextService', enhanceInjector]);
+modules.webcommons.run(['$injector', 'contextService','$log', enhanceInjector]);
 
 
-function enhanceInjector($injector, contextService) {
+function enhanceInjector($injector, contextService,$log) {
 
     this.clientfactory = function(serviceName) {
         var client = contextService.client();
@@ -31,6 +30,7 @@ function enhanceInjector($injector, contextService) {
             try {
                 return $injector.get(serviceName);
             } catch (e) {
+                $log.error(e);
                 return null;
             }
         }

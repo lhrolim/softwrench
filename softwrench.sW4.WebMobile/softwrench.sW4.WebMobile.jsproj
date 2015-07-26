@@ -128,6 +128,7 @@
     <Content Include="Content\Mobile\scripts\filters\dateconverter.js" />
     <Content Include="Content\Mobile\scripts\filters\capitalize.js" />
     <Content Include="Content\Mobile\scripts\filters\linebreak.js" />
+    <Content Include="Content\Mobile\scripts\maximoservices\workorder_offline_service.js" />
     <Content Include="Content\Mobile\scripts\services\application\applicationstateservice.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudFilterContextService.js" />
