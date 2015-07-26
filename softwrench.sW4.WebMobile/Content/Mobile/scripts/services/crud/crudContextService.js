@@ -351,7 +351,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         loadMorePromise: function () {
             var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
             var filteredMode = false;
-            if (!nullOrEmpty(internalListContext.searchQuery)) {
+            if (internalListContext.searchQuery != null) {
                 filteredMode = true;
                 baseQuery += ' and datamap like \'%:"{0}%\''.format(internalListContext.searchQuery);
             }
