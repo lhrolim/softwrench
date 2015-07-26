@@ -15,8 +15,6 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public JObject JSON { get; set; }
 
-        private readonly String _id;
-
         public string UserId { get; set; }
 
         private IOperationData _operationData;
@@ -26,13 +24,13 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             _operationName = operationName;
             JSON = json;
             _entityMetadata = entityMetadata;
-            _id = id;
+            Id = id;
             ApplicationMetadata = applicationMetadata;
         }
 
         public OperationWrapper(CrudOperationData operationData, String operationName) {
             _entityMetadata = operationData.EntityMetadata;
-            _id = operationData.Id;
+            Id = operationData.Id;
             UserId = operationData.UserId;
             _operationName = operationName;
             _operationData = operationData;
@@ -47,9 +45,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get { return _entityMetadata; }
         }
 
-        public string Id {
-            get { return _id; }
-        }
+        public string Id { get; private set; }
 
         public IOperationData OperationData(Type type=null) {
             if (_operationData != null) {
@@ -58,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
             var isCrud = OperationConstants.IsCrud(_operationName) || typeof(CrudOperationData) == type;
             if (isCrud) {
-                return EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, _id);
+                return EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
             }
             var data = (OperationData)JSON.ToObject(type);
             data.EntityMetadata = EntityMetadata;
@@ -69,7 +65,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             if (!JSON.TryGetValue("crud", out crudFields)) {
                 throw new InvalidOperationException(String.Format(CrudFieldNotFound, OperationName, _entityMetadata.Name));
             }
-            ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, _id);
+            ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, Id);
             data.ApplicationMetadata = ApplicationMetadata;
             _operationData = data;
             return data;

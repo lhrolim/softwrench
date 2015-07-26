@@ -301,7 +301,7 @@
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
-                            batchItem.crudoperation = operationService.getCrudOperation(dataEntry);
+                            batchItem.crudoperation = operationService.getCrudOperation(dataEntry, detailSchema);
                             return batchItem;
                         }));
                     });
