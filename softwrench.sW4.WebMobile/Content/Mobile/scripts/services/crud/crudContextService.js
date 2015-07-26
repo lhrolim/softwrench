@@ -333,14 +333,14 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             }
             crudContext.filteredList = crudContext.filteredList || [];
             internalListContext.pageNumber = 1;
-            internalListContext.lastPageLoaded = 0;
+            internalListContext.lastPageLoaded = 1;
             this.loadMorePromise();
         },
 
         refreshGrid: function () {
             internalListContext.searchQuery = null;
             crudContext.itemlist = [];
-            internalListContext.lastPageLoaded = 0;
+            internalListContext.lastPageLoaded = 1;
             internalListContext.pageNumber = 1;
             this.loadMorePromise().then(function () {
                 routeService.go("main.crudlist");
