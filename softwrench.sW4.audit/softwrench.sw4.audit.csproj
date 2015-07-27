@@ -106,6 +106,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="shared.placeholder" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web_content\audit\scripts\AuditEntry.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
