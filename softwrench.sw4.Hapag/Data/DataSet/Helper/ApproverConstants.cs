@@ -47,7 +47,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 
         public const string ApprovedStatus = "Approved";
         public const string RejectedStatus = "Rejected";
-        public const string RejectedWorklogDescription = "Rejected by group";
+        public const string RejectedWorklogDescription = "Rejected by group C-HLC-WW-";
 
 
 
