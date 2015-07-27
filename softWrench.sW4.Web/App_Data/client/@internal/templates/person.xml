@@ -46,7 +46,7 @@
           </commandbars>
         </schema>
 
-        <schema id="detail" stereotype="detail" title="Person Detail">
+        <schema id="detail" stereotype="detail" title="Edit My Profile">
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
