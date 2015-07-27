@@ -507,6 +507,14 @@ input[type="date"], input[type="time"] {
     clear: both;
   }
 }
+.select-left-right .left, .select-left-right .right {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.select-left-right .buttons {
+  margin: 10px 0 40px;
+}
+
 .advanced-filter-toogle {
   cursor: pointer;
   text-align: center;

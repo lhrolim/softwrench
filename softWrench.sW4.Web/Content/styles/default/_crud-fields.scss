@@ -294,3 +294,13 @@ input[type="date"], input[type="time"] {
         clear: both;
     }
 }
+
+.select-left-right {
+    .left, .right {
+            padding-right: 15px;
+    padding-left: 15px;
+    }
+    .buttons {
+        margin: 10px 0 40px;
+    }
+}
