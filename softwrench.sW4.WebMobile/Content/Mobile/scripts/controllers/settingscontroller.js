@@ -5,7 +5,7 @@
         function ($scope, routeService, swdbDAO, contextService, securityService) {
 
             function init() {
-                var settings = contextService.fetchFromContext("settings", true);
+                var settings = contextService.fetchFromContext("settings", true, true);
                 if (settings) {
                     $scope.settings = settings;
                 } else {
@@ -26,10 +26,11 @@
                 //SWML-39
                 swdbDAO.instantiate("Settings", $scope.settings)
                     .then(function (settingsToSave) {
-                        
+
                         return swdbDAO.save(settingsToSave);
-                    }).then(function () {
-                        contextService.insertIntoContext("settings", $scope.settings);
+                    }).then(function (settingsToSave) {
+                        $scope.settings = settingsToSave;
+                        contextService.insertIntoContext("settings", $scope.settings, true);
                         contextService.insertIntoContext("serverurl", $scope.settings.serverurl);
                         // if has an authenticated user go to 'home' (just editting settings)
                         // otherwise go to 'login'

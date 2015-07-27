@@ -69,12 +69,12 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             if (settings.length <= 0) {
                 log.info('creating infos for the first time');
                 var ob = entities.Settings;
-                swdbDAO.save(new ob()).success(function () {
-                    contextService.insertIntoContext("settings", settings);
+                swdbDAO.save(new ob()).success(function (savedSetting) {
+                    contextService.insertIntoContext("settings", savedSetting, true);
                 });
             } else {
                 log.info('loading settings');
-                contextService.insertIntoContext("settings", settings[0]);
+                contextService.insertIntoContext("settings", settings[0],true);
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
         });
