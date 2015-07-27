@@ -16,7 +16,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 	        and apprwo.ITDCREATEDATE > wochange.statusdate
 	        and ( (apprwo.logtype = 'APPROVAL OBTAINED' and DESCRIPTION in ('Approved by group ' || dashapprovals_.approvergroup)  )
                 or
-                (apprwo.logtype = 'REASON REJECTING' and DESCRIPTION like ('Rejected by group%')  )))
+                (apprwo.logtype = 'REASON REJECTING' and DESCRIPTION like ('Rejected by group C-HLC-WW-%')  )))
 	    ";
 
 
