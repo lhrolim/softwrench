@@ -1,7 +1,11 @@
 ﻿(function (mobileServices, angular, persistence) {
     'use strict';
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService) {
+    //#region Service registration
+    mobileServices.factory('batchService', ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', service]);
+    //#endregion
+
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService) {
 
         //#region Utils
 
@@ -284,15 +288,20 @@
                         return null;
                     }
                     var batchItemPromises = [];
+
                     angular.forEach(dataEntries, function (entry) {
+                        dispatcherService.invokeServiceByString(dbapplication.data.parameters["mobile.presyncservice"], [entry.datamap]);
+
                         // if batch submission fails, remember to rollback this state (otherwise dataentry will be in limbo)
                         entry.pending = true;
                         addToRollbackContext(entry);
+                        
+
                         batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function (dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
-                            batchItem.crudoperation = operationService.getCrudOperation(dataEntry);
+                            batchItem.crudoperation = operationService.getCrudOperation(dataEntry, detailSchema);
                             return batchItem;
                         }));
                     });
@@ -341,9 +350,7 @@
         //#endregion
     };
     
-    //#region Service registration
-    mobileServices.factory('batchService', ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', service]);
-    //#endregion
+  
 
 })(mobileServices, angular, persistence);
 

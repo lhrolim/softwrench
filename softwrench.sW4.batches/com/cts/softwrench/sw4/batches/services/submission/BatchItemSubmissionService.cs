@@ -86,7 +86,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 var applicationMetadata = user.CachedSchema(item.Application, new ApplicationMetadataSchemaKey(item.Schema, SchemaMode.None, ClientPlatform.Mobile));
                 var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
 
-                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, null);
+                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, item.ItemId);
                 var wrapper = new OperationWrapper(crudOperationData, item.Operation);
 
                 submissionData.AddItem(new BatchSubmissionItem {

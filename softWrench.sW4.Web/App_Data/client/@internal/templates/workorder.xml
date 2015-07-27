@@ -103,6 +103,7 @@
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
@@ -372,7 +373,7 @@
 
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
-          <field attribute="reportdate" label="Reported On" default="@now"/>
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
@@ -392,6 +393,7 @@
           <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
+          
         </schema>
 
         <detail platform="mobile" title="Work Order">
@@ -404,7 +406,7 @@
           <field attribute="origrecordclass" hidden="true"/>
 
           <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="reportdate" label="Reported On" default="@now"/>
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
           <field attribute="owner" label="Owner"  readonly="true"/>
 
@@ -438,6 +440,7 @@
           </field>
         </detail>
       </schemas>
+      
     </application>
 
 

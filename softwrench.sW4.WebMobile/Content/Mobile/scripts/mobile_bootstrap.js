@@ -35,7 +35,8 @@ var $s = function (element) {
 
 //#region App Modules
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'ngCookies', 'maximo_applications']);
-var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications'])
+var offlineMaximoApplications = angular.module('maximo_offlineapplications', []);
+var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications'])
 //#endregion
 
 //#region App.run
