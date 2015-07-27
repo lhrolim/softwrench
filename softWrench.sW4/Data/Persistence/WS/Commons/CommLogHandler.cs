@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using JetBrains.Annotations;
 using Microsoft.CSharp;
+using Quartz.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -15,6 +16,7 @@ using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class CommLogHandler {
@@ -66,6 +68,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     } else {
                         throw new System.ArgumentNullException("To:");
                     }
+                    var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
+                    var username = user.MaximoPersonId;
+                    _updateEmailHistory(username, recipientEmail);
                 });
              
 
@@ -122,6 +127,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 };
 
             
+        }
+
+        private static void _updateEmailHistory(string userId, string emailAddress) {
+            ISWDBHibernateDAO _swdbDao = SWDBHibernateDAO.GetInstance();
+            Email.Email _email = new Email.Email();
+            _email = _swdbDao.FindSingleByQuery<Email.Email>("WHERE UserID = {0} AND EmailAddress = '{1}'".FormatInvariant(userId, emailAddress));
+            _email.UserID = userId;
+            _email.EmailAddress = emailAddress;
+            _swdbDao.Save(_email);
         }
 
    }

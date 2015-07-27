@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using Quartz.Util;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     public class BaseCommLogDataSet : MaximoApplicationDataSet {
@@ -20,9 +22,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             InMemoryUser currentUser = SecurityFacade.CurrentUser();
 
-            var addresses = _swdbDAO.FindByQuery<Email.Email>("FROM Email WHERE UserID = {0}", currentUser.MaximoPersonId).ToList();
+            var addresses = _swdbDAO.FindByQuery<Email.Email>("FROM Email WHERE UserID = '{0}'".FormatInvariant(currentUser.MaximoPersonId));
 
-            return (from item in postParams.Options where item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"]) select new AssociationOption(item.Label, item.Label)).Cast<IAssociationOption>().ToList();
+            foreach (var address in addresses) {
+                postParams.Options.Add(new AssociationOption(address.EmailAddress, address.EmailAddress));
+            }
+
+            return postParams.Options;
         }
 
         public override string ApplicationName() {
