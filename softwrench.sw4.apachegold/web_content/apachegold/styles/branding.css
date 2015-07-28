@@ -5,11 +5,13 @@
 .container header {
   background: #ffb755 url(../images/header.jpg) no-repeat center left;
 }
+.container header .admin-area {
+  background-color: rgba(1, 62, 91, 0.65);
+}
 .container header .branding {
   background: url(../images/branding.png) no-repeat top left;
 }
 .container header .branding .logo img {
-  /*max-width: 100%;*/
   height: 90px;
   width: auto;
 }
