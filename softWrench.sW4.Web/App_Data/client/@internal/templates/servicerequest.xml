@@ -112,6 +112,9 @@
         </schema>
         
         <schema id="simplenewdetail" stereotype="detailnew" title="New Service Request">
+          <properties>
+            <property key="nextschema.schemaid" value="simplesrgrid"/>
+          </properties>
           <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true">
             <renderer type="default" params="inputsize=medium" />
@@ -137,6 +140,9 @@
         </schema>
 
         <schema id="simpleeditdetail" stereotype="detailnew" title="Service Request Details">
+          <properties>
+            <property key="nextschema.schemaid" value="simplesrgrid"/>
+          </properties>
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
           </association>
           <field attribute="description" label="Summary:" requiredexpression="true">
