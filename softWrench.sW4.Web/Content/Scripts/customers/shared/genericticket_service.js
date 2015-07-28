@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('genericTicketService', function (alertService, associationService, fieldService) {
+app.factory('genericTicketService', function (alertService, searchService) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -143,6 +143,22 @@ app.factory('genericTicketService', function (alertService, associationService, 
                     return false;
                 }
             }
+        },
+
+        afterChangeReportedBy: function (event) {
+            var datamap = event.fields;
+            var searchData = {
+                personid: datamap['reportedby'],
+                isprimary: '1'
+            };
+            searchService.searchWithData("email", searchData, "list").success(function (data) {
+                var resultObject = data.resultObject[0];
+                datamap['reportedemail'] = resultObject ? resultObject.fields['emailaddress'] : '';
+            });
+            searchService.searchWithData("phone", searchData, "list").success(function (data) {
+                var resultObject = data.resultObject[0];
+                datamap['reportedphone'] = resultObject ? resultObject.fields['phonenum'] : '';
+            });
         },
 
     };
