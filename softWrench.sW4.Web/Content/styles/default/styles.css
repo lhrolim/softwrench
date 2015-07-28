@@ -1403,7 +1403,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
   color: #efc663;
 }
 
-.fa-question-circle {
+[rel="tooltip"].fa-question-circle {
   color: #3276b1;
 }
 
