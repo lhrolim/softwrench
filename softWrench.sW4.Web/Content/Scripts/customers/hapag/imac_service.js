@@ -105,11 +105,17 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
             event.fields['assetlocation'] = assetLocation;
             var schemaId = event.scope.schema.schemaId;
             if (schemaId.startsWith('update')) {
-                event.fields['usage'] = assetUsage;
-            }else {
-                event.fields['assetusage'] = assetUsage;    
+                if (assetUsage &&
+                    assetUsage.equalsAny("EDUCATION", "POOL", "MEETING", "MOB MARITME", "MOBILE HOME", "NON-STANDARD", "SPARE UNIT", "SPECIAL FUNC", "STANDARD", "STAND ALONE", "TEST", "TRAINEE")) {
+                    //HAP-1025
+                    event.fields['usage'] = assetUsage;
+                } else {
+                    event.fields['usage'] = null;
+                }
+            } else {
+                event.fields['assetusage'] = assetUsage;
             }
-            
+
             var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser;
             if (schemaId.startsWith('install') || schemaId.startsWith('move')) {
                 //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
