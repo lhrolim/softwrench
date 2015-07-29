@@ -71,12 +71,12 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             if (settings.length <= 0) {
                 log.info('creating infos for the first time');
                 var ob = entities.Settings;
-                swdbDAO.save(new ob()).then(function () {
-                    contextService.insertIntoContext("settings", settings);
+                swdbDAO.save(new ob()).then(function (savedSetting) {
+                    contextService.insertIntoContext("settings", savedSetting);
                 });
             } else {
                 log.info('loading settings');
-                contextService.insertIntoContext("settings", settings[0]);
+                contextService.insertIntoContext("settings", settings[0],true);
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
         });
@@ -255,7 +255,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     controller: "AuditEntryDetailController"
                 }
             }
-        })
+        });
 
 
 

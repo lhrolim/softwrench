@@ -398,6 +398,8 @@
            <field attribute="targcompdate" hidden="true"/>
            <field attribute="actstart" hidden="true"/>
            <field attribute="actfinish" hidden="true"/>
+           <field attribute="schedstart" hidden="true"/>
+           <field attribute="schedfinish" hidden="true"/>
 
            <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
                           parameters="joinattribute=targstartdate;">
@@ -408,6 +410,17 @@
                           parameters="joinattribute=targcompdate;">
               <header label="Target Finish Date:" displacement="sameline"/>
            </section>
+           
+           <section id="schedstart" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=schedstart;">
+              <header label="Scheduled Start Date:" displacement="sameline"/>
+           </section>
+
+           <section id="schedfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=schedfinish;">
+              <header label="Scheduled Finish Date:" displacement="sameline"/>
+           </section>   
+           
 
            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
                           parameters="joinattribute=actstart;">

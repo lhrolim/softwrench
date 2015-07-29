@@ -1,39 +1,42 @@
-﻿.page-signin {
-    background: #0780c9 url(../../Images/signin-lg.jpg) no-repeat center center fixed;
+﻿$signin_color: #0780c9;
+$asset_path: "../../Images";
+
+.page-signin {
+    background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
 }
 
 .container header {
-    background: #0780c9 url(../../Images/header.jpg) no-repeat center left;
+    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
 
     .branding {
-        background: url(../../Images/branding.png) no-repeat top left;
+        background: url(#{$asset_path}/branding.png) no-repeat top left;
     }
 }
 
 /* Extra Small Devices, Phones */
 @media all and (min-width: 1px) and (max-width: 479px) {
     .page-signin {
-        background: #0780c9 url(../../Images/signin-xxs.jpg) no-repeat center center fixed;
+        background: $signin_color url(#{$asset_path}/signin-xxs.jpg) no-repeat center center fixed;
     }
 }
 
 @media only screen and (min-width: 480px) and (max-width: 767px) {
     .page-signin {
-        background: #0780c9 url(../../Images/signin-xs.jpg) no-repeat center center fixed;
+        background: $signin_color url(#{$asset_path}/signin-xs.jpg) no-repeat center center fixed;
     }
 }
 
 /* Small Devices, Tablets */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .page-signin {
-        background: #0780c9 url(../../Images/signin-sm.jpg) no-repeat center center fixed;
+        background: $signin_color url(#{$asset_path}/signin-sm.jpg) no-repeat center center fixed;
     }
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .page-signin {
-        background: #0780c9 url(../../Images/signin-md.jpg) no-repeat center center fixed;
+        background: $signin_color url(#{$asset_path}/signin-md.jpg) no-repeat center center fixed;
     }
 }
 

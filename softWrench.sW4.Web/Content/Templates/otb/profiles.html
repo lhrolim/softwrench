@@ -1,14 +1,18 @@
-﻿<div class="col-lg-offset-2 col-lg-2" ng-controller="ProfileController">
-    <div class="select-left-right">
-        <label>Active Profiles</label>
-        <select multiple="multiple" ng-model="selectedprofiles" ng-options="profile.name for profile in profiles"
-                class="form-control" />
-        <div class="buttons">
-            <button class="btn btn-sm btn-defualt" ng-click="addSelectedProfiles(selectedavailableprofiles)"><i class="fa fa-plus"></i>&ensp;ADD</button>
-            <button class="btn btn-sm btn-defualt" ng-click="removeSelectedProfiles(selectedprofiles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
+﻿<div class="col-sm-offset-2 col-sm-10" ng-controller="ProfileController">
+    <div class="select-left-right row">
+        <div class="left col-sm-5">
+            <label>Active Profiles</label>
+            <select multiple="multiple" ng-model="selectedprofiles" ng-options="profile.name for profile in profiles"
+                    class="form-control" />
+            <div class="buttons">
+                <button class="btn btn-sm btn-defualt" ng-click="addSelectedProfiles(selectedavailableprofiles)"><i class="fa fa-plus"></i>&ensp;ADD</button>
+                <button class="btn btn-sm btn-defualt" ng-click="removeSelectedProfiles(selectedprofiles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
+            </div>
         </div>
-        <label>Available Profiles</label>
-        <select multiple="multiple" ng-model="selectedavailableprofiles" ng-options="profile.name for profile in availableprofiles"
-                class="form-control input-block-level" />
+        <div class="right col-sm-5">
+            <label>Available Profiles</label>
+            <select multiple="multiple" ng-model="selectedavailableprofiles" ng-options="profile.name for profile in availableprofiles"
+                    class="form-control input-block-level" />
+        </div>
     </div>
 </div>

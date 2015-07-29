@@ -26,6 +26,9 @@
 
     <!--Person-->
     <template path="@person.xml"/>
+    
+    
+    
   </templates>
   
   <entities>
@@ -79,9 +82,9 @@
           <field attribute="assetid" hidden="true"/>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="status"/>
+          <field attribute="status" label="Status" qualifier="featured"/>
           <!--<field attribute="siteid" label="Site" qualifier="siteid" />-->
-          <field attribute="propmanuf" label="Manufacturer"  qualifier="featured"/>
+          <field attribute="propmanuf" label="Manufacturer"  qualifier="excerpt"/>
           <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
         </list>
         <detail>
@@ -115,6 +118,8 @@
           <field attribute="serialnum" label="Serial Number"/>
           <field attribute="location" readonly="true" label="Location"/>
           <field attribute="prophr" label="Hand Receipt No." readonly="true"/>
+          <field attribute="siteid"  label="Site" hidden="true"/>
+          <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
           <event type="onload" service="scannerdetectionService" method="initAssetDetailListener"/>
         </detail>
@@ -129,5 +134,18 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="alndomain" entity="alndomain" title="AlnDomain">
+      <schemas>
+        <schema id="list">
+          <field attribute="description" label="Description"></field>
+          <field attribute="value" label="Value"></field>
+          <field attribute="siteid" label="Siteid" hidden="true"></field>
+          <field attribute="orgid" label="OrgId" hidden="true"></field>
+          <field attribute="domainid" label="DomainId" hidden="true"></field>
+        </schema>
+      </schemas>
+    </application>
+    
   </applications>
 </metadata>

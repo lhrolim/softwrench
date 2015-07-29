@@ -376,7 +376,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public Boolean IsMobilePlatform() {
             return SchemaId != ApplicationMetadataConstants.SyncSchema &&
-                ClientPlatform.Mobile == Platform || (ParentSchema != null && ParentSchema.IsMobilePlatform());
+                (ClientPlatform.Mobile == Platform || null == Platform) || (ParentSchema != null && ParentSchema.IsMobilePlatform());
         }
 
 

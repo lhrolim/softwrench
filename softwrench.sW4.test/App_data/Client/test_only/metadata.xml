@@ -834,7 +834,7 @@
     <application name="attachment" title="Attachments" entity="DOCLINKS">
     
       <schemas>
-        <list stereotype="compositionlist" >
+        <list stereotype="compositionlist" platform="web">
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" attribute="document" qualifier="title"/>

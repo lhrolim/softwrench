@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.webcommons",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.audit", "softwrench.sW4.audit\softwrench.sw4.audit.csproj", "{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3E27068-A4CA-4096-B44C-1812FE8B9F20}"
+	ProjectSection(SolutionItems) = preProject
+		Build\build.xml = Build\build.xml
+		Build\buildcordova.xml = Build\buildcordova.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Android = Debug|Android
