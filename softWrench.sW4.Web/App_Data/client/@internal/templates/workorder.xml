@@ -257,6 +257,12 @@
             <field attribute="targcompdate" label="Target Finish Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
+            <field attribute="schedstart" label="Scheduled Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
+            <field attribute="schedfinish" label="Scheduled Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            </field>
             <field attribute="actstart" label="Actual Start Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
             </field>
