@@ -15,11 +15,16 @@ namespace softWrench.sW4.Data.Search {
             SearchOperator = ParseSearchOperator(rawValue, out value, out searchFilter);
             Value = value;
             FilterSearch = searchFilter;
+
         }
 
         private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
             searchFilter = false;
             var searchOperator = SearchOperator.EQ;
+            if (rawValue.StartsWith(SearchUtils.NullOrPrefix)) {
+                NullOr = true;
+                rawValue = rawValue.Substring(SearchUtils.NullOrPrefix.Length);
+            }
             if (rawValue.Contains(">=") && rawValue.Contains("<=")) {
                 searchOperator = SearchOperator.BETWEEN;
             } else if (rawValue.StartsWith(">=")) {
@@ -57,6 +62,8 @@ namespace softWrench.sW4.Data.Search {
         /// </summary>
         public bool FilterSearch { get; set; }
 
+        public bool NullOr { get; set; }
+
         public object Value { get; private set; }
         public bool IsList { get { return SearchOperator == SearchOperator.OR; } }
 
@@ -86,10 +93,9 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public bool IsBlankNumber { get { return IsNumber && SearchOperator.BLANK == SearchOperator; }}
+        public bool IsBlankNumber { get { return IsNumber && SearchOperator.BLANK == SearchOperator; } }
 
-        public bool IsBlankDate
-        {
+        public bool IsBlankDate {
             get { return IsDate && SearchOperator.BLANK == SearchOperator; }
         }
 

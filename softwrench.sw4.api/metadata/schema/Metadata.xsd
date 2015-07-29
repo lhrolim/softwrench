@@ -158,6 +158,18 @@
     <attribute name="literal" type="string"></attribute>
     <attribute name="query" type="string"></attribute>
     <attribute name="quoteLiteral" type="boolean"></attribute>
+    <attribute name="allowsnull" type="boolean">
+      <annotation>
+        <documentation>
+          If true, then a is null condition will be appended to the query. ex:
+          (xxx.to = yyy)
+
+          would become
+
+          (xxx.to is null or xxx.to = yyy)
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Parameter">

@@ -14,6 +14,7 @@
                 associationName = associationName.substring(0, associationName.length-1);
             }
             var associationAsEntityName = displayable.entityAssociation.to;
+            
             //the related application could have been downloaded using either the qualifier or the entity name, 
             //but it doesn´t matter here, as the other relationships will be used
             var baseQuery = " (application = '{0}' or application = '{1}' )".format(associationName, associationAsEntityName);
@@ -27,15 +28,22 @@
                 if (attribute.primary) {
                     continue;
                 }
+                var allowsNull = false;
                 var fromValue;
                 if (attribute.literal) {
                     //siteid = 'SOMETHING'
                     fromValue = attribute.literal;
                 } else {
                     //siteid = siteid
+                    allowsNull = attribute.allowsNull;
                     fromValue = parentdatamap[attribute.from];
                 }
-                baseQuery += ' and datamap like \'%"{0}":"{1}"%\''.format(attribute.to, fromValue);
+                if (allowsNull) {
+                    baseQuery += ' and ( datamap like \'%"{0}":"{1}"%\' or datamap like \'%"{0}":null%\' )'.format(attribute.to, fromValue);
+                } else {
+                    baseQuery += ' and datamap like \'%"{0}":"{1}"%\''.format(attribute.to, fromValue);
+                }
+                
             }
 
             return swdbDAO.findByQuery("AssociationData", baseQuery,{projectionFields:["remoteId","datamap"]});
