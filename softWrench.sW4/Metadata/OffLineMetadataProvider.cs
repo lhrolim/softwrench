@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.Util;
+using DocumentFormat.OpenXml.CustomXmlSchemaReferences;
 using log4net;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -26,14 +27,14 @@ namespace softWrench.sW4.Metadata {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(OffLineMetadataProvider));
 
-        
+
 
 
         public static IEnumerable<CompleteApplicationMetadataDefinition> FetchCompositionApps(InMemoryUser user) {
             //TODO: cache
             var watch = Stopwatch.StartNew();
             var names = new List<string>();
-            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user)) {
+            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {
@@ -55,21 +56,36 @@ namespace softWrench.sW4.Metadata {
         public static IEnumerable<CompleteApplicationMetadataDefinition> FetchAssociationApps(InMemoryUser user) {
             //TODO: cache
             var watch = Stopwatch.StartNew();
-            var names = new List<string>();
-            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile,user)) {
+            var names = new List<Tuple<string, string>>();
+            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {
-                        names.AddRange(schema.Value.Associations.Select(association => association.EntityAssociation.To));
+                        names.AddRange(schema.Value.Associations.Select(association => new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo)));
                     }
                 }
             }
 
             var result = new HashSet<CompleteApplicationMetadataDefinition>();
             foreach (var name in names) {
+                var appNamedAsEntity = name.Item1;
+                var appNamedAsQualifier = name.Item2;
+
                 //TODO: online mode doesn´t require applications for the associations, but currently offline do --> make some sort of inmemory automation
-                var app = MetadataProvider.Application(EntityUtil.GetApplicationName(name));
-                result.Add(app.CloneSecuring(user));
+                var app = MetadataProvider.Application(EntityUtil.GetApplicationName(appNamedAsQualifier), false);
+                if (app == null) {
+                    app = MetadataProvider.Application(EntityUtil.GetApplicationName(appNamedAsEntity), false);
+                    if (app == null) {
+                        Log.WarnFormat(
+                            "Application {0} | {1} is not available, things might go wrong on the offline application",
+                            appNamedAsQualifier, appNamedAsEntity);
+                    } else {
+                        result.Add(app.CloneSecuring(user));
+                    }
+
+                } else {
+                    result.Add(app.CloneSecuring(user));
+                }
             }
 
             Log.DebugFormat("fetching available associations took: {0} ", LoggingUtil.MsDelta(watch));
