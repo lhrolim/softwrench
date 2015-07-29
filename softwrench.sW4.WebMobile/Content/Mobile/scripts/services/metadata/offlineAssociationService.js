@@ -8,6 +8,8 @@
 
         filterPromise: function (parentSchema,parentdatamap, associationName, filterText) {
             var displayable = fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
+            associationName = displayable.entityAssociation.to;
+
             if (associationName.endsWith("_")) {
                 associationName = associationName.substring(0, associationName.length-1);
             }

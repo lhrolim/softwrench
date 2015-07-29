@@ -60,7 +60,7 @@ namespace softWrench.sW4.Metadata {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {
-                        names.AddRange(schema.Value.Associations.Select(association => association.ApplicationTo));
+                        names.AddRange(schema.Value.Associations.Select(association => association.EntityAssociation.To));
                     }
                 }
             }
