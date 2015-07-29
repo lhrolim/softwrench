@@ -86,7 +86,7 @@
           </properties>
         </list>
 
-        <schema id="simplesrgrid" title="Service Request Grid" stereotype="list">
+        <schema id="quicksrgrid" title="Service Request Grid" stereotype="list">
           <field attribute="ticketid" label="SR No">
             <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
           </field>
@@ -106,14 +106,14 @@
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
           <properties>
-            <property key="list.click.schema" value="simpleeditdetail"/>
+            <property key="list.click.schema" value="quickeditdetail"/>
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
           </properties>
         </schema>
         
-        <schema id="simplenewdetail" stereotype="detailnew" title="New Service Request">
+        <schema id="quicknewdetail" stereotype="detailnew" title="New Service Request">
           <properties>
-            <property key="nextschema.schemaid" value="simplesrgrid"/>
+            <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
           <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true">
@@ -139,9 +139,9 @@
           </field>
         </schema>
 
-        <schema id="simpleeditdetail" stereotype="detailnew" title="Service Request Details">
+        <schema id="quickeditdetail" stereotype="detailnew" title="Service Request Details">
           <properties>
-            <property key="nextschema.schemaid" value="simplesrgrid"/>
+            <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
           </association>
