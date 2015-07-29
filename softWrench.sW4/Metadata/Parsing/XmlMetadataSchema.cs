@@ -83,6 +83,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RelationshipAttributeElement = "relationshipAttribute";
         public const string RelationshipAttributeAttributeTo = "to";
         public const string RelationshipAttributeAttributeFrom = "from";
+        public const string RelationshipAttributeAttributeAllowsNull = "allowsnull";
         public const string RelationshipAttributeAttributeLiteral = "literal";
         public const string RelationshipAttributeAttributeQuoteLiteral = "quoteLiteral";
 

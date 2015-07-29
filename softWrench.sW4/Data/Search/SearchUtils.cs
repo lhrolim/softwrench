@@ -26,6 +26,8 @@ namespace softWrench.sW4.Data.Search {
 
         public const string SearchValueSeparator = ",,,";
 
+        public const string NullOrPrefix = "nullor:";
+
         public const string SearchParamAndSeparator = "&&";
 
         public const string SearchParamOrSeparator = "||,";
@@ -74,9 +76,9 @@ namespace softWrench.sW4.Data.Search {
             var where = GetWhere(dto, entityName);
             var parameters = GetParameters(dto);
             foreach (var parameter in parameters) {
-                where = where.Replace(":" + parameter.Key, "'" + (string)parameter.Value + "'");
+                @where = @where.Replace(":" + parameter.Key, "'" + (string)parameter.Value + "'");
             }
-            return where;
+            return @where;
         }
 
         public static string GetWhere(SearchRequestDto listDto, String tableName, String entityName = null) {
@@ -152,8 +154,6 @@ namespace softWrench.sW4.Data.Search {
                 }
                 
                 else {
-                    
-
                     statement.Append("( " + parameterData.Item1);
 
                     if (searchParameter.IsList) {
@@ -164,7 +164,7 @@ namespace softWrench.sW4.Data.Search {
                         statement.Append(GetDefaultParam(operatorPrefix, param));
                     }
 
-                    if ((searchParameter.SearchOperator == SearchOperator.NOTEQ) || (searchParameter.SearchOperator == SearchOperator.NCONTAINS) || (searchParameter.SearchOperator == SearchOperator.BLANK)) {
+                    if (searchParameter.NullOr || (searchParameter.SearchOperator == SearchOperator.NOTEQ) || (searchParameter.SearchOperator == SearchOperator.NCONTAINS) || (searchParameter.SearchOperator == SearchOperator.BLANK)) {
                         statement.Append(" OR " + parameterData.Item1 + " IS NULL " + " )");
                     } else {
                         statement.Append(" )");
@@ -180,8 +180,8 @@ namespace softWrench.sW4.Data.Search {
             return sb.ToString();
         }
 
-        public static IDictionary<String, object> GetParameters(SearchRequestDto listDto) {
-            IDictionary<String, object> resultDictionary = new Dictionary<string, object>();
+        public static IDictionary<string, object> GetParameters(SearchRequestDto listDto) {
+            IDictionary<string, object> resultDictionary = new Dictionary<string, object>();
             var searchParameters = listDto.GetParameters();
             if (searchParameters != null) {
                 foreach (var searchParameter in searchParameters) {
@@ -307,9 +307,5 @@ namespace softWrench.sW4.Data.Search {
             return lookupAttribute.Literal;
 
         }
-
-
-
-
     }
 }

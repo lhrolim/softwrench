@@ -37,5 +37,15 @@ namespace softwrench.sW4.test.Data.Search {
             var parametersMap = SearchUtils.GetParameters(searchRequestDto);
             Assert.AreEqual(0,parametersMap.Count);
         }
+
+        [TestMethod]
+        public void AllowNullTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.AppendSearchEntry("curbal","20",true);
+            Assert.AreEqual("( invbalances.curbal = :curbal OR invbalances.curbal IS NULL  )", SearchUtils.GetWhere(searchRequestDto, "invbalances"));
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 1);
+            Assert.IsTrue(parametersMap["curbal"].Equals(20));
+        }
     }
 }

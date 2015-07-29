@@ -14,8 +14,6 @@ using System.Text.RegularExpressions;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
-
-
         private ApplicationLookupContext _context;
 
         public IDictionary<string, string> CustomParameters { get; set; }
@@ -141,9 +139,13 @@ namespace softWrench.sW4.Data.Search {
             return unionSearchRequestDto;
         }
 
-        public SearchRequestDto AppendSearchEntry(string searchParam, string searchValue) {
+        public SearchRequestDto AppendSearchEntry(string searchParam, string searchValue, bool allowNull = false) {
             AppendSearchParam(searchParam);
-            AppendSearchValue(searchValue);
+            if (!allowNull) {
+                AppendSearchValue(searchValue);
+            } else {
+                AppendSearchValue(SearchUtils.NullOrPrefix + searchValue);
+            }
             return this;
         }
 
@@ -166,11 +168,16 @@ namespace softWrench.sW4.Data.Search {
             SearchParams += searchParam;
         }
 
-        public void AppendSearchValue(string searchValue) {
+        public void AppendSearchValue(string searchValue, bool allownulls = false) {
             if (!String.IsNullOrWhiteSpace(SearchValues)) {
                 SearchValues += SearchUtils.SearchValueSeparator;
             }
-            SearchValues += searchValue;
+            if (!allownulls) {
+                SearchValues += searchValue;
+            } else {
+                SearchValues += SearchUtils.NullOrPrefix + searchValue;
+            }
+
         }
 
         public void AppendWhereClause(string toAppendwhereclause) {
