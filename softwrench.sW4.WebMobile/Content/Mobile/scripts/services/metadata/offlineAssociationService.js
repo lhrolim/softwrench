@@ -8,10 +8,15 @@
 
         filterPromise: function (parentSchema,parentdatamap, associationName, filterText) {
             var displayable = fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
+            
+
             if (associationName.endsWith("_")) {
                 associationName = associationName.substring(0, associationName.length-1);
             }
-            var baseQuery = "application = '{0}' ".format(associationName);
+            var associationAsEntityName = displayable.entityAssociation.to;
+            //the related application could have been downloaded using either the qualifier or the entity name, 
+            //but it doesn´t matter here, as the other relationships will be used
+            var baseQuery = " (application = '{0}' or application = '{1}' )".format(associationName, associationAsEntityName);
             if (!nullOrEmpty(filterText)) {
                 baseQuery += " and datamap like '%{0}%' ".format(filterText);
             }

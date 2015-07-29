@@ -38,6 +38,10 @@
         return this.isOnMainTab() && !crudContextService.hasDirtyChanges();
     }
 
+    $scope.hasAnyComposition = function() {
+        return crudContextService.currentCompositionsToShow().length > 0;
+    }
+
     $scope.cancelChanges = function () {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Confirm Cancel',

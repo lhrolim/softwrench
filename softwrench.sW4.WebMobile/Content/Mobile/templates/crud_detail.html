@@ -28,7 +28,7 @@
         <div class="buttons" style="position: absolute; right: 5px; top:5px">
             <button class="button icon ion-arrow-left-a" ng-click="navigatePrevious()" ng-show="showNavigation()"></button>
             <button class="button icon ion-arrow-right-a" ng-click="navigateNext()" ng-show="showNavigation()"></button>
-            <button class="button icon ion-android-apps" ng-click="expandCompositions($event)" ng-show="!hasDirtyChanges()"></button>
+            <button class="button icon ion-android-apps" ng-click="expandCompositions($event)" ng-show="!hasDirtyChanges() && hasAnyComposition()"></button>
             <button class="button icon ion-android-done" ng-show="hasDirtyChanges()" ng-click="saveChanges()">Save</button>
 
             <!--            <button class="button icon ion-android-more-vertical"></button>-->
