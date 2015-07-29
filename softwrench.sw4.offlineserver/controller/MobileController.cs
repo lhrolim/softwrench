@@ -74,7 +74,8 @@ namespace softwrench.sw4.offlineserver.controller {
             bool fromCache;
             var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
 
-            var statusColorJSONString = "";
+            //make it a default json object syntax to avoid errors on the offline side
+            var statusColorJSONString = "{}";
 
             var statusColorJson = _statusColorResolver.FetchCatalogs();
             if (statusColorJson != null) {

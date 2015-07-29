@@ -26,6 +26,9 @@
 
     <!--Person-->
     <template path="@person.xml"/>
+    
+    
+    
   </templates>
   
   <entities>
@@ -79,9 +82,9 @@
           <field attribute="assetid" hidden="true"/>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="status"/>
+          <field attribute="status" label="Status" qualifier="featured"/>
           <!--<field attribute="siteid" label="Site" qualifier="siteid" />-->
-          <field attribute="propmanuf" label="Manufacturer"  qualifier="featured"/>
+          <field attribute="propmanuf" label="Manufacturer"  qualifier="excerpt"/>
           <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
         </list>
         <detail>
