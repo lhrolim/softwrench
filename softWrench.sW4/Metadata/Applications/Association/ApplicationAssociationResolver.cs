@@ -75,8 +75,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             foreach (var lookupAttribute in lookupAttributes) {
                 var searchValue = SearchUtils.GetSearchValue(lookupAttribute, originalEntity);
                 if (!String.IsNullOrEmpty(searchValue)) {
-                    associationFilter.AppendSearchParam(lookupAttribute.To);
-                    associationFilter.AppendSearchValue(searchValue);
+                    associationFilter.AppendSearchEntry(lookupAttribute.To, searchValue, lookupAttribute.AllowsNull);
                 }
             }
 

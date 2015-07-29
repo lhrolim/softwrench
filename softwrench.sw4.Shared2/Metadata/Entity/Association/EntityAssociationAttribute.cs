@@ -11,15 +11,21 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
 
         public string Query { get; set; }
 
-        public EntityAssociationAttribute() { }
+        public bool AllowsNull { get; set; }
 
-        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false) {
+        public EntityAssociationAttribute() { }
+        
+
+        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false,bool allowsNull=false) {
 
             From = @from;
             To = to;
             Primary = primary;
             Query = query;
+            AllowsNull = allowsNull;
         }
+
+        
 
         public EntityAssociationAttribute(bool quoteLiteral, string to, string from, string literal) {
             if (literal == null) throw new ArgumentNullException("literal");
