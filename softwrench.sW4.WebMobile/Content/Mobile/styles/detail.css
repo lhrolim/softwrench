@@ -80,3 +80,10 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
 }
+
+.page-audit-entrydetail .operation-icon {
+    font-size: 75px;
+}
+.page-audit-entrydetail .bold {
+    font-weight: bold;
+}

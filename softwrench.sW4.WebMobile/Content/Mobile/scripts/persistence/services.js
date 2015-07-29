@@ -53,7 +53,9 @@
             persistence.transaction(function (tx) {
                 tx.executeSql(query, params,
                     function (results) {
-                        console.log(results);
+                        if (persistence.debug) {
+                            console.log(results);
+                        }
                         deferred.resolve(results);
                     }, function (cause) {
                         var msg = "An error ocurred when executing the query '{0}'".format(query);
@@ -473,7 +475,19 @@
                     }
                 });
                 return deferred.promise;
+            },
+
+            /**
+             * Executes a sql statement.
+             * 
+             * @param String statement 
+             * @param [] args 
+             * @returns Promise: resolved with result, rejected with database error 
+             */
+            executeStatement: function(statement, args) {
+                return persistence.runSql(statement, args);
             }
+
         };
 
     }]);

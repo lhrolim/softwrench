@@ -22,13 +22,16 @@
             createdBy: "TEXT",
             createdDate: "DATE"
         });
+
+        entities.AuditEntry.listPattern = "refApplication={0} and createdBy={1}";
+        entities.AuditEntry.listApplicationsStatement = "select distinct refApplication from AuditEntry where createdBy=?";
     }]);
     //#endregion
 
     //#region offlineAuditService
     (function(audit) {
 
-        function offlineAuditService($q, swdbDAO) {
+        function offlineAuditService($q, entities, swdbDAO) {
             //#region Utils
             function validateEntryField(dict, field) {
                 if (!dict[field]) {
@@ -41,23 +44,8 @@
                 validateEntryField(dict, "refApplication");
                 validateEntryField(dict, "createdBy");
 
-                var entry = new entities.AuditEntry();
-                for (key in dict) {
-                    if (!dict.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    entry[key] = dict[key];
-                }
-                return entry;
-            }
-
-            function saveEntry(auditEntry) {
-                var deferred = $q.defer();
-                persistence.add(auditEntry);
-                persistence.flush(function () {
-                    deferred.resolve(auditEntry);
-                });
-                return deferred.promise;
+                dict["createDate"] = new Date();
+                return swdbDAO.instantiate("AuditEntry", dict);
             }
 
             //#endregion
@@ -82,8 +70,10 @@
              * @returns Promise resolved with the registered AuditEntry
              */
             function registerEntry(entry) {
-                var auditEntry = instantiateEntry(entry);
-                return saveEntry(auditEntry);
+                return instantiateEntry(entry).then(function(auditentry) {
+                        return swdbDAO.save(auditentry);
+                    });
+                
             }
 
             /**
@@ -102,17 +92,30 @@
                     operation: operation,
                     refApplication: refApplication,
                     refId: refId,
-                    createdBy: createdBy,
-                    createdDate: new Date()
+                    createdBy: createdBy
                 };
                 return registerEntry(entry);
+            }
+
+            /**
+             * Lists all apllications that have AuditEntries related to them (refApplication).
+             * 
+             * @param createdBy 
+             * @returns Promise resolved with array of name of the applications.
+             */
+            function listAudittedApplications(createdBy) {
+                return swdbDAO.executeStatement(entities.AuditEntry.listApplicationsStatement, [createdBy])
+                    .then(function (results) {
+                        return results.map(function (r) {
+                            return r.application;
+                        });
+                    });
             }
 
             /**
              * Fetches AuditEntries from the Database matching the values passed as arguments.
              * The list can be optionally paginated.
              * 
-             * @param String operation 
              * @param String refApplication 
              * @param String createdBy 
              * @param {} paginationOptions dicitionary: 
@@ -122,26 +125,34 @@
              *              }
              * @returns Promise resolved with AuditEntry list 
              */
-            function listEntries(operation, refApplication, createdBy, paginationOptions) {
-                // base query
-                var filter = entities.AuditEntry.all()
-                    .filter("operation", "=", operation)
-                    .filter("refApplication", "=", refApplication)
-                    .filter("createdBy", "=", createdBy);
-
+            function listEntries(refApplication, createdBy, paginationOptions) {
+                var query = entities.AuditEntry.listPattern.format(refApplication, createdBy);
+                var options = { orderby: "createDate", orderbyascendig: false };
                 if (!!paginationOptions) {
-                    // apply pagination options
-                    var pagesize = paginationOptions["pagesize"];
-                    var pagenumber = paginationOptions["pagenumber"];
-                    filter = filter.limit(pagesize).skip((pagesize * (pagenumber - 1)));
+                    options.pagesize = paginationOptions["pagesize"];
+                    options.pageNumber = paginationOptions["pagenumber"];
                 }
+                return swdbDAO.findByQuery("AuditEntry", query, options);
+            }
 
-                var deferred = $q.defer();
-                filter.list(function (result) {
-                    deferred.resolve(result);
-                });
-                // resolved with list
-                return deferred.promise;
+            /**
+             * Fetches the AuditEntry that has matching id.
+             * 
+             * @param String id primary key in the database 
+             * @returns Promise resolved with the AuditEntry
+             */
+            function getAuditEntry(id) {
+                return swdbDAO.findById("AuditEntry", id);
+            }
+
+            /**
+             * Fetches the DataEntry the entry is tracking.
+             * 
+             * @param AuditEntry entry 
+             * @returns Promise resolved with the entity 
+             */
+            function getTrackedEntity(entry) {
+                return swdbDAO.findById("DataEntry", entry.refId);
             }
 
             //#endregion
@@ -150,7 +161,10 @@
             var service = {
                 registerEvent: registerEvent,
                 registerEntry: registerEntry,
-                listEntries: listEntries
+                listEntries: listEntries,
+                listAudittedApplications: listAudittedApplications,
+                getAuditEntry: getAuditEntry,
+                getTrackedEntity: getTrackedEntity
             };
 
             return service;
@@ -158,7 +172,7 @@
         };
 
         //#region Service registration
-        audit.factory("offlineAuditService", ["$q", "swdbDAO", offlineAuditService]);
+        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", offlineAuditService]);
         //#endregion
     })(audit);
     //#endregion

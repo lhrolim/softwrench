@@ -223,7 +223,39 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     controller: 'CrudCompositionDetailController'
                 }
             }
-        });
+        })
+        // audit
+        .state("main.audit", {
+            'abstract': true,
+            url: "/audit"
+        })
+        .state("main.audit.applicationselect", {
+            url: "/application",
+            views: {
+                'main@main': { 
+                    templateUrl: "Content/Mobile/templates/audit/audit.application.select.html",
+                    controller: "AuditApplicationSelectController"
+                }
+            }
+        })
+        .state("main.audit.applicationselect.entrylist", {
+            url: "/list/{application}",
+            views: {
+                'main@main': {
+                    templateUrl: "Content/Mobile/templates/audit/audit.entry.list.html",
+                    controller: "AuditEntryListController"
+                }
+            }
+        })
+        .state("main.audit.applicationselect.entrylist.entrydetail", {
+            url: "/entry/{id}",
+            views: {
+                'main@main': {
+                    templateUrl: "Content/Mobile/templates/audit/audit.entry.detail.html",
+                    controller: "AuditEntryDetailController"
+                }
+            }
+        })
 
 
 

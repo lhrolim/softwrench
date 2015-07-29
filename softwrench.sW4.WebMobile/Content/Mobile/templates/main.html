@@ -25,20 +25,21 @@
                 <div class="item item-divider icon ion-android-apps">
                     Applications
                 </div>
-                <a class="item icon {{leaf.icon}}" ng-repeat="leaf in menuleafs()" ng-click="loadApplication(leaf)">  {{leaf.title}}</a>
+                <a class="item icon {{leaf.icon}}" ng-repeat="leaf in menuleafs()" ng-click="loadApplication(leaf)">&nbsp;{{leaf.title}}</a>
 
                 <div class="item item-divider icon ion-android-archive">
                     Admin
                 </div>
 
-                <a class="item icon ion-refresh" ng-click="loadAction('main.home')">Synchronization</a>
-                <a class="item" ng-click="loadAction('main.settings')">Settings</a>
+                <a class="item icon ion-refresh" ng-click="loadAction('main.home')">&nbsp;Synchronization</a>
+                <a class="item icon ion-folder" ng-click="loadAction('main.audit.applicationselect')">&nbsp;Audit</a>
+                <a class="item icon ion-gear-a" ng-click="loadAction('main.settings')">&nbsp;Settings</a>
 
                 <div class="item item-divider icon ion-person">
                     User
                 </div>
 
-                <a class="item" ng-click="logout()">Logout</a>
+                <a class="item icon ion-log-out" ng-click="logout()">&nbsp;Logout</a>
 
 
                 <!--<a ui-sref="main.home" class="item" ng-click="toggleMenu()">Home</a>
