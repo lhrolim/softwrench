@@ -132,6 +132,7 @@
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <renderer type="lookup"/>
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
           </association>
           <field label="Attachment:" attribute="newattachment" >
@@ -161,6 +162,7 @@
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <renderer type="lookup"/>
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
           </association>
           <composition relationship="attachment" label="Attachments" printenabled="false">
