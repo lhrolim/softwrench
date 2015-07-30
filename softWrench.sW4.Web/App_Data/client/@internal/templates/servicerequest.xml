@@ -115,6 +115,7 @@
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true">
             <renderer type="default" params="inputsize=medium" />
@@ -132,6 +133,7 @@
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <renderer type="lookup"/>
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
           </association>
           <field label="Attachment:" attribute="newattachment" >
@@ -143,6 +145,7 @@
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
           </association>
           <field attribute="description" label="Summary:" requiredexpression="true">
@@ -161,6 +164,7 @@
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <renderer type="lookup"/>
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
           </association>
           <composition relationship="attachment" label="Attachments" printenabled="false">
