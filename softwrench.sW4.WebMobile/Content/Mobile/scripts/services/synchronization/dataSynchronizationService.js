@@ -9,7 +9,7 @@
         return ids;
     };
 
-    var service = function($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, datamapSanitizationService) {
+    var service = function($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities) {
 
         var errorHandlePromise = function(error) {
             if (!error) {
@@ -120,7 +120,7 @@
         return api;
     };
 
-    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "restService", "metadataModelService", "rowstampService", "offlineCompositionService", "datamapSanitizationService"];
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "restService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities"];
 
     mobileServices.factory('dataSynchronizationService', service);
 

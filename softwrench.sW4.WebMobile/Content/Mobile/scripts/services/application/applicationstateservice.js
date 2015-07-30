@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function applicationStateService(swdbDAO, $q) {
+    function applicationStateService(swdbDAO, $q, entities) {
 
         //#region Utils
 
@@ -121,7 +121,7 @@
 
     //#region Service registration
 
-    mobileServices.factory("applicationStateService", ["swdbDAO", "$q", applicationStateService]);
+    mobileServices.factory("applicationStateService", ["swdbDAO", "$q", "offlineEntities", applicationStateService]);
 
     //#endregion
 

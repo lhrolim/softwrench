@@ -1,6 +1,5 @@
-﻿mobileServices.factory('associationDataSynchronizationService', function ($http, $log, $q, swdbDAO, restService, rowstampService) {
+﻿mobileServices.factory('associationDataSynchronizationService', function ($http, $log, $q, swdbDAO, restService, rowstampService, offlineEntities) {
     return {
-
 
         /// <summary>
         /// 
@@ -30,7 +29,7 @@
                     for (var j = 0; j < dataToInsert.length; j++) {
                         var datamap = dataToInsert[j];
                         var id = persistence.createUUID();
-                        var query = { query: entities.AssociationData.InsertionPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id] };
+                        var query = { query: offlineEntities.AssociationData.InsertionPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id] };
                         queryArray.push(query);
                     }
                 }

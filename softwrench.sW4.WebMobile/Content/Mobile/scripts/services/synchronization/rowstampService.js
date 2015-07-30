@@ -1,4 +1,5 @@
-﻿mobileServices.factory('rowstampService', function ($q, $log, swdbDAO) {
+﻿mobileServices.factory('rowstampService', function ($q, $log, swdbDAO, offlineEntities) {
+    var entities = offlineEntities;
 
     return {
 

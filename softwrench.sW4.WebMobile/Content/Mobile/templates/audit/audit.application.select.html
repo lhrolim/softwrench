@@ -1,0 +1,28 @@
+﻿<ion-view title="Audit" class="page-audit-applicationselect">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-clear" menu-toggle="left">
+            <i class="icon ion-navicon"></i>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" ng-class="{ 'vertical-center' : !data.applications || data.applications.length <= 0 }">
+
+        <div class="list" ng-if="data.applications && data.applications.length > 0">
+            <div class="item item-divider">
+                Applications
+            </div>
+            <div class="item" ng-repeat="app in data.applications" ng-click="selectApplication(app)">
+                {{ app | capitalize }}
+            </div>
+        </div>
+
+        <div class="row" ng-if="!data.applications || data.applications.length <= 0">
+            <div class="col">
+                <p>There are currently no Audit entries registered.</p>
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

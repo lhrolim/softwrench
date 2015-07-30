@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -26,7 +26,6 @@
     <script src="Content/Vendor/scripts/angular-ui-router.js"></script>
     <script src="Content/Vendor/scripts/angular-sanitize.js"></script>
     <script src="Content/Vendor/scripts/angular-animate.js"></script>
-    <script src="Content/Vendor/scripts/angular-cookies.js"></script>
     <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0/js/ionic.min.js"></script>
     <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0/js/ionic-angular.js"></script>
     
@@ -44,36 +43,39 @@
 
     <script src="Content/Mobile/scripts/mobile_bootstrap.js"></script>
     <script src="Content/Mobile/scripts/utils/mobileconstants.js"></script>
+
     <!--    <script src="scripts/mobile_angular.js"></script>-->
     
-    
-    <!-- start shared auto template tags, grunt will generate it for dev environment, do not remove this -->
-    
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/object_util.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/schema_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/field_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/validation_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/format_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/event_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/expression_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/rest_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/user_service.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
-    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"></script>
-    
-    <!-- end shared auto template tags -->
-
-    
     <!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->
+        <script type="text/javascript" src="Content/Mobile/scripts/persistence/module.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/offlineEntities.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/offlinePersistenceBootstrap.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/swdbDAO.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/persistence/config.entities.js"></script>
+        <script type="text/javascript" src="Content/Shared/audit/scripts/offline/audit.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/object_util.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/schema_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/field_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/validation_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/format_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/event_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/expression_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/rest_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/user_service.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
+        <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.application.select.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.entry.detail.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.entry.list.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/controllers/compositionMenuController.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_composition_detail.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_composition_list.js"></script>
@@ -94,13 +96,6 @@
         <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineCompositionService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineSaveService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/data/operationService.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/AssociationData.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/Batch.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/CompositionDataEntry.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/DataEntry.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/Problem.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/SyncOperation.js"></script>
-        <script type="text/javascript" src="Content/Mobile/scripts/services/db/swdbDAO.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/login/loginService.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/login/securityservice.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/services/menu/menuModelService.js"></script>
@@ -132,9 +127,6 @@
         <script type="text/javascript" src="Content/Mobile/scripts/filters/dateconverter.js"></script>
         <script type="text/javascript" src="Content/Mobile/scripts/filters/linebreak.js"></script>
         <!-- end auto template tags -->
-
-
-
 
 
 </head>
