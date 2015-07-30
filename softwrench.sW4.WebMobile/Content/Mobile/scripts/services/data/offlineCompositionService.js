@@ -1,6 +1,7 @@
-﻿mobileServices.factory('offlineCompositionService', function ($log, swdbDAO) {
-
+﻿mobileServices.factory('offlineCompositionService', function ($log, swdbDAO, offlineEntities) {
     'use strict';
+
+    var entities = offlineEntities;
 
     return {
 

@@ -1,10 +1,11 @@
-﻿mobileServices.factory('menuModelService', function ($q, swdbDAO, $log) {
+﻿mobileServices.factory('menuModelService', function ($q, swdbDAO, $log, offlineEntities) {
 
     var menuModel = {
         dbData: {},
         listItems: []
     };
 
+    var entities = offlineEntities;
 
     return {
 
@@ -15,9 +16,9 @@
         updateMenu: function (serverMenu) {
             var defer = $q.defer();
 
-            swdbDAO.instantiate("Menu", menuModel.dbData).success(function (menu) {
+            swdbDAO.instantiate("Menu", menuModel.dbData).then(function (menu) {
                 menu.data = serverMenu;
-                swdbDAO.save(menu).success(function (item) {
+                swdbDAO.save(menu).then(function (item) {
                     menuModel.dbData.data = serverMenu;
                     menuModel.listItems = serverMenu.explodedLeafs;
                     defer.resolve();
@@ -31,7 +32,7 @@
         initAndCacheFromDB: function () {
             var log = $log.getInstance("menuModelService#initAndCacheFromDB");
             var defer = $q.defer();
-            swdbDAO.findUnique("Menu").success(function (menu) {
+            swdbDAO.findUnique("Menu").then(function (menu) {
                 if (!menu) {
                     menu = new entities.Menu();
                     swdbDAO.save(menu);

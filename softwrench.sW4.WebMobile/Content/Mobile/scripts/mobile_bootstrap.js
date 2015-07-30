@@ -34,16 +34,14 @@ var $s = function (element) {
 //#endregion
 
 //#region App Modules
-var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'ngCookies', 'maximo_applications']);
+var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline']);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', []);
 var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications'])
 //#endregion
 
 //#region App.run
-.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "$q", "synchronizationNotificationService", "$rootScope",
-    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, $q, synchronizationNotificationService, $rootScope) {
-
-    
+.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "synchronizationNotificationService", "offlinePersitenceBootstrap", "offlineEntities",
+    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap, entities) {
 
     $ionicPlatform.ready(function () {
         // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -62,15 +60,19 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
     function initContext() {
         var log = $log.get("bootstrap#initContext");
-        swdbDAO.init();
+
+        offlinePersitenceBootstrap.init();
+
         menuModelService.initAndCacheFromDB();
+
         metadataModelService.initAndCacheFromDB();
-        swdbDAO.findAll("Settings").success(function (settings) {
+
+        swdbDAO.findAll("Settings").then(function (settings) {
             if (settings.length <= 0) {
                 log.info('creating infos for the first time');
                 var ob = entities.Settings;
-                swdbDAO.save(new ob()).success(function (savedSetting) {
-                    contextService.insertIntoContext("settings", savedSetting, true);
+                swdbDAO.save(new ob()).then(function (savedSetting) {
+                    contextService.insertIntoContext("settings", savedSetting);
                 });
             } else {
                 log.info('loading settings');
@@ -81,26 +83,6 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     }
 
     function initDataBaseDebuggingHelpers() {
-        // adding some functionalities to persistence
-        persistence.runSql = function (query, params) {
-            var deferred = $q.defer();
-            persistence.transaction(function (tx) {
-                tx.executeSql(query, params,
-                    function (results) {
-                        console.log(results);
-                        deferred.resolve(results);
-                    }, function (cause) {
-                        var msg = "An error ocurred when executing the query '{0}'".format(query);
-                        if (params && params.length > 0) msg += " with parameters {0}".format(params);
-                        var error = new Error(msg);
-                        error.cause = cause;
-                        console.error(error);
-                        deferred.reject(error);
-                    });
-            });
-            return deferred.promise;
-        };
-
         // DataBase debug mode: set swdbDAO service as global variable
         if (!!persistence.debug) {
             window.swdbDAO = swdbDAO;
@@ -239,6 +221,38 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 'body': {
                     templateUrl: "Content/Mobile/templates/crud_composition_detail.html",
                     controller: 'CrudCompositionDetailController'
+                }
+            }
+        })
+        // audit
+        .state("main.audit", {
+            'abstract': true,
+            url: "/audit"
+        })
+        .state("main.audit.applicationselect", {
+            url: "/application",
+            views: {
+                'main@main': { 
+                    templateUrl: "Content/Mobile/templates/audit/audit.application.select.html",
+                    controller: "AuditApplicationSelectController"
+                }
+            }
+        })
+        .state("main.audit.applicationselect.entrylist", {
+            url: "/list/{application}",
+            views: {
+                'main@main': {
+                    templateUrl: "Content/Mobile/templates/audit/audit.entry.list.html",
+                    controller: "AuditEntryListController"
+                }
+            }
+        })
+        .state("main.audit.applicationselect.entrylist.entrydetail", {
+            url: "/entry/{id}",
+            views: {
+                'main@main': {
+                    templateUrl: "Content/Mobile/templates/audit/audit.entry.detail.html",
+                    controller: "AuditEntryDetailController"
                 }
             }
         });

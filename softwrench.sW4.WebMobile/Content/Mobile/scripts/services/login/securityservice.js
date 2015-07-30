@@ -36,10 +36,17 @@
         };
 
         /**
+         * @returns username of the logged user. 
+         */
+        var currentUser = function() {
+            return localStorageService.get(config.authkey);
+        };
+
+        /**
          * @returns true if there's a user logged in, false otherwise 
          */
         var hasAuthenticatedUser = function() {
-            var user = localStorageService.get(config.authkey);
+            var user = currentUser();
             return !!user;
         };
 
@@ -76,6 +83,7 @@
 
         var service = {
             loginLocal: loginLocal,
+            currentUser: currentUser,
             hasAuthenticatedUser: hasAuthenticatedUser,
             logout: logout,
             handleUnauthorizedRemoteAccess: handleUnauthorizedRemoteAccess

@@ -1,7 +1,7 @@
-﻿mobileServices.factory('offlineSaveService', function ($log, swdbDAO, $ionicPopup) {
-
+﻿mobileServices.factory('offlineSaveService', function ($log, swdbDAO, $ionicPopup, offlineEntities) {
     'use strict';
 
+    var entities = offlineEntities;
 
     var doSave = function (applicationName, item, messageEntry) {
         var localId = item.id;
