@@ -236,7 +236,8 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.previousschema = $scope.schema;
             //}
             var crudContext = contextService.fetchFromContext("crud_context", true);
-            $scope.previousdata = crudContext.previousData == null ? $scope.datamap : crudContext.previousData;
+            var contextPreviousData = crudContext == null ? crudContext : crudContext.previousData;
+            $scope.previousdata = contextPreviousData == null ? $scope.datamap : contextPreviousData;
         }
         var scope = isModal ? $scope.modal : $scope;
         scope.schema = result.schema;
