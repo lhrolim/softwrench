@@ -115,6 +115,7 @@
           <properties>
             <property key="nextschema.schemaid" value="simplesrgrid"/>
           </properties>
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true">
             <renderer type="default" params="inputsize=medium" />
@@ -144,6 +145,7 @@
           <properties>
             <property key="nextschema.schemaid" value="simplesrgrid"/>
           </properties>
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
           </association>
           <field attribute="description" label="Summary:" requiredexpression="true">
