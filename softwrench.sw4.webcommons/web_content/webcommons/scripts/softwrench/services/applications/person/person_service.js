@@ -2,14 +2,13 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['alertService', personService]);
+    angular.module('maximo_applications').factory('personService', ['alertService', dispatchService]);
 
-    function personService(alertService) {
+    function dispatchService(alertService) {
 
         var service = {
             afterChangeUsername: afterChangeUsername,
-            validatePerson: validatePerson,
-            cancelPersonDetail: cancelPersonDetail
+            validatePerson: validatePerson
         };
 
         return service;
@@ -30,7 +29,7 @@
             }
 
             return errors;
-        };
+        }
 
     }
 })();
