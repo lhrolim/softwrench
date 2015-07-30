@@ -1,7 +1,4 @@
-﻿var constants = constants || {};
-
-
-mobileServices.factory('crudFilterContextService', function ($q, $log,contextService) {
+﻿mobileServices.factory('crudFilterContextService', function ($q, $log,contextService) {
 
     'use strict';
 

@@ -10,7 +10,7 @@ app.directive('printModal', function ($log, contextService) {
             datamap: '=',
         },
 
-        controller: function ($scope, printService, tabsService, i18NService) {
+        controller: function ($scope, printService, tabsService, i18NService, crudContextHolderService) {
                         
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -49,7 +49,7 @@ app.directive('printModal', function ($log, contextService) {
                 $scope.compositionstoprint = {};
                 $scope.shouldPrintMain = true;
                 $scope.printSchema = schema;
-                var activetab = contextService.getActiveTab();
+                var activetab = crudContextHolderService.getActiveTab();
                 var tabs = tabsService.tabsDisplayables($scope.printSchema);
                 for (var i = 0; i < tabs.length ; i++) {
                     var tab = tabs[i];

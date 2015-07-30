@@ -6,6 +6,7 @@
      'angularFileUpload',
      "xeditable",
      'sw_lookup',
+     "sw_scan",
      'webcommons_services',
      'maximo_applications']);
 

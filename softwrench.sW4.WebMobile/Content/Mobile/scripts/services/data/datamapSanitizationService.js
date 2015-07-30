@@ -1,7 +1,19 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    var service = function () {
+
+    mobileServices.factory("datamapSanitizationService", service);
+
+    function service() {
+
+
+
+        var api = {
+            sanitize: sanitize,
+            enforceNumericType: enforceNumericType
+        };
+
+        return api;
 
         // holds the sanitizer functions to be applied to a datamap
         var sanitizationPipeline = [
@@ -12,7 +24,22 @@
             //, future sanitization processes
         ];
 
-        var sanitize = function(datamap) {
+        function enforceNumericType(datamap, displayables) {
+            if (!datamap || !displayables) {
+                return;
+            }
+            angular.forEach(displayables, function (field) {
+                if (field.rendererType !== "numericinput") {
+                    return;
+                }
+                if (!datamap[field.attribute]) {
+                    return;
+                }
+                datamap[field.attribute] = parseInt(datamap[field.attribute]);
+            });
+        };
+
+        function sanitize(datamap) {
             if (!datamap) {
                 return datamap;
             }
@@ -24,15 +51,11 @@
             return sanitizedDataMap;
         };
 
-        var api = {
-            sanitize: sanitize
-        };
 
-        return api;
     };
 
     // service.$inject = [];
 
-    mobileServices.factory("datamapSanitizationService", service);
+
 
 })(mobileServices, angular);

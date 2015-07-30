@@ -1,4 +1,4 @@
-﻿modules.webcommons.factory('eventService', function ($log, dispatcherService) {
+﻿modules.webcommons.factory('eventService', function ($log, dispatcherService,crudContextHolderService) {
     var loadEvent = function(schema, eventName) {
         if (schema.events === undefined) {
             return null;
@@ -23,6 +23,9 @@
             if (!fn) {
                 return;
             }
+            parameters.tabid = parameters.tabid || crudContextHolderService.getActiveTab();
+            parameters.applicationName = parameters.applicationName || crudContextHolderService.currentApplicationName();
+            parameters.schemaId = parameters.schemaId || crudContextHolderService.currentSchema().schemaId;
             fn(scope, schema, datamap, parameters);
         },
         onviewdetail: function (schema, parameters) {

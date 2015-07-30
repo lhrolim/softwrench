@@ -131,6 +131,7 @@
     <Content Include="Content\Mobile\scripts\maximoservices\workorder_offline_service.js" />
     <Content Include="Content\Mobile\scripts\services\application\applicationstateservice.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
+    <Content Include="Content\Mobile\scripts\services\crud\crudContextHolderService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudFilterContextService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
     <Content Include="Content\Mobile\scripts\services\data\datamapSanitizationService.js" />
