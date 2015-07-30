@@ -6,8 +6,8 @@
     <application id="NSR" icon="fa fa-plus" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request" role="sr"/>
     <!-- TODO: The following two application titles have trailing spaces to differentiate them from the two previous schemas with the same title.
          The bread crumbs will need to be able to access the schema id's in order to be able to correct this issue (SWWEB-1315) -->
-    <application id="SSR" icon="fa fa-table" title="Service Request Grid " ref="servicerequest" schema="simplesrgrid" tooltip="Click to view your Service Request Grid" role="ssr"/>
-    <application id="SNSR" icon="fa fa-plus" title="New Service Request " ref="servicerequest" schema="simplenewdetail" tooltip="Click to Create a New Service Request" role="ssr"/>
+    <application id="SSR" icon="fa fa-table" title="Quick Grid" ref="servicerequest" schema="quicksrgrid" tooltip="Click to view your Service Request Grid" role="ssr"/>
+    <application id="SNSR" icon="fa fa-plus" title="Quick Request" ref="servicerequest" schema="quicknewdetail" tooltip="Click to Create a New Service Request" role="ssr"/>
   </container>
 
   <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
