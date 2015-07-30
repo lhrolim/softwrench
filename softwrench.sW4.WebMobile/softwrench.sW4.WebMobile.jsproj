@@ -134,7 +134,9 @@
     <Content Include="Content\Mobile\scripts\maximoservices\workorder_offline_service.js" />
     <Content Include="Content\Mobile\scripts\persistence\config.entities.js" />
     <Content Include="Content\Mobile\scripts\persistence\module.js" />
-    <Content Include="Content\Mobile\scripts\persistence\services.js" />
+    <Content Include="Content\Mobile\scripts\persistence\services\offlineEntities.js" />
+    <Content Include="Content\Mobile\scripts\persistence\services\offlinePersistenceBootstrap.js" />
+    <Content Include="Content\Mobile\scripts\persistence\services\swdbDAO.js" />
     <Content Include="Content\Mobile\scripts\services\application\applicationstateservice.js" />
     <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudFilterContextService.js" />

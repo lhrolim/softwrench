@@ -1,104 +1,4 @@
-﻿//#region Provider: offlineEntities
-(function(angular, persistence) {
-    /**
-     * entities: exposed as provider propertiy so it can be configured by the modules that use them.
-     * Usage in config:
-     * angular.module("myApp", ["persistence.offline"]).config(["offlineEntitiesProvider", function(entitiesProvider){
-     *     entitiesProvider.entities.MyTable = persistence.define("MyTable", { ... }); 
-     * }]);
-     * Usage in run, service, controller, etc:
-     * app.controller("MyCtrl", ["$scope", "offlineEntities", function($scope, entities){
-     *      $scope.newMyTable = function(){
-     *          var record = new entities.MyTable();
-     *          // ...
-     *      };
-     * }])
-     */
-    angular.module("persistence.offline").provider("offlineEntities", [function () {
-        // service instance
-        var entities = {};
-
-        var provider = {
-            // access to the service instance in config time
-            entities: entities,
-            // alias to persistence.define
-            define: function (name, options) {
-                entities[name] = persistence.define(name, options);
-            },
-            // service constructor
-            $get: [function () {
-                return entities;
-            }]
-        };
-        return provider;
-    }]);
-
-})(angular, persistence);
-
-
-//#endregion
-
-//#region offlinePersitenceBootstrap
-(function (angular, persistence) {
-    "use strict";
-
-    /**
-     * Service with "init" hook to initialize persistence's Database.
-     * @constructor
-     */
-    function offlinePersitenceBootstrap($q) {
-        //#region Utils
-        var runSql = function (query, params) {
-            var deferred = $q.defer();
-            persistence.transaction(function (tx) {
-                tx.executeSql(query, params,
-                    function (results) {
-                        if (persistence.debug) {
-                            console.log(results);
-                        }
-                        deferred.resolve(results);
-                    }, function (cause) {
-                        var msg = "An error ocurred when executing the query '{0}'".format(query);
-                        if (params && params.length > 0) msg += " with parameters {0}".format(params);
-                        var error = new Error(msg);
-                        error.cause = cause;
-                        console.error(error);
-                        deferred.reject(error);
-                    });
-            });
-            return deferred.promise;
-        };
-        //#endregion
-
-        //#region Public methods
-        function init() {
-            // initializing database
-            persistence.store.cordovasql.config(persistence, "offlineswdb", "1.0", "SWDB OffLine instance", 5 * 1024 * 1024, 0);
-            persistence.debug = sessionStorage["logsql"] === "true" || sessionStorage["loglevel"] === "debug";
-            persistence.schemaSync();
-            // adding some functionalities to persistence
-            persistence.runSql = runSql;
-        }
-        //#endregion
-
-        //#region Service Instance
-        var service = {
-            init: init
-        };
-
-        return service;
-        //#endregion
-    }
-    //#region Service registration
-    angular.module("persistence.offline").factory("offlinePersitenceBootstrap", ["$q", offlinePersitenceBootstrap]);
-    //#endregion
-
-
-})(angular, persistence);
-//#endregion
-
-//#region swdbDAO
-(function (angular, persistence) {
+﻿(function (angular, persistence) {
     "use strict";
 
     angular.module("persistence.offline").factory("swdbDAO", ["$q", "offlineEntities", function ($q, entities) {
@@ -484,7 +384,7 @@
              * @param [] args 
              * @returns Promise: resolved with result, rejected with database error 
              */
-            executeStatement: function(statement, args) {
+            executeStatement: function (statement, args) {
                 return persistence.runSql(statement, args);
             }
 
@@ -493,4 +393,3 @@
     }]);
 
 })(angular, persistence);
-//#endregion

@@ -6,7 +6,7 @@ module.exports = function (grunt) {
     var commonScripts = [
         // persistence.offline
         "Content/Mobile/scripts/persistence/module.js",
-        "Content/Mobile/scripts/persistence/services.js",
+        "Content/Mobile/scripts/persistence/services/**/*.js",
         "Content/Mobile/scripts/persistence/config.entities.js",
         // audit.offline
         "Content/Shared/audit/scripts/offline/audit.js"
