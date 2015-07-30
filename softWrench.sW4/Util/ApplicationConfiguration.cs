@@ -51,6 +51,14 @@ namespace softWrench.sW4.Util {
             }
         }
 
+        public static void FixClientName(string clientName) {
+            //to be used on dev environments only
+            if (!IsDev()) {
+                return;
+            }
+            _clientName = clientName;
+        }
+
         /// <summary>
         /// Name which indentifies a client, to fetch the correct metadata
         /// </summary>

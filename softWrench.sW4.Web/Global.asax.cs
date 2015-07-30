@@ -38,14 +38,20 @@ namespace softWrench.sW4.Web {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
 
         protected void Application_Start(object sender, EventArgs args) {
+            DoStartApplication(false);
+        }
+
+        private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
             if (!ApplicationConfiguration.IsLocal() && ApplicationConfiguration.IsDev()) {
                 if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
                     //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
-                    ConfigurationManager.AppSettings["clientkey"] = applicationPath.Substring(4);
+                    var clientName = applicationPath.Substring(4);
+                    Log.InfoFormat("changing clientKey to {0}",clientName);
+                    ApplicationConfiguration.FixClientName(clientName);
                 }
             }
-            DoStartApplication(false);
+
         }
 
         private static void DoStartApplication(bool changeClient) {
@@ -59,6 +65,7 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
                 ConfigureLogging();
+                SetFixClient();
                 AreaRegistration.RegisterAllAreas();
                 EnableJsonCamelCasing();
                 RegisterDataMapFormatter();
