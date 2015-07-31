@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Web.Hosting;
 using cts.commons.portable.Util;
 using cts.commons.Util;
@@ -38,14 +38,20 @@ namespace softWrench.sW4.Web {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
 
         protected void Application_Start(object sender, EventArgs args) {
+            DoStartApplication(false);
+        }
+
+        private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
             if (!ApplicationConfiguration.IsLocal() && ApplicationConfiguration.IsDev()) {
                 if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
                     //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
-                    ConfigurationManager.AppSettings["clientkey"] = applicationPath.Substring(4);
+                    var clientName = applicationPath.Substring(4);
+                    Log.InfoFormat("changing clientKey to {0}", clientName);
+                    ApplicationConfiguration.FixClientName(clientName);
                 }
             }
-            DoStartApplication(false);
+
         }
 
         private static void DoStartApplication(bool changeClient) {
@@ -59,6 +65,7 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
                 ConfigureLogging();
+                SetFixClient();
                 AreaRegistration.RegisterAllAreas();
                 EnableJsonCamelCasing();
                 RegisterDataMapFormatter();
@@ -66,7 +73,7 @@ namespace softWrench.sW4.Web {
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
-
+              
             }
             MetadataProvider.DoInit();
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
@@ -137,18 +144,18 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e) {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-            Response.Cache.SetNoStore();
-
-
+            //            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            //            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            //            Response.Cache.SetNoStore();
+            
+            
             if (Request.UrlReferrer != null) {
                 //this is for ripple development where CORS is enabled.
                 //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://" + Request.UrlReferrer.Authority);
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");    
             }
-
+            
 
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {
                 //These headers are handling the "pre-flight" OPTIONS call sent by the browser
@@ -160,7 +167,11 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {
-            var context = new HttpContextWrapper(Context);
+            if (Response.ContentType == "text/html") {
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+                Response.Cache.SetNoStore();
+            }
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 //302 ==> not allowed
                 //Context.Response.RedirectLocation.Contains("/SignIn") --> are we redirecting to login
@@ -182,8 +193,8 @@ namespace softWrench.sW4.Web {
                     Context.Response.RedirectLocation += "&timeout=true";
                 }
             }
-
-
+            
+        
         }
 
 
@@ -235,7 +246,7 @@ namespace softWrench.sW4.Web {
         }
 
         public void HandleEvent(ClearCacheEvent eventToDispatch) {
-
+            
         }
     }
 }

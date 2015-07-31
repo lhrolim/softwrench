@@ -1,0 +1,34 @@
+﻿<ion-view title="Audit" class="page-audit-entrydetail">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-clear" ng-click="back()">
+            <i class="icon ion-chevron-left"></i>
+            Back
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+
+        <div class="row">
+            <div class="col-33 col-center text-center">
+                <!--TODO: add support for other operations-->
+                <i class="icon operation-icon" ng-class="{ 'ion-ios-barcode-outline': data.entry.operation === 'scan' }"></i>
+            </div>
+            <div class="col col-center text-left">
+                <h3>{{data.entry.operation | capitalize}}</h3>
+                <p>{{data.entry.formattedDate}}</p>
+            </div>
+        </div>
+        <div class="padding">
+            <p><span class="bold">Application:</span> {{data.entry.refApplication}}</p>    
+            <p><span class="bold">Created by:</span> {{data.entry.createdBy}}</p>
+            <p>
+                The tracked <span class="bold">{{data.entity.application}}</span> is currently <span class="bold" ng-if="!data.entity.pending">not</span> <span class="bold">pending</span>
+                and <span class="bold" ng-if="!data.entity.isDirty">not</span><span ng-if="data.entity.isDirty">is</span> <span class="bold">dirty</span>.
+            </p>    
+        </div>
+                        
+
+    </ion-content>
+
+</ion-view>

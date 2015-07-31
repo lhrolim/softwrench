@@ -87,3 +87,7 @@ input.ion-autocomplete[readonly] {
     padding-left: 0;
     font-size: 14px;
 }
+
+.page-audit-entrylist .entry-item {
+    padding-right: 0;
+}

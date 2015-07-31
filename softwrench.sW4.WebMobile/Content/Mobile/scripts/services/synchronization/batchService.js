@@ -2,10 +2,10 @@
     'use strict';
 
     //#region Service registration
-    mobileServices.factory('batchService', ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', service]);
+    mobileServices.factory('batchService', ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', service]);
     //#endregion
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService) {
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService, entities) {
 
         //#region Utils
 

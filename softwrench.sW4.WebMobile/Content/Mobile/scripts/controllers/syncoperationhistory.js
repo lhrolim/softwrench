@@ -27,7 +27,7 @@
                 synchronizationOperationService.getSyncList($scope.paginationData.currentPage)
                     .then(function (operations) {
                         // update pagination data
-                        $scope.paginationData.hasMoreAvailable = (operations && operations.length >= $scope.paginationData.hasMoreAvailable);
+                        $scope.paginationData.hasMoreAvailable = (operations && operations.length >= $scope.paginationData.pageSize);
                         $scope.paginationData.currentPage += 1;
                         // update list
                         $scope.operationList = $scope.operationList.concat(operations);
