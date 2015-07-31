@@ -167,7 +167,7 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {
-            if (Response.ContentType == "text/html") {
+            if (ApplicationConfiguration.IsLocal() || Response.ContentType == "text/html") {
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
                 Response.Cache.SetNoStore();

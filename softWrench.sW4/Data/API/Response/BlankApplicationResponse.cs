@@ -15,7 +15,8 @@ namespace softWrench.sW4.Data.API.Response {
 
         public DateTime TimeStamp { get; set; }
         public string Type { get { return typeof (BlankApplicationResponse).Name; } }
-        public ApplicationSchemaDefinition Schema { get; private set; }
+        public ApplicationSchemaDefinition Schema { get; set; }
+        public string CachedSchemaId { get; set; }
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }
         public string Id { get; set; }

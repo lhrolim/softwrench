@@ -54,7 +54,7 @@ app.directive('filterrowrendered', function ($timeout) {
 function ApplicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
-    checkpointService, focusService, detailService, crudContextHolderService) {
+    checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
     $scope.$name = 'applicationController';
 
 
@@ -241,7 +241,8 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.previousdata = contextPreviousData == {} ? datamap : contextPreviousData;
         }
         var scope = isModal ? $scope.modal : $scope;
-        scope.schema = result.schema;
+
+        scope.schema = schemaCacheService.getSchemaFromResult(result);
 
         // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
         scope.datamap = instantiateIfUndefined(result.resultObject);

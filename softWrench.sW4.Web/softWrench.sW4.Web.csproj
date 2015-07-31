@@ -493,6 +493,7 @@
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
     <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
+    <Content Include="Content\Scripts\client\services\schemaCacheService.js" />
     <Content Include="Content\Scripts\client\services\crud_contextservice.js" />
     <Content Include="Content\Scripts\client\services\crud_layoutservice.js" />
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
