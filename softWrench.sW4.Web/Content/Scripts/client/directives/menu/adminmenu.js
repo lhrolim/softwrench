@@ -54,9 +54,12 @@
 
             scope.logout = function () {
                 sessionStorage.removeItem("swGlobalRedirectURL");
+                if (contextService.isLocal()) {
+                    //clear local everytime to make development easier
+                    schemaCacheService.wipeSchemaCacheIfNeeded();
+                }
                 contextService.clearContext();
                 sessionStorage['ctx_loggedin'] = false;
-                schemaCacheService.wipeSchemaCache();
             };
 
             //show or hide the menu when the expand button is clicked

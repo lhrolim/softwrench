@@ -1,11 +1,6 @@
 ﻿$(document).ready(function () {
     $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
     sessionStorage['ctx_loggedin'] = false;
-    delete sessionStorage['schemaCache'];
-
-
-
-
 
     $('#btnLogin').click(function () {
         var username = $('#userName');

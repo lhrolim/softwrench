@@ -118,10 +118,12 @@ app.directive("ngEnabled", function () {
     };
 });
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService,schemaCacheService) {
 
     $scope.$name = 'LayoutController';
     var log = $log.getInstance('sw4.LayoutController');
+
+    schemaCacheService.wipeSchemaCacheIfNeeded();
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;

@@ -4,11 +4,11 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("schemaCacheService", [schemaCacheService]);
+    angular.module("sw_layout").factory("schemaCacheService", ["$log","contextService", schemaCacheService]);
 
     //#endregion
 
-    function schemaCacheService() {
+    function schemaCacheService($log,contextService) {
 
         //#region Utils
 
@@ -38,11 +38,13 @@
                 }
                 result += key + ";";
             }
+            $log.get("schemaCacheService#getSchemaCacheKeys").debug("schema keys in cache {0}".format(result));
             return result;
         }
 
         function getSchemaFromResult(result) {
             if (result.cachedSchemaId) {
+                $log.get("schemaCacheService#getSchemaFromResult").info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
                 return this.getCachedSchema(result.applicationName, result.cachedSchemaId);
             }
             return result.schema;
@@ -60,14 +62,23 @@
             schemaCache = schemaCache || {};
             var schemaKey = schema.applicationName + "." + schema.schemaId;
             if (!schemaCache[schemaKey]) {
+                var systeminitMillis = contextService.getFromContext("systeminittime");
+                $log.get("schemaCacheService#addSchemaToCache").info("adding schema {0} retrieved to cache".format(schemaKey));
                 schemaCache[schemaKey] = schema;
+                schemaCache.systeminitMillis = systeminitMillis;
                 sessionStorage["schemaCache"] = JSON.stringify(schemaCache);
             }
         }
 
-        function wipeSchemaCache() {
-            schemaCache = {};
-            delete sessionStorage["schemaCache"];
+        function wipeSchemaCacheIfNeeded() {
+            var systeminitMillis = contextService.getFromContext("systeminittime");
+            if (schemaCache && schemaCache.systeminitMillis != systeminitMillis) {
+                $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
+                delete sessionStorage["schemaCache"];
+                schemaCache = {
+                    systeminitMillis: systeminitMillis
+                };
+            }
         }
 
         //#endregion
@@ -79,7 +90,7 @@
             addSchemaToCache: addSchemaToCache,
             getCachedSchema: getCachedSchema,
             getSchemaFromResult: getSchemaFromResult,
-            wipeSchemaCache: wipeSchemaCache
+            wipeSchemaCacheIfNeeded: wipeSchemaCacheIfNeeded
         };
 
         return service;
@@ -87,6 +98,6 @@
         //#endregion
     }
 
- 
+
 
 })();

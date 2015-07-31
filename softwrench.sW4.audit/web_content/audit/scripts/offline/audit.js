@@ -1,5 +1,12 @@
-﻿(function (angular, persistence) {
+﻿(function (angular) {
+
     "use strict";
+
+    try {
+        angular.module("persistence.offline");
+    } catch (err) {
+        return;
+    }
 
     //#region audit.offline module
     var audit = angular.module("audit.offline", ["persistence.offline"]);
@@ -29,7 +36,7 @@
     //#endregion
 
     //#region offlineAuditService
-    (function(audit) {
+    (function (audit) {
 
         function offlineAuditService($q, entities, swdbDAO) {
             //#region Utils
@@ -70,10 +77,10 @@
              * @returns Promise resolved with the registered AuditEntry
              */
             function registerEntry(entry) {
-                return instantiateEntry(entry).then(function(auditentry) {
-                        return swdbDAO.save(auditentry);
-                    });
-                
+                return instantiateEntry(entry).then(function (auditentry) {
+                    return swdbDAO.save(auditentry);
+                });
+
             }
 
             /**
@@ -177,4 +184,4 @@
     })(audit);
     //#endregion
 
-})(angular, persistence);
+})(angular);
