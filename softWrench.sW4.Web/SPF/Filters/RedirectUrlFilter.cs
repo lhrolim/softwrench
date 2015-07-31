@@ -72,7 +72,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 return;
             }
             var cachedSchemas = RequestUtil.GetValue(actionExecutedContext.Request, "cachedschemas");
-            if (cachedSchemas != null &&
+            if (cachedSchemas != null && applicationResponse.Schema != null &&
                 cachedSchemas.Contains(";" + applicationResponse.Schema.GetApplicationKey() + ";")) {
                 //to reduce payload SWWEB-1317
                 applicationResponse.CachedSchemaId = applicationResponse.Schema.SchemaId;
