@@ -144,9 +144,9 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e) {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-            Response.Cache.SetNoStore();
+//            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+//            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+//            Response.Cache.SetNoStore();
 
 
             if (Request.UrlReferrer != null) {
@@ -167,7 +167,8 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {
-            var context = new HttpContextWrapper(Context);
+            Response.Cache.SetCacheability(HttpCacheability.Public);
+            Context.Response.Cache.SetSlidingExpiration(true);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 //302 ==> not allowed
                 //Context.Response.RedirectLocation.Contains("/SignIn") --> are we redirecting to login
