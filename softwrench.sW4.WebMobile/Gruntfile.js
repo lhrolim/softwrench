@@ -29,6 +29,7 @@ module.exports = function (grunt) {
         "Content/Shared/webcommons/scripts/softwrench/services/expression_service.js",
         "Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js",
         "Content/Shared/webcommons/scripts/softwrench/services/rest_service.js",
+        "Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js",
         "Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
         "Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
         "Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",

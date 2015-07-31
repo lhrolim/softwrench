@@ -96,7 +96,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _redeclaringSchema; }
         }
 
-        public ApplicationSchemaDefinition() {
+        public IDictionary<string, ApplicationCompositionSchema> CompositionSchemas { get; set; }
+
+        public ApplicationSchemaDefinition()
+        {
+            CompositionSchemas = new Dictionary<string, ApplicationCompositionSchema>();
         }
 
         public ApplicationSchemaDefinition(
@@ -105,6 +109,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
             string idFieldName, string userIdFieldName, string unionSchema, IEnumerable<ApplicationEvent> events = null) {
+            CompositionSchemas = new Dictionary<string, ApplicationCompositionSchema>();
             if (displayables == null) throw new ArgumentNullException("displayables");
 
             ApplicationName = applicationName;
@@ -173,7 +178,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                         _lazyFksResolved = true;
                     }
 
-                    
+
                 }
 
                 if (!_referencesResolved && ComponentDisplayableResolver != null) {
@@ -353,6 +358,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ApplicationMetadataSchemaKey GetSchemaKey() {
             return new ApplicationMetadataSchemaKey(SchemaId, Mode, Platform);
+        }
+
+        public String GetApplicationKey() {
+            return ApplicationName + "." + SchemaId;
         }
 
         public ICollection<string> FieldWhichHaveDeps {

@@ -67,7 +67,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService) {
+            associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
 
 
 
@@ -222,8 +222,7 @@ app.directive('crudList', function (contextService) {
                     //none of my business --> another dashboard event
                     return;
                 }
-
-                $scope.schema = data.schema;
+                $scope.schema = schemaCacheService.getSchemaFromResult(data);
                 $scope.datamap = data.resultObject;
                 $scope.selectAllChecked = false;
                 if ($rootScope.printRequested !== true) {

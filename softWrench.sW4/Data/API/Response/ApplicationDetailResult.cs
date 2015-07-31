@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -7,21 +8,21 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 namespace softWrench.sW4.Data.API.Response {
     public class ApplicationDetailResult : GenericResponseResult<DataMap>, IApplicationResponse {
         private readonly string _id;
-        private readonly ApplicationSchemaDefinition _main;
-        private readonly IDictionary<string, ApplicationCompositionSchema>
-            _compositions = new Dictionary<string, ApplicationCompositionSchema>();
+
+       
 
         private readonly IDictionary<string, BaseAssociationUpdateResult> _associationOptions
                     = new Dictionary<string, BaseAssociationUpdateResult>();
 
-        
+
 
         public ApplicationDetailResult(DataMap dataMap, IDictionary<string, BaseAssociationUpdateResult> associationOptions,
             ApplicationSchemaDefinition main, IDictionary<string, ApplicationCompositionSchema> compositions, string id)
             : base(dataMap, null) {
-            _compositions = compositions;
+            
             _associationOptions = associationOptions;
-            _main = main;
+            Schema = main;
+            Schema.CompositionSchemas = compositions;
             _id = id;
         }
 
@@ -29,23 +30,22 @@ namespace softWrench.sW4.Data.API.Response {
             get { return _associationOptions; }
         }
 
-        public ApplicationSchemaDefinition Schema {
-            get { return _main; }
-        }
+
+        public string CachedSchemaId { get; set; }
 
         public string Mode {
             get;
             set;
         }
 
-     
+
 
         public string Id {
             get { return _id; }
         }
 
         public IDictionary<string, ApplicationCompositionSchema> Compositions {
-            get { return _compositions; }
+            get { return Schema.CompositionSchemas; }
         }
 
         public string Type {
@@ -54,9 +54,7 @@ namespace softWrench.sW4.Data.API.Response {
 
         public string ApplicationName { get { return Schema.ApplicationName; } }
 
-        public ApplicationSchemaDefinition Main {
-            get { return _main; }
-        }
+        public ApplicationSchemaDefinition Schema { get; set; }
 
         private bool _allassociationsFetched;
 

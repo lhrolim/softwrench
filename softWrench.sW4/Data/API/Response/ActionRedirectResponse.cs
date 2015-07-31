@@ -23,7 +23,8 @@ namespace softWrench.sW4.Data.API.Response {
 
         #region uselessmethodstokeephierarchy...
         
-        public ApplicationSchemaDefinition Schema { get; private set; }
+        public ApplicationSchemaDefinition Schema { get; set; }
+        public string CachedSchemaId { get; set; }
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }
         public string Id { get; private set; }

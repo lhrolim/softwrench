@@ -54,7 +54,7 @@ app.directive('filterrowrendered', function ($timeout) {
 function ApplicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
-    checkpointService, focusService,detailService) {
+    checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
     $scope.$name = 'applicationController';
 
 
@@ -241,7 +241,8 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.previousdata = contextPreviousData == {} ? datamap : contextPreviousData;
         }
         var scope = isModal ? $scope.modal : $scope;
-        scope.schema = result.schema;
+
+        scope.schema = schemaCacheService.getSchemaFromResult(result);
 
         // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
         scope.datamap = instantiateIfUndefined(result.resultObject);
@@ -254,7 +255,9 @@ function ApplicationController($scope, $http, $log, $timeout,
 
         scope.mode = result.mode;
         if (scope.schema != null) {
+            // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
+            crudContextHolderService.updateCrudContext(scope.schema);
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
@@ -264,6 +267,7 @@ function ApplicationController($scope, $http, $log, $timeout,
         }
         var log = $log.getInstance("applicationcontroller#renderData");
         validationService.clearDirty();
+        
         if (result.type == 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
             detailService.fetchRelationshipData(scope, result);
@@ -303,7 +307,7 @@ function ApplicationController($scope, $http, $log, $timeout,
 
 
     $scope.toListSchema = function (data, schema) {
-        contextService.setActiveTab(null);
+        crudContextHolderService.setActiveTab(null);
 
         var log = $log.getInstance('application#toListSchema');
         $scope.multipleSchema = false;
@@ -419,7 +423,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.multipleSchema = false;
             $scope.schemas = null;
             $scope.isDetail = false;
-            contextService.setActiveTab(null);
+            crudContextHolderService.setActiveTab(null);
             //            fixHeaderService.unfix();
 
         });

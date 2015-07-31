@@ -2,13 +2,10 @@
 
 app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
-                                                 fieldService, submitService, validationService, commandService) {
+                                                 fieldService, submitService, validationService, commandService, scanningCommonsService) {
 
 
-    var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
-    if ("true" == sessionStorage.debugscanner) {
-        timeBetweenCharacters = 30000;
-    }
+ 
 
     var validateAssocationLookupFn = function (result, searchObj) {
         if (Object.keys(result).length != 1 ||
@@ -54,27 +51,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
         });
     }
 
-    var scanCallbackMap = {
-
-    };
-
-    var registerScanCallBackOnSchema = function (parameters, callback) {
-
-        scanCallbackMap[parameters.tabid] = callback;
-
-        $(document).scannerDetection({
-            avgTimeByChar: timeBetweenCharacters,
-
-
-            onComplete: function(data) {
-                var tabId = contextService.getActiveTab();
-                var callbackFn = scanCallbackMap[tabId];
-                if (callbackFn) {
-                    callbackFn(data);
-                }
-            }
-        });
-    };
+  
 
     return {
 
@@ -87,7 +64,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
 
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     // Retrieve the scan order string from the context that relates to the current schema
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
@@ -115,7 +92,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
         initIssueItemListener: function (scope, schema, datamap, parameters) {
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     //This function will look for an item being scanned for the Issue Inventory application. 
                     //Scanned items are added to the invissue composition.  
@@ -213,7 +190,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
         initInvuseTransferDetailListener: function (schema, datamap) {
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     datamap['invuseline_.itemnum'] = data;
                     $rootScope.$digest();
@@ -223,7 +200,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
 
         initMaterialScanningListener: function (scope, schema, datamap, parameters) {
 
-            registerScanCallBackOnSchema(parameters, function(data) {
+            scanningCommonsService.registerScanCallBackOnSchema(parameters, function(data) {
                 datamap['itemnum'] = data;
                 $rootScope.$digest();
             });
@@ -232,7 +209,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
         initInvIssueDetailListener: function (scope, schema, datamap) {
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     //If the user scan's the string '%SUBMIT%', then the sw_submitdata event
                     //will be called using the default submit functions/process
@@ -279,7 +256,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
 
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     navigateToAsset(data);
                 }
@@ -290,7 +267,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
 
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     if (!validationService.getDirty()) {
                         navigateToAsset(data);
@@ -325,7 +302,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
 
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
-                avgTimeByChar: timeBetweenCharacters,
+                avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     // Retrieve the scan order string from the context that relates to the current schema
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
@@ -368,7 +345,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
         },
 
         initSouthernOperatorRounds: function (scope, schema, datamap, parameters) {
-            registerScanCallBackOnSchema(parameters, function (data) {
+            scanningCommonsService.registerScanCallBackOnSchema(parameters, function (data) {
                 $log.get("scan#initSouthernOperatorRounds").info('receiving operator round notifications');
                 var assets = datamap.multiassetlocci_;
                 for (var asset in assets) {

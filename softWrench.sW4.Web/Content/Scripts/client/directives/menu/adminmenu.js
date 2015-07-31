@@ -1,4 +1,4 @@
-﻿app.directive('adminMenu', function (contextService,menuService,redirectService,i18NService) {
+﻿app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService) {
     return {
         restrict: 'E',
         replace: true,
@@ -56,6 +56,7 @@
                 sessionStorage.removeItem("swGlobalRedirectURL");
                 contextService.clearContext();
                 sessionStorage['ctx_loggedin'] = false;
+                schemaCacheService.wipeSchemaCache();
             };
 
             //show or hide the menu when the expand button is clicked

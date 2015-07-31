@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log) {
+    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
         var started = function (config) {
@@ -11,6 +11,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['requesttime'] = new Date().getTime();
+            config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
             if (config.url.indexOf("/Content/") == -1) {

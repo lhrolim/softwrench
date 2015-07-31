@@ -90,7 +90,7 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
-            associationService, contextService, alertService,
+            associationService, crudContextHolderService, alertService,
             validationService, schemaService, $timeout, eventService, $log, expressionService,focusService) {
 
             $(document).on("sw_autocompleteselected", function(event, key) {
@@ -136,7 +136,7 @@ app.directive('crudBody', function (contextService) {
             });
 
             $scope.$on('sw_compositiondataresolved', function(event,data) {
-                var tab = contextService.getActiveTab();
+                var tab = crudContextHolderService.getActiveTab();
                 if (tab != null && data[tab]!=null) {
                     redirectService.redirectToTab(tab);
                 }
@@ -166,7 +166,7 @@ app.directive('crudBody', function (contextService) {
             });
 
             $scope.setActiveTab = function (tabId) {
-                contextService.setActiveTab(tabId);
+                crudContextHolderService.setActiveTab(tabId);
             };
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
