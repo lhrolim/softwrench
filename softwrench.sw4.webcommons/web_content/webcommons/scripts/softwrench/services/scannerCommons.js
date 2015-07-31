@@ -72,8 +72,13 @@
                         callbackFn1(data);
                         return;
                     }
-                    callbackFn1(data);
-                    callbackFn2(data);
+                    if (callbackFn1) {
+                        callbackFn1(data);
+                    }
+                    if (callbackFn2) {
+                        callbackFn2(data);
+                    }
+                    
                 }
             });
         };

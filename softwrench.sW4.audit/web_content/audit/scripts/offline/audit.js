@@ -38,7 +38,7 @@
     //#region offlineAuditService
     (function (audit) {
 
-        function offlineAuditService($q, entities, swdbDAO) {
+        function offlineAuditService($q, entities, swdbDAO, securityService) {
             //#region Utils
             function validateEntryField(dict, field) {
                 if (!dict[field]) {
@@ -94,7 +94,8 @@
              * @param String createdBy username of the user who triggered the event
              * @return Promise resolved with the registered AuditEntry
              */
-            function registerEvent(operation, refApplication, refId, createdBy) {
+            function registerEvent(operation, refApplication, refId) {
+                var createdBy = securityService.currentUser();
                 var entry = {
                     operation: operation,
                     refApplication: refApplication,
@@ -179,7 +180,7 @@
         };
 
         //#region Service registration
-        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", offlineAuditService]);
+        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", "securityService", offlineAuditService]);
         //#endregion
     })(audit);
     //#endregion

@@ -120,6 +120,20 @@
         function currentListSchema() {
             return _crudContext.currentListSchema;
         }
+
+        function currentSchema() {
+            var result = [];
+            var listSchema = _crudContext.currentListSchema;
+            var detailSchema = _crudContext.currentDetailSchema;
+            if (!listSchema) {
+                return detailSchema;
+            }else if (!detailSchema) {
+                return listSchema;
+            }
+            //both are defined, bigger devices
+            return [listSchema, detailSchema];
+        }
+
         function currentDetailSchema() {
             if (_crudContext.newItem) {
                 return _crudContext.currentNewDetailSchema ? _crudContext.currentNewDetailSchema : _crudContext.currentDetailSchema;
@@ -130,6 +144,7 @@
         function currentDetailItem() {
             return _crudContext.currentDetailItem;
         }
+
 
         function itemlist() {
             return _crudContext.itemlist;
@@ -167,6 +182,12 @@
             return _crudContext.composition.currentTab.label;
         };
 
+        function getActiveTab() {
+            if (this.isOnMainTab()) {
+                return null;
+            }
+            return _crudContext.composition.currentTab.id;
+        }
 
         function compositionList () {
             return _crudContext.composition.itemlist;
@@ -210,6 +231,7 @@
             currentListSchema: currentListSchema,
             currentDetailSchema: currentDetailSchema,
             currentDetailItem: currentDetailItem,
+            currentSchema: currentSchema,
             itemlist: itemlist,
             currentDetailItemDataMap: currentDetailItemDataMap,
             leavingDetail: leavingDetail,
@@ -221,9 +243,11 @@
             getCompositionListSchema: getCompositionListSchema,
             getCompositionDetailSchema: getCompositionDetailSchema,
             getCompositionDetailItem: getCompositionDetailItem,
-            hasDirtyChanges:hasDirtyChanges,
+            hasDirtyChanges: hasDirtyChanges,
+            getActiveTab: getActiveTab,
             //below method to facilitate migration
-            getCrudContext:getCrudContext
+            getCrudContext: getCrudContext
+            
         };
 
         return service;
