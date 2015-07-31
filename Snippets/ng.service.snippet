@@ -36,7 +36,23 @@
 (function () {
     "use strict";
     
+    //#region Service registration
+
+    angular.module("$module$").factory("$service$", ["$dependency$", $service$]);
+
+    //#endregion
+    
     function $service$($dependency$) {
+    
+      //#region Service Instance
+
+        var service = {
+            $member1$: $member1$
+        };
+
+        return service;
+
+        //#endregion
     		
     		//#region Utils
     		
@@ -50,22 +66,10 @@
 
         //#endregion
 
-        //#region Service Instance
-
-        var service = {
-            $member1$: $member1$
-        };
-
-        return service;
-
-        //#endregion
+      
     }
     
-    //#region Service registration
-
-    angular.module("$module$").factory("$service$", ["$dependency$", $service$]);
-
-    //#endregion
+  
 
 })();
                 ]]>

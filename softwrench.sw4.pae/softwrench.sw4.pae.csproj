@@ -73,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\pae\readme.txt" />
+    <Content Include="online_content\pae\scripts\paeAssetService.web.js" />
+    <Content Include="web_content\pae\scripts\paeAssetService.mobile.js" />
+    <Content Include="web_content\pae\scripts\paeAssetService.web.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\pae\statuscolors.json">
@@ -88,9 +91,12 @@
     <Folder Include="classes\com\cts\pae\configuration\" />
     <Folder Include="classes\com\cts\pae\connector\" />
     <Folder Include="classes\com\cts\pae\migration\" />
+    <Folder Include="offline_content\pae\scripts\" />
+    <Folder Include="online_content\pae\htmls\" />
+    <Folder Include="online_content\pae\images\" />
+    <Folder Include="online_content\pae\styles\" />
     <Folder Include="web_content\pae\htmls\" />
     <Folder Include="web_content\pae\images\" />
-    <Folder Include="web_content\pae\scripts\" />
     <Folder Include="web_content\pae\styles\" />
   </ItemGroup>
   <ItemGroup>
