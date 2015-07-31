@@ -43,7 +43,7 @@
 
             var registerApplication = matchingparameters.applicationName;
             var registerSchemaId = matchingparameters.schemaId;
-            var registerTabId = matchingparameters.tabid;
+            var registerTabId = matchingparameters.tabid || "";
 
             scanCallbackMap["{0}.{1}.{2}".format(registerApplication, registerSchemaId, registerTabId)] = callback;
 
@@ -52,7 +52,7 @@
 
 
                 onComplete: function (data) {
-                    var tabId = crudContextHolderService.getActiveTab();
+                    var tabId = crudContextHolderService.getActiveTab() || "";
                     var schema = crudContextHolderService.currentSchema();
                     var applicationName = crudContextHolderService.currentApplicationName();
                     
