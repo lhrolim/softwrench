@@ -16,7 +16,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
     return {
 
         //#region delegateMethods
-        restoreState: function () {
+        restoreState: function() {
             var savedState = crudContextHolderService.restoreState();
             if (savedState && savedState.itemlist && !savedState.currentDetailItem) {
                 this.refreshGrid();
@@ -24,78 +24,78 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             return savedState;
         },
 
-        isList: function () {
+        isList: function() {
             return crudContextHolderService.isList();
         },
 
-        getFilteredList: function () {
+        getFilteredList: function() {
             return crudContextHolderService.getFilteredList();
         },
 
 
-        currentTitle: function () {
+        currentTitle: function() {
             return crudContextHolderService.currentTitle();
         },
 
-        currentApplicationName: function () {
+        currentApplicationName: function() {
             return crudContextHolderService.currentApplicationName();
         },
 
-        currentListSchema: function () {
+        currentListSchema: function() {
             return crudContextHolderService.currentListSchema();
         },
 
-        currentDetailSchema: function () {
+        currentDetailSchema: function() {
             return crudContextHolderService.currentDetailSchema();
         },
 
-        currentDetailItem: function () {
+        currentDetailItem: function() {
             return crudContextHolderService.currentDetailItem();
         },
 
-        itemlist: function () {
+        itemlist: function() {
             return crudContextHolderService.itemlist();
         },
 
-        currentDetailItemDataMap: function () {
+        currentDetailItemDataMap: function() {
             return crudContextHolderService.currentDetailItemDataMap();
         },
 
-        leavingDetail: function () {
+        leavingDetail: function() {
             crudContextHolderService.leavingDetail();
         },
 
-        isOnMainTab: function () {
+        isOnMainTab: function() {
             return crudContextHolderService.isOnMainTab();
         },
 
-        resetTab: function () {
+        resetTab: function() {
             crudContextHolderService.resetTab();
         },
 
-        tabTitle: function () {
+        tabTitle: function() {
             return crudContextHolderService.tabTitle();
         },
 
 
-        leavingCompositionDetail: function () {
+        leavingCompositionDetail: function() {
             crudContextHolderService.leavingCompositionDetail();
         },
 
         //#region composition
-        compositionList: function () {
+        compositionList: function() {
             return crudContextHolderService.compositionList();
         },
 
-        getCompositionListSchema: function () {
+        getCompositionListSchema: function() {
             return crudContextHolderService.getCompositionListSchema();
         },
 
-        getCompositionDetailSchema: function () {
+        getCompositionDetailSchema: function() {
             return crudContextHolderService.getCompositionDetailSchema();
         },
 
-        getCompositionDetailItem: function () {
+        getCompositionDetailItem: function() {
             return crudContextHolderService.getCompositionDetailItem();
         },
         //#endregion
@@ -103,20 +103,20 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         //#endregion
 
 
-        mainDisplayables: function () {
+        mainDisplayables: function() {
             return schemaService.nonTabFields(this.currentDetailSchema());
         },
 
 
         //#region Compositions
 
-        currentCompositionsToShow: function () {
+        currentCompositionsToShow: function() {
             var detailSchema = this.currentDetailSchema();
             var allDisplayables = tabsService.tabsDisplayables(detailSchema);
             return allDisplayables;
         },
 
-        loadTab: function (tab) {
+        loadTab: function(tab) {
             var crudContext = crudContextHolderService.getCrudContext();
             if (tab == null) {
                 //let´s return to the main tab
@@ -130,7 +130,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 return routeService.go("main.cruddetail.compositionlist");
             }
 
-            return offlineCompositionService.loadComposition(crudContext.currentDetailItem, tab).then(function (compositionItems) {
+            return offlineCompositionService.loadComposition(crudContext.currentDetailItem, tab).then(function(compositionItems) {
                 crudContext.composition.currentTab = tab;
                 crudContext.composition.itemlist = compositionItems;
                 crudContext.composition.currentListSchema = tab.schema.schemas.list;
@@ -141,7 +141,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             });
         },
 
-        loadCompositionDetail: function (item) {
+        loadCompositionDetail: function(item) {
             var crudContext = crudContextHolderService.getCrudContext();
             var fields = this.getCompositionDetailSchema().displayables;
             datamapSanitizationService.enforceNumericType(item, fields);
@@ -152,7 +152,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             return routeService.go("main.cruddetail.compositiondetail");
         },
 
-        createNewCompositionItem: function () {
+        createNewCompositionItem: function() {
             var crudContext = crudContextHolderService.getCrudContext();
             crudContext.composition.currentDetailItem = {};
             offlineSchemaService.fillDefaultValues(crudContext.composition.currentDetailSchema, crudContext.composition.currentDetailItem);
@@ -165,19 +165,15 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         },
 
 
-
-
-
-
-        //#endregion
+//#endregion
 
         //#region saveFNS
 
-        hasDirtyChanges: function () {
+        hasDirtyChanges: function() {
             return crudContextHolderService.hasDirtyChanges();
         },
 
-        cancelChanges: function () {
+        cancelChanges: function() {
             var crudContext = crudContextHolderService.getCrudContext();
             if (crudContext.composition.currentDetailItem) {
                 crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItemDatamap);
@@ -192,7 +188,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
         },
 
-        saveChanges: function (crudForm) {
+        saveChanges: function(crudForm) {
             var crudContext = crudContextHolderService.getCrudContext();
             crudForm = crudForm || {};
             var detailSchema = this.currentDetailSchema();
@@ -207,14 +203,14 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             var that = this;
             if (crudContext.composition && crudContext.composition.currentDetailItem) {
                 var compositionItem = crudContext.composition.currentDetailItem;
-                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(function () {
+                return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(function() {
                     crudContext.originalDetailItemDatamap = datamap;
                     crudContext.composition.originalDetailItemDatamap = crudContext.composition.currentDetailItem;
                     that.loadTab(crudContext.composition.currentTab);
                 });
             }
 
-            return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(function () {
+            return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(function() {
                 crudContext.originalDetailItemDatamap = angular.copy(datamap);
                 contextService.insertIntoContext("crudcontext", crudContext);
                 if (crudContext.newItem) {
@@ -228,7 +224,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
         //#region GridFNS
 
-        filterList: function (text) {
+        filterList: function(text) {
             var crudContext = crudContextHolderService.getCrudContext();
             internalListContext.searchQuery = text;
             if (text == null) {
@@ -240,19 +236,19 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             this.loadMorePromise();
         },
 
-        refreshGrid: function () {
+        refreshGrid: function() {
             var crudContext = crudContextHolderService.getCrudContext();
             internalListContext.searchQuery = null;
             crudContext.itemlist = [];
             internalListContext.lastPageLoaded = 1;
             internalListContext.pageNumber = 1;
-            this.loadMorePromise().then(function () {
+            this.loadMorePromise().then(function() {
                 routeService.go("main.crudlist");
                 contextService.insertIntoContext("crudcontext", crudContext);
             });
         },
 
-        loadMorePromise: function () {
+        loadMorePromise: function() {
             var crudContext = crudContextHolderService.getCrudContext();
             var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
             var filteredMode = false;
@@ -267,7 +263,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
                 baseQuery += ' and isDirty = 0 ';
             }
 
-            return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded }).then(function (results) {
+            return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded }).then(function(results) {
                 internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
                 if (filteredMode) {
                     crudContext.filteredList = [];
@@ -281,7 +277,7 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
         },
 
 
-        loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
+        loadApplicationGrid: function(applicationName, applicationTitle, schemaId) {
             var crudContext = crudContextHolderService.getCrudContext();
             //cleaning up
             crudContext.currentDetailItem = null;
@@ -294,13 +290,18 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             crudContext.currentApplication = application;
 
 
-
             crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
             crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication);
             crudContext.currentNewDetailSchema = offlineSchemaService.locateSchemaByStereotype(crudContext.currentApplication, "detailnew");
 
 
             this.refreshGrid();
+        },
+
+        hasNewDetailSchema: function() {
+            var crudContext = crudContextHolderService.getCrudContext();
+            var newDetailSchema = crudContext.currentNewDetailSchema;
+            return newDetailSchema != null;
         },
 
         //#endregion

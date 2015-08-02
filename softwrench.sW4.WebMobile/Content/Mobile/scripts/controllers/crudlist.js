@@ -66,6 +66,10 @@
                 $scope.filteroptionspopover.hide();
             });
 
+            $scope.hasNewSchemaAvailable = function() {
+                return crudContextService.hasNewSchemaAvailable();
+            }
+
             $scope.disableSearch = function () {
                 $scope._searching = false;
                 $scope.searchQuery = null;

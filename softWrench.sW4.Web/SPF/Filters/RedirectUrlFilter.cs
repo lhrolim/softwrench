@@ -68,12 +68,12 @@ namespace softWrench.sW4.Web.SPF.Filters {
         }
 
         private void ClearSchemaIfCached(IApplicationResponse applicationResponse, HttpActionExecutedContext actionExecutedContext) {
-            if (applicationResponse == null) {
+            if (applicationResponse == null || applicationResponse.Schema == null) {
+                // if there´s no schema to cache, just return 
                 return;
             }
             var cachedSchemas = RequestUtil.GetValue(actionExecutedContext.Request, "cachedschemas");
-            if (cachedSchemas != null && applicationResponse.Schema != null &&
-                cachedSchemas.Contains(";" + applicationResponse.Schema.GetApplicationKey() + ";")) {
+            if (cachedSchemas != null && cachedSchemas.Contains(";" + applicationResponse.Schema.GetApplicationKey() + ";")) {
                 //to reduce payload SWWEB-1317
                 applicationResponse.CachedSchemaId = applicationResponse.Schema.SchemaId;
                 var applicationName = applicationResponse.ApplicationName;
