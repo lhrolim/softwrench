@@ -293,12 +293,14 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
             crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication);
             crudContext.currentNewDetailSchema = offlineSchemaService.locateSchemaByStereotype(crudContext.currentApplication, "detailnew");
-
-
+            if (crudContext.currentNewDetailSchema == null && schemaService.isPropertyTrue(crudContext.currentDetailSchema,"mobile.actasnewschema")) {
+                //if this property is true, then the detail schema will also be used as the newschema
+                crudContext.currentNewDetailSchema =  crudContext.currentDetailSchema;
+            }
             this.refreshGrid();
         },
 
-        hasNewDetailSchema: function() {
+        hasNewSchemaAvailable: function () {
             var crudContext = crudContextHolderService.getCrudContext();
             var newDetailSchema = crudContext.currentNewDetailSchema;
             return newDetailSchema != null;

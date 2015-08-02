@@ -15,7 +15,7 @@
 
         //#region Utils
 
-        var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
+        var timeBetweenCharacters = isMobile() ? 300 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
         if ("true" == sessionStorage.debugscanner) {
             timeBetweenCharacters = 30000;
         }
