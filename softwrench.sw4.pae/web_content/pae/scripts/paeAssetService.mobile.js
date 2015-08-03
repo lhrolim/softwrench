@@ -30,6 +30,7 @@
                 var loadedAsset = null;
                 maximoDataService.loadItemByMaximoUid("asset", schema, data)
                     .then(function (asset) {
+                        loadedAsset = asset;
                         return offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId);
                     })
                     .then(function (auditentry) {
