@@ -157,7 +157,7 @@ namespace softWrench.sW4.Data.Persistence {
                 var query = BuildQuery(queryst, parameters, session, true, paginationData,queryAlias);
                 query.SetResultTransformer(NhTransformers.ExpandoObject);
                 var result = query.List<dynamic>();
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done query"));
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
                 return result;
             }
         }
@@ -165,13 +165,13 @@ namespace softWrench.sW4.Data.Persistence {
 
 
 
-        public int CountByNativeQuery(String queryst, ExpandoObject parameters) {
+        public int CountByNativeQuery(String queryst, ExpandoObject parameters, string queryAlias = null) {
             var before = Stopwatch.StartNew();
 
             using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, native: true);
+                var query = BuildQuery(queryst, parameters, session, true,null,queryAlias);
                 var result = (int)query.UniqueResult();
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done count query"));
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
                 return result;
             }
         }

@@ -163,6 +163,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
+            if (searchDto.Context != null && searchDto.Context.MetadataId != null) {
+                searchDto.QueryAlias = searchDto.Context.MetadataId;
+            } else {
+                searchDto.QueryAlias = application.Name + "." + schema.SchemaId;
+            }
+
             if (schema.UnionSchema != null) {
                 searchDto.BuildUnionDTO(searchDto, schema);
             }
