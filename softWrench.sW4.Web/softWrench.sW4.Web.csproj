@@ -493,7 +493,10 @@
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
     <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
+    <Content Include="Content\Scripts\client\services\schemaCacheService.js" />
+    <Content Include="Content\Scripts\client\services\crud_contextservice.js" />
     <Content Include="Content\Scripts\client\services\crud_layoutservice.js" />
+    <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />

@@ -11,7 +11,7 @@ namespace softwrench.sw4.webcommons.classes.bundles {
 
 
         public void PopulateStyleBundles(BundleCollection bundles) {
-            AddClientBundle(bundles);
+            AddClientStyleBundle(bundles);
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
@@ -20,19 +20,23 @@ namespace softwrench.sw4.webcommons.classes.bundles {
 
             var clientName = ApplicationConfiguration.ClientName;
             var clientPath = String.Format("~/Content/customers/{0}/Scripts/", clientName);
+            //scritps specific of the online
+            var clientOnlinePath = String.Format("~/Content/customers/{0}_online/Scripts/", clientName);
             const string sharedPath = "~/Content/Scripts/customers/shared";
             var scriptBundle = new ScriptBundle("~/Content/Scripts/client/client-js");
             bundles.Add(scriptBundle.IncludeDirectory(sharedPath, "*.js"));
+            bundles.IgnoreList.Ignore("*.mobile.js");
             try {
                 // Wanted OTB to load as the base template and then additional js can be applied to overwrite the existing one
                 bundles.Add(scriptBundle.IncludeDirectory("~/Content/Scripts/customers/otb", "*.js"));
                 bundles.Add(scriptBundle.IncludeDirectory(clientPath, "*.js"));
+                bundles.Add(scriptBundle.IncludeDirectory(clientOnlinePath, "*.js"));
             } catch {
                 //nothing to do
             }
         }
 
-        private static void AddClientBundle(BundleCollection bundles) {
+        private static void AddClientStyleBundle(BundleCollection bundles) {
             var clientName = ApplicationConfiguration.ClientName;
             const string basePath = "~/Content/styles/default/";
             const string baseAppPath = basePath + "/application";
@@ -53,6 +57,8 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             bundles.Add(styleBundle.IncludeDirectory(basePath, "*.css"));
             bundles.Add(styleBundle.IncludeDirectory(baseAppPath, "*.css"));
             bundles.Add(styleBundle.IncludeDirectory(baseMediaPath, "*.css"));
+
+            bundles.IgnoreList.Ignore("*.mobile.css");
 
             //client specific scripts go after, so they can override default styles
             try {

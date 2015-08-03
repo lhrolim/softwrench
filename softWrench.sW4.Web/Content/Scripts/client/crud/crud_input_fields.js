@@ -79,7 +79,7 @@ app.directive('sectionElementInput', function ($compile) {
         }
     }
 });
-app.directive('crudInputFields', function (contextService, eventService, crud_inputcommons) {
+app.directive('crudInputFields', function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
     return {
         restrict: 'E',
         replace: true,
@@ -125,7 +125,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             var parameters = {
                 element: element,
-                tabid: contextService.getActiveTab()
+                tabid: crudContextHolderService.getActiveTab()
             };
             eventService.onload(scope, scope.schema, scope.datamap, parameters);
 

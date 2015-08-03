@@ -85,7 +85,7 @@
           <field attribute="status" label="Status" qualifier="featured"/>
           <!--<field attribute="siteid" label="Site" qualifier="siteid" />-->
           <field attribute="propmanuf" label="Manufacturer"  qualifier="excerpt"/>
-          <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
+          <event type="onload" service="paeAssetService" method="initAssetGridListener"/>
         </list>
         <detail>
           <field attribute="plustsoldamt" hidden="true"/>
@@ -121,7 +121,7 @@
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
-          <event type="onload" service="scannerdetectionService" method="initAssetDetailListener"/>
+          <event type="onload" service="paeAssetService" method="initAssetDetailListener"/>
         </detail>
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>

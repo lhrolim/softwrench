@@ -22,8 +22,8 @@
 
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"/>
 
-  
-   
+
+
   <if test="${property::exists('ignoretstamp')==true}">
     <!--makes development easier-->
     <property name="deploypath" value="${OutputDir}/deploy/local"></property>
@@ -58,7 +58,7 @@
   </if>
 
 
-  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,explodexmlfiles,deploy"/>
+  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,deploy"/>
 
   <target name="fullbuildlocal" depends="compile,zip"/>
 
@@ -170,31 +170,49 @@
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="onlinefolder" value="${foldername}/online_content" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
       <property name="length" value="${string::get-length(foldername)}" />
       <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
+      
 
       <property name="projectname" value="${string::substring(foldername,indexof,size)}" />
 
 
 
-      <if test="${projectname == client}">
-        
+
+      <if test="${projectname == client or ( file::exists(customerplaceholder) and profile == 'dev')}">
+
         <copy todir="${deploypath}/Content/Customers/${projectname}">
-          <fileset basedir="../softWrench.sW4.${client}/web_content/${projectname}">
+          <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
             <include name="**/*" />
             <exclude name="**/*.${platformtoexclude}.*"/>
           </fileset>
         </copy>
 
+        <if test="${directory::exists(onlinefolder)}">
+          <copy todir="${deploypath}/Content/Customers/${projectname}">
+            <fileset basedir="../softWrench.sW4.${projectname}/online_content/${projectname}">
+              <include name="**/*" />
+              <exclude name="**/*.${platformtoexclude}.*"/>
+            </fileset>
+          </copy>
+        </if>
+
+        <copy todir="${deploypath}/App_Data/Client/${projectname}/">
+          <fileset basedir="../softwrench.sW4.${projectname}/metadata/${projectname}/">
+            <include name="*.*" />
+          </fileset>
+        </copy>
+
         <copy todir="${deploypath}/bin/">
-          <fileset basedir="../softWrench.sW4.${client}/Dependencies">
+          <fileset basedir="../softWrench.sW4.${projectname}/Dependencies">
             <include name="**/*" />
           </fileset>
         </copy>
-        
-        <echo message="Copied files for ${client}" />
+
+        <echo message="Copied files for ${projectname}" />
       </if>
 
 
@@ -210,7 +228,7 @@
     </foreach>
   </target>
 
-  
+
   <target name="releaseprepare" >
 
     <xmlpoke file="../softWrench.sW4.Web/Web.config"
@@ -235,7 +253,7 @@
                value="${profile}" failonerror="true"/>
   </target>
 
-  <target name="zip" depends="copydlls,copylinkedfolders,setclient,setenv,explodexmlfiles">
+  <target name="zip" depends="copydlls,copylinkedfolders,setclient,setenv">
 
 
 
@@ -247,16 +265,16 @@
   </target>
 
 
-  <target name="explodexmlfiles" depends="setenv,setclient">
-    <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />
-    <if test="${file::exists(clientpropertyfile)}">
-      <copy todir="${deploypath}/App_Data/Client/${client}/">
-        <fileset basedir="../softwrench.sW4.${client}/metadata/${client}/">
-          <include name="*.*" />
-        </fileset>
-      </copy>
-    </if>
-  </target>
+  <!--  <target name="explodexmlfiles" depends="setenv,setclient">-->
+  <!--    <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />-->
+  <!--    <if test="${file::exists(clientpropertyfile)}">-->
+  <!--      <copy todir="${deploypath}/App_Data/Client/${client}/">-->
+  <!--        <fileset basedir="../softwrench.sW4.${client}/metadata/${client}/">-->
+  <!--          <include name="*.*" />-->
+  <!--        </fileset>-->
+  <!--      </copy>-->
+  <!--    </if>-->
+  <!--  </target>-->
 
   <target name="deploypeek" depends="setenv,setclient">
 
@@ -324,6 +342,7 @@
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="onlinefolder" value="${foldername}/online_content" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
       <property name="length" value="${string::get-length(foldername)}" />
@@ -343,7 +362,15 @@
           <arg value="/c"/>
           <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
-        
+
+        <if test="${directory::exists(onlinefolder)}">
+          <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /D ${clientname}_online "${foldername}\online_content\${clientname}"'/>
+          </exec>
+        </if>
+
+
 
         <if test="${customerlinkcreated =='0'}">
           <echo message="created symbolic link for ${clientname}" />
@@ -360,6 +387,13 @@
           <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
+        <if test="${directory::exists(onlinefolder)}">
+          <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /D ${clientname}_online "${foldername}\online_content\${clientname}"'/>
+          </exec>
+        </if>
+
         <if test="${customerlinkcreated =='0'}">
           <echo message="created symbolic link for ${clientname}" />
         </if>
@@ -373,6 +407,7 @@
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="offlinefolder" value="${foldername}/offline_content" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
       <property name="length" value="${string::get-length(foldername)}" />
@@ -393,6 +428,14 @@
           <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
+        <if test="${directory::exists(offlinefolder)}">
+          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /D ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
+          </exec>
+        </if>
+
+
         <if test="${customerlinkcreated =='0'}">
           <echo message="created symbolic link for ${clientname}" />
         </if>
@@ -407,6 +450,13 @@
           <arg value="/c"/>
           <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
+
+        <if test="${directory::exists(offlinefolder)}">
+          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /D ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
+          </exec>
+        </if>
 
         <if test="${customerlinkcreated =='0'}">
           <echo message="created symbolic link for ${clientname}" />

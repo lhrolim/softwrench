@@ -23,8 +23,7 @@
   <property key="maximoutc" value="US Mountain Standard Time"/>
 
   <environment key="dev">
-    <!-- <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_BS7116;User Id=sw;password=softwrench;" /> /-->
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_Max7115Tst;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_PAE71DEV;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa">

@@ -29,11 +29,13 @@ module.exports = function (grunt) {
         "Content/Shared/webcommons/scripts/softwrench/services/expression_service.js",
         "Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js",
         "Content/Shared/webcommons/scripts/softwrench/services/rest_service.js",
+        "Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js",
         "Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
         "Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
         "Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
         "Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
-        "Content/Shared/audit/scripts/offline/audit.js"
+        "Content/Shared/audit/scripts/offline/audit.js",
+        
     ];
 
     var appScripts = [
@@ -45,7 +47,13 @@ module.exports = function (grunt) {
         "Content/Mobile/scripts/filters/**/*.js"
     ];
 
-    var solutionScripts = commonScripts.concat(sharedScripts).concat(appScripts);
+    //TODO: make a client-based build??
+    //make it download the customer scripts from the server at runtime?
+    var customerScripts = [
+        "Content/Customers/pae/scripts/paeAssetService.mobile.js"
+    ];
+
+    var solutionScripts = commonScripts.concat(sharedScripts).concat(appScripts).concat(customerScripts);
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),

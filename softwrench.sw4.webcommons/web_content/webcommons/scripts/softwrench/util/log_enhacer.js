@@ -98,8 +98,9 @@ function enhanceAngularLog($log, contextService) {
     function isLevelEnabled(level, context) {
         var enabledLevel = sessionStorage.loglevel;
         if (enabledLevel == undefined) {
-            enabledLevel = contextService.retrieveFromContext('defaultlevel');
+            enabledLevel = contextService.retrieveFromContext('defaultlevel') || "warn";
         }
+
         var contextLevel = getContextLevel(context);
         enabledLevel = getMinLevel(enabledLevel, contextLevel);
 

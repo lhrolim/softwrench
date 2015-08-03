@@ -77,6 +77,7 @@
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\scannerCommons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\person\person_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\spin_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_commons.js" />
@@ -135,7 +136,6 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\print_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\redirect_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\rest_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\scannerdetection_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\schema_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\screenshot_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\search_service.js" />

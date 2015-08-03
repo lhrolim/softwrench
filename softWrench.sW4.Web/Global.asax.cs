@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+using System.Configuration;
+using System.Web.Hosting;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
@@ -40,7 +41,22 @@ namespace softWrench.sW4.Web {
             DoStartApplication(false);
         }
 
+        private static void SetFixClient() {
+            var applicationPath = HostingEnvironment.ApplicationVirtualPath;
+            if (!ApplicationConfiguration.IsLocal() && ApplicationConfiguration.IsDev()) {
+                if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
+                    //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
+                    var clientName = applicationPath.Substring(4);
+                    Log.InfoFormat("changing clientKey to {0}", clientName);
+                    ApplicationConfiguration.FixClientName(clientName);
+                }
+            }
+
+        }
+
         private static void DoStartApplication(bool changeClient) {
+
+
 
             var before = Stopwatch.StartNew();
             if (!changeClient) {
@@ -49,6 +65,7 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
                 ConfigureLogging();
+                SetFixClient();
                 AreaRegistration.RegisterAllAreas();
                 EnableJsonCamelCasing();
                 RegisterDataMapFormatter();
@@ -127,15 +144,15 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e) {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-            Response.Cache.SetNoStore();
+            //            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            //            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            //            Response.Cache.SetNoStore();
             
             
-            if (Request.UrlReferrer != null){
+            if (Request.UrlReferrer != null) {
                 //this is for ripple development where CORS is enabled.
                 //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://"+Request.UrlReferrer.Authority);
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://" + Request.UrlReferrer.Authority);
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");    
             }
             
@@ -150,7 +167,11 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {
-            var context = new HttpContextWrapper(Context);
+            if (ApplicationConfiguration.IsLocal() || Response.ContentType == "text/html") {
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+                Response.Cache.SetNoStore();
+            }
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 //302 ==> not allowed
                 //Context.Response.RedirectLocation.Contains("/SignIn") --> are we redirecting to login

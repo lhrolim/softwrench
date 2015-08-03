@@ -1,4 +1,4 @@
-﻿app.directive('adminMenu', function (contextService,menuService,redirectService,i18NService) {
+﻿app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService) {
     return {
         restrict: 'E',
         replace: true,
@@ -54,6 +54,10 @@
 
             scope.logout = function () {
                 sessionStorage.removeItem("swGlobalRedirectURL");
+                if (contextService.isLocal()) {
+                    //clear local everytime to make development easier
+                    schemaCacheService.wipeSchemaCacheIfNeeded();
+                }
                 contextService.clearContext();
                 sessionStorage['ctx_loggedin'] = false;
             };

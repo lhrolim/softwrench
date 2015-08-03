@@ -7,8 +7,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
     public class ApplicationListResult : GenericResponseResult<IEnumerable<AttributeHolder>>, IApplicationResponse {
-
-        private readonly ApplicationSchemaDefinition _schema;
         public PaginatedSearchRequestDto PageResultDto;
         private string _mode;
         //this is for grids that have optionfields inside of it
@@ -17,16 +15,15 @@ namespace softWrench.sW4.Data.API.Response {
         public ApplicationListResult(int totalCount, PaginatedSearchRequestDto searchDTO,
             IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, IDictionary<string, BaseAssociationUpdateResult> associationOptions)
             : base(dataMap, null) {
-            _schema = schema;
+            Schema = schema;
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
             PageResultDto.SearchParams = searchDTO.SearchParams;
             PageResultDto.FilterFixedWhereClause = searchDTO.FilterFixedWhereClause;
             _associationOptions = associationOptions;
         }
 
-        public ApplicationSchemaDefinition Schema {
-            get { return _schema; }
-        }
+        public ApplicationSchemaDefinition Schema { get; set; }
+        public string CachedSchemaId { get; set; }
 
         public IDictionary<string, BaseAssociationUpdateResult> AssociationOptions {
             get { return _associationOptions; }

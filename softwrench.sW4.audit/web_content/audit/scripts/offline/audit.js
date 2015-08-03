@@ -1,5 +1,12 @@
-﻿(function (angular, persistence) {
+﻿(function (angular) {
+
     "use strict";
+
+    try {
+        angular.module("persistence.offline");
+    } catch (err) {
+        return;
+    }
 
     //#region audit.offline module
     var audit = angular.module("audit.offline", ["persistence.offline"]);
@@ -32,9 +39,9 @@
     //#endregion
 
     //#region offlineAuditService
-    (function(audit) {
+    (function (audit) {
 
-        function offlineAuditService($q, entities, swdbDAO) {
+        function offlineAuditService($q, entities, swdbDAO, securityService) {
             //#region Utils
             function validateEntryField(dict, field) {
                 if (!dict[field]) {
@@ -77,10 +84,10 @@
              * @throws Error if any of the mandatory fields is ommited
              */
             function registerEntry(entry) {
-                return instantiateEntry(entry).then(function(auditentry) {
-                        return swdbDAO.save(auditentry);
-                    });
-                
+                return instantiateEntry(entry).then(function (auditentry) {
+                    return swdbDAO.save(auditentry);
+                });
+
             }
 
             /**
@@ -98,7 +105,8 @@
              * @return Promise resolved with the registered AuditEntry
              * @throws Error if any of the parameters is ommited
              */
-            function registerEvent(operation, refApplication, refClientId, refId, createdBy) {
+            function registerEvent(operation, refApplication, refClientId, refId) {
+				var createdBy = securityService.currentUser();
                 var entry = {
                     operation: operation,
                     refApplication: refApplication,
@@ -184,9 +192,9 @@
         };
 
         //#region Service registration
-        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", offlineAuditService]);
+        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", "securityService", offlineAuditService]);
         //#endregion
     })(audit);
     //#endregion
 
-})(angular, persistence);
+})(angular);
