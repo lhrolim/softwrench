@@ -1,5 +1,4 @@
-﻿(function (angular) {
-
+﻿(function (angular, persistence) {
     "use strict";
 
     try {
@@ -17,15 +16,18 @@
         var entities = offlineEntitiesProvider.entities;
 
         entities.AuditEntry = persistence.define("AuditEntry", {
-            //the name of the operation, such as crud_create,crud_update, or a custom one
+            //the name of the operation, such as crud_create, crud_update, or a custom one
             operation: "TEXT",
             //this is a datamap before an action has happened on the entry
             originaldatamap: "JSON",
             //this is the datamap after the action has been performed, both will be used to generate a diff
             datamap: "JSON",
-
+            // application/entity being tracked
             refApplication: "TEXT",
+            // server's/maximo's id of the entity being tracked
             refId: "TEXT",
+            // local/persistence's id of the entity being tracked
+            refClientId: "TEXT",
             createdBy: "TEXT",
             createdDate: "DATE"
         });
@@ -47,8 +49,12 @@
             }
 
             function instantiateEntry(dict) {
+                if (!dict["createdBy"]) {
+                    dict["createdBy"] = securityService.currentUser();
+                }
                 validateEntryField(dict, "operation");
                 validateEntryField(dict, "refApplication");
+                validateEntryField(dict, "refClientId");
                 validateEntryField(dict, "createdBy");
 
                 dict["createDate"] = new Date();
@@ -67,14 +73,17 @@
              *  originaldatamap: {}, // a datamap before an action has happened on the entry
              *  datamap: {}, // datamap after the action has been performed, both will be used to generate a diff
              *  refApplication: String, // name of the application/entity being affected
-             *  refId: String, // id of the entity being affected
-             *  createdBy: String, // username of the user who triggered the operation
+             *  refClientId: String, // local id of the entity being affected
+             *  refId: String, // server's id of the entity being affected
+             *  createdBy: String, // username of the user who triggered the operation -> defaults to current logged user if omitted
              * }
-             * Fields can be ommited depending on the action being executed, this method is intended for registering
-             * complete entries though. See other methods (such as registerEvent) for registering customized entries.
+             * The fields "operation", "refApplication" and "refClientId" are mandatory.
+             * The other fields can be ommited depending on the action being executed, this method is intended for registering
+             * complete entries though. See other methods (such as {@link #registerEvent}) for registering customized entries.
              * 
              * @param {} entry dictionary in the aforementioned format
              * @returns Promise resolved with the registered AuditEntry
+             * @throws Error if any of the mandatory fields is ommited and/or there's no user logged in
              */
             function registerEntry(entry) {
                 return instantiateEntry(entry).then(function (auditentry) {
@@ -87,18 +96,22 @@
              * Register an "Audit Event" type entry. 
              * This entry has no data change (create, update, delete) associated with it
              * i.e. it has no tracking of other entities's datamaps.
+             * Usage example (user scanned an asset):
+             * offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId, auth.currentUser());
              * 
              * @param String operation name of the operation/event being tracked
              * @param String refApplication name of the application/entity being affected by the event
-             * @param String refId id of the enity being affected by the event
-             * @param String createdBy username of the user who triggered the event
+             * @param String refClientId local id of the enity being affected by the event
+             * @param String refId server's id of the entity being affected by the event
+             * @param String createdBy username of the user who triggered the event -> defaults to current logged user if omitted  
              * @return Promise resolved with the registered AuditEntry
+             * @throws Error if any of the parameters is omitted and/or there's no user logged in
              */
-            function registerEvent(operation, refApplication, refId) {
-                var createdBy = securityService.currentUser();
+            function registerEvent(operation, refApplication, refClientId, refId, createdBy) {
                 var entry = {
                     operation: operation,
                     refApplication: refApplication,
+                    refClientId: refClientId,
                     refId: refId,
                     createdBy: createdBy
                 };
@@ -108,10 +121,10 @@
             /**
              * Lists all apllications that have AuditEntries related to them (refApplication).
              * 
-             * @param createdBy 
              * @returns Promise resolved with array of name of the applications.
              */
-            function listAudittedApplications(createdBy) {
+            function listAudittedApplications() {
+                var createdBy = securityService.currentUser();
                 return swdbDAO.executeStatement(entities.AuditEntry.listApplicationsStatement, [createdBy])
                     .then(function (results) {
                         return results.map(function (r) {
@@ -125,7 +138,6 @@
              * The list can be optionally paginated.
              * 
              * @param String refApplication 
-             * @param String createdBy 
              * @param {} paginationOptions dicitionary: 
              *              { 
              *              "pagenumber": Integer, // page to fetch 
@@ -133,7 +145,8 @@
              *              }
              * @returns Promise resolved with AuditEntry list 
              */
-            function listEntries(refApplication, createdBy, paginationOptions) {
+            function listEntries(refApplication, paginationOptions) {
+                var createdBy = securityService.currentUser();
                 var query = entities.AuditEntry.listPattern.format(refApplication, createdBy);
                 var options = { orderby: "createDate", orderbyascendig: false };
                 if (!!paginationOptions) {
@@ -160,7 +173,7 @@
              * @returns Promise resolved with the entity 
              */
             function getTrackedEntity(entry) {
-                return swdbDAO.findById("DataEntry", entry.refId);
+                return swdbDAO.findById("DataEntry", entry.refClientId);
             }
 
             //#endregion
@@ -185,4 +198,4 @@
     })(audit);
     //#endregion
 
-})(angular);
+})(angular, persistence);

@@ -2,10 +2,9 @@
     "use strict";
 
     app.controller("AuditEntryListController",
-        ["$scope", "offlineAuditService", "securityService", "formatService", "$stateParams", "routeService", "$ionicHistory",
-            function ($scope, offlineAuditService, securityService, formatService, $stateParams, routeService, $ionicHistory) {
+        ["$scope", "offlineAuditService", "formatService", "$stateParams", "routeService", "$ionicHistory",
+            function ($scope, offlineAuditService, formatService, $stateParams, routeService, $ionicHistory) {
 
-                var currentUser = securityService.currentUser();
                 var application = $stateParams.application;
 
                 $scope.data = {
@@ -38,7 +37,7 @@
                         pagenumber: $scope.paginationData.currentPage,
                         pagesize: $scope.paginationData.pageSize
                     };
-                    offlineAuditService.listEntries(application, currentUser, options)
+                    offlineAuditService.listEntries(application, options)
                         .then(function (entries) {
                             // update pagination data
                             $scope.paginationData.hasMoreAvailable = (entries && entries.length >= $scope.paginationData.pageSize);

@@ -4,7 +4,7 @@
 mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService) {
     'use strict';
 
 
@@ -351,15 +351,11 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             return routeService.go("main.cruddetail.maininput");
         },
 
-        loadDetailByMaximoUid: function (application,schema, refId) {
+        loadDetailByMaximoUid: function (application, schema, refId) {
             var that = this;
-            var userId =schema.userIdFieldName;
-            return swdbDAO.findByQuery("DataEntry", 'application = \'{0}\' and datamap like \'%"{1}":"{2}"%\''.format(application, userId,refId))
+            maximoDataService.loadItemByMaximoUid(application, schema, refId)
                 .then(function (item) {
-                    if (item.length == 0) {
-                        return $q.reject();
-                    }
-                    return that.loadDetail(item[0]);
+                    return that.loadDetail(item);
                 });
         },
 
