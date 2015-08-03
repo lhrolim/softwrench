@@ -1,5 +1,4 @@
-﻿(function (angular) {
-
+﻿(function (angular, persistence) {
     "use strict";
 
     try {
@@ -50,6 +49,9 @@
             }
 
             function instantiateEntry(dict) {
+                if (!dict["createdBy"]) {
+                    dict["createdBy"] = securityService.currentUser();
+                }
                 validateEntryField(dict, "operation");
                 validateEntryField(dict, "refApplication");
                 validateEntryField(dict, "refClientId");
@@ -73,15 +75,15 @@
              *  refApplication: String, // name of the application/entity being affected
              *  refClientId: String, // local id of the entity being affected
              *  refId: String, // server's id of the entity being affected
-             *  createdBy: String, // username of the user who triggered the operation
+             *  createdBy: String, // username of the user who triggered the operation -> defaults to current logged user if omitted
              * }
-             * The fields "operation", "refApplication", "refClientId" and "createdBy" are mandatory.
+             * The fields "operation", "refApplication" and "refClientId" are mandatory.
              * The other fields can be ommited depending on the action being executed, this method is intended for registering
              * complete entries though. See other methods (such as {@link #registerEvent}) for registering customized entries.
              * 
              * @param {} entry dictionary in the aforementioned format
              * @returns Promise resolved with the registered AuditEntry
-             * @throws Error if any of the mandatory fields is ommited
+             * @throws Error if any of the mandatory fields is ommited and/or there's no user logged in
              */
             function registerEntry(entry) {
                 return instantiateEntry(entry).then(function (auditentry) {
@@ -100,13 +102,12 @@
              * @param String operation name of the operation/event being tracked
              * @param String refApplication name of the application/entity being affected by the event
              * @param String refClientId local id of the enity being affected by the event
-             * @param String refId server's id of the enity being affected by the event
-             * @param String createdBy username of the user who triggered the event
+             * @param String refId server's id of the entity being affected by the event
+             * @param String createdBy username of the user who triggered the event -> defaults to current logged user if omitted  
              * @return Promise resolved with the registered AuditEntry
-             * @throws Error if any of the parameters is ommited
+             * @throws Error if any of the parameters is omitted and/or there's no user logged in
              */
-            function registerEvent(operation, refApplication, refClientId, refId) {
-				var createdBy = securityService.currentUser();
+            function registerEvent(operation, refApplication, refClientId, refId, createdBy) {
                 var entry = {
                     operation: operation,
                     refApplication: refApplication,
@@ -120,10 +121,10 @@
             /**
              * Lists all apllications that have AuditEntries related to them (refApplication).
              * 
-             * @param createdBy 
              * @returns Promise resolved with array of name of the applications.
              */
-            function listAudittedApplications(createdBy) {
+            function listAudittedApplications() {
+                var createdBy = securityService.currentUser();
                 return swdbDAO.executeStatement(entities.AuditEntry.listApplicationsStatement, [createdBy])
                     .then(function (results) {
                         return results.map(function (r) {
@@ -137,7 +138,6 @@
              * The list can be optionally paginated.
              * 
              * @param String refApplication 
-             * @param String createdBy 
              * @param {} paginationOptions dicitionary: 
              *              { 
              *              "pagenumber": Integer, // page to fetch 
@@ -145,7 +145,8 @@
              *              }
              * @returns Promise resolved with AuditEntry list 
              */
-            function listEntries(refApplication, createdBy, paginationOptions) {
+            function listEntries(refApplication, paginationOptions) {
+                var createdBy = securityService.currentUser();
                 var query = entities.AuditEntry.listPattern.format(refApplication, createdBy);
                 var options = { orderby: "createDate", orderbyascendig: false };
                 if (!!paginationOptions) {
@@ -197,4 +198,4 @@
     })(audit);
     //#endregion
 
-})(angular);
+})(angular, persistence);

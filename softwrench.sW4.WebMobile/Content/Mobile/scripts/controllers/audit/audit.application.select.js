@@ -2,17 +2,15 @@
     "use strict";
 
     app.controller("AuditApplicationSelectController",
-        ["$scope", "offlineAuditService", "securityService", "routeService",
+        ["$scope", "offlineAuditService", "routeService",
             function ($scope, offlineAuditService, securityService, routeService) {
-
-                var currentUser = securityService.currentUser();
 
                 $scope.data = {
                     applications: []
                 };
 
                 var loadApplications = function () {
-                    offlineAuditService.listAudittedApplications(currentUser)
+                    offlineAuditService.listAudittedApplications()
                         .then(function (applications) {
                             $scope.data.applications = applications;
                         });

@@ -5,12 +5,12 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications").factory("paeAssetService", [
-        "scanningCommonsService", "$log", "crudContextService", "offlineAuditService","$ionicPopup",
+        "scanningCommonsService", "$log", "crudContextService", "offlineAuditService", "$ionicPopup", "maximoDataService",
         paeAssetService]);
 
     //#endregion
 
-    function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup) {
+    function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup, maximoDataService) {
 
         //#region Service Instance
 
@@ -25,6 +25,21 @@
 
         //#region Utils
 
+        function initScanEventListener(schema, parameters) {
+            scanningCommonsService.registerScanCallBackOnSchema(parameters, function (data) {
+                var loadedAsset = null;
+                maximoDataService.loadItemByMaximoUid("asset", schema, data)
+                    .then(function (asset) {
+                        return offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId);
+                    })
+                    .then(function (auditentry) {
+                        return crudContextService.loadDetail(loadedAsset);
+                    })
+                    .catch(function (error) {
+                        $ionicPopup.alert({ title: error });
+                    });
+            });
+        }
 
         //#endregion
 
@@ -32,28 +47,14 @@
 
 
         function initAssetDetailListener(scope, schema, datamap, parameters) {
-            scanningCommonsService.registerScanCallBackOnSchema(parameters, function(data) {
-                crudContextService.loadDetailByMaximoUid("asset",schema, data);
-                offlineAuditService.registerEvent("scan", "asset", data);
-            });
+            initScanEventListener(schema, parameters);
         };
 
         function initAssetGridListener(scope, schema, datamap, parameters) {
-            scanningCommonsService.registerScanCallBackOnSchema(parameters, function(data) {
-                crudContextService.loadDetailByMaximoUid("asset", schema,data).then(function(item) {
-                    offlineAuditService.registerEvent("scan", "asset", data);
-                }).catch(function() {
-                    $ionicPopup.alert({
-                        title: "Asset {0} not found".format(data),
-                    });
-                });
-                
-            });
+            initScanEventListener(schema, parameters);
         };
 
         //#endregion
-
-
     }
 
 
