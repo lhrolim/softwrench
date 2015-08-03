@@ -95,7 +95,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             //basically samething as LocalITC, but without appending EU queries for SR, have to register them back here...
             _wcFacade.Register("servicerequest", R0017Method("SRWhereClause"), ForModule(fr.XItc));
 
-            _wcFacade.Register("asset", R0017Method("AssetWhereClause"), ForModule(fr.XItc));
+            _wcFacade.Register("asset", "@assetControlWhereClauseProvider.AssetWhereClauseIfRegionSelected", ForModule(fr.XItc));
             _wcFacade.Register("imac", R0017Method("ImacWhereClause"), ForModule(fr.XItc));
             _wcFacade.Register("incident", R0017Method("IncidentWhereClause"), ForModule(fr.XItc));
             //problem whereclause registered as basic one

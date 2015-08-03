@@ -135,6 +135,12 @@ namespace softWrench.sW4.Web {
         //        }
         //
         protected void Application_EndRequest(object sender, EventArgs e) {
+            if (ApplicationConfiguration.IsLocal() || Response.ContentType == "text/html") {
+                //fix back button browser bug that would "relogin" users (would show page that was cached)
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+                Response.Cache.SetNoStore();
+            }
             var context = new HttpContextWrapper(Context);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 if ("~/Signout/SignOutClosePage".Equals(Request.AppRelativeCurrentExecutionFilePath, StringComparison.CurrentCultureIgnoreCase)) {

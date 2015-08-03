@@ -174,7 +174,7 @@ namespace softwrench.sw4.Hapag.Security {
             };
             var result = result1;
             user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] = result;
-            
+
             if (user.IsInGroup(HapagPersonGroupConstants.XITC) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
                 //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
                 //TODO: move to a better place...
@@ -422,7 +422,7 @@ namespace softwrench.sw4.Hapag.Security {
             return options;
         }
 
-        public HlagGroupedLocation[] GetLocationsOfLoggedUser(bool forceXITCContext=false) {
+        public HlagGroupedLocation[] GetLocationsOfLoggedUser(bool forceXITCContext = false) {
             var user = SecurityFacade.CurrentUser();
             var locations = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
             Log.DebugFormat("locations of user {0}: {1}", user.Login, locations);
@@ -431,24 +431,14 @@ namespace softwrench.sw4.Hapag.Security {
                 return null;
             }
             //            var groupedLocations = locations.GroupedLocations;
+            if (ctx.MetadataParameters.ContainsKey("region") && HlagLocationUtil.ValidateRegionSelectionIsAllowed(ctx, user, forceXITCContext)) {
+                return HandleSelectedRegion(ctx);
+            }
+
+
             if (forceXITCContext || ctx.IsInModule(FunctionalRole.XItc)) {
                 if (user.IsWWUser()) {
-                    HlagGroupedLocation[] hlagGroupedLocations;
-                    if (ctx.MetadataParameters.ContainsKey("region")) {
-                        //HAP-994
-                        var parentRegion = ctx.MetadataParameters["region"];
-                        Log.DebugFormat("Region {0} was previously selected", parentRegion);
-                        try {
-                            hlagGroupedLocations =
-                                FindLocationsOfParentLocation(new PersonGroup { Name = parentRegion })
-                                    .ToArray();
-                        } catch (Exception) {
-                            Log.WarnFormat("region {0} not found, applying default", parentRegion);
-                            hlagGroupedLocations = FindAllLocations().ToArray();
-                        }
-                    } else {
-                        hlagGroupedLocations = FindAllLocations().ToArray();
-                    }
+                    var hlagGroupedLocations = FindAllLocations().ToArray();
                     Log.DebugFormat("found {0} location entries for R0017", hlagGroupedLocations.Length);
                     return hlagGroupedLocations;
                 }
@@ -460,6 +450,24 @@ namespace softwrench.sw4.Hapag.Security {
             var result = locations.DirectGroupedLocations.ToArray();
             Log.DebugFormat("found {0} location entries for R0017", result.Length);
             return result;
+        }
+
+      
+
+        private HlagGroupedLocation[] HandleSelectedRegion(ContextHolder ctx) {
+            HlagGroupedLocation[] hlagGroupedLocations;
+            //HAP-994
+            var parentRegion = ctx.MetadataParameters["region"];
+            Log.DebugFormat("Region {0} was previously selected", parentRegion);
+            try {
+                hlagGroupedLocations =
+                    FindLocationsOfParentLocation(new PersonGroup { Name = parentRegion })
+                        .ToArray();
+            } catch (Exception) {
+                Log.WarnFormat("region {0} not found, applying default", parentRegion);
+                hlagGroupedLocations = FindAllLocations().ToArray();
+            }
+            return hlagGroupedLocations;
         }
 
         private string BuildCostCentersFromMaximo(string subCustomer, string personId) {

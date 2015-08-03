@@ -83,5 +83,8 @@ namespace softwrench.sw4.Hapag.Data.Init {
             return role.GetName().Equals(ctx.Module, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        public static bool IsInAnyModule(this ContextHolder ctx, params FunctionalRole[] roles) {
+            return roles.Any(role => role.GetName().Equals(ctx.Module, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }

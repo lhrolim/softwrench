@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHibernate.Loader.Custom.Sql;
+using softwrench.sw4.Hapag.Data;
+using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
+using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Util;
@@ -79,6 +83,14 @@ namespace softwrench.sw4.Hapag.Security {
                 sb.Append("'").Append(otherCostCenter).Append("'").Append(",");
             }
             return sb.ToString(0, sb.Length - 1);
+        }
+
+        public static bool ValidateRegionSelectionIsAllowed(ContextHolder ctx, InMemoryUser user,bool forceXITCContext=false) {
+            if (forceXITCContext || ctx.IsInModule(FunctionalRole.XItc)) {
+                return user.IsWWUser();
+            }
+            return ctx.IsInAnyModule(FunctionalRole.Tom, FunctionalRole.Itom, FunctionalRole.Purchase,
+                FunctionalRole.AssetControl);
         }
 
         //        public static List<HlagAssociationLocation> ConvertToAssociationList(IEnumerable<HlagLocation> hlagLocations) {
