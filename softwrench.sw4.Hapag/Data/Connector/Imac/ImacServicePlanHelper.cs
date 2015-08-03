@@ -15,26 +15,31 @@ using System.Xml.Serialization;
 namespace softwrench.sw4.Hapag.Data.Connector.Imac {
     public class ImacServicePlanHelper : IImacServicePlanHelper {
 
-        private static ILog LOG = LogManager.GetLogger(typeof(ImacServicePlanHelper));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ImacServicePlanHelper));
 
         //TODO:discover this
         private const string HamburgLocation = ISMConstants.DefaultCustomerName;
         private const string HamburgLocation2 = ISMConstants.HamburgLocation2;
+        private const string HLULocation = ISMConstants.HAP1071Location;
 
         public IEnumerable<Activity> LoadFromServicePlan(string schemaid, CrudOperationData jsonObject) {
             if ("installstd".Equals(schemaid)) {
-                return HandleIbmTechMatrix(jsonObject, "HLAINPCS", "HLAINPCH", "HLAINPCW");
+                return HandleIbmTechMatrix(jsonObject, "HLAINPCS", "HLAINPCH", "HLAINPCW", "HLAINPCH_HLU", "HLAINPCS_HLU");
             }
             if ("installlan".Equals(schemaid)) {
                 if ("lan".Equals(jsonObject.GetAttribute("lantype"))) {
-                    return HandleIbmTechMatrix(jsonObject, "HLAINPRS", "HLAINPRH", "HLAINPRW");
+                    return HandleIbmTechMatrix(jsonObject, "HLAINPRS", "HLAINPRH", "HLAINPRW", "HLAINPRH_HLU", "HLAINPRS_HLU");
                 }
-                return HandleIbmTechMatrix(jsonObject, "HLAINPRSEP", "HLAINPRHHP", "HLAINPRWWP");
+                return HandleIbmTechMatrix(jsonObject, "HLAINPRSEP", "HLAINPRHHP", "HLAINPRWWP", "HLAINPRHHP_HLU", "HLAINPRSEP_HLU");
             }
 
             if ("installother".Equals(schemaid)) {
                 var classification = jsonObject.GetAttribute("classification") ?? "";
-                return classification.Equals("43290200") ? DoLoadFromFile("HLAINVPCS") : DoLoadFromFile("HLAINOTHER");
+                if (!classification.Equals("43290200")) {
+                    return DoLoadFromFile("HLAINOTHER");
+                }
+                return HandleIbmTechMatrix(jsonObject, "HLAINVPCS", "HLAINVPCS", "HLAINVPCS", "HLAINVPCS_HLU",
+                    "HLAINVPCS_HLU");
             }
             var lanType = jsonObject.GetAttribute("lantype") as string ?? "";
             var isLan = lanType.Equals("lan", StringComparison.CurrentCultureIgnoreCase);
@@ -57,24 +62,24 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
                 }
                 if (fromLocation.Equals(toLocation)) {
                     if (currentITC.Equals(toITC)) {
-                        return HandleIbmTechMatrix(jsonObject, "HLAMVINS", "HLAMVINH", "HLAMVINW");
+                        return HandleIbmTechMatrix(jsonObject, "HLAMVINS", "HLAMVINH", "HLAMVINW", "HLAMVINH_HLU", "HLAMVINS_HLU");
                     }
 
                     if (isIdleStatus) {
-                        return HandleIbmTechMatrix(jsonObject, "HLAMVINCOS", "HLAMVINCOH", null);
+                        return HandleIbmTechMatrix(jsonObject, "HLAMVINCOS", "HLAMVINCOH", null, "HLAMVINCOH_HLU", "HLAMVINCOS_HLU");
                     }
 
 
 
                     if (classification.StartsWith("432121")) {
                         if (isLan) {
-                            return HandleIbmTechMatrix(jsonObject, "HLARMPRSIO", "HLARMPRHIO", "HLARMPRWIO");
+                            return HandleIbmTechMatrix(jsonObject, "HLARMPRSIO", "HLARMPRHIO", "HLARMPRWIO", "HLARMPRHIO_HLU", "HLARMPRSIO_HLU");
                         }
                         if ("lan/host".Equals(lanType) || isLanHostPap) {
-                            return HandleIbmTechMatrix(jsonObject, "HLARMPPSIO", "HLARMPPHIO", "HLARMPPWIO");
+                            return HandleIbmTechMatrix(jsonObject, "HLARMPPSIO", "HLARMPPHIO", "HLARMPPWIO", "HLARMPPHIO_HLU", "HLARMPPSIO_HLU");
                         }
                     }
-                    return HandleIbmTechMatrix(jsonObject, "HLARMPCSIO", "HLARMPCHIO", "HLARMPCWIO");
+                    return HandleIbmTechMatrix(jsonObject, "HLARMPCSIO", "HLARMPCHIO", "HLARMPCWIO", "HLARMPCHIO_HLU", "HLARMPCSIO_HLU");
                 }
 
                 if (currentITC.Equals(toITC)) {
@@ -83,23 +88,26 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
                     }
                     if (classification.StartsWith("432121")) {
                         if (isLan) {
-                            return DoLoadFromFile("HLARMPRSOS");
+                            return HandleIbmTechMatrix2Cases(jsonObject, "HLARMPRSOS", "HLARMPRSOS_HLU");
                         }
                         if (isLanHostPap) {
-                            return DoLoadFromFile("HLARMPPSOS");
+                            return HandleIbmTechMatrix2Cases(jsonObject, "HLARMPPSOS", "HLARMPPSOS_HLU");
                         }
                     }
-                    return DoLoadFromFile("HLARMPCSOS");
+                    return HandleIbmTechMatrix2Cases(jsonObject, "HLARMPCSOS", "HLARMPCSOS_HLU");
                 }
                 if (classification.StartsWith("432121")) {
                     if (isLan) {
-                        return DoLoadFromFile("HLARMPRSOO");
+                        return HandleIbmTechMatrix2Cases(jsonObject, "HLARMPRSOO", "HLARMPRSOO_HLU");
                     }
                     if (isLanHostPap) {
-                        return DoLoadFromFile("HLARMPPSOO");
+                        return HandleIbmTechMatrix2Cases(jsonObject, "HLARMPPSOO", "HLARMPPSOO_HLU");
                     }
                 }
-                return DoLoadFromFile("HLARMPCSOO");
+                if (!isIdleStatus) {
+                    return HandleIbmTechMatrix2Cases(jsonObject, "HLARMPCSOO", "HLARMPCSOO_HLU");
+                }
+                return DoLoadFromFile("HLAMVOTCOS");
             }
 
             if ("update".Equals(schemaid)) {
@@ -107,18 +115,18 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
             }
 
             if ("add".Equals(schemaid)) {
-                return HandleIbmTechMatrix(jsonObject, "HLAADDCOMS", "HLAADDCOMH", "HLAADDCOMW");
+                return HandleIbmTechMatrix(jsonObject, "HLAADDCOMS", "HLAADDCOMH", "HLAADDCOMW", "HLAADDCOMH_HLU", "HLAADDCOMS");
             }
 
             if ("removestd".Equals(schemaid)) {
-                return HandleIbmTechMatrix(jsonObject, "HLARVPCS", "HLARVPCH", "HLARVPCW");
+                return HandleIbmTechMatrix(jsonObject, "HLARVPCS", "HLARVPCH", "HLARVPCW", "HLARVPCH_HLU", "HLARVPCS_HLU");
             }
 
             if ("removelan".Equals(schemaid)) {
                 if (isLan) {
-                    return HandleIbmTechMatrix(jsonObject, "HLARVPRS", "HLARVPRH", "HLARVPRW");
+                    return HandleIbmTechMatrix(jsonObject, "HLARVPRS", "HLARVPRH", "HLARVPRW", "HLARVPRH_HLU", "HLARVPRS_HLU");
                 }
-                return HandleIbmTechMatrix(jsonObject, "HLARVPRSEP", "HLARVPRHHP", "HLARVPRWWP");
+                return HandleIbmTechMatrix(jsonObject, "HLARVPRSEP", "HLARVPRHHP", "HLARVPRWWP", "HLARVPRHHP_HLU", "HLARVPRSEP_HLU");
             }
 
             if ("removeother".Equals(schemaid)) {
@@ -126,14 +134,14 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
             }
 
             if ("replacestd".Equals(schemaid)) {
-                return HandleIbmTechMatrix(jsonObject, "HLARPPCS", "HLARPPCH", "HLARPPCW");
+                return HandleIbmTechMatrix(jsonObject, "HLARPPCS", "HLARPPCH", "HLARPPCW", "HLARPPCH_HLU", "HLARPPCS_HLU");
             }
 
             if ("replacelan".Equals(schemaid)) {
                 if (isLan) {
-                    return HandleIbmTechMatrix(jsonObject, "HLARPPRS", "HLARPPRH", "HLARPPRW");
+                    return HandleIbmTechMatrix(jsonObject, "HLARPPRS", "HLARPPRH", "HLARPPRW", "HLARPPRH_HLU", "HLARPPRS_HLU");
                 }
-                return HandleIbmTechMatrix(jsonObject, "HLARPPRSEP", "HLARPPRHHP", "HLARPPRWWP");
+                return HandleIbmTechMatrix(jsonObject, "HLARPPRSEP", "HLARPPRHHP", "HLARPPRWWP", "HLARPPRHHP_HLU", "HLARPPRSEP_HLU");
             }
 
             if ("replaceother".Equals(schemaid)) {
@@ -153,20 +161,41 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
             //            return SecurityFacade.CurrentUser().MaximoPersonId;
         }
 
-        private IEnumerable<Activity> HandleIbmTechMatrix(CrudOperationData jsonObject, string notechnicianFile, string hamburgLocation, string otherLocation) {
+        private IEnumerable<Activity> HandleIbmTechMatrix(CrudOperationData jsonObject, string notechnicianFileExceptHlu, string hamburgLocationTechinician,
+            string techinicianExceptHamburgHlu, string hluTechinician, string hluNonTechinician) {
             if ("no".Equals(jsonObject.GetAttribute("ibmtechnician"))) {
-                return DoLoadFromFile(notechnicianFile);
+                if (IsHlu(jsonObject)) {
+                    return DoLoadFromFile(hluNonTechinician);
+                }
+                return DoLoadFromFile(notechnicianFileExceptHlu);
             }
+            // techinician
             if (IsHamburg(jsonObject)) {
-                return DoLoadFromFile(hamburgLocation);
+                return DoLoadFromFile(hamburgLocationTechinician);
+            } if (IsHlu(jsonObject)) {
+                return DoLoadFromFile(hluTechinician);
             }
-            return DoLoadFromFile(otherLocation);
+            return DoLoadFromFile(techinicianExceptHamburgHlu);
+        }
+
+        private IEnumerable<Activity> HandleIbmTechMatrix2Cases(CrudOperationData jsonObject, string nonHlu, string hlu) {
+
+            if (IsHlu(jsonObject)) {
+                return DoLoadFromFile(hlu);
+            }
+            return DoLoadFromFile(nonHlu);
         }
 
         private static bool IsHamburg(CrudOperationData jsonObject) {
             var attribute = jsonObject.GetAttribute("fromlocation") as string;
             var hh1Location = ISMConstants.NormalizeLocation(attribute);
             return HamburgLocation.Equals(hh1Location) || HamburgLocation2.Equals(hh1Location);
+        }
+
+        private static bool IsHlu(CrudOperationData jsonObject) {
+            var attribute = jsonObject.GetAttribute("fromlocation") as string;
+            var hh1Location = ISMConstants.NormalizeLocation(attribute);
+            return HLULocation.Equals(hh1Location);
         }
 
         public static IEnumerable<Activity> DoLoadFromFile(string path) {
@@ -176,7 +205,7 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
                     businessMatrixPath = businessMatrixPath + "\\";
                 }
                 var fullPath = businessMatrixPath + path + ".txt";
-                LOG.DebugFormat("loading business matrix out of {0}", fullPath);
+                Log.DebugFormat("loading business matrix out of {0}", fullPath);
                 try {
                     using (var reader = new StreamReader(fullPath)) {
                         return DoParseXML(reader);

@@ -7,6 +7,7 @@
         public const string ChangeAssignedGroup = "I-SM-DE-SDM-SDM-HLC-SDM";
         public const string DefaultCustomerName = "HLC-DE-HH1";
         public const string HamburgLocation2 = "HLC-DE-HH2";
+        public const string HAP1071Location = "HLC-DE-HLU";
         public const string DefaultBaseLocation = "HLC-00";
         public const string LocationId = "ESS6";
         public const string OrganizationId = "ITD-ESS6";
