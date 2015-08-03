@@ -9,6 +9,7 @@
 
         //#region Utils
 
+        //#region DataEntry Rollback
         /**
          * internal rollback context
          */
@@ -85,6 +86,8 @@
             rollbackContext.submittingEntries = [];
         };
 
+        //#endregion
+
         function generateDatamapDiff(batchItem) {
             if (batchItem.operation) {
                 return batchItem.operation.datamap;
@@ -95,6 +98,61 @@
             //TODO: implement the diff, passing also the ID + siteid all the time
             return datamap;
         };
+
+        //#region Post-Batch Handlers
+        var postBatchHandlers = [];
+        
+        /**
+         * Adds a handler callback to be executed after a Batch is created.
+         * The callback function receives the created Batch as it's single argument.
+         * The callback doesn't need to return a concrete value (can return null, undefined or void)
+         * but if it returns a value it should be a either a dictionary or a promise that resolves with a dictionary.
+         * 
+         * @param function handler 
+         */
+        function onBatchCreated(handler) {
+            postBatchHandlers.push(handler);
+        }
+
+        function executePostBatchHandlers(batch) {
+            var promises = [];
+            angular.forEach(postBatchHandlers, function (handler) {
+                var result = handler(batch);
+                promises.push($q.when(result));
+            });
+            return $q.all(promises).then(function (results) {
+                if (!results) return results;
+                // defragment the results array
+                return results.filter(function (result) {
+                    return !!result;
+                });
+            });
+        }
+
+        function onAfterBatchCreated(batch) {
+            return executePostBatchHandlers(batch).then(function (dataList) {
+                if (!dataList) {
+                    return batch;
+                }
+                batch["additionaldata"] = {};
+                angular.forEach(dataList, function (data) {
+                    if (!data) {
+                        return;
+                    }
+                    // adds each additional data in the batch
+                    for (var key in data) {
+                        if (!data.hasOwnProperty(key)) continue;
+                        batch["additionaldata"][key] = data[key];
+                    }
+                });
+                return batch;
+            });
+        }
+
+        function onSubmitResponseReceived(localBatch, remoteBatch) {
+            delete localBatch["additionaldata"];
+            return updateBatch(localBatch, remoteBatch);
+        }
 
         //#endregion
 
@@ -218,14 +276,18 @@
                 application: batch.application,
                 remoteId: batch.id
             }
-            var jsonToSend = angular.toJson({ items: items });
+            var objectToSend = { items: items };
+            if (batch["aditionaldata"]) {
+                objectToSend["additionaldata"] = batch["aditionaldata"];
+            }
+            var jsonToSend = angular.toJson(objectToSend);
             // performing the request
             log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
             return restService
                 .postPromise("Mobile", "SubmitBatch", batchParams, jsonToSend)
                 .then(function (response) {
                     var returnedBatch = response.data;
-                    return updateBatch(batch, returnedBatch);
+                    return onSubmitResponseReceived(batch, returnedBatch);
                 });
         };
 
@@ -329,6 +391,9 @@
                         item.batch = batch;
                     }
                     return saveBatch(batch, batchItemsToCreate, dataEntries);
+
+                }).then(function (batch) {
+                    return onAfterBatchCreated(batch);
                 });
         }
 
@@ -343,6 +408,7 @@
             createBatch: createBatch,
             saveBatch: saveBatch,
             updateBatch: updateBatch,
+            onBatchCreated: onBatchCreated
         };
 
         return api;

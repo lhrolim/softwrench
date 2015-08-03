@@ -143,6 +143,7 @@
              *              "pagenumber": Integer, // page to fetch 
              *              "pagesize": Integer // number of items per page
              *              }
+             *           won't paginate if parameter is omitted
              * @returns Promise resolved with AuditEntry list 
              */
             function listEntries(refApplication, paginationOptions) {
