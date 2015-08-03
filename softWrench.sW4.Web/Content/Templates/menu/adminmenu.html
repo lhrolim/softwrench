@@ -27,7 +27,7 @@
                 </li>
                 <li class="dropdown-submenu" ng-show="isClientAdmin">
                     <a data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-gear fa-fw"></i>&ensp;Admin
+                        <i class="fa fa-wrench fa-fw"></i>&ensp;Admin
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li class="dropdown-submenu">
@@ -39,10 +39,10 @@
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-wrench fa-fw"></i>&ensp;Setup</a>
+                            <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i>&ensp;Setup</a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)"><i class="fa fa-wrench fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
                                 <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
                             </ul>
                         </li>

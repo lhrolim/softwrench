@@ -1,52 +1,5 @@
 ﻿var app = angular.module('sw_layout');
 
-function mapDOM(element, json) {
-    var treeObject = {};
-
-    // If string convert to document Node
-    if (typeof element === "string") {
-        if (window.DOMParser) {
-            parser = new DOMParser();
-            docNode = parser.parseFromString(element, "text/xml");
-        } else { // Microsoft strikes again
-            docNode = new ActiveXObject("Microsoft.XMLDOM");
-            docNode.async = false;
-            docNode.loadXML(element);
-        }
-        element = docNode.firstChild;
-    }
-
-    //Recursively loop through DOM elements and assign properties to object
-    function treeHTML(element, object) {
-        object["type"] = element.nodeName;
-        var nodeList = element.childNodes;
-        if (nodeList != null) {
-            if (nodeList.length) {
-                object["content"] = [];
-                for (var i = 0; i < nodeList.length; i++) {
-                    if (nodeList[i].nodeType == 3) {
-                        object["content"].push(nodeList[i].nodeValue);
-                    } else {
-                        object["content"].push({});
-                        treeHTML(nodeList[i], object["content"][object["content"].length - 1]);
-                    }
-                }
-            }
-        }
-        if (element.attributes != null) {
-            if (element.attributes.length) {
-                object["attributes"] = {};
-                for (var i = 0; i < element.attributes.length; i++) {
-                    object["attributes"][element.attributes[i].nodeName] = element.attributes[i].nodeValue;
-                }
-            }
-        }
-    }
-    treeHTML(element, treeObject);
-
-    return (json) ? JSON.stringify(treeObject) : treeObject;
-}
-
 app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
     var log = $log.getInstance('sw4.breadcrumb');
     //log.debug($rootScope);
@@ -71,27 +24,34 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
                     var mainItem = $('.admin-area .admin-menu > a');
 
                     if (mainItem.hasOwnProperty(length)) {
-                        log.debug(mainItem, mainItem[0].firstChild);
+                        //log.debug(mainItem, mainItem[0].firstChild);
 
                         template += '<div class="part">';
-                        template += '<a data-toggle="dropdown" aria-expanded="false">';
+                        //template += '<a data-toggle="dropdown" aria-expanded="false">';
                         template += mainItem[0].firstElementChild.outerHTML;
                         template += '&ensp;';
-                        template += 'Admin';
-                        template += '&ensp;<i class="fa fa-caret-down"></i>';
+                        template += 'Settings';
+                        //template += '&ensp;<i class="fa fa-caret-down"></i>';
                         template += '</a>';
-
                     }
 
                     var mainMenu = $('.admin-area .admin-menu > .dropdown-menu');
                     var leafs = getAdminLeafs(log, mainMenu[0].children);
+                    log.debug(mainMenu, leafs);
 
                     var adminMenu = {};
                     adminMenu.leafs = leafs;
+                    adminMenu.tpye = 'admin';
 
-                    template += getChildMenu(log, adminMenu.leafs, null, menuService);
+                    //template += getChildMenu(log, adminMenu.leafs, null, menuService);
                     template += '</div>';
 
+                    //append child parts
+                    var foundPath = findCurrentPage(log, adminMenu.leafs, scope.title, adminMenu);
+                    if (foundPath) {
+                        template += seperator;
+                        template += foundPath;
+                    } 
                 } else {
                     template = getBreadCrumbHTML(log, scope.menu, scope.title, menuService);
                 }
@@ -105,7 +65,6 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
 
     }
 });
-
 
 app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService) {
     var log = $log.getInstance('sw4.breadcrumb Menu Item');
@@ -150,7 +109,6 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService) {
     }
 });
 
-
 function getAdminLeafs(log, kids) {
     var leafs = [];
 
@@ -164,26 +122,57 @@ function getAdminLeafs(log, kids) {
                     var icon = link.firstElementChild;
                     var title = link.innerText.trim();
 
+                    //log.debug(link.attributes['ng-click']);
+
                     if (icon != null) {
                         if (icon.className != undefined) {
-                            iconClass = icon.className;
+                            //iconClass = icon.className;
+
+                            for (i = 0; i < icon.classList.length; i++) {
+                                if (icon.classList[i] != 'fa-fw') {
+                                    iconClass += icon.classList[i] + ' ';
+                                }
+                            }
                         }
                     }
 
-                    var newObject = {};
-                    newObject.icon = iconClass.trim();
-                    newObject.title = title;
-                    //newObject.type = '';
+                    //log.debug(kids[idx].innerHTML);
 
-                    if (kids[idx].children != null && kids[idx].children.length > 0) {
-                        var childLeafs = getAdminLeafs(log, kids[idx].children);
+                    //log.debug(kids[idx].innerHTML.indexOf("doAction") > -1);
 
-                        if (childLeafs.length > 0) {
-                            newObject.leafs = childLeafs;
+                    if (kids[idx].className != 'user') {
+                        var newObject = {};
+                        newObject.icon = iconClass.trim();
+                        newObject.title = title;
+
+                        if (link.attributes['ng-click']) {
+                            newObject.click = link.attributes['ng-click'].nodeValue;
                         }
-                    }
 
-                    leafs.push(newObject);
+                        //newObject.type = '';
+
+                        //if  (kids[idx].innerHTML.indexOf("doAction") > -1) {
+                        //    newObject.type = 'ActionMenuItemDefinition';
+                        //}
+
+                        //if (leafs[id].type == 'ActionMenuItemDefinition') {
+                        //    path += 'doAction';
+                        //} else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
+                        //    path += 'goToApplication';
+                        //} else if (leafs[id].type == 'ExternalLinkMenuItemDefinition') {
+                        //    path += '<a target="_blank" href="{0}"'.format(leaf.link);
+                        //}
+
+                        if (kids[idx].children != null && kids[idx].children.length > 0) {
+                            var childLeafs = getAdminLeafs(log, kids[idx].children);
+
+                            if (childLeafs.length > 0) {
+                                newObject.leafs = childLeafs;
+                            }
+                        }
+
+                        leafs.push(newObject);
+                    }
 
                     break;
 
@@ -226,8 +215,78 @@ function getBreadCrumbHTML(log, menu, current, menuService) {
     return path;
 }
 
+function getChildMenu(log, leafs, parent, menuService) {
+    var path = '';
+    var searchLeafs = null;
+
+    //if no parent use the get the whole menu, else the child items from the parent
+    if (parent == null) {
+        searchLeafs = leafs
+    } else {
+        if (parent.leafs != null) {
+            searchLeafs = parent.leafs;
+        }
+    }
+
+    if (searchLeafs != null) {
+        path += '<ul class="dropdown-menu" role="menu" bc-menu>';
+        for (var id in searchLeafs) {
+            var leaf = searchLeafs[id];
+            if (leaf.title != null) {
+                var childMenu = getChildMenu(log, leaf.leafs, leaf, menuService);
+
+                //if child menu found, display as submenu
+                if (childMenu) {
+                    path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
+                } else {
+                    path += '<li><a bc-menu-item ng-click="';
+
+                    if (leaf.click) {
+                        //path += '<a ng-click="';
+                        path += leaf.click;
+                        path += '">';
+                    } else {
+                        //path += '<a bc-menu-item ng-click="';
+
+                        if (leaf.type == 'ActionMenuItemDefinition') {
+                            path += 'doAction';
+                        } else if (leaf.type == 'ApplicationMenuItemDefinition') {
+                            path += 'goToApplication';
+                        } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
+                            if (!leaf.link.startsWith("http")) {
+                                leaf.link = "http://" + leaf.link;
+                            }
+                            var externalLink = menuService.parseExternalLink(leaf);
+                            path += '\" target="_blank" href="{0}"'.format(externalLink);
+                        }
+
+                        path += '(\'' + leaf.title + '\')">';
+                    }
+                }
+
+                //build the menu item
+                path += '<i class="' + leaf.icon + ' fa-fw"></i>&ensp;' + leaf.title.trim();
+                path += '</a>';
+
+                //add the child menu items
+                if (childMenu) {
+                    path += childMenu;
+                }
+
+                path += '</li>';
+            }
+        }
+        path += '</ul>';
+        //path = '';
+    }
+
+    return path;
+}
+
 function findCurrentPage(log, leafs, current, parent) {
     var path = '';
+
+    //log.debug('parent', current, parent);
 
     if (leafs != null) {
         for (var id in leafs) {
@@ -244,34 +303,47 @@ function findCurrentPage(log, leafs, current, parent) {
                 path += '<div class="part">';
 
                 //if child menu found, add the dropdown toggle
-                if (newPath) {
-                    path += '<a data-toggle="dropdown" aria-expanded="false">';
-                } else {
-                    path += '<a ng-click="';
+                //if (parent != null && parent.hasOwnProperty('type')) {
+               
 
-                    if (leafs[id].type == 'ActionMenuItemDefinition') {
-                        path += 'doAction';
-                    } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
-                        path += 'goToApplication';
-                    } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
-                        path += '<a target="_blank" href="{0}"'.format(leaf.link);
+                    if (newPath) {
+                        path += '<a data-toggle="dropdown" aria-expanded="false">';
+                    } else {
+                        path += '<a ng-click="';
+
+                        if (leafs[id].type == 'ActionMenuItemDefinition') {
+                            path += 'doAction';
+                        } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
+                            path += 'goToApplication';
+                        } else if (leafs[id].type == 'ExternalLinkMenuItemDefinition') {
+                            path += '<a target="_blank" href="{0}"'.format(leaf.link);
+                        }
+
+                        path += '(\'' + leafs[id].title + '\')">';
                     }
-
-                    path += '(\'' + leafs[id].title + '\')">';
-                }
+                //} else {
+                    //path += '<a>';
+                //}
 
                 //add the icon and title
                 path += icon + leafs[id].title;
 
-                if (newPath) {
-                    path += '&ensp;<i class="fa fa-caret-down"></i>';
-                }
+                //if (parent != null && parent.hasOwnProperty('type')) {
+                    if (newPath) {
+                        path += '&ensp;<i class="fa fa-caret-down"></i>';
+                    }
+                //}
 
                 path += '</a>';
 
                 //add the child menu items
-                if (newPath) {
-                    path += getChildMenu(log, leafs, leafs[id]);
+                //log.debug(parent, parent.type);
+                log.debug('parent', current, parent);
+
+                if (parent != null && parent.type != 'admin') {
+                    if (newPath) {
+                        path += getChildMenu(log, leafs, leafs[id]);
+                    }
                 }
 
                 path += '</div>';
@@ -307,65 +379,6 @@ function findleafByTitle(log, leafs, title) {
     }
 
     return found;
-}
-
-function getChildMenu(log, leafs, parent, menuService) {
-    var path = '';
-    var searchLeafs = null;
-
-    //if no parent use the get the whole menu, else the child items from the parent
-    if (parent == null) {
-        searchLeafs = leafs
-    } else {
-        if (parent.leafs != null) {
-            searchLeafs = parent.leafs;
-        }
-    }
-
-    if (searchLeafs != null) {
-        path += '<ul class="dropdown-menu" role="menu" bc-menu>';
-        for (var id in searchLeafs) {
-            var leaf = searchLeafs[id];
-            if (leaf.title != null) {
-                var childMenu = getChildMenu(log, leaf.leafs, leaf, menuService);
-
-                //if child menu found, display as submenu
-                if (childMenu) {
-                    path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
-                } else {
-                    path += '<li><a bc-menu-item ng-click="';
-
-                    if (leaf.type == 'ActionMenuItemDefinition') {
-                        path += 'doAction';
-                    } else if (leaf.type == 'ApplicationMenuItemDefinition') {
-                        path += 'goToApplication';
-                    } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
-                        if (!leaf.link.startsWith("http")) {
-                            leaf.link = "http://" + leaf.link;
-                        }
-                        var externalLink = menuService.parseExternalLink(leaf);
-                        path += '\" target="_blank" href="{0}"'.format(externalLink);
-                    }
-
-                    path += '(\'' + leaf.title + '\')">';
-                }
-
-                //build the menu item
-                path += '<i class="' + leaf.icon + ' fa-fw"></i>&ensp;' + leaf.title.trim();
-                path += '</a>';
-
-                //add the child menu items
-                if (childMenu) {
-                    path += childMenu;
-                }
-
-                path += '</li>';
-            }
-        }
-        path += '</ul>';
-    }
-
-    return path;
 }
 
 var seperator = '<span class="part seperator">/</span>';
