@@ -1,6 +1,6 @@
 ﻿<div>
     <div class="admin-area" ng-if="popupmode == 'none'">
-        <div class="breadcrumb" breadcrumb data-menu="menu" data-title="title" ng-if="menu.displacement == 'breadcrumb'"></div>
+        <div class="breadcrumb" breadcrumb data-menu="menu" data-title="title" data-schema="schema" ng-if="menu.displacement == 'breadcrumb'"></div>
         <div class="text" ng-if="menu.displacement != 'breadcrumb'"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}</div>
 
         <div class="admin-menu">
@@ -62,11 +62,6 @@
                         <i class="fa fa-info fa-fw"></i>&ensp;{{i18N('_headermenu.about','About')}}
                     </a>
                 </li>
-                <!--<li ng-show="isSysAdmin">
-                    <a href="#" ng-click="doAction(null,'EntityMetadata','Refresh',null,$event.target)">
-                        <i class="fa fa-refresh"></i>&ensp;Refresh Metadata
-                    </a>
-                </li>-->
                 <li>
                     <a ng-href="{{contextPath('SignOut/SignOut')}}" ng-click="logout()">
                         <i class="fa fa-sign-out fa-fw"></i>&ensp;{{i18N('_headermenu.logout','Logout')}}
