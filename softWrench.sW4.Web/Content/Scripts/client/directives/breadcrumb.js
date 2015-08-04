@@ -2,7 +2,6 @@
 
 app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
     var log = $log.getInstance('sw4.breadcrumb');
-    //log.debug($rootScope);
 
     return {
         scope: {
@@ -12,38 +11,39 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
         },
         link: function (scope, element, attr) {
             scope.$watch('title', function (newValue, oldValue) {
-                log.debug(scope.menu);
+                //log.debug(scope.menu);
 
                 var template;
-       
                 var currentItem = $('.admin-area .admin-menu .dropdown-menu a:contains("' + scope.title + '")');
+
+                //if we are in the admin menu
                 if (currentItem.hasOwnProperty(length)) {
                     template = getBreadCrumbHTML(log, scope.menu, undefined, menuService);
                     template += seperator;
 
                     var mainItem = $('.admin-area .admin-menu > a');
 
+                    //build the settings item
                     if (mainItem.hasOwnProperty(length)) {
-                        //log.debug(mainItem, mainItem[0].firstChild);
-
                         template += '<div class="part">';
-                        //template += '<a data-toggle="dropdown" aria-expanded="false">';
+                        template += '<a data-toggle="dropdown" aria-expanded="false">';
                         template += mainItem[0].firstElementChild.outerHTML;
                         template += '&ensp;';
                         template += 'Settings';
-                        //template += '&ensp;<i class="fa fa-caret-down"></i>';
+                        template += '&ensp;<i class="fa fa-caret-down"></i>';
                         template += '</a>';
                     }
 
+                    //get the admin menu items
                     var mainMenu = $('.admin-area .admin-menu > .dropdown-menu');
                     var leafs = getAdminLeafs(log, mainMenu[0].children);
-                    log.debug(mainMenu, leafs);
 
                     var adminMenu = {};
                     adminMenu.leafs = leafs;
                     adminMenu.tpye = 'admin';
 
-                    //template += getChildMenu(log, adminMenu.leafs, null, menuService);
+                    //append the dropdown menu
+                    template += getChildMenu(log, adminMenu.leafs, null, menuService);
                     template += '</div>';
 
                     //append child parts
@@ -66,7 +66,7 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
     }
 });
 
-app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService) {
+app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, adminMenuService) {
     var log = $log.getInstance('sw4.breadcrumb Menu Item');
 
     return {
@@ -105,6 +105,22 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService) {
                     menuService.doAction(leaf, null);
                 }
             };
+
+            $scope.adminDoAction = function (title, controller, action, parameters, target) {
+                adminMenuService.doAction(title, controller, action, parameters, target);
+            };
+
+            $scope.adminLoadApplication = function (applicationName, schemaId, mode, id) {
+                adminMenuService.loadApplication(applicationName, schemaId, mode, id);
+            };
+
+            $scope.adminLogout = function () {
+                adminMenuService.logout();
+            };
+
+            $scope.adminMyProfile = function () {
+                adminMenuService.myProfile();
+            };
         },
     }
 });
@@ -122,12 +138,8 @@ function getAdminLeafs(log, kids) {
                     var icon = link.firstElementChild;
                     var title = link.innerText.trim();
 
-                    //log.debug(link.attributes['ng-click']);
-
                     if (icon != null) {
                         if (icon.className != undefined) {
-                            //iconClass = icon.className;
-
                             for (i = 0; i < icon.classList.length; i++) {
                                 if (icon.classList[i] != 'fa-fw') {
                                     iconClass += icon.classList[i] + ' ';
@@ -136,32 +148,22 @@ function getAdminLeafs(log, kids) {
                         }
                     }
 
-                    //log.debug(kids[idx].innerHTML);
-
-                    //log.debug(kids[idx].innerHTML.indexOf("doAction") > -1);
-
                     if (kids[idx].className != 'user') {
                         var newObject = {};
                         newObject.icon = iconClass.trim();
                         newObject.title = title;
 
                         if (link.attributes['ng-click']) {
-                            newObject.click = link.attributes['ng-click'].nodeValue;
+                            var click = link.attributes['ng-click'].nodeValue;
+
+                            //rename the admin function, to avoid confilts
+                            click = click.replace('doAction', 'adminDoAction');
+                            click = click.replace('myProfile', 'adminMyProfile');
+                            click = click.replace('loadApplication', 'adminLoadApplication');
+                            click = click.replace('logout', 'adminLogout');
+
+                            newObject.click = click;
                         }
-
-                        //newObject.type = '';
-
-                        //if  (kids[idx].innerHTML.indexOf("doAction") > -1) {
-                        //    newObject.type = 'ActionMenuItemDefinition';
-                        //}
-
-                        //if (leafs[id].type == 'ActionMenuItemDefinition') {
-                        //    path += 'doAction';
-                        //} else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
-                        //    path += 'goToApplication';
-                        //} else if (leafs[id].type == 'ExternalLinkMenuItemDefinition') {
-                        //    path += '<a target="_blank" href="{0}"'.format(leaf.link);
-                        //}
 
                         if (kids[idx].children != null && kids[idx].children.length > 0) {
                             var childLeafs = getAdminLeafs(log, kids[idx].children);
@@ -242,12 +244,9 @@ function getChildMenu(log, leafs, parent, menuService) {
                     path += '<li><a bc-menu-item ng-click="';
 
                     if (leaf.click) {
-                        //path += '<a ng-click="';
                         path += leaf.click;
                         path += '">';
                     } else {
-                        //path += '<a bc-menu-item ng-click="';
-
                         if (leaf.type == 'ActionMenuItemDefinition') {
                             path += 'doAction';
                         } else if (leaf.type == 'ApplicationMenuItemDefinition') {
@@ -277,7 +276,6 @@ function getChildMenu(log, leafs, parent, menuService) {
             }
         }
         path += '</ul>';
-        //path = '';
     }
 
     return path;
@@ -285,8 +283,6 @@ function getChildMenu(log, leafs, parent, menuService) {
 
 function findCurrentPage(log, leafs, current, parent) {
     var path = '';
-
-    //log.debug('parent', current, parent);
 
     if (leafs != null) {
         for (var id in leafs) {
@@ -303,47 +299,34 @@ function findCurrentPage(log, leafs, current, parent) {
                 path += '<div class="part">';
 
                 //if child menu found, add the dropdown toggle
-                //if (parent != null && parent.hasOwnProperty('type')) {
-               
+                if (newPath) {
+                    path += '<a data-toggle="dropdown" aria-expanded="false">';
+                } else {
+                    path += '<a ng-click="';
 
-                    if (newPath) {
-                        path += '<a data-toggle="dropdown" aria-expanded="false">';
-                    } else {
-                        path += '<a ng-click="';
-
-                        if (leafs[id].type == 'ActionMenuItemDefinition') {
-                            path += 'doAction';
-                        } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
-                            path += 'goToApplication';
-                        } else if (leafs[id].type == 'ExternalLinkMenuItemDefinition') {
-                            path += '<a target="_blank" href="{0}"'.format(leaf.link);
-                        }
-
-                        path += '(\'' + leafs[id].title + '\')">';
+                    if (leafs[id].type == 'ActionMenuItemDefinition') {
+                        path += 'doAction';
+                    } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
+                        path += 'goToApplication';
+                    } else if (leafs[id].type == 'ExternalLinkMenuItemDefinition') {
+                        path += '<a target="_blank" href="{0}"'.format(leaf.link);
                     }
-                //} else {
-                    //path += '<a>';
-                //}
+
+                    path += '(\'' + leafs[id].title + '\')">';
+                }
 
                 //add the icon and title
                 path += icon + leafs[id].title;
 
-                //if (parent != null && parent.hasOwnProperty('type')) {
-                    if (newPath) {
-                        path += '&ensp;<i class="fa fa-caret-down"></i>';
-                    }
-                //}
+                if (newPath) {
+                    path += '&ensp;<i class="fa fa-caret-down"></i>';
+                }
 
                 path += '</a>';
 
                 //add the child menu items
-                //log.debug(parent, parent.type);
-                log.debug('parent', current, parent);
-
-                if (parent != null && parent.type != 'admin') {
-                    if (newPath) {
-                        path += getChildMenu(log, leafs, leafs[id]);
-                    }
+                if (newPath) {
+                    path += getChildMenu(log, leafs, leafs[id]);
                 }
 
                 path += '</div>';
