@@ -69,7 +69,7 @@
                   var alphaString;
                     if (options.onComplete) {
                         //TODO: Narrow down the wrong characther here, instead of removing them all
-                        alphaString = stringWriting ? stringWriting.trim()(/\W/g, '') : null;
+                        alphaString = stringWriting ? stringWriting.replace(/\W/g, '') : null;
                         options.onComplete.call(self, alphaString);
                     }
                     $self.trigger('scannerDetectionComplete', {
