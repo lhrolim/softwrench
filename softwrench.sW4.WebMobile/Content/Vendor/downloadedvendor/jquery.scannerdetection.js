@@ -66,8 +66,15 @@
                 // If all condition are good (length, time...), call the callback and re-initialize the plugin for next scanning
                 // Else, just re-initialize
                 if (stringWriting.length >= options.minLength && lastCharTime - firstCharTime < stringWriting.length * options.avgTimeByChar) {
-                    if (options.onComplete) options.onComplete.call(self, stringWriting);
-                    $self.trigger('scannerDetectionComplete', { string: stringWriting });
+                  var alphaString;
+                    if (options.onComplete) {
+                        //TODO: Narrow down the wrong characther here, instead of removing them all
+                        alphaString = stringWriting ? stringWriting.trim()(/\W/g, '') : null;
+                        options.onComplete.call(self, alphaString);
+                    }
+                    $self.trigger('scannerDetectionComplete', {
+                         string: stringWriting
+                    });
                     initScannerDetection();
                     return true;
                 } else {
