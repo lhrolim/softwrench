@@ -157,7 +157,7 @@ namespace cts.commons.persistence {
                 var query = BuildQuery(queryst, parameters, session, true, paginationData);
                 query.SetResultTransformer(NhTransformers.ExpandoObject);
                 var result = query.List<dynamic>();
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done query"));
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
                 return result;
             }
         }
@@ -179,12 +179,12 @@ namespace cts.commons.persistence {
         //        }
         //    }
         //}
-        public int CountByNativeQuery(String queryst, ExpandoObject parameters) {
+        public int CountByNativeQuery(String queryst, ExpandoObject parameters, string queryAlias = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true);
+                var query = BuildQuery(queryst, parameters, session, true, null, queryAlias);
                 var result = Convert.ToInt32(query.UniqueResult());
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done count query. Count result : {0}", result));
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
                 return result;
             }
         }

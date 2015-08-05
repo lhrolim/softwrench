@@ -155,7 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="shared.placeholder" />
+    <None Include="shared_commons.placeholder" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

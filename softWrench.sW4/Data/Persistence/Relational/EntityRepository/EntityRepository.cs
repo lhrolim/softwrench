@@ -202,7 +202,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = new EntityQueryBuilder().CountRows(entityMetadata, searchDto);
 
-            return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters);
+            return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters, searchDto.QueryAlias);
 
         }
 

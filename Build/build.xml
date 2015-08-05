@@ -360,13 +360,13 @@
 
         <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
-          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
+          <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${directory::exists(onlinefolder)}">
           <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
-            <arg line='mklink /D ${clientname}_online "${foldername}\online_content\${clientname}"'/>
+            <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
           </exec>
         </if>
 
@@ -384,13 +384,13 @@
 
         <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
-          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
+          <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${directory::exists(onlinefolder)}">
           <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
-            <arg line='mklink /D ${clientname}_online "${foldername}\online_content\${clientname}"'/>
+            <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
           </exec>
         </if>
 
@@ -407,6 +407,7 @@
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="offlinefolder" value="${foldername}/offline_content" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
@@ -421,17 +422,17 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-
-
-        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+<!--
+        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
-        </exec>
+        </exec>-->
 
         <if test="${directory::exists(offlinefolder)}">
-          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <echo message="creating symbolic link for ${clientname}" />
+          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
-            <arg line='mklink /D ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
+            <arg line='mklink /J ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
           </exec>
         </if>
 
@@ -446,15 +447,10 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
-          <arg value="/c"/>
-          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
-        </exec>
-
         <if test="${directory::exists(offlinefolder)}">
-          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
-            <arg line='mklink /D ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
+            <arg line='mklink /J ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
           </exec>
         </if>
 
@@ -462,6 +458,28 @@
           <echo message="created symbolic link for ${clientname}" />
         </if>
       </if>
+
+      <if test="${file::exists(sharedcommonsplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
+        </exec>
+
+        <if test="${directory::exists(offlinefolder)}">
+          <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /J ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
+          </exec>
+        </if>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="created symbolic link for ${clientname}" />
+        </if>
+      </if>
+
     </foreach>
 
   </target>
