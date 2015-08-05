@@ -17,7 +17,7 @@ softWrench.sW4.Web/Content/Scripts/softwrench/shared
 
 softWrench.sW4.WebMobile/www/Content/Customers/**/
 softWrench.sW4.WebMobile/www/Content/Shared/**/
-softWrench.sW4.WebMobile/www/Content/Vendor/scripts
+softWrench.sW4.WebMobile/www/Content/Vendor/scripts/*.js
 softWrench.sW4.WebMobile/www/Content/Vendor/fonts
 
 softWrench.sW4.WebMobile/platforms/
