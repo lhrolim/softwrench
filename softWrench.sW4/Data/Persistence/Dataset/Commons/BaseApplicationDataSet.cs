@@ -187,7 +187,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
-            return new CompositionFetchResult(result,cruddata);
+            return new CompositionFetchResult(result, cruddata);
         }
 
 
@@ -198,6 +198,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
+
+            if (searchDto.Context != null && searchDto.Context.MetadataId != null) {
+                searchDto.QueryAlias = searchDto.Context.MetadataId;
+            } else {
+                searchDto.QueryAlias = application.Name + "." + schema.SchemaId;
+            }
+
             var propertyValue = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListSchemaOrderBy);
             if (searchDto.SearchSort == null && propertyValue != null) {
                 //if the schema has a default sort defined, and we didn´t especifally asked for any sort column, apply the default schema
@@ -219,7 +226,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //query
             tasks[1] = Task.Factory.NewThread(c => {
-                var dto = (PaginatedSearchRequestDto) searchDto.ShallowCopy();
+                var dto = (PaginatedSearchRequestDto)searchDto.ShallowCopy();
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 // Only fetch the compositions schemas if indicated on searchDTO
                 var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
