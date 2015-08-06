@@ -43,10 +43,15 @@ namespace softWrench.sW4.Web {
                 ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/fonts").Include(
-                "~/Content/fonts/font.css"));
+                "~/Content/fonts/font.css"
+                ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/ie9").Include(
                 "~/Content/ie/ie9.css"
+                ));
+
+            bundles.Add(new StyleBundle("~/Content/angular-ui-select").Include(
+                "~/Content/angular-ui-select/angular-ui-select.css"
                 ));
         }
 
@@ -66,7 +71,8 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/other/textAngular-min.js",
                 "~/Content/Scripts/vendor/other/textAngular-setup.js",
                 "~/Content/Scripts/vendor/other/jquery.scannerdetection.js",
-                "~/Content/Scripts/vendor/other/angular-fileUpload.js"));
+                "~/Content/Scripts/vendor/other/angular-fileUpload.js",
+                "~/Content/Scripts/vendor/other/angular-ui-select.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
                 "~/Content/Scripts/vendor/jquery/jquery-ui-{version}.js"));

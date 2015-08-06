@@ -6,7 +6,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
     public class AssociationFieldRenderer : FieldRenderer {
 
-        private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, MODAL, CUSTOM and COMBODROPDOWN";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, MULTISELECTAUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, MODAL, CUSTOM and COMBODROPDOWN";
 
         private AssociationRendererType EnumRendererType { get; set; }
 
@@ -31,11 +31,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public enum AssociationRendererType {
-            AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, CUSTOM, COMBODROPDOWN, MODAL
+            AUTOCOMPLETECLIENT, MULTISELECTAUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, CUSTOM, COMBODROPDOWN, MODAL
         }
 
         public bool IsLazyLoaded {
-            get { return EnumRendererType != AssociationRendererType.AUTOCOMPLETECLIENT && EnumRendererType != AssociationRendererType.COMBO && EnumRendererType != AssociationRendererType.COMBODROPDOWN; }
+            get { return EnumRendererType != AssociationRendererType.AUTOCOMPLETECLIENT && EnumRendererType != AssociationRendererType.MULTISELECTAUTOCOMPLETECLIENT && EnumRendererType != AssociationRendererType.COMBO && EnumRendererType != AssociationRendererType.COMBODROPDOWN; }
         }
 
         public bool IsPaginated {

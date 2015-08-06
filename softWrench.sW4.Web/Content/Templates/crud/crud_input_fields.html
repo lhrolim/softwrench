@@ -175,6 +175,16 @@
                         </div>
                     </div>
                 </div>
+                <div ng-switch-when="multiselectautocompleteclient">
+                    <ui-select multiple tagging tagging-label="(blah)" ng-model="datamap[fieldMetadata.target]">
+                        <ui-select-match placeholder=" ">{{$item.value}}</ui-select-match>
+                    <!--<ui-select-choices repeat="option.value as option.label for option in associationOptions[fieldMetadata.associationKey] | filter: $select.search track by option.value">-->
+                        <ui-select-choices repeat="option in associationOptions[fieldMetadata.associationKey] | filter: $select.search track by option.value">
+                            <div ng-bind-html="option.value"></div>
+                            <!--<div ng-bind-html="option.label | highlight: $select.search"></div>-->
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
                 <div ng-switch-when="autocompleteserver">
                     <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{fieldMetadata.associationKey}}" data-target="{{fieldMetadata.attribute}}" />
                     <input type="hidden" id="{{'autocomplete_' + fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
