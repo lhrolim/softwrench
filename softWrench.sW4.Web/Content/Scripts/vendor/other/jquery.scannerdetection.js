@@ -15,9 +15,6 @@
 (function ($) {
     $.fn.scannerDetection = function (options) {
 
-        var backspaceWhich = 8;
-        var leftArrowWhich = 37;
-
         // If string given, call onComplete callback
         if (typeof options === "string") {
             this.each(function () {
@@ -45,8 +42,6 @@
         } else {
             options = $.extend({}, defaults, options);
         }
-
-
 
         this.each(function () {
             var self = this, $self = $(self), firstCharTime = 0, lastCharTime = 0, stringWriting = '', callIsScanner = false, testTimer = false;
@@ -85,64 +80,61 @@
                     return false;
                 }
             }
-            $self.data('scannerDetection', { options: options })
-                .unbind('.scannerDetection')
-                .bind('keydown.scannerDetection', function (e) {
-
-
-                    if (e.which >= 48 && e.which <= 90 && (e.target.type == "text" || e.target.type == "search")) {
-                        e.preventDefault();
-                        focusedInput = e.target;
-                        charBuffer = String.fromCharCode(e.which);
-                    } else {
-                        focusedInput = null;
+            $self.data('scannerDetection', { options: options }).unbind('.scannerDetection').bind('keydown.scannerDetection', function (e) {
+                // Add event on keydown because keypress is not triggered for non character keys (tab, up, down...)
+                // So need that to check endChar (that is often tab or enter) and call keypress if necessary
+                if (firstCharTime && options.endChar.indexOf(e.which) !== -1) {
+                    // Clone event, set type and trigger it
+                    var e2 = jQuery.Event('keypress', e);
+                    e2.type = 'keypress.scannerDetection';
+                    if (!focusedInput) {
+                        $self.triggerHandler(e2);
                     }
+                    // Cancel default
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                }
+            }).bind('keypress.scannerDetection', function (e) {
+
+
+                if ((e.which >= 48 && e.which <= 90 || (e.which >= 97 && e.which <= 122)) && (e.target.type == "text" || e.target.type == "search")) {
+                    e.preventDefault();
+                    focusedInput = e.target;
+                    charBuffer = String.fromCharCode(e.which);
+                } else {
+                    focusedInput = null;
+                }
 
 
 
-                    if (options.stopPropagation) e.stopImmediatePropagation();
-                    if (options.preventDefault) e.preventDefault();
+                if (options.stopPropagation) e.stopImmediatePropagation();
+                if (options.preventDefault) e.preventDefault();
 
-                    if (firstCharTime && options.endChar.indexOf(e.which) !== -1) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        callIsScanner = true;
-                    } else {
-                        stringWriting += String.fromCharCode(e.which);
-                        callIsScanner = false;
-                    }
+                if (firstCharTime && options.endChar.indexOf(e.which) !== -1) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    callIsScanner = true;
+                } else {
+                    stringWriting += String.fromCharCode(e.which);
+                    callIsScanner = false;
+                }
 
-                    if (!firstCharTime) {
-                        firstCharTime = Date.now();
-                    }
-                    lastCharTime = Date.now();
+                if (!firstCharTime) {
+                    firstCharTime = Date.now();
+                }
+                lastCharTime = Date.now();
 
-                    if (testTimer) clearTimeout(testTimer);
-                    if (callIsScanner) {
-                        self.scannerDetectionTest();
-                        testTimer = false;
-                    } else {
-                        testTimer = setTimeout(self.scannerDetectionTest, options.timeBeforeScanTest);
-                    }
+                if (testTimer) clearTimeout(testTimer);
+                if (callIsScanner) {
+                    self.scannerDetectionTest();
+                    testTimer = false;
+                } else {
+                    testTimer = setTimeout(self.scannerDetectionTest, options.timeBeforeScanTest);
+                }
 
-                    if (options.onReceive) options.onReceive.call(self, e);
-                    $self.trigger('scannerDetectionReceive', { evt: e });
-
-
-                    // Add event on keydown because keypress is not triggered for non character keys (tab, up, down...)
-                    // So need that to check endChar (that is often tab or enter) and call keypress if necessary
-                    if (firstCharTime && options.endChar.indexOf(e.which) !== -1) {
-                        // Clone event, set type and trigger it
-                        var e2 = jQuery.Event('keypress', e);
-                        e2.type = 'keypress.scannerDetection';
-                        if (!focusedInput) {
-                            $self.triggerHandler(e2);
-                        }
-                        // Cancel default
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                    }
-                });
+                if (options.onReceive) options.onReceive.call(self, e);
+                $self.trigger('scannerDetectionReceive', { evt: e });
+            });
         });
         return this;
     }
