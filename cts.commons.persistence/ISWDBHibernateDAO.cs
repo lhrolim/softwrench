@@ -14,6 +14,6 @@ namespace cts.commons.persistence
         IList<T> FindByQuery<T>(String queryst, params object[] parameters) where T : class;
         IList<T> FindAll<T>(Type type) where T : class;
         void ExecuteSql(string sql, params object[] parameters);
-
+        ICollection<T> BulkSave<T>(ICollection<T> items) where T : class;
     }
 }

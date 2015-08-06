@@ -75,6 +75,9 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
             }
         }
 
+        [JsonIgnore]
+        public JObject AdditionalData { get; set; }
+
     }
 
 

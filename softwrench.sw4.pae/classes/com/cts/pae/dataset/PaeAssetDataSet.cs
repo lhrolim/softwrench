@@ -33,7 +33,7 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
                 JObject json = JObject.Parse(JsonConvert.SerializeObject(result.ResultObject.Fields));
                 Execute(application, json, request.Id, "update", false);
                 // Create an audit entry for the updated asset record
-                _auditManager.CreateAuditEntry("scan", application.Name, request.Id, JsonConvert.SerializeObject(result.ResultObject.Fields), DateTime.Now.FromServerToRightKind());
+                _auditManager.CreateAuditEntry("scan", application.Name, request.Id, result.ResultObject.GetAttribute(result.Schema.UserIdFieldName) as string, JsonConvert.SerializeObject(result.ResultObject.Fields), DateTime.Now.FromServerToRightKind());
             }
 
             return result;
