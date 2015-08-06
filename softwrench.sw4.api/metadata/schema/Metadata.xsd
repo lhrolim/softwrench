@@ -715,6 +715,7 @@
     </attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="printenabled" type="boolean"></attribute>
   </complexType>
 
   <complexType name="OptionField">

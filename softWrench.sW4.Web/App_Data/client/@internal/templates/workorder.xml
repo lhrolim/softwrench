@@ -332,7 +332,7 @@
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" prefilterfunction=""/>
             </composition>
             <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="" hidden="true" fetchtype="manual">
               <collectionproperties allowcreation="false" listschema="composition"/>

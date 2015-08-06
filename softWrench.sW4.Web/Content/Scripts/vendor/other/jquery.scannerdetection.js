@@ -78,6 +78,7 @@
                     if (focusedInput) {
                         var newValue = $(focusedInput).val() + stringWriting;
                         $(focusedInput).val(newValue);
+                        $(focusedInput).trigger('input');
                         charBuffer = '';
                     }
                     initScannerDetection();
