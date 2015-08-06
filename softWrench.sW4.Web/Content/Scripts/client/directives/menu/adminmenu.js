@@ -1,4 +1,4 @@
-﻿app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService) {
+﻿app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService, adminMenuService) {
     return {
         restrict: 'E',
         replace: true,
@@ -13,25 +13,15 @@
         },
         link: function (scope, element, attr) {
             scope.doAction = function (title, controller, action, parameters, target) {
-                menuService.setActiveLeaf(target);
-                redirectService.redirectToAction(title, controller, action, parameters);
+                adminMenuService.doAction(title, controller, action, parameters, target);
             };
 
             scope.loadApplication = function (applicationName, schemaId, mode, id) {
-                var parameters = {
-                    Id: id
-                }
-                redirectService.goToApplicationView(applicationName, schemaId, mode, null, parameters, null);
+                adminMenuService.loadApplication(applicationName, schemaId, mode, id);
             };
 
             scope.myProfile = function () {
-                var crudContext = {
-                    detail_next: "0",
-                    detail_previous: "-1"
-                };
-                contextService.insertIntoContext("crud_context", crudContext);
-                var id = contextService.getUserData().maximoPersonId;
-                this.loadApplication('Person', 'detail', 'input', id);
+                adminMenuService.myProfile();
             }
 
             scope.i18N = function (key, defaultValue, paramArray) {
@@ -53,13 +43,7 @@
             };
 
             scope.logout = function () {
-                sessionStorage.removeItem("swGlobalRedirectURL");
-                if (contextService.isLocal()) {
-                    //clear local everytime to make development easier
-                    schemaCacheService.wipeSchemaCacheIfNeeded();
-                }
-                contextService.clearContext();
-                sessionStorage['ctx_loggedin'] = false;
+                adminMenuService.logout();
             };
 
             //show or hide the menu when the expand button is clicked
