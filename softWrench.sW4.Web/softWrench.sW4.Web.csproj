@@ -298,6 +298,7 @@
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201506241200Swweb1166Part3.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201507201700Swweb1166Part4.cs" />
+    <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
