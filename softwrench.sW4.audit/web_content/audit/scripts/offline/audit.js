@@ -24,16 +24,23 @@
             datamap: "JSON",
             // application/entity being tracked
             refApplication: "TEXT",
-            // server's/maximo's id of the entity being tracked
-            refId: "TEXT",
             // local/persistence's id of the entity being tracked
             refClientId: "TEXT",
+            // server's/maximo's id of the entity being tracked
+            refId: "TEXT",
+            // server's/maximo's userId of the entity being tracked (such as an asset's assetnum)
+            refUserId: "TEXT",
+
             createdBy: "TEXT",
             createdDate: "DATE"
         });
 
-        entities.AuditEntry.listPattern = "refApplication={0} and createdBy={1}";
+        entities.AuditEntry.listPattern = "refApplication='{0}' and createdBy='{1}'";
         entities.AuditEntry.listApplicationsStatement = "select distinct refApplication from AuditEntry where createdBy=?";
+        entities.AuditEntry.forEntityPattern = "refClientId='{0}' and refApplication='{1}'";
+        entities.AuditEntry.deleteRelatedStatement = "delete from AuditEntry where refClientId=? and refApplication=?";
+        //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
+        entities.AuditEntry.deleteRelatedByRefIdStatement = "delete from AuditEntry where refApplication=? and (refId in (?) or refId is null)";
     }]);
     //#endregion
 
@@ -57,7 +64,7 @@
                 validateEntryField(dict, "refClientId");
                 validateEntryField(dict, "createdBy");
 
-                dict["createDate"] = new Date();
+                dict["createdDate"] = new Date();
                 return swdbDAO.instantiate("AuditEntry", dict);
             }
 
@@ -103,16 +110,18 @@
              * @param String refApplication name of the application/entity being affected by the event
              * @param String refClientId local id of the enity being affected by the event
              * @param String refId server's id of the entity being affected by the event
+             * @param String refUserId server's userId of the entity being affected by the event
              * @param String createdBy username of the user who triggered the event -> defaults to current logged user if omitted  
              * @return Promise resolved with the registered AuditEntry
              * @throws Error if any of the parameters is omitted and/or there's no user logged in
              */
-            function registerEvent(operation, refApplication, refClientId, refId, createdBy) {
+            function registerEvent(operation, refApplication, refClientId, refId, refUserId, createdBy) {
                 var entry = {
                     operation: operation,
                     refApplication: refApplication,
                     refClientId: refClientId,
                     refId: refId,
+                    refUserId: refUserId,
                     createdBy: createdBy
                 };
                 return registerEntry(entry);
@@ -143,6 +152,7 @@
              *              "pagenumber": Integer, // page to fetch 
              *              "pagesize": Integer // number of items per page
              *              }
+             *           won't paginate if parameter is omitted
              * @returns Promise resolved with AuditEntry list 
              */
             function listEntries(refApplication, paginationOptions) {
@@ -176,6 +186,26 @@
                 return swdbDAO.findById("DataEntry", entry.refClientId);
             }
 
+            /**
+             * @param String DataEntry's id
+             * @param String application DataEntry's application
+             * @returns Promise resolved with list of AuditEntries related to the entity
+             */
+            function getEntriesForEntity(entityId, application) {
+                return swdbDAO.findByQuery("AuditEntry", entities.AuditEntry.forEntityPattern.format(entityId, application));
+            }
+
+            /**
+             * Deletes all AuditEntries tracking the entity.
+             * 
+             * @param String entityId DataEntry's id
+             * @param String 
+             * @returns Promise 
+             */
+            function deleteRelatedEntries(entityId, application) {
+                return swdbDAO.executeStatement(entities.AuditEntry.deleteRelatedStatement, [entityId, application]);
+            }
+
             //#endregion
 
             //#region Service Instance
@@ -185,7 +215,9 @@
                 listEntries: listEntries,
                 listAudittedApplications: listAudittedApplications,
                 getAuditEntry: getAuditEntry,
-                getTrackedEntity: getTrackedEntity
+                getTrackedEntity: getTrackedEntity,
+                getEntriesForEntity: getEntriesForEntity,
+                deleteRelatedEntries: deleteRelatedEntries
             };
 
             return service;

@@ -27,20 +27,22 @@
 
         //#region Public methods
 
-
+        /**
+         * Register the given callback function to be executed upon a successful scanning on a context that matches the matchingparameters.
+         * To simulate a scan event in a debugging evironment just call <code>$(document).scannerDetection("<data_being_scanned>")</code>. 
+         * Remember that in order to trigger your callbacks they need to have been previously registered and the event needs to be fired
+         * in the correct context (defined by the matchingparamenters argument).
+         * 
+         * @param {} matchingparameters dictionary in the format:
+         *              {
+         *                  applicationName: String, // the name of the application to register the scan,
+         *                  schemaId: String, //the schemaId to register the scan
+         *                  tabId: String // the id of the tab to register the scan (composition or tab)
+         *              }
+         * @param function callback receives the scanned data as it's single argument 
+         */
         function registerScanCallBackOnSchema(matchingparameters, callback) {
-            /// <summary>
-            /// 
-            ///  Register the given callback function to be executed upon a successful scanning on a context that matches the matchingparameters 
-            /// 
-            /// </summary>
-            /// <param name="matchingparameters">
-            ///  applicationName --> the name of the application to register the scan
-            ///  schemaId --> the schemaId to register the scan
-            ///  tabId --> the id of the tab to register the scan (composition or tab)
-            /// </param>
-            /// <param name="callback"></param>
-
+            
             var registerApplication = matchingparameters.applicationName;
             var registerSchemaId = matchingparameters.schemaId;
             var registerTabId = matchingparameters.tabid || "";

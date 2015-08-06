@@ -15,14 +15,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private static DataSetProvider _instance;
 
         private readonly MaximoApplicationDataSet _defaultMaximoDataSet;
-        private readonly MaximoApplicationDataSet _defaultSWDBDataSet;
+        private readonly SWDBApplicationDataset _defaultSWDBDataSet;
 
 
         private readonly IDictionary<ApplicationFiltereableKey, IDataSet> _maximoDataSets = new Dictionary<ApplicationFiltereableKey, IDataSet>();
         private readonly IDictionary<ApplicationFiltereableKey, IDataSet> _swdbDataSets = new Dictionary<ApplicationFiltereableKey, IDataSet>();
 
 
-        public DataSetProvider(MaximoApplicationDataSet defaultMaximoDataSet, MaximoApplicationDataSet defaultSWDBDataSet) {
+        public DataSetProvider(MaximoApplicationDataSet defaultMaximoDataSet, SWDBApplicationDataset defaultSWDBDataSet) {
             _defaultMaximoDataSet = defaultMaximoDataSet;
             _defaultSWDBDataSet = defaultSWDBDataSet;
         }
@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         protected override IDataSet LocateDefaultItem(string applicationName, string schemaId, string clientName) {
             var isSWDBApplication = applicationName.StartsWith("_");
-            return isSWDBApplication ? _defaultSWDBDataSet : _defaultMaximoDataSet;
+            return isSWDBApplication ? (IDataSet) _defaultSWDBDataSet : _defaultMaximoDataSet;
         }
 
         protected override IDictionary<ApplicationFiltereableKey, IDataSet> LocateStorage(IDataSet item) {

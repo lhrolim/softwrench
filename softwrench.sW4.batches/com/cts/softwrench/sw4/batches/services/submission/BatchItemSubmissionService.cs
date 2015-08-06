@@ -14,9 +14,12 @@ using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
+using softwrench.sW4.audit.classes.Services.Batch;
+using softwrench.sW4.audit.classes.Services.Batch.Data;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
     public class BatchItemSubmissionService : ISingletonComponent {
@@ -27,13 +30,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         private IEnumerable<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>> _converters;
         private readonly IContextLookuper _contextLookuper;
         private readonly ProblemManager _problemManager;
+        private readonly AuditPostBatchHandlerProvider _auditPostBatchHandlerProvider;
 
 
-        public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, ProblemManager problemManager) {
+        public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, ProblemManager problemManager, AuditPostBatchHandlerProvider auditPostBatchHandlerProvider) {
             _dao = dao;
             _maximoEngine = maximoEngine;
             _contextLookuper = contextLookuper;
             _problemManager = problemManager;
+            _auditPostBatchHandlerProvider = auditPostBatchHandlerProvider;
         }
 
         public IEnumerable<IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper>> Converters {
@@ -49,12 +54,18 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         public Batch Submit(Batch batch, BatchOptions options) {
             var submissionData = BuildSubmissionData(batch);
             var user = SecurityFacade.CurrentUser();
-            _contextLookuper.SetMemoryContext(batch.RemoteId, batch,true);
+            _contextLookuper.SetMemoryContext(batch.RemoteId, batch, true);
+
+            var auditPostBatchHandler = _auditPostBatchHandlerProvider.LookupItem(batch.Application, "detail", ApplicationConfiguration.ClientName);
+
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                 var originalItem = itemToSubmit.OriginalItem;
                 try {
-                    _maximoEngine.Execute(itemToSubmit.CrudData);
+                    var result = _maximoEngine.Execute(itemToSubmit.CrudData);
                     batch.SuccessItems.Add(originalItem.RemoteId);
+
+                    auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result, originalItem.AdditionalData));
+                
                 } catch (Exception e) {
                     if (options.GenerateProblems) {
                         var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
@@ -78,10 +89,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         private BatchSubmissionData BuildSubmissionData(Batch batch) {
 
             var submissionData = new BatchSubmissionData();
-            var jArray = new JArray();
+            //var jArray = new JArray();
             var user = SecurityFacade.CurrentUser();
             foreach (var item in batch.Items) {
-                jArray.Add(item.DataMapJSonObject);
+                //jArray.Add(item.DataMapJSonObject);
 
                 var applicationMetadata = user.CachedSchema(item.Application, new ApplicationMetadataSchemaKey(item.Schema, SchemaMode.None, ClientPlatform.Mobile));
                 var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);

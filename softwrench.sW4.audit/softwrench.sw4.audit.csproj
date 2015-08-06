@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -60,7 +64,12 @@
   <ItemGroup>
     <Compile Include="classes\Services\AuditManager.cs" />
     <Compile Include="classes\Model\AuditEntry.cs" />
+    <Compile Include="classes\Services\Batch\AuditPostBatchHandler.cs" />
+    <Compile Include="classes\Services\Batch\AuditPostBatchHandlerProvider.cs" />
+    <Compile Include="classes\Services\Batch\Data\AuditPostBatchData.cs" />
+    <Compile Include="Interfaces\IAuditPostBatchHandler.cs" />
     <Compile Include="Interfaces\IAuditManager.cs" />
+    <Compile Include="Migration\MigrationSwweb1322.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +96,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
