@@ -12,6 +12,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace softWrench.sW4.Data.Persistence.SWDB {
@@ -36,25 +37,53 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
         public T Save<T>(T ob) where T : class {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (var transaction = session.BeginTransaction()) {
-                    var b = ob as IBaseEntity;
-                    var aud = ob as IBaseAuditEntity;
-                    if (aud != null) {
-                        aud.UpdateDate = DateTime.Now;
-                    }
-
-                    if (b != null && (b.Id == 0 || b.Id == null)) {
-                        if (aud != null) {
-                            aud.CreationDate = DateTime.Now;
-                            aud.CreatedBy = SecurityFacade.CurrentUser().UserId;
-                        }
-                        b.Id = (int)session.Save(ob);
-                    } else {
-                        ob = session.Merge(ob);
-                    }
+                    ob = DoSave(ob, session);
                     transaction.Commit();
                     return ob;
                 }
             }
+        }
+
+        public ICollection<T> BulkSave<T>(ICollection<T> items) where T : class {
+            if (items == null || !items.Any()) {
+                return items;
+            }
+            var result = new List<T>(items.Count);
+            using (var session = SessionManager.Instance.OpenSession()) {
+                using (var transaction = session.BeginTransaction()) {
+                    // adding the saved items to a new collection 
+                    // because they can't replace the original's in an iteration 
+                    result.AddRange(items.Select(item => DoSave(item, session)));
+                    transaction.Commit();
+                }
+            }
+            return result;
+        }
+
+
+        private static T DoSave<T>(T ob, ISession session) where T : class
+        {
+            var b = ob as IBaseEntity;
+            var aud = ob as IBaseAuditEntity;
+            if (aud != null)
+            {
+                aud.UpdateDate = DateTime.Now;
+            }
+
+            if (b != null && (b.Id == 0 || b.Id == null))
+            {
+                if (aud != null)
+                {
+                    aud.CreationDate = DateTime.Now;
+                    aud.CreatedBy = SecurityFacade.CurrentUser().UserId;
+                }
+                b.Id = (int) session.Save(ob);
+            }
+            else
+            {
+                ob = session.Merge(ob);
+            }
+            return ob;
         }
 
         public void DeleteCollection(IEnumerable<object> collection) {

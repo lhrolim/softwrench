@@ -1,4 +1,4 @@
-﻿(function (angular, persistence) {
+(function (angular, persistence) {
     "use strict";
 
     angular.module("persistence.offline").factory("swdbDAO", ["$q", "offlineEntities", function ($q, entities) {
@@ -284,8 +284,7 @@
             },
 
             findSingleByQuery: function (entity, query, options) {
-                options = options || {};
-                var optionsToUse = angular.copy(options);
+                var optionsToUse = !!options ? angular.copy(options) : {};
                 optionsToUse.pagesize = 1;
                 optionsToUse.pageNumber = 1;
                 return this.findByQuery(entity, query, options)

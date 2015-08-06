@@ -1,16 +1,13 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, angular) {
     "use strict";
 
-    service.$inject = ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "routeService"];
-
-    mobileServices.factory('synchronizationFacade', service);
-
-    function service($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, routeService) {
+    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService) {
         
+        //#region Utils
+
         function getDownloadDataCount(dataDownloadResult) {
             var count = 0;
             angular.forEach(dataDownloadResult, function (result) {
-                
                 if (!angular.isArray(result)) {
                     count += result;
                     return;
@@ -23,6 +20,62 @@
             });
             return count;
         }
+
+        /**
+         * Updates the Batches and creates a SyncOperation.
+         * 
+         * @param Object completionResult 
+         */
+        function onBatchesCompleted(completionResult) {
+            var log = $log.get("dataSynchronizationService#onBatchesCompleted");
+            var start = completionResult.start;
+            var batchTuples = completionResult.batchTuples;
+            var promises = [];
+            angular.forEach(batchTuples, function (tuple) {
+                var remoteBatch = tuple.remote;
+                var batch = tuple.local;
+                promises.push(batchService.updateBatch(batch, remoteBatch));
+            });
+            $q.all(promises)
+                .then(function (batches) {
+                    return dataSynchronizationService.syncData().then(function (downloadResults) {
+                        var dataCount = getDownloadDataCount(downloadResults);
+                        return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
+                    });
+                })
+                .then(function (operation) {
+                    log.info("created SyncOperation for async Batch Processing");
+                    synchronizationNotificationService.notifySynchronizationReceived(operation);
+                })
+                .catch(function (error) {
+                    log.error(error);
+                });
+        }
+
+        /**
+         * For each item in the payload adds the related AuditEntries in their 'additionaldata' field.
+         * 
+         * @returns Promise resolved with the updated payload
+         */
+        function onBeforeBatchSubmit(batch, params, payload) {
+            var promises = [];
+            angular.forEach(payload.items, function (item) {
+                var promise = offlineAuditService.getEntriesForEntity(item.dataentry, batch.application).then(function (entries) {
+                    item.additionaldata.auditentries = entries;
+                    return item;
+                });
+                promises.push(promise);
+            });
+            return $q.all(promises).then(function (items) {
+                // substitute payload's items by items with auditentries
+                payload.items = items;
+                return payload;
+            });
+        }
+
+        //#endregion
+
+        //#region Public methods
 
         /**
          * Executes a full download (data, metadata and association data) and creates a SyncOperation
@@ -100,7 +153,7 @@
                                 return synchronizationOperationService.createBatchOperation(start, batchResults);
                             }
                             // sync case: download ONLY data and create a SyncOperation indicating both a Batch submission and a download
-                            return associationDataSynchronizationService.syncData()
+                            return dataSynchronizationService.syncData()
                                 .then(function (downloadResults) {
                                     log.debug("Batch returned synchronously --> performing download");
                                     var dataCount = getDownloadDataCount(downloadResults);
@@ -110,37 +163,12 @@
                 });
         }
 
-        /**
-         * Updates the Batches and creates a SyncOperation.
-         * 
-         * @param Object completionResult 
-         */
-        function onBatchesCompleted(completionResult) {
-            var log = $log.get("dataSynchronizationService#onBatchesCompleted");
-            var start = completionResult.start;
-            var batchTuples = completionResult.batchTuples;
-            var promises = [];
-            angular.forEach(batchTuples, function (tuple) {
-                var remoteBatch = tuple.remote;
-                var batch = tuple.local;
-                promises.push(batchService.updateBatch(batch, remoteBatch));
-            });
-            $q.all(promises)
-                .then(function (batches) {
-                    return associationDataSynchronizationService.syncData().then(function (downloadResults) {
-                        var dataCount = getDownloadDataCount(downloadResults);
-                        return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
-                    });
-                })
-                .then(function (operation) {
-                    log.info("created SyncOperation for async Batch Processing");
-                    synchronizationNotificationService.notifySynchronizationReceived(operation);
-                })
-                .catch(function (error) {
-                    log.error(error);
-                });
-        }
+        //#endregion
 
+        //#region Service instance
+
+        // registering batch submit callback on batchService
+        batchService.onBeforeBatchSubmit(onBeforeBatchSubmit);
         // registering completion callback on the asyncSynchronizationService
         asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
@@ -150,6 +178,11 @@
         }
 
         return api;
+        //#endregion
     }
 
-})(mobileServices);
+    //#region Service registration
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", synchronizationFacade]);
+    //#endregion
+
+})(mobileServices, angular);

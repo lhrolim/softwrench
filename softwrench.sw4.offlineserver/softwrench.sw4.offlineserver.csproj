@@ -95,6 +95,10 @@
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.audit\softwrench.sw4.audit.csproj">
+      <Project>{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}</Project>
+      <Name>softwrench.sw4.audit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
       <Project>{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}</Project>
       <Name>softwrench.sw4.batches.api</Name>

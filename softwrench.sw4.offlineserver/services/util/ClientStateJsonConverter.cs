@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sW4.audit.classes.Model;
 
 namespace softwrench.sw4.offlineserver.services.util {
     public class ClientStateJsonConverter {
@@ -75,7 +77,8 @@ namespace softwrench.sw4.offlineserver.services.util {
                     Status = BatchStatus.SUBMITTING,
                     UpdateDate = DateTime.Now,
                     Schema = "detail",
-                    Operation = item.operation
+                    Operation = item.operation,
+                    AdditionalData = item.additionaldata
                 };
                 result.Add(batchItem);
             }

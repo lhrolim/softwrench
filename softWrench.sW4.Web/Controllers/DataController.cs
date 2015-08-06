@@ -211,6 +211,7 @@ namespace softWrench.sW4.Web.Controllers {
                     operationDataRequest.Operation,
                     applicationMetadata.Name,
                     maximoResult.Id,
+                    maximoResult.UserId,
                     json.ToString(),
                     DateTime.Now.FromServerToRightKind());
             }

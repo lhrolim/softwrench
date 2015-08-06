@@ -1,4 +1,4 @@
-﻿/*
+/*
  * jQuery Scanner Detection
  *
  * Copyright (c) 2013 Julien Maurel

@@ -85,6 +85,9 @@
                 if (deletedIds.length > 0) {
                     var deleteQuery = { query: entities.DataEntry.deleteQueryPattern, args: [buildIdsString(deletedIds), application.applicationName] };
                     queryArray.push(deleteQuery);
+                    //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
+                    var deleteAuditQuery = { query: entities.AuditEntry.deleteRelatedByRefIdStatement, args: [application.apllicationName, buildIdsString(deletedIds)] };
+                    queryArray.push(deleteAuditQuery);
                 }
             }
             //ignoring composition number to SyncOperation table

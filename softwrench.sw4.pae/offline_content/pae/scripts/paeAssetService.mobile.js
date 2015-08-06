@@ -30,8 +30,12 @@
                 var loadedAsset = null;
                 maximoDataService.loadItemByMaximoUid("asset", schema, data)
                     .then(function (asset) {
+                        asset.isDirty = true;
+                        return swdbDAO.save(asset);
+                    })
+                    .then(function (asset) {
                         loadedAsset = asset;
-                        return offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId);
+                        return offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId, data);
                     })
                     .then(function (auditentry) {
                         return crudContextService.loadDetail(loadedAsset);

@@ -7,8 +7,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.audit.classes.Model {
     [Class(Table = "audit_entry", Lazy = false)]
-    public class AuditEntry : IBaseEntity
-    {
+    public class AuditEntry : IBaseEntity {
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
@@ -18,6 +17,8 @@ namespace softwrench.sW4.audit.classes.Model {
         public virtual string RefApplication { get; set; }
         [Property]
         public virtual string RefId { get; set; }
+        [Property]
+        public virtual string RefUserId { get; set; }
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
         public virtual byte[] Data { get; set; }
@@ -26,36 +27,24 @@ namespace softwrench.sW4.audit.classes.Model {
         [Property]
         public virtual DateTime CreatedDate { get; set; }
 
-        public virtual string DataStringValue
-        {
+        public virtual string DataStringValue {
             get { return StringExtensions.GetString(CompressionUtil.Decompress(Data)); }
-            set { Data = CompressionUtil.Compress(value.GetBytes()); }
+            set { Data = CompressionUtil.Compress(value == null ? null : value.GetBytes()); }
         }
 
-        public AuditEntry()
-        {
-            
+        public AuditEntry() {
+
         }
 
-        public AuditEntry(string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
-        {
+        public AuditEntry(string action, string refApplication, string refId, string refUserId, string data, string createdBy, DateTime createdDate) {
             Action = action;
             RefApplication = refApplication;
             RefId = refId;
+            RefUserId = refUserId;
             DataStringValue = data;
             CreatedBy = createdBy;
             CreatedDate = createdDate;
         }
 
-        public AuditEntry(int id, string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
-        {
-            Id = id;
-            Action = action;
-            RefApplication = refApplication;
-            RefId = refId;
-            DataStringValue = data;
-            CreatedBy = createdBy;
-            CreatedDate = createdDate;
-        }
     }
 }
