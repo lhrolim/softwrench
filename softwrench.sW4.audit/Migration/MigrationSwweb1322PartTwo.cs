@@ -1,7 +1,7 @@
 ﻿using FluentMigrator;
 
 namespace softwrench.sW4.audit.Migration {
-    [Migration(201508061215)]
+    [Migration(2015050817021)]
     public class MigrationSwweb1322PartTwo : FluentMigrator.Migration {
 
         public override void Up() {
