@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>softwrench.sW4.WebMobile</title>
+
+    <!-- softwrench.sW4.WebMobile references -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="css/optionfield.css" rel="stylesheet" />
+    <link href="Content/Mobile/styles/directives/swoperationicon.css" rel="stylesheet" />
+    <link href="Content/Mobile/styles/list.css" rel="stylesheet" />
+    <link href="Content/Mobile/styles/detail.css" rel="stylesheet" />
+    <link href="Content/Mobile/styles/login.css" rel="stylesheet" />
+    <link href="Content/Vendor/downloadedvendor/ionic-v1.0.0/css/ionic.min.css" rel="stylesheet">
+    <link href="Content/Vendor/css/ionautocomplete.css" rel="stylesheet">
+
+    <!-- Cordova reference, this is added to your app when it's built. -->
+    <!--For some reason Ripple doesnt like enclosed <script/> tags-->
+
+    <script src="scripts/platformOverrides.js"></script>
+
+    <script src="scripts/index.js"></script>
+    <script src="Content/Vendor/scripts/jquery.js"></script>
+    <script src="Content/Vendor/scripts/moment.js"></script>
+    <script src="Content/Vendor/scripts/angular.js"></script>
+    <script src="Content/Vendor/scripts/angular-ui-router.js"></script>
+    <script src="Content/Vendor/scripts/angular-sanitize.js"></script>
+    <script src="Content/Vendor/scripts/angular-animate.js"></script>
+    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0/js/ionic.min.js"></script>
+    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0/js/ionic-angular.js"></script>
+
+    <script src="Content/Vendor/downloadedvendor/ionautocomplete.js"></script>
+
+
+
+    <script src="Content/Vendor/scripts/ng-cordova.js"></script>
+    <script src="Content/Vendor/downloadedvendor/persistence.js"></script>
+    <script src="Content/Vendor/downloadedvendor/jquery.scannerdetection.js"></script>
+
+    <script src="Content/Vendor/downloadedvendor/persistence.store.sql.js"></script>
+    <script src="Content/Vendor/scripts/persistence.store.websql.js"></script>
+    <script src="Content/Vendor/downloadedvendor/persistence.store.cordovasql.js"></script>
+    <script src="cordova.js"></script>
+
+    <script src="Content/Mobile/scripts/mobile_bootstrap.js"></script>
+    <script src="Content/Mobile/scripts/utils/mobileconstants.js"></script>
+
+    <!--    <script src="scripts/mobile_angular.js"></script>-->
+    <!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->
+    <script type="text/javascript" src="Content/Mobile/scripts/persistence/module.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/offlineEntities.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/offlinePersistenceBootstrap.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/swdbDAO.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/persistence/config.entities.js"></script>
+    <script type="text/javascript" src="Content/Shared/audit_offline/scripts/offline/audit.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/object_util.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/schema_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/field_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/validation_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/format_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/event_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/expression_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/rest_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/user_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.application.select.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.entry.detail.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.entry.list.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/compositionMenuController.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_composition_detail.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_composition_list.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_detail.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_input.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crudlist.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/filterOptionController.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/logincontroller.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/maincontroller.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/settingscontroller.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/syncoperationdetail.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/syncoperationhistory.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/application/applicationstateservice.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/configuration/configurationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudContextHolderService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudContextService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudFilterContextService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/data/datamapSanitizationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineCompositionService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineSaveService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/data/operationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/login/loginService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/login/securityservice.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/menu/menuModelService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/metadataModelService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineAssociationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineSchemaService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/routes/routesService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/storage/localstorageservice.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/associationDataSynchronizationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/asyncSynchronizationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/batchService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/dataSynchronizationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/metadataSynchronizationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/notificationPluginWrapper.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/rowstampService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationFacade.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationNotificationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationOperationService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_input_fields.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_output_fields.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/directives/messagesection.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/directives/option_field.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/directives/swoperationicon.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/maximoservices/maximodataservice.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/maximoservices/workorder_offline_service.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileajaxinterceptor.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileconstants.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileutils.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/filters/capitalize.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/filters/dateconverter.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/filters/linebreak.js"></script>
+    <!-- end auto template tags -->
+
+
+</head>
+<!-- <body ng-app="softwrench"> -->
+<body>
+    <!--    <ion-nav-bar class="bar-stable">-->
+    <!--        <ion-nav-back-button>-->
+    <!--        </ion-nav-back-button>-->
+    <!--    </ion-nav-bar>-->
+    <!--
+      The views will be rendered in the <ion-nav-view> directive below
+      Templates are in the /templates folder (but you could also
+      have templates inline in this html file if you'd like).
+    -->
+    <ion-nav-view></ion-nav-view>
+
+</body>
+</html>

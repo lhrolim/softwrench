@@ -1,24 +1,26 @@
 # Local-only VS/Re#/etc files
 *.suo
 *.user
+*.apk
 *.gpState
 _ReSharper.*
 .*.swp
 /Auth.targets
 .DS_Store
 Thumbs.db
-
+/.vs
 softwrench.sw4.jstest/jenkinstest-results.xml
 softwrench.sw4.jstest/test-results.testxml
 softWrench.sW4.Web/Content/Customers/
 softWrench.sW4.Web/Content/Shared/
 softWrench.sW4.Web/Content/Scripts/softwrench/shared
 
-softWrench.sW4.WebMobile/Content/Customers/
-softWrench.sW4.WebMobile/Content/Shared/
-softWrench.sW4.WebMobile/Content/Vendor/scripts
-softWrench.sW4.WebMobile/Content/Vendor/fonts
+softWrench.sW4.WebMobile/www/Content/Customers/**/
+softWrench.sW4.WebMobile/www/Content/Shared/**/
+softWrench.sW4.WebMobile/www/Content/Vendor/scripts/*.js
+softWrench.sW4.WebMobile/www/Content/Vendor/fonts
 
+softWrench.sW4.WebMobile/platforms/
 softWrench.sW4.WebMobile/bld/
 softWrench.sW4.WebMobile/bower_components/
 

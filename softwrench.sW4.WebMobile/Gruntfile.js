@@ -5,44 +5,44 @@ module.exports = function (grunt) {
 
     var commonScripts = [
         // persistence.offline
-        "Content/Mobile/scripts/persistence/module.js",
-        "Content/Mobile/scripts/persistence/services/**/*.js",
-        "Content/Mobile/scripts/persistence/config.entities.js",
+        "www/Content/Mobile/scripts/persistence/module.js",
+        "www/Content/Mobile/scripts/persistence/services/**/*.js",
+        "www/Content/Mobile/scripts/persistence/config.entities.js",
         // audit.offline
-        "Content/Shared/audit/scripts/offline/audit.js"
+        "www/Content/Shared/audit_offline/scripts/offline/audit.js"
     ];
 
     var sharedScripts = [
-        "Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js",
-        "Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js",
-        "Content/Shared/webcommons/scripts/softwrench/util/object_util.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/context_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/schema_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/field_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/validation_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/format_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/event_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/expression_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/rest_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
-        "Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
-        "Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
-        "Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
+        "www/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/object_util.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/context_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/schema_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/field_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/validation_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/format_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/event_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/expression_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/rest_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
     ];
 
     var appScripts = [
-        "Content/Mobile/scripts/controllers/**/*.js",
-        "Content/Mobile/scripts/services/**/*.js",
-        "Content/Mobile/scripts/directives/**/*.js",
-        "Content/Mobile/scripts/maximoservices/**/*.js",
-        "Content/Mobile/scripts/utils/**/*.js",
-        "Content/Mobile/scripts/filters/**/*.js"
+        "www/Content/Mobile/scripts/controllers/**/*.js",
+        "www/Content/Mobile/scripts/services/**/*.js",
+        "www/Content/Mobile/scripts/directives/**/*.js",
+        "www/Content/Mobile/scripts/maximoservices/**/*.js",
+        "www/Content/Mobile/scripts/utils/**/*.js",
+        "www/Content/Mobile/scripts/filters/**/*.js"
     ];
 
     //TODO: make a client-based build??
@@ -51,7 +51,7 @@ module.exports = function (grunt) {
     var customer = grunt.option("customer");
     if (customer) {
         customerScripts = [
-            "Content/Customers/" + customer + "/scripts/**/*.mobile.js"
+            "www/Content/Customers/" + customer + "_offline/scripts/**/*.mobile.js"
         ];
     }
 
@@ -61,14 +61,14 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         clean: {
-            folder: "Content/Vendor/scripts/",
-            folder2: "Content/Vendor/styles/"
+            folder: "www/Content/Vendor/scripts/",
+            folder2: "www/Content/Vendor/styles/"
         },
 
         bowercopy: {
 
             options: {
-                destPrefix: 'Content/Vendor/scripts'
+                destPrefix: 'www/Content/Vendor/scripts'
             },
 
 
@@ -101,7 +101,7 @@ module.exports = function (grunt) {
             css: {
 
                 options: {
-                    destPrefix: 'Content/Vendor/css'
+                    destPrefix: 'www/Content/Vendor/css'
                 },
                 files: {
                     'ionautocomplete.css': 'ion-autocomplete/dist/ion-autocomplete.min.css',
@@ -141,14 +141,14 @@ module.exports = function (grunt) {
 
             build: {
                 src: solutionScripts,
-                dest: 'layout.html'
+                dest: 'www/layout.html'
             }
         },
 
         concat: {
             mobileScripts: {
                 src: solutionScripts,
-                dest: "scripts/dist/mobile_angular.js"
+                dest: "www/scripts/dist/mobile_angular.js"
             }
         }
 

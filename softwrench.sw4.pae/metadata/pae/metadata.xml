@@ -123,6 +123,7 @@
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
           <event type="onload" service="paeAssetService" method="initAssetDetailListener"/>
         </detail>
+   
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
