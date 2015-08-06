@@ -508,8 +508,8 @@
 
   <complexType name="Lookup">
     <sequence>
-      maxOccurs="1" minOccurs="0">
-      </element>
+      <element name="lookupFilters" type="tns:LookupFilters"
+         maxOccurs="1" minOccurs="0"></element>
     </sequence>
     <attribute name="sourceApplication" type="string"></attribute>
     <attribute name="sourceField" type="string"></attribute>

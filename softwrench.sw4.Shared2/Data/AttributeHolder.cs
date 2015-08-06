@@ -15,6 +15,7 @@ namespace softwrench.sW4.Shared2.Data {
 
         protected AttributeHolder(IDictionary<string, object> attributes) {
             Attributes = attributes;
+            new Dictionary<string,object>(EqualityComparer.)
         }
 
 

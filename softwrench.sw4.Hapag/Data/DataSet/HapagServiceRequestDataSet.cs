@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using softWrench.sW4.Metadata.Applications.DataSet.Faq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagServiceRequestDataSet : HapagBaseApplicationDataSet {

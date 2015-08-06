@@ -47,13 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\manchester\dataset\ComMatusetransDataSet.cs" />
     <Compile Include="classes\com\cts\manchester\migration\Migration20150331Comsw74.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\manchester\configuration\" />
     <Folder Include="classes\com\cts\manchester\connector\" />
-    <Folder Include="classes\com\cts\manchester\dataset\" />
     <Folder Include="web_content\manchester\htmls\" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +96,14 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{CE228C26-938D-4D6F-95FA-12CC5241AFB5}</Project>
+      <Name>softWrench.sW4</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

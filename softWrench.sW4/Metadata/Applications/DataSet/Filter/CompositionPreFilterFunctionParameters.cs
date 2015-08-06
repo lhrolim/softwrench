@@ -1,7 +1,7 @@
-﻿using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata.Entities.Schema;
-using softwrench.sW4.Shared2.Data;
+﻿using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Entities.Schema;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {
     public class CompositionPreFilterFunctionParameters : BasePreFilterParameters<ApplicationCompositionCollectionSchema> {

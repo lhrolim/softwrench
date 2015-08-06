@@ -50,7 +50,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
-        <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.ServiceRequest.DispatchOperationHandler" />
+        <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
   </entities>
