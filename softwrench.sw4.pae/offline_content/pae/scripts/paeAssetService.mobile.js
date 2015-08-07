@@ -5,12 +5,12 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications").factory("paeAssetService", [
-        "scanningCommonsService", "$log", "crudContextService", "offlineAuditService", "$ionicPopup", "maximoDataService",
+        "scanningCommonsService", "$log", "crudContextService", "offlineAuditService", "$ionicPopup", "maximoDataService","swdbDAO",
         paeAssetService]);
 
     //#endregion
 
-    function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup, maximoDataService) {
+    function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup, maximoDataService,swdbDAO) {
 
         //#region Service Instance
 

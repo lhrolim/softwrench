@@ -5,7 +5,7 @@ namespace softwrench.sW4.audit.Migration {
     public class MigrationSwweb1322 : FluentMigrator.Migration {
 
         public override void Up() {
-            Alter.Table("AUDIT_ENTRY").AddColumn("RefUserId").AsString();
+            Alter.Table("AUDIT_ENTRY").AddColumn("RefUserId").AsString().WithDefaultValue("");
         }
 
         public override void Down() {

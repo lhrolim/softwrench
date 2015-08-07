@@ -120,11 +120,14 @@
                   if (toState.name.startsWith("main.cruddetail")) {
                       //needs to refresh the displayables and datamap everytime the detail page is loaded.
                       init();
-                      if (toState.name == "main.cruddetail.maininput") {
+                      if (toState.name === "main.cruddetail.maininput") {
                           crudContextService.resetTab();
                       }
-                  } else {
+                  } else{
                       crudContextService.leavingDetail();
+                      if (!toState.name.startsWith("main.crud")) {
+                          crudContextService.resetContext();
+                      }
                   }
               });
 

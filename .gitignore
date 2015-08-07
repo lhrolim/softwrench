@@ -4,6 +4,7 @@
 *.apk
 *.gpState
 _ReSharper.*
+UpgradeLog2.*
 .*.swp
 /Auth.targets
 .DS_Store
@@ -19,6 +20,9 @@ softWrench.sW4.WebMobile/www/Content/Customers/**/
 softWrench.sW4.WebMobile/www/Content/Shared/**/
 softWrench.sW4.WebMobile/www/Content/Vendor/scripts/*.js
 softWrench.sW4.WebMobile/www/Content/Vendor/fonts
+
+Backup/
+
 
 softWrench.sW4.WebMobile/platforms/
 softWrench.sW4.WebMobile/bld/

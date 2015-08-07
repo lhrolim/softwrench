@@ -2,7 +2,7 @@
 (function () {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$rootScope', '$timeout', '$ionicPopover','eventService'
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$rootScope', '$timeout', '$ionicPopover', 'eventService'
         , function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover, eventService) {
 
             'use strict';
@@ -19,7 +19,7 @@
                 });
                 var schema = crudContextService.currentListSchema();
                 var datamap = crudContextService.itemlist();
-                eventService.onload($scope, schema, datamap, {schemaId: schema.schemaId});
+                eventService.onload($scope, schema, datamap, { schemaId: schema.schemaId });
             }
 
             init();
@@ -66,7 +66,7 @@
                 $scope.filteroptionspopover.hide();
             });
 
-            $scope.hasNewSchemaAvailable = function() {
+            $scope.hasNewSchemaAvailable = function () {
                 return crudContextService.hasNewSchemaAvailable();
             }
 
@@ -129,7 +129,10 @@
 
             $rootScope.$on('$stateChangeSuccess',
                  function (event, toState, toParams, fromState, fromParams) {
-                     if (!toState.name.startsWith("main.crudlist")) {
+                     $log.get("crudlist#statehandler").debug("handler called");
+                     if (!toState.name.startsWith("main.crud")) {
+                         crudContextService.resetContext();
+                     }else if (!toState.name.startsWith("main.crudlist")) {
                          $timeout(function () {
                              //to avoid strange transitions on the screen
                              //TODO: transition finished event??
