@@ -42,7 +42,7 @@
          * @param function callback receives the scanned data as it's single argument 
          */
         function registerScanCallBackOnSchema(matchingparameters, callback) {
-            
+
             var registerApplication = matchingparameters.applicationName;
             var registerSchemaId = matchingparameters.schemaId;
             var registerTabId = matchingparameters.tabid || "";
@@ -69,6 +69,10 @@
                         var callbackFn = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema.schemaId, tabId)];
                         if (callbackFn) {
                             callbackFn(data);
+                        } else {
+                            //no call back defined, let´s take the chance to unregister the scanner detector
+                            //whenever it reaches the proper screen it can then register it self again
+                            $(document).scannerDetection(null);
                         }
                         return;
                     }
@@ -76,6 +80,13 @@
                     //if we have multiple schemas on screen, invoke both functions unless they are the same
                     var callbackFn1 = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema[0].schemaId, tabId)];
                     var callbackFn2 = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema[1].schemaId, tabId)];
+                    if (callbackFn1 == null && callbackFn2 == null) {
+                        //no call back defined, let´s take the chance to unregister the scanner detector
+                        //whenever it reaches the proper screen it can then register it self again
+                        $(document).scannerDetection(null);
+                        return;
+                    }
+
                     if (callbackFn1 == callbackFn2) {
                         callbackFn1(data);
                         return;
@@ -86,7 +97,7 @@
                     if (callbackFn2) {
                         callbackFn2(data);
                     }
-                    
+
                 }
             });
         };
