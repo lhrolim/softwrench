@@ -9,8 +9,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
-
-    class BaseTicketDataSet : MaximoApplicationDataSet {
+    public class BaseTicketDataSet : MaximoApplicationDataSet {
 
 
 
@@ -105,6 +104,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
 
 
+
+
+        public String BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+            return null;
+        }
 
     }
 }

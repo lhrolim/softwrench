@@ -332,7 +332,7 @@
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" prefilterfunction=""/>
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
             </composition>
             <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="" hidden="true" fetchtype="manual">
               <collectionproperties allowcreation="false" listschema="composition"/>
@@ -439,7 +439,9 @@
           <composition relationship="labtrans" label="Labor">
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
-          <composition relationship="attachment" label="Attachments" />
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
           <field attribute="description" label="Description"  />
           <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>

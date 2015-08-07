@@ -12,7 +12,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
-    class BaseServiceRequestDataSet : BaseTicketDataSet {
+    public class BaseServiceRequestDataSet : BaseTicketDataSet {
         private readonly SWDBHibernateDAO _swdbDao;
         /* Need to add this prefilter function for the problem codes !! 
         public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters)
@@ -66,6 +66,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             dto.AppendWhereClauseFormat("(( DOCLINKS.ownerid = '{0}' ) AND ( UPPER(COALESCE(DOCLINKS.ownertable,'')) = 'SR' )  or (ownerid in (select commloguid from commlog where ownerid = '{0}' and ownertable like 'SR') and ownertable like 'COMMLOG')) and ( 1=1 )", ticketuid);
             return dto;
         }
+
 
         public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters) {
             return GetClassStructureType(parameters, "SR");

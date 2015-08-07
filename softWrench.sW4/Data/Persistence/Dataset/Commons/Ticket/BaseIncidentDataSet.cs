@@ -3,7 +3,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Metadata.Applications.DataSet;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
-    class BaseIncidentDataSet : BaseTicketDataSet {
+    public class BaseIncidentDataSet : BaseTicketDataSet {
 
 
         public IEnumerable<IAssociationOption> GetIncidentClassStructureType(OptionFieldProviderParameters parameters) {

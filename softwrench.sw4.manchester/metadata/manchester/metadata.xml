@@ -481,7 +481,7 @@
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
             </composition>
           </section>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
