@@ -24,6 +24,10 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
             return savedState;
         },
 
+        resetContext:function() {
+            crudContextHolderService.reset();
+        },
+
         isList: function() {
             return crudContextHolderService.isList();
         },
@@ -112,6 +116,9 @@ mobileServices.factory('crudContextService', function ($q, $log, swdbDAO,
 
         currentCompositionsToShow: function() {
             var detailSchema = this.currentDetailSchema();
+            if (!detailSchema) {
+                return [];
+            }
             var allDisplayables = tabsService.tabsDisplayables(detailSchema);
             return allDisplayables;
         },

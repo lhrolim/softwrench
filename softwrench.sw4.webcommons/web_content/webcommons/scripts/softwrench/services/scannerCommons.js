@@ -57,7 +57,13 @@
                     var tabId = crudContextHolderService.getActiveTab() || "";
                     var schema = crudContextHolderService.currentSchema();
                     var applicationName = crudContextHolderService.currentApplicationName();
-                    
+                    if (applicationName == null || schema == null) {
+                        //we´re not on a crud screen, let´s take the chance to unregister the scanner detector
+                        //whenever it reaches the proper screen it can then register it self again
+                        $(document).scannerDetection(null);
+                        return;
+                    }
+
                     if (!Array.isArray(schema)) {
                         //sometimes we could have multiple schemas at the same time on screen, such as a master-detail for compositions 
                         var callbackFn = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema.schemaId, tabId)];

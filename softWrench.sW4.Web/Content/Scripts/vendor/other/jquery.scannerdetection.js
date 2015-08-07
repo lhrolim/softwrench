@@ -15,6 +15,13 @@
 (function ($) {
     $.fn.scannerDetection = function (options) {
 
+        if (options === null) {
+            //removing the scanner listener, for the sake of application restoring best performance on inputs
+            $(this).data('scannerDetection', { options: {} })
+                .unbind('.scannerDetection').unbind('keydown.scannerDetection');
+            return this;
+        }
+
         // If string given, call onComplete callback
         if (typeof options === "string") {
             this.each(function () {

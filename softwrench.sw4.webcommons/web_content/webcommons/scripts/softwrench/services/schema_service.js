@@ -102,6 +102,10 @@
         },
 
         getTitle: function (schema, datamap, smallDevices) {
+            if (!schema) {
+                return null;
+            }
+
             if (!datamap) {
                 return "New " + schema.title;
             }
