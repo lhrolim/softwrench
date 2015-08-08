@@ -23,15 +23,14 @@
             <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges()">Add</button>
         </div>
 
+        <!-- empty title to position the buttons correctly -->
+        <h1 class="title"></h1>
 
-
-        <div class="buttons" style="position: absolute; right: 5px; top:5px">
-            <button class="button icon ion-arrow-left-a" ng-click="navigatePrevious()" ng-show="showNavigation()"></button>
-            <button class="button icon ion-arrow-right-a" ng-click="navigateNext()" ng-show="showNavigation()"></button>
-            <button class="button icon ion-android-apps" ng-click="expandCompositions($event)" ng-show="!hasDirtyChanges() && hasAnyComposition()"></button>
-            <button class="button icon ion-android-done" ng-show="hasDirtyChanges()" ng-click="saveChanges()">Save</button>
-
-            <!--            <button class="button icon ion-android-more-vertical"></button>-->
+        <div class="buttons" style="white-space: nowrap">
+            <button class="button icon ion-arrow-left-a" ng-click="navigatePrevious()" ng-if="showNavigation()"></button>
+            <button class="button icon ion-arrow-right-a" ng-click="navigateNext()" ng-if="showNavigation()"></button>
+            <button class="button icon ion-android-apps" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"></button>
+            <button class="button icon ion-android-done" ng-click="saveChanges()" ng-if="hasDirtyChanges()">Save</button>
         </div>
 
     </ion-header-bar>
