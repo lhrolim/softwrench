@@ -105,10 +105,12 @@
                     if (e.which >= 48 && e.which <= 90 && (e.target.type === "text" || e.target.type === "search")) {
                         e.preventDefault();
                         focusedInput = e.target;
-                        if (e.shiftKey) {
-                            //non capital letters
+                        if (e.shiftKey || e.which < 65) {
+                            // capital letters and numbers
                             charBuffer = String.fromCharCode(e.which);
-                        } else {
+                        } else
+                        {
+                            //non capital letters
                             charBuffer = String.fromCharCode(e.which + 32);
                         }
                     } else {

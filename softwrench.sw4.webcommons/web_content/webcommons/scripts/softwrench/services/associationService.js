@@ -123,6 +123,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             } else if (fullObject == null) {
                 //now, the object was not present in the array, let´s update it. For instance, we have a lookup with a single initial option, and changed it to another.
                 //the array should contain 2 elements in the end. If the object was already there, no need to do anything
+                //TODO: it would better to update it, but need some code to locate it by key first, update getFullObject to return the index also
                 if (scope.associationOptions[key] == undefined) {
                     scope.associationOptions[key] = [];
                 }
