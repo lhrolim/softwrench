@@ -175,7 +175,7 @@
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
           </association>
           <composition relationship="attachment" label="Attachments" printenabled="false">
-            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
         </schema>
         
@@ -328,7 +328,7 @@
             </composition>
 
             <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
               
             </composition>
             <composition relationship="relatedrecord" label="Related Records">

@@ -59,7 +59,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return compList;
         }
 
-        public SearchRequestDto AppendCommlogDoclinks(CompositionPreFilterFunctionParameters parameter) {
+        public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
             var originalEntity = parameter.OriginalEntity;
 
             var origrecordid = parameter.BASEDto.ValuesDictionary["ownerid"].Value;

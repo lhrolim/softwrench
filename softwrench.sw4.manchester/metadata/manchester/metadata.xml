@@ -288,7 +288,7 @@
             </composition>
 
             <composition relationship="attachment" label="Attachments">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
               
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
