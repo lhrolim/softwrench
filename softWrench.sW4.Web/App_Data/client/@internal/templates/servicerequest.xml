@@ -150,6 +150,8 @@
           <field attribute="assetsiteid" hidden="true"/>
           <field attribute="location" hidden="true"/>
           <field attribute="assetnum" hidden="true"/>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="cinum" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           
           <field attribute="ticketuid" label="SR No:" hidden="true"/>
@@ -212,6 +214,8 @@
             <field attribute="assetsiteid" hidden="true"/>
             <field attribute="location" hidden="true"/>
             <field attribute="assetnum" hidden="true"/>
+            <field attribute="failurecode" hidden="true"/>
+            <field attribute="cinum" hidden="true"/>
             
 
             <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >

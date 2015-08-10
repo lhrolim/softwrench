@@ -112,6 +112,8 @@
           <field attribute="assetsiteid" hidden="true"/>
           <field attribute="location" hidden="true"/>
           <field attribute="assetnum" hidden="true"/>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="cinum" hidden="true"/>
 
           <section orientation="horizontal">
             <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true" />

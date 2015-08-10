@@ -118,7 +118,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             //CONTRACTS
             sb.AppendFormat(@" or(ownertable = 'WARRANTYVIEW' and ownerid in (select wocontractid from wocontract where wonum ='{0}' and orgid ='{1}'))",wonum,orgid);
 
-            sb.AppendFormat(@" or(ownertable = 'SERVICEADDRESS' and ownerid in (select woserviceaddressid from woserviceaddress where wonum ='{0}' and siteid = '{1}'))", wonum, siteId);
+            sb.AppendFormat(@" or(ownertable = 'WOSERVICEADDRESS' and ownerid in (select woserviceaddressid from woserviceaddress where wonum ='{0}' and siteid = '{1}'))", wonum, siteId);
 
 
             sb.AppendFormat(@" or(ownertable = 'SAFETYPLAN' and ownerid in 

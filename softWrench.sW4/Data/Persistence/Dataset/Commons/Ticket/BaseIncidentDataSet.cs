@@ -31,6 +31,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var assetnum = originalEntity.GetAttribute("assetnum");
             var location = originalEntity.GetAttribute("location");
             var solution = originalEntity.GetAttribute("solution");
+            var cinum = originalEntity.GetAttribute("cinum");
+            var failureCode = originalEntity.GetAttribute("failurecode");
 
 
 
@@ -61,6 +63,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             if (solution != null) {
                 sb.AppendFormat(@" or (ownertable='SOLUTION' and ownerid in (select solutionid from solution where solution='{0}'))", solution);
             }
+
+            if (cinum != null) {
+                sb.AppendFormat(@" or(ownertable = 'CI' and ownerid in (select ciid from ci where cinum='{0}' and assetlocsiteid ='{1}'))",
+                    cinum, siteId);
+            }
+
+            if (failureCode != null) {
+                sb.AppendFormat(@" or(ownertable = 'FAILURELIST' and ownerid in (select failurelist from failurelist where failurecode='{0}' ))",
+                    failureCode);
+            }
+
+            sb.AppendFormat(@" or(ownertable = 'TKSERVICEADDRESS' and ownerid in (select tkserviceaddressid from TKSERVICEADDRESS where ticketid ='{0}' and siteid = '{1}' and class = 'INCIDENT'))", origrecordid, siteId);
 
             sb.AppendFormat(
                 @" or (ownertable='COMMLOG' and ownerid in (select commloguid from commlog where ownertable='INCIDENT' and ownerid='{0}')) ", ticketuid);
