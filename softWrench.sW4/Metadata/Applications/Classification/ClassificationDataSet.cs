@@ -10,7 +10,7 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Metadata.Applications.Classification {
-    internal class ClassificationDataSet : ISingletonComponent
+    public class ClassificationDataSet : ISingletonComponent
     {
         public enum ClassStructureType { 
             Asset = 0, 

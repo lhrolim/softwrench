@@ -150,7 +150,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 var dataSet = DataSetProvider.GetInstance().LookupDataSet(entityMetadata.ApplicationName, entityMetadata.AppSchema.SchemaId);
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
-                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.Schema, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
+                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 

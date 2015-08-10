@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
-using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.application;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.WS.API;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Security;
-using softwrench.sW4.Shared2.Data;
-using IComponent = cts.commons.simpleinjector.IComponent;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     /// <summary>
