@@ -104,7 +104,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             }
 
             if (cinum != null) {
-                sb.AppendFormat(@" or(ownertable = 'CI' and ownerid in (select ciid from ci where cinum='{0}' and siteid ='{1}'))",
+                sb.AppendFormat(@" or(ownertable = 'CI' and ownerid in (select ciid from ci where cinum='{0}' and assetlocsiteid ='{1}'))",
                     cinum, siteId);
             }
 
