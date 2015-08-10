@@ -176,6 +176,7 @@
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
+          <field attribute="failurecode"  hidden="true"/>
 
           <section orientation="horizontal">
             <field attribute="wonum" label="WO No:" readonly="true">

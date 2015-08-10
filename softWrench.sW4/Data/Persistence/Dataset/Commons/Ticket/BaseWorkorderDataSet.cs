@@ -66,6 +66,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
             var originalEntity = parameter.OriginalEntity;
             var siteId = originalEntity.GetAttribute("siteid");
+            var orgid = originalEntity.GetAttribute("orgid");
             var workorderid = originalEntity.GetAttribute("workorderid");
             var woclass = originalEntity.GetAttribute("woclass");
             var wonum = originalEntity.GetAttribute("wonum");
@@ -74,6 +75,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var jpNum = originalEntity.GetAttribute("jpnum");
             var pmNum = originalEntity.GetAttribute("pmnum");
             var cinum = originalEntity.GetAttribute("cinum");
+            var failureCode = originalEntity.GetAttribute("failurecode");
 
             var sb = new StringBuilder();
             //base section
@@ -107,6 +109,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                 sb.AppendFormat(@" or(ownertable = 'CI' and ownerid in (select ciid from ci where cinum='{0}' and assetlocsiteid ='{1}'))",
                     cinum, siteId);
             }
+
+            if (failureCode != null) {
+                sb.AppendFormat(@" or(ownertable = 'FAILURELIST' and ownerid in (select failurelist from failurelist where failurecode='{0}' ))",
+                    failureCode);
+            }
+
+            //CONTRACTS
+            sb.AppendFormat(@" or(ownertable = 'WARRANTYVIEW' and ownerid in (select wocontractid from wocontract where wonum ='{0}' and orgid ='{1}'))",wonum,orgid);
+
+            sb.AppendFormat(@" or(ownertable = 'SERVICEADDRESS' and ownerid in (select woserviceaddressid from woserviceaddress where wonum ='{0}' and siteid = '{1}'))", wonum, siteId);
 
 
             sb.AppendFormat(@" or(ownertable = 'SAFETYPLAN' and ownerid in 
