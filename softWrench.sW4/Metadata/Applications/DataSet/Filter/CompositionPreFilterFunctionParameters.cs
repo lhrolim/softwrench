@@ -2,19 +2,20 @@
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities.Schema;
+using softWrench.sW4.Metadata.Entities.Sliced;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {
     public class CompositionPreFilterFunctionParameters : BasePreFilterParameters<ApplicationCompositionCollectionSchema> {
-        private readonly EntitySchema _schema;
+        private readonly SlicedEntityMetadata _slicedEntityMetadata;
 
 
-        public CompositionPreFilterFunctionParameters(EntitySchema schema, SearchRequestDto baseDto, AttributeHolder originalEntity, ApplicationCompositionCollectionSchema composition)
+        public CompositionPreFilterFunctionParameters(SlicedEntityMetadata slicedEntityMetadata, SearchRequestDto baseDto, AttributeHolder originalEntity, ApplicationCompositionCollectionSchema composition)
             : base(baseDto, composition, originalEntity) {
-            _schema = schema;
+            _slicedEntityMetadata = slicedEntityMetadata;
         }
 
-        public EntitySchema Schema {
-            get { return _schema; }
+        public SlicedEntityMetadata Schema {
+            get { return _slicedEntityMetadata; }
         }
     }
 }

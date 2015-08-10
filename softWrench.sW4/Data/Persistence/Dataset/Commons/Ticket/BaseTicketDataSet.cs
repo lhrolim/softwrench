@@ -12,6 +12,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
     public class BaseTicketDataSet : MaximoApplicationDataSet {
 
 
+        /*private const string Base = "(( DOCLINKS.ownerid = '{0}' ) AND ( UPPER(COALESCE(DOCLINKS.ownertable,'')) = '{0}' )  ";*/
 
         //WAPPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO.
         //APPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO (por enquanto).
@@ -78,9 +79,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                                                     from classusewith  
                                                                     where classusewith.classstructureid=c.classstructureid
                                                                     and objectname= '{2}')",
-                                        parameters.OriginalEntity.Attributes["orgid"],
-                                        parameters.OriginalEntity.Attributes["siteid"],
-                                        ReferenceEquals(parameters.OriginalEntity.Attributes["class"], "") ? "" : woclass,
+                                        parameters.OriginalEntity.GetAttribute("orgid"),
+                                        parameters.OriginalEntity.GetAttribute("siteid"),
+                                        ReferenceEquals(parameters.OriginalEntity.GetAttribute("class"), "") ? "" : woclass,
                                         ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as"
                                         );
 
@@ -104,11 +105,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
 
 
-
-
-        public String BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
-            return null;
-        }
 
     }
 }

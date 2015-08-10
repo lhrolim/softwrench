@@ -301,6 +301,8 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
+        public string ExtraLeftJoinSection { get; set; }
+
         public virtual SearchRequestDto ShallowCopy() {
             return (SearchRequestDto)MemberwiseClone();
         }

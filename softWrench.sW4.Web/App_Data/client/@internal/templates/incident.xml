@@ -107,6 +107,12 @@
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
 
+          <field attribute="class" label="" hidden="true"/>
+          <field attribute="solution" hidden="true"/>
+          <field attribute="assetsiteid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+
           <section orientation="horizontal">
             <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>

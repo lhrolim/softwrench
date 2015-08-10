@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet;
@@ -60,6 +61,69 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         public IEnumerable<IAssociationOption> GetWOClassStructureType(OptionFieldProviderParameters parameters) {
             return GetClassStructureType(parameters, "WORKORDER");
         }
+
+        public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+            var originalEntity = parameter.OriginalEntity;
+            var siteId = originalEntity.GetAttribute("siteid");
+            var workorderid = originalEntity.GetAttribute("workorderid");
+            var woclass = originalEntity.GetAttribute("woclass");
+            var wonum = originalEntity.GetAttribute("wonum");
+            var assetnum = originalEntity.GetAttribute("assetnum");
+            var location = originalEntity.GetAttribute("location");
+            var jpNum = originalEntity.GetAttribute("jpnum");
+            var pmNum = originalEntity.GetAttribute("pmNum");
+
+            var sb = new StringBuilder();
+            //base section
+            sb.AppendFormat(
+                @"(ownertable = 'WORKORDER' and ownerid ='{0}') or(ownertable = 'WORKORDER' and ownerid in (select workorderid from workorder
+                        where parent ='{1}' and istask = 1 and siteid ='{2}'))", workorderid, wonum, siteId);
+
+            if (assetnum != null) {
+                sb.AppendFormat(
+                    @" or(ownertable = 'ASSET' and ownerid in (select assetuid from asset where assetnum ='{0}' and siteid ='{1}'))",
+                    assetnum, siteId);
+            }
+
+            if (location != null) {
+                sb.AppendFormat(@" or (ownertable = 'LOCATIONS' and ownerid in (select locationsid from locations where location ='{0}' and siteid ='{1}'))",
+                    location, siteId);
+            }
+
+            if (jpNum != null) {
+                sb.AppendFormat(@" or (ownertable = 'JOBPLAN' and ownerid in (select jobplanid from jobplan where jpnum ='{0}' and (siteid is null or siteid = '{1}')) )",
+                    jpNum, siteId);
+            }
+
+            if (pmNum != null) {
+                sb.AppendFormat(@" or(ownertable = 'PM' and ownerid in 
+                        (select pmuid from pm where pmnum ='{0}' and siteid ='{1}'))",
+                    pmNum, siteId);
+            }
+
+
+            sb.AppendFormat(@" or(ownertable = 'SAFETYPLAN' and ownerid in 
+                        (select safetyplanuid from safetyplan, wosafetyplan where safetyplan.safetyplanid = wosafetyplan.safetyplanid 
+                        and wosafetyplan.wonum ={0} and wosafetyplan.siteid ={1}))
+                        or(ownertable in ('SR', 'INCIDENT', 'PROBLEM') and 
+                            ownerid in (select ticketuid from ticket,relatedrecord where ticketid = recordkey and ticket.class = relatedrecord.class 
+                                and relatedrecclass={2} and relatedreckey={0} and relatedrecsiteid={1}))
+                        or(ownertable in ('WOCHANGE','WORELEASE','WOACTIVITY') 
+                        and ownerid in (select workorderid from workorder, relatedrecord where wonum = recordkey and workorder.woclass = relatedrecord.class 
+                        and relatedrecclass={2} and relatedreckey={0} and relatedrecsiteid={1}))
+                        or(ownertable= 'COMMLOG' and ownerid in (select commloguid from 
+                            commlog where ownerid ={3} and ownertable in (select value from synonymdomain where domainid = 'WOCLASS')))
+                        or (ownertable= 'SLA' and ownerid in (select slaid from sla, slarecords, workorder where sla.slanum= slarecords.slanum and 
+                            slarecords.ownerid= workorder.workorderid and sla.objectname= 'WORKORDER' and slarecords.ownertable= 'WORKORDER' and workorder.wonum={0}))
+", "'" + wonum + "'", "'" + siteId + "'", "'" + woclass + "'", "'" + workorderid + "'");
+
+            parameter.BASEDto.SearchValues = null;
+            parameter.BASEDto.SearchParams = null;
+            parameter.BASEDto.AppendWhereClause(sb.ToString());
+
+            return parameter.BASEDto;
+        }
+
 
         public override string ApplicationName() {
             return "workorder";

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
@@ -28,7 +29,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
 
 
-       
+
 
 
         public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
@@ -58,13 +59,60 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return compList;
         }
 
-        public SearchRequestDto AppendCommlogDoclinks(CompositionPreFilterFunctionParameters preFilter) {
-            var dto = preFilter.BASEDto;
-            dto.SearchValues = null;
-            dto.SearchParams = null;
-            var ticketuid = preFilter.OriginalEntity.GetAttribute("ticketuid");
-            dto.AppendWhereClauseFormat("(( DOCLINKS.ownerid = '{0}' ) AND ( UPPER(COALESCE(DOCLINKS.ownertable,'')) = 'SR' )  or (ownerid in (select commloguid from commlog where ownerid = '{0}' and ownertable like 'SR') and ownertable like 'COMMLOG')) and ( 1=1 )", ticketuid);
-            return dto;
+        public SearchRequestDto AppendCommlogDoclinks(CompositionPreFilterFunctionParameters parameter) {
+            var originalEntity = parameter.OriginalEntity;
+
+            var origrecordid = parameter.BASEDto.ValuesDictionary["ownerid"].Value;
+            var origrecordclass = parameter.BASEDto.ValuesDictionary["ownertable"].Value as string;
+
+            var ticketuid = originalEntity.GetAttribute("ticketuid");
+
+
+            var siteId = originalEntity.GetAttribute("siteid");
+            var assetsiteid = originalEntity.GetAttribute("assetsiteid");
+
+            var assetnum = originalEntity.GetAttribute("assetnum");
+            var location = originalEntity.GetAttribute("location");
+            var solution = originalEntity.GetAttribute("solution");
+
+
+
+            var sb = new StringBuilder();
+            //base section
+            sb.AppendFormat(
+                @"(ownertable = 'SR' and ownerid = {0})
+                or (  ownertable='PROBLEM' and ownerid in (select ticketuid from problem where ticketid={1} and class={2} )) 
+                or (  ownertable='INCIDENT' and ownerid in (select ticketuid from incident where ticketid={1} and class={2}))
+                or (  ownertable='WOCHANGE' and ownerid in (select workorderid from wochange where wonum={1} and woclass={2}))
+                or (  ownertable='WORELEASE' and ownerid in (select workorderid from worelease where wonum={1} and woclass={2}))
+                or (ownertable='WOACTIVITY' and ownerid in (select workorderid from woactivity where origrecordid={1} and origrecordclass={2}))
+                or (ownertable='JOBPLAN' and ownerid in (select jobplanid from jobplan where jpnum in (select jpnum from woactivity where origrecordid={1} and origrecordclass={2})))
+            ", "'" + ticketuid + "'", "'" + origrecordid + "'", "'" + origrecordclass + "'");
+
+            if (assetnum != null) {
+                sb.AppendFormat(
+                    @" or(ownertable = 'ASSET' and ownerid in (select assetuid from asset where assetnum ='{0}' and siteid ='{1}'))",
+                    assetnum, siteId);
+            }
+
+            if (location != null) {
+                sb.AppendFormat(@" or (ownertable = 'LOCATIONS' and ownerid in (select locationsid from locations where location ='{0}' and assetsiteid ='{1}'))",
+                    location, siteId);
+            }
+
+            if (solution != null) {
+                sb.AppendFormat(@" or (ownertable='SOLUTION' and ownerid in (select solutionid from solution where solution='{0}'))", solution);
+            }
+
+            sb.AppendFormat(
+                @" or (ownertable='COMMLOG' and ownerid in (select commloguid from commlog where ownertable='SR' and ownerid='{0}')) ", ticketuid);
+
+
+            parameter.BASEDto.SearchValues = null;
+            parameter.BASEDto.SearchParams = null;
+            parameter.BASEDto.AppendWhereClause(sb.ToString());
+
+            return parameter.BASEDto;
         }
 
 
