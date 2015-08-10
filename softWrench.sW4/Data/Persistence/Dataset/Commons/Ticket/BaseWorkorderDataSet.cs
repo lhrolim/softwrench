@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +45,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             if (result != null && result.Any()) {
                 foreach (var record in result) {
-                    list.Add(new AssociationOption(record["VALUE"], $"{record["VALUE"]} - {record["LABEL"]}"));
+                    list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
                 }
             } else {
                 // If no values are found, then default to numeric selection 1-5
