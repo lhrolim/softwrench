@@ -211,18 +211,13 @@
          * @returns Promise resolved with array of updated SyncOperations 
          */
         this.completeFromAsyncBatch = function(batches) {
-            var operationIds = batches.map(function(batch) {
-                return "'" + batch.syncoperation + "'";
+            var enddate = new Date();
+            var operations = batches.map(function(batch) {
+                batch.syncoperation.status = "COMPLETE";
+                batch.syncoperation.enddate = enddate;
+                return batch.syncoperation;
             });
-            return swdbDAO.findByQuery("SyncOperation", "where id in ({0})".format(operationIds))
-                .then(function (operations) {
-                    var enddate = new Date();
-                    angular.forEach(function(operation) {
-                        operation.status = "COMPLETE";
-                        operation.enddate = enddate;
-                    });
-                    return swdbDAO.bulkSave(operations);
-                });
+            return swdbDAO.bulkSave(operations);
         };
 
     };
