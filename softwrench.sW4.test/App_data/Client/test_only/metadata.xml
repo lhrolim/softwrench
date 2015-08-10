@@ -118,8 +118,8 @@
         <connectorParameter key="mea_integration_interface" value="SWWO" />
         <connectorParameter key="mif_integration_interface" value="MXSW3Workorder" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
-        <connectorParameter key="createfollowup_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.FollowUpWorkorderHandler" />
-        <connectorParameter key="updatestatus_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.UpdateStatusWorkorderHandler" />
+        <connectorParameter key="createfollowup_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.FollowUpWorkorderHandler" />
+        <connectorParameter key="updatestatus_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.Ticket.UpdateStatusWorkorderHandler" />
       </connectorParameters>
     </entity>
     <entity name="worklog" idAttribute="worklogid" >

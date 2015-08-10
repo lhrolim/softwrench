@@ -27,6 +27,7 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
         {
             var result = base.GetApplicationDetail(application, user, request);
 
+
             if (result != null && _contextLookuper.LookupContext().ScanMode)
             {
                 // Submit the requested record back to the database with updated audit date

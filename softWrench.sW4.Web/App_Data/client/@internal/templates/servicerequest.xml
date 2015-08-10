@@ -50,7 +50,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
-        <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.ServiceRequest.DispatchOperationHandler" />
+        <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
   </entities>
@@ -145,6 +145,13 @@
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
+          
+          <field attribute="solution" hidden="true"/>
+          <field attribute="assetsiteid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="class" label="" hidden="true"/>
+          
           <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
           </association>
@@ -168,7 +175,7 @@
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
           </association>
           <composition relationship="attachment" label="Attachments" printenabled="false">
-            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
         </schema>
         
@@ -193,12 +200,19 @@
             <section id ="siteidsection"/>
 
             <field attribute="ticketuid" label="SR No:" hidden="true"/>
-            <field attribute="class" label="" hidden="true"/>
+            
             <field attribute="actlabcost" hidden="true" />
             <field attribute="actlabhrs" hidden="true"/>
             <field attribute="siteid" hidden="true" />
             <field attribute="orgid" hidden="true"/>
             <field attribute="createby" hidden="true"/>
+
+            <field attribute="class" label="" hidden="true"/>
+            <field attribute="solution" hidden="true"/>
+            <field attribute="assetsiteid" hidden="true"/>
+            <field attribute="location" hidden="true"/>
+            <field attribute="assetnum" hidden="true"/>
+            
 
             <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
@@ -314,7 +328,7 @@
             </composition>
 
             <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
               
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
