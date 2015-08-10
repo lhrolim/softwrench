@@ -72,7 +72,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var assetnum = originalEntity.GetAttribute("assetnum");
             var location = originalEntity.GetAttribute("location");
             var jpNum = originalEntity.GetAttribute("jpnum");
-            var pmNum = originalEntity.GetAttribute("pmNum");
+            var pmNum = originalEntity.GetAttribute("pmnum");
+            var cinum = originalEntity.GetAttribute("cinum");
 
             var sb = new StringBuilder();
             //base section
@@ -100,6 +101,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                 sb.AppendFormat(@" or(ownertable = 'PM' and ownerid in 
                         (select pmuid from pm where pmnum ='{0}' and siteid ='{1}'))",
                     pmNum, siteId);
+            }
+
+            if (cinum != null) {
+                sb.AppendFormat(@" or(ownertable = 'CI' and ownerid in (select ciid from ci where cinum='{0}' and siteid ='{1}'))",
+                    cinum, siteId);
             }
 
 

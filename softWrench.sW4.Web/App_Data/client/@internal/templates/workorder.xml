@@ -174,7 +174,8 @@
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <field attribute="pmNum"  hidden="true"/>
+          <field attribute="pmnum"  hidden="true"/>
+          <field attribute="cinum"  hidden="true"/>
 
           <section orientation="horizontal">
             <field attribute="wonum" label="WO No:" readonly="true">
