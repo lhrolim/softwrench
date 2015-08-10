@@ -38,6 +38,15 @@
             });
             $q.all(promises)
                 .then(function (batches) {
+                    // update the related syncoperations as 'COMPLETE'
+                    // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
+                    return synchronizationOperationService.completeFromAsyncBatch(batches).then(function (operations) {
+                        // resolve with the saved batches to transparently continue the promise 
+                        // chain as it was before (not aware of syncoperations update)
+                        return batches;
+                    });
+                })
+                .then(function (batches) {
                     return dataSynchronizationService.syncData().then(function (downloadResults) {
                         var dataCount = getDownloadDataCount(downloadResults);
                         return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);

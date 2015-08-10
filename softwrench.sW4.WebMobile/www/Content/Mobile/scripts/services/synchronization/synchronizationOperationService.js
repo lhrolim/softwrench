@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function(angular, modules) {
     "use strict";
 
     /**
@@ -78,11 +78,12 @@
                 startdate: startdate,
                 numberofdownloadeditems: numberofdownloadeditems,
                 numberofdownloadedsupportdata: 0,
-                hasProblems: hasProblem
+                hasProblems: hasProblem,
+                enddate: new Date()
             };
             return saveBatchOperation(operation, relatedBatches);
         };
-
+        
         this.createNonBatchOperation = function(startdate, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange) {
             var operation = {
                 startdate: startdate,
@@ -199,8 +200,28 @@
                     return self.formatOperation(operation);
                 });
         };
+
+        /**
+         * Updates the status of the SyncOperations related to the batches to "COMPLETE"
+         * and sets their enddate as now.
+         * 
+         * TODO: this method assumes there's a single batch/application per SyncOperation -> develop generic case
+         * 
+         * @param [Batch] batches 
+         * @returns Promise resolved with array of updated SyncOperations 
+         */
+        this.completeFromAsyncBatch = function(batches) {
+            var enddate = new Date();
+            var operations = batches.map(function(batch) {
+                batch.syncoperation.status = "COMPLETE";
+                batch.syncoperation.enddate = enddate;
+                return batch.syncoperation;
+            });
+            return swdbDAO.bulkSave(operations);
+        };
+
     };
 
     modules.webcommons.service("synchronizationOperationService", ["$log", "$q", "swdbDAO", "formatService", SynchronizationOperationService]);
 
-})();
+})(angular, modules);
