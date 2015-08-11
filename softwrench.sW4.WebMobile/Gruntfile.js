@@ -199,9 +199,11 @@ module.exports = function (grunt) {
         var cordovaBuild = require('taco-team-build'),
             done = this.async();
 
-        var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"], // Darwin == OSX
+         //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
+
+         var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android"],
             buildArgs = {
-                android: ["--release", "--ant"],    // Warning: Omit the extra "--" when referencing platform
+                android: ["--debug"],    // Warning: Omit the extra "--" when referencing platform
                 ios: ["--release", "--device"],     // specific preferences like "-- --ant" for Android
                 windows: ["--release"],             // or "-- --win" for Windows. You may also encounter a
                 wp8: ["--release"]                  // "TypeError" after adding a flag Android doesn't recognize
