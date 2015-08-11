@@ -12,11 +12,6 @@ using softWrench.sW4.Util;
 namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
     class DeltaDentalWorkOrderDataSet : BaseWorkorderDataSet {
 
-        public IEnumerable<IAssociationOption> GetWOClassStructureType(OptionFieldProviderParameters parameters)
-        {
-            return GetClassStructureType(parameters, "WORKORDER");
-        }
-
         protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass)
         {
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
