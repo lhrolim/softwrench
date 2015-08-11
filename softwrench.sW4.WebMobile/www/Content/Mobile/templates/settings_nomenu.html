@@ -17,6 +17,24 @@
             <button class="button button-calm button-block" ng-click="save()">Save</button>
         </div>
 
+        <div class="list card" ng-if="config">
+            <div class="item item-divider">
+                About
+            </div>
+            <div class="item item-text-wrap" ng-show="config.server">
+                Client name:&nbsp;{{config.server.client}}
+            </div>
+            <div class="item item-text-wrap" ng-show="config.server">
+                Server environment:&nbsp;{{config.server.environment}}
+            </div>
+            <div class="item item-text-wrap" ng-show="config.server">
+                Server version:&nbsp;{{config.server.version}}
+            </div>
+            <div class="item item-text-wrap" ng-show="config.client">
+                App version:&nbsp;{{config.client.version}}
+            </div>
+        </div>
+
     </ion-content>
 </ion-view>
 

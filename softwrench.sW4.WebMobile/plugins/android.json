@@ -27,6 +27,10 @@
                         {
                             "xml": "<feature name=\"Battery\"><param name=\"android-package\" value=\"org.apache.cordova.batterystatus.BatteryListener\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -88,6 +92,9 @@
             "PACKAGE_NAME": "io.cordova.softwrench.sW4.WebMobile"
         },
         "org.apache.cordova.battery-status": {
+            "PACKAGE_NAME": "io.cordova.softwrench.sW4.WebMobile"
+        },
+        "uk.co.whiteoctober.cordova.appversion": {
             "PACKAGE_NAME": "io.cordova.softwrench.sW4.WebMobile"
         }
     },

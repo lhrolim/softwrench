@@ -1,8 +1,10 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("SettingsController", ["$scope", "routeService", "swdbDAO", "contextService", "securityService",
-        function ($scope, routeService, swdbDAO, contextService, securityService) {
+    softwrench.controller("SettingsController", ["$scope", "routeService", "swdbDAO", "contextService", "securityService", "applicationStateService",
+        function ($scope, routeService, swdbDAO, contextService, securityService, applicationStateService) {
+
+            $scope.config = null;
 
             function init() {
                 var settings = contextService.fetchFromContext("settings", true, true);
@@ -11,6 +13,11 @@
                 } else {
                     $scope.settings = {};
                 }
+
+                applicationStateService.getAppConfig().then(function(config) {
+                    $scope.config = config;
+                });
+
             }
 
             $scope.goToLogin = function () {
