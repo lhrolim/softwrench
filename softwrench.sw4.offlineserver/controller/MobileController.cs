@@ -15,6 +15,7 @@ using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.dto.association;
 using softwrench.sw4.offlineserver.services;
+using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
@@ -39,7 +40,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly SynchronizationManager _syncManager;
 
-        private readonly StatusColorResolver _statusColorResolver;
+        private readonly AppConfigurationProvider _appConfigurationProvider;
 
         private readonly OffLineBatchService _offLineBatchService;
 
@@ -47,9 +48,9 @@ namespace softwrench.sw4.offlineserver.controller {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManager syncManager, StatusColorResolver statusColorResolver, OffLineBatchService offLineBatchService) {
+        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider, OffLineBatchService offLineBatchService) {
             _syncManager = syncManager;
-            _statusColorResolver = statusColorResolver;
+            _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
         }
 
@@ -74,20 +75,12 @@ namespace softwrench.sw4.offlineserver.controller {
             bool fromCache;
             var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
 
-            //make it a default json object syntax to avoid errors on the offline side
-            var statusColorJSONString = "{}";
-
-            var statusColorJson = _statusColorResolver.FetchCatalogs();
-            if (statusColorJson != null) {
-                statusColorJSONString = statusColorJson.ToString(Newtonsoft.Json.Formatting.Indented);
-            }
-
             var response = new MobileMetadataDownloadResponseDefinition {
                 TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                StatusColorsJSON = statusColorJSONString
+                AppConfiguration = _appConfigurationProvider.AppConfig()
             };
 
             Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));

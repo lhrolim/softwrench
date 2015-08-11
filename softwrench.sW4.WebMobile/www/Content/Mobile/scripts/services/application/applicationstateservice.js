@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function applicationStateService(swdbDAO, $q, entities) {
+    function applicationStateService(swdbDAO, $q, entities, configurationService, $cordovaAppVersion) {
 
         //#region Utils
 
@@ -105,13 +105,35 @@
                 });
 
         }
+        
+        /**
+         * Fetches the app's configuration (server and client info).
+         * 
+         * @returns Promise resolved with dictionary containing 'server' and 'client' configuration (both are dictionaries) 
+         */
+        function getAppConfig() {
+            var serverConfigPromise = configurationService.getConfig("serverconfig");
+            var clientVersionPromise =  isRippleEmulator() ? $q.when("Ripple") : $cordovaAppVersion.getAppVersion();
+            return $q.all([serverConfigPromise, clientVersionPromise]).then(function (results) {
+                var serverConfig = results[0];
+                var appVersion = results[1];
+                var config = {
+                    'server': serverConfig,
+                    'client': {
+                        'version': appVersion
+                    }
+                };
+                return config;
+            });
+        }
 
         //#endregion
 
         //#region Service Instance
 
         var service = {
-            currentState: currentState
+            currentState: currentState,
+            getAppConfig: getAppConfig
         };
 
         return service;
@@ -121,7 +143,7 @@
 
     //#region Service registration
 
-    mobileServices.factory("applicationStateService", ["swdbDAO", "$q", "offlineEntities", applicationStateService]);
+    mobileServices.factory("applicationStateService", ["swdbDAO", "$q", "offlineEntities", "configurationService", "$cordovaAppVersion", applicationStateService]);
 
     //#endregion
 

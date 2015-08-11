@@ -1,8 +1,10 @@
-﻿mobileServices.factory('configurationService', function ($http, $log, $q, swdbDAO, contextService) {
-    return {
+﻿(function(mobileServices, angular) {
+    "use strict";
 
-        loadConfigs: function () {
-            swdbDAO.findAll("Configuration").success(function (items) {
+mobileServices.factory("configurationService", ["$http", "$log", "$q", "swdbDAO", "contextService", function ($http, $log, $q, swdbDAO, contextService) {
+    return {
+        loadConfigs: function() {
+            swdbDAO.findAll("Configuration").success(function(items) {
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
                     var config = item.data;
@@ -11,26 +13,37 @@
             });
         },
 
-
-        saveConfigs: function (configs) {
-            var entitiesPromises = [];
-            for (var i = 0; i < configs.length; i++) {
-                var config = configs[i];
-                var entityPreparedPromise = swdbDAO.instantiate("Configuration", { key: config.key, value: config.value });
-                entitiesPromises.push(entityPreparedPromise);
-            }
-            return $q.all(entitiesPromises).then(function (result) {
+        saveConfigs: function(configs) {
+            var entitiesPromises = configs.map(function(config) {
+                return swdbDAO.instantiate("Configuration", config);
+            });
+            return $q.all(entitiesPromises).then(function(result) {
                 return swdbDAO.bulkSave(result);
             }).then(function (items) {
-                for (i = 0; i < items.length; i++) {
-                    var item = items[i];
+                angular.forEach(items, function(item) {
                     contextService.insertIntoContext(item.key, item.value);
-                }
-                $q.when();
+                });
+                return items;
             });
+        },
 
-
+        /**
+         * Finds the Configuration with matching key.
+         * 
+         * @param String key 
+         * @returns Promise resolved with the Configuration's value if it was found, null otherwise 
+         */
+        getConfig: function(key) {
+            return swdbDAO.findSingleByQuery("Configuration", "key='{0}'".format(key))
+                .then(function(config) {
+                    if (!config) {
+                        return null;
+                    }
+                    return config.value;
+                });
         }
+    };
 
-    }
-});
+}]);
+
+})(mobileServices, angular);
