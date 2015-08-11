@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\deltadental\dataset\DeltaDentalWorkOrderDataSet.cs" />
     <Compile Include="classes\com\cts\deltadental\dataset\DeltaDentalServiceRequestDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
