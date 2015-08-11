@@ -9,7 +9,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
-    class BaseWorkorderDataSet : BaseTicketDataSet {
+    public class BaseWorkorderDataSet : BaseTicketDataSet {
 
 
         public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
