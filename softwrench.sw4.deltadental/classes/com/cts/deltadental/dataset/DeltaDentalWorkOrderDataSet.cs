@@ -21,10 +21,6 @@ namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
             return query + customColumnsWhere;
         }
 
-        public override string ApplicationName() {
-            return "workorder";
-        }
-
         public override string ClientFilter() {
             return "deltadental";
         }
