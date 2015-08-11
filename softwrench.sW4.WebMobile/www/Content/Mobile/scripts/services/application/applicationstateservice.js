@@ -113,7 +113,7 @@
          */
         function getAppConfig() {
             var serverConfigPromise = configurationService.getConfig("serverconfig");
-            var clientVersionPromise =  isRippleEmulator() ? $q.when("Ripple") : $cordovaAppVersion.getAppVersion();
+            var clientVersionPromise = isRippleEmulator() ? $q.when("Ripple") : $cordovaAppVersion.getVersionNumber();
             return $q.all([serverConfigPromise, clientVersionPromise]).then(function (results) {
                 var serverConfig = results[0];
                 var appVersion = results[1];
