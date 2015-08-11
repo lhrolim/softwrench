@@ -70,9 +70,9 @@
             }
         }
 
-        function wipeSchemaCacheIfNeeded() {
+        function wipeSchemaCacheIfNeeded(forceClean) {
             var systeminitMillis = contextService.getFromContext("systeminittime");
-            if (schemaCache && schemaCache.systeminitMillis != systeminitMillis) {
+            if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
                 delete sessionStorage["schemaCache"];
                 schemaCache = {
