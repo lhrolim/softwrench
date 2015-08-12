@@ -23,15 +23,15 @@
 
 package de.appplant.cordova.plugin.notification;
 
-import android.app.AlarmManager;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
+import android.app.AlarmManager;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * Wrapper around the JSON object passed through JS which contains all
@@ -175,31 +175,17 @@ public class Options {
     }
 
     /**
-     * ongoing flag for local notifications.
+     * Android only ongoing flag for local notifications.
      */
     public Boolean isOngoing() {
         return options.optBoolean("ongoing", false);
     }
 
     /**
-     * autoClear flag for local notifications.
+     * Trigger date in milliseconds.
      */
-    public Boolean isAutoClear() {
-        return options.optBoolean("autoClear", false);
-    }
-
-    /**
-     * ID for the local notification as a number.
-     */
-    public Integer getId() {
-        return options.optInt("id", 0);
-    }
-
-    /**
-     * ID for the local notification as a string.
-     */
-    public String getIdStr() {
-        return getId().toString();
+    public long getTriggerTime() {
+        return options.optLong("at", 0) * 1000;
     }
 
     /**
@@ -210,13 +196,21 @@ public class Options {
     }
 
     /**
-     * Trigger date in milliseconds.
+     * ID for the local notification.
      */
-    public long getTriggerTime() {
-        return Math.max(
-                System.currentTimeMillis(),
-                options.optLong("at", 0) * 1000
-        );
+    public String getId() {
+        return options.optString("id", "0");
+    }
+
+    /**
+     * ID for the local notification.
+     */
+    public int getIdAsInt() {
+        try {
+            return Integer.parseInt(getId());
+        } catch (Exception ignore) {
+            return 0;
+        }
     }
 
     /**

@@ -7,12 +7,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "org.apache.cordova.device": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.device"
-        }
-    },
     "io.litehelpers.cordova.sqlite": {
         "source": {
             "type": "git",
@@ -22,23 +16,32 @@
     },
     "de.appplant.cordova.plugin.local-notification": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-local-notifications.git",
-            "subdir": "."
-        }
+            "type": "registry",
+            "id": "de.appplant.cordova.plugin.local-notification"
+        },
+        "is_top_level": true,
+        "variables": {}
     },
-    "cordova-plugin-whitelist": {
+    "org.apache.cordova.device": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-whitelist.git",
-            "subdir": "."
-        }
+            "type": "registry",
+            "id": "org.apache.cordova.device"
+        },
+        "is_top_level": false,
+        "variables": {}
     },
     "uk.co.whiteoctober.cordova.appversion": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/whiteoctober/cordova-plugin-app-version.git",
-            "subdir": "."
+            "type": "registry",
+            "id": "uk.co.whiteoctober.cordova.appversion"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist"
         },
         "is_top_level": true,
         "variables": {}

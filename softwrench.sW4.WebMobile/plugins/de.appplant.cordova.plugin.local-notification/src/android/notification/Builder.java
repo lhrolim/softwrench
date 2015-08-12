@@ -23,6 +23,8 @@
 
 package de.appplant.cordova.plugin.notification;
 
+import java.util.Random;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -30,8 +32,6 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 import org.json.JSONObject;
-
-import java.util.Random;
 
 /**
  * Builder class for local notifications. Build fully configured local
@@ -130,7 +130,7 @@ public class Builder {
                 .setTicker(options.getText())
                 .setSmallIcon(options.getSmallIcon())
                 .setLargeIcon(options.getIconBitmap())
-                .setAutoCancel(options.isAutoClear())
+                .setAutoCancel(true)
                 .setOngoing(options.isOngoing())
                 .setStyle(style)
                 .setLights(options.getLedColor(), 500, 500);
@@ -158,7 +158,7 @@ public class Builder {
             return;
 
         Intent deleteIntent = new Intent(context, clearReceiver)
-                .setAction(options.getIdStr())
+                .setAction(options.getId())
                 .putExtra(Options.EXTRA, options.toString());
 
         PendingIntent dpi = PendingIntent.getBroadcast(

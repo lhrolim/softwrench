@@ -21,19 +21,18 @@
  * @APPPLANT_LICENSE_HEADER_END@
  */
 
-@interface APPLocalNotificationOptions : NSObject
+#import "AppDelegate.h"
 
-- (id) initWithDict:(NSDictionary*)dict;
+#import <Availability.h>
 
-@property (readonly, getter=id) NSString* id;
-@property (readonly, getter=badgeNumber) NSInteger badgeNumber;
-@property (readonly, getter=alertBody) NSString* alertBody;
-@property (readonly, getter=soundName) NSString* soundName;
-@property (readonly, getter=fireDate) NSDate* fireDate;
-@property (readonly, getter=repeatInterval) NSCalendarUnit repeatInterval;
-@property (readonly, getter=userInfo) NSDictionary* userInfo;
+extern NSString* const UIApplicationRegisterUserNotificationSettings;
 
-// If it's a repeating notification
-- (BOOL) isRepeating;
+@interface AppDelegate (APPLocalNotification)
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+// Tells the delegate what types of notifications may be used
+- (void)                    application:(UIApplication*)application
+    didRegisterUserNotificationSettings:(UIUserNotificationSettings*)settings;
+#endif
 
 @end
