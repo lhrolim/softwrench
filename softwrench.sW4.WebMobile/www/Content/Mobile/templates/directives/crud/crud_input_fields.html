@@ -9,7 +9,8 @@
                                   component-id="{{field.associationKey}}"
                                   items-method="associationSearch(query,componentId)"
                                   item-value-key="{{getAssociationValueField(field)}}"
-                                  item-view-value-key="{{getAssociationLabelField(field)}}" />
+                                  item-view-value-key="{{getAssociationLabelField(field)}}" association-description/>
+
             </div>
             <div ng-switch-when="OptionField">
                 {{datamap[field.target]}}
