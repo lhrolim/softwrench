@@ -170,7 +170,6 @@ module.exports = function (grunt) {
 
     });
 
-  
 
     grunt.loadNpmTasks("grunt-typescript");
     grunt.loadNpmTasks('grunt-contrib-uglify');
