@@ -193,7 +193,7 @@ module.exports = function (grunt) {
     grunt.registerTask('fulldev', ['clean', 'bowercopy:dev', 'tags']);
     grunt.registerTask('quick_dev', ['bowercopy:dev', 'bowercopy:css', 'tags']);
 
-    grunt.registerTask('vs2015', ['typescript','build']);
+    grunt.registerTask('vs2015', ['bowercopy:prod','build']);
 
      grunt.registerTask('build', function () {
         var cordovaBuild = require('taco-team-build'),
