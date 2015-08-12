@@ -85,7 +85,7 @@ namespace softWrench.sW4.Web {
                 ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
             SecurityFacade.InitSecurity();
-            Log.Info(LoggingUtil.BaseDurationMessage("**************App started in {0}*************", before));
+            Log.Info(String.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
