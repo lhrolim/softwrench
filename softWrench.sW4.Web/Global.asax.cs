@@ -44,7 +44,7 @@ namespace softWrench.sW4.Web {
         private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
             Log.InfoFormat("initing "+ applicationPath);
-            if ( ApplicationConfiguration.IsDev()) {
+            if (!ApplicationConfiguration.IsLocal() &&  ApplicationConfiguration.IsDev()) {
                 if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
                     //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
                     var clientName = applicationPath.Substring(4);
