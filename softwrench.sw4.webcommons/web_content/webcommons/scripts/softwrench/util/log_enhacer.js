@@ -1,14 +1,28 @@
 ﻿//base idea: http://blog.projectnibble.org/2013/12/23/enhance-logging-in-angularjs-the-simple-way/
 
+(function(angular, modules) {
+    "use strict";
+
 //var app = angular.module('sw_layout');
-modules.webcommons.run(['$log', 'contextService', enhanceAngularLog]);
+//modules.webcommons.run(['$log', 'contextService', enhanceAngularLog]);
+
+/**
+ * Enhancing $log with angular decorator so it can be further decorated with other decorators
+ * (altering the singleton in 'module.run' makes it harder to chain decorators).
+ */
+modules.webcommons.config(["$provide", function ($provide) {
+    $provide.decorator("$log", ["$delegate", "$injector", function($delegate, $injector) {
+        enhanceAngularLog($delegate, $injector);
+        return $delegate;
+    }]);
+}]);
 
 function ltEnabledLevel(currLevel, enabledLevel) {
     if (!enabledLevel) {
         return true;
     }
 
-    if (enabledLevel == "none") {
+    if (enabledLevel === "none") {
         return true;
     }
     if (enabledLevel.equalsIc("trace")) {
@@ -36,7 +50,7 @@ function getContextLevel(context) {
         return methodLogLevel;
     }
     var indexOf = context.indexOf("#");
-    if (indexOf != -1) {
+    if (indexOf >= 0) {
         var serviceName = context.substr(0, indexOf);
         var serviceLogLevel = sessionStorage["log_" + serviceName];
         if (serviceLogLevel !== undefined) {
@@ -51,34 +65,37 @@ function getMinLevel(globalLevel, contextLevel) {
         return globalLevel;
     }
 
-    if (contextLevel == "trace") {
+    if (contextLevel === "trace") {
         return contextLevel;
     }
 
-    if (contextLevel == "debug") {
-        return globalLevel == "trace" ? globalLevel : contextLevel;
+    if (contextLevel === "debug") {
+        return globalLevel === "trace" ? globalLevel : contextLevel;
     }
 
-    if (contextLevel == "info") {
+    if (contextLevel === "info") {
         return globalLevel.equalsAny("trace", "debug") ? globalLevel : contextLevel;
     }
 
-    if (contextLevel == "warn") {
+    if (contextLevel === "warn") {
         return globalLevel.equalsAny("trace", "debug", "info") ? globalLevel : contextLevel;
     }
 
     return globalLevel;
 }
 
-function enhanceAngularLog($log, contextService) {
+function enhanceAngularLog($log, $injector) {
     $log.enabledContexts = [];
 
+    var contextService;
 
     $log.get = function (context) {
         return this.getInstance(context);
     };
 
     $log.getInstance = function (context) {
+        // getting around circular deps: $rootScope <- contextService <- $log <- $exceptionHandler <- $rootScope
+        if (!contextService) contextService = $injector.get("contextService");
         return {
             log: enhanceLogging($log.log, 'log', context, contextService),
             info: enhanceLogging($log.info, 'info', context, contextService),
@@ -131,4 +148,8 @@ function enhanceAngularLog($log, contextService) {
             localStorage.logs += modifiedArguments[0] + "\n";
         };
     }
-}
+};
+
+
+
+})(angular, modules);
