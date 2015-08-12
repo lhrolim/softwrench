@@ -45,5 +45,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-vs-taco-support": {
+        "source": {
+            "type": "local",
+            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\node_modules\\taco-team-build\\taco-cordova-support-plugin"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
