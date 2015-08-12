@@ -86,7 +86,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     '<i class="icon ion-trash-a" style="cursor:pointer" ng-click="removeItem($index)"></i>',
                     '</ion-item>',
                     '<ion-item class="item-divider" ng-show="items.length > 0">{{selectItemsLabel}}</ion-item>',
-                    '<ion-item collection-repeat="item in items" item-height="55" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)">',
+                    '<ion-item collection-repeat="item in items" item-height="55" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)" class="item item-text-wrap">',
                     '{{getItemValue(item, itemViewValueKey)}}',
                     '</ion-item>',
                     '</ion-list>',
@@ -345,12 +345,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                 // render the view value of the model
                 ngModel.$render = function () {
-                    if (scope.itemValueKey) {
-                        element.val(scope.getItemValue(ngModel.$viewValue, scope.itemValueKey));
-                    } else {
-                        element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
-                    }
-
+                    element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
                 };
 
                 // set the view value of the model
@@ -371,7 +366,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     return {
         require: '?ngModel',
         restrict: 'E',
-        template: '<input ion-autocomplete type="text" readonly="readonly" class="ion-autocomplete" autocomplete="off" />',
+        template: '<input ion-autocomplete type="text" readonly="readonly" class="ion-autocomplete item-text-wrap" autocomplete="off" />',
         replace: true
     }
 });
