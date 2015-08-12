@@ -23,7 +23,6 @@
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"/>
 
 
-
   <if test="${property::exists('ignoretstamp')==true}">
     <!--makes development easier-->
     <property name="deploypath" value="${OutputDir}/deploy/local"></property>
