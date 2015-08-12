@@ -1,0 +1,2 @@
+#TargetFrameworkVersion=:PlatformToolSet=v120_wp81:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit
+debug|Win32|F:\Github\softwrench\softwrench.sW4.WebMobile\plugins\io.litehelpers.cordova.sqlite\src\windows\SQLite3-WinRT\SQLite3\SQLite3.WindowsPhone\|

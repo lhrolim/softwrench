@@ -413,6 +413,7 @@
   <target name="generatelinksMobile">
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
+      <property name="customerlinkcreated" value="1" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
       <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="offlinefolder" value="${foldername}/offline_content" />

@@ -1,0 +1,8 @@
+cd softwrench.sW4.WebMobile
+call npm install
+call grunt vs2015
+
+call robocopy www \\MAX7506DEV\sw4off\www  /MIR
+call xcopy /y  config.xml \\MAX7506DEV\sw4off
+call ren platforms\android\build\outputs\apk\android-debug.apk sw4.apk
+call xcopy /y  platforms\android\build\outputs\apk\sw.apk \\MAX7506DEV\sw4off\www\
