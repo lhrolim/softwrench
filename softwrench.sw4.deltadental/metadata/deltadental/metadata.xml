@@ -548,7 +548,7 @@
           <field attribute="transtype" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="enterby" hidden="true" />
-          <field attribute="payrate" hidden="true" />
+          <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
           <field attribute="transtype" default="WORK" hidden="true"/>
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()">
             <renderer type="lookup"/>
