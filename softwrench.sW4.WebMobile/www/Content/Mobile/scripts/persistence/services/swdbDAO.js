@@ -320,14 +320,18 @@
             },
 
             /**
-             * Deletes all entries for every entity in the database (every entity registered in window.entities).
+             * Deletes all entries for every entity in the database (every entity registered in window.entities), except for the ones passed as parameters.
+             * @param Array toExcludeArray 
              * 
              * @returns Promise 
              */
-            resetDataBase: function () {
+            resetDataBase: function (toExcludeArray) {
                 var queries = [];
+                toExcludeArray = toExcludeArray || {};
                 for (var entity in entities) {
-                    if (!entities.hasOwnProperty(entity)) continue;
+                    if (!entities.hasOwnProperty(entity) || toExcludeArray.indexOf(entity)!==-1) {
+                         continue;
+                    }
                     queries.push("delete from {0}".format(entity));
                 }
                 return this.executeQueries(queries);

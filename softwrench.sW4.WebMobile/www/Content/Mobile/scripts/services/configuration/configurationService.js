@@ -4,11 +4,14 @@
 mobileServices.factory("configurationService", ["$http", "$log", "$q", "swdbDAO", "contextService", function ($http, $log, $q, swdbDAO, contextService) {
     return {
         loadConfigs: function() {
-            swdbDAO.findAll("Configuration").success(function(items) {
+            swdbDAO.findAll("Configuration").then(function(items) {
                 for (var i = 0; i < items.length; i++) {
-                    var item = items[i];
-                    var config = item.data;
+                    var config = items[i];
                     contextService.insertIntoContext(config.key, config.value);
+                    if (config.key === "serverconfig") {
+                        //adapting so that we can use the same contextService.isDev() here
+                        contextService.insertIntoContext("environment", config.value.environment);
+                    }
                 }
             });
         },

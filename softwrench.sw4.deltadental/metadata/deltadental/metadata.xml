@@ -338,7 +338,7 @@
                 <renderer type="combo" />
               </association>
             </section>
-            <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_SRClassStructureType">
+            <optionfield attribute="classstructureid" label="Request Code:" dependantfields="siteid" providerattribute="_SRClassStructureType">
               <renderer type="autocompleteclient" />
             </optionfield>
           </section>
@@ -484,7 +484,7 @@
           <customization position="labtrans"/>
           <customization position="tooltrans"/>
           <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_WOClassStructureType" requiredexpression="true">
+            <optionfield attribute="classstructureid" label="Request Code:" dependantfields="siteid" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
             </optionfield>
           </customization>
@@ -512,7 +512,7 @@
         
         <schema id="newdetail" platform="web" redeclaring="false">
           <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Request Code:" providerattribute="_WOClassStructureType" requiredexpression="true">
+            <optionfield attribute="classstructureid" label="Request Code:" dependantfields="siteid" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
             </optionfield>
           </customization>

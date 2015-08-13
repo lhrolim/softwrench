@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
     class DeltaDentalServiceRequestDataSet : BaseServiceRequestDataSet {
-        private readonly string[] _sites = { "PA", "ALN", "SF", "RNCHO" };
+        private readonly string[] _sites = { "PA", "ALP", "SF", "RNCHO" };
         public DeltaDentalServiceRequestDataSet(SWDBHibernateDAO swdbDao) : base(swdbDao) {
         }
 
