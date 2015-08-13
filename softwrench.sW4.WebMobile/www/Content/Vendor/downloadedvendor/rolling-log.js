@@ -284,11 +284,11 @@
                 * Internal use: Writes log to console, adds log to in-memory list,
                 * then calls to file if it is time.
                 */
-                writeLog: function () {
-                    // first argument is log level
-                    var level = arguments[0];
-                    // second argument is a varargs with the messages
-                    var args = 2 <= arguments.length ? [].slice.call(arguments, 1) : [];
+                writeLog: function (level, args) {
+                    //// first argument is log level
+                    //var level = arguments[0];
+                    //// second argument is a varargs with the messages
+                    //var args = 2 <= arguments.length ? [].slice.call(arguments, 1) : [];
                     
                     // no messages to log
                     if (args.length <= 0) {
