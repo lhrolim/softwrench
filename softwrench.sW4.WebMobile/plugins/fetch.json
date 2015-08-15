@@ -23,10 +23,11 @@
     },
     "de.appplant.cordova.plugin.local-notification": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-local-notifications.git",
-            "subdir": "."
-        }
+            "type": "local",
+            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\plugins\\de.appplant.cordova.plugin.local-notification"
+        },
+        "is_top_level": true,
+        "variables": {}
     },
     "cordova-plugin-whitelist": {
         "source": {
