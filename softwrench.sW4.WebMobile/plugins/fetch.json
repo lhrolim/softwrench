@@ -15,10 +15,11 @@
     },
     "io.litehelpers.cordova.sqlite": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/litehelpers/Cordova-sqlite-storage",
-            "subdir": "."
-        }
+            "type": "local",
+            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\plugins\\io.litehelpers.cordova.sqlite"
+        },
+        "is_top_level": true,
+        "variables": {}
     },
     "de.appplant.cordova.plugin.local-notification": {
         "source": {
