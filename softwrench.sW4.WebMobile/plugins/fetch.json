@@ -15,16 +15,9 @@
     },
     "io.litehelpers.cordova.sqlite": {
         "source": {
-            "type": "local",
-            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\plugins\\io.litehelpers.cordova.sqlite"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "de.appplant.cordova.plugin.local-notification": {
-        "source": {
-            "type": "local",
-            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\plugins\\de.appplant.cordova.plugin.local-notification"
+            "type": "git",
+            "url": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
@@ -34,7 +27,9 @@
             "type": "git",
             "url": "https://github.com/apache/cordova-plugin-whitelist.git",
             "subdir": "."
-        }
+        },
+        "is_top_level": true,
+        "variables": {}
     },
     "uk.co.whiteoctober.cordova.appversion": {
         "source": {
@@ -47,8 +42,42 @@
     },
     "cordova-plugin-vs-taco-support": {
         "source": {
-            "type": "local",
-            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\node_modules\\taco-team-build\\taco-cordova-support-plugin"
+            "type": "git",
+            "url": "https://github.com/Chuxel/taco-cordova-support-plugin.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "android.support.v4": {
+        "source": {
+            "type": "registry",
+            "id": "android.support.v4"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-appversion": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-appversion"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/advisory/forked--cordova-plugin-local-notifications.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
