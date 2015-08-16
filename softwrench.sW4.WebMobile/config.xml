@@ -92,4 +92,5 @@
   <vs:plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Chuxel/taco-cordova-support-plugin.git" />
   <vs:plugin name="uk.co.whiteoctober.cordova.appversion" version="0.1.7" src="https://github.com/whiteoctober/cordova-plugin-app-version.git" />
   <vs:plugin name="cordova-plugin-device" version="1.0.1" />
+  <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" />
 </widget>
