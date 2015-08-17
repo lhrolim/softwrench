@@ -108,7 +108,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
                 if (assetUsage &&
                     assetUsage.equalsAny("EDUCATION", "POOL", "MEETING", "MOB MARITME", "MOBILE HOME", "NON-STANDARD", "SPARE UNIT", "SPECIAL FUNC", "STANDARD", "STAND ALONE", "TEST", "TRAINEE")) {
                     //HAP-1025
-                    event.fields['usage'] = assetUsage;
+                    event.fields['usage'] = assetUsage.toUpperCase();
                 } else {
                     event.fields['usage'] = null;
                 }
