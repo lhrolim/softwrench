@@ -7,6 +7,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -445,6 +446,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bootstrap\css\bootstrap-combobox.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
@@ -584,14 +586,98 @@
     <Content Include="Content\bootstrap\css\bootstrap-select.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme-min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-min.css" />
-    <Content Include="Content\bootstrap\css\datepicker.css" />
-    <Content Include="Content\bootstrap\css\datetimepicker.css" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\af.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ar-ma.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ar-sa.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ar-tn.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ar.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\az.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\be.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\bg.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\bn.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\bo.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\br.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\bs.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ca.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\cs.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\cv.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\cy.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\da.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\de-at.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\el.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\en-au.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\en-ca.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\en-gb.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\eo.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\et.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\eu.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\fa.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\fi.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\fo.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\fr-ca.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\fr.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\fy.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\gl.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\he.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\hi.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\hr.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\hu.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\hy-am.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\id.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\is.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\it.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ja.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\jv.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ka.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\km.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ko.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\lb.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\lt.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\lv.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\me.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\mk.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ml.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\mr.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ms-my.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ms.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\my.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\nb.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ne.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\nl.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\nn.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\pl.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\pt-br.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\pt.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ro.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ru.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\si.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\sk.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\sl.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\sq.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\sr-cyrl.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\sr.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\sv.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\ta.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\th.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\tl-ph.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\tr.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\tzl.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\tzm-latn.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\tzm.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\uk.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\uz.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\vi.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\zh-cn.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\zh-tw.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latin.woff2" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latinext.woff2" />
@@ -814,12 +900,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap\datepicker\less\datepicker.less">
-      <Compile>False</Compile>
-      <Minify>False</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-    </Content>
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
@@ -998,9 +1078,6 @@
     <Content Include="Content\Scripts\vendor\ace\worker-lua.js" />
     <Content Include="Content\Scripts\vendor\ace\worker-php.js" />
     <Content Include="Content\Scripts\vendor\ace\worker-xquery.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datepicker.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.min.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-datepicker.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-strap.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-strap-min.js" />
