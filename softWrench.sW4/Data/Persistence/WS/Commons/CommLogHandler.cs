@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using JetBrains.Annotations;
 using Microsoft.CSharp;
+using NHibernate.Linq;
 using Quartz.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -41,39 +42,46 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
        
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
-            
-                var user = SecurityFacade.CurrentUser();
-                var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
-                var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
-                var ownerid = w.GetRealValue(rootObject, ticketuid);
-                w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
-                    ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
-                    var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
-                    var rnd = new Random();
-                    var commlogid = Convert.ToInt32(id) + rnd.Next(1, 10);
-                    w.SetValue(integrationObject, Commlogid, commlogid);
-                    w.SetValue(integrationObject, Ownerid, ownerid);
-                    w.SetValueIfNull(integrationObject, ownertable, entity.TableName);
-                    w.SetValueIfNull(integrationObject, inbound, false);
-                    w.CopyFromRootEntity(rootObject, integrationObject, siteid, user.SiteId);
-                    w.CopyFromRootEntity(rootObject, integrationObject, orgid, user.OrgId);
-                    w.CopyFromRootEntity(rootObject, integrationObject, createby, user.Login, "CHANGEBY");
-                    w.CopyFromRootEntity(rootObject, integrationObject, createdate, DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                    w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
-                    w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
-                    LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                    HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
-                    if (w.GetRealValue(integrationObject, sendto) != null) {
-                        maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
-                    } else {
-                        throw new System.ArgumentNullException("To:");
-                    }
-                    var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
-                    var username = user.MaximoPersonId;
-                    _updateEmailHistory(username, recipientEmail);
-                });
-             
-
+            var user = SecurityFacade.CurrentUser();
+            var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
+            var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
+            foreach (CrudOperationData commLog in commlogs) {
+                var sendtoObject = commLog.GetAttribute("sendto");
+                //var sendtoArray = sendtoObject.Select(x => x.ToString()).ToArray();
+                var sendtoArray = ((IEnumerable) sendtoObject).Cast<object>()
+                                                              .Select(x => x.ToString())
+                                                              .ToArray();
+                commLog.SetAttribute("sendto", string.Join(",", sendtoArray));
+            }
+            var ownerid = w.GetRealValue(rootObject, ticketuid);
+            w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
+                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
+                var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
+                var rnd = new Random();
+                var commlogid = Convert.ToInt32(id) + rnd.Next(1, 10);
+                w.SetValue(integrationObject, Commlogid, commlogid);
+                w.SetValue(integrationObject, Ownerid, ownerid);
+                w.SetValueIfNull(integrationObject, ownertable, entity.TableName);
+                w.SetValueIfNull(integrationObject, inbound, false);
+                w.CopyFromRootEntity(rootObject, integrationObject, siteid, user.SiteId);
+                w.CopyFromRootEntity(rootObject, integrationObject, orgid, user.OrgId);
+                w.CopyFromRootEntity(rootObject, integrationObject, createby, user.Login, "CHANGEBY");
+                w.CopyFromRootEntity(rootObject, integrationObject, createdate, DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
+                w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
+                w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
+                LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
+                HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
+                if (w.GetRealValue(integrationObject, sendto) != null) {
+                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
+                } else {
+                    throw new System.ArgumentNullException("To:");
+                }
+                var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
+                var username = user.MaximoPersonId;
+                foreach(string recipient in recipientEmail.Split(',')) {
+                    _updateEmailHistory(username, recipient);
+                }
+            });
         }
 
         private static void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj,
@@ -132,7 +140,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private static void _updateEmailHistory(string userId, string emailAddress) {
             ISWDBHibernateDAO _swdbDao = SWDBHibernateDAO.GetInstance();
             Email.Email _email = new Email.Email();
-            _email = _swdbDao.FindSingleByQuery<Email.Email>("WHERE UserID = {0} AND EmailAddress = '{1}'".FormatInvariant(userId, emailAddress));
+            _email = _swdbDao.FindSingleByQuery<Email.Email>("WHERE UserID = '{0}' AND EmailAddress = '{1}'".FormatInvariant(userId, emailAddress));
             _email.UserID = userId;
             _email.EmailAddress = emailAddress;
             _swdbDao.Save(_email);

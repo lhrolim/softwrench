@@ -1440,11 +1440,14 @@
                     }
                 });
                 function _findCaseInsensitiveDupe(arr) {
-                    if (arr === undefined || $select.search === undefined) {
+                    if (arr === undefined || arr.length === 0 || $select.search === undefined) {
                         return false;
                     }
                     var hasDupe = arr.filter(function (origItem) {
-                        if ($select.search.toUpperCase() === undefined || origItem === undefined) {
+                        if (typeof origItem !== "string") {
+                            origItem = origItem.Value;
+                        }
+                        if ($select.search.toUpperCase() === undefined || origItem === "" || origItem === null || origItem === undefined) {
                             return false;
                         }
                         return origItem.toUpperCase() === $select.search.toUpperCase();
