@@ -15,13 +15,12 @@ namespace softWrench.sW4.Web {
                "~/Content/bootstrap/css/datepicker.css",
                "~/Content/bootstrap/css/bootstrap-select.css",
                "~/Content/bootstrap/css/datetimepicker.css",
+               "~/Content/bootstrap/css/bootstrap-datetimepicker.css",
                "~/Content/bootstrap/css/submenu.css",
                "~/Content/bootstrap/css/typeahead.js-bootstrap.css",
                "~/Content/bootstrap/css/bootstrap-multiselect.css",
                "~/Content/bootstrap/css/textAngular-min.css"
                ));
-//            AddClientBundle(bundles);
-
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                 "~/Content/themes/base/jquery.ui.core.css",
@@ -36,7 +35,6 @@ namespace softWrench.sW4.Web {
                 "~/Content/themes/base/jquery.ui.datepicker.css",
                 "~/Content/themes/base/jquery.ui.progressbar.css",
                 "~/Content/themes/base/jquery.ui.theme.css"));
-
 
             bundles.Add(new StyleBundle("~/Content/themes/base/font-awesome").Include(
                 "~/Content/font-awesome/css/font-awesome.css"
@@ -61,7 +59,6 @@ namespace softWrench.sW4.Web {
                  ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
-                "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/other/textAngular-sanitize.js",
                 "~/Content/Scripts/vendor/other/textAngular-min.js",
                 "~/Content/Scripts/vendor/other/textAngular-setup.js",
@@ -92,17 +89,15 @@ namespace softWrench.sW4.Web {
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/twitter-bootstrap").Include(
                 "~/Content/Scripts/vendor/bootstrap/bootstrap.max.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-datepicker.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-combobox.js",
+                "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-datetimepicker.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-collapse.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-richtext.js",
                 "~/Content/Scripts/vendor/other/bootbox.js",
                 "~/Content/Scripts/vendor/other/typeahead.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datepicker.de.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datetimepicker.de.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datepicker.es.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datetimepicker.es.js",
+                "~/Content/Scripts/vendor/moment/locales/de.js",
+                "~/Content/Scripts/vendor/moment/locales/es.js",
                 "~/Content/Scripts/vendor/bootstrap/modal.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-multiselect.js"
                 ));
@@ -123,11 +118,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/client/directives/menu/*.js"
                 ).IncludeDirectory("~/Content/Templates/commands", "*.js", true)
                 .IncludeDirectory("~/Content/modules", "*.js", true));
-
-
         }
-        
-        
 
         public static void ClearBundles() {
             BundleTable.Bundles.Clear();

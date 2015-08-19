@@ -446,6 +446,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bootstrap\css\bootstrap-combobox.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
@@ -584,14 +585,15 @@
     <Content Include="Content\bootstrap\css\bootstrap-select.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme-min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-min.css" />
-    <Content Include="Content\bootstrap\css\datepicker.css" />
-    <Content Include="Content\bootstrap\css\datetimepicker.css" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
+    <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latin.woff2" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latinext.woff2" />
@@ -726,18 +728,6 @@
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
     <Content Include="Content\Scripts\client\crud\messagehandler.js" />
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.de.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.es.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.fr.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.pt-BR.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.pt.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.uk.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datetimepicker.de.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datetimepicker.es.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datetimepicker.fr.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datetimepicker.pt-BR.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datetimepicker.pt.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datetimepicker.uk.js" />
     <Content Include="Content\Scripts\vendor\other\spin-min.js" />
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
     <None Include="Content\styles\default\_tooltips.scss" />
@@ -815,12 +805,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap\datepicker\less\datepicker.less">
-      <Compile>False</Compile>
-      <Minify>False</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-    </Content>
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
@@ -996,9 +980,6 @@
     <Content Include="Content\Scripts\vendor\ace\worker-lua.js" />
     <Content Include="Content\Scripts\vendor\ace\worker-php.js" />
     <Content Include="Content\Scripts\vendor\ace\worker-xquery.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datepicker.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
-    <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.min.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-datepicker.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-strap.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-strap-min.js" />
