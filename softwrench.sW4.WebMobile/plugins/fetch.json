@@ -1,39 +1,4 @@
 {
-    "org.apache.cordova.battery-status": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.battery-status@0.2.11"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "org.apache.cordova.device": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.device"
-        }
-    },
-    "io.litehelpers.cordova.sqlite": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/litehelpers/Cordova-sqlite-storage",
-            "subdir": "."
-        }
-    },
-    "de.appplant.cordova.plugin.local-notification": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-local-notifications.git",
-            "subdir": "."
-        }
-    },
-    "cordova-plugin-whitelist": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-whitelist.git",
-            "subdir": "."
-        }
-    },
     "uk.co.whiteoctober.cordova.appversion": {
         "source": {
             "type": "git",
@@ -43,10 +8,62 @@
         "is_top_level": true,
         "variables": {}
     },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device@1.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "org.apache.cordova.device": {
+        "source": {
+            "type": "registry",
+            "id": "org.apache.cordova.device"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "android.support.v4": {
+        "source": {
+            "type": "registry",
+            "id": "android.support.v4@21.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "io.litehelpers.cordova.sqlite": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-whitelist.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
     "cordova-plugin-vs-taco-support": {
         "source": {
-            "type": "local",
-            "path": "F:\\Github\\softwrench\\softwrench.sW4.WebMobile\\node_modules\\taco-team-build\\taco-cordova-support-plugin"
+            "type": "git",
+            "url": "https://github.com/Chuxel/taco-cordova-support-plugin.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/katzer/cordova-plugin-local-notifications.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
