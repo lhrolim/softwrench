@@ -16,6 +16,8 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             '..//softWrench.sW4.Web//Content//Scripts//vendor/jquery/**/*.js',
+            '..//softWrench.sW4.Web//Content//Scripts//vendor/other/moment.js',
+            '..//softWrench.sW4.Web//Content//Scripts//vendor/moment/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/bootstrap/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/angular/angular.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/angular/**/*.js',
