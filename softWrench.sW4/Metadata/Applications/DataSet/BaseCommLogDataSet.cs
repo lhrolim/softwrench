@@ -4,6 +4,7 @@ using cts.commons.persistence;
 using Quartz.Util;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Email;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
@@ -22,7 +23,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             InMemoryUser currentUser = SecurityFacade.CurrentUser();
 
-            var addresses = _swdbDAO.FindByQuery<Email.Email>("FROM Email WHERE UserID = '{0}'".FormatInvariant(currentUser.MaximoPersonId));
+            var addresses = _swdbDAO.FindByQuery<EmailHistory>(EmailHistory.byUserId, currentUser.MaximoPersonId);
 
             foreach (var address in addresses) {
                 postParams.Options.Add(new AssociationOption(address.EmailAddress, address.EmailAddress));

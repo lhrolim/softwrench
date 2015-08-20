@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using NHibernate.Mapping.Attributes;
 
 namespace softWrench.sW4.Email {
     [Class(Table = "EMAIL_HISTORY", Lazy = false)]
-    class Email : IBaseEntity  {
+    class EmailHistory : IBaseEntity
+    {
+        public const string byUserIdEmailAddess = "FROM EmailHistory WHERE lower(UserID) = lower(?) AND lower(EmailAddress) = lower(?)";
+        public const string byUserId = "FROM EmailHistory WHERE lower(UserID) = lower(?)";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -20,14 +24,40 @@ namespace softWrench.sW4.Email {
         [Property]
         public virtual string EmailAddress { get; set; }
 
-        public Email() {
+        public EmailHistory() {
             
         }
 
-        public Email(int? id, string userid, string emailaddress) {
+        public EmailHistory(int? id, string userid, string emailaddress) {
             Id = id;
             UserID = userid;
             EmailAddress = emailaddress;
+        }
+
+        protected bool Equals(EmailHistory other)
+        {
+            return UserID.EqualsIc(other.UserID) && EmailAddress.EqualsIc(other.EmailAddress);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((EmailHistory) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (UserID.GetHashCode()*397) ^ EmailAddress.GetHashCode();
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"EmailAddress: {EmailAddress}, UserID: {UserID}, Id: {Id}";
         }
     }
 }

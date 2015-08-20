@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -78,10 +80,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     throw new System.ArgumentNullException("To:");
                 }
                 var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
+                var ccEmail = w.GetRealValue(integrationObject, cc).ToString();
+                var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
                 var username = user.MaximoPersonId;
-                foreach(string recipient in recipientEmail.Split(',')) {
-                    _updateEmailHistory(username, recipient);
-                }
+                // TODO: Move this call off to a separate thread to spead up return time. User does not eed to wait for the email addresses to be processed and stored.
+                _updateEmailHistory(username, allAddresses.Split(','));
             });
         }
 
@@ -138,13 +141,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             
         }
 
-        private static void _updateEmailHistory(string userId, string emailAddress) {
+        private static void _updateEmailHistory(string userId, string[] emailAddresses) {
             ISWDBHibernateDAO _swdbDao = SWDBHibernateDAO.GetInstance();
-            Email.Email email = _swdbDao.FindSingleByQuery<Email.Email>("FROM Email WHERE lower(UserID) = lower(?) AND lower(EmailAddress) = lower(?)", userId, emailAddress);
-            email = email ?? new Email.Email();
-            email.UserID = userId;
-            email.EmailAddress = emailAddress;
-            _swdbDao.Save(email);
+            List<EmailHistory> emailRecords = _swdbDao.FindByQuery<EmailHistory>(EmailHistory.byUserId, userId).ToList();
+            List<EmailHistory> newRecords = new List<EmailHistory>();
+            foreach (var emailAddress in emailAddresses) {
+                if (!emailRecords.Any(t => t.EmailAddress.EqualsIc(emailAddress))) {
+                    newRecords.Add(new EmailHistory(null, userId, emailAddress));
+                }
+            }
+            _swdbDao.BulkSave(newRecords);
         }
 
    }
