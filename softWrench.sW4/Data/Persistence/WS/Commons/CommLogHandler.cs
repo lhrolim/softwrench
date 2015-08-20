@@ -2,13 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.persistence;
 using JetBrains.Annotations;
-using Microsoft.CSharp;
-using NHibernate.Linq;
-using Quartz.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -44,14 +39,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
-            var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
+            var newCommLogs = commlogs.Where(r => r.GetAttribute(commloguid) == null);
             foreach (CrudOperationData commLog in commlogs) {
-                var sendtoObject = commLog.GetAttribute("sendto");
-                //var sendtoArray = sendtoObject.Select(x => x.ToString()).ToArray();
+                // Convert sendto array to a comma separated list
+                var sendtoObject = commLog.GetAttribute(sendto);
                 var sendtoArray = ((IEnumerable) sendtoObject).Cast<object>()
                                                               .Select(x => x.ToString())
                                                               .ToArray();
-                commLog.SetAttribute("sendto", string.Join(",", sendtoArray));
+                commLog.SetAttribute(sendto, string.Join(",", sendtoArray));
+                // Convert cc array to a comma separated list
+                var ccObject = commLog.GetAttribute(cc);
+                var ccArray = ((IEnumerable)ccObject).Cast<object>()
+                                                              .Select(x => x.ToString())
+                                                              .ToArray();
+                commLog.SetAttribute(cc, string.Join(",", ccArray));
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
@@ -139,11 +140,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         private static void _updateEmailHistory(string userId, string emailAddress) {
             ISWDBHibernateDAO _swdbDao = SWDBHibernateDAO.GetInstance();
-            Email.Email _email = new Email.Email();
-            _email = _swdbDao.FindSingleByQuery<Email.Email>("WHERE UserID = '{0}' AND EmailAddress = '{1}'".FormatInvariant(userId, emailAddress));
-            _email.UserID = userId;
-            _email.EmailAddress = emailAddress;
-            _swdbDao.Save(_email);
+            Email.Email email = _swdbDao.FindSingleByQuery<Email.Email>("FROM Email WHERE lower(UserID) = lower(?) AND lower(EmailAddress) = lower(?)", userId, emailAddress);
+            email = email ?? new Email.Email();
+            email.UserID = userId;
+            email.EmailAddress = emailAddress;
+            _swdbDao.Save(email);
         }
 
    }

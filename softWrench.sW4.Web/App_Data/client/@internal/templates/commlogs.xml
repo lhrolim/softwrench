@@ -146,9 +146,10 @@
             <renderer type="multiselectautocompleteclient"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
-          <field attribute="cc" label="Cc:">
-            <renderer type="email"/>
-          </field>
+          <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+            <renderer type="multiselectautocompleteclient"/>
+            <dataprovider postfilterfunction="EmailPostFilter"/>
+          </association>
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" >
             <renderer type="email"/>
