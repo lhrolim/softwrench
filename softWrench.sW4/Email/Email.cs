@@ -34,29 +34,24 @@ namespace softWrench.sW4.Email {
             EmailAddress = emailaddress;
         }
 
-        protected bool Equals(EmailHistory other)
-        {
+        protected bool Equals(EmailHistory other) {
             return UserID.EqualsIc(other.UserID) && EmailAddress.EqualsIc(other.EmailAddress);
         }
 
-        public override bool Equals(object obj)
-        {
+        public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((EmailHistory) obj);
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
+        public override int GetHashCode() {
+            unchecked {
                 return (UserID.GetHashCode()*397) ^ EmailAddress.GetHashCode();
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"EmailAddress: {EmailAddress}, UserID: {UserID}, Id: {Id}";
         }
     }
