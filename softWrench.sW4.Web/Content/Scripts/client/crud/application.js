@@ -21,7 +21,6 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     };
 });
 
-
 app.directive('listtablerendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',

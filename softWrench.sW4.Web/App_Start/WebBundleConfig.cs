@@ -21,6 +21,12 @@ namespace softWrench.sW4.Web {
                "~/Content/bootstrap/css/bootstrap-multiselect.css",
                "~/Content/bootstrap/css/textAngular-min.css"
                ));
+//            AddClientBundle(bundles);
+
+            bundles.Add(new StyleBundle("~/Content/styles/thirdparty").Include(
+                "~/Content/font-awesome/css/font-awesome.css",
+                "~/Content/angular-ui-select/angular-ui-select.css"
+                ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                 "~/Content/themes/base/jquery.ui.core.css",
@@ -36,9 +42,6 @@ namespace softWrench.sW4.Web {
                 "~/Content/themes/base/jquery.ui.progressbar.css",
                 "~/Content/themes/base/jquery.ui.theme.css"));
 
-            bundles.Add(new StyleBundle("~/Content/themes/base/font-awesome").Include(
-                "~/Content/font-awesome/css/font-awesome.css"
-                ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/fonts").Include(
                 "~/Content/fonts/font.css"));
@@ -59,11 +62,13 @@ namespace softWrench.sW4.Web {
                  ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
+                "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/other/textAngular-sanitize.js",
                 "~/Content/Scripts/vendor/other/textAngular-min.js",
                 "~/Content/Scripts/vendor/other/textAngular-setup.js",
                 "~/Content/Scripts/vendor/other/jquery.scannerdetection.js",
-                "~/Content/Scripts/vendor/other/angular-fileUpload.js"));
+                "~/Content/Scripts/vendor/other/angular-fileUpload.js",
+                "~/Content/Scripts/vendor/other/angular-ui-select.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
                 "~/Content/Scripts/vendor/jquery/jquery-ui-{version}.js"));
@@ -84,13 +89,12 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/angular/angular-sanitize.js",
                 "~/Content/Scripts/vendor/angular/bindonce.js",
                 "~/Content/Scripts/vendor/angular/components/*.js"
-
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/twitter-bootstrap").Include(
                 "~/Content/Scripts/vendor/bootstrap/bootstrap.max.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-datepicker.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-combobox.js",
-                "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-datetimepicker.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-collapse.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-richtext.js",
@@ -123,9 +127,5 @@ namespace softWrench.sW4.Web {
         public static void ClearBundles() {
             BundleTable.Bundles.Clear();
         }
-
-      
-
-       
     }
 }

@@ -299,6 +299,7 @@
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201506241200Swweb1166Part3.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201507201700Swweb1166Part4.cs" />
+    <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
@@ -445,6 +446,7 @@
     <Content Include="App_Data\Client\tva\workorderbatch.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\angular-ui-select\angular-ui-select.css" />
     <Content Include="Content\bootstrap\css\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
@@ -461,6 +463,7 @@
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
+    <Content Include="Content\Images\changestatus_whitebg.gif" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
@@ -591,6 +594,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\other\angular-ui-select.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
@@ -608,12 +612,6 @@
     </Content>
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
-    <Content Include="Content\styles\default\styles.css">
-      <DependentUpon>styles.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\vendor\vendor.css">
       <DependentUpon>vendor.scss</DependentUpon>
     </Content>
