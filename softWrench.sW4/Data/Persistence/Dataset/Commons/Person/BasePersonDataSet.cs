@@ -3,6 +3,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -104,7 +105,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var username = json.GetValue("personid").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
             var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
-            var isCreation = user.Id == null;
+            var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
             var primaryEmail = json.GetValue("#primaryemail").ToString();
 
             JToken password;
