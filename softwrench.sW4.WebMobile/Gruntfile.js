@@ -43,7 +43,8 @@ module.exports = function (grunt) {
         "www/Content/Mobile/scripts/maximoservices/**/*.js",
         "www/Content/Mobile/scripts/utils/**/*.js",
         "www/Content/Mobile/scripts/filters/**/*.js",
-        "www/Content/Mobile/scripts/decorators/**/*.js"
+        "www/Content/Mobile/scripts/decorators/**/*.js",
+        "www/Content/Mobile/scripts/constants/**/*.js"
     ];
 
     //TODO: make a client-based build??

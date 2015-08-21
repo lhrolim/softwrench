@@ -29,11 +29,7 @@
         return arg;
     }
 
-    logModule.factory('$roll', [
-        '$log',
-        '$q',
-        function ($log, $q) {
-            'use strict';
+    logModule.factory('$roll', ['$q', function ($q) {
             /*
             * CordovaFile is an internal service used to interface with
             * the filesystem while using promises instead of callbacks.
@@ -236,14 +232,14 @@
                             return cordovaFile.getFileSize(logFile);
                         }).then(function (size) {
                             if (size > logFactory.config.logSize) {
-                                $log.info(
-                                    'Log is over capacity. Moving old log to ' +
-                                        logLast
-                                );
+                                //$log.info(
+                                //    'Log is over capacity. Moving old log to ' +
+                                //        logLast
+                                //);
                                 // We then return the original log all over again
                                 return cordovaFile.moveFile(logFile,
                                     logLast).then(function (success) {
-                                        logFactory.debug(success);
+                                        // logFactory.debug(success);
                                         return cordovaFile.getFile(logCurr);
                                     }).then(function (aFileEntry) {
                                         logFile = aFileEntry;
@@ -261,14 +257,14 @@
                             }
                         )
                         .then(function (success) {
-                            $log.debug('Wrote logs to log file successfully: ' +
-                                success);
+                            //$log.debug('Wrote logs to log file successfully: ' +
+                            //    success);
                             deferredWrite.resolve('success');
                             logFactory.started = true;
                         })
                         .catch(function (err) {
-                            logFactory.error(err);
-                            logFactory.error(
+                            console.error(err);
+                            console.error(
                                 'Error writing to log file.. Adding old' +
                                     ' logs to logs variable for next time.'
                             );
@@ -296,36 +292,37 @@
                     }
 
                     // logging to console
-                    if (this.config.console) {
-                        if (level === 'log') {
-                            $log.log(args);
-                        } else if (level === 'info') {
-                            $log.info(args);
-                        } else if (level === 'warn') {
-                            $log.warn(args);
-                        } else if (level === 'error') {
-                            $log.error(args);
-                        }  else if (level === 'debug' && this.config.debug) {
-                            $log.debug(args);
-                        } else {
-                            return;
-                        }
-                    }
+                    //if (this.config.console) {
+                    //    if (level === 'log') {
+                    //        $log.log(args);
+                    //    } else if (level === 'info') {
+                    //        $log.info(args);
+                    //    } else if (level === 'warn') {
+                    //        $log.warn(args);
+                    //    } else if (level === 'error') {
+                    //        $log.error(args);
+                    //    }  else if (level === 'debug' && this.config.debug) {
+                    //        $log.debug(args);
+                    //    } else {
+                    //        return;
+                    //    }
+                    //}
                     // logging to file
 
                     //preparing the messages
-                    var displayType = level === "log" ? "" : " - " + level.toUpperCase();
-                    var time = new Date().toISOString();
-                    var logHeader = time + displayType + ": ";
-                    var msgs = [logHeader];
-                    angular.forEach(args, function (arg) {
+                    //var displayType = level === "log" ? "" : " - " + level.toUpperCase();
+                    //var time = new Date().toISOString();
+                    //var logHeader = time + displayType + ": ";
+                    //var msgs = [logHeader];
+                    var msgs = [];
+                    angular.forEach(args, function(arg) {
                         msgs.push(formatToMessage(arg));
                     });
+                    this.logs.push(msgs.join(" "));
                     // add to queue for writing
                     // Only write to file if queue is large enough
                     // or on error.
-                    this.logs.concat(msgs);
-                    if (this.started && (level === 'error' || this.logs.length > this.config.eventBuffer)) {
+                    if (this.started && (level === "error" || this.logs.length > this.config.eventBuffer)) {
                         this.started = false;
                         this.writeToFile(this.logs, this.directory);
                     }
@@ -408,11 +405,11 @@
                         cordovaFile.setLocation(directory)
                             .then(function (success) {
                                 logFactory.started = true;
-                                logFactory.debug('Location set!');
-                                logFactory.debug(success);
+                                // logFactory.debug('Location set!');
+                                // logFactory.debug(success);
                                 deferredStart.resolve('Rolling logger started.');
                             }, function (error) {
-                                logFactory.error(error);
+                                // console.error(error);
                                 deferredStart
                                     .reject('Rolling logger unable to start.');
                             });
@@ -453,6 +450,9 @@
                 },
                 warn: function() {
                     this.writeLog("warn", arguments);
+                },
+                trace: function() {
+                    this.writeLog("trace", arguments);
                 }
             };
         }

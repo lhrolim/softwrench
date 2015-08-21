@@ -128,24 +128,25 @@ function enhanceAngularLog($log, $injector) {
         return function () {
             var isEnabled = this.isLevelEnabled(level, context);
             if (!isEnabled) {
-                return;
+                return [];
             }
             //var modifiedArguments = [].slice.call(arguments);
             //modifiedArguments[0] = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '] + modifiedArguments[0];
             //add timestamp and context to array of arguments (inspect object using the bowser console)
             var currentargs = [].slice.call(arguments);
-            var contextarg = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '];
+            var contextarg = ["[" + level.toUpperCase() + "] " + moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '];
             var modifiedArguments = contextarg.concat(currentargs);
 
             loggingFunc.apply(null, modifiedArguments);
-            if (localStorage.logs == undefined) {
-                localStorage.logs = "";
-            }
-            if (localStorage.logs.length > 10000) {
-                //clear to avoid exploding... todo --> send to server side
-                localStorage.logs = "";
-            }
-            localStorage.logs += modifiedArguments[0] + "\n";
+            //if (localStorage.logs == undefined) {
+            //    localStorage.logs = "";
+            //}
+            //if (localStorage.logs.length > 10000) {
+            //    //clear to avoid exploding... todo --> send to server side
+            //    localStorage.logs = "";
+            //}
+            //localStorage.logs += modifiedArguments[0] + "\n";
+            return modifiedArguments;
         };
     }
 };
