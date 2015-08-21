@@ -6,13 +6,30 @@ using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using Quartz.Util;
+using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
     public class UserManager : ISingletonComponent {
         private const string HlagPrefix = "@HLAG.COM";
+
+
+
+
+        private static IEventDispatcher _dispatcher;
+
+        public static IEventDispatcher Dispatcher {
+            get {
+                if (_dispatcher == null) {
+                    _dispatcher =SimpleInjectorGenericFactory.Instance.GetObject<IEventDispatcher>(typeof(IEventDispatcher));
+                }
+                return _dispatcher;
+
+            }
+        }
 
         public static SWDBHibernateDAO DAO {
             get {
@@ -27,27 +44,44 @@ namespace softWrench.sW4.Security.Services {
                 user.MergeFromDBUser(dbuser);
 
             }
-            if (updateMaximo)
-            {
+            if (updateMaximo) {
                 user.Person.Save();
             }
-            return DAO.Save(user);
+            var savedUser = DAO.Save(user);
+            // ReSharper disable once PossibleInvalidOperationException --> just saved
+            Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value,savedUser.UserName));
+            return savedUser;
         }
 
-        public static User GetUserById(int id)
-        {
+        public void DefineUserPassword(User user, string password) {
+            user.Password = AuthUtils.GetSha1HashData(password);
+            var savedUser =DAO.Save(user);
+            //TODO: wipeout link
+            // ReSharper disable once PossibleInvalidOperationException
+            Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
+        }
+
+        public User FindUserByLink(string tokenLink) {
+            //TODO: implement and remove this mock
+            return new User()
+            {
+                FirstName = "Luiz",
+                LastName = "Rolim"
+            };
+        }
+
+
+        public static User GetUserById(int id) {
             return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
         }
 
-        public static User GetUserByUsername(string username)
-        {
+        public static User GetUserByUsername(string username) {
             User user = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username) ?? null;
-            
+
             return user;
         }
 
-        public static IEnumerable<User> GetUsersByUsername(List<string> usernames)
-        {
+        public static IEnumerable<User> GetUsersByUsername(List<string> usernames) {
             var param = BaseQueryUtil.GenerateInString(usernames);
             var querystring = string.Format("from User where lower(userName) in ({0})", param.ToLower());
             return SWDBHibernateDAO.GetInstance()

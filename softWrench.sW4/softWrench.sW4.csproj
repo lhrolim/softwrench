@@ -417,6 +417,7 @@
     <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
+    <Compile Include="Security\UserSavedEvent.cs" />
     <Compile Include="Security\UserType.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\FollowUpWorkorderHandler.cs" />

@@ -1,12 +1,9 @@
-﻿using cts.commons.web.Attributes;
-using softWrench.sW4.Data.API;
+﻿using System.Web.Http;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
-using softWrench.sW4.Web.SPF;
-using System.Web.Http;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [System.Web.Mvc.Authorize]

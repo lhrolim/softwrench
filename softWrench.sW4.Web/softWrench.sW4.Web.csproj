@@ -273,7 +273,9 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
     <Compile Include="Controllers\Routing\RouterParameters.cs" />
+    <Compile Include="Controllers\Security\AuthenticationCookie.cs" />
     <Compile Include="Controllers\Security\MakeSWAdminController.cs" />
+    <Compile Include="Controllers\Security\UserSetupController.cs" />
     <Compile Include="DB_Migration\1.0\20140324_SWWEB-93.cs" />
     <Compile Include="DB_Migration\1.0\Issue20140314_HAP_113.cs" />
     <Compile Include="DB_Migration\4.0\20140422Swweb112_2.cs" />
@@ -304,8 +306,11 @@
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
+    <Compile Include="Models\IBaseLayoutModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
+    <Compile Include="Models\USerSetup.cs" />
+    <Compile Include="Models\UserSetup\DefinePasswordModel.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
     <Compile Include="SPF\Filters\ContextFilter.cs" />
@@ -449,6 +454,7 @@
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
+    <Content Include="Content\Controller\ChangePassword.html" />
     <Content Include="Content\Controller\About.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
     <Content Include="Content\Controller\LogAdmin.html" />
@@ -490,6 +496,7 @@
     <Content Include="Content\Scripts\client\adminresources\myProfile.js" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\adminresources\profile.js" />
+    <Content Include="Content\Scripts\client\definePasswordController.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\crud\crud_input_fields_commons.js" />
@@ -1331,9 +1338,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Content\Controller\MyProfile.html" />
     <Content Include="Content\Controller\EntityMetadataEditor.html" />
-    <Content Include="Views\Configuration\Index.cshtml" />
     <Content Include="Views\SignIn\Index_old.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\UserSetup\DefinePassword.cshtml" />
+    <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />

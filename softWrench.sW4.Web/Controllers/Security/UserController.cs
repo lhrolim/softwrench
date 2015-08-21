@@ -1,29 +1,20 @@
 ﻿
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using cts.commons.web.Attributes;
+using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
-using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Entities;
-using softWrench.sW4.Data.Persistence.SWDB;
-using softwrench.sw4.Hapag.Data;
-using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
+using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.MyProfile;
-using softWrench.sW4.Web.SPF;
-using System.Text.RegularExpressions;
-using cts.commons.persistence;
-using softWrench.sW4.Data.Entities.SyncManagers;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [Authorize]
