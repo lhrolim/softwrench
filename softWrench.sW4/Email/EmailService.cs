@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,7 +32,7 @@ namespace softWrench.sW4.Email {
                 objsmtpClient.Port = Int32.Parse(overriddenPort);
             }
 
-            objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.stmp.enableSSL", true));
+            objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.smtp.enableSSL", true));
 
             // Increase timeout value if needed - depended on site 
             var timeout = MetadataProvider.GlobalProperty("email.smtp.timeout");
@@ -39,12 +40,20 @@ namespace softWrench.sW4.Email {
                 objsmtpClient.Timeout = Int32.Parse(timeout);
             }
 
+            var username = MetadataProvider.GlobalProperty("email.smtp.username");
+            var password = MetadataProvider.GlobalProperty("email.smtp.password");
+            if (username != null && password != null) {
+                objsmtpClient.UseDefaultCredentials = false;
+                objsmtpClient.Credentials = new NetworkCredential(username, password);
+                objsmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            }
+
             return objsmtpClient;
         }
 
         public void SendEmail(EmailData emailData) {
             var objsmtpClient = ConfiguredSmtpClient();
-           
+
             // Send the email message
             var email = new MailMessage() {
                 From = new MailAddress(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail")),
@@ -54,23 +63,22 @@ namespace softWrench.sW4.Email {
             };
 
             if (!string.IsNullOrEmpty((emailData.SendTo))) {
-                foreach (var emailaddress in emailData.SendTo.Split(new char[]{' ', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                foreach (var emailaddress in emailData.SendTo.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
                     email.To.Add(emailaddress.Trim());
                 }
             }
 
             if (!string.IsNullOrEmpty(emailData.Cc)) {
-                foreach (var emailaddress in emailData.Cc.Split(new char[]{' ', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                foreach (var emailaddress in emailData.Cc.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
                     email.CC.Add(emailaddress.Trim());
                 }
             }
             email.IsBodyHtml = true;
-            if (emailData.Attachments != null){
+            if (emailData.Attachments != null) {
                 HandleAttachments(emailData.Attachments, email);
             }
 
-            try
-            {
+            try {
                 objsmtpClient.Send(email);
             } catch (Exception ex) {
                 Log.Error(ex);
@@ -79,12 +87,12 @@ namespace softWrench.sW4.Email {
         }
 
         private void HandleAttachments(List<EmailAttachment> attachments, MailMessage email) {
-            foreach (var attachment in attachments){
+            foreach (var attachment in attachments) {
                 string encodedAttachment = attachment.AttachmentData.Substring(attachment.AttachmentData.IndexOf(",") + 1);
                 byte[] bytes = Convert.FromBase64String(encodedAttachment);
                 email.Attachments.Add(new Attachment(new MemoryStream(bytes), attachment.AttachmentName));
             }
-            
+
         }
 
         public class EmailData {
@@ -106,8 +114,8 @@ namespace softWrench.sW4.Email {
             public string Message { get; set; }
         }
 
-        public class EmailAttachment{
-            public EmailAttachment(string attachmentData, string attachmentName){
+        public class EmailAttachment {
+            public EmailAttachment(string attachmentData, string attachmentName) {
                 AttachmentData = attachmentData;
                 AttachmentName = attachmentName;
             }
@@ -117,6 +125,6 @@ namespace softWrench.sW4.Email {
         }
 
 
-       
+
     }
 }
