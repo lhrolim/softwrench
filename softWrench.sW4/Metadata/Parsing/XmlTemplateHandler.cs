@@ -29,10 +29,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             foreach (var template in templates.Elements().Where(e => e.IsNamed(XmlMetadataSchema.TemplateElement))) {
                 var realPath = RealPath(template);
                 if (alreadyParsedTemplates.Contains(realPath.Item2)) {
-                    Log.Info("template {0} skipped because it was already added".Fmt(realPath));
+                    Log.Debug("template {0} skipped because it was already added".Fmt(realPath));
                     continue;
                 }
-                Log.Info("parsing template {0}".Fmt(realPath));
+                Log.Debug("parsing template {0}".Fmt(realPath));
                 using (var stream = MetadataParsingUtils.DoGetStreamForTemplate(realPath.Item1, realPath.Item2)) {
                     if (stream != null) {
                         var parsingResult = parser.Parse(stream, alreadyParsedTemplates);

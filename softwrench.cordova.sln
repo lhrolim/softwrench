@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3E27068
 	ProjectSection(SolutionItems) = preProject
 		Build\build.xml = Build\build.xml
 		Build\buildcordova.xml = Build\buildcordova.xml
+		jenkins_build.txt = jenkins_build.txt
 	EndProjectSection
 EndProject
 Global

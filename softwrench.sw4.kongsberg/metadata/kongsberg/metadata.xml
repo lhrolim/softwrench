@@ -2305,7 +2305,7 @@
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" attribute="document" qualifier="title"/>
           <field label="Created Date" attribute="createdate" qualifier="subtitle">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false"/>
           </field>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
@@ -2327,7 +2327,7 @@
           <section label="Document" attribute="document"
 									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
           <field label="Created Date" attribute="createdate">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false"/>
           </field>
         </list>
 

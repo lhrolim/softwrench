@@ -84,8 +84,11 @@
   <preference name="ShowTitle" value="False" />
   <preference name="InAppBrowserStorageEnabled" value="True" />
   <preference name="SuppressesIncrementalRendering" value="False" />
-  <vs:plugin name="io.litehelpers.cordova.sqlite" version="0.7.10-pre" src="F:\Github\softwrench\softwrench.sW4.WebMobile\plugins\io.litehelpers.cordova.sqlite" />
-  <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" src="plugins\de.appplant.cordova.plugin.local-notification" />
-  <vs:plugin name="uk.co.whiteoctober.cordova.appversion" version="0.1.7" src="plugins\uk.co.whiteoctober.cordova.appversion" />
-  <vs:plugin name="cordova-plugin-whitelist" version="1.0.0" src="plugins\cordova-plugin-whitelist" />
+  <vs:plugin name="io.litehelpers.cordova.sqlite" version="0.7.10" src="https://github.com/litehelpers/Cordova-sqlite-storage.git" />
+  <vs:plugin name="cordova-plugin-whitelist" version="1.1.1-dev" src="https://github.com/apache/cordova-plugin-whitelist.git" />
+  <vs:plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Chuxel/taco-cordova-support-plugin.git" />
+  <vs:plugin name="uk.co.whiteoctober.cordova.appversion" version="0.1.7" src="https://github.com/whiteoctober/cordova-plugin-app-version.git" />
+  <vs:plugin name="cordova-plugin-device" version="1.0.1" />
+  <vs:plugin name="android.support.v4" version="21.0.1" />
+  <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.2.dev" src="https://github.com/katzer/cordova-plugin-local-notifications.git" />
 </widget>

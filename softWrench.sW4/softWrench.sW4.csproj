@@ -169,6 +169,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\MultiAssetLocciHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
@@ -371,7 +372,6 @@
     <Compile Include="Data\Persistence\WS\Commons\BaseServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\LongDescriptionHandler.cs" />
-    <Compile Include="Data\Persistence\WS\Commons\MifWorkOrderCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\WorkLogHandler.cs" />
     <Compile Include="Data\API\DataRequestAdapter.cs" />
     <Compile Include="Data\API\DetailRequest.cs" />
@@ -380,7 +380,6 @@
     <Compile Include="Data\Entities\EntityBuilder.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
-    <Compile Include="Data\Persistence\WS\Mea\MeaWorkOrderCrudConnector.cs" />
     <Compile Include="Data\Relationship\Composition\CompositionExpanderHelper.cs" />
     <Compile Include="Data\Search\SearchParameterUtils.cs" />
     <Compile Include="Data\Relationship\Composition\CompositionExpander.cs" />

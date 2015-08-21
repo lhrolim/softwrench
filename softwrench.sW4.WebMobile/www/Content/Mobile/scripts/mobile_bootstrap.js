@@ -41,8 +41,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 //#endregion
 
 //#region App.run
-.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "synchronizationNotificationService", "offlinePersitenceBootstrap", "offlineEntities",
-    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap, entities) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "synchronizationNotificationService", "offlinePersitenceBootstrap", "offlineEntities", "configurationService",
+    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap, entities, configService) {
 
     $ionicPlatform.ready(function () {
         // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -67,6 +67,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         menuModelService.initAndCacheFromDB();
 
         metadataModelService.initAndCacheFromDB();
+
+        configService.loadConfigs();
 
         swdbDAO.findAll("Settings").then(function (settings) {
             if (settings.length <= 0) {

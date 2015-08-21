@@ -27,15 +27,12 @@
             <!--Read only section-->
 
             <div ng-class="getInputClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
-                
-                
-
                 <input type="datetime" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
                        data-date-time
                        data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
                        data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                       data-date-format="{{fieldMetadata.rendererParameters['format']}}"
+                       data-format-string="{{fieldMetadata.rendererParameters['format']}}"
                        data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
                        class="form-control datetimereadonly"
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" ng-readonly="true" readonly>
@@ -282,8 +279,7 @@
                                data-date-time
                                data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
                                data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                               data-date-format="{{fieldMetadata.rendererParameters['format']}}"
-                               data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                               data-format-string="{{fieldMetadata.rendererParameters['format']}}"
                                data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
                                class="form-control">
@@ -300,8 +296,7 @@
                                data-date-time
                                data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
                                data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                               data-date-format="{{fieldMetadata.rendererParameters['format']}}"
-                               data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                               data-format-string="{{fieldMetadata.rendererParameters['format']}}"
                                data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
                                class="form-control">
@@ -318,8 +313,7 @@
                                data-date-time
                                data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
                                data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                               data-date-format="{{fieldMetadata.rendererParameters['format']}}"
-                               data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                               data-format-string="{{fieldMetadata.rendererParameters['format']}}"
                                data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
                                class="form-control">
