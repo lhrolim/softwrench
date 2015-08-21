@@ -15,15 +15,18 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Security.Setup;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
     public class BasePersonDataSet : MaximoApplicationDataSet {
 
         private readonly ISWDBHibernateDAO _swdbDAO;
+        private readonly UserSetupEmailService _userSetupEmailService;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO) {
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService) {
             _swdbDAO = swdbDAO;
+            _userSetupEmailService = userSetupEmailService;
         }
 
 
@@ -70,13 +73,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     }
                     swUser = _swdbDAO.Save(swUser);
                 }
+                var isActive = swUser.IsActive ? "1" : "0";
+                dataMap.SetAttribute("#isactive", isActive);
             } else {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
                 swUser.Profiles = new HashedSet<UserProfile>();
+                //for new users lets make them active by default
+                dataMap.SetAttribute("#isactive", "1");
             }
-            var isActive = swUser.IsActive ? "1" : "0";
-            dataMap.SetAttribute("#isactive", isActive);
+
             dataMap.SetAttribute("#profiles", swUser.Profiles);
             var availableprofiles = UserProfileManager.FetchAllProfiles(true).ToList();
             foreach (var profile in swUser.Profiles) {
@@ -97,19 +103,25 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Save the updated sw user record
             var username = json.GetValue("personid").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
-            User user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
+            var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
+            var isCreation = user.Id == null;
+            var primaryEmail = json.GetValue("#primaryemail").ToString();
 
             JToken password;
             json.TryGetValue("#password", out password);
-            if (password != null) {
+            if (password != null && !password.ToString().NullOrEmpty()) {
                 var passwordString = password.ToString();
                 user.Password = AuthUtils.GetSha1HashData(passwordString);
             }
             user.IsActive = isactive;
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
+            var targetResult = Engine().Execute(operationWrapper);
+            if (isCreation) {
+                _userSetupEmailService.SendEmail(user, primaryEmail);
+            }
 
-            return Engine().Execute(operationWrapper);
+            return targetResult;
         }
 
 

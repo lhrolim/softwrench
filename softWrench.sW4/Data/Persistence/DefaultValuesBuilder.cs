@@ -163,6 +163,12 @@ namespace softWrench.sW4.Data.Persistence {
             if (innerReference.Equals("phone")) {
                 return user.Phone;
             }
+            if (innerReference.Equals("siteid")) {
+                return user.SiteId;
+            }
+            if (innerReference.Equals("orgid")) {
+                return user.OrgId;
+            }
             if (innerReference.Equals("email")) {
                 return user.Email;
             }

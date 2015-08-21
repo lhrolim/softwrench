@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using static softWrench.sW4.Util.ReflectionUtil;
 using r = softWrench.sW4.Util.ReflectionUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
@@ -41,37 +42,37 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object GetRealValue(Object integrationObject, string propertyName) {
-            object property = r.GetProperty(integrationObject, propertyName);
+            object property = GetProperty(integrationObject, propertyName);
             if (property == null) {
                 return null;
             }
-            var value = r.GetProperty(property, "Value");
+            var value = GetProperty(property, "Value");
             return value;
         }
 
         public static T GetRealValue<T>(Object integrationObject, string propertyName) {
-            object property = r.GetProperty(integrationObject, propertyName);
+            object property = GetProperty(integrationObject, propertyName);
             if (property == null) {
                 return default(T);
             }
-            var value = r.GetProperty(property, "Value");
+            var value = GetProperty(property, "Value");
             return (T)value;
         }
 
         public static T GetRealValue<T>(Object mxObject) where T : class {
-            var value = r.GetProperty(mxObject, "Value");
+            var value = GetProperty(mxObject, "Value");
             return (T)value;
         }
 
         public static void SetAction(object baseObjectWithAction, OperationType actionType) {
-            r.SetProperty(baseObjectWithAction, "action", actionType.ToString());
-            r.SetProperty(baseObjectWithAction, "actionSpecified", true);
+            SetProperty(baseObjectWithAction, "action", actionType.ToString());
+            SetProperty(baseObjectWithAction, "actionSpecified", true);
         }
 
 
         public static void SetChanged(object baseObjectWithAction) {
-            r.SetProperty(baseObjectWithAction, "changed", true);
-            r.SetProperty(baseObjectWithAction, "changedSpecified", true);
+            SetProperty(baseObjectWithAction, "changed", true);
+            SetProperty(baseObjectWithAction, "changedSpecified", true);
         }
 
         public static void SetChanged(params object[] baseObjectWithAction) {
@@ -87,13 +88,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 Log.Warn(String.Format("property {0} not found on object null", propertyName));
                 return null;
             }
-            PropertyDescriptor property = r.GetPropertyDescriptor(baseObject, propertyName);
+            PropertyDescriptor property = GetPropertyDescriptor(baseObject, propertyName);
             if (property == null) {
                 Log.Warn(String.Format("property {0} not found on object {1}", propertyName, baseObject.GetType()));
                 return null;
             }
             var propertyVal = property.GetValue(baseObject);
-            var currentValue = r.GetProperty(propertyVal, "Value");
+            var currentValue = GetProperty(propertyVal, "Value");
             if (currentValue == null) {
                 return SetValue(baseObject, propertyName, value, markSpecified);
             }
@@ -112,7 +113,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object SetValue(object baseObject, string propertyName, object value, Boolean markSpecified = false) {
-            var propDescriptor = r.PropertyDescriptor(baseObject, propertyName);
+            var propDescriptor = PropertyDescriptor(baseObject, propertyName);
             if (propDescriptor == null) {
                 if (ApplicationConfiguration.IsLocal()) {
                     Log.WarnFormat("property {0} not found on object {1}. Review metadata config or maximo config",
@@ -131,9 +132,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             var prop = propDescriptor.GetValue(baseObject);
             if (prop == null) {
-                return r.InstantiateProperty(baseObject, propertyName, new { Value = value });
+                return InstantiateProperty(baseObject, propertyName, new { Value = value });
             }
-            r.SetProperty(prop, new { Value = value });
+            SetProperty(prop, new { Value = value });
             if (markSpecified) {
                 SetValue(baseObject, propertyName + "Specified", true);
             }
@@ -144,20 +145,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public static object SetQueryValue(object baseObject, string propertyName, object value, QueryOperator operatorType = QueryOperator.Equals) {
             object queryField = SetValue(baseObject, propertyName, value);
-            r.SetProperty(queryField, "@operator", operatorType.MaximoValue());
-            r.SetProperty(queryField, "operatorSpecified", true);
+            SetProperty(queryField, "@operator", operatorType.MaximoValue());
+            SetProperty(queryField, "operatorSpecified", true);
             return queryField;
         }
 
 
         public static void SetChangeBy(object baseObject) {
             var user = SecurityFacade.CurrentUser();
-            r.InstantiateProperty(baseObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
-            r.InstantiateProperty(baseObject, "CHANGEBY", new { Value = user.Login });
+            InstantiateProperty(baseObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
+            InstantiateProperty(baseObject, "CHANGEBY", new { Value = user.Login });
         }
 
         public static object CloneExistingProperties(object target, object source) {
-            return r.Clone(target, source, "value");
+            return Clone(target, source, "value");
         }
 
         public static object CloneFromEntity(object target, AttributeHolder attributes) {
@@ -170,18 +171,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 } else if (!prop.PropertyType.IsPrimitive) {
                     object o = prop.GetValue(target);
                     if (o == null) {
-                        object newInstance = ReflectionUtil.InstanceFromType(prop.PropertyType);
+                        object newInstance = InstanceFromType(prop.PropertyType);
                         prop.SetValue(target, newInstance);
                         o = newInstance;
                     }
-                    r.SetProperty(o, new { Value = value });
+                    SetProperty(o, new { Value = value });
                 }
             }
             return target;
         }
 
         public static void NullifyValue(object baseObject, string propertyName) {
-            r.SetProperty(baseObject, propertyName, null);
+            SetProperty(baseObject, propertyName, null);
         }
 
         public static void CloneArray(IEnumerable<CrudOperationData> collectionAssociation, object integrationObject, string propertyName, Action<object, CrudOperationData> itemHandlerDelegate = null) {
@@ -189,7 +190,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (!crudOperationDatas.Any()) {
                 return;
             }
-            var arr = ReflectionUtil.InstantiateArrayWithBlankElements(integrationObject, propertyName, crudOperationDatas.Count);
+            var arr = InstantiateArrayWithBlankElements(integrationObject, propertyName, crudOperationDatas.Count);
             for (var i = 0; i < arr.Length; i++) {
                 CrudOperationData crudOperationData = crudOperationDatas[i];
                 var cloneFromEntity = WsUtil.CloneFromEntity(arr.GetValue(i), crudOperationData);
@@ -203,7 +204,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static void CloneSingle(CrudOperationData crudOperationData, object integrationObject, string propertyName, Action<object, CrudOperationData> itemHandlerDelegate = null) {
-            var element = ReflectionUtil.InstantiateSingleElementFromArray(integrationObject, propertyName);
+            var element = InstantiateSingleElementFromArray(integrationObject, propertyName);
             var cloneFromEntity = WsUtil.CloneFromEntity(element, crudOperationData);
             if (itemHandlerDelegate != null) {
                 itemHandlerDelegate(cloneFromEntity, crudOperationData);

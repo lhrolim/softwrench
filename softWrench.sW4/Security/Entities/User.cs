@@ -206,6 +206,10 @@ namespace softWrench.sW4.Security.Entities {
             return user;
         }
 
+        public string FullName {
+            get { return FirstName + " " + LastName; }
+        }
+
         protected bool Equals(User other) {
             return Id == other.Id;
         }

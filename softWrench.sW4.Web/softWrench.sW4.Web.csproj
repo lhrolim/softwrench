@@ -454,7 +454,6 @@
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
-    <Content Include="Content\Controller\ChangePassword.html" />
     <Content Include="Content\Controller\About.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
     <Content Include="Content\Controller\LogAdmin.html" />
@@ -781,6 +780,8 @@
     <Content Include="Content\Templates\message_section.html" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
+    <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
+    <Content Include="Content\Templates\usersetup\welcomeemail_automaticpassword.html" />
     <Content Include="Dependencies\DocumentFormat.OpenXml.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

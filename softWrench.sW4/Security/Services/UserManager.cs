@@ -10,6 +10,7 @@ using cts.commons.simpleinjector.Events;
 using Quartz.Util;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Security.Setup;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
@@ -17,6 +18,11 @@ namespace softWrench.sW4.Security.Services {
         private const string HlagPrefix = "@HLAG.COM";
 
 
+        private IUserLinkManager _userLinkManager;
+
+        public UserManager(IUserLinkManager userLinkManager) {
+            _userLinkManager = userLinkManager;
+        }
 
 
         private static IEventDispatcher _dispatcher;
@@ -24,7 +30,7 @@ namespace softWrench.sW4.Security.Services {
         public static IEventDispatcher Dispatcher {
             get {
                 if (_dispatcher == null) {
-                    _dispatcher =SimpleInjectorGenericFactory.Instance.GetObject<IEventDispatcher>(typeof(IEventDispatcher));
+                    _dispatcher = SimpleInjectorGenericFactory.Instance.GetObject<IEventDispatcher>(typeof(IEventDispatcher));
                 }
                 return _dispatcher;
 
@@ -34,7 +40,6 @@ namespace softWrench.sW4.Security.Services {
         public static SWDBHibernateDAO DAO {
             get {
                 return SWDBHibernateDAO.GetInstance();
-
             }
         }
 
@@ -49,26 +54,20 @@ namespace softWrench.sW4.Security.Services {
             }
             var savedUser = DAO.Save(user);
             // ReSharper disable once PossibleInvalidOperationException --> just saved
-            Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value,savedUser.UserName));
+            Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
             return savedUser;
         }
 
         public void DefineUserPassword(User user, string password) {
             user.Password = AuthUtils.GetSha1HashData(password);
-            var savedUser =DAO.Save(user);
+            var savedUser = DAO.Save(user);
             //TODO: wipeout link
+            _userLinkManager.DeleteLink(savedUser);
             // ReSharper disable once PossibleInvalidOperationException
             Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
         }
 
-        public User FindUserByLink(string tokenLink) {
-            //TODO: implement and remove this mock
-            return new User()
-            {
-                FirstName = "Luiz",
-                LastName = "Rolim"
-            };
-        }
+
 
 
         public static User GetUserById(int id) {
@@ -134,5 +133,8 @@ namespace softWrench.sW4.Security.Services {
             get { return ApplicationConfiguration.ClientName == "hapag" && ApplicationConfiguration.IsProd(); }
         }
 
+        public User FindUserByLink(string tokenLink) {
+            return _userLinkManager.RetrieveUserByLink(tokenLink);
+        }
     }
 }

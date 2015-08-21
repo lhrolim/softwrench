@@ -82,6 +82,10 @@
       <Private>True</Private>
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
@@ -417,6 +421,9 @@
     <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
+    <Compile Include="Security\Setup\IUserLinkManager.cs" />
+    <Compile Include="Security\Setup\UserLinkManager.cs" />
+    <Compile Include="Security\Setup\UserSetupEmailService.cs" />
     <Compile Include="Security\UserSavedEvent.cs" />
     <Compile Include="Security\UserType.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseApplicationDataSet.cs" />
