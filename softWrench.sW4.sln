@@ -105,6 +105,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.apachegold",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.tva", "softwrench.sw4.tva\softwrench.sw4.tva.csproj", "{C987E2C2-A2D3-4D7B-B2FF-A5F1667B159A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{93DC42A0-9FDE-40C2-899E-61A67C553851}"
+	ProjectSection(SolutionItems) = preProject
+		Build.proj = Build.proj
+		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
+		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Android = Ad-Hoc|Android

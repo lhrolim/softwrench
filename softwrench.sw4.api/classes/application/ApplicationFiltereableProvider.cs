@@ -59,9 +59,9 @@ namespace softwrench.sw4.api.classes.application {
             var dataSets = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<T>(typeof(T));
 
             foreach (var dataSet in dataSets) {
-                var applicationName = dataSet.ApplicationName();
+                var applicationNames = dataSet.ApplicationName();
 
-                if (applicationName == null) {
+                if (applicationNames == null) {
                     //null stands for framework instances... we dont need to handle these
                     continue;
                 }
@@ -70,13 +70,20 @@ namespace softwrench.sw4.api.classes.application {
                 var storageToUse = LocateStorage(dataSet);
 
                 var clientFilter = dataSet.ClientFilter();
-                if (clientFilter != null) {
-                    var strings = clientFilter.Split(',');
-                    foreach (var client in strings) {
-                        storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, schemaId), dataSet);
+                foreach (string applicationName in applicationNames.Split(','))
+                {
+                    if (clientFilter != null)
+                    {
+                        var strings = clientFilter.Split(',');
+                        foreach (var client in strings)
+                        {
+                            storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, schemaId), dataSet);
+                        }
                     }
-                } else {
-                    storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, schemaId), dataSet);
+                    else
+                    {
+                        storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, schemaId), dataSet);
+                    }
                 }
             }
         }

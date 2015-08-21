@@ -583,6 +583,16 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 (fieldMetadata.header == null);
 
             };
+
+            $scope.associationOptionsToStringArray = function(options) {
+                var strArr = new Array();
+                for (var option in options) {
+                    if(!options.hasOwnProperty(option)) continue;
+                    strArr.push(options[option].value);
+                }
+                return strArr;
+            }
+
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
             };

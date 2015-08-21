@@ -8,13 +8,17 @@
      'sw_lookup',
      "sw_scan",
      'webcommons_services',
-     'maximo_applications']);
+     'maximo_applications',
+     'ui.select']);
 
 //angular 1.3 migration reference
 //app.config(['$controllerProvider', function ($controllerProvider) {
 //    $controllerProvider.allowGlobals();
 //}]);
 
+app.config(function(uiSelectConfig) {
+    uiSelectConfig.theme = "bootstrap";
+});
 
 app.run(function (editableOptions) {
     editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'

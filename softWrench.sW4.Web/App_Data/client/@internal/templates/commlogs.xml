@@ -139,15 +139,17 @@
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
-          <field attribute="sendto" label="To:" requiredexpression="true">
+          <!--<field attribute="sendto" label="To:" requiredexpression="true">
             <renderer type="email"/>
-          </field>
-          <!--<association label="To:" target="sendto" labelfield="email_.emailaddress">
-            <renderer type="autocompleteserver"/>
-          </association>-->
-          <field attribute="cc" label="Cc:">
-            <renderer type="email"/>
-          </field>
+          </field>-->
+          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+            <renderer type="multiselectautocompleteclient"/>
+            <dataprovider postfilterfunction="EmailPostFilter"/>
+          </association>
+          <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+            <renderer type="multiselectautocompleteclient"/>
+            <dataprovider postfilterfunction="EmailPostFilter"/>
+          </association>
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" >
             <renderer type="email"/>

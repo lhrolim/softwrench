@@ -42,7 +42,9 @@ module.exports = function (grunt) {
         "www/Content/Mobile/scripts/directives/**/*.js",
         "www/Content/Mobile/scripts/maximoservices/**/*.js",
         "www/Content/Mobile/scripts/utils/**/*.js",
-        "www/Content/Mobile/scripts/filters/**/*.js"
+        "www/Content/Mobile/scripts/filters/**/*.js",
+        "www/Content/Mobile/scripts/decorators/**/*.js",
+        "www/Content/Mobile/scripts/constants/**/*.js"
     ];
 
     //TODO: make a client-based build??
@@ -171,7 +173,7 @@ module.exports = function (grunt) {
     });
 
 
-    grunt.loadNpmTasks("grunt-typescript");
+    //grunt.loadNpmTasks("grunt-typescript");
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
