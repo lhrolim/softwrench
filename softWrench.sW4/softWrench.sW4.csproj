@@ -192,6 +192,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\OffLineMetadataProvider.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
