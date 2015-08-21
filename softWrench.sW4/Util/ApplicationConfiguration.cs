@@ -72,7 +72,7 @@ namespace softWrench.sW4.Util {
                     return _testclientName;
                 }
                 _clientName = ConfigurationManager.AppSettings["clientkey"];
-                return ClientName;
+                return _clientName;
             }
         }
 
