@@ -1,29 +1,45 @@
-﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, restService, menuModelService, metadataModelService, configurationService) {
-    return {
+﻿(function (mobileServices) {
+    "use strict";
 
+    mobileServices.factory("metadataSynchronizationService",
+        ["$http", "$q", "restService", "menuModelService", "metadataModelService", "configurationService",
+            function ($http, $q, restService, menuModelService, metadataModelService, configurationService) {
+
+    var toConfigurationArray = function (configuration) {
+        var configArray = [];
+        for (var key in configuration) {
+            if (!configuration.hasOwnProperty(key)) continue;
+            configArray.push({ key: key, value: configuration[key] });
+        }
+        return configArray;
+    };
+
+    return {
         syncData: function (currentServerVersion) {
 
             return restService.getPromise("Mobile", "DownloadMetadatas", {}).then(function (metadatasResult) {
                 var serverMenu = JSON.parse(metadatasResult.data.menuJson);
                 var topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
-                var statusColorJson = JSON.parse(metadatasResult.data.statusColorsJSON);
                 var associationMetadatasJson = JSON.parse(metadatasResult.data.associationMetadatasJson);
                 var compositionMetadatasJson = JSON.parse(metadatasResult.data.compositionMetadatasJson);
+                var config = metadatasResult.data.appConfiguration;
 
                 var menuPromise = menuModelService.updateMenu(serverMenu);
                 var topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
                 var associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);
                 var compositionPromise = metadataModelService.updateCompositionMetadata(compositionMetadatasJson);
-                //TODO: server return a whole list of configs
-                var configServicePromise = configurationService.saveConfigs([{ key: 'statuscolor', value: statusColorJson }]);
-                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, configServicePromise]).then(function (results) {
-                    //TODO: return whether changes where downloaded or not
-                    $q.when(true);
-                });
-            }).catch(function (errordata) {
-                $q.reject();
-            });
 
+                var configArray = toConfigurationArray(config);
+                var configServicePromise = configurationService.saveConfigs(configArray);
+
+                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, configServicePromise]);
+
+            }).then(function (results) {
+                //TODO: return whether changes where downloaded or not
+                return true;
+            });
         }
     }
-});
+}]);
+
+})(mobileServices);

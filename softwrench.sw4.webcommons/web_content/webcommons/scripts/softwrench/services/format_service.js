@@ -168,14 +168,13 @@
             /// <returns type=""></returns>
             if (dateFormat == undefined || dateFormat == '') {
                 //default ==> should be client specific
-                return showTime ? "mm/dd/yyyy hh:ii" : "mm/dd/yyyy";
+                return showTime ? "MM/DD/YYYY HH:mm" : "MM/DD/YYYY";
             } else {
-                dateFormat = dateFormat.replace('MM', 'mm');
-                dateFormat = dateFormat.replace(':mm', ':ii');
-                dateFormat = dateFormat.replace('HH', 'hh');
+                dateFormat = dateFormat.replace('dd', 'DD');
+                dateFormat = dateFormat.replace('yyyy', 'YYYY');
                 if (!showTime) {
                     //the format and the showtime flag are somehow conflitant, let´s adjust the format
-                    dateFormat = dateFormat.replace('hh:ii', '');
+                    dateFormat = dateFormat.replace('HH:mm', '');
                 }
                 return dateFormat.trim();
             }

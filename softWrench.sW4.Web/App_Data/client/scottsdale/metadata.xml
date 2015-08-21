@@ -502,7 +502,9 @@
 
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs"/>
-            <composition relationship="attachment" label="Attachments"/>
+            <composition relationship="attachment" label="Attachments">
+              <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
           </section>
 
           <commands>

@@ -23,7 +23,6 @@
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"/>
 
 
-
   <if test="${property::exists('ignoretstamp')==true}">
     <!--makes development easier-->
     <property name="deploypath" value="${OutputDir}/deploy/local"></property>
@@ -170,6 +169,7 @@
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="onlinefolder" value="${foldername}/online_content" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
@@ -216,7 +216,7 @@
       </if>
 
 
-      <if test="${file::exists(sharedplaceholder)}">
+      <if test="${file::exists(sharedplaceholder) or file::exists(sharedcommonsplaceholder)}">
         <copy todir="${deploypath}/Content/Shared/${projectname}">
           <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
             <include name="**/*" />
@@ -342,6 +342,7 @@
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="onlinefolder" value="${foldername}/online_content" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
@@ -378,7 +379,7 @@
       </if>
 
 
-      <if test="${file::exists(sharedplaceholder)}">
+      <if test="${file::exists(sharedplaceholder) or file::exists(sharedcommonsplaceholder)}">
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
@@ -398,6 +399,11 @@
           <echo message="created symbolic link for ${clientname}" />
         </if>
       </if>
+
+
+      
+      
+      
     </foreach>
 
   </target>
@@ -406,6 +412,7 @@
   <target name="generatelinksMobile">
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
+      <property name="customerlinkcreated" value="1" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
       <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="offlinefolder" value="${foldername}/offline_content" />

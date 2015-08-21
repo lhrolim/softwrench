@@ -6,7 +6,7 @@
         //#region Utils
 
         var config = {
-            eventnamespace:"security:",
+            eventnamespace:"sw4:security:",
             authkey: "security:auth:user",
             previouskey: "security:auth:previous",
             sessionexpiredmessage: "Your session has expired. Please log in to resume your activities."

@@ -30,6 +30,8 @@
                 loginService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');
+                        //enforcing SWOFF-93
+                        $scope.data = {};
                     })
                     .catch(function () {
                         showAlert("Login failed!", "Please check your credentials!");

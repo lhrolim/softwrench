@@ -15,8 +15,12 @@
 (function ($) {
     $.fn.scannerDetection = function (options) {
 
-        var backspaceWhich = 8;
-        var leftArrowWhich = 37;
+        if (options === null) {
+            //removing the scanner listener, for the sake of application restoring best performance on inputs
+            $(this).data('scannerDetection', { options: {} })
+                .unbind('.scannerDetection').unbind('keydown.scannerDetection');
+            return this;
+        }
 
         // If string given, call onComplete callback
         if (typeof options === "string") {
@@ -55,6 +59,7 @@
             var initScannerDetection = function () {
                 firstCharTime = 0;
                 stringWriting = '';
+                charBuffer = '';
 
             };
             self.scannerDetectionTest = function (s) {
@@ -62,6 +67,7 @@
                 if (s) {
                     firstCharTime = lastCharTime = 0;
                     stringWriting = s;
+                    charBuffer = s;
                 }
                 // If all condition are good (length, time...), call the callback and re-initialize the plugin for next scanning
                 // Else, just re-initialize
@@ -73,7 +79,7 @@
                         options.onComplete.call(self, alphaString);
                     }
                     $self.trigger('scannerDetectionComplete', {
-                         string: stringWriting
+                        string: stringWriting
                     });
                     initScannerDetection();
                     return true;
@@ -83,23 +89,31 @@
                     }
                     $self.trigger('scannerDetectionError', { string: stringWriting });
                     if (focusedInput) {
-                        var newValue = $(focusedInput).val() + stringWriting;
+                        var newValue = $(focusedInput).val() + charBuffer;
                         $(focusedInput).val(newValue);
-                        charBuffer = '';
+                        $(focusedInput).trigger('input');
                     }
                     initScannerDetection();
                     return false;
                 }
             }
+
             $self.data('scannerDetection', { options: options })
                 .unbind('.scannerDetection')
                 .bind('keydown.scannerDetection', function (e) {
 
 
-                    if (e.which >= 48 && e.which <= 90 && (e.target.type == "text" || e.target.type == "search")) {
+                    if (e.which >= 48 && e.which <= 90 && (e.target.type === "text" || e.target.type === "search")) {
                         e.preventDefault();
                         focusedInput = e.target;
-                        charBuffer = String.fromCharCode(e.which);
+                        if (e.shiftKey || e.which < 65) {
+                            // capital letters and numbers
+                            charBuffer = String.fromCharCode(e.which);
+                        } else
+                        {
+                            //non capital letters
+                            charBuffer = String.fromCharCode(e.which + 32);
+                        }
                     } else {
                         focusedInput = null;
                     }

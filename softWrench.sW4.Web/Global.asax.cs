@@ -43,7 +43,8 @@ namespace softWrench.sW4.Web {
 
         private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
-            if (!ApplicationConfiguration.IsLocal() && ApplicationConfiguration.IsDev()) {
+            Log.InfoFormat("initing "+ applicationPath);
+            if (!ApplicationConfiguration.IsLocal() &&  ApplicationConfiguration.IsDev()) {
                 if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
                     //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
                     var clientName = applicationPath.Substring(4);
@@ -84,7 +85,7 @@ namespace softWrench.sW4.Web {
                 ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
             SecurityFacade.InitSecurity();
-            Log.Info(LoggingUtil.BaseDurationMessage("**************App started in {0}*************", before));
+            Log.Info(String.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 

@@ -22,7 +22,11 @@
         }
 
         $scope.getAssociationLabelField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.labelFields[0];
+            var associationValueField = this.getAssociationValueField(fieldMetadata);
+            if ("true" === fieldMetadata.hideDescription) {
+                return associationValueField;
+            }
+            return associationValueField +  "+' - '+"  + "datamap." + fieldMetadata.labelFields[0];
         }
 
         $scope.getAssociationValueField = function (fieldMetadata) {

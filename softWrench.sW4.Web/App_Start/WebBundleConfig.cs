@@ -15,22 +15,38 @@ namespace softWrench.sW4.Web {
                "~/Content/bootstrap/css/datepicker.css",
                "~/Content/bootstrap/css/bootstrap-select.css",
                "~/Content/bootstrap/css/datetimepicker.css",
+               "~/Content/bootstrap/css/bootstrap-datetimepicker.css",
                "~/Content/bootstrap/css/submenu.css",
                "~/Content/bootstrap/css/typeahead.js-bootstrap.css",
                "~/Content/bootstrap/css/bootstrap-multiselect.css",
                "~/Content/bootstrap/css/textAngular-min.css"
                ));
+//            AddClientBundle(bundles);
 
             bundles.Add(new StyleBundle("~/Content/styles/thirdparty").Include(
                 "~/Content/font-awesome/css/font-awesome.css",
                 "~/Content/angular-ui-select/angular-ui-select.css"
                 ));
 
-            bundles.Add(new StyleBundle("~/Content/fonts").Include(
-                "~/Content/fonts/font.css"
-                ));
+            bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
+                "~/Content/themes/base/jquery.ui.core.css",
+                "~/Content/themes/base/jquery.ui.resizable.css",
+                "~/Content/themes/base/jquery.ui.selectable.css",
+                "~/Content/themes/base/jquery.ui.accordion.css",
+                "~/Content/themes/base/jquery.ui.autocomplete.css",
+                "~/Content/themes/base/jquery.ui.button.css",
+                "~/Content/themes/base/jquery.ui.dialog.css",
+                "~/Content/themes/base/jquery.ui.slider.css",
+                "~/Content/themes/base/jquery.ui.tabs.css",
+                "~/Content/themes/base/jquery.ui.datepicker.css",
+                "~/Content/themes/base/jquery.ui.progressbar.css",
+                "~/Content/themes/base/jquery.ui.theme.css"));
 
-            bundles.Add(new StyleBundle("~/Content/ie9").Include(
+
+            bundles.Add(new StyleBundle("~/Content/themes/base/fonts").Include(
+                "~/Content/fonts/font.css"));
+
+            bundles.Add(new StyleBundle("~/Content/themes/base/ie9").Include(
                 "~/Content/ie/ie9.css"
                 ));
         }
@@ -84,10 +100,8 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-richtext.js",
                 "~/Content/Scripts/vendor/other/bootbox.js",
                 "~/Content/Scripts/vendor/other/typeahead.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datepicker.de.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datetimepicker.de.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datepicker.es.js",
-                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datetimepicker.es.js",
+                "~/Content/Scripts/vendor/moment/locales/de.js",
+                "~/Content/Scripts/vendor/moment/locales/es.js",
                 "~/Content/Scripts/vendor/bootstrap/modal.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-multiselect.js"
                 ));

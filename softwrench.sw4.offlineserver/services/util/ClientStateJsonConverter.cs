@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Iesi.Collections.Generic;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.offlineserver.dto.association;
-using softwrench.sW4.audit.classes.Model;
 
 namespace softwrench.sw4.offlineserver.services.util {
     public class ClientStateJsonConverter {

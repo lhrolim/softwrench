@@ -16,6 +16,11 @@
                 adminMenuService.doAction(title, controller, action, parameters, target);
             };
 
+            scope.refreshMetadata = function() {
+                this.doAction(null, 'EntityMetadata', 'Refresh', null, null);
+                schemaCacheService.wipeSchemaCacheIfNeeded(true);
+            }
+
             scope.loadApplication = function (applicationName, schemaId, mode, id) {
                 adminMenuService.loadApplication(applicationName, schemaId, mode, id);
             };

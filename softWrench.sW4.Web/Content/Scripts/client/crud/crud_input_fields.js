@@ -230,7 +230,9 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                     $scope.configureFieldChangeEvents();
                     //                    $scope.configureDirtyWatcher();
                 }
-                $('.datetimereadonly').datepicker("remove");
+
+                $('.datetimereadonly').data("DateTimePicker").disable();
+
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
                     var fileName = this.value.match(/[^\/\\]+$/);

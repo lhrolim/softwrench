@@ -14,10 +14,8 @@
 
         //#region Utils
 
-    
-        // ReSharper disable once InconsistentNaming
-        var _crudContext = {
 
+        var initialContext = {
             currentApplicationName: null,
             currentApplication: null,
             currentTitle: null,
@@ -48,8 +46,9 @@
 
             previousItem: null,
             nextItem: null,
-
-        }
+        };
+        // ReSharper disable once InconsistentNaming
+        var _crudContext = angular.copy(initialContext);
 
         //#endregion
 
@@ -209,6 +208,10 @@
             return _crudContext;
         }
 
+        function reset() {
+            _crudContext = angular.copy(initialContext);
+        }
+
         function hasDirtyChanges () {
             if (_crudContext.composition.currentDetailItem) {
                 return _crudContext.composition.currentDetailItem && (!angular.equals(_crudContext.composition.originalDetailItemDatamap, _crudContext.composition.currentDetailItem));
@@ -245,6 +248,7 @@
             getCompositionDetailItem: getCompositionDetailItem,
             hasDirtyChanges: hasDirtyChanges,
             getActiveTab: getActiveTab,
+            reset:reset,
             //below method to facilitate migration
             getCrudContext: getCrudContext
             

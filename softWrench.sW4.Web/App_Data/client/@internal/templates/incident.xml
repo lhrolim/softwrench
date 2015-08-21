@@ -107,6 +107,14 @@
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
 
+          <field attribute="class" label="" hidden="true"/>
+          <field attribute="solution" hidden="true"/>
+          <field attribute="assetsiteid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="cinum" hidden="true"/>
+
           <section orientation="horizontal">
             <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
@@ -216,8 +224,8 @@
                 <renderer type ="richtext"/>
               </field>
             </tab>
-            <composition relationship="attachment" label="Attachments">
-              <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+            <composition relationship="attachment" label="Attachments" >
+              <collectionproperties  allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
             </composition>
           </section>
         </schema>

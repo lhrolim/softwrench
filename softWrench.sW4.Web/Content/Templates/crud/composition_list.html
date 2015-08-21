@@ -113,6 +113,9 @@
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
+                                    <span ng-if="column.rendererParameters['showattribute'] == 'true'">
+                                        {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
+                                    </span>
                                 </div>
                                 <div ng-switch-when="datetime">
                                     <div id="datetimepicker" class="input-group" data-datepicker="true" ng-if="column.rendererParameters['editable'] == 'true'">
@@ -134,8 +137,7 @@
                                     </a>
 
                                 </div>
-                                <div ng-switch-default style="padding-top: 6px">
-
+                                <div ng-switch-default>
                                     <div ng-if="column.rendererParameters['editable'] == 'true'"
                                          ng-class="{'input-group': column.rendererParameters['prepend'] || column.rendererParameters['append'] }">
                                         <span class="input-group-addon" ng-if="column.rendererParameters['prepend']!=null">{{column.rendererParameters['prepend']}}</span>
