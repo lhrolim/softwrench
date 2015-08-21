@@ -469,6 +469,7 @@
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
+    <Content Include="Content\Images\header-email.jpg" />
     <Content Include="Content\Images\header.jpg" />
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
