@@ -51,10 +51,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 commLog.SetAttribute(sendto, string.Join(",", sendtoArray));
                 // Convert cc array to a comma separated list
                 var ccObject = commLog.GetAttribute(cc);
-                var ccArray = ((IEnumerable)ccObject).Cast<object>()
-                                                              .Select(x => x.ToString())
-                                                              .ToArray();
-                commLog.SetAttribute(cc, string.Join(",", ccArray));
+                if (ccObject != null) {
+                    var ccArray = ((IEnumerable) ccObject).Cast<object>()
+                        .Select(x => x.ToString())
+                        .ToArray();
+                    commLog.SetAttribute(cc, string.Join(",", ccArray));
+                }
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
@@ -80,11 +82,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     throw new System.ArgumentNullException("To:");
                 }
                 var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
-                var ccEmail = w.GetRealValue(integrationObject, cc).ToString();
+                var ccEmail = w.GetRealValue(integrationObject, cc);
+                ccEmail = ccEmail?.ToString() ?? "";
                 var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
                 var username = user.MaximoPersonId;
-                // TODO: Move this call off to a separate thread to spead up return time. User does not eed to wait for the email addresses to be processed and stored.
-                _updateEmailHistory(username, allAddresses.Split(','));
+                // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
+                _updateEmailHistory(username, allAddresses.ToLower().Split(','));
             });
         }
 
@@ -143,7 +146,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         private static void _updateEmailHistory(string userId, string[] emailAddresses) {
             ISWDBHibernateDAO _swdbDao = SWDBHibernateDAO.GetInstance();
-            List<EmailHistory> emailRecords = _swdbDao.FindByQuery<EmailHistory>(EmailHistory.byUserId, userId).ToList();
+            string[] userIds = { userId.ToLower() };
+            List<EmailHistory> emailRecords = _swdbDao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
             List<EmailHistory> newRecords = new List<EmailHistory>();
             foreach (var emailAddress in emailAddresses) {
                 if (!emailRecords.Any(t => t.EmailAddress.EqualsIc(emailAddress))) {

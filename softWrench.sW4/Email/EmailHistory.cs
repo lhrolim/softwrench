@@ -11,7 +11,7 @@ namespace softWrench.sW4.Email {
     [Class(Table = "EMAIL_HISTORY", Lazy = false)]
     class EmailHistory : IBaseEntity
     {
-        public const string byUserIdEmailAddess = "FROM EmailHistory WHERE lower(UserID) = lower(?) AND lower(EmailAddress) = lower(?)";
+        public const string byUserIdEmailAddess = "FROM EmailHistory WHERE lower(UserID) IN (:p0) AND lower(EmailAddress) IN (:p1)";
         public const string byUserId = "FROM EmailHistory WHERE lower(UserID) = lower(?)";
 
         [Id(0, Name = "Id")]
