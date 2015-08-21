@@ -85,101 +85,6 @@
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
           </properties>
         </list>
-
-        <schema id="quicksrgrid" title="Service Request Grid" stereotype="list">
-          <field attribute="ticketid" label="SR No">
-            <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
-          </field>
-          <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
-          </field>
-          <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
-          </field>
-          <field attribute="owner" label="Owner">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
-          </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
-          </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
-          </field>
-          <properties>
-            <property key="list.click.schema" value="quickeditdetail"/>
-            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
-          </properties>
-        </schema>
-        
-        <schema id="quicknewdetail" stereotype="detailnew" title="New Service Request">
-          <properties>
-            <property key="nextschema.schemaid" value="quicksrgrid"/>
-          </properties>
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
-          <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
-          <field attribute="description" label="Summary:" requiredexpression="true">
-            <renderer type="default" params="inputsize=medium" />
-          </field>
-          <field label="Details:" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
-            <renderer type="lookup" params="columnlabel=Name;"/>
-            <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
-          </association>
-          <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
-          <field attribute="reportedemail" label="Reported By Email:" readonly="true"/>
-          <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-            <renderer type="lookup"/>
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-          </association>
-          <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
-          </field>
-        </schema>
-
-        <schema id="quickeditdetail" stereotype="detailnew" title="Service Request Details">
-          <properties>
-            <property key="nextschema.schemaid" value="quicksrgrid"/>
-          </properties>
-          
-          <field attribute="solution" hidden="true"/>
-          <field attribute="assetsiteid" hidden="true"/>
-          <field attribute="location" hidden="true"/>
-          <field attribute="assetnum" hidden="true"/>
-          <field attribute="failurecode" hidden="true"/>
-          <field attribute="cinum" hidden="true"/>
-          <field attribute="class" label="" hidden="true"/>
-          
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
-          </association>
-          <field attribute="description" label="Summary:" requiredexpression="true">
-            <renderer type="default" params="inputsize=medium" />
-          </field>
-          <field label="Details:" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
-            <renderer type="lookup" params="columnlabel=Name;"/>
-            <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
-          </association>
-          <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
-          <field attribute="reportedemail" label="Reported By Email:" readonly="true"/>
-          <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-            <renderer type="lookup"/>
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-          </association>
-          <composition relationship="attachment" label="Attachments" printenabled="false">
-            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>
-        </schema>
         
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
@@ -356,10 +261,106 @@
       </schemas>
     </application>
 
+    <application entity="SR" name="quickservicerequest" title="Service Request" >
+      <properties>
+        <property key="mobile.disabled" value="true"/>
+      </properties>
+      <schemas>
+        <schema id="quicksrgrid" title="Service Request Grid" stereotype="list">
+          <field attribute="ticketid" label="SR No">
+            <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="#color" label="">
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="quickeditdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+          </properties>
+        </schema>
 
+        <schema id="quicknewdetail" stereotype="detailnew" title="New Service Request">
+          <properties>
+            <property key="nextschema.schemaid" value="quicksrgrid"/>
+          </properties>
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+          <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
+          <field attribute="description" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="inputsize=medium" />
+          </field>
+          <field label="Details:" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+          <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
+            <renderer type="lookup" params="columnlabel=Name;"/>
+            <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
+          </association>
+          <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
+          <field attribute="reportedemail" label="Reported By Email:" readonly="true"/>
+          <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <renderer type="lookup"/>
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+          </association>
+          <field label="Attachment:" attribute="newattachment" >
+            <renderer type="upload"/>
+          </field>
+        </schema>
+
+        <schema id="quickeditdetail" stereotype="detailnew" title="Service Request Details">
+          <properties>
+            <property key="nextschema.schemaid" value="quicksrgrid"/>
+          </properties>
+
+          <field attribute="solution" hidden="true"/>
+          <field attribute="assetsiteid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="cinum" hidden="true"/>
+          <field attribute="class" label="" hidden="true"/>
+
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
+          </association>
+          <field attribute="description" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="inputsize=medium" />
+          </field>
+          <field label="Details:" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+          <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
+            <renderer type="lookup" params="columnlabel=Name;"/>
+            <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
+          </association>
+          <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
+          <field attribute="reportedemail" label="Reported By Email:" readonly="true"/>
+          <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <renderer type="lookup"/>
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+          </association>
+          <composition relationship="attachment" label="Attachments" printenabled="false">
+            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+        </schema>
+      </schemas>
+    </application>
   </applications>
-
-
-
-
 </metadata>
