@@ -83,7 +83,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 }
                 var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
                 var ccEmail = w.GetRealValue(integrationObject, cc);
-                ccEmail = ccEmail?.ToString() ?? "";
+                ccEmail = ccEmail != null ? ccEmail.ToString() : "";
                 var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
                 var username = user.MaximoPersonId;
                 // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
