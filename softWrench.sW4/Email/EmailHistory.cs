@@ -52,7 +52,7 @@ namespace softWrench.sW4.Email {
         }
 
         public override string ToString() {
-            return $"EmailAddress: {EmailAddress}, UserID: {UserID}, Id: {Id}";
+            return "EmailAddress: {0}, UserID: {1}, Id: {2}".Fmt(EmailAddress,UserID,Id);
         }
     }
 }
