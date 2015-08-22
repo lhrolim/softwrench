@@ -118,7 +118,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
             var targetResult = Engine().Execute(operationWrapper);
-            if (isCreation) {
+            if (isCreation && isactive) {
                 _userSetupEmailService.SendEmail(user, primaryEmail);
             }
 

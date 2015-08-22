@@ -44,16 +44,16 @@ namespace softWrench.sW4.Configuration.Definitions {
         public virtual string Renderer { get; set; }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Visible { get; set; }
+        public virtual bool Visible { get; set; }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Contextualized { get; set; }
+        public virtual bool Contextualized { get; set; }
 
 //        [Property(Type = "BinaryBlob")]
         public virtual byte[] DefaultBlobValue { get; set; }
 
         [Property(Column = "alias_")]
-        public virtual String Alias { get; set; }
+        public virtual string Alias { get; set; }
 
 
         public virtual string StringValue {
@@ -86,7 +86,7 @@ namespace softWrench.sW4.Configuration.Definitions {
 
 
         public int CompareTo(PropertyDefinition other) {
-            return System.String.Compare(Key, other.Key, System.StringComparison.Ordinal);
+            return string.Compare(Key, other.Key, System.StringComparison.Ordinal);
         }
 
         public override string ToString() {

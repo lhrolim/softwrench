@@ -15,9 +15,9 @@ namespace softWrench.sW4.Security.Services {
         private const string HlagPrefix = "@HLAG.COM";
 
 
-        private IUserLinkManager _userLinkManager;
+        private readonly UserLinkManager _userLinkManager;
 
-        public UserManager(IUserLinkManager userLinkManager) {
+        public UserManager(UserLinkManager userLinkManager) {
             _userLinkManager = userLinkManager;
         }
 
@@ -130,8 +130,8 @@ namespace softWrench.sW4.Security.Services {
             get { return ApplicationConfiguration.ClientName == "hapag" && ApplicationConfiguration.IsProd(); }
         }
 
-        public User FindUserByLink(string tokenLink) {
-            return _userLinkManager.RetrieveUserByLink(tokenLink);
+        public User FindUserByLink(string tokenLink, out bool hasExpired) {
+            return _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace cts.commons.portable.Util {
 
-    public class DateUtil {
+    public static class DateUtil {
 
         // added additional acceptance format 
         public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy hh:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-M-d" };
@@ -36,7 +36,11 @@ namespace cts.commons.portable.Util {
             return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
         }
 
-     
+        public static double TimeInMillis(this DateTime time) {
+            return (time - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
+        }
+
+
 
 
         /// <summary>

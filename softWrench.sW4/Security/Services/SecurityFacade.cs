@@ -10,6 +10,7 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
