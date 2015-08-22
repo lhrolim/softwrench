@@ -1,12 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
-using softWrench.sW4.Data.Batches;
-using softWrench.sW4.Data.Entities;
-using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Util;
+﻿using softWrench.sW4.Data.Batches;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Inventory.Issue {
 

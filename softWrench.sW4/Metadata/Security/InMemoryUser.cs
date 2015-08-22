@@ -1,5 +1,4 @@
-﻿using cts.commons.portable.Util;
-using Iesi.Collections.Generic;
+﻿using Iesi.Collections.Generic;
 using log4net;
 using Newtonsoft.Json;
 using softwrench.sw4.api.classes.user;
@@ -9,16 +8,14 @@ using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softWrench.sW4.Metadata.Menu.Containers;
-using softWrench.sW4.Security.Entities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using softwrench.sW4.Shared2.Data;
-using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Search;
+using cts.commons.portable.Util;
+using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {

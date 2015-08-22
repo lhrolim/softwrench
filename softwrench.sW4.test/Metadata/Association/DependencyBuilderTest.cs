@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata.Applications.Association;
 
 namespace softwrench.sW4.test.Metadata.Association {

@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
+﻿using softWrench.sW4.Data.Persistence.SWDB;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Data.Init {
     class HapagRoleInitializer {

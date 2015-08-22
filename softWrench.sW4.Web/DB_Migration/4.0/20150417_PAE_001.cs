@@ -1,10 +1,4 @@
 ﻿using FluentMigrator;
-using softWrench.sW4.Web.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using cts.commons.persistence.Util;
 
 
 namespace softWrench.sW4.Web.DB_Migration._4._0

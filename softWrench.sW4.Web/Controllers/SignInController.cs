@@ -1,25 +1,19 @@
-﻿using System.Threading;
-using JetBrains.Annotations;
-using Quartz.Util;
+﻿using JetBrains.Annotations;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.LoginHandler;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Oracle.DataAccess.Types;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Web.Controllers.Security;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -141,7 +135,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private InMemoryUser GetUser(string userName, string password, string userTimezoneOffset) {
-            var userAux = _dao.FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, userName);
+            var userAux = _dao.FindSingleByQuery<User>(softwrench.sw4.user.classes.entities.User.UserByUserName, userName);
             // User needs to load person data
             var allowNonUsersToLogin = "true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"));
             if (userAux == null) {

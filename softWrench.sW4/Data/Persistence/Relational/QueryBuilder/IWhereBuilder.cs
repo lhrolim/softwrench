@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {

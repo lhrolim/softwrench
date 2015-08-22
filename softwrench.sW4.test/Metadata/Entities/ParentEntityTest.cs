@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata.Entities {

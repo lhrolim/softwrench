@@ -7,7 +7,6 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
-using softwrench.sw4.Shared2.Metadata.Exception;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;

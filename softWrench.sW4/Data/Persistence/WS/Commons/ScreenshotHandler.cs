@@ -3,10 +3,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class ScreenshotHandler {

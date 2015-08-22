@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
-using softWrench.sW4.Util;
+using softwrench.sw4.api.classes.fwk.context;
 
 namespace softWrench.sW4.SPF {
     public class RedirectService : ISingletonComponent {
 
-        private readonly IContextLookuper _lookuper;
+        private readonly IMemoryContextLookuper _lookuper;
 
         private const string ApplicationUrlTemplate =
            "{0}/Home/RedirectToAction?application={1}&querystring=id${2}@key%5BschemaId%5D${3}@key%5Bmode%5D$@{4}key%5Bplatform%5D$web";

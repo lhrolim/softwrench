@@ -1,24 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Security.Interfaces;
+using cts.commons.portable.Util;
+using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Preferences {
+    public class UserPreferences {
 
-    [Component]
-    public class UserPreference :IBaseEntity{
-        public int? Id { get; set; }
+        public ISet<GridFilterAssociation> GridFilters { get; set; }
 
-        [Set(0, Table = "PREF_FILTER",
-        Lazy = CollectionLazy.False, Cascade = "all")]
-        [Key(1, Column = "pref_id")]
-        [OneToMany(2, ClassType = typeof(UserFilter))]
-        public virtual Iesi.Collections.Generic.ISet<UserFilter> Filters { get; set; }
-
+        /// <summary>
+        /// checks if the user already has a filter created by him with the same alias for a given application.
+        /// 
+        /// Shared filters do not apply here, since the user might want to have a filter with a same name as a shared one.
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool ContainsFilter(GridFilter filter, InMemoryUser user) {
+            return GridFilters != null &&
+                   GridFilters.Any(g => (g.User.Id == user.DBId && filter.Alias.EqualsIc(g.Filter.Alias) && filter.Application.EqualsIc(g.Filter.Application)));
+        }
     }
 }

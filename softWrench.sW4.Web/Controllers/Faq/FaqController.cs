@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.IO;
 
 namespace softWrench.sW4.Web.Controllers.Faq {

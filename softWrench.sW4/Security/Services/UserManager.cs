@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
-using Quartz.Util;
-using softWrench.sW4.AUTH;
+using cts.commons.Util;
+using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
-using softWrench.sW4.Security.Setup;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {

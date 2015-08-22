@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cts.commons.simpleinjector.Events;
+﻿using cts.commons.simpleinjector.Events;
 
 namespace softWrench.sW4.Security {
     public class UserSavedEvent : ISWEvent {

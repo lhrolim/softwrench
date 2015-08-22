@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagSolutionDataSet : MaximoApplicationDataSet {

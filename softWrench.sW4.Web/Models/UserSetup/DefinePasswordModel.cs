@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using softWrench.sW4.Util;
+﻿using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Models.UserSetup {
     public class DefinePasswordModel : IBaseLayoutModel {

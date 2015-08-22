@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace softWrench.sW4.Util {
+namespace cts.commons.Util {
     public class Validate {
 
         public static void NotNull(object parameterValue, string parameterName) {

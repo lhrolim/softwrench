@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Data.Offline;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Entities.Schema {

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
-using cts.commons.Util;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 

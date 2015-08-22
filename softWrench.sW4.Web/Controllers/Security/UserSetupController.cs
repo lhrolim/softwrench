@@ -4,10 +4,9 @@ using System.Threading;
 using System.Web.Mvc;
 using System.Web.Security;
 using cts.commons.persistence;
+using cts.commons.Util;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
-using softWrench.sW4.Util;
-using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.UserSetup;
 
 namespace softWrench.sW4.Web.Controllers.Security {

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using cts.commons.Util;
-using Iesi.Collections;
 using Iesi.Collections.Generic;
 using log4net;
 using softWrench.sW4.Configuration.Services.Api;
@@ -10,7 +9,6 @@ using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata;
 using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Configuration.Services {
     public class ApplicationWhereClauseRegistry : ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {

@@ -5,7 +5,7 @@ using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
-using NHibernate.Mapping.Attributes;
+using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -117,23 +117,23 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
-        private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
+        private static EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
-            List<EmailService.EmailAttachment> attachments = new List<EmailService.EmailAttachment>();
+            List<EmailAttachment> attachments = new List<EmailAttachment>();
             if (!String.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("attachment")) &&
                 !String.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("newattachment_path"))){
                 var attachmentsData = crudData.GetUnMappedAttribute("attachment").Split(',');
                 var attachmentsPath = crudData.GetUnMappedAttribute("newattachment_path").Split(',');
                 for (int i = 0, j = 0; i < attachmentsPath.Length; i++){
-                    EmailService.EmailAttachment attachment =
-                        new EmailService.EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1],
+                    EmailAttachment attachment =
+                        new EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1],
                             attachmentsPath[i]);
                     attachments.Add(attachment);
                     j = j + 2;
                 }
             }
 
-            return new EmailService.EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
+            return new EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
                 w.GetRealValue<string>(integrationObject, sendto),
                 w.GetRealValue<string>(integrationObject, subject),
                 w.GetRealValue<string>(integrationObject, message),

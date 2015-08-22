@@ -1,10 +1,10 @@
-﻿using NHibernate;
+﻿using System;
+using System.Data;
+using NHibernate;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
-using System;
-using System.Data;
 
-namespace softWrench.sW4.Util {
+namespace cts.commons.persistence.Util {
     public class BooleanToIntUserType : IUserType {
         public object Assemble(object cached, object owner) {
             return cached;

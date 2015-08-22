@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Common.Logging;
 using SimpleInjector;
-using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using cts.commons.simpleinjector.Core.Order;
-using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Scheduler.Jobs {

@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using softWrench.sW4.Data.API;
-using softWrench.sW4.Web.Models.Application;
 
 namespace softWrench.sW4.Web.Models.Generic {
     public class GenericModel {

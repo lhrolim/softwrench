@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Iesi.Collections;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -9,7 +8,7 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softwrench.sw4.Hapag.Security;
-using softWrench.sW4.Security.Entities;
+using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Data;
 
 namespace softwrench.sw4.Hapag.Data.Sync {

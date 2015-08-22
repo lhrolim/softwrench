@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.Collection;

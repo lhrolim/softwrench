@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -11,7 +10,6 @@ using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Modules;
-using softwrench.sW4.Shared2.Util;
 
 namespace softWrench.sW4.Metadata.Menu {
 

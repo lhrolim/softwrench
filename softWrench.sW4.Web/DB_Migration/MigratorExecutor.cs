@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
 using cts.commons.persistence;
@@ -12,7 +11,6 @@ using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.MySql;
 using log4net;
-using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.DB_Migration {

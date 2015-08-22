@@ -1,10 +1,10 @@
 ﻿using softwrench.sw4.Hapag.Data.Sync;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Entities;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Data.Init {
 

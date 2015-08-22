@@ -1,5 +1,4 @@
-﻿using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
-using softWrench.sW4.Data.Persistence.Operation;
+﻿using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;

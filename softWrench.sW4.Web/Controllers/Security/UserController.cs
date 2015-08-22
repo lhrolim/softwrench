@@ -6,11 +6,11 @@ using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
@@ -122,7 +122,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         //todo make message specific
         public GenericResponseResult<ICollection<User>> Post(JObject userJson) {
-            SecurityFacade.SaveUser(sW4.Security.Entities.User.FromJson(userJson));
+            SecurityFacade.SaveUser(softwrench.sw4.user.classes.entities.User.FromJson(userJson));
             var users = List(false).ResultObject.Users;
 
             var response = new GenericResponseResult<ICollection<User>> {

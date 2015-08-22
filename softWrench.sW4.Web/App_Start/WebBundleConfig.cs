@@ -1,7 +1,5 @@
-﻿using System;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 using cts.commons.web;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web {
     public class WebBundleConfig :IBundleConfigProvider{

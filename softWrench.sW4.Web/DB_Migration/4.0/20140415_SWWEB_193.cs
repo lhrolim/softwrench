@@ -1,7 +1,5 @@
-﻿using System.Web.Razor.Generator;
-using cts.commons.persistence.Util;
+﻿using cts.commons.persistence.Util;
 using FluentMigrator;
-using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.DB_Migration
 {

@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
-using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Util;
 using softwrench.sw4.problem.classes;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public class UserSyncManager : AMaximoRowstampManager, IUserSyncManager {

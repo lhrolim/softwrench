@@ -1,9 +1,8 @@
 ﻿using cts.commons.persistence;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
 using System;
+using cts.commons.persistence.Util;
 
 namespace softWrench.sW4.Configuration.Definitions {
 

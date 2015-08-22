@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 

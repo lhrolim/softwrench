@@ -9,7 +9,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
-using cts.commons.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Association
 {

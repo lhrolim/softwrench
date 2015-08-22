@@ -1,8 +1,6 @@
 ﻿
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Util;
 using System;
 
 namespace softwrench.sw4.Hapag.Data.DataSet.Helper {

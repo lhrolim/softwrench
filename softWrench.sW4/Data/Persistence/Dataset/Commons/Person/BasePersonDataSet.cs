@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
+using cts.commons.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services.setup;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -14,9 +16,7 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Security.Setup;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {

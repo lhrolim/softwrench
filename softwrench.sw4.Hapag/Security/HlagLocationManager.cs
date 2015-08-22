@@ -4,19 +4,18 @@ using softwrench.sw4.Hapag.Data;
 using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Shared2.Data.Association;
-using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Security {
     public class HlagLocationManager : ISWEventListener<ApplicationStartedEvent>, ISWEventListener<UserLoginEvent>, IHlagLocationManager {

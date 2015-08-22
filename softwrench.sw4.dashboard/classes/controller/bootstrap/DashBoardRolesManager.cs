@@ -3,8 +3,8 @@ using System.Linq;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
 
 namespace softwrench.sw4.dashboard.classes.controller.bootstrap {
 

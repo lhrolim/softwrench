@@ -1,8 +1,6 @@
 ﻿using System;
 using Common.Logging;
 using Quartz;
-using softWrench.sW4.Configuration;
-using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Scheduler.Interfaces;
 

@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
-using cts.commons.web.Attributes;
-using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Metadata.Applications.DataSet;
-using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Applications.DataSet.Faq;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.Faq;
-using softWrench.sW4.Web.SPF;
 
 namespace softWrench.sW4.Web.Controllers {
     [System.Web.Http.Authorize]

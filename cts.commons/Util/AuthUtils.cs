@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 
-namespace softWrench.sW4.AUTH {
+namespace cts.commons.Util {
     public class AuthUtils {
         public static IPrincipal CurrentPrincipal {
             get { return System.Threading.Thread.CurrentPrincipal; }

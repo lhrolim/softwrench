@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using FluentMigrator;
-using softWrench.sW4.Web.Util;
+﻿using FluentMigrator;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0 {
     [Migration(201405051415)]

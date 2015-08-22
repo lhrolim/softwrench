@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,11 +6,9 @@ using System.Text;
 using cts.commons.Util;
 using NHibernate;
 using log4net;
-using softWrench.sW4.Data.Persistence;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence.Relational.DataConstraint;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Util;
 
 
 namespace softWrench.sW4.Security.Services {

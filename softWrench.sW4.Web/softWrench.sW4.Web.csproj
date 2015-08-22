@@ -1458,6 +1458,10 @@
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
       <Name>softwrench.sw4.swgas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
+      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
+      <Name>softwrench.sw4.user</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
       <Name>softwrench.sw4.webcommons</Name>
@@ -1501,7 +1505,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
   <ProjectExtensions>
@@ -1525,7 +1529,7 @@
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
-   <!--Target Name="AfterBuild">
+  <!--Target Name="AfterBuild">
    </Target> -->
   <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll" />
   <Target Name="Transform">

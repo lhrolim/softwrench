@@ -1,12 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
-using softWrench.sW4.Data.Persistence.WS.Mif;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 

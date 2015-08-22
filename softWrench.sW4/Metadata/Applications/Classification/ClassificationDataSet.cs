@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;

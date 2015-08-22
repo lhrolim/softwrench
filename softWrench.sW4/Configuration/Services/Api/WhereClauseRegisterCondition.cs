@@ -2,7 +2,6 @@
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Configuration.Services.Api {

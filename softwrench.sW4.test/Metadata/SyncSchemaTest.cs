@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Data.Offline;

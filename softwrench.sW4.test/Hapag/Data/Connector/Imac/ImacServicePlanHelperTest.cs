@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softwrench.sw4.Hapag.Data.Connector.Imac;
-using softwrench.sw4.Hapag.Resources.ImacConfigs;
 
 namespace softwrench.sW4.test.Hapag.Data.Connector.Imac {
     [TestClass]
