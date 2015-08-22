@@ -15,7 +15,6 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
-using static System.Int32;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 
 
@@ -95,7 +94,7 @@ namespace softWrench.sW4.Security.Services {
 
             int? userTimezoneOffsetInt = null;
             int tmp;
-            if (TryParse(userTimezoneOffset, out tmp)) {
+            if (int.TryParse(userTimezoneOffset, out tmp)) {
                 userTimezoneOffsetInt = tmp;
             }
 
