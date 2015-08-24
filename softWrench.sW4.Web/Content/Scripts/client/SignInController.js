@@ -17,6 +17,7 @@
                 $scope.showforgotPasswordForm = false;
                 $scope.errorMessage = null;
                 $scope.successMessage = "An email has been sent with instructions to reset the password";
+                $scope.userNameOrEmail = null;
             }).error(function (err) {
                 $scope.errorMessage = err.errorMessage;
             });
