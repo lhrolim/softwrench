@@ -24,6 +24,7 @@ softWrench.sW4.WebMobile/www/Content/Vendor/fonts
 
 Backup/
 
+# ignore /platforms/* but includes /platforms/android/cordova/lib/build.js
 !softWrench.sW4.WebMobile/platforms/
 softWrench.sW4.WebMobile/platforms/*
 !softWrench.sW4.WebMobile/platforms/android/

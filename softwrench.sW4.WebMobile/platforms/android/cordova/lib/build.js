@@ -498,8 +498,11 @@ function parseOpts(options, resolvedTarget) {
             throw new Error('Specified build config file does not exist: ' + buildConfig);
         }
         console.log('Reading build config file: '+ path.resolve(buildConfig));
-        // var config = JSON.parse(fs.readFileSync(buildConfig, 'utf8'));
-        var config = require(buildConfig);
+        // for some bewildering reason parsing the file content throws a parse error
+        // using node's require to set the config variable works though
+        // var config = JSON.parse(fs.readFileSync(buildConfig, 'utf8')); -> throws parse error
+        var config = require(buildConfig); // -> works
+        
         if (config.android && config.android[ret.buildType]) {
             var androidInfo = config.android[ret.buildType];
             if(androidInfo.keystore && !packageArgs.keystore) {
