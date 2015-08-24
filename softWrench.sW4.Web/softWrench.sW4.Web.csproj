@@ -496,6 +496,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\SignInController.js" />
     <Content Include="Content\Scripts\client\noMenuLayoutController.js" />
     <Content Include="Content\Scripts\client\adminresources\myProfile.js" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
@@ -781,6 +782,7 @@
     <Content Include="Content\Templates\message_section.html" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
+    <Content Include="Content\Templates\usersetup\forgotpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_automaticpassword.html" />
     <Content Include="Dependencies\DocumentFormat.OpenXml.dll">

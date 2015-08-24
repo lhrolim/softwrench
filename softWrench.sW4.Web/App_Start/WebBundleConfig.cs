@@ -60,7 +60,6 @@ namespace softWrench.sW4.Web {
                  ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
-                "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/other/textAngular-sanitize.js",
                 "~/Content/Scripts/vendor/other/textAngular-min.js",
                 "~/Content/Scripts/vendor/other/textAngular-setup.js",
@@ -90,6 +89,7 @@ namespace softWrench.sW4.Web {
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/twitter-bootstrap").Include(
+                "~/Content/Scripts/vendor/other/moment.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap.max.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-datepicker.js",
                 "~/Content/Scripts/vendor/bootstrap/bootstrap-combobox.js",

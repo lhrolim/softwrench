@@ -24,6 +24,9 @@ namespace softwrench.sw4.api.classes.fwk.context {
 
         public string GetActionUrl(string controller, string action, string queryString) {
             var fullContext = _lookuper.GetFromMemoryContext<SwHttpContext>("httpcontext");
+            if (fullContext == null) {
+                throw new InvalidOperationException("context cannot be null");
+            }
             var actionUrl = ActionUrlTemplate.Fmt(fullContext, controller, action);
             if (queryString != null) {
                 actionUrl += "?" + queryString;

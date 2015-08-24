@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
+using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -7,6 +11,7 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services.setup;
+using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Util;
 
@@ -17,12 +22,19 @@ namespace softWrench.sW4.Security.Services {
 
         private readonly UserLinkManager _userLinkManager;
 
-        public UserManager(UserLinkManager userLinkManager) {
+        private readonly MaximoHibernateDAO _maxDAO;
+
+        private UserSetupEmailService _userSetupEmailService;
+
+        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService) {
             _userLinkManager = userLinkManager;
+            _maxDAO = maxDAO;
+            _userSetupEmailService = userSetupEmailService;
         }
 
 
         private static IEventDispatcher _dispatcher;
+
 
         public static IEventDispatcher Dispatcher {
             get {
@@ -44,7 +56,9 @@ namespace softWrench.sW4.Security.Services {
             if (user.Id != null) {
                 var dbuser = DAO.FindByPK<User>(typeof(User), (int)user.Id);
                 user.MergeFromDBUser(dbuser);
-
+            } else {
+                //for creation, assigning MaximoId to be username
+                user.MaximoPersonId = user.UserName;
             }
             if (updateMaximo) {
                 user.Person.Save();
@@ -132,6 +146,35 @@ namespace softWrench.sW4.Security.Services {
 
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
             return _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
+        }
+
+        public string ForgotPassword(string userNameOrEmail) {
+            var isEmail = new EmailAddressAttribute().IsValid(userNameOrEmail);
+            User user;
+            string emailToSend = null;
+            if (!isEmail) {
+                user = DAO.FindSingleByQuery<User>(User.UserByUserName, userNameOrEmail);
+                if (user == null) {
+                    return "User {0} not found".Fmt(userNameOrEmail);
+                }
+                var email = _maxDAO.FindSingleByNativeQuery<string>("select emailaddress from email where personid = ? and isPrimary = 1", user.MaximoPersonId);
+                if (email == null) {
+                    return "User {0} has no primary email registered. Please contact your administrator".Fmt(userNameOrEmail);
+                }
+            } else {
+                emailToSend = userNameOrEmail;
+                var personid = _maxDAO.FindSingleByNativeQuery<string>("select personid from email where emailaddress = ? and isPrimary = 1", userNameOrEmail);
+                if (personid == null) {
+                    return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
+                }
+                user = DAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, personid);
+                if (user == null) {
+                    return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
+                }
+            }
+            user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+            _userSetupEmailService.ForgotPasswordEmail(user, emailToSend);
+            return null;
         }
     }
 }

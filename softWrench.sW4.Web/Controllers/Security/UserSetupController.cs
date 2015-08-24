@@ -1,6 +1,7 @@
 ﻿
 using System.Security;
 using System.Threading;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
 using cts.commons.persistence;
@@ -48,13 +49,15 @@ namespace softWrench.sW4.Web.Controllers.Security {
             });
         }
 
+
+
         [System.Web.Http.HttpPost]
         [SPFRedirect(URL = "DefinePassword")]
         public ActionResult DoSetPassword(string tokenLink, string password, string userTimezoneOffset) {
             Validate.NotNull(tokenLink, "tokenLink");
             Validate.NotNull(password, "password");
             bool hasExpired;
-            var user = _userManager.FindUserByLink(tokenLink,out hasExpired);
+            var user = _userManager.FindUserByLink(tokenLink, out hasExpired);
             if (user == null) {
                 throw new SecurityException(WrongLinkException);
             }
@@ -75,4 +78,31 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
 
     }
+
+
+    /// <summary>
+    /// Same idea, but using webapi for AJAX calls...
+    /// 
+    /// TODO: unify both
+    /// </summary>
+    public class UserSetupWebApiController : ApiController {
+
+        private readonly UserManager _userManager;
+
+        public UserSetupWebApiController(UserManager userManager) {
+            _userManager = userManager;
+        }
+
+        [System.Web.Http.HttpPost]
+        public IGenericResponseResult ForgotPassword([FromUri]string userNameOrEmail) {
+            Validate.NotNull(userNameOrEmail, "userNameOrEmail");
+            var exception =_userManager.ForgotPassword(userNameOrEmail);
+            if (exception != null){
+                throw new SecurityException(exception);
+            }
+            return null;
+        }
+
+    }
+
 }

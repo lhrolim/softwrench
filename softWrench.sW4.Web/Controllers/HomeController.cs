@@ -45,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public ActionResult Index() {
-            _lookuper.RegisterHttpContext(Request);
+            
 
             var user = SecurityFacade.CurrentUser();
             bool fromCache;

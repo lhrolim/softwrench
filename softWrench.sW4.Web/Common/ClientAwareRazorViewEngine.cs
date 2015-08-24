@@ -45,6 +45,10 @@ namespace softWrench.sW4.Web.Common {
 
         private string FetchMasterPath(ControllerContext controllerContext, string viewPath) {
             var clientLayout = String.Format(ClientLayoutPattern, ApplicationConfiguration.ClientName);
+            if (controllerContext.Controller is UserSetupController) {
+                //TODO: create some sort of annotation here
+                return NoMenuLayout;
+            }
             if (!controllerContext.HttpContext.User.Identity.IsAuthenticated ||
                 controllerContext.Controller is softWrench.sW4.Web.Controllers.ReportController) {
                 return "";
@@ -54,10 +58,7 @@ namespace softWrench.sW4.Web.Common {
                 //FIX for HAP-780
                 return "";
             }
-            if (controllerContext.Controller is UserSetupController) {
-                //TODO: create some sort of annotation here
-                return NoMenuLayout;
-            }
+           
 
             if (base.FileExists(controllerContext, clientLayout)) {
                 return clientLayout;

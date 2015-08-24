@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using softWrench.sW4.Metadata.Security;
 using ActionFilterAttribute = System.Web.Http.Filters.ActionFilterAttribute;
 
 
@@ -17,7 +18,8 @@ namespace softWrench.sW4.Web.Common {
 
         public override void OnActionExecuting(HttpActionContext actionExecutingContext) {
             base.OnActionExecuting(actionExecutingContext);
-            var userName = SecurityFacade.CurrentUser().Login;
+            var loggedUser = SecurityFacade.CurrentUser();
+            var userName = loggedUser == null? "Anonymous" : loggedUser.Login;
             var logInfo = new LogInfo(userName, DateTime.Now, actionExecutingContext.Request.RequestUri,
                 actionExecutingContext.ActionDescriptor.ActionName);
             HttpContext.Current.Items.Add(LogInfo, logInfo);
