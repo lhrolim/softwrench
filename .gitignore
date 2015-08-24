@@ -1,6 +1,7 @@
 # Local-only VS/Re#/etc files
 *.suo
 *.user
+!softwrench.sw4.user/
 *.apk
 *.gpState
 _ReSharper.*
