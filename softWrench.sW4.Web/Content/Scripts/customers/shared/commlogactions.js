@@ -37,9 +37,9 @@
             }
         }
         fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
-        clonedItem['sendto'] = origSendFrom;
+        clonedItem['sendto'] = origSendFrom.split(',');
         clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
-        clonedItem['cc'] = clonedItem['cc'] ? clonedItem['cc'] : "";
+        clonedItem['cc'] = clonedItem['cc'] ? clonedItem['cc'].split(',') : "";
         clonedItem['commloguid'] = null;
         clonedItem['subject'] = "Re: " + origSubject;
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
@@ -62,7 +62,7 @@
         }
         fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
         clonedItem['commloguid'] = null;
-        clonedItem['sendto'] = origSendFrom;
+        clonedItem['sendto'] = origSendFrom.split(',');
         //if (origCc != "") {
         //    clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
         //} else {

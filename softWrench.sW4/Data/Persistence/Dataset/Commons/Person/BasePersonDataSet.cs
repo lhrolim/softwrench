@@ -106,7 +106,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var isactive = json.GetValue("#isactive").ToString() == "1";
             var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
             var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
-            var primaryEmail = json.GetValue("#primaryemail").ToString();
+            var primaryEmailToken = json.GetValue("#primaryemail");
+            string primaryEmail = null;
+            if (primaryEmailToken != null) {
+                primaryEmail = primaryEmailToken.ToString();
+            }
 
             JToken password;
             json.TryGetValue("#password", out password);
