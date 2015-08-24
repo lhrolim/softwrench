@@ -60,8 +60,10 @@ module.exports = function (grunt) {
     var solutionScripts = commonScripts.concat(sharedScripts).concat(appScripts).concat(customerScripts);
 
     // build environment
+    /*
     var env = grunt.option("env") || "debug";
     var cliEnv = "--" + env;
+    */
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -205,7 +207,7 @@ module.exports = function (grunt) {
         done = this.async();
 
          //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
-
+         var cliEnv = "--release";
          var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android"],
             buildArgs = {
                 android: [cliEnv],    // Warning: Omit the extra "--" when referencing platform
