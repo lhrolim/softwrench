@@ -24,16 +24,17 @@ softWrench.sW4.WebMobile/www/Content/Vendor/fonts
 
 Backup/
 
+softWrench.sW4.WebMobile/platforms/
 # ignore /platforms/* but includes /platforms/android/cordova/lib/build.js
-!softWrench.sW4.WebMobile/platforms/
-softWrench.sW4.WebMobile/platforms/*
-!softWrench.sW4.WebMobile/platforms/android/
-softWrench.sW4.WebMobile/platforms/android/*
-!softWrench.sW4.WebMobile/platforms/android/cordova/
-softWrench.sW4.WebMobile/platforms/android/cordova/*
-!softWrench.sW4.WebMobile/platforms/android/cordova/lib/
-softWrench.sW4.WebMobile/platforms/android/cordova/lib/*
-!softWrench.sW4.WebMobile/platforms/android/cordova/lib/build.js
+# !softWrench.sW4.WebMobile/platforms/
+# softWrench.sW4.WebMobile/platforms/*
+# !softWrench.sW4.WebMobile/platforms/android/
+# softWrench.sW4.WebMobile/platforms/android/*
+# !softWrench.sW4.WebMobile/platforms/android/cordova/
+# softWrench.sW4.WebMobile/platforms/android/cordova/*
+# !softWrench.sW4.WebMobile/platforms/android/cordova/lib/
+# softWrench.sW4.WebMobile/platforms/android/cordova/lib/*
+# !softWrench.sW4.WebMobile/platforms/android/cordova/lib/build.js
 
 softWrench.sW4.WebMobile/bld/
 softWrench.sW4.WebMobile/plugins/android.json
