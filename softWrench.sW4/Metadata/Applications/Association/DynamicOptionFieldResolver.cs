@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
-using NHibernate.Mapping;
-using softWrench.sW4.Data;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softwrench.sw4.Shared2.Util;
 using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Metadata.Applications.Association {

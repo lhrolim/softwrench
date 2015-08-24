@@ -8,12 +8,12 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sw4.user.classes.entities;
 using HlagLocationManager = softwrench.sw4.Hapag.Security.HlagLocationManager;
 
 namespace softwrench.sw4.Hapag.Data.Sync {

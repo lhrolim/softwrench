@@ -10,7 +10,6 @@ using FluentMigrator.Infrastructure.Extensions;
 using log4net;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
-using softWrench.sW4.Data.Entities.SyncManagers;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.SimpleInjector.WebApi;

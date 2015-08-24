@@ -7,7 +7,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
     class ApplicationSchemaLazyFkHandler {

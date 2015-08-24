@@ -1,27 +1,26 @@
-﻿using cts.commons.portable.Util;
-using cts.commons.Util;
-using DocumentFormat.OpenXml.Bibliography;
-using log4net;
-using softWrench.sW4.Preferences;
-using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.AUTH;
-using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
-using cts.commons.simpleinjector;
-using cts.commons.simpleinjector.Events;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Security.Principal;
+using System.Threading;
+using System.Web.Security;
+using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
+using log4net;
+using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Data.Entities.SyncManagers;
+using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Preferences;
+using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 
 
 namespace softWrench.sW4.Security.Services {
-    public class SecurityFacade {
+    public class SecurityFacade : ISingletonComponent, ISWEventListener<UserSavedEvent> {
         private const string LoginQuery = "from User where userName =? and IsActive=1";
 
         private static SecurityFacade _instance = null;
@@ -32,22 +31,20 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
 
+        private static readonly IDictionary<string, InMemoryUser> Users = new ConcurrentDictionary<string, InMemoryUser>();
+
 
         public static SecurityFacade GetInstance() {
             if (_instance == null) {
-                _instance = new SecurityFacade();
+                _instance = SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
             }
             return _instance;
         }
 
-        private SecurityFacade() {
-            _eventDispatcher =
-                SimpleInjectorGenericFactory.Instance.GetObject<IEventDispatcher>(typeof(IEventDispatcher));
-            _gridFilterManager = SimpleInjectorGenericFactory.Instance.GetObject<GridFilterManager>(typeof(GridFilterManager));
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager) {
+            _eventDispatcher = dispatcher;
+            _gridFilterManager = gridFilterManager;
         }
-
-
-        private static readonly IDictionary<string, InMemoryUser> _users = new ConcurrentDictionary<string, InMemoryUser>();
 
         public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
             if (dbUser.MaximoPersonId == null) {
@@ -72,8 +69,6 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public InMemoryUser Login(string userName, string password, string userTimezoneOffset) {
-            var shaPassword = AuthUtils.GetSha1HashData(password);
-            var md5Password = AuthUtils.GetHashData(password, SHA256.Create());
             var dbUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(LoginQuery, userName);
             if (dbUser == null || !MatchPassword(dbUser, password)) {
                 return null;
@@ -88,7 +83,7 @@ namespace softWrench.sW4.Security.Services {
 
         private bool MatchPassword(User dbUser, string password) {
             var encryptedPassword = "";
-            string criptoProperties = dbUser.CriptoProperties;
+            var criptoProperties = dbUser.CriptoProperties;
             if (String.IsNullOrEmpty(criptoProperties)) {
                 encryptedPassword = AuthUtils.GetSha1HashData(password);
             }
@@ -100,7 +95,7 @@ namespace softWrench.sW4.Security.Services {
 
             int? userTimezoneOffsetInt = null;
             int tmp;
-            if (Int32.TryParse(userTimezoneOffset, out tmp)) {
+            if (int.TryParse(userTimezoneOffset, out tmp)) {
                 userTimezoneOffsetInt = tmp;
             }
 
@@ -109,11 +104,11 @@ namespace softWrench.sW4.Security.Services {
                 GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
             };
             var inMemoryUser = new InMemoryUser(dbUser, profiles, userPreferences, userTimezoneOffsetInt);
-            if (_users.ContainsKey(inMemoryUser.Login)) {
-                _users.Remove(inMemoryUser.Login);
+            if (Users.ContainsKey(inMemoryUser.Login)) {
+                Users.Remove(inMemoryUser.Login);
             }
             try {
-                _users.Add(inMemoryUser.Login, inMemoryUser);
+                Users.Add(inMemoryUser.Login, inMemoryUser);
             } catch {
                 Log.Warn("Duplicate user should not happen here " + inMemoryUser.Login);
             }
@@ -146,7 +141,7 @@ namespace softWrench.sW4.Security.Services {
 
 
         public static IPrincipal CurrentPrincipal {
-            get { return System.Threading.Thread.CurrentPrincipal; }
+            get { return Thread.CurrentPrincipal; }
         }
 
         public static string CurrentPrincipalLogin {
@@ -170,8 +165,8 @@ namespace softWrench.sW4.Security.Services {
                 return null;
             }
 
-            if (!fetchFromDB || _users.ContainsKey(currLogin)) {
-                return _users[currLogin];
+            if (!fetchFromDB || Users.ContainsKey(currLogin)) {
+                return Users[currLogin];
             }
             //cookie authenticated already 
             //TODO: remove this in prod?
@@ -185,7 +180,7 @@ namespace softWrench.sW4.Security.Services {
                 fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
             }
             fullUser.MergeFromDBUser(swUser);
-            var formsIdentity = CurrentPrincipal.Identity as System.Web.Security.FormsIdentity;
+            var formsIdentity = CurrentPrincipal.Identity as FormsIdentity;
             var timezone = String.Empty;
             if (formsIdentity != null && formsIdentity.Ticket != null && !String.IsNullOrWhiteSpace(formsIdentity.Ticket.UserData)) {
                 var userData = PropertyUtil.ConvertToDictionary(formsIdentity.Ticket.UserData);
@@ -193,19 +188,19 @@ namespace softWrench.sW4.Security.Services {
             }
             UserFound(fullUser, timezone);
             LogicalThreadContext.FreeNamedDataSlot("executinglogin");
-            return _users[currLogin];
+            return Users[currLogin];
         }
 
         //TODO: this could lead to concurrency problems
         public static void ClearUserFromCache(String login = null, InMemoryUser userToPut = null) {
             //this means, an action that affects all the users, like updating a profile
             if (login == null) {
-                _users.Clear();
-            } else if (_users.ContainsKey(login)) {
-                _users.Remove(login);
+                Users.Clear();
+            } else if (Users.ContainsKey(login)) {
+                Users.Remove(login);
             }
             if (userToPut != null) {
-                _users[login] = userToPut;
+                Users[login] = userToPut;
             }
         }
 
@@ -223,8 +218,7 @@ namespace softWrench.sW4.Security.Services {
         public void DeleteProfile(UserProfile profile) {
             UserProfileManager.DeleteProfile(profile);
         }
-        public User SaveUser(User user, Iesi.Collections.Generic.ISet<UserProfile> profiles, Iesi.Collections.Generic.ISet<UserCustomRole> customRoles,
-            Iesi.Collections.Generic.ISet<UserCustomConstraint> customConstraints) {
+        public User SaveUser(User user, Iesi.Collections.Generic.ISet<UserProfile> profiles, Iesi.Collections.Generic.ISet<UserCustomRole> customRoles, Iesi.Collections.Generic.ISet<UserCustomConstraint> customConstraints) {
             user.Profiles = profiles;
             user.CustomRoles = customRoles;
             user.CustomConstraints = customConstraints;
@@ -259,6 +253,10 @@ namespace softWrench.sW4.Security.Services {
         public User FetchUser(string maximopersonid) {
             User swUser = UserManager.GetUserByUsername(maximopersonid);
             return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
+        }
+
+        public void HandleEvent(UserSavedEvent userEvent) {
+            Users.Remove(userEvent.Login);
         }
     }
 }

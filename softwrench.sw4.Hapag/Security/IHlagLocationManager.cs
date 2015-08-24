@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using softWrench.sW4.Security.Entities;
+﻿using System.Collections.Generic;
 using softwrench.sw4.Shared2.Data.Association;
 using cts.commons.simpleinjector;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Security
 {

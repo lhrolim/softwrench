@@ -2,12 +2,11 @@
 using log4net;
 using NHibernate;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Security.Services {
     public class RoleManager {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
 
 namespace softWrench.sW4.Web.Common {
     public class LogInfo {

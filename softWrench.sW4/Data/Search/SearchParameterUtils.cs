@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace softWrench.sW4.Data.Search {
+﻿namespace softWrench.sW4.Data.Search {
     public class SearchParameterUtils {
         private readonly string _param;
         private readonly object _paramValue;

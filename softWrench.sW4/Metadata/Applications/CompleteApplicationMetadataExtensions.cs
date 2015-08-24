@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;

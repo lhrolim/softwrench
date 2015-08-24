@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using log4net;
 using softWrench.sW4.Metadata.Menu;
-using softWrench.sW4.Metadata.Parsing;
-using softWrench.sW4.Metadata.Properties;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Validator {
 

@@ -273,7 +273,9 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
     <Compile Include="Controllers\Routing\RouterParameters.cs" />
+    <Compile Include="Controllers\Security\AuthenticationCookie.cs" />
     <Compile Include="Controllers\Security\MakeSWAdminController.cs" />
+    <Compile Include="Controllers\Security\UserSetupController.cs" />
     <Compile Include="DB_Migration\1.0\20140324_SWWEB-93.cs" />
     <Compile Include="DB_Migration\1.0\Issue20140314_HAP_113.cs" />
     <Compile Include="DB_Migration\4.0\20140422Swweb112_2.cs" />
@@ -299,13 +301,17 @@
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201506241200Swweb1166Part3.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201507201700Swweb1166Part4.cs" />
+    <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
+    <Compile Include="Models\IBaseLayoutModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
+    <Compile Include="Models\USerSetup.cs" />
+    <Compile Include="Models\UserSetup\DefinePasswordModel.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
     <Compile Include="SPF\Filters\ContextFilter.cs" />
@@ -445,6 +451,7 @@
     <Content Include="App_Data\Client\tva\workorderbatch.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\angular-ui-select\angular-ui-select.css" />
     <Content Include="Content\bootstrap\css\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
@@ -461,9 +468,11 @@
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
+    <Content Include="Content\Images\changestatus_whitebg.gif" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
+    <Content Include="Content\Images\header-email.jpg" />
     <Content Include="Content\Images\header.jpg" />
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
@@ -487,9 +496,12 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\SignInController.js" />
+    <Content Include="Content\Scripts\client\noMenuLayoutController.js" />
     <Content Include="Content\Scripts\client\adminresources\myProfile.js" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\adminresources\profile.js" />
+    <Content Include="Content\Scripts\client\definePasswordController.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\crud\crud_input_fields_commons.js" />
@@ -591,6 +603,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\other\angular-ui-select.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
@@ -608,12 +621,6 @@
     </Content>
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
-    <Content Include="Content\styles\default\styles.css">
-      <DependentUpon>styles.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\vendor\vendor.css">
       <DependentUpon>vendor.scss</DependentUpon>
     </Content>
@@ -630,6 +637,7 @@
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\font-awesome\fonts\FontAwesome.otf" />
     <None Include="compilerconfig.json" />
+    <Content Include="Content\styles\default\_define-password.scss" />
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
@@ -774,6 +782,9 @@
     <Content Include="Content\Templates\message_section.html" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
+    <Content Include="Content\Templates\usersetup\forgotpassword.html" />
+    <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
+    <Content Include="Content\Templates\usersetup\welcomeemail_automaticpassword.html" />
     <Content Include="Dependencies\DocumentFormat.OpenXml.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1331,9 +1342,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Content\Controller\MyProfile.html" />
     <Content Include="Content\Controller\EntityMetadataEditor.html" />
-    <Content Include="Views\Configuration\Index.cshtml" />
     <Content Include="Views\SignIn\Index_old.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\UserSetup\DefinePassword.cshtml" />
+    <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
@@ -1448,6 +1460,10 @@
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
       <Name>softwrench.sw4.swgas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
+      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
+      <Name>softwrench.sw4.user</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
       <Name>softwrench.sw4.webcommons</Name>
@@ -1491,7 +1507,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
   <ProjectExtensions>
@@ -1515,7 +1531,7 @@
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
-   <!--Target Name="AfterBuild">
+  <!--Target Name="AfterBuild">
    </Target> -->
   <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll" />
   <Target Name="Transform">

@@ -2,7 +2,6 @@
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
-using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
 

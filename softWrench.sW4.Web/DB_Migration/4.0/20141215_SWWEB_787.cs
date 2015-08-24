@@ -1,8 +1,5 @@
 ﻿using cts.commons.persistence.Util;
-using DocumentFormat.OpenXml.Wordprocessing;
 using FluentMigrator;
-using softWrench.sW4.Util;
-using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0
 {

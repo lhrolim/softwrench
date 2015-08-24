@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
 using log4net;
 using softWrench.sW4.Util;
-using softWrench.sW4.Web.Controllers;
 
 namespace softWrench.sW4.Web.Common {
     public class GenericExceptionFilter : ExceptionFilterAttribute, System.Web.Mvc.IExceptionFilter {

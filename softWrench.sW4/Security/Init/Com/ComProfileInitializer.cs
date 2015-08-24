@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
 
 namespace softWrench.sW4.Security.Init.Com {
     class ComProfileInitializer {

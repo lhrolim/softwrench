@@ -1,5 +1,4 @@
-﻿using WcfSamples.DynamicProxy;
-using softWrench.sW4.Data.Persistence.Operation;
+﻿using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 
 namespace softWrench.sW4.Data.Persistence.WS.Mif {

@@ -1,7 +1,6 @@
 ﻿using cts.commons.portable.Util;
 using softWrench.sW4.Security.Context;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;

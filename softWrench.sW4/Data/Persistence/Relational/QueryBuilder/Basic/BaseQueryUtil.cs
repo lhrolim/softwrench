@@ -7,7 +7,6 @@ using cts.commons.simpleinjector;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
-using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {

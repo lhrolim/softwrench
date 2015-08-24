@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.persistence;
 using FluentMigrator.Builders.Alter.Column;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Exceptions;
-using Quartz.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Extension {

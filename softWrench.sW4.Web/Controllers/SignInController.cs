@@ -1,25 +1,20 @@
-﻿using System.Threading;
-using JetBrains.Annotations;
-using Quartz.Util;
+﻿using JetBrains.Annotations;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.LoginHandler;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Oracle.DataAccess.Types;
+using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Web.Controllers.Security;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
@@ -75,6 +70,7 @@ namespace softWrench.sW4.Web.Controllers {
             loginMessage = loginMessageAux;
             return enabled;
         }
+
 
         [HttpPost]
         public ActionResult Index(string userName, string password, string userTimezoneOffset) {
@@ -139,7 +135,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private InMemoryUser GetUser(string userName, string password, string userTimezoneOffset) {
-            var userAux = _dao.FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, userName);
+            var userAux = _dao.FindSingleByQuery<User>(softwrench.sw4.user.classes.entities.User.UserByUserName, userName);
             // User needs to load person data
             var allowNonUsersToLogin = "true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"));
             if (userAux == null) {
@@ -200,62 +196,7 @@ namespace softWrench.sW4.Web.Controllers {
             return Json(new UserReturningData(user));
         }
 
-        private static class AuthenticationCookie {
-            private const int PersistentCookieTimeoutDays = 14;
-
-            /// <summary>
-            ///     Sets a non-persistent cookie (i.e. not saved accross
-            ///     browser sessions) for the Forms Authentication state.
-            /// </summary>
-            /// <param name="userName">The username authenticated.</param>
-            /// <param name="userTimezoneOffset">The user time zone offset</param>
-            /// <param name="response">Response object</param>
-            public static void SetSessionCookie(string userName, string userTimezoneOffset, HttpResponseBase response) {
-                //FormsAuthentication.SetAuthCookie(userName, false);
-
-                var strb = new StringBuilder();
-                strb.AppendFormat("userName={0}", userName);
-                strb.AppendFormat(";userTimezoneOffset={0}", userTimezoneOffset);
-                var dateToUse = ApplicationConfiguration.SystemBuildDateInMillis;
-                if (ApplicationConfiguration.IsLocal()) {
-                    //if local we can safely use the starttime
-                    dateToUse = ApplicationConfiguration.StartTimeMillis;
-                }
-                strb.AppendFormat(";cookiesystemdate={0}", dateToUse);
-
-
-                var cookie = FormsAuthentication.GetAuthCookie(userName, false);
-                var ticket = FormsAuthentication.Decrypt(cookie.Value);
-                var newTicket = new FormsAuthenticationTicket(ticket.Version, ticket.Name, ticket.IssueDate,
-                    ticket.Expiration, ticket.IsPersistent, strb.ToString(), ticket.CookiePath);
-                FormsAuthentication.RenewTicketIfOld(newTicket);
-                var encTicket = FormsAuthentication.Encrypt(newTicket);
-
-                cookie.Value = encTicket;
-
-                response.Cookies.Add(cookie);
-            }
-
-            /// <summary>
-            ///     Sets a persistent cookie (i.e. saved accross browser
-            ///     sessions) for the Forms Authentication state.
-            /// </summary>
-            /// <param name="userName">The username authenticated.</param>
-            /// <param name="response">The HTTP response to inject the cookie into.</param>
-            public static void SetPersistentCookie(string userName, string userTimezoneOffset, HttpResponseBase response) {
-                // TODO: set userTimezoneOffset
-                var ticket = new FormsAuthenticationTicket(userName.ToLower(), true, (int)TimeSpan.FromDays(PersistentCookieTimeoutDays).TotalMinutes);
-                var encryptedData = FormsAuthentication.Encrypt(ticket);
-
-                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedData) {
-                    HttpOnly = true,
-                    Path = FormsAuthentication.FormsCookiePath,
-                    Secure = FormsAuthentication.RequireSSL
-                };
-
-                response.Cookies.Add(cookie);
-            }
-        }
+     
 
         internal class UserReturningData {
             public bool Found { get; set; }

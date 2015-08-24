@@ -1,4 +1,4 @@
-using System.Configuration;
+﻿using System.Configuration;
 using System.Web.Hosting;
 using cts.commons.portable.Util;
 using cts.commons.Util;
@@ -24,9 +24,9 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
+using softWrench.sW4.Web.Security;
 
 
 namespace softWrench.sW4.Web {
@@ -84,6 +84,7 @@ namespace softWrench.sW4.Web {
                 dispatcher.Dispatch(new ApplicationStartedEvent());
                 ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
+            
             SecurityFacade.InitSecurity();
             Log.Info(String.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
@@ -148,8 +149,9 @@ namespace softWrench.sW4.Web {
             //            Response.Cache.SetCacheability(HttpCacheability.NoCache);
             //            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             //            Response.Cache.SetNoStore();
-            
-            
+
+            ContextLookuper.GetInstance().RegisterHttpContext(Request);
+
             if (Request.UrlReferrer != null) {
                 //this is for ripple development where CORS is enabled.
                 //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak

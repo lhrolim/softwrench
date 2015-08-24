@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {

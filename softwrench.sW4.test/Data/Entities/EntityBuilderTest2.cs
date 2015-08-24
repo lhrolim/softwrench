@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Entities;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Entities {

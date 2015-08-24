@@ -1,6 +1,7 @@
 # Local-only VS/Re#/etc files
 *.suo
 *.user
+!softwrench.sw4.user/
 *.apk
 *.gpState
 _ReSharper.*
@@ -40,6 +41,10 @@ Build/test-results.testxml
 Build/TestResults.trx
 Build/TestResults*
 
+# VS2015 files
+Backup
+UpgradeLog.htm
+.vs/config/applicationhost.config
 
 # Build outputs
 bin

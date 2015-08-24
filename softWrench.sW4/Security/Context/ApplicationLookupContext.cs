@@ -1,6 +1,5 @@
 ﻿using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Configuration.Definitions;
-using softWrench.sW4.Util;
 using con = softWrench.sW4.Configuration.Definitions.ConditionMatchResult;
 
 namespace softWrench.sW4.Security.Context {

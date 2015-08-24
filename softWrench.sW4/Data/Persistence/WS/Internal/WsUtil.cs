@@ -41,37 +41,37 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object GetRealValue(Object integrationObject, string propertyName) {
-            object property = r.GetProperty(integrationObject, propertyName);
+            object property = ReflectionUtil.GetProperty(integrationObject, propertyName);
             if (property == null) {
                 return null;
             }
-            var value = r.GetProperty(property, "Value");
+            var value = ReflectionUtil.GetProperty(property, "Value");
             return value;
         }
 
         public static T GetRealValue<T>(Object integrationObject, string propertyName) {
-            object property = r.GetProperty(integrationObject, propertyName);
+            object property = ReflectionUtil.GetProperty(integrationObject, propertyName);
             if (property == null) {
                 return default(T);
             }
-            var value = r.GetProperty(property, "Value");
+            var value = ReflectionUtil.GetProperty(property, "Value");
             return (T)value;
         }
 
         public static T GetRealValue<T>(Object mxObject) where T : class {
-            var value = r.GetProperty(mxObject, "Value");
+            var value = ReflectionUtil.GetProperty(mxObject, "Value");
             return (T)value;
         }
 
         public static void SetAction(object baseObjectWithAction, OperationType actionType) {
-            r.SetProperty(baseObjectWithAction, "action", actionType.ToString());
-            r.SetProperty(baseObjectWithAction, "actionSpecified", true);
+            ReflectionUtil.SetProperty(baseObjectWithAction, "action", actionType.ToString());
+            ReflectionUtil.SetProperty(baseObjectWithAction, "actionSpecified", true);
         }
 
 
         public static void SetChanged(object baseObjectWithAction) {
-            r.SetProperty(baseObjectWithAction, "changed", true);
-            r.SetProperty(baseObjectWithAction, "changedSpecified", true);
+            ReflectionUtil.SetProperty(baseObjectWithAction, "changed", true);
+            ReflectionUtil.SetProperty(baseObjectWithAction, "changedSpecified", true);
         }
 
         public static void SetChanged(params object[] baseObjectWithAction) {
@@ -87,13 +87,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 Log.Warn(String.Format("property {0} not found on object null", propertyName));
                 return null;
             }
-            PropertyDescriptor property = r.GetPropertyDescriptor(baseObject, propertyName);
+            PropertyDescriptor property = ReflectionUtil.GetPropertyDescriptor(baseObject, propertyName);
             if (property == null) {
                 Log.Warn(String.Format("property {0} not found on object {1}", propertyName, baseObject.GetType()));
                 return null;
             }
             var propertyVal = property.GetValue(baseObject);
-            var currentValue = r.GetProperty(propertyVal, "Value");
+            var currentValue = ReflectionUtil.GetProperty(propertyVal, "Value");
             if (currentValue == null) {
                 return SetValue(baseObject, propertyName, value, markSpecified);
             }
@@ -112,7 +112,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object SetValue(object baseObject, string propertyName, object value, Boolean markSpecified = false) {
-            var propDescriptor = r.PropertyDescriptor(baseObject, propertyName);
+            var propDescriptor = ReflectionUtil.PropertyDescriptor(baseObject, propertyName);
             if (propDescriptor == null) {
                 if (ApplicationConfiguration.IsLocal()) {
                     Log.WarnFormat("property {0} not found on object {1}. Review metadata config or maximo config",
@@ -131,9 +131,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             var prop = propDescriptor.GetValue(baseObject);
             if (prop == null) {
-                return r.InstantiateProperty(baseObject, propertyName, new { Value = value });
+                return ReflectionUtil.InstantiateProperty(baseObject, propertyName, new { Value = value });
             }
-            r.SetProperty(prop, new { Value = value });
+            ReflectionUtil.SetProperty(prop, new { Value = value });
             if (markSpecified) {
                 SetValue(baseObject, propertyName + "Specified", true);
             }
@@ -144,20 +144,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public static object SetQueryValue(object baseObject, string propertyName, object value, QueryOperator operatorType = QueryOperator.Equals) {
             object queryField = SetValue(baseObject, propertyName, value);
-            r.SetProperty(queryField, "@operator", operatorType.MaximoValue());
-            r.SetProperty(queryField, "operatorSpecified", true);
+            ReflectionUtil.SetProperty(queryField, "@operator", operatorType.MaximoValue());
+            ReflectionUtil.SetProperty(queryField, "operatorSpecified", true);
             return queryField;
         }
 
 
         public static void SetChangeBy(object baseObject) {
             var user = SecurityFacade.CurrentUser();
-            r.InstantiateProperty(baseObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
-            r.InstantiateProperty(baseObject, "CHANGEBY", new { Value = user.Login });
+            ReflectionUtil.InstantiateProperty(baseObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
+            ReflectionUtil.InstantiateProperty(baseObject, "CHANGEBY", new { Value = user.Login });
         }
 
         public static object CloneExistingProperties(object target, object source) {
-            return r.Clone(target, source, "value");
+            return ReflectionUtil.Clone(target, source, "value");
         }
 
         public static object CloneFromEntity(object target, AttributeHolder attributes) {
@@ -174,14 +174,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                         prop.SetValue(target, newInstance);
                         o = newInstance;
                     }
-                    r.SetProperty(o, new { Value = value });
+                    ReflectionUtil.SetProperty(o, new { Value = value });
                 }
             }
             return target;
         }
 
         public static void NullifyValue(object baseObject, string propertyName) {
-            r.SetProperty(baseObject, propertyName, null);
+            ReflectionUtil.SetProperty(baseObject, propertyName, null);
         }
 
         public static void CloneArray(IEnumerable<CrudOperationData> collectionAssociation, object integrationObject, string propertyName, Action<object, CrudOperationData> itemHandlerDelegate = null) {

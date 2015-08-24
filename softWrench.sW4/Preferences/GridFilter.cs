@@ -2,8 +2,7 @@
 using cts.commons.persistence;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Security.Interfaces;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Preferences {
 

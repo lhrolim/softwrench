@@ -1,8 +1,6 @@
-﻿using System.IO;
-using System.Web.Http;
+﻿using System.Web.Http;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.SWDB;
-using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Web.Controllers {
 

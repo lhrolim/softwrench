@@ -1,9 +1,7 @@
 ﻿using System;
 using cts.commons.persistence;
 using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Preferences {
 

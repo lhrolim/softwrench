@@ -1,11 +1,8 @@
 ﻿
 using cts.commons.portable.Util;
-using cts.commons.Util;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Util;
-using System;
 using System.Collections.Generic;
 using System.Text;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
     class ApproverConstants {

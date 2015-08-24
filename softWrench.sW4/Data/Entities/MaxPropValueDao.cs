@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;

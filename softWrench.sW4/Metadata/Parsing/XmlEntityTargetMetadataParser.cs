@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using JetBrains.Annotations;
-using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Metadata.Entities.Schema;
-using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softWrench.sW4.Metadata.Parsing {
     /// <summary>

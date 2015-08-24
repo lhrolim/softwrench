@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
-using PersonGroup = softWrench.sW4.Security.Entities.PersonGroup;
+﻿using System.Linq;
 
 namespace softWrench.sW4.Web.Models.MyProfile {
     public class LocationCostCenterRestriction {

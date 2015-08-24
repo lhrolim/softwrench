@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Exceptions;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProviderInternalCache {

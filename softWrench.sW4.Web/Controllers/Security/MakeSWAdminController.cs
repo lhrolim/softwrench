@@ -1,12 +1,9 @@
-﻿using cts.commons.web.Attributes;
-using softWrench.sW4.Data.API;
+﻿using System.Web.Http;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
-using softWrench.sW4.Web.SPF;
-using System.Web.Http;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [System.Web.Mvc.Authorize]
@@ -28,7 +25,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public IGenericResponseResult Submit(string password) {
             var user = SecurityFacade.CurrentUser();
             var authorized = false;
-            var adminUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, "swadmin");
+            var adminUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(softwrench.sw4.user.classes.entities.User.UserByUserName, "swadmin");
             if (adminUser.Password != null) {
                 var authenticatedAdminUser = SecurityFacade.GetInstance().Login(adminUser, password, string.Empty);
                 if (authenticatedAdminUser != null) {

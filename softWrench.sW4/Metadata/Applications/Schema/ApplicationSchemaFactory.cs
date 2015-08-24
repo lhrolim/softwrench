@@ -12,13 +12,13 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Applications.Reference;
 using softWrench.sW4.Metadata.Stereotypes;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Util;
 

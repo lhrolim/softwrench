@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
-using softWrench.sW4.Util;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Security.Interfaces {
 

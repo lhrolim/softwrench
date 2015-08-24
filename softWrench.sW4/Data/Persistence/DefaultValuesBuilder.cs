@@ -1,6 +1,5 @@
 ﻿using cts.commons.portable.Util;
 using JetBrains.Annotations;
-using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.Entities;
@@ -162,6 +161,12 @@ namespace softWrench.sW4.Data.Persistence {
             var innerReference = o.Substring(UserPrefix.Length);
             if (innerReference.Equals("phone")) {
                 return user.Phone;
+            }
+            if (innerReference.Equals("siteid")) {
+                return user.SiteId;
+            }
+            if (innerReference.Equals("orgid")) {
+                return user.OrgId;
             }
             if (innerReference.Equals("email")) {
                 return user.Email;

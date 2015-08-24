@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHibernate.SqlCommand;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
 using cts.commons.simpleinjector;

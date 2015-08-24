@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using cts.commons.portable.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception {

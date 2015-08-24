@@ -1,8 +1,6 @@
 ﻿using softWrench.sW4.Data.API.Response;
-using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.Report;
@@ -11,12 +9,9 @@ using System.Data;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
-using Newtonsoft.Json;
 using System;
-using System.Reflection;
 using softWrench.sW4.Data.Pagination;
 using System.Text;
-using softWrench.sW4.Data.Search;
 using System.Text.RegularExpressions;
 using softWrench.sW4.Security.Services;
 

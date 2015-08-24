@@ -6,13 +6,13 @@ using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Configuration.Services {
     class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 

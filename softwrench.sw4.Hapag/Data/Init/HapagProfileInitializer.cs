@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Iesi.Collections.Generic;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Security;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.Security.Init;
 
 namespace softwrench.sw4.Hapag.Data.Init {
     class HapagProfileInitializer {

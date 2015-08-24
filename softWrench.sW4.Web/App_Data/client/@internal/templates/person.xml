@@ -14,8 +14,8 @@
         <property key="list.defaultorderby" value="personid asc"/>
         <property key="detail.navigationbuttons.disabled" value="true"/>
       </properties>
-      
-      
+
+
       <schemas>
 
 
@@ -46,7 +46,7 @@
           </commandbars>
         </schema>
 
-        <schema id="detail" stereotype="detail" title="Edit My Profile">
+        <schema id="detail" stereotype="detail" title="User Profile">
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
@@ -74,7 +74,7 @@
             <renderer type="checkbox"/>
           </field>
 
-         
+
 
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
@@ -91,7 +91,7 @@
 
         </schema>
 
-        <schema id="newPersonDetail" stereotype="detail" title="New User" mode="input">
+        <schema id="newPersonDetail" stereotype="detailnew" title="New User" mode="input">
           <properties>
             <property key="detail.hidetitle" value="true"/>
           </properties>
@@ -101,40 +101,61 @@
             <event type="afterchange" service="personService" method="afterChangeUsername"/>
           </field>
           <field attribute="personid" label="Username" showexpression="@personuid != -1" readonly="true" />
-          <field attribute="#password" label="Password" requiredexpression="!@ldapEnabled &amp;&amp; @personuid == -1" showexpression="!@ldapEnabled"/>
-          <field attribute="#retypepassword" label="Retype Password" requiredexpression="!@ldapEnabled &amp;&amp; @personuid == -1" showexpression="!@ldapEnabled"/>
+          <field attribute="#primaryemail" requiredexpression="true" label="Primary Email" tooltip="The user will receive a confirmation link on this email"/>
+
+          <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled" 
+                       tooltip="If Automatic an email with a link will be sent to the new users where they will be able to select a password. 
+                       On manual mode the user will receive the assigned password via email">
+            <renderer type="radio"/>
+            <option value="auto" label="Automatic"/>
+            <option value="manual" label="Manual"/>
+          </optionfield>
+
+          <section orientation="vertical" showexpression="@passwordmode == 'manual'">
+            <field attribute="#password" label="Password" showexpression="!@ldapEnabled" requiredexpression="true">
+              <renderer type="password"  params="placeholder=Leave it blank to make the system autogenerate it;avoidautofocus=true"/>
+            </field>
+            <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled" requiredexpression="true">
+              <renderer type="password" params="placeholder=Leave it blank to make the system autogenerate it;avoidautofocus=true"/>
+            </field>
+          </section>
+
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
-          <association target="locationorg" labelfield="organization_.description" label="Org ID">
+
+          <field attribute="#primaryphone" label="Primary Phone" />
+          <association target="locationorg" labelfield="organization_.description" label="Org ID" default="@user.orgid">
             <renderer type="lookup"/>
           </association>
-          <association target="locationsite" labelfield="site_.description" label="Site ID">
+          <association target="locationsite" labelfield="site_.description" label="Site ID" default="@user.siteid">
             <renderer type="lookup"/>
           </association>
           <association target="location" labelfield="location_.description" label="Location">
             <renderer type="lookup"/>
           </association>
           <field attribute="department" label="Department"/>
-          <field attribute="langcode" label="Language"/>
-          <field attribute="#isactive" label="Active">
+          <optionfield attribute="langcode" label="Language">
+            <option label="English" value="EN"/>
+            <option label="Spanish" value="ES"/>
+          </optionfield>
+          <field attribute="#isactive" label="Active" default="1">
             <renderer type="checkbox"/>
           </field>
 
-        
 
-          <composition relationship="phone" label="Phone Numbers" inline="false" >
-            <collectionproperties allowcreation="true" allowupdate="false"/>
-          </composition>
-          <composition relationship="email" label="Email Addresses" inline="false">
-            <collectionproperties allowcreation="true" allowupdate="false"/>
-          </composition>
+          <!--          <composition relationship="phone" label="Phone Numbers" inline="false" >-->
+          <!--            <collectionproperties allowcreation="true" allowupdate="false"/>-->
+          <!--          </composition>-->
+          <!--          <composition relationship="email" label="Email Addresses" inline="false">-->
+          <!--            <collectionproperties allowcreation="true" allowupdate="false"/>-->
+          <!--          </composition>-->
 
-          <tab label="Permissions" icon="fa-gear" showexpression="" role="sysadmin">
+          <tab label="Permissions" icon="fa-gear" id="permission" showexpression="" role="sysadmin">
             <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html">
               <header displacement="ontop" label="Profiles" showexpression="true"/>
             </section>
           </tab>
-          
+
         </schema>
       </schemas>
     </application>

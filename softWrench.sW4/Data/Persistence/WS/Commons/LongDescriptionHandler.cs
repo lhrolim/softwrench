@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using softWrench.sW4.Data.Persistence.Operation;
+﻿using softWrench.sW4.Data.Persistence.Operation;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata.Applications.Command;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
-using softwrench.sW4.Shared2.Metadata.Applications.Command;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sW4.test.Metadata.Applications.Command {
     [TestClass]

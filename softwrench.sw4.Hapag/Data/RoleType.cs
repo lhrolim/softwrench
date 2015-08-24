@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace softwrench.sw4.Hapag.Data {
+﻿namespace softwrench.sw4.Hapag.Data {
     public enum RoleType {
         Incident,
         Asset,

@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Models.Home {
-    public class HomeModel {
+    public class HomeModel :IBaseLayoutModel{
 
         public string Url { get; set; }
         public string Title { get; set; }
         public bool HasPopupLogo { get; set; }
-        public String ConfigJSON { get; set; }
+        public string ConfigJSON { get; set; }
 
-        public String UserJSON { get; set; }
+        public string UserJSON { get; set; }
 
         public string I18NJsons { get; set; }
 
@@ -29,7 +24,7 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public long InitTimeMillis { get; set; }
 
-        public String MenuJSON { get; set; }
+        public string MenuJSON { get; set; }
 
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,
