@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace softWrench.sW4.Metadata.Entities.Schema {
+﻿namespace softWrench.sW4.Metadata.Entities.Schema {
     public class EntityTargetConstant {
         public string Key { get; set; }
         public string Value { get; set; }

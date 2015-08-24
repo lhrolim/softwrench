@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using cts.commons.portable.Util;
-using NHibernate.Loader.Custom.Sql;
 using softwrench.sw4.Hapag.Data.Sync;
-using softWrench.sW4.Security.Entities;
-using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sw4.Shared2.Util;
+using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Security {
 

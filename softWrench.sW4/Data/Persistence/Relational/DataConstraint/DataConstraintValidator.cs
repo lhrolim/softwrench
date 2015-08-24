@@ -5,7 +5,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.DataConstraint {
     class DataConstraintValidator {
 
 
-        public String ValidateContraint(softWrench.sW4.Security.Entities.DataConstraint constraint) {
+        public String ValidateContraint(softwrench.sw4.user.classes.entities.DataConstraint constraint) {
             try {
                 var entityMetadata = MetadataProvider.Entity(constraint.EntityName);
                 if (entityMetadata == null) {

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
-using softWrench.sW4.Security.Entities;
 using cts.commons.simpleinjector;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.Hapag.Data {

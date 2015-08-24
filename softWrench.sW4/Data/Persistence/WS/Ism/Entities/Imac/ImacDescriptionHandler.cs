@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata.Applications;
@@ -11,7 +10,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
-using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {

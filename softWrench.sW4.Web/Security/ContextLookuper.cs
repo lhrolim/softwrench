@@ -3,12 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http.Controllers;
 using log4net;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
@@ -74,9 +74,7 @@ namespace softWrench.sW4.Web.Security {
             MemoryContext.Remove(key);
         }
 
-        public T GetFromMemoryContext<T>(string key,bool userSpecific = false) {
-            var user = SecurityFacade.CurrentUser();
-            var userKey = new UserKey(user.Login, key);
+        public T GetFromMemoryContext<T>(string key, bool userSpecific = false) {
             if (!MemoryContext.ContainsKey(key)) {
                 Log.WarnFormat("object {0} not found in memory", key);
                 return default(T);
@@ -111,7 +109,8 @@ namespace softWrench.sW4.Web.Security {
             }
         }
 
-        public void RegisterHttpContext(HttpRequestBase request) {
+
+        public void RegisterHttpContext(HttpRequest request) {
             if (MemoryContext.ContainsKey("httpcontext")) {
                 //already registered
                 return;

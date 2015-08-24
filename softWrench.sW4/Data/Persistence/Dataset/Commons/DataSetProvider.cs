@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.simpleinjector;
-using cts.commons.simpleinjector.Events;
-using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.application;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Util;
 

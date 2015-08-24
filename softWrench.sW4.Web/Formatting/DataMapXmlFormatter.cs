@@ -11,7 +11,6 @@ using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.Entities;
 
 namespace softWrench.sW4.Web.Formatting
 {

@@ -1,21 +1,13 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
-using System.Linq;
-using System.Net.Mail;
-using System.Net;
-using softWrench.sW4.Configuration.Services.Api;
 using cts.commons.simpleinjector;
+using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Email;
-using softWrench.sW4.Data.Persistence.Engine;
-using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -80,7 +72,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
-                _emailService.SendEmail((EmailService.EmailData)maximoTemplateData.Properties["mailObject"]);
+                _emailService.SendEmail((EmailData)maximoTemplateData.Properties["mailObject"]);
             }
 
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 

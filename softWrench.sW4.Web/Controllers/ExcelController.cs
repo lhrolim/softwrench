@@ -8,8 +8,6 @@ using System.Web.Http;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Web.Util;
-using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Web.Controllers {

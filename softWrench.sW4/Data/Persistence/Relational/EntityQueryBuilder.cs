@@ -29,7 +29,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return TemplateQueryBuild(entityMetadata, new InternalQueryRequest() { SearchDTO = searchDto }, QueryCacheKey.QueryMode.Count);
         }
 
-        public BindedEntityQuery CountRowsFromConstraint(EntityMetadata entityMetadata, softWrench.sW4.Security.Entities.DataConstraint constraint) {
+        public BindedEntityQuery CountRowsFromConstraint(EntityMetadata entityMetadata, softwrench.sw4.user.classes.entities.DataConstraint constraint) {
             var buffer = new StringBuilder(InitialStringBuilderCapacity);
             buffer.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, QueryCacheKey.QueryMode.Count, null));
             buffer.Append(QueryFromBuilder.Build(entityMetadata));

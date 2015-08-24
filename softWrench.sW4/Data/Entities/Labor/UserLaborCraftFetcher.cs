@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cts.commons.simpleinjector.Events;
+﻿using cts.commons.simpleinjector.Events;
 using log4net;
-using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;

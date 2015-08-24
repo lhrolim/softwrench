@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using log4net;
-using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Data.Configuration;
-using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Data;
-using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public abstract class AMaximoRowstampManager {

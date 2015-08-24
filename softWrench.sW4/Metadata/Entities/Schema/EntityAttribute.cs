@@ -1,10 +1,9 @@
 ﻿using cts.commons.portable.Util;
-using cts.commons.Util;
-using DocumentFormat.OpenXml.Spreadsheet;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Util;
 using System;
+using cts.commons.Util;
 
 namespace softWrench.sW4.Metadata.Entities.Schema {
     public class EntityAttribute {

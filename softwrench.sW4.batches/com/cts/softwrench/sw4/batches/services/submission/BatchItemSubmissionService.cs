@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.persistence;
-using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.services;

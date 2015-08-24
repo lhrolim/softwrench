@@ -82,6 +82,10 @@
       <Private>True</Private>
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
@@ -122,6 +126,7 @@
       <HintPath>..\packages\SpreadsheetLight.3.4.2\lib\SpreadsheetLight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -176,6 +181,7 @@
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Email\EmailHistory.cs" />
     <Compile Include="Extension\MigrationExtensions.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Person\BasePhoneDataSet.cs" />
@@ -198,7 +204,6 @@
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
-    <Compile Include="AUTH\AuthUtils.cs" />
     <Compile Include="AUTH\LdapAuthArgs.cs" />
     <Compile Include="AUTH\LdapManager.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatch.cs" />
@@ -274,7 +279,6 @@
     <Compile Include="Data\Persistence\WS\Ism\Entities\Change\ChangeApprovalActionCustomConnector.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Change\IsmNewChangeCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Incident\IsmIncidentCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Imac\IImacServicePlanHelper.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Imac\ImacDescriptionHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Imac\ImacCompleteActionCustomConnector.cs" />
@@ -329,7 +333,6 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
-    <Compile Include="Metadata\Security\UserPreferences.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
@@ -348,6 +351,7 @@
     <Compile Include="Preferences\GridFilterController.cs" />
     <Compile Include="Preferences\GridFilterExceptions.cs" />
     <Compile Include="Preferences\GridFilterManager.cs" />
+    <Compile Include="Preferences\UserPreferences.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
@@ -403,11 +407,6 @@
     <Compile Include="Scheduler\SimpleInjectorJobFactory.cs" />
     <Compile Include="Security\Context\ContextHolder.cs" />
     <Compile Include="Security\Context\IContextLookuper.cs" />
-    <Compile Include="Security\Entities\Person.cs" />
-    <Compile Include="Security\Entities\PersonGroupAssociation.cs" />
-    <Compile Include="Security\Entities\PersonGroup.cs" />
-    <Compile Include="Security\Entities\RoleWithErrorMessage.cs" />
-    <Compile Include="Security\Entities\RoleGroup.cs" />
     <Compile Include="Data\Configuration\ComConfigurationRegistry.cs" />
     <Compile Include="Security\Init\Com\ComInitializer.cs" />
     <Compile Include="Security\Init\Com\ComProfileInitializer.cs" />
@@ -539,12 +538,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Security\Entities\UserCustomConstraint.cs" />
-    <Compile Include="Security\Entities\DataConstraint.cs" />
-    <Compile Include="Security\Entities\Role.cs" />
-    <Compile Include="Security\Entities\User.cs" />
-    <Compile Include="Security\Entities\UserCustomRole.cs" />
-    <Compile Include="Security\Entities\UserProfile.cs" />
     <Compile Include="Security\Services\RoleManager.cs" />
     <Compile Include="Security\Services\SecurityFacade.cs" />
     <Compile Include="Security\Services\UserManager.cs" />
@@ -578,13 +571,11 @@
     <Compile Include="SPF\RedirectResponseResult.cs" />
     <Compile Include="SPF\RedirectService.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
-    <Compile Include="SPF\SwHttpContext.cs" />
     <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
     <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
-    <Compile Include="Util\BooleanToIntUserType.cs" />
     <Compile Include="Util\CollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
     <Compile Include="Util\CompressionUtil.cs" />
@@ -607,7 +598,6 @@
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\TransactionConstants.cs" />
-    <Compile Include="Util\Validate.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -904,6 +894,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
+      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
+      <Name>softwrench.sw4.user</Name>
     </ProjectReference>
     <ProjectReference Include="..\WCFDynamicProxy\src\DynamicProxyLibrary.csproj">
       <Project>{20fd2b93-bd84-48d7-a7fb-4231972d3e26}</Project>

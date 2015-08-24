@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using log4net;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Metadata.Entities.Connectors;
-using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata;
 

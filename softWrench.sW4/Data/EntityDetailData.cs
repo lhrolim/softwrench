@@ -1,5 +1,4 @@
-﻿using softWrench.sW4.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata;
+﻿using softwrench.sW4.Shared2.Metadata;
 
 namespace softWrench.sW4.Data {
     class EntityDetailData {

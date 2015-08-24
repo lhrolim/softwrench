@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
-using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.log4net {
     public class Log4NetUtil {

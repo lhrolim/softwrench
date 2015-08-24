@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace softwrench.sw4.Hapag.Data {
+﻿namespace softwrench.sw4.Hapag.Data {
     public class HapagDashBoardsConstants {
         public const string ActionRequiredForOpenRequests = "actionrequiredrequest";
         public const string EUOpenRequests = "euopenrequests";

@@ -2,33 +2,24 @@
 using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.persistence.Event;
-using cts.commons.web.Attributes;
-using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Definitions;
-using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Configuration.Util;
-using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Security;
-using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Modules;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
-using softWrench.sW4.Web.SPF;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using System.Web.Http;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Web.Controllers.Configuration {
     public class ConfigurationController : ApiController {

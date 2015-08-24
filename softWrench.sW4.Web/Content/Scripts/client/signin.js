@@ -8,7 +8,7 @@
         var userNameMessage = $('#userNameMessage');
         var passwordMessage = $('#passwordMessage');
 
-        if (username.val() == '') {
+        if (username.val() === '') {
             passwordMessage.hide();
             if (userNameMessage.hide()) {
                 userNameMessage.toggle();
@@ -16,7 +16,7 @@
             return false;
         }
 
-        if (password.val() == '') {
+        if (password.val() === '') {
             userNameMessage.hide();
             if (passwordMessage.hide()) {
                 passwordMessage.toggle();

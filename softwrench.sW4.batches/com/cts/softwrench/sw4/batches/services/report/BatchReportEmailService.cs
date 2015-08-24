@@ -6,6 +6,7 @@ using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;
+using softwrench.sw4.api.classes.email;
 using softWrench.sW4.SPF;
 using Hash = DotLiquid.Hash;
 
@@ -51,7 +52,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
            
           
 
-            var emailData = new EmailService.EmailData("noreply@controltechnologysolutions.com", user.Email, "Batch Submission Finished", msg);
+            var emailData = new EmailData("noreply@controltechnologysolutions.com", user.Email, "Batch Submission Finished", msg);
             _emailService.SendEmail(emailData);
 
         }

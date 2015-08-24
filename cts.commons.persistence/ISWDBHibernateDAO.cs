@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.simpleinjector;
+using NHibernate;
 
 namespace cts.commons.persistence
 {

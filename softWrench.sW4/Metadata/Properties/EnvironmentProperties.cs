@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using cts.commons.portable.Util;
 
 namespace softWrench.sW4.Metadata.Properties {
     public class EnvironmentProperties {
@@ -22,6 +19,10 @@ namespace softWrench.sW4.Metadata.Properties {
 
         public IDictionary<string, string> Properties {
             get { return _properties; }
+        }
+
+        public override string ToString() {
+            return "Key: {0} , Properties: {1}".Fmt(Key,Properties);
         }
     }
 }

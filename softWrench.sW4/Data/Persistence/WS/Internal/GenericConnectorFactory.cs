@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
-using softWrench.sW4.Data.Persistence.WS.Ism;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Persistence.WS.Mea;
 using softWrench.sW4.Data.Persistence.WS.Mif;

@@ -1,5 +1,4 @@
 ﻿using log4net;
-using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Entities;

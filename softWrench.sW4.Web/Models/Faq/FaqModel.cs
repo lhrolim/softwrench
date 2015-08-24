@@ -1,18 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using NHibernate.Hql.Ast.ANTLR;
-using NHibernate.Linq.Functions;
-using softWrench.sW4.Data;
-using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.Schema;
-using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Web.Controllers;
 
 namespace softWrench.sW4.Web.Models.Faq {
     public class FaqModel {

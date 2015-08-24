@@ -1,7 +1,6 @@
 ﻿using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Entities.Sliced;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {

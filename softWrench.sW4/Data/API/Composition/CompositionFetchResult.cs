@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
-using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softwrench.sW4.Shared2.Data;
 
 namespace softWrench.sW4.Data.API.Composition {
     public class CompositionFetchResult : GenericResponseResult<Dictionary<string, EntityRepository.SearchEntityResult>> {

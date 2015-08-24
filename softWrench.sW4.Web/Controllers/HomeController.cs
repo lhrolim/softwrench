@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Web.Security;
+﻿using System.Web.Security;
 using cts.commons.portable.Util;
-using cts.commons.Util;
-using SimpleInjector;
-using softwrench.sw4.api.classes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -20,7 +16,6 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using softWrench.sW4.Web.Controllers.Configuration;
 using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -50,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public ActionResult Index() {
-            _lookuper.RegisterHttpContext(Request);
+            
 
             var user = SecurityFacade.CurrentUser();
             bool fromCache;

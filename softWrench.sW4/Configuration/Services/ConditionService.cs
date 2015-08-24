@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using cts.commons.simpleinjector;
 

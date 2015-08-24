@@ -4,12 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Reflection;
-using System.Web;
 using System.Web.Compilation;
 using cts.commons.portable.Util;
-using cts.commons.Util;
 
 namespace softWrench.sW4.Util {
     public static class AssemblyLocator {

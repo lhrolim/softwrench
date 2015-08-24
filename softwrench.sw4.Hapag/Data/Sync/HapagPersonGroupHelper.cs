@@ -1,15 +1,13 @@
 ﻿using cts.commons.portable.Util;
-using cts.commons.Util;
 using Iesi.Collections.Generic;
 using log4net;
 using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
 using cts.commons.simpleinjector;
-using softWrench.sW4.Util;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sw4.user.classes.entities;
 using c = softwrench.sw4.Hapag.Data.Sync.HapagPersonGroupConstants;
 
 namespace softwrench.sw4.Hapag.Data.Sync {

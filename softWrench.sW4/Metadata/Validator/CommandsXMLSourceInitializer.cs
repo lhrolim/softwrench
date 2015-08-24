@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 

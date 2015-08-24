@@ -1,7 +1,5 @@
 using cts.commons.portable.Util;
-using cts.commons.Util;
 using JetBrains.Annotations;
-using softWrench.sW4.Metadata.Applications.Association;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -9,7 +7,6 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using System;
 using System.Linq;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications {
     public static class ApplicationMetadataExtensions {
