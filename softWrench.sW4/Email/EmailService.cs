@@ -31,7 +31,7 @@ namespace softWrench.sW4.Email {
                 objsmtpClient.Port = Int32.Parse(overriddenPort);
             }
 
-            objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.smtp.enableSSL", true));
+            objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.smtp.enableSSL"));
 
             // Increase timeout value if needed - depended on site 
             var timeout = MetadataProvider.GlobalProperty("email.smtp.timeout");
