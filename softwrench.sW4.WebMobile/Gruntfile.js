@@ -59,12 +59,6 @@ module.exports = function (grunt) {
 
     var solutionScripts = commonScripts.concat(sharedScripts).concat(appScripts).concat(customerScripts);
 
-    // build environment
-    /*
-    var env = grunt.option("env") || "debug";
-    var cliEnv = "--" + env;
-    */
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -206,15 +200,18 @@ module.exports = function (grunt) {
         var cordovaBuild = require('taco-team-build'),
         done = this.async();
 
-         //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
-         var cliEnv = "--release";
-         var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android"],
-            buildArgs = {
+        //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
+
+        var env = grunt.option("env") || "debug";
+        var cliEnv = "--" + env;
+
+        var platformsToBuild = process.platform === "darwin" ? ["ios"] : ["android"];
+        var buildArgs = {
                 android: [cliEnv],    // Warning: Omit the extra "--" when referencing platform
                 ios: [cliEnv, "--device"],     // specific preferences like "-- --ant" for Android
                 windows: [cliEnv],             // or "-- --win" for Windows. You may also encounter a
                 wp8: [cliEnv]                  // "TypeError" after adding a flag Android doesn't recognize
-            };                                      // when using Cordova < 4.3.0. This is fixed in 4.3.0.
+        };                                      // when using Cordova < 4.3.0. This is fixed in 4.3.0.
 
         cordovaBuild.buildProject(platformsToBuild, buildArgs)
             .then(function() {
