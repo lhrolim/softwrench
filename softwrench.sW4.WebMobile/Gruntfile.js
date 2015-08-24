@@ -204,7 +204,7 @@ module.exports = function (grunt) {
 
          var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android"],
             buildArgs = {
-                android: ["--debug"],    // Warning: Omit the extra "--" when referencing platform
+                android: ["--release"],    // Warning: Omit the extra "--" when referencing platform
                 ios: ["--release", "--device"],     // specific preferences like "-- --ant" for Android
                 windows: ["--release"],             // or "-- --win" for Windows. You may also encounter a
                 wp8: ["--release"]                  // "TypeError" after adding a flag Android doesn't recognize
