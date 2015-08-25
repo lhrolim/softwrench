@@ -1,5 +1,6 @@
 ﻿using System;
 using cts.commons.portable.Util;
+using cts.commons.Util;
 using log4net;
 using log4net.Appender;
 using log4net.Config;
@@ -39,6 +40,8 @@ namespace softWrench.sW4.log4net {
         public static void ConfigureLogging() {
             XmlConfigurator.Configure();
 
+            LoggingUtil.DefaultLog.InfoFormat("init log system for client {0}",ApplicationConfiguration.ClientName);
+
             if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
                 return;
             }
@@ -58,7 +61,7 @@ namespace softWrench.sW4.log4net {
                 ChangeLevel("MAXIMO.SQL", "WARN", null);
                 ChangeLevel("SWDB.SQL", "WARN", null);
             }
-
+            LoggingUtil.DefaultLog.InfoFormat("finish log system setup for client {0}", ApplicationConfiguration.ClientName);
         }
 
 
