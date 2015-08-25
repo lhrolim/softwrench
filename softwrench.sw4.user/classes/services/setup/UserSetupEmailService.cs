@@ -30,7 +30,7 @@ namespace softwrench.sw4.user.classes.services.setup {
         private string _forgotPasswordTemplatePath;
         private string _headerImageUrl;
 
-        public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager) {
+        public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager, IApplicationConfiguration appConfig) {
             Log.Debug("init Log");
             _emailService = emailService;
             _redirectService = redirectService;
@@ -39,11 +39,7 @@ namespace softwrench.sw4.user.classes.services.setup {
             _manualTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_manualpassword.html";
             _forgotPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//forgotpassword.html";
 
-            //TODO get actual client key
-            var clientKey = "deltadental";
-            //IApplicationConfiguration
-            //ApplicationConfiguration.ClientName
-
+            var clientKey = appConfig.GetClientKey();
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "//Content//Customers//" + clientKey + "//images//header-email.jpg"))
             {
                 _headerImageUrl = "Content/Customers/" + clientKey + "/images/header-email.jpg";
