@@ -1,7 +1,7 @@
 ﻿//taken from here:
 //http://codepen.io/mhartington/pen/CImqy
 
-(function () {
+(function (softwrench) {
     "use strict";
 
 softwrench.directive('optionField',
@@ -153,4 +153,4 @@ softwrench.directive('optionField',
         }
     ]
 );
-})();
+})(softwrench);

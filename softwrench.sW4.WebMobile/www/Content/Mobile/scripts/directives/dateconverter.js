@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     "use strict";
 
     angular.module("softwrench").directive("dateconverter", ["formatService", function (formatService) {
@@ -7,7 +6,6 @@
             restrict: 'A',
             require: '?ngModel',
             link: function (scope, element, attrs, modelCtrl) {
-
 
                 modelCtrl.$parsers.push(function (inputValue) {
                     if (inputValue instanceof Date) {
@@ -20,8 +18,6 @@
                     return new Date(modelValue);
                 });
 
-
-
             }
         };
 
@@ -29,6 +25,6 @@
 
     }]);
 
-})();
+})(angular);
 
 
