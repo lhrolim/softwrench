@@ -61,8 +61,7 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
                     element.html(content);
                 }
             });
-        },
-
+        }
     }
 });
 
@@ -121,7 +120,7 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, a
             $scope.adminMyProfile = function () {
                 adminMenuService.myProfile();
             };
-        },
+        }
     }
 });
 

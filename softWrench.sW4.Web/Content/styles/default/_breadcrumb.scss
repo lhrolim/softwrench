@@ -119,3 +119,56 @@
         }
     }
 }
+
+.mobile {
+    header {
+        .admin-area {
+            .breadcrumb {
+                .dropdown-menu {
+                    position: initial;
+                    /*top: 100%;*/
+                    /*left: 0;*/
+                    /*z-index: 1000;*/
+                    /*display: none;*/
+                    float: none;
+                    /*min-width: 160px;*/
+                    /*padding: 5px 0;*/
+                    /*margin: 2px 0 0;*/
+                    /*font-size: 14px;*/
+                    /*list-style: none;*/
+                    background: none;
+                    border: none;
+                    /*border: 1px solid rgba(0,0,0,0.15);*/
+                    border-radius: 0;
+                    /*-webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);*/
+                    box-shadow: none;
+                    /*background-clip: padding-box;*/
+                    .dropdown-submenu {
+                        .dropdown-menu {
+                            /*display: block;*/
+                            margin-left: 23px;
+                        }
+
+                        & > a:after {
+                            display: none;
+                        }
+                    }
+
+                    li {
+                        a {
+                            color: #fff;
+
+                            i {
+                                color: #fff;
+                            }
+
+                            &:hover {
+                                background: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
