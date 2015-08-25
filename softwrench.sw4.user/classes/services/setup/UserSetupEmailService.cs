@@ -1,13 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Net.Cache;
+using System.Security.Policy;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using Common.Logging;
 using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.user.classes.entities;
+using Hash = DotLiquid.Hash;
 
 namespace softwrench.sw4.user.classes.services.setup {
 
@@ -24,8 +28,9 @@ namespace softwrench.sw4.user.classes.services.setup {
         private readonly string _automaticTemplatePath;
         private readonly string _manualTemplatePath;
         private string _forgotPasswordTemplatePath;
+        private string _headerImageUrl;
 
-        public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager) {
+        public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager, IApplicationConfiguration appConfig) {
             Log.Debug("init Log");
             _emailService = emailService;
             _redirectService = redirectService;
@@ -33,6 +38,18 @@ namespace softwrench.sw4.user.classes.services.setup {
             _automaticTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_automaticpassword.html";
             _manualTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_manualpassword.html";
             _forgotPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//forgotpassword.html";
+
+            var clientKey = appConfig.GetClientKey();
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "//Content//Customers//" + clientKey + "//images//header-email.jpg"))
+            {
+                _headerImageUrl = "Content/Customers/" + clientKey + "/images/header-email.jpg";
+            } else if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "//Content//Images//" + clientKey + "//header-email.jpg"))
+            {
+                _headerImageUrl = "Content/Images/" + clientKey + "/header-email.jpg";
+            } else
+            {
+                _headerImageUrl = "Content/Images/header-email.jpg";
+            }
         }
 
         public void SendEmail(User user, string email) {
@@ -56,13 +73,14 @@ namespace softwrench.sw4.user.classes.services.setup {
 
             var msg = _template.Render(
                     Hash.FromAnonymousObject(new {
+                        headerurl = _redirectService.GetRootUrl() + _headerImageUrl,
                         name = user.FullName,
                         link = linkUrl,
                         //password won´t be used for automatic template, but let´s put it here anyway
                         password = user.Password
                     }));
 
-            var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[Softwrench]Welcome to softwrench", msg);
+            var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[softWrench] Welcome to softWrench", msg);
             _emailService.SendEmail(emailData);
 
         }
@@ -78,15 +96,18 @@ namespace softwrench.sw4.user.classes.services.setup {
             var templateContent = File.ReadAllText(templateToUse);
             _template = Template.Parse(templateContent);  // Parses and compiles the template
 
+            //var test = _redirectService.GetRootUrl();
+
             var msg = _template.Render(
                     Hash.FromAnonymousObject(new {
+                        headerurl = _redirectService.GetRootUrl() + _headerImageUrl,
                         name = user.FullName,
                         link = linkUrl,
                         //password won´t be used for automatic template, but let´s put it here anyway
                         password = user.Password
                     }));
 
-            var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[Softwrench]Change Password Instructions", msg);
+            var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[softWrench] Change Password Instructions", msg);
             _emailService.SendEmail(emailData);
 
         }
