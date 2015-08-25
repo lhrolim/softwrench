@@ -44,11 +44,28 @@
             }
         }
 
+        .forgot-password {
+            margin-left: 20px;
+        }
+
+        .control-label {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .password-cancel {
+            margin-left: 20px;
+        }
+
         .user-links {
             color: #fff;
             margin-bottom: 30px;
             font-size: 14px;
             line-height: 1.5;
+        }
+
+        .buttons {
+            margin-top: 20px;
         }
 
         a {

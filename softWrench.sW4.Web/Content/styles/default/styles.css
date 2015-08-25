@@ -1467,11 +1467,20 @@ input:focus, select:focus, textarea:focus {
     border-radius: 40px; }
     .page-signin .form-signin button[type="submit"]:hover {
       background-color: rgba(255, 255, 255, 0.4); }
+  .page-signin .form-signin .forgot-password {
+    margin-left: 20px; }
+  .page-signin .form-signin .control-label {
+    color: #fff;
+    margin-bottom: 10px; }
+  .page-signin .form-signin .password-cancel {
+    margin-left: 20px; }
   .page-signin .form-signin .user-links {
     color: #fff;
     margin-bottom: 30px;
     font-size: 14px;
     line-height: 1.5; }
+  .page-signin .form-signin .buttons {
+    margin-top: 20px; }
   .page-signin .form-signin a {
     color: #fff; }
     .page-signin .form-signin a:hover {
