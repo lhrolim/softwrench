@@ -1,7 +1,7 @@
 ﻿<div class="col-sm-offset-2 col-sm-10" ng-controller="ProfileController">
     <div class="select-left-right row">
         <div class="left col-sm-5">
-            <label>Active Profiles</label>
+            <label>Active Security Groups</label>
             <select multiple="multiple" ng-model="selectedprofiles" ng-options="profile.name for profile in profiles"
                     class="form-control" />
             <div class="buttons">
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="right col-sm-5">
-            <label>Available Profiles</label>
+            <label>Available Security Groups</label>
             <select multiple="multiple" ng-model="selectedavailableprofiles" ng-options="profile.name for profile in availableprofiles"
                     class="form-control input-block-level" />
         </div>

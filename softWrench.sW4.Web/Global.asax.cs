@@ -64,9 +64,10 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
-                Log4NetUtil.ConfigureLogging();
+                Log4NetUtil.InitDefaultLog();
                 Log.Info("*****Starting web app****************");
                 SetFixClient();
+                Log4NetUtil.ConfigureDevLogging();
                 AreaRegistration.RegisterAllAreas();
                 EnableJsonCamelCasing();
                 RegisterDataMapFormatter();
