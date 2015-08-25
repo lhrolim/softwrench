@@ -11,6 +11,7 @@ namespace softWrench.sW4.log4net {
     public class Log4NetUtil {
 
 
+
         public static void ChangeLevel(string logName, string newLevel, string pattern) {
             var repositories = LogManager.GetAllRepositories();
             if (pattern == null) {
