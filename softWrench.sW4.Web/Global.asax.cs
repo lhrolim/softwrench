@@ -3,7 +3,6 @@ using System.Web.Hosting;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
-using log4net.Config;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
 using NHibernate.Context;
@@ -65,7 +64,8 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
-                ConfigureLogging();
+                Log4NetUtil.ConfigureLogging();
+                Log.Info("*****Starting web app****************");
                 SetFixClient();
                 AreaRegistration.RegisterAllAreas();
                 EnableJsonCamelCasing();
@@ -90,18 +90,7 @@ namespace softWrench.sW4.Web {
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
-        private static void ConfigureLogging() {
-            XmlConfigurator.Configure();
-            if (ApplicationConfiguration.IsLocal()) {
-                //Log4NetUtil.ChangeLevel("DEFAULT_LOG", "DEBUG", null);
-                //Log4NetUtil.ChangeLevel("softwrench", "DEBUG", null);
-            } else if (!ApplicationConfiguration.IsDev()) {
-                Log4NetUtil.ChangeLevel("MAXIMO.SQL", "WARN", null);
-                Log4NetUtil.ChangeLevel("SWDB.SQL", "WARN", null);
-            }
-
-            Log.Info("*****Starting web app****************");
-        }
+      
 
         private static void RegisterDataMapFormatter() {
             var index = GlobalConfiguration
