@@ -4,6 +4,7 @@ using System.Net.Cache;
 using System.Security.Policy;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using Common.Logging;
 using DotLiquid;
@@ -37,14 +38,22 @@ namespace softwrench.sw4.user.classes.services.setup {
             _automaticTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_automaticpassword.html";
             _manualTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_manualpassword.html";
             _forgotPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//forgotpassword.html";
-            _headerImageUrl = "Content/Images/header-email.jpg";
 
-            //_headerImageUrl = redirectService.GetRootUrl() + "//Content//Images//header-email.jpg";
+            //TODO get actual client key
+            var clientKey = "deltadental";
+            //IApplicationConfiguration
+            //ApplicationConfiguration.ClientName
 
-
-            //Request.U
-            //HttpRequest 
-            //scott = Url
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "//Content//Customers//" + clientKey + "//images//header-email.jpg"))
+            {
+                _headerImageUrl = "Content/Customers/" + clientKey + "/images/header-email.jpg";
+            } else if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "//Content//Images//" + clientKey + "//header-email.jpg"))
+            {
+                _headerImageUrl = "Content/Images/" + clientKey + "/header-email.jpg";
+            } else
+            {
+                _headerImageUrl = "Content/Images/header-email.jpg";
+            }
         }
 
         public void SendEmail(User user, string email) {
