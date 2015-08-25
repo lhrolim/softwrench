@@ -58,25 +58,9 @@
       display: inline-block;
       color: #fff; } }
 
-.mobile header .admin-area .breadcrumb .dropdown-menu {
-  position: initial;
-  float: none;
-  margin-left: -10px;
-  background: none;
-  border: none;
-  border-radius: 0;
-  box-shadow: none; }
-  .mobile header .admin-area .breadcrumb .dropdown-menu .dropdown-submenu .dropdown-menu {
-    display: block;
-    margin-left: 23px; }
-  .mobile header .admin-area .breadcrumb .dropdown-menu .dropdown-submenu > a:after {
-    display: none; }
-  .mobile header .admin-area .breadcrumb .dropdown-menu li a {
-    color: #fff; }
-    .mobile header .admin-area .breadcrumb .dropdown-menu li a i {
-      color: #fff; }
-    .mobile header .admin-area .breadcrumb .dropdown-menu li a:hover {
-      background: none; }
+.mobile header .admin-area .breadcrumb .dropdown-submenu > .dropdown-menu {
+  left: 10px;
+  margin-top: 23px; }
 
 .btn-brand {
   background-color: #34a7e0;

@@ -124,38 +124,9 @@
     header {
         .admin-area {
             .breadcrumb {
-                .dropdown-menu {
-                    position: initial;
-                    float: none;
-                    margin-left: -10px;
-                    background: none;
-                    border: none;
-                    border-radius: 0;
-                    box-shadow: none;
-                    .dropdown-submenu {
-                        .dropdown-menu {
-                            display: block;
-                            margin-left: 23px;
-                        }
-
-                        & > a:after {
-                            display: none;
-                        }
-                    }
-
-                    li {
-                        a {
-                            color: #fff;
-
-                            i {
-                                color: #fff;
-                            }
-
-                            &:hover {
-                                background: none;
-                            }
-                        }
-                    }
+                .dropdown-submenu > .dropdown-menu {
+                    left: 10px;
+                    margin-top: 23px;
                 }
             }
         }
