@@ -60,25 +60,14 @@
 
 .mobile header .admin-area .breadcrumb .dropdown-menu {
   position: initial;
-  /*top: 100%;*/
-  /*left: 0;*/
-  /*z-index: 1000;*/
-  /*display: none;*/
   float: none;
-  /*min-width: 160px;*/
-  /*padding: 5px 0;*/
-  /*margin: 2px 0 0;*/
-  /*font-size: 14px;*/
-  /*list-style: none;*/
+  margin-left: -10px;
   background: none;
   border: none;
-  /*border: 1px solid rgba(0,0,0,0.15);*/
   border-radius: 0;
-  /*-webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);*/
-  box-shadow: none;
-  /*background-clip: padding-box;*/ }
+  box-shadow: none; }
   .mobile header .admin-area .breadcrumb .dropdown-menu .dropdown-submenu .dropdown-menu {
-    /*display: block;*/
+    display: block;
     margin-left: 23px; }
   .mobile header .admin-area .breadcrumb .dropdown-menu .dropdown-submenu > a:after {
     display: none; }
