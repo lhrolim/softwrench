@@ -1,4 +1,6 @@
 ﻿//base idea: http://blog.projectnibble.org/2013/12/23/enhance-logging-in-angularjs-the-simple-way/
+(function (modules) {
+    "use strict";
 
 modules.webcommons.run(['$injector', 'contextService','$log', enhanceInjector]);
 
@@ -36,3 +38,5 @@ function enhanceInjector($injector, contextService,$log) {
         }
     }
 };
+
+})(modules);

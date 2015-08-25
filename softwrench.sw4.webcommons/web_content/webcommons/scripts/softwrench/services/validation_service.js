@@ -1,5 +1,4 @@
-
-(function () {
+(function (angular) {
     'use strict';
 
     angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', validationService]);
@@ -151,8 +150,4 @@
 
     }
 
-})();
-
-
-
-
+})(angular);

@@ -1,5 +1,7 @@
-﻿
-modules.webcommons.factory('fieldService', function ($injector, $log,$filter, expressionService, eventService, userService,formatService) {
+﻿(function (modules) {
+    "use strict";
+
+    modules.webcommons.factory('fieldService', ["$injector", "$log", "$filter", "expressionService", "eventService", "userService", "formatService", function ($injector, $log, $filter, expressionService, eventService, userService, formatService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -415,6 +417,6 @@ modules.webcommons.factory('fieldService', function ($injector, $log,$filter, ex
         }
     };
 
-});
+}]);
 
-
+})(modules);

@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     'use strict';
 
     angular.module('webcommons_services').factory('userService', ['contextService', userService]);
@@ -75,7 +74,4 @@
         };
 
     }
-})();
-
-
-
+})(angular);
