@@ -37,14 +37,17 @@ namespace softWrench.sW4.log4net {
             }
         }
 
-        public static void ConfigureLogging() {
+        public static void InitDefaultLog(){
             XmlConfigurator.Configure();
+        }
 
-            LoggingUtil.DefaultLog.InfoFormat("init log system for client {0}",ApplicationConfiguration.ClientName);
+        public static void ConfigureDevLogging() {
 
             if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
                 return;
             }
+
+            LoggingUtil.DefaultLog.InfoFormat("init custom log system for client {0}", ApplicationConfiguration.ClientName);
 
             if (ApplicationConfiguration.IsDev()) {
                 var appenders = LogManager.GetRepository().GetAppenders();
