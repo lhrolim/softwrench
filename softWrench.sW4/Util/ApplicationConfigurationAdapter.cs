@@ -15,5 +15,10 @@ namespace softWrench.sW4.Util {
         public bool IsOracle(DBType maximo) {
             return ApplicationConfiguration.IsOracle(maximo);
         }
+
+        public string GetClientKey()
+        {
+            return ApplicationConfiguration.ClientName;
+        }
     }
 }

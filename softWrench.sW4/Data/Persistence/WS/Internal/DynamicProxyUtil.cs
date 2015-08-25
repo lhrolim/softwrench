@@ -20,11 +20,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         private const string MissingKeyMsg = "Please provide integration_interface key for entity {0}";
 
         private const string QueryInterfaceParam = "integration_query_interface";
-        private static readonly Dictionary<String, IDynamicProxyFactory> DynamicProxyCache = new Dictionary<string, IDynamicProxyFactory>();
+        private static readonly Dictionary<string, IDynamicProxyFactory> DynamicProxyCache = new Dictionary<string, IDynamicProxyFactory>();
         private readonly static ILog Log = LogManager.GetLogger(typeof(DynamicProxyUtil));
 
+        public DynamicProxyUtil(){
+            Log.Debug("init log");
+        }
+
         //TODO: adjust caching
-        public static DynamicObject LookupProxy(EntityMetadata metaData, Boolean queryProxy = false) {
+        public static DynamicObject LookupProxy(EntityMetadata metaData, bool queryProxy = false) {
             var wsdlUri = GetWsdlUri(metaData, queryProxy);
             try {
                 
@@ -37,7 +41,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
         }
 
-        public static DynamicObject LookupProxy(String integrationInterface, Boolean applyPrefix = true) {
+        public static DynamicObject LookupProxy(string integrationInterface, bool applyPrefix = true) {
             string wsdlUri = GetWsdlFromKey(integrationInterface, applyPrefix);
             var factory = LookupFactory(wsdlUri);
             return factory.CreateMainProxy();
@@ -48,8 +52,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
 
-        private static IDynamicProxyFactory LookupFactory(String wsdlUri) {
+        private static IDynamicProxyFactory LookupFactory(string wsdlUri) {
+            
             if (DynamicProxyCache.ContainsKey(wsdlUri)) {
+                Log.DebugFormat("returning factory for wsdl {0} for customer {1}",wsdlUri,ApplicationConfiguration.ClientName);
                 return DynamicProxyCache[wsdlUri];
             }
             var factory = GetFactory(wsdlUri);
@@ -57,8 +63,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return factory;
         }
 
-        private static IDynamicProxyFactory GetFactory(String wsdlUri) {
-            Log.InfoFormat("Looking for Dynamic Proxy factory at wsdl {0}", wsdlUri);
+        private static IDynamicProxyFactory GetFactory(string wsdlUri) {
+            Log.InfoFormat("Looking for Dynamic Proxy factory at wsdl {0} for customer {1}", wsdlUri, ApplicationConfiguration.ClientName);
 
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
                 ServicePointManager.ServerCertificateValidationCallback = SWIgnoreErrorsCertHandler;
@@ -83,7 +89,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         private static string GetWsdlUri(EntityMetadata metaData, bool queryProxy) {
-            String entityKey = null;
+            string entityKey = null;
             var connectorParams = metaData.ConnectorParameters.Parameters;
             var keyToUse = queryProxy && ApplicationConfiguration.IsMea() ? QueryInterfaceParam : ConnectorParameters.UpdateInterfaceParam;
             //first we try mea_integration_interface / mif_integration_interface
@@ -97,12 +103,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 if (!connectorParams.TryGetValue(ApplicationConfiguration.WsProvider + "_" + ConnectorParameters.UpdateInterfaceParam,
                     out entityKey)
                     && !connectorParams.TryGetValue(ConnectorParameters.UpdateInterfaceParam, out entityKey)) {
-                    throw new InvalidOperationException(String.Format(MissingKeyMsg, metaData.Name));
+                    throw new InvalidOperationException(string.Format(MissingKeyMsg, metaData.Name));
                 }
                 //by convention, query interface name would be IN_NAME + "_QUERY" (SWWO ==> SWWO_QUERY)
                 entityKey = entityKey + "_QUERY";
             } else {
-                throw new InvalidOperationException(String.Format(MissingKeyMsg, metaData.Name));
+                throw new InvalidOperationException(string.Format(MissingKeyMsg, metaData.Name));
             }
             return GetWsdlFromKey(entityKey);
         }
