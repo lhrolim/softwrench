@@ -3,7 +3,7 @@ using FluentMigrator;
 
 namespace softwrench.sw4.user.Migration {
     [Migration(201508221123)]
-    public class MigrationSwweb1322 : FluentMigrator.Migration {
+    public class MigrationSwweb1331 : FluentMigrator.Migration {
 
         public override void Up() {
             Create.Table("USER_ACTIVATIONLINK")

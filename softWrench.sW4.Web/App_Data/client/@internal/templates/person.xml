@@ -48,6 +48,9 @@
 
         <schema id="detail" stereotype="detail" title="User Profile">
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
+
+          <section id="statistics" resourcepath="/Content/Templates/usersetup/userstatistics.html"></section>
+          
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
 

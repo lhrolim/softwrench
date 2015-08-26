@@ -85,6 +85,7 @@ namespace softwrench.sw4.user.classes.entities {
         [OneToMany(2, ClassType = typeof(UserCustomConstraint))]
         public ISet<UserCustomConstraint> CustomConstraints { get; set; }
 
+
         //public string DisplayName {
         //    get { return Person.FirstName + " " + Person.LastName; }
         //}

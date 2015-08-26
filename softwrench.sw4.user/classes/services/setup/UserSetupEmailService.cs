@@ -58,10 +58,10 @@ namespace softwrench.sw4.user.classes.services.setup {
             }
         }
 
-        public void SendEmail(User user, string email) {
+        public void SendActivationEmail(User user, string email,string openPassword=null) {
             Validate.NotNull(email, "email");
             Validate.NotNull(user, "user");
-            var automaticMode = user.Password == null;
+            var automaticMode = openPassword == null;
             string templateToUse;
             string linkUrl;
             if (automaticMode) {
@@ -83,7 +83,7 @@ namespace softwrench.sw4.user.classes.services.setup {
                         name = user.FullName,
                         link = linkUrl,
                         //password won´t be used for automatic template, but let´s put it here anyway
-                        password = user.Password
+                        password = openPassword
                     }));
 
             var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[softWrench] Welcome to softWrench", msg);
