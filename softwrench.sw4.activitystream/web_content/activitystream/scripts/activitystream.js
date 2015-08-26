@@ -178,7 +178,7 @@ app.directive('activitystream', function(contextService) {
                 var actionToUse = "GetNotifications";
 
                 var parameters = {};
-                parameters.role = 'allRole';
+                parameters.role = 'default';
 
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));

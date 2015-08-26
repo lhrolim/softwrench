@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.activitystream.classes.Model;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
@@ -19,8 +21,13 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
 
         [HttpGet]
-        public NotificationResponse GetNotifications(string role) {
-            return _notificationFacade.GetNotificationStream(role);
+        public NotificationResponse GetNotifications() {
+            var securityGroups = SecurityFacade.CurrentUser().Profiles;
+            if (securityGroups.Count == 0) {
+                return null;
+            }
+            var securityGroup = securityGroups.ElementAt(0);
+            return _notificationFacade.GetNotificationStream(securityGroup.Name);
         }
 
         [HttpPost]
