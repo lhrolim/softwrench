@@ -1,4 +1,3 @@
-/// <vs AfterBuild='quick_dev_wrapper' />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -72,7 +71,7 @@ module.exports = function (grunt) {
     //TODO: make a client-based build??
     //make it download the customer scripts from the server at runtime?
     var customerScripts = [];
-    var customer = grunt.option("customer") || "pae"; // -> harcoding only customer with custom script
+    var customer = grunt.option("customer") || "pae"; // -> harcoding the only customer that has custom scripts
     //if (customer) {
     customerScripts = [
         "www/Content/Customers/" + customer + "_offline/scripts/**/*.mobile.js"
@@ -88,71 +87,109 @@ module.exports = function (grunt) {
         .concat(customerScripts);
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: grunt.file.readJSON("package.json"),
 
         clean: {
-            folder: "www/Content/Vendor/scripts/",
-            folder2: "www/Content/Vendor/styles/"
+            vendor: [
+                "www/Content/Vendor/scripts/",
+                "www/Content/Vendor/css/"
+            ]
         },
 
         bowercopy: {
 
             options: {
-                destPrefix: 'www/Content/Vendor/scripts'
+                destPrefix: "www/Content/Vendor/scripts"
             },
-
 
             dev: {
                 files: {
-                    'angular-sanitize.js': 'angular-sanitize/angular-sanitize.js',
-                    'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.js',
-                    'angular-animate.js': 'angular-animate/angular-animate.js',
-                    'angular.js': 'angular/angular.js',
-                    'jquery.js': 'jquery/dist/jquery.js',
-                    'ng-cordova.js': 'ngCordova/dist/ng-cordova.js',
-                    'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
-                    'moment.js': 'moment/moment.js',
-                    'ionic.min.js': 'ionic/release/js/ionic.min.js',
-                    'ionic-angular.min.js': 'ionic/release/js/ionic-angular.min.js'
-                },
+                    "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
+                    "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
+                    "angular-animate.js": "angular-animate/angular-animate.js",
+                    "angular.js": "angular/angular.js",
+                    "jquery.js": "jquery/dist/jquery.js",
+                    "ng-cordova.js": "ngCordova/dist/ng-cordova.js",
+                    "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
+                    "moment.js": "moment/moment.js",
+                    "ionic.min.js": "ionic/release/js/ionic.min.js",
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js"
+                }
             },
 
             css: {
                 options: {
-                    destPrefix: 'www/Content/Vendor/css'
+                    destPrefix: "www/Content/Vendor/css"
                 },
                 files: {
-                    'ionic.min.css': 'ionic/release/css/ionic.min.css',
-                    'ionautocomplete.css': 'ion-autocomplete/dist/ion-autocomplete.min.css'
+                    "ionic.min.css": "ionic/release/css/ionic.min.css",
+                    "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css"
                 }
             },
 
             prod: {
                 files: {
-                    'angular.js': 'angular/angular.min.js',
-                    'angular-sanitize.js': 'angular-sanitize/angular-sanitize.min.js',
-                    'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.min.js',
-                    'angular-animate.js': 'angular-animate/angular-animate.min.js',
-                    'jquery.js': 'jquery/dist/jquery.min.js',
-                    'ng-cordova.js': 'ngCordova/dist/ng-cordova.min.js',
-                    'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
-                    'moment.js': 'moment/min/moment.min.js',
-                    'ionic.min.js': 'ionic/release/js/ionic.min.js',
-                    'ionic-angular.min.js': 'ionic/release/js/ionic-angular.min.js'
+                    "angular.js": "angular/angular.min.js",
+                    "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
+                    "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.min.js",
+                    "angular-animate.js": "angular-animate/angular-animate.min.js",
+                    "jquery.js": "jquery/dist/jquery.min.js",
+                    "ng-cordova.js": "ngCordova/dist/ng-cordova.min.js",
+                    "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
+                    "moment.js": "moment/min/moment.min.js",
+                    "ionic.min.js": "ionic/release/js/ionic.min.js",
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js"
                 }
             }
         },
 
 
         tags: {
-            options: {
-                openTag: '<!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->',
-                closeTag: '<!-- end auto template tags -->'
+            // app's js
+            buildScripts: {
+                options: {
+                    openTag: "<!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template script tags -->"
+                },
+                src: solutionScripts,
+                dest: "www/layout.html"
+            },
+            // vendors's js
+            buildVendorScripts: {
+                options: {
+                    scriptTemplate: "<script type=\"text/javascript\" src=\"{{ path }}\"></script>",
+                    openTag: "<!-- start auto template VENDOR script tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template VENDOR script tags -->"
+                },
+                src: [
+                    "www/Content/Vendor/scripts/**/*.js"
+                ],
+                dest: "www/layout.html"
             },
 
-            build: {
-                src: solutionScripts,
-                dest: 'www/layout.html'
+            // app's css
+            buildLinks: {
+                options: {
+                    openTag: "<!-- start auto template style tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template style tags -->"
+                },
+                src: [
+                    "www/css/**/*.css",
+                    "www/Content/Mobile/**/*.css"
+                ],
+                dest: "www/layout.html"
+            },
+            // vendors's css
+            buildVendorLinks: {
+                options: {
+                    linkTemplate: "<link rel=\"stylesheet\" type=\"text/css\" href=\"{{ path }}\" />",
+                    openTag: "<!-- start auto template VENDOR style tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template VENDOR style tags -->"
+                },
+                src: [
+                    "www/Content/Vendor/css/**/*.css"
+                ],
+                dest: "www/layout.html"
             }
         },
 
@@ -161,52 +198,48 @@ module.exports = function (grunt) {
                 src: solutionScripts,
                 dest: "www/scripts/dist/mobile_angular.js"
             }
-        },
-
-          typescript: {
-            base: {
-                src: "scripts/**/*.ts",
-                dest: "www",
-                options: {
-                    base: "scripts",
-                    noImplicitAny: false,
-                    noEmitOnError: true,
-                    removeComments: false,
-                    sourceMap: true,
-                    target: "es5"
-                }
-            }
         }
 
-
+        //  typescript: {
+        //    base: {
+        //        src: "scripts/**/*.ts",
+        //        dest: "www",
+        //        options: {
+        //            base: "scripts",
+        //            noImplicitAny: false,
+        //            noEmitOnError: true,
+        //            removeComments: false,
+        //            sourceMap: true,
+        //            target: "es5"
+        //        }
+        //    }
+        //}
     });
 
 
     //grunt.loadNpmTasks("grunt-typescript");
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-bowercopy');
-    grunt.loadNpmTasks('grunt-script-link-tags');
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-bowercopy");
+    grunt.loadNpmTasks("grunt-script-link-tags");
 
-    grunt.option('jssuffix', 'min.js');
+    grunt.option("jssuffix", "min.js");
 
-    //grunt.option('jssuffix', 'js');
-
-
+    //grunt.option("jssuffix", "js");
 
 
     // Default task(s).
 
-    grunt.registerTask('prod', ['clean', 'bowercopy:prod', 'uglify']);
+    grunt.registerTask("prod", ["clean:vendor", "bowercopy:prod", "uglify"]);
 
-    grunt.registerTask('fulldev', ['clean', 'bowercopy:dev', 'tags']);
-    grunt.registerTask('quick_dev', ['bowercopy:dev', 'bowercopy:css', 'tags']);
+    grunt.registerTask("fulldev", ["clean:vendor", "bowercopy:dev", "bowercopy:css", "tags"]);
+    grunt.registerTask("default", ["fulldev"]);
 
-    grunt.registerTask('vs2015', ['bowercopy:prod','build']);
+    grunt.registerTask("vs2015", ["bowercopy:prod", "build"]);
 
-     grunt.registerTask('build', function () {
-        var cordovaBuild = require('taco-team-build'),
+    grunt.registerTask("build", function () {
+        var cordovaBuild = require("taco-team-build"),
         done = this.async();
 
         //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
@@ -216,14 +249,14 @@ module.exports = function (grunt) {
 
         var platformsToBuild = process.platform === "darwin" ? ["ios"] : ["android"];
         var buildArgs = {
-                android: [cliEnv],    // Warning: Omit the extra "--" when referencing platform
-                ios: [cliEnv, "--device"],     // specific preferences like "-- --ant" for Android
-                windows: [cliEnv],             // or "-- --win" for Windows. You may also encounter a
-                wp8: [cliEnv]                  // "TypeError" after adding a flag Android doesn't recognize
+            android: [cliEnv],    // Warning: Omit the extra "--" when referencing platform
+            ios: [cliEnv, "--device"],     // specific preferences like "-- --ant" for Android
+            windows: [cliEnv],             // or "-- --win" for Windows. You may also encounter a
+            wp8: [cliEnv]                  // "TypeError" after adding a flag Android doesn"t recognize
         };                                      // when using Cordova < 4.3.0. This is fixed in 4.3.0.
 
         cordovaBuild.buildProject(platformsToBuild, buildArgs)
-            .then(function() {
+            .then(function () {
                 return cordovaBuild.packageProject(platformsToBuild);
             })
             .done(done);
