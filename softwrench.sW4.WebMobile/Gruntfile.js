@@ -3,6 +3,17 @@ module.exports = function (grunt) {
 
     // Project configuration.
 
+    /** downloaded and customized or not distributed by bower */
+    var customVendorScripts = [
+        "www/Content/Vendor/downloadedvendor/persistence.js",
+        "www/Content/Vendor/downloadedvendor/persistence.store.sql.js",
+        "www/Content/Vendor/downloadedvendor/persistence.store.cordovasql.js",
+        "www/Content/Vendor/downloadedvendor/jquery.scannerdetection.js",
+        "www/Content/Vendor/downloadedvendor/rolling-log.js",
+        "www/Content/Vendor/downloadedvendor/ionautocomplete.js"
+    ];
+
+    /** offline reusable lib scripts (ours) */
     var commonScripts = [
         // persistence.offline
         "www/Content/Mobile/scripts/persistence/module.js",
@@ -12,6 +23,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/audit_offline/scripts/offline/audit.js"
     ];
 
+    /** reusable online & offline lib scripts (ours)  */
     var sharedScripts = [
         "www/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js",
@@ -36,6 +48,16 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
     ];
 
+
+    /** app scripts: required for bootstraping the app */
+    var appBootstrapScripts = [
+        "www/scripts/platformOverrides.js",
+        "www/scripts/index.js",
+        "www/Content/Mobile/scripts/mobile_bootstrap.js",
+        "www/Content/Mobile/scripts/utils/mobileconstants.js"
+    ];
+
+    /** app scripts: angular constructs */
     var appScripts = [
         "www/Content/Mobile/scripts/controllers/**/*.js",
         "www/Content/Mobile/scripts/services/**/*.js",
@@ -50,14 +72,20 @@ module.exports = function (grunt) {
     //TODO: make a client-based build??
     //make it download the customer scripts from the server at runtime?
     var customerScripts = [];
-    var customer = grunt.option("customer");
-    if (customer) {
-        customerScripts = [
-            "www/Content/Customers/" + customer + "_offline/scripts/**/*.mobile.js"
-        ];
-    }
+    var customer = grunt.option("customer") || "pae"; // -> harcoding only customer with custom script
+    //if (customer) {
+    customerScripts = [
+        "www/Content/Customers/" + customer + "_offline/scripts/**/*.mobile.js"
+    ];
+    //}
 
-    var solutionScripts = commonScripts.concat(sharedScripts).concat(appScripts).concat(customerScripts);
+    var solutionScripts = []
+        .concat(customVendorScripts)
+        .concat(commonScripts)
+        .concat(sharedScripts)
+        .concat(appBootstrapScripts)
+        .concat(appScripts)
+        .concat(customerScripts);
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -75,38 +103,27 @@ module.exports = function (grunt) {
 
 
             dev: {
-
                 files: {
                     'angular-sanitize.js': 'angular-sanitize/angular-sanitize.js',
                     'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.js',
                     'angular-animate.js': 'angular-animate/angular-animate.js',
                     'angular.js': 'angular/angular.js',
-                    //'angular-cookies.js': 'angular-cookies/angular-cookies.js',
-
                     'jquery.js': 'jquery/dist/jquery.js',
                     'ng-cordova.js': 'ngCordova/dist/ng-cordova.js',
-                    'persistence.js': 'persistence/lib/persistence.js',
-                    //'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
                     'moment.js': 'moment/moment.js',
-                    'ionautocomplete.js': 'ion-autocomplete/dist/ion-autocomplete.js',
-                    //'ionic/release/js/ionic.js': 'ionic/release/js/ionic.js',
-                    //'ionic/release/js/ionic-angular.js': 'ionic/release/js/ionic-angular.js',
-                    //'ionic/release/css/ionic.css': 'ionic/release/css/ionic.css',
-                    //'ionic/release/fonts/ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
-                    //'ionic/release/fonts/ionicons.woff': 'ionic/release/fonts/ionicons.woff',
+                    'ionic.min.js': 'ionic/release/js/ionic.min.js',
+                    'ionic-angular.min.js': 'ionic/release/js/ionic-angular.min.js'
                 },
-
-
             },
 
             css: {
-
                 options: {
                     destPrefix: 'www/Content/Vendor/css'
                 },
                 files: {
-                    'ionautocomplete.css': 'ion-autocomplete/dist/ion-autocomplete.min.css',
+                    'ionic.min.css': 'ionic/release/css/ionic.min.css',
+                    'ionautocomplete.css': 'ion-autocomplete/dist/ion-autocomplete.min.css'
                 }
             },
 
@@ -116,20 +133,12 @@ module.exports = function (grunt) {
                     'angular-sanitize.js': 'angular-sanitize/angular-sanitize.min.js',
                     'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.min.js',
                     'angular-animate.js': 'angular-animate/angular-animate.min.js',
-                    //'angular-cookies.js': 'angular-cookies/angular-cookies.min.js',
-
                     'jquery.js': 'jquery/dist/jquery.min.js',
                     'ng-cordova.js': 'ngCordova/dist/ng-cordova.min.js',
-                    'persistence.js': 'persistence/lib/persistence.js',
-                    //'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
                     'moment.js': 'moment/min/moment.min.js',
-                    'ionautocomplete.js': 'ion-autocomplete/dist/ion-autocomplete.min.js',
-                    //'ionic/release/js/ionic.js': 'ionic/release/js/ionic.min.js',
-                    //'ionic/release/js/ionic-angular.js': 'ionic/release/js/ionic-angular.min.js',
-                    //'ionic/release/css/ionic.css': 'ionic/release/css/ionic.min.css',
-                    //'ionic/release/fonts/ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
-                    //'ionic/release/fonts/ionicons.woff': 'ionic/release/fonts/ionicons.woff',
+                    'ionic.min.js': 'ionic/release/js/ionic.min.js',
+                    'ionic-angular.min.js': 'ionic/release/js/ionic-angular.min.js'
                 }
             }
         },
