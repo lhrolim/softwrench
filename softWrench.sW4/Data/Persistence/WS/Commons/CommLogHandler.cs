@@ -45,17 +45,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             foreach (CrudOperationData commLog in commlogs) {
                 // Convert sendto array to a comma separated list
                 var sendtoObject = commLog.GetAttribute(sendto);
-                var sendtoArray = ((IEnumerable) sendtoObject).Cast<object>()
-                                                              .Select(x => x.ToString())
-                                                              .ToArray();
-                commLog.SetAttribute(sendto, string.Join(",", sendtoArray));
-                // Convert cc array to a comma separated list
-                var ccObject = commLog.GetAttribute(cc);
-                if (ccObject != null) {
-                    var ccArray = ((IEnumerable) ccObject).Cast<object>()
+                if (sendtoObject.ToString().Contains(','))
+                {
+                    sendtoObject = ((IEnumerable) sendtoObject).Cast<object>()
                         .Select(x => x.ToString())
                         .ToArray();
-                    commLog.SetAttribute(cc, string.Join(",", ccArray));
+                }
+                commLog.SetAttribute(sendto, string.Join(",", sendtoObject));
+                // Convert cc array to a comma separated list
+                var ccObject = commLog.GetAttribute(cc);
+                if (ccObject != null && ccObject.ToString().Contains(',')) {
+                    ccObject = ((IEnumerable) ccObject).Cast<object>()
+                        .Select(x => x.ToString())
+                        .ToArray();
+                    commLog.SetAttribute(cc, string.Join(",", ccObject));
                 }
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
