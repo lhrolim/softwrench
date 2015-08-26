@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.Util;
+using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.Models.UserSetup;
@@ -88,9 +89,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
     public class UserSetupWebApiController : ApiController {
 
         private readonly UserManager _userManager;
+        private readonly UserSetupEmailService _userSetupEmailService;
 
-        public UserSetupWebApiController(UserManager userManager) {
+        public UserSetupWebApiController(UserManager userManager, UserSetupEmailService userSetupEmailService)
+        {
             _userManager = userManager;
+            _userSetupEmailService = userSetupEmailService;
         }
 
         [System.Web.Http.HttpPost]
@@ -100,6 +104,13 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (exception != null){
                 throw new SecurityException(exception);
             }
+            return null;
+        }
+
+        [System.Web.Http.HttpPost]
+        public IGenericResponseResult SendActivationEmail([FromUri]int userId,[FromUri]string email)
+        {
+            _userManager.SendActivationEmail(userId, email);
             return null;
         }
 

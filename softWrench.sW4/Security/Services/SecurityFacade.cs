@@ -10,6 +10,7 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -29,6 +30,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static GridFilterManager _gridFilterManager;
 
+        private static UserStatisticsService _statisticsService;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
 
         private static readonly IDictionary<string, InMemoryUser> Users = new ConcurrentDictionary<string, InMemoryUser>();
@@ -41,9 +44,10 @@ namespace softWrench.sW4.Security.Services {
             return _instance;
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
+            _statisticsService = statisticsService;
         }
 
         public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
@@ -53,6 +57,8 @@ namespace softWrench.sW4.Security.Services {
             }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             maximoUser.MergeFromDBUser(dbUser);
+            
+
             return UserFound(maximoUser, userTimezoneOffset);
         }
 
@@ -121,6 +127,7 @@ namespace softWrench.sW4.Security.Services {
                     string.Join(",", inMemoryUser.PersonGroups)
                     ));
             }
+            _statisticsService.UpdateStatistcsAsync(dbUser);
             return inMemoryUser;
         }
 

@@ -82,6 +82,7 @@
     <Compile Include="classes\entities\RoleGroup.cs" />
     <Compile Include="classes\entities\RoleWithErrorMessage.cs" />
     <Compile Include="classes\entities\User.cs" />
+    <Compile Include="classes\entities\UserStatistics.cs" />
     <Compile Include="classes\entities\UserActivationLink.cs" />
     <Compile Include="classes\entities\UserCustomConstraint.cs" />
     <Compile Include="classes\entities\UserCustomRole.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="classes\services\setup\UserSavedEvent.cs" />
     <Compile Include="classes\services\setup\UserSetupEmailService.cs" />
     <Compile Include="classes\services\setup\UserLinkManager.cs" />
+    <Compile Include="classes\services\UserStatisticsService.cs" />
+    <Compile Include="Migration\MigrationSwweb1340.cs" />
     <Compile Include="Migration\MigrationSwweb1331.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
