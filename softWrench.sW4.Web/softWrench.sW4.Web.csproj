@@ -621,6 +621,12 @@
     </Content>
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
+    <Content Include="Content\styles\default\styles.css">
+      <DependentUpon>styles.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\styles\default\styles.min.css">
+      <DependentUpon>styles.css</DependentUpon>
+    </Content>
     <Content Include="Content\styles\default\vendor\vendor.css">
       <DependentUpon>vendor.scss</DependentUpon>
     </Content>

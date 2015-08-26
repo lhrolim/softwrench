@@ -49,7 +49,6 @@
                 <div class="row branding"></div>
                 <div class="row divider top"></div>
                 @if (!Model.IsLoginEnabled) {
-
                     <div class="row index-form-row">
                         <div class="serviceItLoginWarning" style="margin-bottom: 2em">
                             @Model.LoginMessage
@@ -134,9 +133,9 @@
                                     }
                                 </div>
                             </div>
-                            <div class="row submit-button">
+                            <div class="row buttons submit-button">
                                 <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
-                                <a class="btn col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">&emsp;Forgot Password?</a>
+                                <a class="btn forgot-password col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
                             </div>
                         </form>
 
@@ -157,9 +156,9 @@
                                     <input type="text" class="form-control" ng-model="userNameOrEmail" />
                                 </div>
                             </div>
-                            <div class="row">
-                                <button class="btn-primary col-xs-4 col-sm-2" type="submit" ng-click="forgotPassword()">&emsp;Submit</button>
-                                <button class="btn-primary col-xs-4 col-sm-2" type="submit" ng-click="showforgotPasswordForm=false">&emsp;Cancel</button>
+                            <div class="row buttons">
+                                <button class="btn col-xs-4 col-sm-2" type="submit" ng-click="forgotPassword()"><span class="glyphicon glyphicon-ok"></span>&emsp;Submit</button>
+                                <button class="btn password-cancel col-xs-4 col-sm-2" type="submit" ng-click="showforgotPasswordForm=false"><span class="glyphicon glyphicon-remove"></span>&emsp;Cancel</button>
                             </div>
                         </form>
 
