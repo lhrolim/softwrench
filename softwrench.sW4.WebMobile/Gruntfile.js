@@ -47,7 +47,6 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
     ];
 
-
     /** app scripts: required for bootstraping the app */
     var appBootstrapScripts = [
         "www/scripts/platformOverrides.js",
@@ -88,6 +87,10 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
+
+        app : {
+            index: "www/layout.html"
+        },
 
         clean: {
             vendor: [
@@ -161,7 +164,7 @@ module.exports = function (grunt) {
                     closeTag: "<!-- end auto template script tags -->"
                 },
                 src: solutionScripts,
-                dest: "www/layout.html"
+                dest: "<%= app.index %>"
             },
             // vendors's js
             buildVendorScripts: {
@@ -173,7 +176,7 @@ module.exports = function (grunt) {
                 src: [
                     "www/Content/Vendor/scripts/**/*.js"
                 ],
-                dest: "www/layout.html"
+                dest: "<%= app.index %>"
             },
             // app's css
             buildLinks: {
@@ -185,7 +188,7 @@ module.exports = function (grunt) {
                     "www/css/**/*.css",
                     "www/Content/Mobile/**/*.css"
                 ],
-                dest: "www/layout.html"
+                dest: "<%= app.index %>"
             },
             // vendors's css
             buildVendorLinks: {
@@ -197,7 +200,7 @@ module.exports = function (grunt) {
                 src: [
                     "www/Content/Vendor/css/**/*.css"
                 ],
-                dest: "www/layout.html"
+                dest: "<%= app.index %>"
             },
             /* END DEV */
 
@@ -293,6 +296,14 @@ module.exports = function (grunt) {
                     "www/Content/public/app.min.css": "<%= concat.appStyles.dest %>" 
                 }
             }
+        },
+        
+        copy: {
+            build: { // applies /overrides files
+                files: [
+                    { expand: true, src: ["overrides/*"], dest: "platforms/", filter: "isFile" }
+                ]
+            }
         }
 
     });
@@ -308,26 +319,46 @@ module.exports = function (grunt) {
 
     // Default task(s).
 
-
+    // dev
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("fulldev", ["clean:vendor", "bowercopy:dev", "bowercopy:css", "tagsdev"]);
     grunt.registerTask("default", ["fulldev"]);
+
+    // release: prepare
 
     grunt.registerTask("tagsrelease", ["tags:buildReleaseScripts", "tags:buildReleaseVendorScripts", "tags:buildReleaseLinks", "tags:buildReleaseVendorLinks"]);
     grunt.registerTask("cleanall", ["clean:vendor", "clean:release"]);
     grunt.registerTask("concatall", ["concat:appScripts", "concat:vendorScripts", "concat:appStyles", "concat:vendorStyles"]);
     grunt.registerTask("minify", ["uglify:release", "cssmin:release"]);
-    grunt.registerTask("preparerelease", ["cleanall", "bowercopy:prod", "bowercopy:css", "concatall", "minify", "tagsrelease"]);
+    
+    grunt.registerTask("preparerelease", [ // prepares the project for release build
+        "cleanall", // cleans destination folders
+        "bowercopy:prod", "bowercopy:css", // copy bower dependencies to appropriate project folders
+        "concatall", // concats the scripts and stylesheets
+        "minify", // uglyfies scripts and minifies stylesheets
+        "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
+    ]);
 
-    grunt.registerTask("vs2015", ["bowercopy:prod", "build"]);
+    // release: build
+
+    var env = grunt.option("env") || "debug";
+
+    grunt.registerTask("vs2015", function () {
+        switch (env) {
+            case "release":
+                return grunt.task.run(["preparerelease", "copy:build", "build"]);
+            case "debug":
+                return grunt.task.run(["fulldev", "build"]);
+            default:
+                throw new Error("Unsupported build environment: " + env);
+        }
+    });
 
     grunt.registerTask("build", function () {
         var cordovaBuild = require("taco-team-build"),
         done = this.async();
 
         //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
-
-        var env = grunt.option("env") || "debug";
         var cliEnv = "--" + env;
 
         var platformsToBuild = process.platform === "darwin" ? ["ios"] : ["android"];
