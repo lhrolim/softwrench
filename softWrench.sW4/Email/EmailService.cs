@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -51,6 +52,7 @@ namespace softWrench.sW4.Email {
         }
 
         public void SendEmail(EmailData emailData) {
+
             var objsmtpClient = ConfiguredSmtpClient();
 
             // Send the email message
@@ -61,17 +63,38 @@ namespace softWrench.sW4.Email {
                 IsBodyHtml = true
             };
 
+            var anyAddressSet = false;
+
             if (!string.IsNullOrEmpty((emailData.SendTo))) {
-                foreach (var emailaddress in emailData.SendTo.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
-                    email.To.Add(emailaddress.Trim());
+                foreach (var emailaddress in emailData.SendTo.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
+                    if (AllowedToAdd(emailaddress)){
+                        email.To.Add(emailaddress.Trim());
+                        anyAddressSet = true;
+                    }
                 }
             }
 
+            if (!anyAddressSet) {
+                throw new InvalidOperationException("Email cannot be sent to {0}. Dev environments limit the domain which can be sent to avoid sending unadvertised test emails".Fmt(emailData.SendTo));
+            }
+
+
             if (!string.IsNullOrEmpty(emailData.Cc)) {
-                foreach (var emailaddress in emailData.Cc.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
-                    email.CC.Add(emailaddress.Trim());
+                foreach (var emailaddress in emailData.Cc.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
+                    if (AllowedToAdd(emailaddress)) {
+                        email.CC.Add(emailaddress.Trim());
+                    }
                 }
             }
+
+            if (!string.IsNullOrEmpty(emailData.BCc)) {
+                foreach (var emailaddress in emailData.BCc.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
+                    if (AllowedToAdd(emailaddress)) {
+                        email.Bcc.Add(emailaddress.Trim());
+                    }
+                }
+            }
+
             email.IsBodyHtml = true;
             if (emailData.Attachments != null) {
                 HandleAttachments(emailData.Attachments, email);
@@ -85,6 +108,20 @@ namespace softWrench.sW4.Email {
             }
         }
 
+        private static Boolean AllowedToAdd(string emailaddress) {
+            if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
+                return true;
+            }
+
+            var domain = emailaddress.Split('@')[1];
+            if (!domain.EqualsAny("controltechnologysolutions.com", "softwrenchsolutions.com", "amlabs.com.br")) {
+                Log.WarnFormat("This email ( {0}) is not valid for this environment".Fmt(emailaddress));
+                return false;
+            }
+
+            return true;
+        }
+
         private void HandleAttachments(List<EmailAttachment> attachments, MailMessage email) {
             foreach (var attachment in attachments) {
                 string encodedAttachment = attachment.AttachmentData.Substring(attachment.AttachmentData.IndexOf(",") + 1);
@@ -94,7 +131,7 @@ namespace softWrench.sW4.Email {
 
         }
 
-      
+
 
 
 
