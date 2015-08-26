@@ -429,7 +429,7 @@
             this.$element.val(this.source[0]);
         }
         var val = this.$element.val();
-        if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
+        if (!this.source || val.trim() === "") {
             this.clearElement();
         }
     }

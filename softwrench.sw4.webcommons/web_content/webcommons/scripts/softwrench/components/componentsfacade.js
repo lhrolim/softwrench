@@ -98,7 +98,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType == 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue);
+                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, scope.associationOptions[displayable.associationKey]);
             } else if (rendererType == 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType == 'combodropdown') {
