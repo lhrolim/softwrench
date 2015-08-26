@@ -29,7 +29,7 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
         },
 
         refreshFromAttribute: function (attribute, value, availableoptions) {
-            var labelValue = '';
+            var labelValue = value;
             if (!nullOrEmpty(value)) {
                 //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
                 for (var i = 0; i < availableoptions.length; i++) {
@@ -39,7 +39,7 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
                 }
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
-            if (combo != undefined) {
+            if (combo != undefined && availableoptions) {
                 combo.refresh(labelValue);
             }
         },
