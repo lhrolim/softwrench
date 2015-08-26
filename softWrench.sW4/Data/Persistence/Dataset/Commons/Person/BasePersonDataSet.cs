@@ -5,6 +5,7 @@ using cts.commons.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
@@ -24,10 +25,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         private readonly ISWDBHibernateDAO _swdbDAO;
         private readonly UserSetupEmailService _userSetupEmailService;
+        private readonly UserLinkManager _userLinkManager;
+        private readonly UserStatisticsService _userStatisticsService;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService) {
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService) {
             _swdbDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
+            _userLinkManager = userLinkManager;
+            _userStatisticsService = userStatisticsService;
         }
 
 
@@ -58,6 +63,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var personId = detail.ResultObject.GetAttribute("personid") as string;
             var swUser = new User();
             var dataMap = detail.ResultObject;
+            UserStatistics statistics = null;
+            UserActivationLink activationLink = null;
             if (personId != null) {
                 swUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
                 if (swUser == null) {
@@ -73,6 +80,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                         swUser.MaximoPersonId = personId;
                     }
                     swUser = _swdbDAO.Save(swUser);
+                } else {
+                    statistics = _userStatisticsService.LocateStatistics(swUser);
+                    activationLink = _userLinkManager.GetLinkByUser(swUser);
                 }
                 var isActive = swUser.IsActive ? "1" : "0";
                 dataMap.SetAttribute("#isactive", isActive);
@@ -82,6 +92,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 swUser.Profiles = new HashedSet<UserProfile>();
                 //for new users lets make them active by default
                 dataMap.SetAttribute("#isactive", "1");
+
             }
 
             dataMap.SetAttribute("#profiles", swUser.Profiles);
@@ -94,6 +105,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Hide the password inputs if using LDAP
             var ldapEnabled = ApplicationConfiguration.LdapServer != null;
             dataMap.SetAttribute("ldapEnabled", ldapEnabled);
+            dataMap.SetAttribute("statistics", statistics);
+            dataMap.SetAttribute("activationlink", activationLink);
+            dataMap.SetAttribute("#userid", swUser.Id);
             return detail;
         }
 
@@ -112,21 +126,27 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 primaryEmail = primaryEmailToken.ToString();
             }
 
-            JToken password;
-            json.TryGetValue("#password", out password);
-            if (password != null && !password.ToString().NullOrEmpty()) {
-                var passwordString = password.ToString();
-                user.Password = AuthUtils.GetSha1HashData(passwordString);
-            }
+            var passwordString = HandlePassword(json, user);
             user.IsActive = isactive;
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
             var targetResult = Engine().Execute(operationWrapper);
             if (isCreation && isactive) {
-                _userSetupEmailService.SendEmail(user, primaryEmail);
+                _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
 
             return targetResult;
+        }
+
+        private static string HandlePassword(JObject json, User user) {
+            JToken password;
+            json.TryGetValue("#password", out password);
+            string passwordString = null;
+            if (password != null && !password.ToString().NullOrEmpty()) {
+                passwordString = password.ToString();
+                user.Password = AuthUtils.GetSha1HashData(passwordString);
+            }
+            return passwordString;
         }
 
 

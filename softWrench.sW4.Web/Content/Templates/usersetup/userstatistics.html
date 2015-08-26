@@ -1,0 +1,16 @@
+<div ng-controller="UserStatisticsController"
+     ng-if="!isLdap()"
+     class="alert faq clearfix ng-scope col-sm-offset-2" ng-class="{'alert-warning' : !hasAlreadyLoggedIn()}">
+    <article>
+        <div class="col-md-12" ng-show="!hasAlreadyLoggedIn()">
+            <label>That user has not yet logged into the system</label>
+            <div ng-if="activationlink!=null">
+                <label>An activation email has already been sent on {{getFormattedDate(activationlink.sentDate)}}</label>
+                <button class="btn btn-primary" ng-click="sendActivationEmail()"><span>Resend Activation Email</span></button>
+            </div>
+            <div ng-if="activationlink==null">
+                <button class="btn btn-primary" ng-click="sendActivationEmail()"><span>Send Activation Email</span></button>
+            </div>
+        </div>
+    </article>
+</div>
