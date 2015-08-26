@@ -93,6 +93,10 @@ module.exports = function (grunt) {
             vendor: [
                 "www/Content/Vendor/scripts/",
                 "www/Content/Vendor/css/"
+            ],
+            release: [
+                "tmp/",
+                "www/Content/public/"
             ]
         },
 
@@ -145,6 +149,11 @@ module.exports = function (grunt) {
 
 
         tags: {
+            /* 
+                DEV: tags doesn't work with an outer object around the actual tasks
+                such as `tags: { dev { buildScripts: { ... } } }` 
+                and then calling `tags:dev` -> nested tasks aren't called
+            */
             // app's js
             buildScripts: {
                 options: {
@@ -166,7 +175,6 @@ module.exports = function (grunt) {
                 ],
                 dest: "www/layout.html"
             },
-
             // app's css
             buildLinks: {
                 options: {
@@ -190,51 +198,126 @@ module.exports = function (grunt) {
                     "www/Content/Vendor/css/**/*.css"
                 ],
                 dest: "www/layout.html"
+            },
+            /* END DEV */
+
+            /* RELEASE */
+            // app's js
+            buildReleaseScripts: {
+                options: {
+                    scriptTemplate: "<script type=\"text/javascript\" src=\"{{ path }}\"></script>",
+                    openTag: "<!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template script tags -->"
+                },
+                src: [
+                    "www/Content/public/app.min.js"
+                ],
+                dest: "www/layout.html"
+            },
+            // vendors's js
+            buildReleaseVendorScripts: {
+                options: {
+                    scriptTemplate: "<script type=\"text/javascript\" src=\"{{ path }}\"></script>",
+                    openTag: "<!-- start auto template VENDOR script tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template VENDOR script tags -->"
+                },
+                src: [
+                    "www/Content/public/vendor.min.js"
+                ],
+                dest: "www/layout.html"
+            },
+            // app's css
+            buildReleaseLinks: {
+                options: {
+                    linkTemplate: "<link rel=\"stylesheet\" type=\"text/css\" href=\"{{ path }}\" />",
+                    openTag: "<!-- start auto template style tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template style tags -->"
+                },
+                src: [
+                    "www/Content/public/app.min.css"
+                ],
+                dest: "www/layout.html"
+            },
+            // vendors's css
+            buildReleaseVendorLinks: {
+                options: {
+                    linkTemplate: "<link rel=\"stylesheet\" type=\"text/css\" href=\"{{ path }}\" />",
+                    openTag: "<!-- start auto template VENDOR style tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template VENDOR style tags -->"
+                },
+                src: [
+                    "www/Content/public/vendor.min.css"
+                ],
+                dest: "www/layout.html"
             }
+            /* END RELEASE */
         },
 
         concat: {
-            mobileScripts: {
+            appScripts: {
                 src: solutionScripts,
-                dest: "www/scripts/dist/mobile_angular.js"
+                dest: "tmp/concat/app.js"
+            },
+            vendorScripts: {
+                src: ["www/Content/Vendor/scripts/**/*.js"],
+                dest: "www/Content/public/vendor.min.js" // already minified by vendors
+            },
+            appStyles: {
+                src: [
+                    "www/css/**/*.css",
+                    "www/Content/Mobile/**/*.css"
+                ],
+                dest: "tmp/concat/app.css"
+            },
+            vendorStyles: {
+                src: [
+                    "www/Content/Vendor/css/**/*.css"
+                ],
+                dest: "www/Content/public/vendor.min.css" // already minified by vendors
+            }
+        },
+
+        uglify: {
+            release: {
+                // uglify the result of concat
+                files: {
+                    "www/Content/public/app.min.js": "<%= concat.appScripts.dest %>"
+                }
+            }
+        },
+        
+        cssmin: {
+            release: {
+                // minify the result of concat
+                files: {
+                    "www/Content/public/app.min.css": "<%= concat.appStyles.dest %>" 
+                }
             }
         }
 
-        //  typescript: {
-        //    base: {
-        //        src: "scripts/**/*.ts",
-        //        dest: "www",
-        //        options: {
-        //            base: "scripts",
-        //            noImplicitAny: false,
-        //            noEmitOnError: true,
-        //            removeComments: false,
-        //            sourceMap: true,
-        //            target: "es5"
-        //        }
-        //    }
-        //}
     });
 
 
-    //grunt.loadNpmTasks("grunt-typescript");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-bowercopy");
     grunt.loadNpmTasks("grunt-script-link-tags");
-
-    grunt.option("jssuffix", "min.js");
-
-    //grunt.option("jssuffix", "js");
-
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-cssmin");
 
     // Default task(s).
 
-    grunt.registerTask("prod", ["clean:vendor", "bowercopy:prod", "uglify"]);
 
-    grunt.registerTask("fulldev", ["clean:vendor", "bowercopy:dev", "bowercopy:css", "tags"]);
+    grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
+    grunt.registerTask("fulldev", ["clean:vendor", "bowercopy:dev", "bowercopy:css", "tagsdev"]);
     grunt.registerTask("default", ["fulldev"]);
+
+    grunt.registerTask("tagsrelease", ["tags:buildReleaseScripts", "tags:buildReleaseVendorScripts", "tags:buildReleaseLinks", "tags:buildReleaseVendorLinks"]);
+    grunt.registerTask("cleanall", ["clean:vendor", "clean:release"]);
+    grunt.registerTask("concatall", ["concat:appScripts", "concat:vendorScripts", "concat:appStyles", "concat:vendorStyles"]);
+    grunt.registerTask("minify", ["uglify:release", "cssmin:release"]);
+    grunt.registerTask("preparerelease", ["cleanall", "bowercopy:prod", "bowercopy:css", "concatall", "minify", "tagsrelease"]);
 
     grunt.registerTask("vs2015", ["bowercopy:prod", "build"]);
 
