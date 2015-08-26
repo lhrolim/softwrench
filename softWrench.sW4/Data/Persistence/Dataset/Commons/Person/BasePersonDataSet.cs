@@ -117,8 +117,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             // Save the updated sw user record
             var username = json.GetValue("personid").ToString();
+            var firstName = json.GetValue("firstname").ToString();
+            var lastName = json.GetValue("lastname").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
-            var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive);
+
+            var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive) {
+                FirstName = firstName,
+                LastName = lastName
+            };
             var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
             var primaryEmailToken = json.GetValue("#primaryemail");
             string primaryEmail = null;

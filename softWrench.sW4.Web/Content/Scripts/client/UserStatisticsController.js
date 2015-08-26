@@ -48,6 +48,8 @@
 
             restService.postPromise("UserSetupWebApi", "SendActivationEmail", params).then(function () {
                 alertService.success("An email has been sent with instructions to reset the password");
+            }).catch(function(data) {
+                alertService.error(data.data.errorMessage);
             });
         }
     }

@@ -416,6 +416,9 @@ input[type="date"], input[type="time"] {
 .select-left-right .buttons {
   margin: 10px 0 40px; }
 
+.alert .cta-button {
+  margin-top: 20px; }
+
 #definepasswordform {
   background: #f5f5f5;
   border: #d0d0d0 solid 1px;

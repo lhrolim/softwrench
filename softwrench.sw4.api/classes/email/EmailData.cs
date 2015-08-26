@@ -21,6 +21,7 @@ namespace softwrench.sw4.api.classes.email {
         public string SendFrom { get; set; }
         public string SendTo { get; set; }
         public string Cc { get; set; }
+        public string BCc { get; set; }
         public string Subject { get; set; }
         public List<EmailAttachment> Attachments { get; set; }
         public string Message { get; set; }
