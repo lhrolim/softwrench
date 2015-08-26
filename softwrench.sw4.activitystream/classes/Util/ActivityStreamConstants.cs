@@ -16,21 +16,6 @@ namespace softwrench.sw4.activitystream.classes.Util {
             new Dictionary<string, string>
             {
                 {
-                    "commlog",
-                    "SELECT 'commlog' AS application, null AS targetschema, " +
-                    "'communication' AS label, 'fa-envelope-o' AS icon, " +
-                    "CONVERT(varchar(10), commlogid) AS id, c.commloguid AS uid, " +
-                    "t.ticketid AS parentid, c.ownerid AS parentuid, " +
-                    "CASE c.ownertable WHEN 'SR' THEN 'servicerequest' " +
-                    "ELSE c.ownertable END AS parentapplication, " +
-                    "c.subject AS summary, c.createby AS changeby, " +
-                    "c.createdate AS changedate, " +
-                    "CONVERT(bigint, c.rowstamp) AS rowstamp FROM commlog c " +
-                    "LEFT JOIN ticket t ON t.ticketuid = c.ownerid " +
-                    "WHERE createdate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
-                    "createdate < '{1}'"
-                },
-                {
                     "sr",
                     "SELECT 'servicerequest' AS application, " +
                     "'editdetail' AS targetschema, 'service request' AS label, " +
@@ -41,18 +26,34 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "END changeby, changedate, " +
                     "CONVERT(bigint, rowstamp) AS rowstamp FROM ticket " +
                     "WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) AND " +
-                    "changedate < '{1}' AND class='SR' " +
-                    "UNION " +
+                    "changedate < '{1}' AND class='SR' "
+                },
+                {
+                    "srCommlogs",
+                    "SELECT 'commlog' AS application, null AS targetschema, " +
+                    "'communication' AS label, 'fa-envelope-o' AS icon, " +
+                    "CONVERT(varchar(10), commlogid) AS id, c.commloguid AS uid, " +
+                    "sr.ticketid AS parentid, c.ownerid AS parentuid, " +
+                    "'servicerequest' AS parentapplication, " +
+                    "c.subject AS summary, c.createby AS changeby, " +
+                    "c.createdate AS changedate, " +
+                    "CONVERT(bigint, c.rowstamp) AS rowstamp FROM commlog c " +
+                    "LEFT JOIN ticket sr ON sr.ticketuid = c.ownerid " +
+                    "WHERE c.ownertable = 'SR' AND createdate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
+                    "createdate < '{1}'"
+                },
+                {
+                    "srWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
                     "'work log' AS label, 'fa fa-wrench' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
                     "CONVERT(varchar(10), l.worklogid) AS uid, " +
-                    "l.recordkey AS parentid, t.ticketuid AS parentuid, " +
+                    "l.recordkey AS parentid, sr.ticketuid AS parentuid, " +
                     "'servicerequest' AS parentapplication, " +
                     "l.description AS summary, l.createby AS changeby, " +
                     "l.modifydate AS changedate, " +
                     "CONVERT(bigint, l.rowstamp) AS rowstamp FROM worklog l " +
-                    "LEFT JOIN ticket t ON t.ticketid = l.recordkey " +
+                    "LEFT JOIN ticket sr ON sr.ticketid = l.recordkey " +
                     "where l.class in ('SR') AND logtype = 'clientnote' " +
                     "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND modifydate < '{1}'"
                 },
@@ -65,8 +66,24 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "null AS parentapplication, description AS summary, " +
                     "changeby, changedate, CONVERT(bigint, rowstamp) AS rowstamp " +
                     "FROM ticket WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) " +
-                    "AND changedate < '{1}' AND class='INCIDENT' " +
-                    "UNION " +
+                    "AND changedate < '{1}' AND class='INCIDENT' "
+                },
+                {
+                    "incidentCommlogs",
+                    "SELECT 'commlog' AS application, null AS targetschema, " +
+                    "'communication' AS label, 'fa-envelope-o' AS icon, " +
+                    "CONVERT(varchar(10), commlogid) AS id, c.commloguid AS uid, " +
+                    "incident.ticketid AS parentid, c.ownerid AS parentuid, " +
+                    "'servicerequest' AS parentapplication, " +
+                    "c.subject AS summary, c.createby AS changeby, " +
+                    "c.createdate AS changedate, " +
+                    "CONVERT(bigint, c.rowstamp) AS rowstamp FROM commlog c " +
+                    "LEFT JOIN ticket incident incident sr.ticketuid = c.ownerid " +
+                    "WHERE c.ownertable = 'INCIDENT' AND createdate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
+                    "createdate < '{1}'"
+                },
+                {
+                    "incidentWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
                     "'work log' AS label, 'fa fa-wrench' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
@@ -89,20 +106,21 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "null AS parentapplication, description AS summary, " +
                     "changeby, changedate, CONVERT(bigint, rowstamp) AS rowstamp " +
                     "FROM workorder WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) " +
-                    "AND changedate < '{1}' " +
-                    "UNION " +
+                    "AND changedate < '{1}' "
+                },
+                {
+                    "workordersWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
                     "'work log' AS label, 'fa fa-wrench' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
                     "CONVERT(varchar(10), l.worklogid) AS uid, " +
-                    "l.recordkey AS parentid, w.workorderid AS parentuid, " +
-                    "CASE l.class WHEN 'WORKORDER' THEN 'WORKORDER' " +
-                    "ELSE l.class END AS parentapplication, " +
+                    "l.recordkey AS parentid, workorder.workorderid AS parentuid, " +
+                    "'WORKORDER' AS parentapplication, " +
                     "l.description AS summary, l.createby AS changeby, " +
                     "l.modifydate AS changedate, " +
                     "CONVERT(bigint, l.rowstamp) AS rowstamp FROM worklog l " +
-                    "LEFT JOIN workorder w ON w.wonum = l.recordkey " +
-                    "WHERE class IN ('WORKORDER') AND logtype = 'clientnote' " +
+                    "LEFT JOIN workorder ON workorder.wonum = l.recordkey " +
+                    "WHERE class = 'WORKORDER' AND logtype = 'clientnote' " +
                     "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
                     "modifydate < '{1}'"
                 }

@@ -30,10 +30,46 @@ namespace softwrench.sw4.activitystream.classes.Util
             var roles = securityGroup.Roles;
             string notificationsQuery = "";
             foreach (var role in roles) {
-                if(role.Name.EqualsIc("sr") || role.Name.EqualsIc("workorders") || role.Name.EqualsIc("incident")) {
-                    notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
-                    notificationsQuery += " UNION ";
+                switch (role.Name.ToLower()) {
+                    case "sr":
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Worklogs")).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Commlogs")).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        break;
+                    case "incident":
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Worklogs")).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Commlogs")).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        break;
+                    case "workorders":
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Worklogs")).Value;
+                        //append where clause
+                        notificationsQuery += " UNION ";
+                        break;
                 }
+                //if(role.Name.EqualsIc("sr") || role.Name.EqualsIc("workorders") || role.Name.EqualsIc("incident")) {
+                //    notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
+
+                //    // Append the where clause
+
+
+                //    notificationsQuery += " UNION ";
+                //}
             }
             if (notificationsQuery.EndsWith(" UNION ")) {
                 notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
