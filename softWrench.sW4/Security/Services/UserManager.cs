@@ -176,5 +176,14 @@ namespace softWrench.sW4.Security.Services {
             _userSetupEmailService.ForgotPasswordEmail(user, emailToSend);
             return null;
         }
+
+        public void SendActivationEmail(int userId, string email) {
+            var user = DAO.FindByPK<User>(typeof(User), userId);
+            if (user == null) {
+                throw new InvalidOperationException("user {0} not found".Fmt(userId));
+            }
+            user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+            _userSetupEmailService.SendActivationEmail(user, email);
+        }
     }
 }

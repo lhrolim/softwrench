@@ -61,8 +61,7 @@ app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
                     element.html(content);
                 }
             });
-        },
-
+        }
     }
 });
 
@@ -121,7 +120,7 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, a
             $scope.adminMyProfile = function () {
                 adminMenuService.myProfile();
             };
-        },
+        }
     }
 });
 
@@ -239,7 +238,8 @@ function getChildMenu(log, leafs, parent, menuService) {
 
                 //if child menu found, display as submenu
                 if (childMenu) {
-                    path += '<li class="dropdown-submenu"><a data-toggle="dropdown" aria-expanded="false">';
+                    path += '<li class="dropdown-submenu">';
+                    path += '<a data-toggle="dropdown" aria-expanded="false">';
                 } else {
                     path += '<li><a bc-menu-item ng-click="';
 

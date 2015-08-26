@@ -28,10 +28,19 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
             }
         },
 
-        refreshFromAttribute: function (attribute,value) {
+        refreshFromAttribute: function (attribute, value, availableoptions) {
+            var labelValue = '';
+            if (!nullOrEmpty(value)) {
+                //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
+                for (var i = 0; i < availableoptions.length; i++) {
+                    if (availableoptions[i].value.trim() === value.trim()) {
+                        labelValue = availableoptions[i].label;
+                    }
+                }
+            }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
             if (combo != undefined) {
-                combo.refresh(value);
+                combo.refresh(labelValue);
             }
         },
 
