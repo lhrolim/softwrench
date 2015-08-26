@@ -21,7 +21,7 @@ app.factory('adminMenuService', function (menuService, redirectService, contextS
             };
             contextService.insertIntoContext("crud_context", crudContext);
             var id = contextService.getUserData().maximoPersonId;
-            this.loadApplication('Person', 'detail', 'input', id);
+            this.loadApplication('Person', 'myprofiledetail', 'input', id);
         },
 
         logout: function () {
