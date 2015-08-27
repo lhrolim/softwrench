@@ -89,7 +89,19 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
 
         app: {
-            index: "www/layout.html"
+            index: "www/layout.html",
+            vendors: [ // complete paths to guarantee load order (instead of **/*.js)
+                "www/Content/Vendor/scripts/angular.js",
+                "www/Content/Vendor/scripts/angular-ui-router.js",
+                "www/Content/Vendor/scripts/angular-sanitize.js",
+                "www/Content/Vendor/scripts/angular-animate.js",
+                "www/Content/Vendor/scripts/ionic.min.js",
+                "www/Content/Vendor/scripts/ionic-angular.min.js",
+                "www/Content/Vendor/scripts/jquery.js",
+                "www/Content/Vendor/scripts/ng-cordova.js",
+                "www/Content/Vendor/scripts/moment.js",
+                "www/Content/Vendor/scripts/persistence.store.websql.js"
+            ]
         },
 
         clean: {
@@ -102,10 +114,10 @@ module.exports = function (grunt) {
         },
 
         bowercopy: {
-            options: {
-                destPrefix: "www/Content/Vendor/scripts"
-            },
             dev: {
+                options: {
+                    destPrefix: "www/Content/Vendor/scripts"
+                },
                 files: {
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
@@ -116,7 +128,7 @@ module.exports = function (grunt) {
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/moment.js",
                     "ionic.min.js": "ionic/release/js/ionic.min.js",
-                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js"
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
                 }
             },
             css: {
@@ -128,7 +140,32 @@ module.exports = function (grunt) {
                     "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css"
                 }
             },
+            fontsdev: {
+                options: {
+                    destPrefix: "www/Content/Vendor/fonts"
+                },
+                files: {
+                    "ionicons.eot": "ionic/release/fonts/ionicons.eot",
+                    "ionicons.svg": "ionic/release/fonts/ionicons.svg",
+                    "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
+                    "ionicons.woff": "ionic/release/fonts/ionicons.woff"
+                }
+            },
+            fontsrelease: {
+                options: {
+                   destPrefix: "www/Content/public/fonts"
+                },
+                files: {
+                    "ionicons.eot": "ionic/release/fonts/ionicons.eot",
+                    "ionicons.svg": "ionic/release/fonts/ionicons.svg",
+                    "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
+                    "ionicons.woff": "ionic/release/fonts/ionicons.woff"
+                }
+            },
             prod: {
+                options: {
+                    destPrefix: "www/Content/Vendor/scripts"
+                },
                 files: {
                     "angular.js": "angular/angular.min.js",
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
@@ -167,7 +204,7 @@ module.exports = function (grunt) {
                     closeTag: "<!-- end auto template VENDOR script tags -->"
                 },
                 src: [
-                    "www/Content/Vendor/scripts/**/*.js"
+                    "<%= app.vendors %>"
                 ],
                 dest: "<%= app.index %>"
             },
@@ -218,7 +255,7 @@ module.exports = function (grunt) {
                     closeTag: "<!-- end auto template VENDOR script tags -->"
                 },
                 src: [
-                    "www/Content/public/vendor.min.js"
+                    "www/Content/public/vendor/vendor.min.js"
                 ],
                 dest: "www/layout.html"
             },
@@ -242,7 +279,7 @@ module.exports = function (grunt) {
                     closeTag: "<!-- end auto template VENDOR style tags -->"
                 },
                 src: [
-                    "www/Content/public/vendor.min.css"
+                    "www/Content/public/vendor/vendor.min.css"
                 ],
                 dest: "www/layout.html"
             }
@@ -251,12 +288,18 @@ module.exports = function (grunt) {
 
         concat: {
             appScripts: {
+                options: {
+                    separator: ";\n"  
+                },
                 src: solutionScripts,
                 dest: "tmp/concat/app.js"
             },
             vendorScripts: {
-                src: ["www/Content/Vendor/scripts/**/*.js"],
-                dest: "www/Content/public/vendor.min.js" // already minified by vendors
+                options: {
+                    separator: ";\n"
+                },
+                src: "<%= app.vendors %>",
+                dest: "www/Content/public/vendor/vendor.min.js" // already minified by vendors
             },
             appStyles: {
                 src: [
@@ -269,11 +312,16 @@ module.exports = function (grunt) {
                 src: [
                     "www/Content/Vendor/css/**/*.css"
                 ],
-                dest: "www/Content/public/vendor.min.css" // already minified by vendors
+                dest: "www/Content/public/vendor/vendor.min.css" // already minified by vendors
             }
         },
 
         uglify: {
+            options: {
+                mangle: {
+                    except: ["jQuery", "angular", "persistence", "constants", "ionic"]
+                }
+            },
             release: {
                 // uglify the result of concat
                 files: {
@@ -317,7 +365,7 @@ module.exports = function (grunt) {
     // dev
 
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("fulldev", ["cleanall", "bowercopy:dev", "bowercopy:css", "tagsdev"]);
+    grunt.registerTask("fulldev", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
     grunt.registerTask("default", ["fulldev"]);
 
     // release: prepare
@@ -328,7 +376,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("preparerelease", "prepares the project for release build", [
         "cleanall", // cleans destination folders
-        "bowercopy:prod", "bowercopy:css", // copy bower dependencies to appropriate project folders
+        "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
         "minify", // uglyfies scripts and minifies stylesheets
         "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
