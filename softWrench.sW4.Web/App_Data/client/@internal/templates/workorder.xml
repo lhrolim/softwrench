@@ -19,6 +19,7 @@
     <template path="@worktype.xml"/>
     <template path="@synstatus.xml"/>
     <template path="@route.xml"/>
+    <template path="@relatedrecords.xml"/>
   </templates>
 
   <entities>
