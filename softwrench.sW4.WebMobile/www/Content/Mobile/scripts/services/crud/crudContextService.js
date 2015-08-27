@@ -3,6 +3,7 @@
     constants = constants || {};
 
     mobileServices.factory('crudContextService', [
+    "$q", "$log", "$rootScope", "swdbDAO",
     "metadataModelService", "offlineSchemaService", "offlineCompositionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
     "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService",

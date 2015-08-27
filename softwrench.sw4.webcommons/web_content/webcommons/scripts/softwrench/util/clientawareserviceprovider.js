@@ -1,21 +1,15 @@
 ﻿//base idea: http://blog.projectnibble.org/2013/12/23/enhance-logging-in-angularjs-the-simple-way/
-(function (modules) {
-    "use strict";
+//(function (modules) {
+//    "use strict";
 
-modules.webcommons.run(['$injector', 'contextService','$log', enhanceInjector]);
+modules.webcommons.run(['$injector', 'contextService', '$log', enhanceInjector]);
 
 
-function enhanceInjector($injector, contextService,$log) {
-
-    this.clientfactory = function(serviceName) {
-        var client = contextService.client();
-        return this.factory(client + "." + serviceName);
-    }
+function enhanceInjector($injector, contextService, $log) {
 
     $injector.getInstance = function(serviceName) {
         return doGet(serviceName);
     };
-
 
     function doGet(serviceName) {
         var client = contextService.client();
@@ -39,4 +33,4 @@ function enhanceInjector($injector, contextService,$log) {
     }
 };
 
-})(modules);
+//})(modules);
