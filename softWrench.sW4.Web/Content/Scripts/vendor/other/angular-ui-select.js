@@ -651,6 +651,27 @@
               return processed;
           }
 
+          // When the select loses focus
+          function _handleDropDownFocusLoss() {
+              // Check if there is a value in the input
+
+              // Check how many matches are available, if more than 2 continue as normal
+
+              // If only one option
+              if (ctrl.items.length === 1) {
+                  // If new, validate using the passed validation function
+                  if (false) {
+                      // Add it to the list of selected options
+                      ctrl.select(ctrl.items[0], true);
+                  }
+              }
+              
+              // If two options (one for new, one for existing) validate the value that is the new option using the validation function
+                // If the new option is valid add it to the list of selected options
+              // else select the only other option
+
+          }
+
           // Bind to keyboard shortcuts
           ctrl.searchInput.on('keydown', function (e) {
 
