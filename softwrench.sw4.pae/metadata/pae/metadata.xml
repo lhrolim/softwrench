@@ -40,6 +40,7 @@
         <attribute name="prophr" type="varchar" required="false" />
         <attribute name="partnum" type="varchar" required="false" />
         <attribute name="proptype" type="varchar" required="false" />
+        <attribute name="proplinenum" type="bigint" required="false" />
         <attribute name="propmanuf" type="varchar" required="false" />
         <attribute name="description" type="varchar" required="true"/>
         <attribute name="invdate" type="datetime" required="true"/>
@@ -125,10 +126,15 @@
           <field attribute="partnum" label="Part Number" requiredexpression="true"/>
           <field attribute="propmanuf" label="Manufacturer"/>
           <field attribute="serialnum" label="Serial Number" requiredexpression="true"/>
+          <field attribute="proplinenum" label="PROPLINENUM" requiredexpression="true"/>
+          <field attribute="installdate" label="Install Date" requiredexpression="true">
+            <renderer type="datetime"/>
+          </field>
           <association target="location" label="Location" labelfield="location_.description">
             <renderer type="lookup" />
           </association>
-          <field attribute="prophr" label="Hand Receipt No." readonly="true"/>
+          <field attribute="proptype" label="PROPTYPE" />
+          <field attribute="prophr" label="Hand Receipt No." />
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
