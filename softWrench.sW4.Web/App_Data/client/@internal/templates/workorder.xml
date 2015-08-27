@@ -176,7 +176,7 @@
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
-          <field attribute="failurecode"  hidden="true"/>
+<!--          <field attribute="failurecode"  hidden="true"/>-->
 
           <section orientation="horizontal">
             <field attribute="wonum" label="WO No:" readonly="true">
@@ -343,20 +343,24 @@
             <composition relationship="locationmeter" label="Location Meter Reading" detailschema="" hidden="true" fetchtype="manual">
               <collectionproperties allowcreation="false" listschema="composition"/>
             </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+            </composition>
           </section>
-          <commandbars>
-            <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" 
-                         properties="modalclass=readingsmodal"
-                         parameters="schema,datamap" service="meterReadingService" method="read"/>
-
-                <command id ="applyroute" icon="fa-steam" label="Apply Route"  nextSchemaId="routes.selection" stereotype="modal"
-                         properties="modalclass=readingsmodal"
-                         parameters="schema,datamap" service="routeService" method="apply"/>
-              </container>
-            </commandgroup>
-          </commandbars>
+<!--          <commandbars>-->
+          <!--commented since no customization is possible currently-->
+<!--            <commandgroup position="actions">-->
+<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+<!--                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" -->
+<!--                         properties="modalclass=readingsmodal"-->
+<!--                         parameters="schema,datamap" service="meterReadingService" method="read"/>-->
+<!---->
+<!--                <command id ="applyroute" icon="fa-steam" label="Apply Route"  nextSchemaId="routes.selection" stereotype="modal"-->
+<!--                         properties="modalclass=readingsmodal"-->
+<!--                         parameters="schema,datamap" service="routeService" method="apply"/>-->
+<!--              </container>-->
+<!--            </commandgroup>-->
+<!--          </commandbars>-->
           
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
