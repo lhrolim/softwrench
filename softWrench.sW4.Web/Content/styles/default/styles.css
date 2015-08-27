@@ -8,15 +8,17 @@
 .container header .admin-area .breadcrumb {
   float: left;
   color: #fff; }
-  .container header .admin-area .breadcrumb .part {
-    float: left;
-    display: none; }
-    .container header .admin-area .breadcrumb .part.main {
-      display: block; }
-      .container header .admin-area .breadcrumb .part.main i.fa-bars {
-        color: #fff; }
-      .container header .admin-area .breadcrumb .part.main i.fa-caret-down {
-        display: none; }
+  .container header .admin-area .breadcrumb .parts {
+    float: left; }
+    .container header .admin-area .breadcrumb .parts .part {
+      float: left;
+      display: none; }
+      .container header .admin-area .breadcrumb .parts .part.main {
+        display: block; }
+        .container header .admin-area .breadcrumb .parts .part.main i.fa-bars {
+          color: #fff; }
+        .container header .admin-area .breadcrumb .parts .part.main i.fa-caret-down {
+          display: none; }
   .container header .admin-area .breadcrumb a {
     color: #fff;
     cursor: pointer; }
@@ -50,18 +52,26 @@
     margin-right: -20px; }
 
 @media all and (min-width: 768px) {
-  .container header .admin-area .breadcrumb .part {
+  .container header .admin-area .breadcrumb .parts .part {
     display: block; }
-    .container header .admin-area .breadcrumb .part.main i.fa-bars {
+    .container header .admin-area .breadcrumb .parts .part.main i.fa-bars {
       color: #c9c7c7; }
-    .container header .admin-area .breadcrumb .part.main i.fa-caret-down {
+    .container header .admin-area .breadcrumb .parts .part.main i.fa-caret-down {
       display: inline-block;
       color: #fff; } }
 
-.mobile header .admin-area .breadcrumb .dropdown-submenu > .dropdown-menu {
-  left: 10px;
-  margin-top: 23px; }
-
+/*.mobile {
+    header {
+        .admin-area {
+            .breadcrumb {
+                .dropdown-submenu > .dropdown-menu {
+                    left: 10px;
+                    margin-top: 23px;
+                }
+            }
+        }
+    }
+}*/
 .btn-brand {
   background-color: #34a7e0;
   border-color: #34a7e0;

@@ -13,20 +13,24 @@
                 float: left;
                 color: #fff;
 
-                .part {
+                .parts {
                     float: left;
-                    display: none;
 
-                    &.main {
-                        display: block;
+                    .part {
+                        float: left;
+                        display: none;
 
-                        i {
-                            &.fa-bars {
-                                color: #fff;
-                            }
+                        &.main {
+                            display: block;
 
-                            &.fa-caret-down {
-                                display: none;
+                            i {
+                                &.fa-bars {
+                                    color: #fff;
+                                }
+
+                                &.fa-caret-down {
+                                    display: none;
+                                }
                             }
                         }
                     }
@@ -98,18 +102,20 @@
         header {
             .admin-area {
                 .breadcrumb {
-                    .part {
-                        display: block;
+                    .parts {
+                        .part {
+                            display: block;
 
-                        &.main {
-                            i {
-                                &.fa-bars {
-                                    color: #c9c7c7;
-                                }
+                            &.main {
+                                i {
+                                    &.fa-bars {
+                                        color: #c9c7c7;
+                                    }
 
-                                &.fa-caret-down {
-                                    display: inline-block;
-                                    color: #fff;
+                                    &.fa-caret-down {
+                                        display: inline-block;
+                                        color: #fff;
+                                    }
                                 }
                             }
                         }
@@ -120,7 +126,7 @@
     }
 }
 
-.mobile {
+/*.mobile {
     header {
         .admin-area {
             .breadcrumb {
@@ -131,4 +137,4 @@
             }
         }
     }
-}
+}*/

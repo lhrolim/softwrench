@@ -1,0 +1,12 @@
+﻿<div ng-repeat="bcItem in breadcrumbItems" class="parts">
+    <div ng-class="{'main' : $first}" class="part">
+        <a ng-if="bcItem.leafs" data-toggle="dropdown" aria-expanded="false">
+            <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>&ensp;<i class="fa fa-caret-down"></i>
+        </a>
+        <!-- add ng click -->
+        <a ng-if="!bcItem.leafs">
+            <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>
+        </a>
+    </div>
+    <span ng-if="!$last" class="part seperator">/</span>
+</div>
