@@ -652,24 +652,35 @@
           }
 
           // When the select loses focus
-          function _handleDropDownFocusLoss() {
-              // Check if there is a value in the input
-
-              // Check how many matches are available, if more than 2 continue as normal
-
+          ctrl.onFocusLoss = function() {
+              // If no value in the input or more than 2 options, return
+              if (ctrl.search.trim() === '' || ctrl.items.length > 2) {
+                  return;
+              }
               // If only one option
               if (ctrl.items.length === 1) {
-                  // If new, validate using the passed validation function
+                  // If new
                   if (false) {
-                      // Add it to the list of selected options
+                      // If valid
+                      if (false) {
+                          // Add it to the list of selected options
+                          ctrl.select(ctrl.items[0], true);
+                      }
+                  } else {
                       ctrl.select(ctrl.items[0], true);
                   }
+                  return;
               }
-              
               // If two options (one for new, one for existing) validate the value that is the new option using the validation function
-                // If the new option is valid add it to the list of selected options
-              // else select the only other option
-
+              if (ctrl.items.length === 2) {
+                  // If the new option is valid add it to the list of selected options, else select the other option of the two
+                  if (false) {
+                      ctrl.select(ctrl.items[0], true);
+                  } else {
+                      ctrl.select(ctrl.items[1], true);
+                  }
+                  return;
+              }
           }
 
           // Bind to keyboard shortcuts
@@ -926,6 +937,7 @@
                               var targetScope = angular.element(e.target).scope(); //To check if target is other ui-select
                               var skipFocusser = targetScope && targetScope.$select && targetScope.$select !== $select; //To check if target is other ui-select
                               if (!skipFocusser) skipFocusser = ~focusableControls.indexOf(e.target.tagName.toLowerCase()); //Check if target is input, button or textarea
+                              $select.onFocusLoss();
                               $select.close(skipFocusser);
                               scope.$digest();
                           }
