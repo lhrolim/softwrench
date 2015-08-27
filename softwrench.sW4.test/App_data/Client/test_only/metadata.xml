@@ -5,6 +5,7 @@
     <template path="@worklogs.xml"/>
     <template path="@incident.xml"/>
     <template path="@inventory.xml"/>
+    <template path="@relatedrecords.xml"/>
   </templates>
   
   <entities>
