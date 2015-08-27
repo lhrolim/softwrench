@@ -1,4 +1,7 @@
-﻿modules.webcommons.factory('schemaService', function (fieldService, expressionService) {
+﻿(function (modules) {
+    "use strict";
+
+    modules.webcommons.factory('schemaService', ["fieldService", "expressionService", function (fieldService, expressionService) {
 
     /// <summary>
     /// builds a cache of the grid qualified displayables to show on small grids
@@ -173,6 +176,6 @@
 
     };
 
-});
+}]);
 
-
+})(modules);

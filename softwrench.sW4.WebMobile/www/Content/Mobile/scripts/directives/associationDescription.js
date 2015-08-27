@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     "use strict";
 
     angular.module("softwrench").directive("associationDescription", ["$parse",function ($parse) {
@@ -7,9 +6,6 @@
             restrict: 'A',
             require: '?ngModel',
             link: function (scope, element, attrs, modelCtrl) {
-
-
-              
 
                 modelCtrl.$formatters.push(function (modelValue) {
                     var field = scope.field;
@@ -19,8 +15,6 @@
                     return modelValue;
                 });
 
-
-
             }
         };
 
@@ -28,6 +22,4 @@
 
     }]);
 
-})();
-
-
+})(angular);

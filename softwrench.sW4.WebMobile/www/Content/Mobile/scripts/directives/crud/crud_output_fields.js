@@ -1,4 +1,7 @@
-﻿softwrench.directive('crudOutputFields', function ($log, fieldService, crudContextService, formatService) {
+﻿(function(softwrench) {
+    "use strict";
+        
+softwrench.directive('crudOutputFields', ["$log", "fieldService", "crudContextService", "formatService", function ($log, fieldService, crudContextService, formatService) {
 
     return {
         restrict: 'E',
@@ -11,10 +14,9 @@
 
         link: function (scope, element, attrs) {
             scope.name = 'crud_output_fields';
-
         },
 
-        controller: function ($scope) {
+        controller: ["$scope", function ($scope) {
 
             $scope.getFormattedValue = function (value, column, datamap) {
                 return formatService.format(value, column, datamap);
@@ -29,9 +31,8 @@
                 return fieldService.isFieldHidden(crudContextService.currentDetailItem(), crudContextService.currentDetailSchema(), fieldMetadata);
             }
 
-
-
-
-        }
+        }]
     }
-});
+}]);
+
+})(softwrench);

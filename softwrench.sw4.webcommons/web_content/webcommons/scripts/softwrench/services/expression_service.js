@@ -1,7 +1,9 @@
-﻿modules.webcommons.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
+﻿(function (modules) {
+    "use strict";
 
+modules.webcommons.factory('expressionService', ["$rootScope", "contextService", "dispatcherService", function ($rootScope, contextService, dispatcherService) {
 
-    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)([\w+\.]+)(?!\w)/g
+    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)([\w+\.]+)(?!\w)/g;
 
     var compiledDatamapRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
     //var datamapRegexString = "(\@\#?)(\w+(\.?\w?)*)";
@@ -378,6 +380,6 @@
 
     };
 
-});
+}]);
 
-
+})(modules);

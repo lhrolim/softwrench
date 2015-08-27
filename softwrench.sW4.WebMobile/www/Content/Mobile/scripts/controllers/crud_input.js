@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     "use strict";
 
     angular.module("softwrench").controller("CrudInputController", ['$log', '$scope', 'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', 'expressionService', function ($log, $scope, crudContextService, fieldService, offlineAssociationService, $ionicPopover, expressionService) {
@@ -45,7 +44,7 @@
         };
 
     }]);
-
-})();
+    
+})(angular);
 
 

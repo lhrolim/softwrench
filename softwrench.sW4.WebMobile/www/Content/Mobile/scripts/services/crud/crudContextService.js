@@ -1,12 +1,16 @@
-﻿var constants = constants || {};
+﻿(function (mobileServices, angular, constants) {
+    "use strict";
+    constants = constants || {};
 
-
-mobileServices.factory('crudContextService', function ($q, $log, $rootScope, swdbDAO,
+    mobileServices.factory('crudContextService', [
+    "$q", "$log", "$rootScope", "swdbDAO",
+    "metadataModelService", "offlineSchemaService", "offlineCompositionService",
+    "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService",
+    function ($q, $log, $rootScope, swdbDAO,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService) {
-    'use strict';
-
 
     // ReSharper disable once InconsistentNaming
     var internalListContext = {
@@ -137,7 +141,7 @@ mobileServices.factory('crudContextService', function ($q, $log, $rootScope, swd
                 return routeService.go("main.cruddetail.maininput");
             }
 
-            if (tab.type != "ApplicationCompositionDefinition") {
+            if (tab.type !== "ApplicationCompositionDefinition") {
                 //tabs do not need to load from the database since the data is already contained on the main datamap
                 crudContext.composition.currentTab = tab;
                 return routeService.go("main.cruddetail.compositionlist");
@@ -404,4 +408,6 @@ mobileServices.factory('crudContextService', function ($q, $log, $rootScope, swd
 
 
 
-});
+}]);
+
+})(mobileServices, angular, constants);

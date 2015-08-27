@@ -1,7 +1,8 @@
-﻿softwrench.controller('CrudCompositionDetailController',
-    function ($log, $scope, $rootScope, crudContextService, fieldService, offlineCompositionService, offlineAssociationService) {
+﻿(function (softwrench) {
+    "use strict";
 
-        'use strict';
+    softwrench.controller('CrudCompositionDetailController', ["$log", "$scope", "$rootScope", "crudContextService", "fieldService", "offlineCompositionService", "offlineAssociationService",
+    function ($log, $scope, $rootScope, crudContextService, fieldService, offlineCompositionService, offlineAssociationService) {
 
         function init() {
             $scope.schema = crudContextService.getCompositionDetailSchema();
@@ -10,7 +11,7 @@
             $scope.allowsUpdate = offlineCompositionService.allowsUpdate(crudContextService.getCompositionDetailItem(), crudContextService.getCompositionListSchema());
         }
 
-        $scope.fieldLabel = function (item,field) {
+        $scope.fieldLabel = function (item, field) {
             return field.label + ":" + item[field.attribute];
         }
 
@@ -44,5 +45,8 @@
 
         init();
 
-    }
-);
+    }]);
+})(softwrench);
+
+
+

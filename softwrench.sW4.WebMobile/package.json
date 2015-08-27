@@ -13,18 +13,20 @@
   },
   "devDependencies": {
     "cordova": "^5.1.1",
+    "grunt": "latest",
     "grunt-bowercopy": "^1.2.0",
     "grunt-clean": "^0.4.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.1",
+    "grunt-contrib-cssmin": "^0.13.0",
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-script-link-tags": "^1.0.2",
+    "grunt-typescript": "latest",
     "jasmine-core": "^2.2.0",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.5",
-    "grunt": "latest",
-    "grunt-typescript": "latest",
     "taco-team-build": "http://aka.ms/tacoteambuild-rel"
   },
   "scripts": {

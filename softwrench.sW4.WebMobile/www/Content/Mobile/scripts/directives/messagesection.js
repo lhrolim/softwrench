@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     "use strict";
 
     angular.module("softwrench").directive("messagesection", ["$log", "$rootScope", function ($log, $rootScope) {
@@ -22,8 +21,6 @@
 
 
             link: function (scope, element, attrs) {
-
-
 
                 scope.$on("sw_validationerrors", function (event, validationArray) {
                     $log.get("messagesection#sw_validationerrors").debug('sw_validationerrors#enter');
@@ -48,5 +45,5 @@
 
     }]);
 
-})();
+})(angular);
 

@@ -1,20 +1,10 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-
     mobileServices.factory("datamapSanitizationService", service);
 
     function service() {
-
-
-
-        var api = {
-            sanitize: sanitize,
-            enforceNumericType: enforceNumericType
-        };
-
-        return api;
-
+        
         // holds the sanitizer functions to be applied to a datamap
         var sanitizationPipeline = [
             // escapes single quotes
@@ -23,6 +13,13 @@
             }
             //, future sanitization processes
         ];
+
+        var api = {
+            sanitize: sanitize,
+            enforceNumericType: enforceNumericType
+        };
+
+        return api;
 
         function enforceNumericType(datamap, displayables) {
             if (!datamap || !displayables) {

@@ -1,5 +1,4 @@
-﻿
-(function (angular) {
+﻿(function (angular) {
     "use strict";
 
     //TODO: crudContextHolderService should be somehow on a dependant module...
@@ -16,7 +15,7 @@
         //#region Utils
 
         var timeBetweenCharacters = isMobile() ? 300 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
-        if ("true" == sessionStorage.debugscanner) {
+        if ("true" === sessionStorage.debugscanner) {
             timeBetweenCharacters = 30000;
         }
 

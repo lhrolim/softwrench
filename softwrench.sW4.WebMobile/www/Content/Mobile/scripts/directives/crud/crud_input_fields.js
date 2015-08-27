@@ -1,4 +1,7 @@
-﻿softwrench.directive('sectionElementInput', function ($compile) {
+﻿(function (softwrench) {
+    "use strict";
+
+softwrench.directive('sectionElementInput', ["$compile", function ($compile) {
     return {
         restrict: "E",
         replace: true,
@@ -39,11 +42,11 @@
             }
         }
     }
-});
+}]);
 
 
 
-softwrench.directive('crudInputFields', function ($log, fieldService, crudContextService, expressionService) {
+softwrench.directive('crudInputFields', ["$log", "fieldService", "crudContextService", "expressionService", function ($log, fieldService, crudContextService, expressionService) {
 
     return {
         restrict: 'E',
@@ -60,18 +63,12 @@ softwrench.directive('crudInputFields', function ($log, fieldService, crudContex
 
         },
 
-        controller: function ($scope) {
-
+        controller: ["$scope", function ($scope) {
             $scope.getDisplayables = function () {
                 return $scope.displayables;
             }
-
-
-       
-
-         
-
-
-        }
+        }]
     }
-});
+}]);
+
+})(softwrench); 

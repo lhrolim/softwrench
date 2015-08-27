@@ -1,12 +1,8 @@
-﻿
-(function () {
+﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$rootScope', '$timeout', '$ionicPopover', 'eventService'
-        , function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover, eventService) {
-
-            'use strict';
-
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$rootScope', '$timeout', '$ionicPopover', 'eventService', 
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover, eventService) {
 
             function init() {
                 $scope.moreItemsAvailable = true;
@@ -155,5 +151,3 @@
         }]);
 
 })(softwrench);
-
-
