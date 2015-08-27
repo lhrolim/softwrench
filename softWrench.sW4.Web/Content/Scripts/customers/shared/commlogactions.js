@@ -37,9 +37,9 @@
             }
         }
         fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
-        clonedItem['sendto'] = origSendFrom.split(',');
+        clonedItem['sendto'] = origSendFrom.indexOf(",") > -1 ? origSendFrom.split(',') : [origSendFrom];
         clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
-        clonedItem['cc'] = clonedItem['cc'] ? clonedItem['cc'].split(',') : "";
+        clonedItem['cc'] = clonedItem['cc'] ? clonedItem['cc'] : "";
         clonedItem['commloguid'] = null;
         clonedItem['subject'] = "Re: " + origSubject;
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
@@ -62,13 +62,8 @@
         }
         fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
         clonedItem['commloguid'] = null;
-        clonedItem['sendto'] = origSendFrom.split(',');
-        //if (origCc != "") {
-        //    clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
-        //} else {
-        //    clonedItem['sendto'] = clonedItem['sendfrom'];
-        //}
-
+        clonedItem['sendto'] = origSendFrom.indexOf(",") > -1 ? origSendFrom.split(',') : [origSendFrom];
+        clonedItem['cc'] = origCc.indexOf(",") > -1 ? origCc.split(",") : [origCc];
         clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
         clonedItem['subject'] = "Re: " + origSubject;
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);

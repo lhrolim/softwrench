@@ -49,6 +49,12 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime? HandleDateConversion(string stValue) {
+            int rowstamp;
+            if (int.TryParse(stValue, out rowstamp)) {
+                //TODO: change the whole rowstamp chain here, that´s being coverted from maximo side
+                return null;
+            }
+
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
             var user = SecurityFacade.CurrentUser(false);
             try {

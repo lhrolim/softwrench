@@ -60,7 +60,7 @@ namespace softWrench.sW4.Metadata.Security {
             SiteId = dbUser.Person.SiteId?? dbUser.SiteId;
             _firstName = dbUser.Person.FirstName ?? dbUser.FirstName;
             _lastName = dbUser.Person.LastName ?? dbUser.LastName;
-            _email = dbUser.Person.Email;
+            _email = dbUser.Person.Email ?? dbUser.Email;
             _orgId = dbUser.Person.OrgId ?? dbUser.OrgId;
             _storeloc = dbUser.Person.Storeloc;
             _department = dbUser.Person.Department;

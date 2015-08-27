@@ -142,7 +142,7 @@
           <!--<field attribute="sendto" label="To:" requiredexpression="true">
             <renderer type="email"/>
           </field>-->
-          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc" >
             <renderer type="multiselectautocompleteclient"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
@@ -151,7 +151,7 @@
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
 
-          <field attribute="sendfrom" label="From:" requiredexpression="true" >
+          <field attribute="sendfrom" label="From:" requiredexpression="true" default="@user.email" readonly="true" >
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>

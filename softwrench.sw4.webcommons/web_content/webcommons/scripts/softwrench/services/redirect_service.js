@@ -34,6 +34,11 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             return restService.getActionUrl(controller, action, parameters);
         },
 
+        redirectToHome:function() {
+            delete sessionStorage.swGlobalRedirectURL;
+            window.location.reload();
+        },
+
         redirectToAction: function (title, controller, action, parameters, target) {
             if (parameters === undefined || parameters == null) {
                 parameters = {};

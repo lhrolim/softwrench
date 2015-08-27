@@ -53,6 +53,10 @@ namespace softwrench.sw4.user.classes.entities {
         public string LastName { get; set; }
 
         [Property]
+        public string Email { get; set; }
+
+
+        [Property]
         public string SiteId { get; set; }
 
         [Property]

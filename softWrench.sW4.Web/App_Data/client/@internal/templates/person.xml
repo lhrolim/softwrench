@@ -94,6 +94,16 @@
 
         </schema>
 
+        <schema id="myprofiledetail" parentschema="detail">
+          <!-- Fix for SWWEB-1245-->
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
+            </commandgroup>
+
+          </commandbars>
+        </schema>
+        
         <schema id="newPersonDetail" stereotype="detailnew" title="New User" mode="input">
           <properties>
             <property key="detail.hidetitle" value="true"/>

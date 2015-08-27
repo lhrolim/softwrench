@@ -2,16 +2,21 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['alertService', personService]);
+    angular.module('maximo_applications').factory('personService', ['alertService','redirectService', personService]);
 
-    function personService(alertService) {
+    function personService(alertService, redirectService) {
 
         var service = {
             afterChangeUsername: afterChangeUsername,
-            validatePerson: validatePerson
+            validatePerson: validatePerson,
+            cancelEdition:cancelEdition
         };
 
         return service;
+
+        function cancelEdition() {
+            redirectService.redirectToHome();
+        };
 
         function afterChangeUsername(datamap) {
             if (!nullOrEmpty(datamap.fields["#personid"])) {
