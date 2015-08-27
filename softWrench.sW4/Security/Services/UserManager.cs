@@ -161,6 +161,7 @@ namespace softWrench.sW4.Security.Services {
                 if (email == null) {
                     return "User {0} has no primary email registered. Please contact your administrator".Fmt(userNameOrEmail);
                 }
+                emailToSend = email;
             } else {
                 emailToSend = userNameOrEmail;
                 var personid = _maxDAO.FindSingleByNativeQuery<string>("select personid from email where emailaddress = ? and isPrimary = 1", userNameOrEmail);
