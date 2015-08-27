@@ -88,7 +88,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
 
-        app : {
+        app: {
             index: "www/layout.html"
         },
 
@@ -97,18 +97,14 @@ module.exports = function (grunt) {
                 "www/Content/Vendor/scripts/",
                 "www/Content/Vendor/css/"
             ],
-            release: [
-                "tmp/",
-                "www/Content/public/"
-            ]
+            temp: ["tmp/"],
+            pub: ["www/Content/public/"]
         },
 
         bowercopy: {
-
             options: {
                 destPrefix: "www/Content/Vendor/scripts"
             },
-
             dev: {
                 files: {
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
@@ -123,7 +119,6 @@ module.exports = function (grunt) {
                     "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js"
                 }
             },
-
             css: {
                 options: {
                     destPrefix: "www/Content/Vendor/css"
@@ -133,7 +128,6 @@ module.exports = function (grunt) {
                     "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css"
                 }
             },
-
             prod: {
                 files: {
                     "angular.js": "angular/angular.min.js",
@@ -149,7 +143,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
 
         tags: {
             /* 
@@ -288,16 +281,16 @@ module.exports = function (grunt) {
                 }
             }
         },
-        
+
         cssmin: {
             release: {
                 // minify the result of concat
                 files: {
-                    "www/Content/public/app.min.css": "<%= concat.appStyles.dest %>" 
+                    "www/Content/public/app.min.css": "<%= concat.appStyles.dest %>"
                 }
             }
         },
-        
+
         copy: {
             build: { // applies /overrides files
                 files: [
@@ -319,19 +312,21 @@ module.exports = function (grunt) {
 
     // Default task(s).
 
+    grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
+
     // dev
+
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("fulldev", ["clean:vendor", "bowercopy:dev", "bowercopy:css", "tagsdev"]);
+    grunt.registerTask("fulldev", ["cleanall", "bowercopy:dev", "bowercopy:css", "tagsdev"]);
     grunt.registerTask("default", ["fulldev"]);
 
     // release: prepare
 
     grunt.registerTask("tagsrelease", ["tags:buildReleaseScripts", "tags:buildReleaseVendorScripts", "tags:buildReleaseLinks", "tags:buildReleaseVendorLinks"]);
-    grunt.registerTask("cleanall", ["clean:vendor", "clean:release"]);
     grunt.registerTask("concatall", ["concat:appScripts", "concat:vendorScripts", "concat:appStyles", "concat:vendorStyles"]);
     grunt.registerTask("minify", ["uglify:release", "cssmin:release"]);
-    
-    grunt.registerTask("preparerelease", [ // prepares the project for release build
+
+    grunt.registerTask("preparerelease", "prepares the project for release build", [
         "cleanall", // cleans destination folders
         "bowercopy:prod", "bowercopy:css", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
@@ -341,20 +336,20 @@ module.exports = function (grunt) {
 
     // release: build
 
-    var env = grunt.option("env") || "debug";
 
-    grunt.registerTask("vs2015", function () {
+    grunt.registerTask("vs2015", "builds the app for devices", function (env) {
+        env = env || "debug";
         switch (env) {
             case "release":
-                return grunt.task.run(["preparerelease", "copy:build", "build"]);
+                return grunt.task.run(["preparerelease", "copy:build", "build:" + env]);
             case "debug":
-                return grunt.task.run(["fulldev", "build"]);
+                return grunt.task.run(["fulldev", "build:" + env]);
             default:
                 throw new Error("Unsupported build environment: " + env);
         }
     });
 
-    grunt.registerTask("build", function () {
+    grunt.registerTask("build", function (env) {
         var cordovaBuild = require("taco-team-build"),
         done = this.async();
 
