@@ -814,6 +814,7 @@
                 if (!targetMoment) {
                     unset = true;
                     input.val('');
+                    input.trigger('input');
                     element.data('date', '');
                     notifyEvent({
                         type: 'dp.change',
@@ -840,6 +841,7 @@
                     //console.log(actualFormat);
 
                     input.val(date.format(actualFormat));
+                    input.trigger('input');
                     element.data('date', date.format(actualFormat));
                     unset = false;
                     update();
@@ -851,6 +853,7 @@
                 } else {
                     if (!options.keepInvalid) {
                         input.val(unset ? '' : date.format(actualFormat));
+                        input.trigger('input');
                     }
                     notifyEvent({
                         type: 'dp.error',
