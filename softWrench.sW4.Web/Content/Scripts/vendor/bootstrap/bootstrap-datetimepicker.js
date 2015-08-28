@@ -304,7 +304,7 @@
                     dateView = $('<div>').addClass('datepicker').append(getDatePickerTemplate()),
                     timeView = $('<div>').addClass('timepicker').append(getTimePickerTemplate()),
                     content = $('<ul>').addClass('list-unstyled'),
-                    toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
+                    toolbar = $('<li>').addClass('pull-right picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
 
                 if (options.inline) {
                     template.removeClass('dropdown-menu');
@@ -324,8 +324,8 @@
                     }
                     template.append(
                         $('<div>').addClass('row')
-                            .append(dateView.addClass('col-md-6'))
-                            .append(timeView.addClass('col-md-6'))
+                            .append(dateView.addClass('col-sm-6'))
+                            .append(timeView.addClass('col-sm-6'))
                     );
                     if (options.toolbarPlacement === 'bottom') {
                         template.append(toolbar);
