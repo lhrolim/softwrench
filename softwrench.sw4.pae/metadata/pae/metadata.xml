@@ -126,14 +126,14 @@
           <field attribute="partnum" label="Part Number" requiredexpression="true"/>
           <field attribute="propmanuf" label="Manufacturer"/>
           <field attribute="serialnum" label="Serial Number" requiredexpression="true"/>
-          <field attribute="proplinenum" label="PROPLINENUM" requiredexpression="true"/>
+          <field attribute="proplinenum" label="Property Line Number" requiredexpression="true"/>
           <field attribute="installdate" label="Install Date" requiredexpression="true">
             <renderer type="datetime"/>
           </field>
           <association target="location" label="Location" labelfield="location_.description">
             <renderer type="lookup" />
           </association>
-          <field attribute="proptype" label="PROPTYPE" />
+          <field attribute="proptype" label="Property Type" />
           <field attribute="prophr" label="Hand Receipt No." />
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
