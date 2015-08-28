@@ -1,7 +1,7 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    function securityService($rootScope, localStorageService, routeService, $http, $q, swdbDAO) {
+    function securityService($rootScope, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
 
         //#region Utils
 
@@ -86,6 +86,7 @@
             $rootScope.$broadcast(config.eventnamespace + "logout", current);
 
             return swdbDAO.resetDataBase(["Settings"]).then(function () {
+                $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 return current;
             });
         };
@@ -120,7 +121,7 @@
 
     //#region Service registration
 
-    mobileServices.factory("securityService", ["$rootScope", "localStorageService", "routeService", "$http", "$q", "swdbDAO", securityService]);
+    mobileServices.factory("securityService", ["$rootScope", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", securityService]);
 
     //#endregion
 

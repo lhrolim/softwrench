@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService) {
+    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO) {
         
         //#region Utils
 
@@ -85,6 +85,12 @@
         //#endregion
 
         //#region Public methods
+
+        function hasDataToSync() {
+            return swdbDAO.countByQuery("DataEntry", "isDirty=1 and pending=0").then(function(count) {
+                return count > 0;
+            });
+        }
 
         /**
          * Executes a full download (data, metadata and association data) and creates a SyncOperation
@@ -182,6 +188,7 @@
         asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
         var api = {
+            hasDataToSync: hasDataToSync,
             fullDownload: fullDownload,
             fullSync: fullSync
         }
@@ -191,7 +198,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", synchronizationFacade]);
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular);
