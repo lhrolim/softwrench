@@ -22,7 +22,6 @@
             $ionicSideMenuDelegate.toggleLeft();
         }
 
-
         $scope.title = function () {
             return crudContextService.currentTitle();
         }
@@ -40,10 +39,19 @@
         $scope.logout = function () {
             $ionicPopup.confirm({
                 title: "Logout",
-                template: "Are you sure you want to logout?"
+                template: "Any unsynched data will be lost.<br>" +
+                    "A synchronization will be required after the next login.<br>" +
+                    "Are you sure you want to logout?"
             }).then(function (res) {
                 if (res) {
-                    securityService.logout();
+                    return securityService.logout().then(function (user) {
+                        return res;
+                    });
+                } else {
+                    return res;
+                }
+            }).then(function (res) {
+                if (res) {
                     routeService.go("login");
                 }
             }).finally(function () {

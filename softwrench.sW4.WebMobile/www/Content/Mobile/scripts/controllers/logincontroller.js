@@ -1,8 +1,8 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "$ionicPopup", "routeService", "loginService", "$timeout", "$stateParams", "$ionicLoading",
-        function($scope, $ionicPopup, routeService, loginService, $timeout, $stateParams, $ionicLoading) {
+    app.controller('LoginController', ["$scope", "$ionicPopup", "routeService", "securityService", "$timeout", "$stateParams", "$ionicLoading",
+        function($scope, $ionicPopup, routeService, securityService, $timeout, $stateParams, $ionicLoading) {
 
             $scope.data = {};
 
@@ -27,7 +27,7 @@
                 $ionicLoading.show({
                     template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>"
                 });
-                loginService.login($scope.data.username, $scope.data.password)
+                securityService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');
                         //enforcing SWOFF-93

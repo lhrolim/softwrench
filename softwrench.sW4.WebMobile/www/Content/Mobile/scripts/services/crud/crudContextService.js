@@ -17,12 +17,6 @@
         lastPageLoaded: 1
     }
 
-    $rootScope.$on("sw4:security:logout", function (event, current) {
-        if (contextService.isDev()) {
-            swdbDAO.resetDataBase(["Settings"]);
-        }
-    });
-
     return {
 
         //#region delegateMethods
