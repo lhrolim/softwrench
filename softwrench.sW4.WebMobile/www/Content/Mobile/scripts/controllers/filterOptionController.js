@@ -1,6 +1,8 @@
-﻿softwrench.controller('FilterOptionController', function ($log, $scope, $ionicScrollDelegate, crudContextService,crudFilterContextService) {
+﻿(function (softwrench) {
+    "use strict";
 
-    'use strict';
+    softwrench.controller('FilterOptionController', ["$log", "$scope", "$ionicScrollDelegate", "crudContextService", "crudFilterContextService",
+        function ($log, $scope, $ionicScrollDelegate, crudContextService, crudFilterContextService) {
 
     $scope.showpending = crudFilterContextService.showPending();
     $scope.showdirty = crudFilterContextService.showDirty();
@@ -24,6 +26,9 @@
         crudContextService.refreshGrid();
     }
 
+}]);
 
-}
-);
+})(softwrench);
+
+
+

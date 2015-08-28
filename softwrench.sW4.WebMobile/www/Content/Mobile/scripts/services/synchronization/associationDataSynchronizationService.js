@@ -1,4 +1,7 @@
-﻿mobileServices.factory('associationDataSynchronizationService', function ($http, $log, $q, swdbDAO, restService, rowstampService, offlineEntities) {
+﻿(function (mobileServices) {
+    "use strict";
+
+    mobileServices.factory('associationDataSynchronizationService', ["$http", "$log", "$q", "swdbDAO", "restService", "rowstampService", "offlineEntities", function ($http, $log, $q, swdbDAO, restService, rowstampService, offlineEntities) {
     return {
 
         /// <summary>
@@ -48,4 +51,6 @@
 
         }
     }
-});
+}]);
+
+})(mobileServices);

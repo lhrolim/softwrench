@@ -1,4 +1,7 @@
-﻿mobileServices.factory('menuModelService', function ($q, swdbDAO, $log, offlineEntities) {
+﻿(function (mobileServices) {
+    "use strict";
+
+    mobileServices.factory('menuModelService', ["$q", "swdbDAO", "$log", "offlineEntities", function ($q, swdbDAO, $log, offlineEntities) {
 
     var menuModel = {
         dbData: {},
@@ -47,4 +50,6 @@
         },
 
     }
-});
+}]);
+
+})(mobileServices);

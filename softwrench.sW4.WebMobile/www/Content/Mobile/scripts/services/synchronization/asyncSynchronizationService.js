@@ -1,4 +1,4 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, angular) {
     "use strict";
 
     /**
@@ -159,4 +159,4 @@
 
     mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", "$interval", AsyncSynchronizationService]);
 
-})(mobileServices);
+})(mobileServices, angular);

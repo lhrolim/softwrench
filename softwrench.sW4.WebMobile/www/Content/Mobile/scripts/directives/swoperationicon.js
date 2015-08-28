@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function(angular) {
     "use strict";
 
     angular.module("softwrench")
@@ -12,4 +12,4 @@
             }
         }]);
 
-})();
+})(angular);

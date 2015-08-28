@@ -1,5 +1,7 @@
-﻿mobileServices.factory('offlineCompositionService', function ($log, swdbDAO, offlineEntities) {
-    'use strict';
+﻿(function (mobileServices) {
+    "use strict";
+
+    mobileServices.factory('offlineCompositionService', ["$log", "swdbDAO", "offlineEntities", function ($log, swdbDAO, offlineEntities) {
 
     var entities = offlineEntities;
 
@@ -93,4 +95,6 @@
 
     }
 
-});
+}]);
+
+})(mobileServices);

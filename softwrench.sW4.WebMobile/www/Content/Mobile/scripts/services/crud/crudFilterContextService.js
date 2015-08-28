@@ -1,6 +1,7 @@
-﻿mobileServices.factory('crudFilterContextService', function ($q, $log,contextService) {
+﻿(function (mobileServices) {
+    "use strict";
 
-    'use strict';
+    mobileServices.factory('crudFilterContextService', ["$q", "$log", "contextService", function ($q, $log, contextService) {
 
     var filterContext = {
         showPending: false,
@@ -9,8 +10,6 @@
     }
 
     return {
-
-      
 
         showPending: function (value) {
             if (value != undefined) {
@@ -37,9 +36,8 @@
             return filterContext.showDirty;
         },
 
-     
-
-
     }
 
-});
+}]);
+
+})(mobileServices);

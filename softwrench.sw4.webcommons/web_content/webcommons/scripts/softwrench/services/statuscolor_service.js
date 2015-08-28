@@ -1,4 +1,7 @@
-﻿modules.webcommons.factory('statuscolorService', function ($rootScope, contextService) {
+﻿(function(modules) {
+    "use strict";
+
+modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
     var fallbackFunction = function (status, applicationname) {
 
@@ -58,12 +61,8 @@
             contextService.insertIntoContext("statuscolor", jsonString);
         },
 
-
-
-
-
     };
 
-});
+}]);
 
-
+})(modules);

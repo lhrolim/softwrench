@@ -1,8 +1,7 @@
-﻿mobileServices.factory('offlineAssociationService', function (swdbDAO,fieldService) {
+﻿(function () {
+    "use strict";
 
-    
-    
-
+mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", function (swdbDAO, fieldService) {
 
     return {
 
@@ -50,4 +49,5 @@
         }
 
     }
-});
+}]);
+})();

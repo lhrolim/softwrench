@@ -1,5 +1,4 @@
-﻿
-(function (angular) {
+﻿(function (angular) {
     "use strict";
 
     function formatService($filter, i18NService, dispatcherService) {
@@ -213,6 +212,3 @@
     //#endregion
 
 })(angular);
-
-
-

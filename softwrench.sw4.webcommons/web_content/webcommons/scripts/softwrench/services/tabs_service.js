@@ -1,4 +1,7 @@
-﻿modules.webcommons.factory('tabsService', function (fieldService, i18NService) {
+﻿(function (modules) {
+    "use strict";
+        
+    modules.webcommons.factory('tabsService', ["fieldService", "i18NService", function (fieldService, i18NService) {
 
     var nonInlineCompositionsDict = function (schema) {
         if (schema.nonInlineCompositionsDict != undefined) {
@@ -190,6 +193,6 @@
         }
 
     };
-});
+}]);
 
-
+})(modules);

@@ -1,3 +1,6 @@
+(function (angular) {
+    "use strict";
+
 angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     '$ionicTemplateLoader', '$ionicBackdrop', '$ionicScrollDelegate', '$rootScope', '$document', '$q', '$parse', '$ionicPlatform',
     function ($ionicTemplateLoader, $ionicBackdrop, $ionicScrollDelegate, $rootScope, $document, $q, $parse, $ionicPlatform) {
@@ -370,3 +373,5 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
         replace: true
     }
 });
+
+})(angular);

@@ -1,27 +1,28 @@
-﻿softwrench.controller('CompositionMenuController', function ($log, $scope,$ionicScrollDelegate, crudContextService) {
+﻿(function(softwrench) {
+    "use strict";
 
-    $scope.compositionMenus = function () {
-        return crudContextService.currentCompositionsToShow();
-    }
+    softwrench.controller('CompositionMenuController', ["$log", "$scope", "$ionicScrollDelegate", "crudContextService", function ($log, $scope, $ionicScrollDelegate, crudContextService) {
 
-    $scope.getTabIcon = function (tab) {
-        return tab.schema.schemas.list.properties['icon.composition.tab'];
-    };
+        $scope.compositionMenus = function () {
+            return crudContextService.currentCompositionsToShow();
+        }
 
-    $scope.loadTab = function (tab) {
-        crudContextService.loadTab(tab);
-        $ionicScrollDelegate.scrollTop();
-        $scope.$emit("sw_compositionselected");
-        
-    }
+        $scope.getTabIcon = function (tab) {
+            return tab.schema.schemas.list.properties['icon.composition.tab'];
+        };
 
-    $scope.notOnMainTab = function() {
-        return !crudContextService.isOnMainTab();
-    }
+        $scope.loadTab = function (tab) {
+            crudContextService.loadTab(tab);
+            $ionicScrollDelegate.scrollTop();
+            $scope.$emit("sw_compositionselected");
 
+        }
 
+        $scope.notOnMainTab = function () {
+            return !crudContextService.isOnMainTab();
+        }
 
+    }]);
 
+})(softwrench);
 
-}
-);

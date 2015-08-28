@@ -1,20 +1,20 @@
-﻿softwrench.controller('CrudCompositionListController',
-    function ($log, $scope, $rootScope, crudContextService, fieldService,formatService) {
+﻿(function (softwrench) {
+    "use strict";
 
-        'use strict';
-
+    softwrench.controller('CrudCompositionListController', ["$log", "$scope", "$rootScope", "crudContextService", "fieldService", "formatService",
+    function ($log, $scope, $rootScope, crudContextService, fieldService, formatService) {
 
         $scope.empty = function () {
             var compositionList = crudContextService.compositionList();
-            return !compositionList || compositionList.length == 0;
+            return !compositionList || compositionList.length === 0;
         }
 
         $scope.list = function () {
             return crudContextService.compositionList();
         }
 
-        $scope.fieldLabel = function (item,field) {
-            return field.label + ":" + formatService.format(item[field.attribute],field,item);
+        $scope.fieldLabel = function (item, field) {
+            return field.label + ":" + formatService.format(item[field.attribute], field, item);
         }
 
         $scope.visibleFields = function () {
@@ -22,17 +22,17 @@
             return fieldService.getVisibleDisplayables({}, schema);
         }
 
-        $scope.loadCompositionDetail = function(item) {
+        $scope.loadCompositionDetail = function (item) {
             crudContextService.loadCompositionDetail(item);
         }
 
-        $scope.isDirty=function(item) {
+        $scope.isDirty = function (item) {
             return item[constants.localIdKey];
         }
 
-       
+    }]);
+
+})(softwrench);
 
 
 
-    }
-);
