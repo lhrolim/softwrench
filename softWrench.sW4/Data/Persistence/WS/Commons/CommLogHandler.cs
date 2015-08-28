@@ -44,21 +44,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var newCommLogs = commlogs.Where(r => r.GetAttribute(commloguid) == null);
             foreach (CrudOperationData commLog in commlogs) {
                 // Convert sendto array to a comma separated list
-                var sendtoObject = commLog.GetAttribute(sendto);
-                if (sendtoObject.ToString().Contains(','))
-                {
-                    sendtoObject = ((IEnumerable) sendtoObject).Cast<object>()
-                        .Select(x => x.ToString())
-                        .ToArray();
+                var sendToObject = commLog.GetAttribute(sendto);
+                var sendToArray = ((IEnumerable)sendToObject).Cast<object>()
+                    .Select(x => x.ToString())
+                    .ToArray();
+                if (sendToArray.Length > 1) {
+                    commLog.SetAttribute(sendto, string.Join(",", sendToArray));
                 }
-                commLog.SetAttribute(sendto, string.Join(",", sendtoObject));
+                else {
+                    commLog.SetAttribute(sendto, sendToArray[0]); 
+                }
                 // Convert cc array to a comma separated list
                 var ccObject = commLog.GetAttribute(cc);
-                if (ccObject != null && ccObject.ToString().Contains(',')) {
-                    ccObject = ((IEnumerable) ccObject).Cast<object>()
+                if (ccObject != null) {
+                    var ccArray = ((IEnumerable)ccObject).Cast<object>()
                         .Select(x => x.ToString())
                         .ToArray();
-                    commLog.SetAttribute(cc, string.Join(",", ccObject));
+                    if (ccArray.Length > 1) {
+                        commLog.SetAttribute(cc, string.Join(",", ccArray));
+                    }
+                    else {
+                        commLog.SetAttribute(cc, ccArray[0]);
+                    }
+                    
                 }
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
