@@ -48,25 +48,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var sendToArray = ((IEnumerable)sendToObject).Cast<object>()
                     .Select(x => x.ToString())
                     .ToArray();
-                if (sendToArray.Length > 1) {
-                    commLog.SetAttribute(sendto, string.Join(",", sendToArray));
-                }
-                else {
-                    commLog.SetAttribute(sendto, sendToArray[0]); 
-                }
+                commLog.SetAttribute(sendto, sendToArray.Length > 1 ? string.Join(",", sendToArray) : sendToArray[0]);
                 // Convert cc array to a comma separated list
                 var ccObject = commLog.GetAttribute(cc);
                 if (ccObject != null) {
                     var ccArray = ((IEnumerable)ccObject).Cast<object>()
                         .Select(x => x.ToString())
                         .ToArray();
-                    if (ccArray.Length > 1) {
-                        commLog.SetAttribute(cc, string.Join(",", ccArray));
-                    }
-                    else {
-                        commLog.SetAttribute(cc, ccArray[0]);
-                    }
-                    
+                    commLog.SetAttribute(cc, ccArray.Length > 1 ? string.Join(",", ccArray) : ccArray[0]);
                 }
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
