@@ -391,7 +391,7 @@ module.exports = function (grunt) {
             case "release":
                 return grunt.task.run(["preparerelease", "copy:build", "build:" + env]);
             case "debug":
-                return grunt.task.run(["fulldev", "build:" + env]);
+                return grunt.task.run(["fulldev", "copy:build", "build:" + env]);
             default:
                 throw new Error("Unsupported build environment: " + env);
         }
