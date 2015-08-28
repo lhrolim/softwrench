@@ -55,9 +55,11 @@
           <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
           <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
-          <relationshipAttribute from="status" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true" />
+        <relationship to="alndomain" qualifier="assetstatus">
+          <relationshipAttribute from="assettype" to="value" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
+          <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
+          <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -112,7 +114,7 @@
 
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
           
-          <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
+          <association label="Status:" target="status" hideDescription="true" labelfield="assetstatus.description">
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
           
