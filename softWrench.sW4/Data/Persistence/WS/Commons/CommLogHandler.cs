@@ -44,21 +44,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var newCommLogs = commlogs.Where(r => r.GetAttribute(commloguid) == null);
             foreach (CrudOperationData commLog in commlogs) {
                 // Convert sendto array to a comma separated list
-                var sendtoObject = commLog.GetAttribute(sendto);
-                if (sendtoObject.ToString().Contains(','))
-                {
-                    sendtoObject = ((IEnumerable) sendtoObject).Cast<object>()
-                        .Select(x => x.ToString())
-                        .ToArray();
-                }
-                commLog.SetAttribute(sendto, string.Join(",", sendtoObject));
+                var sendToObject = commLog.GetAttribute(sendto);
+                var sendToArray = ((IEnumerable)sendToObject).Cast<object>()
+                    .Select(x => x.ToString())
+                    .ToArray();
+                commLog.SetAttribute(sendto, sendToArray.Length > 1 ? string.Join(",", sendToArray) : sendToArray[0]);
                 // Convert cc array to a comma separated list
                 var ccObject = commLog.GetAttribute(cc);
-                if (ccObject != null && ccObject.ToString().Contains(',')) {
-                    ccObject = ((IEnumerable) ccObject).Cast<object>()
+                if (ccObject != null) {
+                    var ccArray = ((IEnumerable)ccObject).Cast<object>()
                         .Select(x => x.ToString())
                         .ToArray();
-                    commLog.SetAttribute(cc, string.Join(",", ccObject));
+                    commLog.SetAttribute(cc, ccArray.Length > 1 ? string.Join(",", ccArray) : ccArray[0]);
                 }
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
