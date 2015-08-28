@@ -21,6 +21,8 @@
 
 /* jshint sub:true */
 
+// OVERRIDEN: marking as overriden by the app
+
 var shell   = require('shelljs'),
     spawn   = require('./spawn'),
     Q       = require('q'),
