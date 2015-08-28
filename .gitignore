@@ -36,6 +36,10 @@ softWrench.sW4.WebMobile/node_modules/
 softWrench.sW4.WebMobile/plugins/
 softWrench.sW4.WebMobile/tmp/
 softWrench.sW4.WebMobile/www/Content/public/
+!softWrench.sW4.WebMobile/www/Content/Vendor/
+softWrench.sW4.WebMobile/www/Content/Vendor/*
+!softWrench.sW4.WebMobile/www/Content/Vendor/downloadedvendor
+!softWrench.sW4.WebMobile/www/Content/Vendor/file.placeholder
 
 Build/jenkinstest-results.xml
 Build/test-results.testxml

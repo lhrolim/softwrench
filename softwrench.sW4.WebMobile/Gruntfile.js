@@ -342,7 +342,7 @@ module.exports = function (grunt) {
         copy: {
             build: { // applies /overrides files
                 files: [
-                    { expand: true, src: ["overrides/*"], dest: "platforms/", filter: "isFile" }
+                    { expand: true, src: ["**/*"], dest: "platforms/", cwd: "overrides/" }
                 ]
             }
         }
