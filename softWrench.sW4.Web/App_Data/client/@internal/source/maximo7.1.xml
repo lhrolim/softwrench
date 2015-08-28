@@ -1437,7 +1437,7 @@
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to="relatedrecord" collection="true">
-          <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
+          <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true"/>
         </relationship>
       </relationships>
