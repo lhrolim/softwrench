@@ -295,6 +295,9 @@
   <applications>
     <!--Request complete custom layout for service request.  Please review before making customization-->
     <application entity="SR" name="servicerequest" title="Service Request">
+      <properties>
+        <property key="crud.disableautofocus" value="true"/>
+      </properties>
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
@@ -477,7 +480,11 @@
       </schemas>
     </application>
     
-    <application name="workorder" title="Work Order" entity="workorder">      
+    <application name="workorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="crud.disableautofocus" value="true"/>
+      </properties>
+      
       <schemas>
         <schema id="editdetail" platform="web" redeclaring="false">
           <customization position="matusetrans"/>
