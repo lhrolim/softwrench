@@ -144,7 +144,11 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
-            return _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
+            var user = _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
+            if (user != null) {
+                user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+            }
+            return user;
         }
 
         public string ForgotPassword(string userNameOrEmail) {
