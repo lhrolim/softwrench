@@ -67,7 +67,7 @@ namespace softWrench.sW4.Email {
 
             if (!string.IsNullOrEmpty((emailData.SendTo))) {
                 foreach (var emailaddress in emailData.SendTo.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
-                    if (AllowedToAdd(emailaddress)){
+                    if (AllowedToAdd(emailaddress)) {
                         email.To.Add(emailaddress.Trim());
                         anyAddressSet = true;
                     }
@@ -111,6 +111,10 @@ namespace softWrench.sW4.Email {
         private static Boolean AllowedToAdd(string emailaddress) {
             if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
                 return true;
+            }
+            if (!new EmailAddressAttribute().IsValid(emailaddress)) {
+                Log.WarnFormat("The email ( {0}) is not valid".Fmt(emailaddress));
+                return false;
             }
 
             var domain = emailaddress.Split('@')[1];
