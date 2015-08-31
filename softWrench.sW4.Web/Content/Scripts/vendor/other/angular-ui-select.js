@@ -274,7 +274,7 @@
             ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelectMatch directive link function
             ctrl.clickTriggeredSelect = false;
             ctrl.$filter = $filter;
-            ctrl.newItemValidation = function() { return true };
+            ctrl.itemValidation = function() { return true };
 
             ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
             if (ctrl.searchInput.length !== 1) {
@@ -521,6 +521,10 @@
                             }
                         }
 
+                        if (!ctrl.itemValidation(item)) {
+                            return;
+                        }
+
                         $scope.$broadcast('uis:select', item);
 
                         var locals = {};
@@ -657,7 +661,7 @@
                         return;
                 }
                 // If only one option
-                if (ctrl.items.length === 1 && ctrl.newItemValidation(ctrl.items[0])) {
+                if (ctrl.items.length === 1 && ctrl.itemValidation(ctrl.items[0])) {
                     // Add it to the list of selected options
                     ctrl.select(ctrl.items[0], true);
                     return;
@@ -665,7 +669,7 @@
                 // If two options (one for new, one for existing) validate the value that is the new option using the validation function
                 if (ctrl.items.length === 2) {
                     // If the new option is valid add it to the list of selected options, else select the other option of the two
-                    if (ctrl.newItemValidation(ctrl.items[0])) {
+                    if (ctrl.itemValidation(ctrl.items[0])) {
                         ctrl.select(ctrl.items[0], true);
                     } else {
                         ctrl.select(ctrl.items[1], true);
@@ -824,8 +828,8 @@
                           }
                       }();
 
-                      if (attrs.newItemValidation !== undefined) {
-                          $select.newItemValidation = dispatcherService.loadServiceByString(attrs.newItemValidation);
+                      if (attrs.itemValidation !== undefined) {
+                          $select.itemValidation = dispatcherService.loadServiceByString(attrs.itemValidation);
                       }
 
                       $select.onSelectCallback = $parse(attrs.onSelect);
