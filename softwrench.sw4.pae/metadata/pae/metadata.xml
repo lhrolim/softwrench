@@ -119,7 +119,7 @@
           </association>
           
           
-          <association target="proptype" label="Asset Type" labelfield="assettype_.description">
+          <association target="proptype" label="Property Type" labelfield="assettype_.description">
             <renderer type="lookup" />
           </association>
           <field attribute="description" label="Description" readonly="true"  />
@@ -128,15 +128,10 @@
           <field attribute="partnum" label="Part Number" requiredexpression="true"/>
           <field attribute="propmanuf" label="Manufacturer"/>
           <field attribute="serialnum" label="Serial Number" requiredexpression="true"/>
-          <field attribute="proplinenum" label="Property Line Number" requiredexpression="true"/>
-          <field attribute="installdate" label="Install Date" requiredexpression="true">
-            <renderer type="datetime"/>
-          </field>
           <association target="location" label="Location" labelfield="location_.description">
             <renderer type="lookup" />
           </association>
-          <field attribute="proptype" label="Property Type" />
-          <field attribute="prophr" label="Hand Receipt No." />
+          <field attribute="prophr" label="Hand Receipt No." hidden="true"/>
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
