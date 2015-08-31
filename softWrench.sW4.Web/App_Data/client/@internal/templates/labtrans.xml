@@ -51,7 +51,9 @@
           <field attribute="refwo" hidden="true" />
           <field attribute="enterby" hidden="true" />
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
-          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" >
+          <field attribute="labor_.worksite" hidden="true" />
+          <field attribute="labor_.orgid" hidden="true" />
+          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
