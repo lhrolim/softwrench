@@ -53,3 +53,21 @@
     background: darken(#ef473a, 10%) !important;
 }
 
+/* keeps side-menu open in tablets */
+@media (min-width: 767px) {
+    /* sidemenu is open: pushes content and sets it's width:  */
+    .menu-content {
+        transform: translate3d(270px, 0px, 0px) !important;
+        -moz-transform: translate3d(270px, 0px, 0px) !important;
+        -ms-transform: translate3d(270px, 0px, 0px) !important;
+        -webkit-transform: translate3d(270px, 0px, 0px) !important;
+        width: calc(100% - 270px) !important;
+    }
+    /* hides 'open menu' button */
+    .bar-header button.ion-navicon {
+        display: none;
+    }
+    .bar-header .button-menu {
+        display: none;
+    }
+}
