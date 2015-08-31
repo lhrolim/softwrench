@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations {
@@ -9,18 +10,22 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, MULTISELECTAUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, MODAL, CUSTOM and COMBODROPDOWN";
 
         private AssociationRendererType EnumRendererType { get; set; }
+        private ComponentStereotype Stereotype { get; set; }
 
         public AssociationFieldRenderer() {
             EnumRendererType = AssociationRendererType.AUTOCOMPLETECLIENT;
             RendererType = EnumRendererType.ToString();
+            Stereotype = ComponentStereotype.None;
         }
 
-        public AssociationFieldRenderer(string renderertype, string parameters, string targetName)
+        public AssociationFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
             : base(renderertype, parameters, targetName) {
             AssociationRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;
-
+            ComponentStereotype stereotypeResult = ComponentStereotype.None;
+            Enum.TryParse(stereotype, true, out stereotypeResult);
+            Stereotype = stereotypeResult;
         }
 
         protected override void ValidateRendererType(String rendererType) {

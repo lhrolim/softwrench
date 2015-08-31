@@ -24,7 +24,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public bool HideDescription { get; set; }
         public string OrderByField { get; set; }
         public string DefaultExpression { get; set; }
-        public ComponentStereotype Stereotype { get; set; }
 
         private string _applicationTo;
         private ISet<string> _extraProjectionFields = new HashSet<string>();
@@ -79,7 +78,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression, ComponentStereotype stereotype,
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression,
             string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null, ApplicationSection detailSection = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
@@ -99,7 +98,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _valueField = valueField;
             DefaultExpression = defaultExpression;
             DetailSection = detailSection;
-            Stereotype = stereotype;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -204,6 +202,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }
         }
 
+        public ComponentStereotype RendererStereotype { get; set; }
+
         public IDictionary<string, object> RendererParameters {
             get {
                 var metadataParameters = _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary();
@@ -254,7 +254,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, OrderByField, DefaultExpression, Stereotype, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField,DetailSection) {
+                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField,DetailSection) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

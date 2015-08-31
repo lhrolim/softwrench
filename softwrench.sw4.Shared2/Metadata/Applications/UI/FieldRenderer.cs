@@ -2,6 +2,7 @@
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
@@ -23,6 +24,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
             RendererType = renderertype;
             ValidateRendererType(renderertype);
             _parameters = ParametersAsDictionary();
+            //Stereotype = ComponentStereotype.None;
         }
 
         protected virtual void ValidateRendererType(String rendererType) {
@@ -39,10 +41,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
         public string RendererType { get; set; }
 
+        //public ComponentStereotype Stereotype { get; set; }
+
         public IDictionary<string, object> Parameters {
             get { return _parameters; }
         }
-
 
 
         public enum BaseRendererType {

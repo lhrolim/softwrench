@@ -103,7 +103,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationAssociationOrderByField = "orderbyfield";
         public const string ApplicationAssociationForceDistinctOptions = "forcedistinctoptions";
         public const string ApplicationAssociationValueField = "valuefield";
-        public const string ApplicationAssociationStereotype = "stereotype";
 
         public const string DataProviderElement = "dataprovider";
         public const string DataProviderWhereClause = "whereClause";
@@ -241,6 +240,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RendererAttributeType = "type";
         public const string RendererAttributeDataProvider = "dataprovider";
         public const string RendererAttributeParams = "params";
+        public const string RendererAttributeStereotype = "stereotype";
 
         public const string FilterElement = "filter";
         public const string FilterOperationType = "operation";

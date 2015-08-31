@@ -18,12 +18,12 @@ namespace softWrench.sW4.Metadata.Applications.Association
 
         public static ApplicationAssociationDefinition GetInstance([NotNull] string @from, ApplicationAssociationDefinition.LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
                                                                    string showExpression, string toolTip, string requiredExpression, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription, 
-            string orderbyfield,string defaultExpression, ComponentStereotype stereotype, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true, string valueField = null,ApplicationSection detailSection=null)
+            string orderbyfield,string defaultExpression, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true, string valueField = null,ApplicationSection detailSection=null)
         {
 
             var association = new ApplicationAssociationDefinition(from, labelData, target, qualifier, applicationAssociationSchema, showExpression,
                                                                    toolTip, requiredExpression, defaultValue, hideDescription, orderbyfield, 
-                                                                   defaultExpression, stereotype, isEnabled, events, forceDistinctOptions, 
+                                                                   defaultExpression, isEnabled, events, forceDistinctOptions, 
                                                                    valueField, detailSection);
 
             var labelField = labelData.LabelField;
@@ -130,7 +130,7 @@ namespace softWrench.sW4.Metadata.Applications.Association
 
         private static void MergeWithStereotypeComponent(ApplicationAssociationDefinition association)
         {
-            var stereotypeProvider = ComponentStereotypeFactory.LookupStereotype(association.Stereotype);
+            var stereotypeProvider = ComponentStereotypeFactory.LookupStereotype(association.RendererStereotype);
             var stereotypeProperties = stereotypeProvider.StereotypeProperties();
 
             foreach (var stereotypeProperty in stereotypeProperties)
