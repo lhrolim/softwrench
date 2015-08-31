@@ -109,7 +109,7 @@ namespace softWrench.sW4.Email {
         }
 
         private static Boolean AllowedToAdd(string emailaddress) {
-            if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
+            if (!ApplicationConfiguration.IsLocal()) {
                 return true;
             }
             if (!new EmailAddressAttribute().IsValid(emailaddress)) {
