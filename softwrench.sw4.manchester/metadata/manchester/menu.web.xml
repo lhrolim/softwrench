@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="breadcrumb" indexitem="SR">
-  <container title="Service Requests" tooltip="Click to access your request tasks">
+  <container title="Service Requests" tooltip="Click to access your request tasks" icon="fa fa-ticket">
     <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
     <application id="NSR" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
   </container>
