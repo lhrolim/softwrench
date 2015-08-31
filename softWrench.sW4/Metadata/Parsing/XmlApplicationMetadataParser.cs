@@ -320,10 +320,15 @@ namespace softWrench.sW4.Metadata.Parsing {
             var hideDescription = association.Attribute(XmlMetadataSchema.ApplicationAssociationHideDescription).ValueOrDefault(false);
             var orderbyfield = association.Attribute(XmlMetadataSchema.ApplicationAssociationOrderByField).ValueOrDefault((String)null);
             var valueField = association.Attribute(XmlMetadataSchema.ApplicationAssociationValueField).ValueOrDefault((string)null);
+            var stereotypeAttr = association.Attribute(XmlMetadataSchema.ApplicationAssociationStereotype).ValueOrDefault((string)null);
             ApplicationSection section = ParseAssociationDetails(association, applicationName,entityMetadata);
+            var stereotype = ComponentStereotype.None;
+            if (stereotypeAttr != null) {
+                Enum.TryParse(stereotypeAttr, true, out stereotype);
+            }
 
             return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, 
-                requiredExpression, ParseEvents(association), defaultValue, hideDescription, orderbyfield, defaultExpression, extraProjectionFields, enableExpression, forceDistinctOptions, valueField,section);
+                requiredExpression, ParseEvents(association), defaultValue, hideDescription, orderbyfield, defaultExpression, stereotype, extraProjectionFields, enableExpression, forceDistinctOptions, valueField,section);
         }
 
         private static ApplicationSection ParseAssociationDetails(XElement association,String applicationName, EntityMetadata entityMetadata)

@@ -15,7 +15,7 @@ namespace softWrench.sW4.Metadata.Stereotypes.Component {
 
         protected override IDictionary<string, string> DefaultValues() {
             var values = new Dictionary<string, string>();
-            values[NewItemValidation] = "emailService.validateEmail";
+            values[NewItemValidation] = "emailService.validateEmailAddress";
             return values;
         }
     }

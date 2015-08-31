@@ -103,6 +103,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationAssociationOrderByField = "orderbyfield";
         public const string ApplicationAssociationForceDistinctOptions = "forcedistinctoptions";
         public const string ApplicationAssociationValueField = "valuefield";
+        public const string ApplicationAssociationStereotype = "stereotype";
 
         public const string DataProviderElement = "dataprovider";
         public const string DataProviderWhereClause = "whereClause";

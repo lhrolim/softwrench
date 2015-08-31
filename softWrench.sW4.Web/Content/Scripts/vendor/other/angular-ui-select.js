@@ -274,7 +274,7 @@
             ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelectMatch directive link function
             ctrl.clickTriggeredSelect = false;
             ctrl.$filter = $filter;
-            ctrl.newItemValidation = true;
+            ctrl.newItemValidation = function() { return true };
 
             ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
             if (ctrl.searchInput.length !== 1) {
@@ -782,8 +782,8 @@
         }]);
 
     uis.directive('uiSelect',
-      ['$document', 'uiSelectConfig', 'uiSelectMinErr', 'uisOffset', '$compile', '$parse', '$timeout',
-      function ($document, uiSelectConfig, uiSelectMinErr, uisOffset, $compile, $parse, $timeout) {
+      ['$document', 'uiSelectConfig', 'uiSelectMinErr', 'uisOffset', '$compile', '$parse', '$timeout', 'dispatcherService',
+      function ($document, uiSelectConfig, uiSelectMinErr, uisOffset, $compile, $parse, $timeout, dispatcherService) {
 
           return {
               restrict: 'EA',
@@ -823,6 +823,10 @@
                               return uiSelectConfig.closeOnSelect;
                           }
                       }();
+
+                      if (attrs.newItemValidation !== undefined) {
+                          $select.newItemValidation = dispatcherService.loadServiceByString(attrs.newItemValidation);
+                      }
 
                       $select.onSelectCallback = $parse(attrs.onSelect);
                       $select.onRemoveCallback = $parse(attrs.onRemove);
@@ -1075,7 +1079,7 @@
           };
       }]);
 
-    uis.directive('uiSelectMatch', ['uiSelectConfig', 'dispatcherService', function (uiSelectConfig) {
+    uis.directive('uiSelectMatch', ['uiSelectConfig', function (uiSelectConfig) {
         return {
             restrict: 'EA',
             require: '^uiSelect',
@@ -1102,10 +1106,6 @@
 
                 if ($select.multiple) {
                     $select.sizeSearchInput();
-                }
-
-                if (attrs.newItemValidation !== undefined) {
-                    $select.newItemValidation = dispatcherService.loadServiceByString(attrs.newItemValidation);
                 }
             }
         };

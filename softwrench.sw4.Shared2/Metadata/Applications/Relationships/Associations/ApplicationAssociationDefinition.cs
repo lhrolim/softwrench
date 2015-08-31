@@ -24,6 +24,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public bool HideDescription { get; set; }
         public string OrderByField { get; set; }
         public string DefaultExpression { get; set; }
+        public ComponentStereotype Stereotype { get; set; }
 
         private string _applicationTo;
         private ISet<string> _extraProjectionFields = new HashSet<string>();
@@ -78,7 +79,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression,
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression, ComponentStereotype stereotype,
             string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null, ApplicationSection detailSection = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
@@ -98,6 +99,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _valueField = valueField;
             DefaultExpression = defaultExpression;
             DetailSection = detailSection;
+            Stereotype = stereotype;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -198,8 +200,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             return string.Format("From: {0}, To: {1} , Target: {2}", From, EntityAssociation, Target);
         }
 
-
-
         public override string RendererType {
             get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }
         }
@@ -254,7 +254,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField,DetailSection) {
+                DefaultValue, HideDescription, OrderByField, DefaultExpression, Stereotype, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField,DetailSection) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

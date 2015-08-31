@@ -1,39 +1,22 @@
 ﻿using cts.commons.portable.Util;
 using softWrench.sW4.Security.Init;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using System.Collections.Generic;
+using softWrench.sW4.Metadata.Stereotypes.Component;
 
 namespace softWrench.sW4.Metadata.Stereotypes {
 
-    class StereotypeFactory {
+    class ComponentStereotypeFactory {
 
-        private static IStereotype LookupStereotype(string stereotype, SchemaMode? mode) {
-            if (stereotype.ToLower() == "list") {
-                return ListSchemaStereotype.GetInstance();
-            }
-            if (stereotype.ToLower() == "detail") {
-                if (SchemaMode.output.Equals(mode)) {
-                    return OutputDetailStereotype.GetInstance();
-                }
-                return DetailSchemaStereotype.GetInstance();
-            }
-
-            if (SchemaStereotype.DetailNew.GetName().EqualsIc(stereotype)) {
-                return DetailNewSchemaStereotype.GetInstance();
-            }
-
-            if (stereotype.ToLower() == "compositionlist") {
-                return CompositionListStereotype.GetInstance();
-            }
-            if (stereotype.ToLower() == "compositiondetail") {
-                return CompositionDetailStereotype.GetInstance();
+        private static IStereotype LookupStereotype(string stereotype) {
+            if (stereotype.ToLower() == "email") {
+                return EmailComponentStereotype.GetInstance();
             }
             return new BlankStereotype();
         }
 
-        internal static IStereotype LookupStereotype(SchemaStereotype type, SchemaMode? mode) {
-            return LookupStereotype(type.ToString(), mode);
+        internal static IStereotype LookupStereotype(ComponentStereotype type) {
+            return LookupStereotype(type.ToString());
         }
 
         class BlankStereotype : IStereotype {

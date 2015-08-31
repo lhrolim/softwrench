@@ -9,6 +9,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
+using softWrench.sW4.Metadata.Stereotypes;
 
 namespace softWrench.sW4.Metadata.Applications.Association
 {
@@ -17,12 +18,13 @@ namespace softWrench.sW4.Metadata.Applications.Association
 
         public static ApplicationAssociationDefinition GetInstance([NotNull] string @from, ApplicationAssociationDefinition.LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
                                                                    string showExpression, string toolTip, string requiredExpression, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription, 
-            string orderbyfield,string defaultExpression, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true, string valueField = null,ApplicationSection detailSection=null)
+            string orderbyfield,string defaultExpression, ComponentStereotype stereotype, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true, string valueField = null,ApplicationSection detailSection=null)
         {
 
             var association = new ApplicationAssociationDefinition(from, labelData, target, qualifier, applicationAssociationSchema, showExpression,
-                                                                   toolTip, requiredExpression, defaultValue, hideDescription, orderbyfield,defaultExpression, isEnabled, events,
-                                                                   forceDistinctOptions, valueField,detailSection);
+                                                                   toolTip, requiredExpression, defaultValue, hideDescription, orderbyfield, 
+                                                                   defaultExpression, stereotype, isEnabled, events, forceDistinctOptions, 
+                                                                   valueField, detailSection);
 
             var labelField = labelData.LabelField;
             association.LabelFields = ParseLabelFields(labelField);
@@ -62,6 +64,7 @@ namespace softWrench.sW4.Metadata.Applications.Association
                 result.Add("schema", schema);
                 return result;
             }));
+            MergeWithStereotypeComponent(association);
             return association;
         }
 
@@ -123,6 +126,21 @@ namespace softWrench.sW4.Metadata.Applications.Association
                 }
             }
             return schema;
+        }
+
+        private static void MergeWithStereotypeComponent(ApplicationAssociationDefinition association)
+        {
+            var stereotypeProvider = ComponentStereotypeFactory.LookupStereotype(association.Stereotype);
+            var stereotypeProperties = stereotypeProvider.StereotypeProperties();
+
+            foreach (var stereotypeProperty in stereotypeProperties)
+            {
+                string key = stereotypeProperty.Key;
+                if (!association.RendererParameters.ContainsKey(key))
+                {
+                    association.RendererParameters.Add(key, stereotypeProperty.Value);
+                }
+            }
         }
     }
 }

@@ -142,11 +142,11 @@
           <!--<field attribute="sendto" label="To:" requiredexpression="true">
             <renderer type="email"/>
           </field>-->
-          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc" >
-            <renderer type="multiselectautocompleteclient" stereotype="email"/>
+          <association label="To:" target="sendto" labelfield="email_.emailaddress" stereotype="email" orderbyfield="LOWER(emailaddress) desc" >
+            <renderer type="multiselectautocompleteclient"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
-          <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+          <association label="Cc:" target="cc" labelfield="email_.emailaddress" stereotype="email" orderbyfield="LOWER(emailaddress) desc">
             <renderer type="multiselectautocompleteclient"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
