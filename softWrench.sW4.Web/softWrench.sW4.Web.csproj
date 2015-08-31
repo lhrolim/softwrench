@@ -496,6 +496,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
     <Content Include="Content\Scripts\client\noMenuLayoutController.js" />
@@ -749,6 +750,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />

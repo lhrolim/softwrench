@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('breadcrumb', function (contextService) {
-    //var log = $log.getInstance('sw4.breadcrumb');
+app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
+    var log = $log.getInstance('sw4.breadcrumb');
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumb.html'),
@@ -10,9 +10,7 @@ app.directive('breadcrumb', function (contextService) {
             menu: '=',
             title: '='
         },
-        controller: function ($scope, $log) {
-            var log = $log.getInstance('sw4.breadcrumb.controller');
-
+        controller: function ($scope) {
             $scope.convertAdminHTMLtoLeafs = function (log, kids) {
                 var leafs = [];
 
@@ -45,12 +43,14 @@ app.directive('breadcrumb', function (contextService) {
                                         var click = link.attributes['ng-click'].nodeValue;
 
                                         //rename the admin function, to avoid confilts
-                                        click = click.replace('doAction', 'adminDoAction');
-                                        click = click.replace('myProfile', 'adminMyProfile');
-                                        click = click.replace('loadApplication', 'adminLoadApplication');
-                                        click = click.replace('logout', 'adminLogout');
+                                        click = click.replace('doAction', '$scope.adminDoAction');
+                                        click = click.replace('$event.target', 'null');
+                                        click = click.replace('myProfile', '$scope.adminMyProfile');
+                                        click = click.replace('loadApplication', '$scope.adminLoadApplication');
+                                        click = click.replace('logout', '$scope.adminLogout');
 
                                         newObject.click = click;
+                                        newObject.type = 'AdminMenuItemDefinition';
                                     }
 
                                     if (kids[idx].children != null && kids[idx].children.length > 0) {
@@ -58,6 +58,7 @@ app.directive('breadcrumb', function (contextService) {
 
                                         if (childLeafs.length > 0) {
                                             newObject.leafs = childLeafs;
+                                            newObject.type = 'MenuContainerDefinition';
                                         }
                                     }
 
@@ -121,6 +122,7 @@ app.directive('breadcrumb', function (contextService) {
                         newPage.icon = 'fa fa-cog';
                         newPage.title = 'Settings';
                         newPage.leafs = currentMenu.leafs;
+                        newPage.type = 'MenuContainerDefinition';
 
                         foundPages.unshift(newPage);
                     }
@@ -130,6 +132,7 @@ app.directive('breadcrumb', function (contextService) {
                     newPage.icon = 'fa fa-bars';
                     newPage.title = 'Hamburger';
                     newPage.leafs = $scope.menu.leafs;
+                    newPage.type = 'MenuContainerDefinition';
 
                     foundPages.unshift(newPage);
                 }
@@ -164,64 +167,79 @@ app.directive('breadcrumb', function (contextService) {
     }
 });
 
-//app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, adminMenuService) {
-//    var log = $log.getInstance('sw4.breadcrumb Menu Item');
+app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
+    //var log = $log.getInstance('sw4.breadcrumb Menu Item');
 
-//    return {
-//        link: function (scope, element, attr) {
-//            $compile(element.contents())(scope);
-//        },
-//        controller: function ($scope, alertService, validationService) {
+    return {
+        controller: function ($scope, alertService, validationService) {
 
-//            $scope.goToApplication = function (title) {
-//                var leaf = findleafByTitle(log, $scope.menu.leafs, title);
-//                var msg = "Are you sure you want to leave the page?";
-//                if (validationService.getDirty()) {
-//                    alertService.confirmCancel(null, null, function () {
-//                        menuService.goToApplication(leaf, null);
-//                        $scope.$digest();
-//                    }, msg, function () { return; });
-//                }
-//                else {
-//                    menuService.goToApplication(leaf, null);
-//                }
-//            };
+            $scope.goToApplication = function (leaf) {
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.goToApplication(leaf, null);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.goToApplication(leaf, null);
+                }
+            };
 
-//            $scope.doAction = function (title) {
-//                //update title when switching to dashboard
-//                $scope.$emit('sw_titlechanged', null);
+            $scope.doAction = function (leaf) {
+                //update title when switching to dashboard
+                $scope.$emit('sw_titlechanged', null);
 
-//                var leaf = findleafByTitle(log, $scope.menu.leafs, title);
-//                var msg = "Are you sure you want to leave the page?";
-//                if (validationService.getDirty()) {
-//                    alertService.confirmCancel(null, null, function () {
-//                        menuService.doAction(leaf, null);
-//                        $scope.$digest();
-//                    }, msg, function () { return; });
-//                }
-//                else {
-//                    menuService.doAction(leaf, null);
-//                }
-//            };
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.doAction(leaf, null);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.doAction(leaf, null);
+                }
+            };
 
-//            $scope.adminDoAction = function (title, controller, action, parameters, target) {
-//                adminMenuService.doAction(title, controller, action, parameters, target);
-//            };
+            $scope.adminEval = function (click) {
+                eval(click);
+            };
 
-//            $scope.adminLoadApplication = function (applicationName, schemaId, mode, id) {
-//                adminMenuService.loadApplication(applicationName, schemaId, mode, id);
-//            };
+            $scope.adminDoAction = function (title, controller, action, parameters, target) {
+                adminMenuService.doAction(title, controller, action, parameters, target);
+            };
 
-//            $scope.adminLogout = function () {
-//                adminMenuService.logout();
-//            };
+            $scope.adminLoadApplication = function (applicationName, schemaId, mode, id) {
+                adminMenuService.loadApplication(applicationName, schemaId, mode, id);
+            };
 
-//            $scope.adminMyProfile = function () {
-//                adminMenuService.myProfile();
-//            };
-//        }
-//    }
-//});
+            $scope.adminLogout = function () {
+                adminMenuService.logout();
+            };
 
+            $scope.adminMyProfile = function () {
+                adminMenuService.myProfile();
+            };
+        }
+    }
+});
 
+app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper) {
+    //var log = $log.getInstance('sw4.breadcrumb Dropdown');
 
+    return {
+        templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbDropdown.html'),
+        scope: {
+            leafs: '='
+        },
+        compile: function (element) {
+            return recursionHelper.compile(element, function (scope, iElement, iAttrs, controller, transcludeFn) {
+                // Define your normal link function here.
+                // Alternative: instead of passing a function,
+                // you can also pass an object with 
+                // a 'pre'- and 'post'-link function.
+            });
+        }
+    }
+});

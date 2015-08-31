@@ -1,11 +1,21 @@
 ﻿<div ng-repeat="bcItem in breadcrumbItems" class="parts">
-    <div ng-class="{'main' : $first}" class="part">
-        <a ng-if="bcItem.leafs" data-toggle="dropdown" aria-expanded="false">
+    <div ng-switch on="bcItem.type" ng-class="{'main' : $first}" class="part">
+        <a ng-switch-when="MenuContainerDefinition" data-toggle="dropdown" aria-expanded="false">
             <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>&ensp;<i class="fa fa-caret-down"></i>
         </a>
-        <!-- add ng click -->
-        <a ng-if="!bcItem.leafs">
-            <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>
+        <ul ng-if="bcItem.leafs" leafs="bcItem.leafs" class="dropdown-menu" role="menu" bc-menu-dropdown></ul>
+        <!-- TODO add modile menu  -->
+        <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(bcItem.click)" bc-menu-item>
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(bcItem, $event.target)" bc-menu-item>
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(bcItem, $event.target)" bc-menu-item>
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{bcItem.link}}" target="_blank">
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
     </div>
     <span ng-if="!$last" class="part seperator">/</span>
