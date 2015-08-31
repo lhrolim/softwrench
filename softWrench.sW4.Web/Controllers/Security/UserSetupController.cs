@@ -45,8 +45,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
             return View(new DefinePasswordModel {
                 Token = tokenLink,
-                FirstName = user.FirstName,
-                LastName = user.LastName
+                FullName = user.FullName
             });
         }
 

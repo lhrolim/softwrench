@@ -9,8 +9,7 @@ namespace softWrench.sW4.Web.Models.UserSetup {
 
         public string Token { get; set; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FullName { get; set; }
 
         public string ClientName { get; set; }
 

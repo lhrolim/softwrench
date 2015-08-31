@@ -60,17 +60,19 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         }
                     });
                 }
-
-                element.datetimepicker({
-                    format: dateFormat,
-                    locale: attrs.language,
-                    maxDate: endDate,
-                    minDate: startDate,
-                    sideBySide: true,
-                    showClose: true,
-                    toolbarPlacement: 'top'
-                    //debug: true
-                });
+                $timeout(function () {
+                    //timeout to avoid $digest is already in progress exception... using false keyword postergates this to next digest loop
+                    element.datetimepicker({
+                        format: dateFormat,
+                        locale: attrs.language,
+                        maxDate: endDate,
+                        minDate: startDate,
+                        sideBySide: true,
+                        showClose: true,
+                        toolbarPlacement: 'top'
+                        //debug: true
+                    });
+                }, 0, false);
             }
 
             function datetimeclassHandler(timeOnly) {

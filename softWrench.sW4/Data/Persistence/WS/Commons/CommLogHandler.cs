@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -37,12 +38,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private const string message = "message";
         private const string cc = "cc";
 
-       
+
+        private static ISWDBHibernateDAO _dao;
+
+        public CommLogHandler() {
+            _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
+        }
+
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
-            var newCommLogs = commlogs.Where(r => r.GetAttribute(commloguid) == null);
-            foreach (CrudOperationData commLog in commlogs) {
+            var crudOperationDatas = commlogs as CrudOperationData[] ?? commlogs.ToArray();
+            var newCommLogs = crudOperationDatas.Where(r => r.GetAttribute(commloguid) == null);
+            foreach (var commLog in crudOperationDatas) {
                 // Convert sendto array to a comma separated list
                 var sendToObject = commLog.GetAttribute(sendto);
                 var sendToArray = ((IEnumerable)sendToObject).Cast<object>()
@@ -59,7 +67,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 }
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
-            w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
+            w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate (object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
                 var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
                 var rnd = new Random();
@@ -85,7 +93,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var ccEmail = w.GetRealValue(integrationObject, cc);
                 ccEmail = ccEmail != null ? ccEmail.ToString() : "";
                 var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
-                var username = user.MaximoPersonId;
+                var username = user.MaximoPersonId ?? user.Login;
                 // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
                 _updateEmailHistory(username, allAddresses.ToLower().Split(','));
             });
@@ -101,13 +109,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var attachmentData = data.GetUnMappedAttribute("attachment");
             var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
-            if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)) {
+            if (!string.IsNullOrWhiteSpace(attachmentData) && !string.IsNullOrWhiteSpace(attachmentPath)) {
                 var attachmentsData = data.GetUnMappedAttribute("attachment").Split(',');
                 var attachmentsPath = attachmentPath.Split(',');
-                AttachmentHandler attachment = new AttachmentHandler();
-                for (int i = 0, j=0; i < attachmentsPath.Length; i++){
+                var attachment = new AttachmentHandler();
+                for (int i = 0, j = 0; i < attachmentsPath.Length; i++) {
                     var content = new AttachmentDTO() {
-                        Data = attachmentsData[j] + ',' + attachmentsData[j+1],
+                        Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
                         Path = attachmentPath.ToString()
                     };
                     attachment.AddAttachment(maximoObj, content);
@@ -117,17 +125,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
-        private static EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
-        {
-            List<EmailAttachment> attachments = new List<EmailAttachment>();
-            if (!String.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("attachment")) &&
-                !String.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("newattachment_path"))){
+        private static EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData) {
+            var attachments = new List<EmailAttachment>();
+            if (!string.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("attachment")) &&
+                !string.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("newattachment_path"))) {
                 var attachmentsData = crudData.GetUnMappedAttribute("attachment").Split(',');
                 var attachmentsPath = crudData.GetUnMappedAttribute("newattachment_path").Split(',');
-                for (int i = 0, j = 0; i < attachmentsPath.Length; i++){
-                    EmailAttachment attachment =
-                        new EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1],
-                            attachmentsPath[i]);
+                for (int i = 0, j = 0; i < attachmentsPath.Length; i++) {
+                    var attachment = new EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1], attachmentsPath[i]);
                     attachments.Add(attachment);
                     j = j + 2;
                 }
@@ -138,24 +143,24 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.GetRealValue<string>(integrationObject, subject),
                 w.GetRealValue<string>(integrationObject, message),
                 attachments) {
-                    Cc = w.GetRealValue<string>(integrationObject, cc)
-                };
+                Cc = w.GetRealValue<string>(integrationObject, cc)
+            };
 
-            
+
         }
 
         private static void _updateEmailHistory(string userId, string[] emailAddresses) {
-            ISWDBHibernateDAO _swdbDao = SWDBHibernateDAO.GetInstance();
+
             string[] userIds = { userId.ToLower() };
-            List<EmailHistory> emailRecords = _swdbDao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
-            List<EmailHistory> newRecords = new List<EmailHistory>();
+            var emailRecords = _dao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
+            var newRecords = new List<EmailHistory>();
             foreach (var emailAddress in emailAddresses) {
                 if (!emailRecords.Any(t => t.EmailAddress.EqualsIc(emailAddress))) {
                     newRecords.Add(new EmailHistory(null, userId, emailAddress));
                 }
             }
-            _swdbDao.BulkSave(newRecords);
+            _dao.BulkSave(newRecords);
         }
 
-   }
+    }
 }
