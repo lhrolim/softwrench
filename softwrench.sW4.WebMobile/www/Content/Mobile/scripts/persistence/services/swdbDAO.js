@@ -307,13 +307,7 @@
             countByQuery: function (entity, query) {
                 var deferred = $q.defer();
                 var filter = createFilter(entity, query);
-                console.log("before:");
-                console.log(query);
-                console.log(filter._additionalWhereSqls);
                 filter.count(function (count) {
-                    console.log("after:");
-                    console.log(query);
-                    console.log(filter._additionalWhereSqls);
                     deferred.resolve(count);
                 });
                 return deferred.promise;
@@ -321,15 +315,14 @@
 
             /**
              * Deletes all entries for every entity in the database (every entity registered in window.entities), except for the ones passed as parameters.
-             * @param Array toExcludeArray 
+             * @param Array except list of tables not to wipe
              * 
              * @returns Promise 
              */
-            resetDataBase: function (toExcludeArray) {
+            resetDataBase: function (except) {
                 var queries = [];
-                toExcludeArray = toExcludeArray || {};
                 for (var entity in entities) {
-                    if (!entities.hasOwnProperty(entity) || toExcludeArray.indexOf(entity)!==-1) {
+                    if (!entities.hasOwnProperty(entity) || except.indexOf(entity) >= 0) {
                          continue;
                     }
                     queries.push("delete from {0}".format(entity));
