@@ -156,6 +156,18 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 return menu;
             };
 
+            $scope.isDesktop = function () {
+                return isDesktop();
+            };
+
+            $scope.isMobile = function () {
+                return isMobile();
+            };
+
+            $scope.toggleOpen = function (event) {
+                $('.hamburger').toggleClass('open');
+            };
+
             $scope.$watch('title', function (newValue, oldValue) {
                 var currentMenu = $scope.getCurrentMenu();
                 var breadcrumbItems = $scope.getBreadcrumbItems(currentMenu);
@@ -232,6 +244,31 @@ app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper)
         templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbDropdown.html'),
         scope: {
             leafs: '='
+        },
+        compile: function (element) {
+            return recursionHelper.compile(element, function (scope, iElement, iAttrs, controller, transcludeFn) {
+                // Define your normal link function here.
+                // Alternative: instead of passing a function,
+                // you can also pass an object with 
+                // a 'pre'- and 'post'-link function.
+            });
+        }
+    }
+});
+
+app.directive('bcMenuMobile', function ($log, contextService, recursionHelper) {
+    //var log = $log.getInstance('sw4.breadcrumb Mobile');
+
+    return {
+        templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbMobile.html'),
+        scope: {
+            leafs: '='
+        },
+        controller: function ($scope) {
+            $scope.toggleOpen = function(event) {
+                //console.log('click', event);
+                $(event.target).next().toggleClass('open');
+            };
         },
         compile: function (element) {
             return recursionHelper.compile(element, function (scope, iElement, iAttrs, controller, transcludeFn) {
