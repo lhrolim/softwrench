@@ -46,57 +46,37 @@
                     $timeout(function () {
                         alert.close();
                     }, 3000);
+                    $ionicSideMenuDelegate.toggleLeft();
+                    // not online, no logout action will be executed
+                    return;
                 }
-                var didlogout = false;
                 $ionicPopup.confirm({
                     title: "Logout",
-                    template: "Any unsynched data will be lost.<br>" +
+                    template: "A synchronization will be performed before the logout, but some data might be lost.<br>" +
                         "A synchronization will be required after the next login.<br>" +
                         "Are you sure you want to logout?"
-                }).then(function (res) {
-                    if (!res) {
-                        // continue promise chain
-                        return res;
+                })
+                .then(function (res) {
+                    // ok then sync before logging out, otherwise break promise chain
+                    return !res ? res : synchronizationFacade.attempSyncAndContinue({ template: "Do you wish to logout anyway?" });
+                })
+                .then(function (canlogout) {
+                    // user did not confirm logout or sync failed and user did not wish to continue
+                    if (!canlogout) {
+                        return false;
                     }
-                    // sync before logging out
-                    return synchronizationFacade.hasDataToSync().then(function (has) {
-                        if (!has) {
-                            // no data to sync: just logout
-                            didlogout = true;
-                            return securityService.logout();
-                        }
-                        $ionicLoading.show({
-                            template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Synchronizing data<span>"
-                        });
-                        // try to sync
-                        return synchronizationFacade.fullSync()
-                            .then(function () {
-                                $ionicLoading.hide();
-                                // sync successfull: logout
-                                didlogout = true;
-                                return securityService.logout();
-                            }).catch(function () {
-                                $ionicLoading.hide();
-                                // sync failed: check if user wishes to logout regardless
-                                return $ionicPopup.confirm({
-                                    title: "Synchronization failed",
-                                    template: "Do you wish to logout anyway?"
-                                }).then(function (ressync) {
-                                    if (ressync) {
-                                        // logout
-                                        didlogout = true;
-                                        return securityService.logout();
-                                    }
-                                    // continue promise chain
-                                    return ressync;
-                                });
-                            });
+                    // no sync required or sync sucessfull or sync failed and user wished to continue anyway
+                    return securityService.logout().then(function () {
+                        return true;
                     });
-                }).then(function () {
+                })
+                .then(function (didlogout) {
                     if (didlogout) {
+                        // logout was performed -> redirect to login screen
                         routeService.go("login");
                     }
-                }).finally(function () {
+                })
+                .finally(function () {
                     $ionicSideMenuDelegate.toggleLeft();
                 });
             };
