@@ -389,9 +389,9 @@ module.exports = function (grunt) {
         env = env || "debug";
         switch (env) {
             case "release":
-                return grunt.task.run(["preparerelease", "copy:build", "build:" + env]);
+                return grunt.task.run(["preparerelease", "build:" + env]);
             case "debug":
-                return grunt.task.run(["fulldev", "copy:build", "build:" + env]);
+                return grunt.task.run(["fulldev", "build:" + env]);
             default:
                 throw new Error("Unsupported build environment: " + env);
         }
@@ -414,6 +414,7 @@ module.exports = function (grunt) {
 
         cordovaBuild.buildProject(platformsToBuild, buildArgs)
             .then(function () {
+                grunt.task.run(["copy:build"]);
                 return cordovaBuild.packageProject(platformsToBuild);
             })
             .done(done);
