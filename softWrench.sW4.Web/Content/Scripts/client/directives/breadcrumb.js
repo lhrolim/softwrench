@@ -180,11 +180,10 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 });
 
 app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
-    //var log = $log.getInstance('sw4.breadcrumb Menu Item');
+    var log = $log.getInstance('sw4.breadcrumb Menu Item');
 
     return {
         controller: function ($scope, alertService, validationService) {
-
             $scope.goToApplication = function (leaf) {
                 var msg = "Are you sure you want to leave the page?";
                 if (validationService.getDirty()) {
@@ -196,6 +195,8 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 else {
                     menuService.goToApplication(leaf, null);
                 }
+
+                $scope.closeBreadcrumbs();
             };
 
             $scope.doAction = function (leaf) {
@@ -212,6 +213,8 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 else {
                     menuService.doAction(leaf, null);
                 }
+
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminEval = function (click) {
@@ -220,18 +223,26 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
 
             $scope.adminDoAction = function (title, controller, action, parameters, target) {
                 adminMenuService.doAction(title, controller, action, parameters, target);
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminLoadApplication = function (applicationName, schemaId, mode, id) {
                 adminMenuService.loadApplication(applicationName, schemaId, mode, id);
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminLogout = function () {
                 adminMenuService.logout();
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminMyProfile = function () {
                 adminMenuService.myProfile();
+                $scope.closeBreadcrumbs();
+            };
+
+            $scope.closeBreadcrumbs = function () {
+                $('.breadcrumb .open').removeClass('open');
             };
         }
     }
