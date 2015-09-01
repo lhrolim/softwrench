@@ -60,21 +60,23 @@
       display: inline-block;
       color: #fff; } }
 
-.mobile header .admin-area .breadcrumb .submenu {
+.mobile header .admin-area .breadcrumb .parts .part.main i.fa-bars {
+  color: #fff; }
+
+.mobile header .admin-area .breadcrumb .parts .part .submenu {
   display: none;
   list-style: none;
-  padding-left: 20px;
-  /*width: 136px;*/ }
-  .mobile header .admin-area .breadcrumb .submenu.hamburger {
+  padding-left: 20px; }
+  .mobile header .admin-area .breadcrumb .parts .part .submenu.hamburger {
     padding: 0; }
-  .mobile header .admin-area .breadcrumb .submenu.open {
+  .mobile header .admin-area .breadcrumb .parts .part .submenu.open {
     display: block; }
-  .mobile header .admin-area .breadcrumb .submenu li {
+  .mobile header .admin-area .breadcrumb .parts .part .submenu li {
     padding: 8px 0; }
-    .mobile header .admin-area .breadcrumb .submenu li a {
+    .mobile header .admin-area .breadcrumb .parts .part .submenu li a {
       padding: 8px 8px 8px 0; }
 
-.mobile header .admin-area .breadcrumb .hassubmenu:after {
+.mobile header .admin-area .breadcrumb .parts .part .hassubmenu:after {
   display: block;
   content: " ";
   float: right;
@@ -1579,3 +1581,4 @@ input:focus, select:focus, textarea:focus {
 /* Large Devices, Wide Screen */
 .page-signin, .container header {
   background-size: cover; }
+
