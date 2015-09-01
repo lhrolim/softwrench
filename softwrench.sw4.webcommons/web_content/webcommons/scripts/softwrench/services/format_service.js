@@ -14,20 +14,6 @@
                 return $filter('date')(new Date(), dateFormat);
             }
 
-            if (forceConversion) {
-                
-
-                return $filter('date')(value, dateFormat);
-
-                //this would be needed for applying the time formats
-//                var date = new Date(value);
-//                if (isNaN(date)) {
-//                    return $filter('date')(value, dateFormat);
-//                } else {
-//                    return $filter('date')(date, dateFormat);
-//                }
-            }
-
             try {
                 return $filter('date')(value, dateFormat);
             } catch (e) {
