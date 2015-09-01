@@ -11,7 +11,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
             title: '='
         },
         controller: function ($scope) {
-            $scope.convertAdminHTMLtoLeafs = function (log, kids) {
+            $scope.convertAdminHTMLtoLeafs = function (kids) {
                 var leafs = [];
 
                 for (var idx = 0; idx < kids.length; idx++) {
@@ -80,38 +80,44 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 return leafs;
             }
 
-            $scope.findCurrentPage = function (log, leafs, current) {
+            $scope.findCurrentPage = function (leafs, current) {
                 var page = null;
 
-                for (var id in leafs) {
-                    if (leafs[id].hasOwnProperty('title')) {
-                        var childPage = $scope.findCurrentPage(log, leafs[id].leafs, current);
+                if (current != null) {
+                    for (var id in leafs) {
+                        if (leafs[id].hasOwnProperty('title')) {
+                            var childPage = $scope.findCurrentPage(leafs[id].leafs, current);
 
-                        //add page if current or decentant is the current page
-                        if (childPage != null || leafs[id].title == current) {
-                            if (page == null) {
-                                page = [];
+                            //add page if current or decentant is the current page
+                            if (childPage != null || leafs[id].title == current) {
+                                if (page == null) {
+                                    page = [];
+                                }
+
+                                page.push(leafs[id]);
                             }
 
-                            page.push(leafs[id]);
-                        }
-
-                        //if decentants were found, add to the return
-                        if (childPage != null) {
-                            for (var x in childPage) {
-                                if (childPage[x].hasOwnProperty('title')) {
-                                    page.push(childPage[x]);
+                            //if decentants were found, add to the return
+                            if (childPage != null) {
+                                for (var x in childPage) {
+                                    if (childPage[x].hasOwnProperty('title')) {
+                                        page.push(childPage[x]);
+                                    }
                                 }
                             }
                         }
                     }
+                } else {
+                    //if the current title is null, use the first menu leaf as the current
+                    page = [];
+                    page.push(leafs[0]);
                 }
 
                 return page;
             }
 
             $scope.getBreadcrumbItems = function (currentMenu) {
-                var foundPages = $scope.findCurrentPage(log, currentMenu.leafs, $scope.title);
+                var foundPages = $scope.findCurrentPage(currentMenu.leafs, $scope.title);
 
                 if (foundPages != null) {
                     var newPage;
@@ -146,7 +152,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                 if (currentItem.hasOwnProperty(length)) {
                     var mainMenu = $('.admin-area .admin-menu > .dropdown-menu');
-                    var leafs = $scope.convertAdminHTMLtoLeafs(log, mainMenu[0].children);
+                    var leafs = $scope.convertAdminHTMLtoLeafs(mainMenu[0].children);
                     menu.displacement = 'admin';
                     menu.leafs = leafs;
                 } else {
@@ -180,7 +186,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 });
 
 app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper) {
-    //var log = $log.getInstance('sw4.breadcrumb Dropdown');
+    var log = $log.getInstance('sw4.breadcrumb Dropdown');
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbDropdown.html'),
