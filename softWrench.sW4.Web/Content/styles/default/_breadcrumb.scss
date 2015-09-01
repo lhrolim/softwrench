@@ -13,20 +13,24 @@
                 float: left;
                 color: #fff;
 
-                .part {
+                .parts {
                     float: left;
-                    display: none;
 
-                    &.main {
-                        display: block;
+                    .part {
+                        float: left;
+                        display: none;
 
-                        i {
-                            &.fa-bars {
-                                color: #fff;
-                            }
+                        &.main {
+                            display: block;
 
-                            &.fa-caret-down {
-                                display: none;
+                            i {
+                                &.fa-bars {
+                                    color: #fff;
+                                }
+
+                                &.fa-caret-down {
+                                    display: none;
+                                }
                             }
                         }
                     }
@@ -98,18 +102,20 @@
         header {
             .admin-area {
                 .breadcrumb {
-                    .part {
-                        display: block;
+                    .parts {
+                        .part {
+                            display: block;
 
-                        &.main {
-                            i {
-                                &.fa-bars {
-                                    color: #c9c7c7;
-                                }
+                            &.main {
+                                i {
+                                    &.fa-bars {
+                                        color: #c9c7c7;
+                                    }
 
-                                &.fa-caret-down {
-                                    display: inline-block;
-                                    color: #fff;
+                                    &.fa-caret-down {
+                                        display: inline-block;
+                                        color: #fff;
+                                    }
                                 }
                             }
                         }
@@ -124,9 +130,52 @@
     header {
         .admin-area {
             .breadcrumb {
-                .dropdown-submenu > .dropdown-menu {
-                    left: 10px;
-                    margin-top: 23px;
+                .parts {
+                    .part {
+                        &.main {
+                            i {
+                                &.fa-bars {
+                                    color: #fff;
+                                }
+                            }
+                        }
+
+                        .submenu {
+                            display: none;
+                            list-style: none;
+                            padding-left: 20px;
+
+                            &.hamburger {
+                                padding: 0;
+                            }
+
+                            &.open {
+                                display: block;
+                            }
+
+                            li {
+                                padding: 8px 0;
+
+                                a {
+                                    padding: 8px 8px 8px 0;
+                                }
+                            }
+                        }
+
+                        .hassubmenu:after {
+                            display: block;
+                            content: " ";
+                            float: right;
+                            width: 0;
+                            height: 0;
+                            border-color: transparent;
+                            border-style: solid;
+                            border-width: 5px 0 5px 5px;
+                            border-left-color: #cccccc;
+                            margin-top: 5px;
+                            margin-right: -30px;
+                        }
+                    }
                 }
             }
         }

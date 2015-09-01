@@ -1,0 +1,30 @@
+﻿<div ng-if="isDesktop()" ng-repeat="bcItem in breadcrumbItems" class="parts">
+    <div ng-switch on="bcItem.type" ng-class="{'main' : $first}" class="part">
+        <a ng-switch-when="MenuContainerDefinition" data-toggle="dropdown" aria-expanded="false">
+            <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>&ensp;<i class="fa fa-caret-down"></i>
+        </a>
+        <ul ng-if="bcItem.leafs" leafs="bcItem.leafs" class="dropdown-menu" role="menu" bc-menu-dropdown></ul>
+        <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(bcItem.click)" bc-menu-item>
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(bcItem, $event.target)" bc-menu-item>
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(bcItem, $event.target)" bc-menu-item>
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{bcItem.link}}" target="_blank">
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+    </div>
+    <span ng-if="!$last" class="part seperator">/</span>
+</div>
+
+<div ng-if="isMobile()" class="parts">
+    <div class="part main">
+        <a ng-click="toggleOpen($event)">
+            <i class="{{breadcrumbItems[0].icon}}"></i>
+        </a>
+        <ul ng-if="breadcrumbItems[0].leafs" leafs="breadcrumbItems[0].leafs" class="submenu hamburger" bc-menu-mobile></ul>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿<li ng-repeat="item in leafs" ng-switch on="item.type">
+    <a ng-switch-when="MenuContainerDefinition" ng-click="toggleOpen($event)" class="hassubmenu">
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+    <ul ng-if="item.leafs" leafs="item.leafs" class="submenu" bc-menu-mobile></ul>
+    <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(item.click)" bc-menu-item>
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+    <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(item, $event.target)" bc-menu-item>
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+    <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(item, $event.target)" bc-menu-item>
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+    <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{item.link}}" target="_blank">
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+</li>
