@@ -401,36 +401,25 @@
            <field attribute="schedstart" hidden="true"/>
            <field attribute="schedfinish" hidden="true"/>
 
-           <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=targstartdate;">
-              <header label="Target Start Date:" displacement="sameline"/>
-           </section>
+           <field attribute="targstartdate" label="Target Start Date:">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+           </field>
+           <field attribute="targcompdate" label="Target Finish Date:">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+           </field>
+           <field attribute="schedstart" label="Scheduled Start Date:">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+           </field>
+           <field attribute="schedfinish" label="Scheduled Finish Date:">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+           </field>
+           <field attribute="actstart" label="Actual Start Date:">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+           </field>
+           <field attribute="actfinish" label="Actual Finish Date:">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+           </field>
 
-           <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=targcompdate;">
-              <header label="Target Finish Date:" displacement="sameline"/>
-           </section>
-           
-           <section id="schedstart" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=schedstart;">
-              <header label="Scheduled Start Date:" displacement="sameline"/>
-           </section>
-
-           <section id="schedfinish" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=schedfinish;">
-              <header label="Scheduled Finish Date:" displacement="sameline"/>
-           </section>   
-           
-
-           <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actstart;">
-              <header label="Actual Start Date:" displacement="sameline"/>
-           </section>
-
-           <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actfinish;">
-              <header label="Actual Finish Date:" displacement="sameline"/>
-           </section>
 
            <!-- Code added from gric metadata.xml SWWEB 173-->
            <section id="attachmentsection" />
@@ -509,7 +498,10 @@
           <field attribute="enterby" hidden="true" />
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
           <field attribute="transtype" default="WORK" hidden="true"/>
-          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()">
+          <field attribute="labor_.worksite" hidden="true" />
+          <field attribute="labor_.orgid" hidden="true" />
+
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()" extraprojectionvalues="worksite,orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>

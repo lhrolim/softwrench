@@ -15,12 +15,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class BaseServiceRequestCrudConnector : CrudConnectorDecorator {
 
         protected AttachmentHandler _attachmentHandler;
+        protected CommLogHandler _commlogHandler;
 
         private readonly EmailService _emailService;
 
         public BaseServiceRequestCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _commlogHandler = new CommLogHandler();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
@@ -61,7 +64,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var mailObject = maximoTemplateData.Properties;
 
             WorkLogHandler.HandleWorkLogs(crudData, sr);
-            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+            _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             HandleServiceAddress(maximoTemplateData);
 

@@ -49,6 +49,10 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime? HandleDateConversion(string stValue) {
+            if (string.IsNullOrEmpty(stValue)) {
+                return null;
+            }
+
             int rowstamp;
             if (int.TryParse(stValue, out rowstamp)) {
                 //TODO: change the whole rowstamp chain here, that´s being coverted from maximo side

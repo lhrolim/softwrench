@@ -9,6 +9,7 @@
       <attributes>
         <attribute name="laborid" type="int"/>
         <attribute name="orgid" type="orgid"/>
+        <attribute name="worksite" type="varchar"/>
         <attribute name="laborcode" type="varchar"/>
         <attribute name="personid" type="personid"/>
       </attributes>

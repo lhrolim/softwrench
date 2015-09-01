@@ -8,15 +8,17 @@
 .container header .admin-area .breadcrumb {
   float: left;
   color: #fff; }
-  .container header .admin-area .breadcrumb .part {
-    float: left;
-    display: none; }
-    .container header .admin-area .breadcrumb .part.main {
-      display: block; }
-      .container header .admin-area .breadcrumb .part.main i.fa-bars {
-        color: #fff; }
-      .container header .admin-area .breadcrumb .part.main i.fa-caret-down {
-        display: none; }
+  .container header .admin-area .breadcrumb .parts {
+    float: left; }
+    .container header .admin-area .breadcrumb .parts .part {
+      float: left;
+      display: none; }
+      .container header .admin-area .breadcrumb .parts .part.main {
+        display: block; }
+        .container header .admin-area .breadcrumb .parts .part.main i.fa-bars {
+          color: #fff; }
+        .container header .admin-area .breadcrumb .parts .part.main i.fa-caret-down {
+          display: none; }
   .container header .admin-area .breadcrumb a {
     color: #fff;
     cursor: pointer; }
@@ -50,17 +52,42 @@
     margin-right: -20px; }
 
 @media all and (min-width: 768px) {
-  .container header .admin-area .breadcrumb .part {
+  .container header .admin-area .breadcrumb .parts .part {
     display: block; }
-    .container header .admin-area .breadcrumb .part.main i.fa-bars {
+    .container header .admin-area .breadcrumb .parts .part.main i.fa-bars {
       color: #c9c7c7; }
-    .container header .admin-area .breadcrumb .part.main i.fa-caret-down {
+    .container header .admin-area .breadcrumb .parts .part.main i.fa-caret-down {
       display: inline-block;
       color: #fff; } }
 
-.mobile header .admin-area .breadcrumb .dropdown-submenu > .dropdown-menu {
-  left: 10px;
-  margin-top: 23px; }
+.mobile header .admin-area .breadcrumb .parts .part.main i.fa-bars {
+  color: #fff; }
+
+.mobile header .admin-area .breadcrumb .parts .part .submenu {
+  display: none;
+  list-style: none;
+  padding-left: 20px; }
+  .mobile header .admin-area .breadcrumb .parts .part .submenu.hamburger {
+    padding: 0; }
+  .mobile header .admin-area .breadcrumb .parts .part .submenu.open {
+    display: block; }
+  .mobile header .admin-area .breadcrumb .parts .part .submenu li {
+    padding: 8px 0; }
+    .mobile header .admin-area .breadcrumb .parts .part .submenu li a {
+      padding: 8px 8px 8px 0; }
+
+.mobile header .admin-area .breadcrumb .parts .part .hassubmenu:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -30px; }
 
 .btn-brand {
   background-color: #34a7e0;
@@ -1554,3 +1581,4 @@ input:focus, select:focus, textarea:focus {
 /* Large Devices, Wide Screen */
 .page-signin, .container header {
   background-size: cover; }
+

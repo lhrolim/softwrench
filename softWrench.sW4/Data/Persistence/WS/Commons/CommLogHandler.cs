@@ -45,7 +45,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
         }
 
-        public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
+        public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
             var crudOperationDatas = commlogs as CrudOperationData[] ?? commlogs.ToArray();
@@ -125,7 +125,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
-        private static EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData) {
+        private EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData) {
             var attachments = new List<EmailAttachment>();
             if (!string.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("attachment")) &&
                 !string.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("newattachment_path"))) {
@@ -149,7 +149,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         }
 
-        private static void _updateEmailHistory(string userId, string[] emailAddresses) {
+        private void _updateEmailHistory(string userId, string[] emailAddresses) {
 
             string[] userIds = { userId.ToLower() };
             var emailRecords = _dao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
