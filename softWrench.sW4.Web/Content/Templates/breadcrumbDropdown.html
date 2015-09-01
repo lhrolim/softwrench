@@ -1,8 +1,15 @@
-﻿<li ng-repeat="item in leafs" ng-switch on="item.type" ng-class="{'dropdown-submenu' : item.leafs}">
-    <a ng-switch-when="MenuContainerDefinition" data-toggle="dropdown" aria-expanded="false">
+﻿<li ng-repeat="item in leafs" ng-switch on="item.type" ng-class="{'dropdown-submenu' : item.leafs && isDesktop()}">
+    <!-- Desktop Dropdown -->
+    <a ng-switch-when="MenuContainerDefinition" ng-if="isDesktop()" data-toggle="dropdown" aria-expanded="false">
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
-    <ul ng-if="item.leafs" leafs="item.leafs" class="dropdown-menu" role="menu" bc-menu-dropdown></ul>
+    <!-- Mobile menu -->
+    <a ng-switch-when="MenuContainerDefinition" ng-if="isMobile()" ng-click="toggleOpen($event)" class="hassubmenu">
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+
+    <!-- Common Items -->
+    <ul ng-if="item.leafs" leafs="item.leafs" ng-class="{'submenu' : isMobile(), 'dropdown-menu' : isDesktop()}" role="menu" bc-menu-dropdown></ul>
     <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(item.click)" bc-menu-item>
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>

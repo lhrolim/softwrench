@@ -4,6 +4,7 @@
             <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>&ensp;<i class="fa fa-caret-down"></i>
         </a>
         <ul ng-if="bcItem.leafs" leafs="bcItem.leafs" class="dropdown-menu" role="menu" bc-menu-dropdown></ul>
+
         <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(bcItem.click)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
@@ -25,6 +26,6 @@
         <a ng-click="toggleOpen($event)">
             <i class="{{breadcrumbItems[0].icon}}"></i>
         </a>
-        <ul ng-if="breadcrumbItems[0].leafs" leafs="breadcrumbItems[0].leafs" class="submenu hamburger" bc-menu-mobile></ul>
+        <ul ng-if="breadcrumbItems[0].leafs" leafs="breadcrumbItems[0].leafs" class="submenu hamburger" bc-menu-dropdown></ul>
     </div>
 </div>
