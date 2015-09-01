@@ -382,24 +382,57 @@ module.exports = function (grunt) {
         "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
     ]);
 
-    // release: build
 
+    // ****************************
+    // ** BUILD DEVICE ARTIFACTS **
+    // ****************************
 
-    grunt.registerTask("vs2015", "builds the app for devices", function (env) {
-        env = env || "debug";
-        switch (env) {
-            case "release":
-                return grunt.task.run(["preparerelease", "build:" + env]);
-            case "debug":
-                return grunt.task.run(["fulldev", "build:" + env]);
-            default:
-                throw new Error("Unsupported build environment: " + env);
+    var taco = require("taco-team-build");
+
+    // ripped from taco-team-build.js
+    // Utility method that coverts args into a consistant input understood by cordova-lib
+    function getCallArgs(platforms, args) {
+        // Processes single platform string (or array of length 1) and an array of args or an object of args per platform
+        args = args || [];
+        if (typeof (platforms) == "string") {
+            platforms = [platforms];
         }
-    });
+        // If only one platform is specified, check if the args is an object and use the args for this platform if so
+        if (platforms.length === 1) {
+            if (args instanceof Array) {
+                return { platforms: platforms, options: args };
+            } else {
+                return { platforms: platforms, options: args[platforms[0]] };
+            }
+        }
+    }
 
-    grunt.registerTask("build", function (env) {
-        var cordovaBuild = require("taco-team-build"),
-        done = this.async();
+    // ripped and modified from taco-team-build.js
+    function buildProject(cordovaPlatforms, args) {
+        if (typeof (cordovaPlatforms) == "string") {
+            cordovaPlatforms = [cordovaPlatforms];
+        }
+        return taco.setupCordova().then(function (cordova) {
+            // Add platforms if not done already
+            var promise = taco.addPlatformsToProject(cordova, cordovaPlatforms);
+            //Build each platform with args in args object
+            cordovaPlatforms.forEach(function (platform) {
+                promise = promise.then(function () {
+                    // Build app with platform specific args if specified
+                    var callArgs = getCallArgs(platform, args);
+                    console.log("Queueing build for platform " + platform + " w/options: " + callArgs.options);
+
+                    // apply overrides before cordova build
+                    grunt.task.run(["build:copy"]);
+                    return cordova.raw.build(callArgs);
+                });
+            });
+            return promise;
+        });
+    }
+
+    grunt.registerTask("build", "builds app for devices", function (env) {
+        var done = this.async();
 
         //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
         var cliEnv = "--" + env;
@@ -412,13 +445,27 @@ module.exports = function (grunt) {
             wp8: [cliEnv]                  // "TypeError" after adding a flag Android doesn"t recognize
         };                                      // when using Cordova < 4.3.0. This is fixed in 4.3.0.
 
-        cordovaBuild.buildProject(platformsToBuild, buildArgs)
+        buildProject(platformsToBuild, buildArgs)
             .then(function () {
-                grunt.task.run(["copy:build"]);
-                return cordovaBuild.packageProject(platformsToBuild);
+                return taco.packageProject(platformsToBuild);
             })
             .done(done);
     });
 
+    grunt.registerTask("vs2015", "intended for CI: prepares workspace and builds the app for devices", function (env) {
+        env = env || "debug";
+        switch (env) {
+            case "release":
+                return grunt.task.run(["preparerelease", "build:" + env]);
+            case "debug":
+                return grunt.task.run(["fulldev", "build:" + env]);
+            default:
+                throw new Error("Unsupported build environment: " + env);
+        }
+    });
+
+    // ********************************
+    // ** END BUILD DEVICE ARTIFACTS **
+    // ********************************
 
 };
