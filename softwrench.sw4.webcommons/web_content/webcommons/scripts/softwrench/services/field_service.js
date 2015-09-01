@@ -100,7 +100,7 @@
                 var target = value.attribute;
                 if (value.displayables && value.displayables.length > 0) {
                     //section
-                    fn(value.displayables, datamap, scope);
+                    fn.call(this,value.displayables, datamap, scope);
                 }
 
                 //Only continues if datmap for the current attribute is null
