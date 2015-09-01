@@ -386,7 +386,9 @@ module.exports = function (grunt) {
     // ****************************
     // ** BUILD DEVICE ARTIFACTS **
     // ****************************
-
+    var fs = require("fs-extra");
+    var path = require("path");
+    var Q = require("q");
     var taco = require("taco-team-build");
 
     // ripped from taco-team-build.js
@@ -407,23 +409,53 @@ module.exports = function (grunt) {
         }
     }
 
+    // ripped from taco-team-build.js
+    // Prep for build by adding platforms and setting environment variables
+    function addPlatformsToProject(cordova, cordovaPlatforms) {
+        var promise = Q();
+        var projectPath = process.cwd();
+        cordovaPlatforms.forEach(function (platform) {
+            promise = promise.then(function () {
+                return cordova.raw.platform('rm', platform);
+            }).then(function () {
+                console.log("Adding platform " + platform + "...");
+                // Fix for when the plugins/<platform>.json file is accidently checked into source control 
+                // without the corresponding contents of the platforms folder. This can cause the behavior
+                // described here: http://stackoverflow.com/questions/30698118/tools-for-apache-cordova-installed-plugins-are-skipped-in-build 
+                var platformPluginJsonFile = path.join(projectPath, "plugins", platform.trim() + ".json")
+                if (fs.existsSync(platformPluginJsonFile)) {
+                    console.log(platform + ".json file found at \"" + platformPluginJsonFile + "\". Removing to ensure plugins install properly in newly added platform.")
+                    fs.unlinkSync(platformPluginJsonFile);
+                }
+            }).then(function () {
+                // Now add the platform
+                return cordova.raw.platform('add', platform);
+            }).then(function () {
+                // apply overrides
+                // TODO: copy all files in overrides
+                var ori = path.join(projectPath, "overrides", platform.trim(), "cordova", "lib", "build.js");
+                var dest = path.join(projectPath, "platforms", platform.trim(), "cordova", "lib", "build.js");
+                return fs.copySync(ori, dest);
+            });
+
+        });
+        return promise;
+    }
+
     // ripped and modified from taco-team-build.js
     function buildProject(cordovaPlatforms, args) {
         if (typeof (cordovaPlatforms) == "string") {
             cordovaPlatforms = [cordovaPlatforms];
         }
-        return taco.setupCordova().then(function (cordova) {
+        return taco.setupCordova().then(function(cordova) {
             // Add platforms if not done already
-            var promise = taco.addPlatformsToProject(cordova, cordovaPlatforms);
+            var promise = addPlatformsToProject(cordova, cordovaPlatforms);
             //Build each platform with args in args object
             cordovaPlatforms.forEach(function (platform) {
                 promise = promise.then(function () {
                     // Build app with platform specific args if specified
                     var callArgs = getCallArgs(platform, args);
                     console.log("Queueing build for platform " + platform + " w/options: " + callArgs.options);
-
-                    // apply overrides before cordova build
-                    grunt.task.run(["copy:build"]);
                     return cordova.raw.build(callArgs);
                 });
             });
