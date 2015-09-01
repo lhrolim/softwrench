@@ -423,7 +423,7 @@ module.exports = function (grunt) {
                     console.log("Queueing build for platform " + platform + " w/options: " + callArgs.options);
 
                     // apply overrides before cordova build
-                    grunt.task.run(["build:copy"]);
+                    grunt.task.run(["copy:build"]);
                     return cordova.raw.build(callArgs);
                 });
             });
