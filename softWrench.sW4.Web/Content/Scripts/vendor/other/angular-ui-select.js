@@ -1344,13 +1344,17 @@
 
                 $select.searchInput.on('keyup', function (e) {
 
+                    
                     if (!KEY.isVerticalMovement(e.which)) {
                         scope.$evalAsync(function () {
                             $select.activeIndex = $select.taggingLabel === false ? -1 : 0;
                         });
                     }
                     // Push a "create new" item into array if there is a search string
-                    if ($select.tagging.isActivated && $select.search.length > 0) {
+                    //luiz: adding a minimum value here to consider a valid option due to performance implications 
+                    //(saving about 1.5s if you turn the log at line ~1456)
+                    //TODO: make it configurable via metadata (email could be even more and maybe apply extra validations)
+                    if ($select.tagging.isActivated && $select.search.length > 4) {
 
                         // return early with these keys
                         if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC || KEY.isVerticalMovement(e.which)) {
@@ -1372,6 +1376,7 @@
 
                         // case for object tagging via transform `$select.tagging.fct` function
                         if ($select.tagging.fct !== undefined) {
+                            
                             tagItems = $select.$filter('filter')(items, { 'isTag': true });
                             if (tagItems.length > 0) {
                                 tagItem = tagItems[0];
@@ -1392,9 +1397,11 @@
                             // handle newItem string and stripping dupes in tagging string context
                         } else {
                             // find any tagging items already in the $select.items array and store them
+                            var t0 = performance.now();
                             tagItems = $select.$filter('filter')(items, function (item) {
                                 return item.match($select.taggingLabel);
                             });
+                            
                             if (tagItems.length > 0) {
                                 tagItem = tagItems[0];
                             }
@@ -1440,10 +1447,14 @@
                             items.push(newItem);
                             items = items.concat(stashArr);
                         }
+                        
                         scope.$evalAsync(function () {
                             $select.activeIndex = 0;
                             $select.items = items;
                         });
+                        var t1 = performance.now();
+                        console.log("s1 took " + (t1 - t0) + " milliseconds.");
+                      
                     }
                 });
                 function _findCaseInsensitiveDupe(arr) {
