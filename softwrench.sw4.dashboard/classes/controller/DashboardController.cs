@@ -38,7 +38,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             _userDashboardManager = userDashboardManager;
             _dispatcher = dispatcher;
         }
-        //TODO: fix datetime deserialization
+
         [HttpPost]
         public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
             //TODO: update menu, clear caching
@@ -55,10 +55,6 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (dashboard.Layout == null) {
                 dashboard.Layout = "0";
             }
-//            if (creationDateSt != null && dashboard.CreationDate==null) {
-//                dashboard.CreationDate = (DateTime)DateUtil.Parse(creationDateSt);
-//            }
-
 
             var savedDashboard = _dao.Save(dashboard);
             user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
