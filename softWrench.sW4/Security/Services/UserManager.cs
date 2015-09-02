@@ -146,7 +146,8 @@ namespace softWrench.sW4.Security.Services {
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
             var user = _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
             if (user != null) {
-                user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+                var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+                user.MergeMaximoWithNewUser(maximoUser);
             }
             return user;
         }
