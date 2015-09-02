@@ -10,12 +10,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, MULTISELECTAUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, MODAL, CUSTOM and COMBODROPDOWN";
 
         private AssociationRendererType EnumRendererType { get; set; }
-        private ComponentStereotype Stereotype { get; set; }
 
         public AssociationFieldRenderer() {
             EnumRendererType = AssociationRendererType.AUTOCOMPLETECLIENT;
             RendererType = EnumRendererType.ToString();
-            Stereotype = ComponentStereotype.None;
+            Stereotype = null;
         }
 
         public AssociationFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
