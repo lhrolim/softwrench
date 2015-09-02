@@ -63,6 +63,7 @@
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationKey.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSectionOrientation.cs" />
+    <Compile Include="Metadata\Applications\Schema\ComponentStereotype.cs" />
     <Compile Include="Metadata\Applications\Schema\DisplayableComponent.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationIndentifiedDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />

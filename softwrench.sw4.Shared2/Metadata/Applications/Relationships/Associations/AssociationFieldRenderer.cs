@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations {
@@ -13,14 +14,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public AssociationFieldRenderer() {
             EnumRendererType = AssociationRendererType.AUTOCOMPLETECLIENT;
             RendererType = EnumRendererType.ToString();
+            Stereotype = null;
         }
 
-        public AssociationFieldRenderer(string renderertype, string parameters, string targetName)
-            : base(renderertype, parameters, targetName) {
+        public AssociationFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
+            : base(renderertype, parameters, targetName, stereotype) {
             AssociationRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;
-
         }
 
         protected override void ValidateRendererType(String rendererType) {
