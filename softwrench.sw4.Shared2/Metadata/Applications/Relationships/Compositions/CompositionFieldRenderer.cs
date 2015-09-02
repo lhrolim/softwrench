@@ -16,7 +16,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public CompositionFieldRenderer(string renderertype, string parameters, string targetName)
-            : base(renderertype, parameters, targetName) {
+            : base(renderertype, parameters, targetName, null) {
                 CompositionRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;

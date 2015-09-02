@@ -19,13 +19,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public AssociationFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
-            : base(renderertype, parameters, targetName) {
+            : base(renderertype, parameters, targetName, stereotype) {
             AssociationRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;
-            ComponentStereotype stereotypeResult = ComponentStereotype.None;
-            Enum.TryParse(stereotype, true, out stereotypeResult);
-            Stereotype = stereotypeResult;
+            //ComponentStereotype stereotypeResult = ComponentStereotype.None;
+            //Enum.TryParse(stereotype, true, out stereotypeResult);
+            //Stereotype = stereotypeResult;
         }
 
         protected override void ValidateRendererType(String rendererType) {

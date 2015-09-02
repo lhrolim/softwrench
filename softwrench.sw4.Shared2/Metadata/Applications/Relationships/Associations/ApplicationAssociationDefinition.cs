@@ -202,7 +202,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }
         }
 
-        public ComponentStereotype RendererStereotype { get; set; }
+        public ComponentStereotype RendererStereotype {
+            get
+            {
+                ComponentStereotype rendererStereotype = ComponentStereotype.None;
+                Enum.TryParse(_applicationAssociationSchema.Renderer.Stereotype, true, out rendererStereotype);
+                return rendererStereotype;
+            }
+        }
 
         public IDictionary<string, object> RendererParameters {
             get {

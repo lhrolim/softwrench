@@ -18,13 +18,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
         private readonly IDictionary<string, object> _parameters;
 
-        public FieldRenderer(string renderertype, string parameters, string targetName) {
+        public FieldRenderer(string renderertype, string parameters, string targetName, string stereotype) {
             _parameterString = parameters;
             TargetName = targetName;
             RendererType = renderertype;
             ValidateRendererType(renderertype);
             _parameters = ParametersAsDictionary();
-            //Stereotype = ComponentStereotype.None;
+            Stereotype = stereotype;
         }
 
         protected virtual void ValidateRendererType(String rendererType) {
@@ -34,6 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
             }
         }
 
+        public string Stereotype { get; set; }
 
         private string TargetName { get; set; }
 

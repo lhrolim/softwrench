@@ -70,7 +70,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                             if (entity != null) {
                                 var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
                                 if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
-                                    return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName);
+                                    return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
                                 }
                             }
                             return new FieldRenderer();
@@ -90,7 +90,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 case FieldRendererType.OPTION:
                     return new OptionFieldRenderer(type, parameters, targetName);
                 default:
-                    return new FieldRenderer(type, parameters, targetName);
+                    return new FieldRenderer(type, parameters, targetName, null);
             }
         }
 

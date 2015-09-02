@@ -14,7 +14,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI
         }
 
         public OptionFieldRenderer(string renderertype, string parameters, string targetName)
-            : base(renderertype, parameters, targetName) {
+            : base(renderertype, parameters, targetName, null) {
             OptionRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;
