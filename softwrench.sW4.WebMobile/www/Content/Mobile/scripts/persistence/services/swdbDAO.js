@@ -104,20 +104,12 @@
             },
 
             findById: function (entity, id) {
-                var deferred = $q.defer();
+                //var deferred = $q.defer();
                 var dbEntity = entities[entity];
                 if (!dbEntity) {
-                    deferred.reject(new Error("entity {0} not found".format(entity)));
+                    return $q.reject(new Error("entity {0} not found".format(entity)));
                 }
-                dbEntity.findBy("id", id, function (result) {
-                    //single result expected
-                    if (!result || result.length <= 0) {
-                        deferred.reject(new Error("no {0} found with 'id' = {1}".format(entity, id)));
-                    } else {
-                        deferred.resolve(result);
-                    }
-                });
-                return deferred.promise;
+                return this.findSingleByQuery(entity, "id='" + id + "'");
             },
 
             /// <summary>
