@@ -40,6 +40,7 @@
         <attribute name="prophr" type="varchar" required="false" />
         <attribute name="partnum" type="varchar" required="false" />
         <attribute name="proptype" type="varchar" required="false" />
+        <attribute name="proplinenum" type="bigint" required="false" />
         <attribute name="propmanuf" type="varchar" required="false" />
         <attribute name="description" type="varchar" required="true"/>
         <attribute name="invdate" type="datetime" required="true"/>
@@ -54,9 +55,11 @@
           <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
           <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
-          <relationshipAttribute from="status" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true" />
+        <relationship to="alndomain" qualifier="assetstatus">
+          <relationshipAttribute from="assettype" to="value" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
+          <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
+          <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -111,12 +114,12 @@
 
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
           
-          <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
+          <association label="Status:" target="status" hideDescription="true" labelfield="assetstatus.description">
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
           
           
-          <association target="proptype" label="Asset Type" labelfield="assettype_.description">
+          <association target="proptype" label="Property Type" labelfield="assettype_.description">
             <renderer type="lookup" />
           </association>
           <field attribute="description" label="Description" readonly="true"  />
@@ -128,7 +131,7 @@
           <association target="location" label="Location" labelfield="location_.description">
             <renderer type="lookup" />
           </association>
-          <field attribute="prophr" label="Hand Receipt No." readonly="true"/>
+          <field attribute="prophr" label="Hand Receipt No." hidden="true"/>
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>

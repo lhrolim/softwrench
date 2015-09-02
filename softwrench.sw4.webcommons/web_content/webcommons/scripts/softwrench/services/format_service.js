@@ -1,5 +1,4 @@
-﻿
-(function (angular) {
+﻿(function (angular) {
     "use strict";
 
     function formatService($filter, i18NService, dispatcherService) {
@@ -13,16 +12,6 @@
 
             if (angular.isString(value) && value.equalsAny("@now", "@currentdatetime", "@currentdate")) {
                 return $filter('date')(new Date(), dateFormat);
-            }
-
-            if (forceConversion) {
-                //this would be needed for applying the time formats
-                var date = new Date(value);
-                if (isNaN(date)) {
-                    return $filter('date')(value, dateFormat);
-                } else {
-                    return $filter('date')(date, dateFormat);
-                }
             }
 
             try {
@@ -213,6 +202,3 @@
     //#endregion
 
 })(angular);
-
-
-

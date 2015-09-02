@@ -1,13 +1,7 @@
-﻿var swdb;
-
-//window.ionic.Platform.ready(function () {
-//    //initing the softwrench application programatically instead of using ng-app for the sake of persistence.js ripple/device compatibility
-//    angular.bootstrap(document, ['softwrench']);
-//});
-
-//#region 'deviceready' listener
+﻿//#region 'deviceready' listener
 document.addEventListener("deviceready", function() {
     // retrieve the DOM element that had the ng-app attribute
+    // bootstrap angular app "softwrench" programatically
     angular.bootstrap(document.body, ["softwrench"]);
 }, false);
 //#endregion

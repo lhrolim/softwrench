@@ -1,10 +1,10 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, angular) {
     "use strict";
 
     /**
      * @constructor 
      */
-    var AsyncSynchronizationService = function ($q, restService, $log, swdbDAO, $interval) {
+    var AsyncSynchronizationService = function ($q, restService, $log, swdbDAO, $interval, $rootScope) {
 
         // Batches indexed by their id
         var batchRegistry = {};
@@ -14,6 +14,12 @@
         var pollingDelay = 60 * 1000; // TODO: get from config
 
         var self = this;
+
+        // clear state on logout
+        $rootScope.$on("sw4:security:logout", function() {
+            batchRegistry = {};
+            completionCallBacks = [];
+        });
 
         var getBatchIds = function() {
             var ids = [];
@@ -157,6 +163,6 @@
 
     };
 
-    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", "$interval", AsyncSynchronizationService]);
+    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", "$interval", "$rootScope", AsyncSynchronizationService]);
 
-})(mobileServices);
+})(mobileServices, angular);

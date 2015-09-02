@@ -1,4 +1,7 @@
-﻿modules.webcommons.factory('dispatcherService', function ($injector, $log,$q) {
+﻿(function (modules) {
+    "use strict";
+
+modules.webcommons.factory('dispatcherService', ["$injector", "$log", "$q", function ($injector, $log, $q) {
     var loadService = function(service, method) {
         var log = $log.getInstance('dispatcherService#loadService');
 
@@ -78,6 +81,6 @@
         }
     };
 
-});
+}]);
 
-
+})(modules);

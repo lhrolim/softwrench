@@ -1,81 +1,235 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('breadcrumb', function ($rootScope, $log, $compile, menuService) {
+app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
+        templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumb.html'),
         scope: {
             schema: '=',
             menu: '=',
             title: '='
         },
-        link: function (scope, element, attr) {
-            scope.$watch('title', function (newValue, oldValue) {
-                //log.debug(scope.menu);
+        controller: function ($scope) {
+            $scope.convertAdminHTMLtoLeafs = function (kids) {
+                var leafs = [];
 
-                var template;
-                var currentItem = $('.admin-area .admin-menu .dropdown-menu a:contains("' + scope.title + '")');
+                for (var idx = 0; idx < kids.length; idx++) {
+                    if (kids[idx].localName != undefined) {
+                        var iconClass = '';
 
-                //if we are in the admin menu
-                if (currentItem.hasOwnProperty(length)) {
-                    template = getBreadCrumbHTML(log, scope.menu, undefined, menuService);
-                    template += seperator;
+                        switch (kids[idx].localName) {
+                            case 'li':
+                                var link = kids[idx].firstElementChild;
+                                var icon = link.firstElementChild;
+                                var title = link.innerText.trim();
 
-                    var mainItem = $('.admin-area .admin-menu > a');
+                                if (icon != null) {
+                                    if (icon.className != undefined) {
+                                        for (i = 0; i < icon.classList.length; i++) {
+                                            if (icon.classList[i] != 'fa-fw') {
+                                                iconClass += icon.classList[i] + ' ';
+                                            }
+                                        }
+                                    }
+                                }
 
-                    //build the settings item
-                    if (mainItem.hasOwnProperty(length)) {
-                        template += '<div class="part">';
-                        template += '<a data-toggle="dropdown" aria-expanded="false">';
-                        template += mainItem[0].firstElementChild.outerHTML;
-                        template += '&ensp;';
-                        template += 'Settings';
-                        template += '&ensp;<i class="fa fa-caret-down"></i>';
-                        template += '</a>';
+                                if (kids[idx].className != 'user') {
+                                    var newObject = {};
+                                    newObject.icon = iconClass.trim();
+                                    newObject.title = title;
+
+                                    if (link.attributes['ng-click']) {
+                                        var click = link.attributes['ng-click'].nodeValue;
+
+                                        //rename the admin function, to avoid confilts
+                                        click = click.replace('doAction', '$scope.adminDoAction');
+                                        click = click.replace('$event.target', 'null');
+                                        click = click.replace('myProfile', '$scope.adminMyProfile');
+                                        click = click.replace('loadApplication', '$scope.adminLoadApplication');
+                                        click = click.replace('logout', '$scope.adminLogout');
+
+                                        newObject.click = click;
+                                        newObject.type = 'AdminMenuItemDefinition';
+                                    }
+
+                                    if (kids[idx].children != null && kids[idx].children.length > 0) {
+                                        var childLeafs = $scope.convertAdminHTMLtoLeafs(log, kids[idx].children);
+
+                                        if (childLeafs.length > 0) {
+                                            newObject.leafs = childLeafs;
+                                            newObject.type = 'MenuContainerDefinition';
+                                        }
+                                    }
+
+                                    leafs.push(newObject);
+                                }
+
+                                break;
+
+                            case 'ul':
+                                if (kids[idx].children != null && kids[idx].children.length > 0) {
+                                    leafs = $scope.convertAdminHTMLtoLeafs(log, kids[idx].children);
+                                }
+
+                                break;
+                            }
+                        }
+                   }
+
+                return leafs;
+            }
+
+            $scope.findCurrentPage = function (leafs, current) {
+                var page = null;
+
+                if (current != null) {
+                    for (var id in leafs) {
+                        if (leafs[id].hasOwnProperty('title')) {
+                            var childPage = $scope.findCurrentPage(leafs[id].leafs, current);
+
+                            //add page if current or decentant is the current page
+                            if (childPage != null || leafs[id].title == current) {
+                                if (page == null) {
+                                    page = [];
+                                }
+
+                                page.push(leafs[id]);
+                            }
+
+                            //if decentants were found, add to the return
+                            if (childPage != null) {
+                                for (var x in childPage) {
+                                    if (childPage[x].hasOwnProperty('title')) {
+                                        page.push(childPage[x]);
+                                    }
+                                }
+                            }
+                        }
                     }
-
-                    //get the admin menu items
-                    var mainMenu = $('.admin-area .admin-menu > .dropdown-menu');
-                    var leafs = getAdminLeafs(log, mainMenu[0].children);
-
-                    var adminMenu = {};
-                    adminMenu.leafs = leafs;
-                    adminMenu.tpye = 'admin';
-
-                    //append the dropdown menu
-                    template += getChildMenu(log, adminMenu.leafs, null, menuService);
-                    template += '</div>';
-
-                    //append child parts
-                    var foundPath = findCurrentPage(log, adminMenu.leafs, scope.title, adminMenu);
-                    if (foundPath) {
-                        template += seperator;
-                        template += foundPath;
-                    } 
                 } else {
-                    template = getBreadCrumbHTML(log, scope.menu, scope.title, menuService);
+                    //if the current title is null, use the first menu leaf as the current
+                    page = [];
+                    page.push(leafs[0]);
                 }
-               
-                if (template != null) {
-                    var content = $compile(template)(scope);
-                    element.html(content);
+
+                return page;
+            }
+
+            $scope.getBreadcrumbItems = function (currentMenu) {
+                var foundPages = $scope.findCurrentPage(currentMenu.leafs, $scope.title);
+                var newPage;
+
+                //add the settings menu
+                if (currentMenu.displacement == 'admin') {
+                    newPage = {};
+                    newPage.icon = 'fa fa-cog';
+                    newPage.title = 'Settings';
+                    newPage.leafs = currentMenu.leafs;
+                    newPage.type = 'MenuContainerDefinition';
+
+                    if (foundPages != null) {
+                        foundPages.unshift(newPage);
+                    } else {
+                        foundPages = [];
+                        foundPages.push(newPage);
+                    }
                 }
+
+                //add the hamburger menu
+                newPage = {};
+                newPage.icon = 'fa fa-bars';
+                newPage.title = 'Hamburger';
+                newPage.leafs = $scope.menu.leafs;
+                newPage.type = 'MenuContainerDefinition';
+
+                if (foundPages != null) {
+                    foundPages.unshift(newPage);
+                } else {
+                    foundPages = [];
+                    foundPages.push(newPage);
+                }
+  
+                return foundPages;
+            };
+
+            $scope.getCurrentMenu = function () {
+                var currentItem = $('.admin-area .admin-menu .dropdown-menu a:contains("' + $scope.title + '")');
+                var menu = {};
+
+                if (currentItem.hasOwnProperty(length)) {
+                    var mainMenu = $('.admin-area .admin-menu > .dropdown-menu');
+                    var leafs = $scope.convertAdminHTMLtoLeafs(mainMenu[0].children);
+                    menu.displacement = 'admin';
+                    menu.leafs = leafs;
+                } else {
+                    menu = $scope.menu;
+                }
+
+                return menu;
+            };
+
+            $scope.isDesktop = function () {
+                return isDesktop();
+            };
+
+            $scope.isMobile = function () {
+                return isMobile();
+            };
+
+            $scope.toggleOpen = function (event) {
+                $('.hamburger').toggleClass('open');
+            };
+
+            $scope.$watch('title', function (newValue, oldValue) {
+                var currentMenu = $scope.getCurrentMenu();
+                var breadcrumbItems = $scope.getBreadcrumbItems(currentMenu);
+
+                log.debug('breadcrumbItems', $scope, currentMenu, breadcrumbItems);
+                $scope.breadcrumbItems = breadcrumbItems;
             });
         }
     }
 });
 
-app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, adminMenuService) {
+app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper) {
+    var log = $log.getInstance('sw4.breadcrumb Dropdown');
+
+    return {
+        templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbDropdown.html'),
+        scope: {
+            leafs: '='
+        },
+        controller: function ($scope) {
+            $scope.isDesktop = function () {
+                return isDesktop();
+            };
+
+            $scope.isMobile = function () {
+                return isMobile();
+            };
+
+            $scope.toggleOpen = function (event) {
+                $(event.target).next().toggleClass('open');
+            };
+        },
+        compile: function (element) {
+            return recursionHelper.compile(element, function (scope, iElement, iAttrs, controller, transcludeFn) {
+                // Define your normal link function here.
+                // Alternative: instead of passing a function,
+                // you can also pass an object with 
+                // a 'pre'- and 'post'-link function.
+            });
+        }
+    }
+});
+
+app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
     var log = $log.getInstance('sw4.breadcrumb Menu Item');
 
     return {
-        link: function (scope, element, attr) {
-            $compile(element.contents())(scope);
-        },
         controller: function ($scope, alertService, validationService) {
-
-            $scope.goToApplication = function (title) {
-                var leaf = findleafByTitle(log, $scope.menu.leafs, title);
+            $scope.goToApplication = function (leaf) {
                 var msg = "Are you sure you want to leave the page?";
                 if (validationService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
@@ -86,13 +240,14 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, a
                 else {
                     menuService.goToApplication(leaf, null);
                 }
+
+                $scope.closeBreadcrumbs();
             };
 
-            $scope.doAction = function (title) {
+            $scope.doAction = function (leaf) {
                 //update title when switching to dashboard
                 $scope.$emit('sw_titlechanged', null);
 
-                var leaf = findleafByTitle(log, $scope.menu.leafs, title);
                 var msg = "Are you sure you want to leave the page?";
                 if (validationService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
@@ -103,265 +258,37 @@ app.directive('bcMenuItem', function ($rootScope, $log, $compile, menuService, a
                 else {
                     menuService.doAction(leaf, null);
                 }
+
+                $scope.closeBreadcrumbs();
+            };
+
+            $scope.adminEval = function (click) {
+                eval(click);
             };
 
             $scope.adminDoAction = function (title, controller, action, parameters, target) {
                 adminMenuService.doAction(title, controller, action, parameters, target);
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminLoadApplication = function (applicationName, schemaId, mode, id) {
                 adminMenuService.loadApplication(applicationName, schemaId, mode, id);
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminLogout = function () {
                 adminMenuService.logout();
+                $scope.closeBreadcrumbs();
             };
 
             $scope.adminMyProfile = function () {
                 adminMenuService.myProfile();
+                $scope.closeBreadcrumbs();
+            };
+
+            $scope.closeBreadcrumbs = function () {
+                $('.breadcrumb .open').removeClass('open');
             };
         }
     }
 });
-
-function getAdminLeafs(log, kids) {
-    var leafs = [];
-
-    for (var idx = 0; idx < kids.length; idx++) {
-        if (kids[idx].localName != undefined) {
-            var iconClass = '';
-
-            switch (kids[idx].localName) {
-                case 'li':
-                    var link = kids[idx].firstElementChild;
-                    var icon = link.firstElementChild;
-                    var title = link.innerText.trim();
-
-                    if (icon != null) {
-                        if (icon.className != undefined) {
-                            for (i = 0; i < icon.classList.length; i++) {
-                                if (icon.classList[i] != 'fa-fw') {
-                                    iconClass += icon.classList[i] + ' ';
-                                }
-                            }
-                        }
-                    }
-
-                    if (kids[idx].className != 'user') {
-                        var newObject = {};
-                        newObject.icon = iconClass.trim();
-                        newObject.title = title;
-
-                        if (link.attributes['ng-click']) {
-                            var click = link.attributes['ng-click'].nodeValue;
-
-                            //rename the admin function, to avoid confilts
-                            click = click.replace('doAction', 'adminDoAction');
-                            click = click.replace('myProfile', 'adminMyProfile');
-                            click = click.replace('loadApplication', 'adminLoadApplication');
-                            click = click.replace('logout', 'adminLogout');
-
-                            newObject.click = click;
-                        }
-
-                        if (kids[idx].children != null && kids[idx].children.length > 0) {
-                            var childLeafs = getAdminLeafs(log, kids[idx].children);
-
-                            if (childLeafs.length > 0) {
-                                newObject.leafs = childLeafs;
-                            }
-                        }
-
-                        leafs.push(newObject);
-                    }
-
-                    break;
-
-                case 'ul':
-                    if (kids[idx].children != null && kids[idx].children.length > 0) {
-                        leafs = getAdminLeafs(log, kids[idx].children);
-                    }
-
-                    break;
-                }
-            }
-       }
-
-    return leafs;
-}
-
-function getBreadCrumbHTML(log, menu, current, menuService) {
-    var path = '<div class="part main" bc-menu>';
-    path += '<a data-toggle="dropdown" aria-expanded="false">';
-    path += '<i class="fa fa-bars"></i>';
-    path += '&ensp;<i class="fa fa-caret-down"></i>';
-    path += '</a>';
-
-    //add submenu
-    path += getChildMenu(log, menu.leafs, null, menuService);
-    path += '</div>';
-
-    //append child parts
-    if (current != undefined) {
-        var foundPath = findCurrentPage(log, menu.leafs, current, null);
-
-        if (foundPath) {
-            path += seperator;
-            path += foundPath;
-        } else {
-            return null;
-        }
-    }
-
-    return path;
-}
-
-function getChildMenu(log, leafs, parent, menuService) {
-    var path = '';
-    var searchLeafs = null;
-
-    //if no parent use the get the whole menu, else the child items from the parent
-    if (parent == null) {
-        searchLeafs = leafs
-    } else {
-        if (parent.leafs != null) {
-            searchLeafs = parent.leafs;
-        }
-    }
-
-    if (searchLeafs != null) {
-        path += '<ul class="dropdown-menu" role="menu" bc-menu>';
-        for (var id in searchLeafs) {
-            var leaf = searchLeafs[id];
-            if (leaf.title != null) {
-                var childMenu = getChildMenu(log, leaf.leafs, leaf, menuService);
-
-                //if child menu found, display as submenu
-                if (childMenu) {
-                    path += '<li class="dropdown-submenu">';
-                    path += '<a data-toggle="dropdown" aria-expanded="false">';
-                } else {
-                    path += '<li><a bc-menu-item ng-click="';
-
-                    if (leaf.click) {
-                        path += leaf.click;
-                        path += '">';
-                    } else {
-                        if (leaf.type == 'ActionMenuItemDefinition') {
-                            path += 'doAction';
-                        } else if (leaf.type == 'ApplicationMenuItemDefinition') {
-                            path += 'goToApplication';
-                        } else if (leaf.type == 'ExternalLinkMenuItemDefinition') {
-                            if (!leaf.link.startsWith("http")) {
-                                leaf.link = "http://" + leaf.link;
-                            }
-                            var externalLink = menuService.parseExternalLink(leaf);
-                            path += '\" target="_blank" href="{0}"'.format(externalLink);
-                        }
-
-                        path += '(\'' + leaf.title + '\')">';
-                    }
-                }
-
-                //build the menu item
-                path += '<i class="' + leaf.icon + ' fa-fw"></i>&ensp;' + leaf.title.trim();
-                path += '</a>';
-
-                //add the child menu items
-                if (childMenu) {
-                    path += childMenu;
-                }
-
-                path += '</li>';
-            }
-        }
-        path += '</ul>';
-    }
-
-    return path;
-}
-
-function findCurrentPage(log, leafs, current, parent) {
-    var path = '';
-
-    if (leafs != null) {
-        for (var id in leafs) {
-            var newPath = findCurrentPage(log, leafs[id].leafs, current, leafs[id]);
-            var icon = '<i class="' + leafs[id].icon + '"></i>&ensp;'
-
-            //if this is part of the breadcrumb
-            if ((newPath != undefined && newPath != '') || (leafs[id].title == current)) {
-
-                //get the child menu items
-                var childMenu = getChildMenu(log, leafs, leafs[id]);
-
-                //build the breadcrumb part and menu
-                path += '<div class="part">';
-
-                //if child menu found, add the dropdown toggle
-                if (newPath) {
-                    path += '<a data-toggle="dropdown" aria-expanded="false">';
-                } else {
-                    path += '<a ng-click="';
-
-                    if (leafs[id].type == 'ActionMenuItemDefinition') {
-                        path += 'doAction';
-                    } else if (leafs[id].type == 'ApplicationMenuItemDefinition') {
-                        path += 'goToApplication';
-                    } else if (leafs[id].type == 'ExternalLinkMenuItemDefinition') {
-                        path += '<a target="_blank" href="{0}"'.format(leaf.link);
-                    }
-
-                    path += '(\'' + leafs[id].title + '\')">';
-                }
-
-                //add the icon and title
-                path += icon + leafs[id].title;
-
-                if (newPath) {
-                    path += '&ensp;<i class="fa fa-caret-down"></i>';
-                }
-
-                path += '</a>';
-
-                //add the child menu items
-                if (newPath) {
-                    path += getChildMenu(log, leafs, leafs[id]);
-                }
-
-                path += '</div>';
-
-                //if found add the next breadcrumb part
-                if (newPath != undefined && newPath != '') {
-                    path += seperator + newPath;
-                }
-            }
-        }
-    }
-
-    return path;
-}
-
-function findleafByTitle(log, leafs, title) {
-    var found = null;
-
-    if (leafs != null) {
-        for (var id in leafs) {
-            var search = findleafByTitle(log, leafs[id].leafs, title);
-
-            //if a child is the current item, pass it along
-            if (search != null) {
-                found = search;
-            }
-
-            //if this is the current item
-            if (leafs[id].title == title) {
-                found = leafs[id];
-            }
-        }
-    }
-
-    return found;
-}
-
-var seperator = '<span class="part seperator">/</span>';

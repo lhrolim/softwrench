@@ -74,6 +74,11 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
         /// <param name="triggerFieldName"></param>
         moveFocus: function (datamap, schema, attribute, params) {
 
+            if (schemaService.isPropertyTrue(schema,'crud.disableautofocus')) {
+                return;
+            }
+
+
             var log = $log.get("focusService#moveFocus");
             log.debug("moving focus to item next to {0}".format(attribute));
 

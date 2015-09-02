@@ -327,16 +327,20 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             if (!schema) {
                 schema = scope.compositionlistschema;
             }
-            if (triggerFieldName != "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) == -1) {
+            if (triggerFieldName !== "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) === -1) {
                 //no other asociation depends upon this first association, return here.
                 //false is to indicate that no value has been updated
                 log.debug('No associated dependants for {0}'.format(triggerFieldName));
-                $timeout(function () {
-                    //this timeout is required because there´s already a digest going on, so this emit would throw an exception
-                    //had to put a bigger timeout so that the watches doesn´t get evaluated.
-                    //TODO: investigate it
-                    scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
-                }, 300, false);
+                if (association.rendererType !== 'multiselectautocompleteclient') {
+                    //if multiple selection, there´s no sense to move focus
+                    $timeout(function () {
+                        //this timeout is required because there´s already a digest going on, so this emit would throw an exception
+                        //had to put a bigger timeout so that the watches doesn´t get evaluated.
+                        //TODO: investigate it
+                        scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
+                    }, 300, false);
+                }
+                
                 
                 return false;
             }

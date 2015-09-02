@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     'use strict';
 
     angular.module('sw_mobile_services').factory('offlineSchemaService', ['$log', 'fieldService', 'schemaService', offlineSchemaService]);
@@ -93,7 +92,4 @@
         }
 
     }
-})();
-
-
-
+})(angular);

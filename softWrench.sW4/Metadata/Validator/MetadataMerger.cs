@@ -78,16 +78,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
             }
 
-            IDictionary<string, string> overridenParameters = new Dictionary<string, string>();
-
-            foreach (var parameter in souceAplication.Parameters) {
-                string value = parameter.Value;
-                if (overridenApplication.Parameters.ContainsKey(parameter.Key)) {
-                    value = overridenApplication.Parameters[parameter.Key];
-                }
-                overridenParameters[parameter.Key] = value;
-            }
-
+            var overridenParameters = MergeParameters(souceAplication, overridenApplication);
 
 
             var title = overridenApplication.Title ?? souceAplication.Title;
@@ -101,6 +92,26 @@ namespace softWrench.sW4.Metadata.Validator {
                 title, entity, idFieldName, userIdFieldName,
                 overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), service, notifications);
 
+        }
+
+        private static IDictionary<string, string> MergeParameters(CompleteApplicationMetadataDefinition souceAplication,
+            CompleteApplicationMetadataDefinition overridenApplication) {
+            IDictionary<string, string> overridenParameters = new Dictionary<string, string>();
+
+            foreach (var parameter in souceAplication.Parameters) {
+                var value = parameter.Value;
+                if (overridenApplication.Parameters.ContainsKey(parameter.Key)) {
+                    value = overridenApplication.Parameters[parameter.Key];
+                }
+                overridenParameters[parameter.Key] = value;
+            }
+            foreach (var parameter in overridenApplication.Parameters){
+                if (!overridenParameters.ContainsKey(parameter.Key)){
+                    overridenParameters[parameter.Key] = parameter.Value;
+                }
+            }
+
+            return overridenParameters;
         }
 
         private static List<DisplayableComponent> MergeComponents(CompleteApplicationMetadataDefinition souceAplication,

@@ -24,14 +24,6 @@
         "is_top_level": false,
         "variables": {}
     },
-    "android.support.v4": {
-        "source": {
-            "type": "registry",
-            "id": "android.support.v4@21.0.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "io.litehelpers.cordova.sqlite": {
         "source": {
             "type": "git",
@@ -75,6 +67,22 @@
             "subdir": "."
         },
         "is_top_level": true,
+        "variables": {}
+    },
+    "android.support.v4": {
+        "source": {
+            "type": "registry",
+            "id": "android.support.v4@21.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-support-v4": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-android-support-v4"
+        },
+        "is_top_level": false,
         "variables": {}
     }
 }

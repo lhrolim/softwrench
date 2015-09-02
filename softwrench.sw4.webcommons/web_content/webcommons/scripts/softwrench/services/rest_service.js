@@ -1,10 +1,10 @@
-﻿modules.webcommons.factory('restService', function ($http, $log, contextService) {
+﻿(function (modules) {
+    "use strict";
+
+modules.webcommons.factory('restService', ["$http", "$log", "contextService", function ($http, $log, contextService) {
 
 
     return {
-
-
-     
 
         getActionUrl: function (controller, action, parameters) {
             action = (action === undefined || action == null) ? 'get' : action;
@@ -67,6 +67,6 @@
 
     };
 
-});
+}]);
 
-
+})(modules);

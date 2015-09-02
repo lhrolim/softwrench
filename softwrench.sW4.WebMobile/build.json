@@ -1,0 +1,11 @@
+﻿{
+    "android": {
+        "release": {
+            "keystore": "certificates\\android\\keystore\\swoff.release.keystore",
+            "storePassword": "softwrench.offline",
+            "alias": "swoff_release",
+            "password": "softwrench.offline",
+            "keystoreType": ""
+        }
+    }
+}

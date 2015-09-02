@@ -153,6 +153,10 @@ namespace softWrench.sW4.Data.Entities {
 
                 var stValue = value.ToString();
                 if (stValue == "") {
+                    if (type.EqualsAny("datetime", "timestamp")) {
+                        return null;
+                    }
+
                     return value.Type == JTokenType.Null ? null : value.ToString();
                 }
                 if (stValue == "$null$ignorewatch") {

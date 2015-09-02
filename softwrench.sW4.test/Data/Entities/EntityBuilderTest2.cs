@@ -30,6 +30,7 @@ namespace softwrench.sW4.test.Data.Entities {
             var worktype = entity.GetRelationship("worktype") as Entity;
             Assert.IsNotNull(worktype);
             Assert.AreEqual("R0 Blade", worktype.GetAttribute("wtypedesc"));
+            Assert.IsNull(worktype.GetAttribute("statusdate"));
 //            Assert.AreEqual("A very long description.", entity.GetAttribute("DESCRIPTION_LONGDESCRIPTION"));
 
             Assert.AreEqual(100, worktype.GetAttribute("worktypeid"));

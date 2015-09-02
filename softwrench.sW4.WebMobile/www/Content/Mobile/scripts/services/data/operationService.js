@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (mobileServices) {
     'use strict';
 
     mobileServices.factory('operationService', ['schemaService', operationService]);
@@ -18,4 +17,4 @@
         }
 
     }
-})();
+})(mobileServices);

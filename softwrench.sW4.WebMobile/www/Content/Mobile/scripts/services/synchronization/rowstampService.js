@@ -1,4 +1,7 @@
-﻿mobileServices.factory('rowstampService', function ($q, $log, swdbDAO, offlineEntities) {
+﻿(function (mobileServices) {
+    "use strict";
+
+    mobileServices.factory('rowstampService', ["$q", "$log", "swdbDAO", "offlineEntities", function ($q, $log, swdbDAO, offlineEntities) {
     var entities = offlineEntities;
 
     return {
@@ -72,4 +75,6 @@
 
 
     }
-});
+}]);
+
+})(mobileServices);

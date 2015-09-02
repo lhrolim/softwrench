@@ -1,6 +1,9 @@
 ﻿//taken from here:
 //http://codepen.io/mhartington/pen/CImqy
 
+(function (softwrench) {
+    "use strict";
+
 softwrench.directive('optionField',
     [
         '$ionicModal',
@@ -149,4 +152,5 @@ softwrench.directive('optionField',
             };
         }
     ]
-)
+);
+})(softwrench);

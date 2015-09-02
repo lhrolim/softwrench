@@ -2,7 +2,7 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="breadcrumb" indexitem="SR">
 
   
-  <container title="Service Requests" tooltip="Click to access your request tasks" role="sr">
+  <container title="Service Requests" tooltip="Click to access your request tasks" role="sr" icon="fa fa-ticket">
     <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
     <application id="NSR" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
   </container>
@@ -10,7 +10,7 @@
     <application id="QSR" icon="fa fa-table" title="Quick Grid" ref="quickservicerequest" schema="quicksrgrid" tooltip="Click to view your Service Request Grid" role="qsr"/>
     <application id="QNSR" icon="fa fa-plus" title="Quick Request" ref="quickservicerequest" schema="quicknewdetail" tooltip="Click to Create a New Service Request" role="qsr"/>
   </container>
-  <container title="Work Orders" tooltip="Click to access your work order tasks" role="workorders">
+  <container title="Work Orders" tooltip="Click to access your work order tasks" role="workorders" icon="fa fa-wrench">
     <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
     <application id="NWO" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
   </container>

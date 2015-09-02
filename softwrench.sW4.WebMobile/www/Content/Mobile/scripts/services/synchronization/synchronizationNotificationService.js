@@ -1,4 +1,4 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, angular) {
     "use strict";
 
     var synchronizationNotificationService = function ($rootScope, routeService, $cordovaLocalNotification, $ionicPopup, notificationPluginWrapper) {
@@ -123,4 +123,4 @@
     mobileServices.factory("synchronizationNotificationService",
         ["$rootScope", "routeService", "$cordovaLocalNotification", "$ionicPopup", "notificationPluginWrapper", synchronizationNotificationService]);
 
-})(mobileServices);
+})(mobileServices, angular);
