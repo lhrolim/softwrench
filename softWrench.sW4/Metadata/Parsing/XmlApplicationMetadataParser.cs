@@ -90,7 +90,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 case FieldRendererType.OPTION:
                     return new OptionFieldRenderer(type, parameters, targetName);
                 default:
-                    return new FieldRenderer(type, parameters, targetName, null);
+                    return new FieldRenderer(type, parameters, targetName, stereotype);
             }
         }
 
