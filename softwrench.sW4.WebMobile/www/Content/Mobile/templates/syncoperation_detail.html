@@ -23,7 +23,7 @@
     <ion-content class="has-header" ng-class="{ 'vertical-center' : !data.operation }">
 
         <!-- has operation to display -->
-        <div ng-if="!!data.operation">
+        <div ng-if="!!data.operation" class="responsive-container lg">
 
             <div class="operation-status">
                 <div class="row">
@@ -60,14 +60,12 @@
             </div>
 
             <!-- detail of latest syncoperation: navigate to history button + recent application state-->
-            <div ng-if="data.isLatestOperation">
+            <div ng-if="data.isLatestOperation" class="responsive-container lg">
 
-                <div class="row">
-                    <div class="col">
-                        <button class="button button-positive button-full" ng-click="goToHistory()">
-                            Synchronization History
-                        </button>
-                    </div>
+                <div class="row button-container">
+                    <button class="button button-positive button-full" ng-click="goToHistory()">
+                        Synchronization History
+                    </button>
                 </div>
 
                 <div class="list">
