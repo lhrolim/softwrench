@@ -38,20 +38,7 @@ namespace softwrench.sw4.Shared2.Data.Association {
             return labelComparison;
         }
 
-        protected bool Equals(GenericAssociationOption other) {
-            return string.Equals(Value, other.Value);
-        }
-
-        public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((GenericAssociationOption)obj);
-        }
-
-        public override int GetHashCode() {
-            return (Value != null ? Value.GetHashCode() : 0);
-        }
+     
     }
 
 
