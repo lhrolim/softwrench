@@ -23,9 +23,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             AssociationRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;
-            //ComponentStereotype stereotypeResult = ComponentStereotype.None;
-            //Enum.TryParse(stereotype, true, out stereotypeResult);
-            //Stereotype = stereotypeResult;
         }
 
         protected override void ValidateRendererType(String rendererType) {
