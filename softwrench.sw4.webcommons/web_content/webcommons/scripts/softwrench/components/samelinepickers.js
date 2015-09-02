@@ -2,11 +2,11 @@
 
 function SamelinePickersController($scope, $rootScope, formatService, $filter) {
 
-    var getCurrentDateString = function() {
+    var getCurrentDateString = function () {
         var date = new Date();
         return date.mmddyyyy();
     }
-    
+
     var joinDates = function (fields) {
         // Set value to null if neither date or time are present
         var dateParameterName = $scope.fieldMetadata.parameters['joinattribute'] + '_date';
@@ -21,8 +21,17 @@ function SamelinePickersController($scope, $rootScope, formatService, $filter) {
         // If time is not present, then apply no time. 
         var finalize_time = fields[timeParameterName] == undefined ? "" : " " + fields[timeParameterName];
 
+        var combinedDates = finalize_date + finalize_time;
+
         // Combine both date and time to form desire tiem.  
-        fields[$scope.fieldMetadata.parameters['joinattribute']] = finalize_date + finalize_time;
+        if (combinedDates.trim() === "") {
+            fields[$scope.fieldMetadata.parameters['joinattribute']] = null;
+        } else {
+            fields[$scope.fieldMetadata.parameters['joinattribute']] = combinedDates;
+        }
+
+        
+        
     };
 
     function doInit() {
@@ -42,7 +51,18 @@ function SamelinePickersController($scope, $rootScope, formatService, $filter) {
 
         $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] = valueToUse;
         $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] = valueToUse;
-            
+
+        if ("true" === $scope.fieldMetadata.parameters["required"]) {
+            $scope.schema.displayables.push({
+                //if the field is required, adding it to the schema so that validation proceeds
+                attribute: $scope.fieldMetadata.parameters['joinattribute'],
+                label: $scope.fieldMetadata.header.label,
+                requiredExpression: 'true',
+                rendererParameters:{}
+            });
+        }
+
+
         $scope.$on("sw_beforesubmitprevalidate_internal", function (event, fields) {
             joinDates(fields);
         });

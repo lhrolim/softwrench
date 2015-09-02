@@ -650,7 +650,11 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 return isDesktop();
             };
 
-            $scope.isFieldRequired = function (requiredExpression) {
+            $scope.isFieldRequired = function (fieldMetadata) {
+                if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
+                    return "true"===fieldMetadata.parameters["required"];
+                }
+                var requiredExpression = fieldMetadata.requiredExpression;
                 if (requiredExpression != undefined) {
                     return expressionService.evaluate(requiredExpression, $scope.datamap);
                 }
