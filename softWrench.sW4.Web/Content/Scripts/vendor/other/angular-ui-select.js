@@ -1180,6 +1180,13 @@
 
                 // From model --> view
                 ngModel.$formatters.unshift(function (inputValue) {
+                    if (typeof inputValue === 'string') {
+                        //luiz: not sure why was that even needed....for some reason when the input was a single array element it was being converted 
+                        // into a string somewhere, breaking the whole component.Couldn´t track it properly, but this workaround seems to fix that bug
+                        //see: https://controltechnologysolutions.atlassian.net/browse/SWWEB-1354
+                        return [inputValue];
+                    }
+
                     var data = $select.parserResult.source(scope, { $select: { search: '' } }), //Overwrite $search
                         locals = {},
                         result;

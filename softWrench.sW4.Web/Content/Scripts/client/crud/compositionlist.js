@@ -509,7 +509,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
             $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
-                if (columnMode == "arrow" || columnMode == "singleselection") {
+                if (columnMode === "arrow" || columnMode === "singleselection") {
                     //to avoid second call
                     $event.stopImmediatePropagation();
                 }
@@ -518,7 +518,12 @@ app.directive('compositionList', function (contextService, formatService, schema
 
                 var log = $log.get("compositionlist#toggleDetails");
 
-                if ((this.isBatch() && columnMode != "arrow")) {
+                if (columnMode == null && column == null) {
+                    //for sections inside compositionlist, ex: reply/replyall of commlogs
+                    return;
+                }
+
+                if ((this.isBatch() && columnMode !== "arrow")) {
                     //For batch mode, as the items will be edited on the lines, 
                     //we cannot allow the details to be expanded unless the button is clicked on the left side of the table.
                     return;
