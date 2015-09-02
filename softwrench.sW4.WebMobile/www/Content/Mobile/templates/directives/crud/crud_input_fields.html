@@ -1,4 +1,4 @@
-﻿<div ng-repeat="it in displayables" ng-show="!isFieldHidden(it)" class="crud-input-fields-wrapper">
+﻿<div ng-repeat="it in displayables" ng-show="!isFieldHidden(it)" class="crud-fields-wrapper">
     <!-- group inputs 2-by-2 in landscape tablets: -->
     <!-- http://stackoverflow.com/questions/27239735/ionic-framwork-gridlayout-with-multiple-rows-and-column-on-which-buttons-placed -->
     <!-- http://stackoverflow.com/questions/23779773/angularjs-loops-and-formatting/27080632#27080632 -->
@@ -8,7 +8,7 @@
             <label class="item item-input">
                 <span ng-show="isFieldRequired(field.requiredExpression)" class="requiredfieldmark">* </span>
                 <span class="input-label">{{field.label}}</span>
-                <ng-switch on="field.type">
+                <ng-switch on="field.type" class="full-width">
                     <div ng-switch-when="ApplicationAssociationDefinition">
                         <ion-autocomplete ng-model="datamap[field.target]"
                                           component-id="{{field.associationKey}}"
