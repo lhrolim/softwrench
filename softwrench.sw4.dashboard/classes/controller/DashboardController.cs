@@ -40,17 +40,16 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
         //TODO: fix datetime deserialization
         [HttpPost]
-        public IGenericResponseResult SaveDashboard([FromUri]Dashboard dashboard, [FromUri]string policy,
-            [FromUri]string creationDateSt) {
+        public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
             var currentdtm = DateTime.Now;
 
-            if ("personal".Equals(policy)) {
-                dashboard.Filter = new DashboardFilter {
-                    UserId = user.UserId
-                };
-            }
+//            if ("personal".Equals(policy)) {
+//                dashboard.Filter = new DashboardFilter {
+//                    UserId = user.UserId
+//                };
+//            }
 
             // Populate default values
             if (dashboard.Layout == null) {
