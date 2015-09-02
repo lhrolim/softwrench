@@ -57,7 +57,7 @@
         clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
 
         clonedItem['sendto'] = origSendFrom.indexOf(",") > -1 ? origSendFrom.split(',') : [origSendFrom];
-        clonedItem['cc'] = nullOrCommaSplit(origCc);
+        clonedItem['cc'] = null;
 
         clonedItem['commloguid'] = null;
         clonedItem['subject'] = "Re: " + origSubject;
