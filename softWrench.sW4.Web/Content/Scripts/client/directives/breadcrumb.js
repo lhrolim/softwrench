@@ -118,29 +118,36 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
             $scope.getBreadcrumbItems = function (currentMenu) {
                 var foundPages = $scope.findCurrentPage(currentMenu.leafs, $scope.title);
+                var newPage;
 
-                if (foundPages != null) {
-                    var newPage;
-
-                    //add the settings menu
-                    if (currentMenu.displacement == 'admin') {
-                        newPage = {};
-                        newPage.icon = 'fa fa-cog';
-                        newPage.title = 'Settings';
-                        newPage.leafs = currentMenu.leafs;
-                        newPage.type = 'MenuContainerDefinition';
-
-                        foundPages.unshift(newPage);
-                    }
-
-                    //add the hamburger menu
+                //add the settings menu
+                if (currentMenu.displacement == 'admin') {
                     newPage = {};
-                    newPage.icon = 'fa fa-bars';
-                    newPage.title = 'Hamburger';
-                    newPage.leafs = $scope.menu.leafs;
+                    newPage.icon = 'fa fa-cog';
+                    newPage.title = 'Settings';
+                    newPage.leafs = currentMenu.leafs;
                     newPage.type = 'MenuContainerDefinition';
 
+                    if (foundPages != null) {
+                        foundPages.unshift(newPage);
+                    } else {
+                        foundPages = [];
+                        foundPages.push(newPage);
+                    }
+                }
+
+                //add the hamburger menu
+                newPage = {};
+                newPage.icon = 'fa fa-bars';
+                newPage.title = 'Hamburger';
+                newPage.leafs = $scope.menu.leafs;
+                newPage.type = 'MenuContainerDefinition';
+
+                if (foundPages != null) {
                     foundPages.unshift(newPage);
+                } else {
+                    foundPages = [];
+                    foundPages.push(newPage);
                 }
   
                 return foundPages;
