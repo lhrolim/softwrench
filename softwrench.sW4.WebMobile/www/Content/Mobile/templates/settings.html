@@ -4,14 +4,15 @@
     </ion-nav-buttons>
 
     <ion-content class="padding" has-header="true">
-        <div class="list list-inset">
+        
+        <div class="list list-inset responsive-container lg">
             <label class="item item-input">
                 <input type="text" placeholder="URL" ng-model="settings.serverurl">
             </label>
             <button class="button button-calm button-block" ng-click="save()">Save</button>
         </div>
 
-        <div class="list card" ng-if="config">
+        <div class="list card responsive-container lg" ng-if="config">
             <div class="item item-divider">
                 About
             </div>

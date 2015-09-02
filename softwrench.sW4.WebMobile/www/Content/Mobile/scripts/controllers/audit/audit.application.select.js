@@ -2,7 +2,7 @@
     "use strict";
 
     app.controller("AuditApplicationSelectController",
-        ["$scope", "offlineAuditService", "routeService",
+        ["$scope", "offlineAuditService", "securityService", "routeService",
             function ($scope, offlineAuditService, securityService, routeService) {
 
                 $scope.data = {

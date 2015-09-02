@@ -16,6 +16,11 @@
             }
         };
 
+        var isLoginState = function () {
+            var current = routeService.$state.current.name;
+            return current === "login";
+        };
+
         /**
          * Authenticates the user locally initializing it's client-side session
          * and $broadcasts the event "security:login" in $rootScope with two parameters
@@ -96,10 +101,14 @@
          * response status (indicating the user requires remote authentication).
          * For now just calls logout.
          */
-        var handleUnauthorizedRemoteAccess = function() {
-            logout().then(function() {
-                routeService.go("login", { message: config.message.unauthorizedaccess });
-            });
+        var handleUnauthorizedRemoteAccess = function () {
+            var logoutPromise = logout();
+            // not at login state, transition to it with proper message
+            if (!isLoginState()) {
+                logoutPromise.then(function () {
+                    routeService.go("login", { message: config.message.unauthorizedaccess });
+                });
+            }
         };
 
         //#endregion
