@@ -1,13 +1,25 @@
 ﻿.page-login .login-settings {
     margin-top: 10px;   
 }
-.page-login .action-bar .action-button {
+.page-login .login-form-container .action-bar {
+    padding-left: 0;
+    padding-right: 0;
+}
+.page-login .login-form-container .action-bar .action-button {
     padding: 0;
     text-align: center;
 }
-.page-login .login-form {
+.page-login .login-form-container .login-form {
     margin-bottom: 0;
 }
-.page-login .login-form .login-input {
+.page-login .login-form-container .login-form .login-input {
     margin-bottom: 0;
+}
+
+@media (min-width: 767px) {
+    .page-login .login-form-container {
+        width: 567px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }

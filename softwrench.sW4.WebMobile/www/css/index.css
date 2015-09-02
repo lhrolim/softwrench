@@ -71,3 +71,14 @@
         display: none;
     }
 }
+/* hide/show according to device type/size */
+@media (max-width: 567px) {
+    .show-tablet {
+        display: none !important;
+    }
+}
+@media (min-width: 767px) {
+    .show-phone {
+        display: none !important;
+    }
+}
