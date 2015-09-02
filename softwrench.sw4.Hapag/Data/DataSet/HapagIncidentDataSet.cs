@@ -102,7 +102,6 @@ namespace softwrench.sw4.Hapag.Data.DataSet
 
         public IEnumerable<IAssociationOption> ParseCommoditiesList(AssociationPostFilterFunctionParameters postParams)
         {
-            var comparer = new OptionComparer();
             ISet<IAssociationOption> commodity = new SortedSet<IAssociationOption>();
 
             foreach (var resultset in postParams.Options)

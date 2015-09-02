@@ -56,7 +56,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
                 delete datamap.panels;
             }
 
-            restService.invokePost('Dashboard', 'SaveDashboard', datamap, null, function (data) {
+            restService.invokePost('Dashboard', 'SaveDashboard', null, datamap, function (data) {
                 $rootScope.$broadcast('dash_dashsaved', data.resultObject);
             });
         },

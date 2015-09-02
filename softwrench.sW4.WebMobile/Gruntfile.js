@@ -382,24 +382,89 @@ module.exports = function (grunt) {
         "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
     ]);
 
-    // release: build
 
+    // ****************************
+    // ** BUILD DEVICE ARTIFACTS **
+    // ****************************
+    var fs = require("fs-extra");
+    var path = require("path");
+    var Q = require("q");
+    var taco = require("taco-team-build");
 
-    grunt.registerTask("vs2015", "builds the app for devices", function (env) {
-        env = env || "debug";
-        switch (env) {
-            case "release":
-                return grunt.task.run(["preparerelease", "copy:build", "build:" + env]);
-            case "debug":
-                return grunt.task.run(["fulldev", "copy:build", "build:" + env]);
-            default:
-                throw new Error("Unsupported build environment: " + env);
+    // ripped from taco-team-build.js
+    // Utility method that coverts args into a consistant input understood by cordova-lib
+    function getCallArgs(platforms, args) {
+        // Processes single platform string (or array of length 1) and an array of args or an object of args per platform
+        args = args || [];
+        if (typeof (platforms) == "string") {
+            platforms = [platforms];
         }
-    });
+        // If only one platform is specified, check if the args is an object and use the args for this platform if so
+        if (platforms.length === 1) {
+            if (args instanceof Array) {
+                return { platforms: platforms, options: args };
+            } else {
+                return { platforms: platforms, options: args[platforms[0]] };
+            }
+        }
+    }
 
-    grunt.registerTask("build", function (env) {
-        var cordovaBuild = require("taco-team-build"),
-        done = this.async();
+    // ripped from taco-team-build.js
+    // Prep for build by adding platforms and setting environment variables
+    function addPlatformsToProject(cordova, cordovaPlatforms) {
+        var promise = Q();
+        var projectPath = process.cwd();
+        cordovaPlatforms.forEach(function (platform) {
+            promise = promise.then(function () {
+                return cordova.raw.platform('rm', platform);
+            }).then(function () {
+                console.log("Adding platform " + platform + "...");
+                // Fix for when the plugins/<platform>.json file is accidently checked into source control 
+                // without the corresponding contents of the platforms folder. This can cause the behavior
+                // described here: http://stackoverflow.com/questions/30698118/tools-for-apache-cordova-installed-plugins-are-skipped-in-build 
+                var platformPluginJsonFile = path.join(projectPath, "plugins", platform.trim() + ".json")
+                if (fs.existsSync(platformPluginJsonFile)) {
+                    console.log(platform + ".json file found at \"" + platformPluginJsonFile + "\". Removing to ensure plugins install properly in newly added platform.")
+                    fs.unlinkSync(platformPluginJsonFile);
+                }
+            }).then(function () {
+                // Now add the platform
+                return cordova.raw.platform('add', platform);
+            }).then(function () {
+                // apply overrides
+                // TODO: copy all files in overrides
+                var ori = path.join(projectPath, "overrides", platform.trim(), "cordova", "lib", "build.js");
+                var dest = path.join(projectPath, "platforms", platform.trim(), "cordova", "lib", "build.js");
+                return fs.copySync(ori, dest);
+            });
+
+        });
+        return promise;
+    }
+
+    // ripped and modified from taco-team-build.js
+    function buildProject(cordovaPlatforms, args) {
+        if (typeof (cordovaPlatforms) == "string") {
+            cordovaPlatforms = [cordovaPlatforms];
+        }
+        return taco.setupCordova().then(function(cordova) {
+            // Add platforms if not done already
+            var promise = addPlatformsToProject(cordova, cordovaPlatforms);
+            //Build each platform with args in args object
+            cordovaPlatforms.forEach(function (platform) {
+                promise = promise.then(function () {
+                    // Build app with platform specific args if specified
+                    var callArgs = getCallArgs(platform, args);
+                    console.log("Queueing build for platform " + platform + " w/options: " + callArgs.options);
+                    return cordova.raw.build(callArgs);
+                });
+            });
+            return promise;
+        });
+    }
+
+    grunt.registerTask("build", "builds app for devices", function (env) {
+        var done = this.async();
 
         //var platformsToBuild = process.platform == "darwin" ? ["ios"] : ["android", "windows", "wp8"*/], // Darwin == OSX
         var cliEnv = "--" + env;
@@ -412,12 +477,27 @@ module.exports = function (grunt) {
             wp8: [cliEnv]                  // "TypeError" after adding a flag Android doesn"t recognize
         };                                      // when using Cordova < 4.3.0. This is fixed in 4.3.0.
 
-        cordovaBuild.buildProject(platformsToBuild, buildArgs)
+        buildProject(platformsToBuild, buildArgs)
             .then(function () {
-                return cordovaBuild.packageProject(platformsToBuild);
+                return taco.packageProject(platformsToBuild);
             })
             .done(done);
     });
 
+    grunt.registerTask("vs2015", "intended for CI: prepares workspace and builds the app for devices", function (env) {
+        env = env || "debug";
+        switch (env) {
+            case "release":
+                return grunt.task.run(["preparerelease", "build:" + env]);
+            case "debug":
+                return grunt.task.run(["fulldev", "build:" + env]);
+            default:
+                throw new Error("Unsupported build environment: " + env);
+        }
+    });
+
+    // ********************************
+    // ** END BUILD DEVICE ARTIFACTS **
+    // ********************************
 
 };

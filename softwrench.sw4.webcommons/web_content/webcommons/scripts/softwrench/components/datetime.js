@@ -69,7 +69,8 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         minDate: startDate,
                         sideBySide: true,
                         showClose: true,
-                        toolbarPlacement: 'top'
+                        toolbarPlacement: 'top',
+                        useCurrent: false
                         //debug: true
                     });
                 }, 0, false);

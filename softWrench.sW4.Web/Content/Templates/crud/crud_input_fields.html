@@ -175,7 +175,7 @@
                 <div ng-switch-when="multiselectautocompleteclient">
                     <ui-select multiple tagging tagging-label="(new option)" ng-model="datamap[fieldMetadata.target]">
                         <ui-select-match placeholder="">{{$item}}</ui-select-match>
-                        <ui-select-choices repeat="option in associationOptionsToStringArray(associationOptions[fieldMetadata.associationKey]) | filter: $select.search track by option">
+                        <ui-select-choices repeat="option in associationOptionsToStringArray(associationOptions[fieldMetadata.associationKey]) | filter: $select.search">
                             {{option}}
                         </ui-select-choices>
                     </ui-select>
