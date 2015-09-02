@@ -407,7 +407,7 @@
            <field attribute="targcompdate" label="Target Finish Date:">
              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
            </field>
-           <field attribute="schedstart" label="Scheduled Start Date:">
+           <field attribute="schedstart" label="Scheduled Start Date:" requiredexpression="true">
              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
            </field>
            <field attribute="schedfinish" label="Scheduled Finish Date:">
