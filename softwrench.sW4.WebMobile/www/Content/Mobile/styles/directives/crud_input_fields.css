@@ -4,10 +4,17 @@
 }
 .crud-input-fields-wrapper .row .col-50 {
     margin: 0;
-    /*position: relative;*/
 }
-.crud-input-fields-wrapper .row .col-50 .item {
-    /*position: absolute;*/
-    height: 100%;
-    width: 100%;
+@media(min-width: 1024px) {
+    /* col-50's chilren to have 100% height 
+        http://stackoverflow.com/questions/20959600/height-100-on-flexbox-column-child
+    */
+    .crud-input-fields-wrapper .row .col-50 {
+        display: flex;
+    }
+
+    .crud-input-fields-wrapper .row .col-50 .item:last-child {
+        width: 100%;
+        border-left: none;
+    }
 }

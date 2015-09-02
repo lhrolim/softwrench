@@ -9,13 +9,16 @@
     padding: 0;
     text-align: center;
 }
+.page-login .login-form-container .action-bar .action-button .button.icon-left:before {
+    margin-right: -18px; /* compensating for icon width to center text */
+}
 .page-login .login-form-container .login-form {
     margin-bottom: 0;
 }
 .page-login .login-form-container .login-form .login-input {
     margin-bottom: 0;
 }
-
+/* center form container in >= portrait tablet  */
 @media (min-width: 767px) {
     .page-login .login-form-container {
         width: 567px;
