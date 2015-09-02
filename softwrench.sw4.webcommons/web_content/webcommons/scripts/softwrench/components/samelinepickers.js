@@ -34,6 +34,25 @@ function SamelinePickersController($scope, $rootScope, formatService, $filter) {
         
     };
 
+    function addRequiredDisplayable(fieldMetadata, displayables) {
+        if ("true" !== fieldMetadata.parameters["required"]) {
+            return;
+        }
+        var alreadyadded = displayables.filter(function (displayable) {
+            return displayable.attribute === fieldMetadata.parameters['joinattribute'];
+        });
+        if (alreadyadded.length >= 2) {
+            return;
+        }
+        displayables.push({
+            //if the field is required, adding it to the schema so that validation proceeds
+            attribute: fieldMetadata.parameters['joinattribute'],
+            label: fieldMetadata.header.label,
+            requiredExpression: 'true',
+            rendererParameters: {}
+        });
+    }
+
     function doInit() {
         var fieldMetadata = $scope.fieldMetadata;
         var defaultValue = fieldMetadata.parameters['default'];
@@ -52,15 +71,7 @@ function SamelinePickersController($scope, $rootScope, formatService, $filter) {
         $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] = valueToUse;
         $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] = valueToUse;
 
-        if ("true" === $scope.fieldMetadata.parameters["required"]) {
-            $scope.schema.displayables.push({
-                //if the field is required, adding it to the schema so that validation proceeds
-                attribute: $scope.fieldMetadata.parameters['joinattribute'],
-                label: $scope.fieldMetadata.header.label,
-                requiredExpression: 'true',
-                rendererParameters:{}
-            });
-        }
+        addRequiredDisplayable($scope.fieldMetadata, $scope.schema.displayables);
 
 
         $scope.$on("sw_beforesubmitprevalidate_internal", function (event, fields) {

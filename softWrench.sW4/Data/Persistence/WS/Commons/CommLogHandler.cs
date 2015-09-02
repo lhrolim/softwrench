@@ -90,6 +90,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         private static void HandleArrayOfOptions(CrudOperationData commLog, string propertyName) {
             var stringOrArray = commLog.GetAttribute(propertyName);
+            if (stringOrArray == null) {
+                return;
+            }
+
             if (stringOrArray is string) {
                 //sometimes component is sending a simple string straight
                 commLog.SetAttribute(sendto, stringOrArray);
