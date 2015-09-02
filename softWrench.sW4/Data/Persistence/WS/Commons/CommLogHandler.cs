@@ -52,19 +52,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var newCommLogs = crudOperationDatas.Where(r => r.GetAttribute(commloguid) == null);
             foreach (var commLog in crudOperationDatas) {
                 // Convert sendto array to a comma separated list
-                var sendToObject = commLog.GetAttribute(sendto);
-                var sendToArray = ((IEnumerable)sendToObject).Cast<object>()
-                    .Select(x => x.ToString())
-                    .ToArray();
-                commLog.SetAttribute(sendto, sendToArray.Length > 1 ? string.Join(",", sendToArray) : sendToArray[0]);
-                // Convert cc array to a comma separated list
-                var ccObject = commLog.GetAttribute(cc);
-                if (ccObject != null) {
-                    var ccArray = ((IEnumerable)ccObject).Cast<object>()
-                        .Select(x => x.ToString())
-                        .ToArray();
-                    commLog.SetAttribute(cc, ccArray.Length > 1 ? string.Join(",", ccArray) : ccArray[0]);
-                }
+                HandleArrayOfOptions(commLog, sendto);
+                HandleArrayOfOptions(commLog, cc);
             }
             var ownerid = w.GetRealValue(rootObject, ticketuid);
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate (object integrationObject, CrudOperationData crudData) {
@@ -97,6 +86,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
                 _updateEmailHistory(username, allAddresses.ToLower().Split(','));
             });
+        }
+
+        private static void HandleArrayOfOptions(CrudOperationData commLog, string propertyName) {
+            var stringOrArray = commLog.GetAttribute(propertyName);
+            if (stringOrArray is string) {
+                //sometimes component is sending a simple string straight
+                commLog.SetAttribute(sendto, stringOrArray);
+                return;
+            }
+            var sendToArray = ((IEnumerable)stringOrArray).Cast<object>()
+                .Select(x => x.ToString())
+                .ToArray();
+            commLog.SetAttribute(propertyName, sendToArray.Length > 1 ? string.Join(",", sendToArray) : sendToArray[0]);
         }
 
         private static void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj,
