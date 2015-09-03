@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Security;
 using softWrench.sW4.Util;
 
@@ -32,6 +33,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
 
             var cookie = FormsAuthentication.GetAuthCookie(userName, false);
+            cookie.Path = HostingEnvironment.ApplicationVirtualPath;
             var ticket = FormsAuthentication.Decrypt(cookie.Value);
             var newTicket = new FormsAuthenticationTicket(ticket.Version, ticket.Name, ticket.IssueDate,
                 ticket.Expiration, ticket.IsPersistent, strb.ToString(), ticket.CookiePath);
