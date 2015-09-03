@@ -107,6 +107,18 @@
             $scope.datamap = crudContextService.currentDetailItemDataMap();
         }
 
+        $scope.onSwipeLeft = function() {
+            if ($scope.showNavigation()) {
+                $scope.navigateNext();
+            }
+        };
+
+        $scope.onSwipeRight = function() {
+            if ($scope.showNavigation()) {
+                $scope.navigatePrevious();
+            }
+        };
+
         $rootScope.$on('sw_cruddetailrefreshed', function () {
             $scope.datamap = crudContextService.currentDetailItemDataMap();
         });
