@@ -5,10 +5,12 @@
 
         $provide.decorator("$exceptionHandler", ["$delegate", "$injector", "rollingLogFileConstants", function ($delegate, $injector, rollingLogFileConstants) {
             
-            var $ionicPopup, $timeout, $log, logger;
+            var $ionicPopup, $timeout, $log, logger, contextService;
 
             function alertLogLocation() {
-                if (!rollingLogFileConstants.logToFileEnabled) {
+                // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScop
+                if (!contextService) contextService = $injector.get("contextService");
+                if (!rollingLogFileConstants.logToFileEnabled || contextService.isDev()) {
                     return;
                 }
                 // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- $exceptionHandler <- $rootScope
@@ -39,7 +41,7 @@
                 // default behavior (from angular.js source): $log.error.apply($log, arguments);
                 logger.error.apply(logger, arguments);
                 // alerting log file location for support
-                $timeout(alertLogLocation);
+                // $timeout(alertLogLocation); -> removed: due to unstable dev environment it was getting in the way
             };
 
         }]);
