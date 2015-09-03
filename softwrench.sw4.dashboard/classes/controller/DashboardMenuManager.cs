@@ -110,7 +110,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
             leafs.Add(dashBoardMenu);
             leafs.AddRange(securedMenu.Leafs);
             securedMenu.Leafs = leafs;
-            securedMenu.ItemindexId = "loadpreferred";
+            if (count > 0) {
+                securedMenu.ItemindexId = "loadpreferred";
+            }
             return securedMenu;
         }
 

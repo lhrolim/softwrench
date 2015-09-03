@@ -47,7 +47,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             if (userName == null) throw new ArgumentNullException("userName");
             User user = null;
             var dto = new SearchRequestDto {
-                WhereClause = (" person.personid = '" + userName + "'").ToUpper()
+                WhereClause = (" person.personid = '" + userName + "' and (email_.isprimary is null or email_.isprimary = 1 )").ToUpper()
             };
             dto = BuildDTO(dto);
             var entityMetadata = MetadataProvider.Entity(EntityName);
