@@ -277,6 +277,9 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }
         $scope.requestpopup = null;
+
+        //broadcast schema for the breadcrumbs 
+        $rootScope.$broadcast('schemaChange', $scope.schema);
     };
 
 
@@ -453,9 +456,6 @@ function ApplicationController($scope, $http, $log, $timeout,
         var applicationName = dataObject.applicationName;
         var schema = dataObject.schema;
         var schemaId = schema == null ? null : schema.schemaId;
-
-        //broadcast schema for the breadcrumbs 
-        $rootScope.$broadcast('schemaChange', schema);
 
         $scope.searchData = {};
         $scope.searchOperator = {};
