@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web;
+using System.Web.Hosting;
+using System.Web.Mvc;
 using System.Web.Security;
 using cts.commons.portable.Util;
 using softWrench.sW4.Metadata;
@@ -25,6 +28,23 @@ namespace softWrench.sW4.Web.Controllers {
                     _eventDispatcher.Dispatch(new ClearCacheEvent());
                 }
                 FormsAuthentication.SignOut();
+
+                Session.Clear();  // This may not be needed -- but can't hurt
+                Session.Abandon();
+
+                // Clear authentication cookie
+                HttpCookie rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+                rFormsCookie.Path = HostingEnvironment.ApplicationVirtualPath;
+                rFormsCookie.Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies.Add(rFormsCookie);
+
+                // Clear session cookie 
+                var rSessionCookie = new HttpCookie("ASP.NET_SessionId", "");
+                rSessionCookie.Expires = DateTime.Now.AddYears(-1);
+                rSessionCookie.Path = HostingEnvironment.ApplicationVirtualPath;
+                Response.Cookies.Add(rSessionCookie);
+
+
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             } catch {
                 FormsAuthentication.SignOut();
