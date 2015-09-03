@@ -20,6 +20,16 @@
         return value;
     }
 
+    function buildReplyAllSendTo(origTo, origFrom) {
+        var transFrom = nullOrCommaSplit(origFrom);
+        var transTo = nullOrCommaSplit(origTo);
+        var userAddressIndex = transTo.indexOf(contextService.getUserData().email);
+        if (userAddressIndex > -1) {
+            transTo.splice(userAddressIndex, 1);
+        }
+        return transFrom.concat(transTo);
+    }
+
 
     $scope.forward = function (commlogitem) {
         var clonedItem = {};
@@ -88,7 +98,7 @@
         fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
         clonedItem['commloguid'] = null;
 
-        clonedItem['sendto'] = nullOrCommaSplit(origSendFrom);
+        clonedItem['sendto'] = buildReplyAllSendTo(origSendTo, origSendFrom);
         clonedItem['cc'] = nullOrCommaSplit(origCc);
 
         clonedItem['sendfrom'] = origSendFrom ? origSendFrom : contextService.getUserData().email;
