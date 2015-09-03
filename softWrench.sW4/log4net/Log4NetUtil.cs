@@ -43,7 +43,7 @@ namespace softWrench.sW4.log4net {
 
         public static void ConfigureDevLogging() {
 
-            if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
+            if (!ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsLocal()) {
                 return;
             }
 
