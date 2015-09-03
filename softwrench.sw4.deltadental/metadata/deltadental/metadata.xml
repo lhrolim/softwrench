@@ -486,6 +486,19 @@
       </properties>
       
       <schemas>
+        <list title="Work Order Grid" platform="web" redeclaring="false">
+          <customization position="asset_.description">
+            <field attribute="owner" label="Owner">
+              <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=30%;widthLG=25%" />
+            </field>
+          </customization>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="workorder.statusdate desc"/>
+            <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
+          </properties>
+        </list>
+        
         <schema id="editdetail" platform="web" redeclaring="false">
           <customization position="matusetrans"/>
           <customization position="labtrans"/>
