@@ -143,11 +143,11 @@
             <renderer type="email"/>
           </field>-->
           <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc" >
-            <renderer type="multiselectautocompleteclient"/>
+            <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
           <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-            <renderer type="multiselectautocompleteclient"/>
+            <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
 

@@ -333,6 +333,9 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
+    <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />
+    <Compile Include="Metadata\Stereotypes\Component\EmailComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />

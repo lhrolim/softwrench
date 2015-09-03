@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations {
 
@@ -22,7 +23,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public ApplicationAssociationSchemaDefinition(AssociationDataProvider dataProvider, FieldRenderer renderer, FieldFilter filter) {
             DataProvider = dataProvider;
-            Renderer = renderer ?? new AssociationFieldRenderer(AssociationFieldRenderer.AssociationRendererType.COMBO.ToString(), null, null);
+            Renderer = renderer ?? new AssociationFieldRenderer(AssociationFieldRenderer.AssociationRendererType.COMBO.ToString(), null, null, ComponentStereotype.None.ToString());
             Filter = Filter;
         }
 

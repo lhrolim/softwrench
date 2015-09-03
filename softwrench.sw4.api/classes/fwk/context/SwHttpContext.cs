@@ -4,10 +4,10 @@ using cts.commons.portable.Util;
 
 namespace softwrench.sw4.api.classes.fwk.context {
     public class SwHttpContext {
-        public String Protocol { get; set; }
-        public String URL { get; set; }
-        public String Port { get; set; }
-        public String Context { get; set; }
+        public string Protocol { get; set; }
+        public string URL { get; set; }
+        public string Port { get; set; }
+        public string Context { get; set; }
 
         public SwHttpContext(string protocol, string url, int port, string context) {
             Protocol = protocol;

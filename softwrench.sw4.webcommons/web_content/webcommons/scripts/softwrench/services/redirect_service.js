@@ -34,8 +34,8 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             return restService.getActionUrl(controller, action, parameters);
         },
 
-        redirectToHome:function() {
-            delete sessionStorage.swGlobalRedirectURL;
+        redirectToHome: function () {
+            contextService.deleteFromContext("swGlobalRedirectURL");
             window.location.reload();
         },
 
@@ -55,7 +55,8 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
 
             redirectUrl = restService.getActionUrl(controller, action, parameters);
-            sessionStorage.swGlobalRedirectURL = redirectUrl;
+
+            contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
             $http.get(redirectUrl).success(
                 function (data) {
                     if (data.type != "BlankApplicationResponse") {
@@ -174,7 +175,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             $rootScope.popupmode = popupMode;
             fixHeaderService.unfix();
             if (jsonData == undefined) {
-                sessionStorage.swGlobalRedirectURL = redirectURL;
+                contextService.insertIntoContext("swGlobalRedirectURL", redirectURL, false);
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 $http.get(redirectURL).success(function (data) {

@@ -17,7 +17,8 @@
         }
 
         function restore() {
-            var schemaCacheJson = sessionStorage["schemaCache"];
+            var urlContext = url("");
+            var schemaCacheJson = sessionStorage[urlContext + ":schemaCache"];
             if (schemaCacheJson) {
                 schemaCache = JSON.parse(schemaCacheJson);
             }
@@ -66,7 +67,8 @@
                 $log.get("schemaCacheService#addSchemaToCache").info("adding schema {0} retrieved to cache".format(schemaKey));
                 schemaCache[schemaKey] = schema;
                 schemaCache.systeminitMillis = systeminitMillis;
-                sessionStorage["schemaCache"] = JSON.stringify(schemaCache);
+                var urlContext = url("");
+                sessionStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
             }
         }
 

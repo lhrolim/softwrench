@@ -23,7 +23,7 @@
         ///used for ie9 form submission
         function submitForm(formToSubmit, parameters, jsonString, applicationName) {
             // remove from session the redirect url... the redirect url will be returned when the form submit response comes from server
-            sessionStorage.removeItem("swGlobalRedirectURL");
+            contextService.deleteFromContext("swGlobalRedirectURL");
 
             for (var i in parameters) {
                 formToSubmit.append("<input type='hidden' name='" + i + "' value='" + parameters[i] + "' />");

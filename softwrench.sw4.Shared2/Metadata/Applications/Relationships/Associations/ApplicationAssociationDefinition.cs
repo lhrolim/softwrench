@@ -198,10 +198,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             return string.Format("From: {0}, To: {1} , Target: {2}", From, EntityAssociation, Target);
         }
 
-
-
         public override string RendererType {
             get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }
+        }
+
+        public ComponentStereotype RendererStereotype {
+            get
+            {
+                ComponentStereotype rendererStereotype = ComponentStereotype.None;
+                Enum.TryParse(_applicationAssociationSchema.Renderer.Stereotype, true, out rendererStereotype);
+                return rendererStereotype;
+            }
         }
 
         public IDictionary<string, object> RendererParameters {

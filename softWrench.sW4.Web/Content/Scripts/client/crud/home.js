@@ -17,7 +17,7 @@
 
         
 
-        var sessionRedirectURL = sessionStorage.swGlobalRedirectURL;
+        var sessionRedirectURL = contextService.fetchFromContext("swGlobalRedirectURL",false,false);
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") == -1) && (redirectUrl.indexOf("MakeSWAdmin") == -1))) {
             redirectUrl = sessionRedirectURL;
         }

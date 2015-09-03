@@ -167,7 +167,7 @@ function ApplicationController($scope, $http, $log, $timeout,
         var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
         if (printMode == undefined) {
             //avoid the print url to be saved on the sessionStorage, breaking page refresh
-            sessionStorage.swGlobalRedirectURL = urlToCall;
+            contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
         }
         log.info("calling url".format(urlToCall));
 

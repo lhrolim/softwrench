@@ -27,7 +27,7 @@ app.factory('adminMenuService', function (menuService, redirectService, contextS
         logout: function () {
             console.log('logout');
 
-            sessionStorage.removeItem("swGlobalRedirectURL");
+            contextService.deleteFromContext("swGlobalRedirectURL");
             if (contextService.isLocal()) {
                 //clear local everytime to make development easier
                 schemaCacheService.wipeSchemaCacheIfNeeded();
