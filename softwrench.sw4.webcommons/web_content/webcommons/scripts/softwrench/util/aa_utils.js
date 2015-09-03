@@ -395,7 +395,7 @@ function loadScript(baseurl, callback) {
 }
 
 function url(path) {
-    if (angular.mock || cordova) {
+    if (angular.mock || window.cordova) {
         //this means we´re running under test scenarios or on offline mode
         return path;
     }
