@@ -11,6 +11,7 @@ using Quartz.Util;
 using softwrench.sw4.activitystream.classes.Model;
 using softwrench.sw4.activitystream.classes.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Notification;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
@@ -28,14 +29,16 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         public static IDictionary<string, long> Counter = new ConcurrentDictionary<string, long>();
 
         private readonly MaximoHibernateDAO MaxDAO;
+        private NotificationQueryBuilder _queryBuilder;
 
         private DataSet BaseNotificationDataset = new DataSet();
         private DateTime lastRun;
 
         Dictionary<string, string> securityGroupsNotificationsQueries = new Dictionary<string, string>();
 
-        public NotificationFacade(MaximoHibernateDAO maxDAO) {
+        public NotificationFacade(MaximoHibernateDAO maxDAO, IWhereClauseFacade whereClauseFacade) {
             MaxDAO = maxDAO;
+            _queryBuilder = new NotificationQueryBuilder(whereClauseFacade);
         }
 
         //Sets up the default notification stream.
@@ -97,7 +100,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         // notifications for and append any necessary where clauses to the query
         public void UpdateNotificationStreams()
         {
-            securityGroupsNotificationsQueries = NotificationQueryBuilder.BuildNotificationsQueries();
+            securityGroupsNotificationsQueries = _queryBuilder.BuildNotificationsQueries();
             var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
             var currentTime = DateTime.Now.FromServerToRightKind();
             foreach (var notificationQuery in securityGroupsNotificationsQueries)
