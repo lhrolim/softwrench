@@ -24,7 +24,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc020202', endColorstr='#00020202',GradientType=1 ); /* IE6-9 */
     }
 
-    .container header .menu-admin {
+    .container header .admin-area {
         background-color: rgba(1, 62, 91, 0.75);
     }
 
