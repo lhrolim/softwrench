@@ -107,7 +107,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                             if ($scope.schema != null) {
                                 //if the current leaf matches the current application
-                                if (leafs[id].applicationContainer == $scope.schema.applicationName) {
+                                if (leafs[id].applicationContainer == $scope.schema.applicationName && childPage == null) {
                                     //add to the breadcrumb
                                     if (page == null) {
                                         page = [];
@@ -117,7 +117,14 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                                     //add a breadcrumb item for the unknown page
                                     var newPage = {};
-                                    newPage.icon = 'fa fa-circle-o';
+
+                                    //determine the best icon to use
+                                    var icon = 'fa fa-circle-o';
+                                    if (current.indexOf("Details") > -1) {
+                                        icon = 'fa fa-file-text-o';
+                                    }
+
+                                    newPage.icon = icon;
                                     newPage.title = current;
                                     newPage.type = 'UnknownMenuItemDefinition';
 
