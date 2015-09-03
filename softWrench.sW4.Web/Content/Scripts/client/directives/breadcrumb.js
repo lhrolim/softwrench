@@ -6,7 +6,6 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumb.html'),
         scope: {
-            schema: '=',
             menu: '=',
             title: '='
         },
@@ -105,6 +104,26 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                                     }
                                 }
                             }
+
+                            if ($scope.schema != null) {
+                                //if the current leaf matches the current application
+                                if (leafs[id].applicationContainer == $scope.schema.applicationName) {
+                                    //add to the breadcrumb
+                                    if (page == null) {
+                                        page = [];
+                                    }
+
+                                    page.push(leafs[id]);
+
+                                    //add a breadcrumb item for the unknown page
+                                    var newPage = {};
+                                    newPage.icon = 'fa fa-circle-o';
+                                    newPage.title = current;
+                                    newPage.type = 'UnknownMenuItemDefinition';
+
+                                    page.push(newPage);
+                                }
+                            }
                         }
                     }
                 } else {
@@ -177,16 +196,25 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 return isMobile();
             };
 
+            $scope.processBreadcrumb = function () {
+                var currentMenu = $scope.getCurrentMenu();
+                var breadcrumbItems = $scope.getBreadcrumbItems(currentMenu);
+
+                log.debug('breadcrumb', $scope, $scope.schema, currentMenu, breadcrumbItems);
+                $scope.breadcrumbItems = breadcrumbItems;
+            };
+
             $scope.toggleOpen = function (event) {
                 $('.hamburger').toggleClass('open');
             };
 
-            $scope.$watch('title', function (newValue, oldValue) {
-                var currentMenu = $scope.getCurrentMenu();
-                var breadcrumbItems = $scope.getBreadcrumbItems(currentMenu);
+            $scope.$on('schemaChange', function (event, schema) {
+                $scope.schema = schema;
+                $scope.processBreadcrumb();
+            });
 
-                log.debug('breadcrumbItems', $scope, currentMenu, breadcrumbItems);
-                $scope.breadcrumbItems = breadcrumbItems;
+            $scope.$watch('title', function (newValue, oldValue) {
+                $scope.processBreadcrumb();
             });
         }
     }

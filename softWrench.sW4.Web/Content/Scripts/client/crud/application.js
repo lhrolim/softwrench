@@ -54,21 +54,19 @@ function ApplicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
     checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
+
     $scope.$name = 'applicationController';
-
-
     var currentFocusedIdx = 0;
 
     $rootScope.$on("sw_resetFocusToCurrent", function (event, schema, field) {
         focusService.resetFocusToCurrent(schema, field);
     });
-    //
+
     $rootScope.$on("sw_movefocus", function (event, datamap, schema, attribute) {
         if (datamap[attribute] != null && datamap[attribute] != '') {
             focusService.moveFocus(datamap, schema, attribute);
         }
     });
-
 
     function switchMode(mode, scope) {
         if (scope == null) {
@@ -455,6 +453,9 @@ function ApplicationController($scope, $http, $log, $timeout,
         var applicationName = dataObject.applicationName;
         var schema = dataObject.schema;
         var schemaId = schema == null ? null : schema.schemaId;
+
+        //broadcast schema for the breadcrumbs 
+        $rootScope.$broadcast('schemaChange', schema);
 
         $scope.searchData = {};
         $scope.searchOperator = {};

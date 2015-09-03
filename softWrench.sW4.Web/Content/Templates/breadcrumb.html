@@ -17,6 +17,9 @@
         <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{bcItem.link}}" target="_blank">
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
+        <a ng-switch-when="UnknownMenuItemDefinition">
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
     </div>
     <span ng-if="!$last" class="part seperator">/</span>
 </div>
