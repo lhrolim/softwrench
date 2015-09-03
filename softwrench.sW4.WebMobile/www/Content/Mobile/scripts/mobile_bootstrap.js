@@ -35,14 +35,10 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 //#endregion
 
 //#region App.run
-.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "synchronizationNotificationService", "offlinePersitenceBootstrap", "offlineEntities", "configurationService",
-    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap, entities, configService) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "synchronizationNotificationService", "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope",
+    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap, entities, configService, $rootScope) {
 
     $ionicPlatform.ready(function () {
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        //      WebView.setWebContentsDebuggingEnabled(true);
-        // }
-
         initContext();
         initDataBaseDebuggingHelpers();
 
@@ -76,6 +72,23 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 contextService.insertIntoContext("settings", settings[0],true);
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
+        });
+
+        // go to settings prior to going to login if no settings is set
+        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+            // not going to 'login' or coming from 'settings' -> do nothing
+            if (toState.name.indexOf("login") < 0 || fromState.name.indexOf("settings") >= 0) {
+                return;
+            }
+            // has serverurl -> do nothing
+            var serverurl = contextService.get("serverurl");
+            if (!!serverurl) {
+                return;
+            }
+            // prevent state change
+            event.preventDefault();
+            // go to settings instead
+            routeService.go("settings");
         });
     }
 
