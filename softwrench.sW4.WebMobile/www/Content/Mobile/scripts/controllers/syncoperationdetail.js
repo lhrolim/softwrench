@@ -76,10 +76,9 @@
                 $scope.data.isSynching = true;
                 $ionicLoading.show(loadingOptions);
                 synchronizationFacade.fullSync()
-                    .then(function (message) {
+                    .then(function (operation) {
                         $ionicPopup.alert({
-                            title: "Synchronization Succeeded",
-                            template: message
+                            title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
                         });
                         return loadData();
                     })
