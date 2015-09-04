@@ -123,6 +123,8 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 }
             }
 
+            scope.options = ["tina@a.com", "luiz@a.com"]
+
             var parameters = {
                 element: element,
                 tabid: crudContextHolderService.getActiveTab()
@@ -192,6 +194,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
             }
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
+                $scope.associationsloaded = true;
                 if (!$scope.associationOptions) {
                     //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
                     $scope.associationOptions = associationoptions;
@@ -234,7 +237,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 if (datepickers) {
                     datepickers.disable();
                 }
-                
+
 
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
@@ -584,12 +587,28 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             };
 
-            $scope.associationOptionsToStringArray = function(options) {
+            $scope.associationOptionsToStringArray = function (fieldMetadata) {
+                if (!$scope.associationsloaded) {
+                    return [];
+                }
+
+                $scope.schema.jscache = $scope.schema.jscache || {};
+
+                var cacheKey = fieldMetadata.associationKey + "stringarraycache";
+                if ($scope.schema.jscache[cacheKey]) {
+                    return $scope.schema.jscache[cacheKey];
+                }
+
+                var options = $scope.associationOptions[fieldMetadata.associationKey];
+                
                 var strArr = new Array();
                 for (var option in options) {
-                    if(!options.hasOwnProperty(option)) continue;
+                    if (!options.hasOwnProperty(option)) {
+                         continue;
+                    }
                     strArr.push(options[option].value);
                 }
+                $scope.schema.jscache[cacheKey] = strArr;
                 return strArr;
             }
 
@@ -652,7 +671,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             $scope.isFieldRequired = function (fieldMetadata) {
                 if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
-                    return "true"===fieldMetadata.parameters["required"];
+                    return "true" === fieldMetadata.parameters["required"];
                 }
                 var requiredExpression = fieldMetadata.requiredExpression;
                 if (requiredExpression != undefined) {
