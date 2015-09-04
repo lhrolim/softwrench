@@ -124,6 +124,15 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                 scope.$watch('ngDisabled', toggle);
             };
 
+            // add 'remove_button' plugin: little 'x' at right side of the label to remove it
+            if (!config.plugins) {
+                config.plugins = ["remove_button"];
+            } else if (angular.isArray(config.plugins)) {
+                config.plugins.push("remove_button");
+            } else {
+                config.plugins["remove_button"] = {};
+            }
+
             element.selectize(config);
 
             element.on('$destroy', function () {
