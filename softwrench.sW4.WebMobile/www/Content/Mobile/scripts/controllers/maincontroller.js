@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('MainController', ["$scope", "routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "$ionicPopup", "securityService", "$timeout", "synchronizationFacade", "$ionicLoading",
-        function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, $ionicPopup, securityService, $timeout, synchronizationFacade, $ionicLoading) {
+    softwrench.controller('MainController', ["$scope", "routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "$ionicPopup", "securityService", "$timeout", "synchronizationFacade", "networkConnectionService",
+        function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, $ionicPopup, securityService, $timeout, synchronizationFacade, networkConnectionService) {
 
             $scope.data = {};
 
@@ -37,7 +37,7 @@
             }
 
             $scope.logout = function () {
-                if (!navigator.onLine) {
+                if (networkConnectionService.isOffline()) {
                     var alert = $ionicPopup.alert({
                         title: "Logout",
                         template: "No internet connection detected.<br>" +
