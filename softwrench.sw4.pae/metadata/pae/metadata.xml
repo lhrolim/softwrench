@@ -84,6 +84,10 @@
     </application>
 
     <application name="asset" title="Asset" entity="paeasset" audit="true">
+      <properties>
+        <property key="mobile.presyncservice" value="paeAssetService.preSync"/>
+      </properties>
+      
       <schemas>
         <list>
           <field attribute="assetid" hidden="true"/>

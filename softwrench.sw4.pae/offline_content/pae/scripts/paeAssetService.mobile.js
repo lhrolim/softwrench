@@ -12,16 +12,7 @@
 
     function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup, maximoDataService,swdbDAO) {
 
-        //#region Service Instance
-
-        var service = {
-            initAssetDetailListener: initAssetDetailListener,
-            initAssetGridListener: initAssetGridListener
-        };
-
-        return service;
-
-        //#endregion
+  
 
         //#region Utils
 
@@ -50,6 +41,9 @@
 
         //#region Public methods
 
+        function preSync(datamap,originaldatamap) {
+            datamap["#originallocation"] = originaldatamap["location"];
+        }
 
         function initAssetDetailListener(scope, schema, datamap, parameters) {
             initScanEventListener(schema, parameters);
@@ -60,6 +54,20 @@
         };
 
         //#endregion
+
+        //#region Service Instance
+
+        var service = {
+            initAssetDetailListener: initAssetDetailListener,
+            initAssetGridListener: initAssetGridListener,
+            preSync: preSync
+        };
+
+        return service;
+
+        //#endregion
+
+        
     }
 
 
