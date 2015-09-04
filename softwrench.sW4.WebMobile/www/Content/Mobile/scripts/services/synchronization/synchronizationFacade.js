@@ -118,7 +118,7 @@
                     var dataDownloadedResult = results.subarray(2);
                     var totalNumber = getDownloadDataCount(dataDownloadedResult);
                     
-                    synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
+                    return synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
                 });
         }
 
