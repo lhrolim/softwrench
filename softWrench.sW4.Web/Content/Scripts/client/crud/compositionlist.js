@@ -774,8 +774,8 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             /*API Methods*/
             this.showExpansionCommands = function () {
-                if ($scope.ismodal == "false") {
-                    return true;
+                if ($scope.ismodal === "true") {
+                    return false;
                 }
 
                 // if schema is not present, then it should default back normal expansion commands
