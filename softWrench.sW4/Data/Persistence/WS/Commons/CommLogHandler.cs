@@ -82,7 +82,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var ccEmail = w.GetRealValue(integrationObject, cc);
                 ccEmail = ccEmail != null ? ccEmail.ToString() : "";
                 var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
-                var username = user.MaximoPersonId ?? user.Login;
+                var username = user.Login;
                 // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
                 _updateEmailHistory(username, allAddresses.ToLower().Split(','));
             });
@@ -99,6 +99,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 commLog.SetAttribute(sendto, stringOrArray);
                 return;
             }
+            if (!(stringOrArray is Array) || ((Array)stringOrArray).Length == 0) {
+                //strange bug whereas the component was passing a blank array rather than either an array or a string
+                //happens after selecting and deleting an item on screen
+                return;
+            }
+
             var sendToArray = ((IEnumerable)stringOrArray).Cast<object>()
                 .Select(x => x.ToString())
                 .ToArray();

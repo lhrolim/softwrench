@@ -172,6 +172,10 @@ namespace softWrench.sW4.Data.Entities {
                 }
             }
 
+            if (array.Length == 0) {
+                return null;
+            }
+
             return array;
         }
     }
