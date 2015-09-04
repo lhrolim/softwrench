@@ -154,6 +154,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         })
         .state('main.home', {
             url: '/home',
+            cache: false,
             views: {
                 'main': {
                     templateUrl: 'Content/Mobile/templates/syncoperation_detail.html',
