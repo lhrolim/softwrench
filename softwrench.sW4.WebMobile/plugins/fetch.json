@@ -84,6 +84,14 @@
         "is_top_level": true,
         "variables": {}
     },
+    "com.ionic.keyboard": {
+        "source": {
+            "type": "registry",
+            "id": "com.ionic.keyboard"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
     "de.appplant.cordova.plugin.local-notification": {
         "source": {
             "type": "git",

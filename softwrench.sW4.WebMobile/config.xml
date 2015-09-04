@@ -79,7 +79,7 @@
   <platform name="wp8">
     <splash src="res/screens/wp8/SplashScreenImage.jpg" width="480" height="800" />
   </platform>
-  <preference name="Fullscreen" value="False" />
+  <preference name="Fullscreen" value="True" />
   <preference name="KeepRunning" value="False" />
   <preference name="ShowTitle" value="True" />
   <preference name="InAppBrowserStorageEnabled" value="False" />
@@ -93,4 +93,5 @@
   <vs:plugin name="cordova-plugin-network-information" version="1.0.1" />
   <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.2.dev" src="https://github.com/katzer/cordova-plugin-local-notifications.git" />
   <vs:plugin name="cordova-plugin-file" version="3.0.1-dev" src="https://github.com/apache/cordova-plugin-file" />
+  <vs:plugin name="com.ionic.keyboard" version="1.0.4" />
 </widget>
