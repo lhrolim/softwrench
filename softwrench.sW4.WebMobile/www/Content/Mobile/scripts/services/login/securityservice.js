@@ -51,6 +51,9 @@
             var loginUrl = routeService.loginURL();
             return $http.post(loginUrl, { username: username, password: password })
                 .then(function (response) {
+                    //cleaning history so that back button does not return user to login page
+                    $ionicHistory.clearCache();
+
                     var userdata = response.data;
                     if (userdata.Found) {
                         loginLocal(userdata.UserName);
