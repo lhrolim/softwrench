@@ -52,7 +52,7 @@
             return $http.post(loginUrl, { username: username, password: password })
                 .then(function (response) {
                     //cleaning history so that back button does not return user to login page
-                    $ionicHistory.clearCache();
+                    $ionicHistory.clearHistory();
 
                     var userdata = response.data;
                     if (userdata.Found) {
