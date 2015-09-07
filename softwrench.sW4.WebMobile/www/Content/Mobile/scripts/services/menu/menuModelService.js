@@ -3,53 +3,59 @@
 
     mobileServices.factory('menuModelService', ["$q", "swdbDAO", "$log", "offlineEntities", function ($q, swdbDAO, $log, offlineEntities) {
 
-    var menuModel = {
-        dbData: {},
-        listItems: []
-    };
+        var initialMenuModel = {
+            dbData: {},
+            listItems: []
+        };
 
-    var entities = offlineEntities;
+        var menuModel = angular.copy(initialMenuModel);
 
-    return {
+        var entities = offlineEntities;
 
-        getMenuItens: function () {
-            return menuModel.listItems;
-        },
+        return {
 
-        updateMenu: function (serverMenu) {
-            var defer = $q.defer();
+            getMenuItens: function () {
+                return menuModel.listItems;
+            },
 
-            swdbDAO.instantiate("Menu", menuModel.dbData).then(function (menu) {
-                menu.data = serverMenu;
-                swdbDAO.save(menu).then(function (item) {
-                    menuModel.dbData.data = serverMenu;
-                    menuModel.listItems = serverMenu.explodedLeafs;
-                    defer.resolve();
+            updateMenu: function (serverMenu) {
+                var defer = $q.defer();
+
+                swdbDAO.instantiate("Menu", menuModel.dbData).then(function (menu) {
+                    menu.data = serverMenu;
+                    swdbDAO.save(menu).then(function (item) {
+                        menuModel.dbData.data = serverMenu;
+                        menuModel.listItems = serverMenu.explodedLeafs;
+                        defer.resolve();
+                    });
+
                 });
 
-            });
+                return defer.promise;
+            },
 
-            return defer.promise;
-        },
+            initAndCacheFromDB: function () {
+                var log = $log.getInstance("menuModelService#initAndCacheFromDB");
+                var defer = $q.defer();
+                swdbDAO.findUnique("Menu").then(function (menu) {
+                    if (!menu) {
+                        menu = new entities.Menu();
+                        swdbDAO.save(menu);
+                        log.info('creating first menu');
+                    } else if (menu.data) {
+                        menuModel.listItems = menu.data.explodedLeafs;
+                    }
+                    menuModel.dbData = menu;
+                    defer.resolve();
+                });
+                return defer.promise;
+            },
 
-        initAndCacheFromDB: function () {
-            var log = $log.getInstance("menuModelService#initAndCacheFromDB");
-            var defer = $q.defer();
-            swdbDAO.findUnique("Menu").then(function (menu) {
-                if (!menu) {
-                    menu = new entities.Menu();
-                    swdbDAO.save(menu);
-                    log.info('creating first menu');
-                } else if (menu.data) {
-                    menuModel.listItems = menu.data.explodedLeafs;
-                }
-                menuModel.dbData = menu;
-                defer.resolve();
-            });
-            return defer.promise;
-        },
+            reset: function () {
+                menuModel = angular.copy(initialMenuModel);
+            }
 
-    }
-}]);
+        }
+    }]);
 
 })(mobileServices);
