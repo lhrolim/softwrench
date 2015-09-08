@@ -1,13 +1,13 @@
-﻿<ion-view title="Settings">
+﻿<ion-view title="Settings" class="page-settings">
     <ion-nav-buttons side="left">
         <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-content class="padding" has-header="true">
         
-        <div class="list list-inset responsive-container lg">
+        <div class="settings-form list list-inset responsive-container lg">
             <label class="item item-input">
-                <input type="text" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off">
+                <input type="text" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off" readonly="readonly">
             </label>
             <button class="button button-calm button-block" ng-click="save()">Save</button>
         </div>
