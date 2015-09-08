@@ -40,9 +40,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
     $ionicPlatform.ready(function () {
         initContext();
-        initDataBaseDebuggingHelpers();
-
+        attachEventListeners();
         initCordovaPlugins();
+        initDataBaseDebuggingHelpers();
 
         // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
         if (ionic.Platform.isAndroid()) {
@@ -78,23 +78,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
         });
-
-        // go to settings prior to going to login if no settings is set
-        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-            // not going to 'login' or coming from 'settings' -> do nothing
-            if (toState.name.indexOf("login") < 0 || fromState.name.indexOf("settings") >= 0) {
-                return;
-            }
-            // has serverurl -> do nothing
-            var serverurl = contextService.get("serverurl");
-            if (!!serverurl) {
-                return;
-            }
-            // prevent state change
-            event.preventDefault();
-            // go to settings instead
-            routeService.go("settings");
-        });
+        
     }
 
     function initDataBaseDebuggingHelpers() {
@@ -117,10 +101,41 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         //      StatusBar.styleDefault();
         // }
 
-
         /* LOCAL NOTIFICATION */
         synchronizationNotificationService.prepareNotificationFeature();
-    };
+    }
+
+    function attachEventListeners() {
+        // don't allow going to 'login' or 'settings' if the user is still logged
+        $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+            // not going to 'login' nor 'settings' -> do nothing
+            if (toState.name.indexOf("login") < 0 && toState.name !== "settings") {
+                return;
+            }
+            // going to 'login' or 'settings' and no user authenticated -> allow transition
+            if (!securityService.hasAuthenticatedUser()) {
+                return;
+            }
+            // going to login and user is authenticated -> prevent transition
+            event.preventDefault();
+        });
+        // go to settings prior to going to login if no settings is set
+        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+            // not going to 'login' or coming from 'settings' -> do nothing
+            if (toState.name.indexOf("login") < 0 || fromState.name.indexOf("settings") >= 0) {
+                return;
+            }
+            // has serverurl -> do nothing
+            var serverurl = contextService.get("serverurl");
+            if (!!serverurl) {
+                return;
+            }
+            // prevent state change
+            event.preventDefault();
+            // go to settings instead
+            routeService.go("settings");
+        });
+    }
 
 }])
 //#endregion
