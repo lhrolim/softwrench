@@ -15,10 +15,9 @@
 
         var self = this;
 
-        // clear state on logout
+        // clear batchRegistry (only user related state) on logout
         $rootScope.$on("sw4:security:logout", function() {
             batchRegistry = {};
-            completionCallBacks = [];
         });
 
         var getBatchIds = function() {
