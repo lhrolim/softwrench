@@ -625,6 +625,9 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             $scope.getDispatchFn = function(serviceCall) {
                 var validationFunction = dispatcherService.loadServiceByString(serviceCall);
+                if (validationFunction == null) {
+                    validationFunction = function() { return true };
+                }
                 return validationFunction;
             }
 
