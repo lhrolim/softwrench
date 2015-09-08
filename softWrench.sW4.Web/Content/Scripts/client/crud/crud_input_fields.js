@@ -622,6 +622,12 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             $scope.nonTabFields = function (displayables) {
                 return fieldService.nonTabFields(displayables);
             };
+
+            $scope.getDispatchFn = function(serviceCall) {
+                var validationFunction = dispatcherService.loadServiceByString(serviceCall);
+                return validationFunction;
+            }
+
             function init() {
                 if (!$scope.isVerticalOrientation()) {
                     var countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
