@@ -105,3 +105,11 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 .page-audit-entrydetail .bold {
     font-weight: bold;
 }
+
+.page-settings .settings-form label {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.page-settings .settings-form label input {
+    padding-left: 5px;
+}
