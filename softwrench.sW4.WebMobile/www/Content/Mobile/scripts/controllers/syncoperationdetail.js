@@ -82,9 +82,10 @@
                         });
                         return loadData();
                     })
-                    .catch(function () {
+                    .catch(function (error) {
                         $ionicPopup.alert({
-                            title: "Error Synchronizing Data"
+                            title: "Error Synchronizing Data",
+                            template: !!error && !!error.message ? error.message : ""
                         });
                     })
                     .finally(function () {

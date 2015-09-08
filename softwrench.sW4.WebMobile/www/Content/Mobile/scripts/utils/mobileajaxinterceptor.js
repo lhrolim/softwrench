@@ -5,7 +5,7 @@
 
         $httpProvider.defaults.withCredentials = true;
 
-        var ajaxInterceptor = function ($q, $rootScope, $timeout, contextService, $log, $injector) {
+        var ajaxInterceptor = function ($q, $rootScope, $timeout, contextService, $log, networkConnectionService, $injector) {
 
             var securityService = null;
 
@@ -21,12 +21,31 @@
             };
 
             var endederror = function (rejection) {
-                if (rejection.status === 401) {
-                    // getting around circular dependency problem ($state -> $http -> ... -> securityService -> routeService -> $state)
-                    if(!securityService) securityService = $injector.get("securityService");
+                var status = rejection.status;
+                if (status === 0) {
+                    // connection problem
+                    if (networkConnectionService.isOffline()) {
+                        // no connection at all
+                        return new Error("No internet connection detected.");
+                    } 
+                    // request-response timeout or server unreachable/socket timeout 
+                    return new Error((!rejection.config.timeout ? "Server unreachable" : "Request timed out") + ". Please check your internet connection.");
+                
+                } else if (status >= 500 && status < 600) {
+                    // internal server error
+                    return new Error("Internal server error. Please contact support.");
+
+                } else if (status === 404) {
+                    // resource not found
+                    return new Error("Requested resource not found. Please contact support.");
+
+                } else if (status === 401) {
+                    // unauthorized access
+                    if (!securityService) securityService = $injector.get("securityService"); // getting around circular dependency problem ($state -> $http -> ... -> securityService -> routeService -> $state)
                     securityService.handleUnauthorizedRemoteAccess();
-                    return;
-                }
+                } 
+                return rejection;
+
             };
 
             var interceptor = {
@@ -42,15 +61,15 @@
                 },
                 // optional method
                 'responseError': function (rejection) {
-                    endederror(rejection);
-                    return $q.reject(rejection);
+                    var error = endederror(rejection);
+                    return $q.reject(error || rejection);
                 }
             };
 
             return interceptor;
         };
 
-        $httpProvider.interceptors.push(["$q", "$rootScope", "$timeout", "contextService", "$log", "$injector", ajaxInterceptor]);
+        $httpProvider.interceptors.push(["$q", "$rootScope", "$timeout", "contextService", "$log", "networkConnectionService", "$injector", ajaxInterceptor]);
 
     }]);
 
