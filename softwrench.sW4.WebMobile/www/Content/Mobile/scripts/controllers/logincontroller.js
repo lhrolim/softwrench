@@ -33,8 +33,8 @@
                         //enforcing SWOFF-93
                         $scope.data = {};
                     })
-                    .catch(function () {
-                        showAlert("Login failed!", "Please check your credentials!");
+                    .catch(function (error) {
+                        showAlert("Login failed", !!error && !!error.message ? error.message : "Please check your credentials.");
                     })
                     .finally(function() {
                         $ionicLoading.hide();
