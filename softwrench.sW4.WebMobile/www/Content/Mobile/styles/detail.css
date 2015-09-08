@@ -36,6 +36,7 @@
         align-items: center;
     }
 }
+
 @media (min-width: 568px) {
     .vertical-center {
         text-align: center;
@@ -47,32 +48,40 @@
 .page-syncdetail .no-operation {
     text-align: center;
 }
+
 .page-syncdetail .row.operation-details {
     padding-top: 0;
 }
+
 .page-syncdetail .operation-details .detail-section {
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.page-syncdetail .operation-details .detail-section.upload-section .item-list {
-    color: gray;
-}
-.page-syncdetail .operation-details .detail-section.upload-section .item-list .icon {
-    padding-right: 5px;
-}
-.page-syncdetail .operation-details .detail-section.upload-section .problem-button {
-    background-color:  rgb(229, 147, 35);
-    color: white;
-    border: none;
-    margin-top: 10px;
-}
+
+    .page-syncdetail .operation-details .detail-section.upload-section .item-list {
+        color: gray;
+    }
+
+        .page-syncdetail .operation-details .detail-section.upload-section .item-list .icon {
+            padding-right: 5px;
+        }
+
+    .page-syncdetail .operation-details .detail-section.upload-section .problem-button {
+        background-color: rgb(229, 147, 35);
+        color: white;
+        border: none;
+        margin-top: 10px;
+    }
+
 .page-syncdetail .operation-status h4 {
     margin-bottom: 0;
 }
+
 .page-syncdetail .operation-status h5 {
     margin-bottom: 0;
     margin-top: 0;
 }
+
 .page-syncdetail .app-summary-title {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -92,6 +101,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 .page-audit-entrydetail .operation-icon {
     font-size: 75px;
 }
+
 .page-audit-entrydetail .bold {
     font-weight: bold;
 }

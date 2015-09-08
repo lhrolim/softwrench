@@ -1,5 +1,6 @@
 ﻿.page-login .login-settings {
-    margin-top: 10px;   
+    margin-top: 10px; 
+    color: rgb(68, 68, 68);  
 }
 .page-login .login-form-container .action-bar {
     padding-left: 0;

@@ -3,11 +3,14 @@
 
     mobileServices.factory('metadataModelService', ["$q", "$log", "swdbDAO", "dispatcherService", function ($q, $log, swdbDAO, dispatcherService) {
 
-    var metadataModel = {
+    var initialMetadataModel = {
         topLevelApplications: [],
         compositionApplications: [],
-        associationApplications: [],
-    };
+        associationApplications: []
+    }
+    
+    //so that we have the original object available for resetting it
+    var metadataModel = angular.copy(initialMetadataModel);
 
     function loadEntityInstance(serverMetadata, memoryArrayName, mergefunctionCBK) {
 
@@ -135,9 +138,6 @@
         },
 
 
-
-
-
         initAndCacheFromDB: function () {
             var log = $log.getInstance("metadataModelService#initAndCacheFromDB");
             var defer = $q.defer();
@@ -160,6 +160,10 @@
             return defer.promise;
 
         },
+
+        reset:function() {
+            metadataModel = angular.copy(initialMetadataModel);
+        }
 
     }
 }]);

@@ -46,7 +46,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
         if (ionic.Platform.isAndroid()) {
-            ionic.Platform.isFullScreen(true);
+            ionic.Platform.isFullScreen = true;
         }
 
         var authenticated = securityService.hasAuthenticatedUser();

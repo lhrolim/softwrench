@@ -127,8 +127,8 @@ module.exports = function (grunt) {
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.js",
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/moment.js",
-                    "ionic.min.js": "ionic/release/js/ionic.min.js",
-                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
+                    "ionic.min.js": "ionic/release/js/ionic.js",
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.js",
                 }
             },
             css: {
