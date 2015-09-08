@@ -2481,41 +2481,38 @@
                 if (inputMode === 'multi' && self.isFull()) return;
 
                 $item = $(self.render('item', self.options[value]));
-                // cts: Ken Implemeting a promise for validation of items being added
-                var promise = self.settings.beforeItemAdd(value);
-                promise.then(function() {
-                    wasFull = self.isFull();
-                    self.items.splice(self.caretPos, 0, value);
-                    self.insertAtCaret($item);
-                    if (!self.isPending || (!wasFull && self.isFull())) {
-                        self.refreshState();
+                if (self.settings.beforeItemAdd != null & !self.settings.beforeItemAdd(value)) return;
+                wasFull = self.isFull();
+                self.items.splice(self.caretPos, 0, value);
+                self.insertAtCaret($item);
+                if (!self.isPending || (!wasFull && self.isFull())) {
+                    self.refreshState();
+                }
+
+                if (self.isSetup) {
+                    $options = self.$dropdown_content.find('[data-selectable]');
+
+                    // update menu / remove the option (if this is not one item being added as part of series)
+                    if (!self.isPending) {
+                        $option = self.getOption(value);
+                        value_next = self.getAdjacentOption($option, 1).attr('data-value');
+                        self.refreshOptions(self.isFocused && inputMode !== 'single');
+                        if (value_next) {
+                            self.setActiveOption(self.getOption(value_next));
+                        }
                     }
 
-                    if (self.isSetup) {
-                        $options = self.$dropdown_content.find('[data-selectable]');
-
-                        // update menu / remove the option (if this is not one item being added as part of series)
-                        if (!self.isPending) {
-                            $option = self.getOption(value);
-                            value_next = self.getAdjacentOption($option, 1).attr('data-value');
-                            self.refreshOptions(self.isFocused && inputMode !== 'single');
-                            if (value_next) {
-                                self.setActiveOption(self.getOption(value_next));
-                            }
-                        }
-
-                        // hide the menu if the maximum number of items have been selected or no options are left
-                        if (!$options.length || self.isFull()) {
-                            self.close();
-                        } else {
-                            self.positionDropdown();
-                        }
-
-                        self.updatePlaceholder();
-                        self.trigger('item_add', value, $item);
-                        self.updateOriginalInput({ silent: silent });
+                    // hide the menu if the maximum number of items have been selected or no options are left
+                    if (!$options.length || self.isFull()) {
+                        self.close();
+                    } else {
+                        self.positionDropdown();
                     }
-                });
+
+                    self.updatePlaceholder();
+                    self.trigger('item_add', value, $item);
+                    self.updateOriginalInput({ silent: silent });
+                }
             });
         },
 

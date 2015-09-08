@@ -143,7 +143,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
         },
 
-        controller: function ($scope, $http, $element, $injector, $timeout, $log, $q,
+        controller: function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup, layoutservice, attachmentService) {
@@ -625,11 +625,6 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             $scope.getDispatchFn = function(serviceCall) {
                 var validationFunction = dispatcherService.loadServiceByString(serviceCall);
-                if (validationFunction === null) {
-                    return function() {
-                        return $q.when();
-                    }
-                }
                 return validationFunction;
             }
 
