@@ -72,6 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="customer.placeholder" />
     <None Include="Dependencies\Oracle.DataAccess.dll.64bck" />
     <None Include="web_content\southern_unreg\styles\branding.css.map">
