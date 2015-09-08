@@ -518,7 +518,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
                 var log = $log.get("compositionlist#toggleDetails");
 
-                if (columnMode == null && column == null) {
+                if (column == null || column.attribute==null ) {
                     //for sections inside compositionlist, ex: reply/replyall of commlogs
                     return;
                 }
