@@ -1,24 +1,30 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("SettingsController", ["$scope", "routeService", "swdbDAO", "contextService", "securityService", "applicationStateService",
-        function ($scope, routeService, swdbDAO, contextService, securityService, applicationStateService) {
+    softwrench.controller("SettingsController", ["$scope", "routeService", "swdbDAO", "contextService", "securityService", "applicationStateService", "$cordovaPreferences", "$q",
+        function ($scope, routeService, swdbDAO, contextService, securityService, applicationStateService, $cordovaPreferences, $q) {
 
             $scope.config = null;
 
             function init() {
                 var settings = contextService.fetchFromContext("settings", true, true);
-                if (settings) {
-                    $scope.settings = settings;
-                } else {
-                    $scope.settings = {};
-                }
+                $scope.settings = settings || {};
 
-                applicationStateService.getAppConfig().then(function(config) {
-                    $scope.config = config;
+
+                applicationStateService.getAppConfig().then(function (result) {
+                    $scope.config = result;
+                    var idx;
+                    if ($scope.config.client && (idx= $scope.config.client.version.indexOf("#")) > 0) {
+                        var originalVersion = $scope.config.client.version;
+                        $scope.config.client.version = originalVersion.substring(0, idx);
+                        $scope.config.client.commit = originalVersion.substring(idx+1);
+                    }
                 });
 
+
             }
+
+
 
             $scope.goToLogin = function () {
                 routeService.go("login");
@@ -29,11 +35,8 @@
                     $scope.settings.serverurl = "http://" + $scope.settings.serverurl;
                 }
 
-                //TODO: handle settings method correctly, appending http, testing, etc...
-                //SWML-39
                 swdbDAO.instantiate("Settings", $scope.settings)
                     .then(function (settingsToSave) {
-
                         return swdbDAO.save(settingsToSave);
                     }).then(function (settingsToSave) {
                         $scope.settings = settingsToSave;

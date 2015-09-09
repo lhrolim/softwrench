@@ -155,7 +155,7 @@
                         metadataModel.topLevelApplications.push(application);
                     }
                 }
-
+                defer.resolve();
             });
             return defer.promise;
 
