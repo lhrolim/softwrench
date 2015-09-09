@@ -27,6 +27,10 @@
             <div class="item item-text-wrap" ng-show="config.client">
                 App version:&nbsp;{{config.client.version}}
             </div>
+            <div class="item item-text-wrap" ng-show="config.client && config.client.commit">
+                Commit:&nbsp;{{config.client.commit}}
+            </div>
+            
         </div>
 
     </ion-content>
