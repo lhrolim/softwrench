@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("SettingsController", ["$scope", "routeService", "swdbDAO", "contextService", "securityService", "applicationStateService", "$cordovaPreferences", "$q",
-        function ($scope, routeService, swdbDAO, contextService, securityService, applicationStateService, $cordovaPreferences, $q) {
+    softwrench.controller("SettingsController", ["$scope", "routeService", "swdbDAO", "contextService", "securityService", "applicationStateService",
+        function ($scope, routeService, swdbDAO, contextService, securityService, applicationStateService) {
 
             $scope.config = null;
 
@@ -14,11 +14,13 @@
                 applicationStateService.getAppConfig().then(function (result) {
                     $scope.config = result;
                     var idx;
-                    if ($scope.config.client && (idx= $scope.config.client.version.indexOf("#")) > 0) {
+                    if ($scope.config.client && (idx = $scope.config.client.version.indexOf("#")) > 0) {
+                        //jenkins would append the commit number after a hash
+                        //implmentation of SWOFF-130, there was no suitable plugins to read the preferences inside the config.xml
                         var originalVersion = $scope.config.client.version;
                         $scope.config.client.version = originalVersion.substring(0, idx);
-                        $scope.config.client.commit = originalVersion.substring(idx+1);
-                    }
+                        $scope.config.client.commit = originalVersion.substring(idx + 1);
+                    } 
                 });
 
 
