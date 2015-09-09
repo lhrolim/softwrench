@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
 using log4net;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Common {
@@ -11,11 +13,23 @@ namespace softWrench.sW4.Web.Common {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(GenericExceptionFilter));
 
+        /// <summary>
+        /// Determines what http status code should be used depending on the exception.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private HttpStatusCode CodeOf(Exception e) {
+            if (e is UnauthorizedException) {
+                return HttpStatusCode.Unauthorized;
+            }
+            return HttpStatusCode.InternalServerError;
+        }
+
         public override void OnException(HttpActionExecutedContext context) {
             var e = context.Exception;
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
-            var errorResponse = context.Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorDto(rootException));
+            var errorResponse = context.Request.CreateResponse(CodeOf(rootException), new ErrorDto(rootException));
             throw new HttpResponseException(errorResponse);
         }
 

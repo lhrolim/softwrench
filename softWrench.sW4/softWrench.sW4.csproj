@@ -184,6 +184,7 @@
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Email\EmailHistory.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Extension\MigrationExtensions.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Person\BasePhoneDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryReturnDataSet.cs" />
