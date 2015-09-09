@@ -73,7 +73,6 @@
                             {
                                 if (string.IsNullOrEmpty(Model.LoginMessage))
                                 {
-
                                     <div class="text-danger" style="margin-bottom: 2em">
                                         Your <strong>User Name</strong> or <strong>Password</strong> was entered incorrectly.
                                     </div>
@@ -124,13 +123,6 @@
                                             Administrator: <b>administrator\password</b>
                                         </div>
                                     }
-                                    else
-                                    {
-                                        @*<div>
-                                                <a href="">Forgot Password?</a><br />
-                                                <a href="">Register Now</a>
-                                            </div>*@
-                                    }
                                 </div>
                             </div>
                             <div class="row buttons submit-button">
@@ -139,8 +131,7 @@
                             </div>
                         </form>
 
-                        <form class="form-horizontal col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm">
-
+                        <form class="form-horizontal forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm">
                             <div class="row">
                                 <div id="diverrormessagelist" class="alert alert-danger" ng-show="errorMessage!=null">
                                     <a class="close" ng-click="errorMessage=null" style="color:black">x</a>
@@ -152,8 +143,8 @@
 
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label class="control-label">Enter your email or username</label>
-                                    <input type="text" class="form-control" ng-model="userNameOrEmail" />
+                                    @*<label class="control-label">Enter your email or username</label>*@
+                                    <input type="text" class="form-control" ng-model="userNameOrEmail" placeholder="Enter your email or username" />
                                 </div>
                             </div>
                             <div class="row buttons">

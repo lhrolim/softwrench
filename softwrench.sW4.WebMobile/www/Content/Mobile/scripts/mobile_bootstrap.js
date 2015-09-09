@@ -1,5 +1,5 @@
 ﻿//#region 'deviceready' listener
-document.addEventListener("deviceready", function() {
+document.addEventListener("deviceready", function () {
     // retrieve the DOM element that had the ng-app attribute
     // bootstrap angular app "softwrench" programatically
     angular.bootstrap(document.body, ["softwrench"]);
@@ -31,113 +31,109 @@ var $s = function (element) {
 
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline', "rollingLog"]);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', ['persistence.offline', 'audit.offline']);
-var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications','sw_scan'])
+var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications', 'sw_scan'])
 //#endregion
 
 //#region App.run
-.run(["$ionicPlatform", "swdbDAO", "$log", "securityService", "contextService", "menuModelService", "metadataModelService", "routeService", "crudContextService", "synchronizationNotificationService", "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope",
-    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap, entities, configService, $rootScope) {
+.run(["$ionicPlatform", "swdbDAO", "$log", "securityService",
+    "contextService", "menuModelService", "metadataModelService", "routeService",
+    "crudContextService", "synchronizationNotificationService",
+    "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope","$q",
+    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
+        entities, configService, $rootScope,$q) {
 
-    $ionicPlatform.ready(function () {
-        initContext();
-        attachEventListeners();
-        initCordovaPlugins();
-        initDataBaseDebuggingHelpers();
+        function initContext() {
+            offlinePersitenceBootstrap.init();
+            var menuPromise = menuModelService.initAndCacheFromDB();
+            var metadataPromise = metadataModelService.initAndCacheFromDB();
+            //server side + client side configs
+            var serverConfigPromise = configService.loadConfigs();
+            var clientConfigPromise = configService.loadClientConfigs();
+            return $q.all([menuPromise, metadataPromise, serverConfigPromise, clientConfigPromise]);
 
-        // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
-        if (ionic.Platform.isAndroid()) {
-            ionic.Platform.isFullScreen = true;
         }
 
-        var authenticated = securityService.hasAuthenticatedUser();
-        crudContextService.restoreState();
-        routeService.loadInitialState(authenticated);
-    });
+      
 
-    function initContext() {
-        var log = $log.get("bootstrap#initContext");
 
-        offlinePersitenceBootstrap.init();
 
-        menuModelService.initAndCacheFromDB();
-
-        metadataModelService.initAndCacheFromDB();
-
-        configService.loadConfigs();
-
-        swdbDAO.findAll("Settings").then(function (settings) {
-            if (settings.length <= 0) {
-                log.info('creating infos for the first time');
-                var ob = entities.Settings;
-                swdbDAO.save(new ob()).then(function (savedSetting) {
-                    contextService.insertIntoContext("settings", savedSetting);
-                });
-            } else {
-                log.info('loading settings');
-                contextService.insertIntoContext("settings", settings[0],true);
-                contextService.insertIntoContext("serverurl", settings[0].serverurl);
+        function initDataBaseDebuggingHelpers() {
+            // DataBase debug mode: set swdbDAO service as global variable
+            if (!!persistence.debug) {
+                window.swdbDAO = swdbDAO;
             }
-        });
-        
-    }
-
-    function initDataBaseDebuggingHelpers() {
-        // DataBase debug mode: set swdbDAO service as global variable
-        if (!!persistence.debug) {
-            window.swdbDAO = swdbDAO;
         }
-    }
 
-    function initCordovaPlugins() {
-        var log = $log.get("bootstrap#initCordovaPlugins");
-        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-        // for form inputs)
-        log.info("init cordova plugins");
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        function initCordovaPlugins() {
+            var log = $log.get("bootstrap#initCordovaPlugins");
+            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+            // for form inputs)
+            log.info("init cordova plugins");
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+            }
+            // if (window.StatusBar) {
+            //      // org.apache.cordova.statusbar required
+            //      StatusBar.styleDefault();
+            // }
+
+            /* LOCAL NOTIFICATION */
+            synchronizationNotificationService.prepareNotificationFeature();
         }
-        // if (window.StatusBar) {
-        //      // org.apache.cordova.statusbar required
-        //      StatusBar.styleDefault();
-        // }
 
-        /* LOCAL NOTIFICATION */
-        synchronizationNotificationService.prepareNotificationFeature();
-    }
+        function attachEventListeners() {
+            // don't allow going to 'login' or 'settings' if the user is still logged
+            $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+                // not going to 'login' nor 'settings' -> do nothing
+                if (toState.name.indexOf("login") < 0 && toState.name !== "settings") {
+                    return;
+                }
+                // going to 'login' or 'settings' and no user authenticated -> allow transition
+                if (!securityService.hasAuthenticatedUser()) {
+                    return;
+                }
+                // going to login and user is authenticated -> prevent transition
+                event.preventDefault();
+            });
+            // go to settings prior to going to login if no settings is set
+            $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+                // not going to 'login' or coming from 'settings' -> do nothing
+                if (toState.name.indexOf("login") < 0 || fromState.name.indexOf("settings") >= 0) {
+                    return;
+                }
+                // has serverurl -> do nothing
+                var serverurl = contextService.get("serverurl");
+                if (!!serverurl) {
+                    return;
+                }
+                // prevent state change
+                event.preventDefault();
+                // go to settings instead
+                routeService.go("settings");
+            });
+        }
 
-    function attachEventListeners() {
-        // don't allow going to 'login' or 'settings' if the user is still logged
-        $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-            // not going to 'login' nor 'settings' -> do nothing
-            if (toState.name.indexOf("login") < 0 && toState.name !== "settings") {
-                return;
-            }
-            // going to 'login' or 'settings' and no user authenticated -> allow transition
-            if (!securityService.hasAuthenticatedUser()) {
-                return;
-            }
-            // going to login and user is authenticated -> prevent transition
-            event.preventDefault();
+        $ionicPlatform.ready(function () {
+            // loading eventual db stored values into context
+            initContext().then(function (result) {
+                
+                attachEventListeners();
+                initCordovaPlugins();
+                initDataBaseDebuggingHelpers();
+
+                // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
+                if (ionic.Platform.isAndroid()) {
+                    ionic.Platform.isFullScreen = true;
+                }
+
+                var authenticated = securityService.hasAuthenticatedUser();
+                crudContextService.restoreState();
+                routeService.loadInitialState(authenticated);
+            });
+
         });
-        // go to settings prior to going to login if no settings is set
-        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-            // not going to 'login' or coming from 'settings' -> do nothing
-            if (toState.name.indexOf("login") < 0 || fromState.name.indexOf("settings") >= 0) {
-                return;
-            }
-            // has serverurl -> do nothing
-            var serverurl = contextService.get("serverurl");
-            if (!!serverurl) {
-                return;
-            }
-            // prevent state change
-            event.preventDefault();
-            // go to settings instead
-            routeService.go("settings");
-        });
-    }
 
-}])
+    }])
 //#endregion
 
 //#region App.config
@@ -263,7 +259,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         .state("main.audit.applicationselect", {
             url: "/application",
             views: {
-                'main@main': { 
+                'main@main': {
                     templateUrl: "Content/Mobile/templates/audit/audit.application.select.html",
                     controller: "AuditApplicationSelectController"
                 }

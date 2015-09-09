@@ -1,18 +1,22 @@
 ﻿[
   {
     "outputFile": "Content/styles/default/styles.css",
-    "inputFile": "Content/styles/default/styles.scss"
+    "inputFile": "Content/styles/default/styles.scss",
+    "sourceMap": true
   },
   {
     "outputFile": "Content/styles/default/application/application.css",
-    "inputFile": "Content/styles/default/application/application.scss"
+    "inputFile": "Content/styles/default/application/application.scss",
+    "sourceMap": true
   },
   {
     "outputFile": "Content/styles/default/media/media.css",
-    "inputFile": "Content/styles/default/media/media.scss"
+    "inputFile": "Content/styles/default/media/media.scss",
+    "sourceMap": true
   },
   {
     "outputFile": "Content/styles/default/vendor/vendor.css",
-    "inputFile": "Content/styles/default/vendor/vendor.scss"
+    "inputFile": "Content/styles/default/vendor/vendor.scss",
+    "sourceMap": true
   }
 ]

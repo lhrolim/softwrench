@@ -65,7 +65,6 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <None Include="customer.placeholder" />
-    <None Include="web_content\tva\styles\branding.css.map" />
     <None Include="web_content\tva\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
