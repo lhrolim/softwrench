@@ -55,6 +55,12 @@
     <Folder Include="web_content\kongsberg\htmls\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\kongsberg\styles\branding.css">
+      <DependentUpon>branding.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\kongsberg\styles\branding.min.css">
+      <DependentUpon>branding.css</DependentUpon>
+    </Content>
     <EmbeddedResource Include="metadata\kongsberg\menu.mobile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -71,6 +77,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\kongsberg\deploy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -80,7 +90,7 @@
     <Content Include="web_content\kongsberg\images\logo-main-mobile.png" />
     <Content Include="web_content\kongsberg\images\logo-main.png" />
     <Content Include="web_content\kongsberg\scripts\aaa_kongsbergmodule.js" />
-    <Content Include="web_content\kongsberg\styles\branding.css" />
+    <None Include="web_content\kongsberg\styles\branding.scss" />
     <Content Include="web_content\kongsberg\images\signin.jpg" />
     <Content Include="web_content\kongsberg\scripts\sr_service.js" />
     <None Include="packages.config" />

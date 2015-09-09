@@ -10,9 +10,7 @@ app.directive('activitystream', function(contextService) {
         },
 
         link: function(scope) {
-            scope.$name = 'crudbody';
-            console.log('add class');
-            
+            scope.$name = 'crudbody';          
         },
         controller: function($scope, $http, $log, $interval, $timeout, redirectService,
             contextService, $rootScope, alertService) {
@@ -30,7 +28,7 @@ app.directive('activitystream', function(contextService) {
 
             if ($scope.activityStreamEnabled()) {
                 $('html').addClass('activitystream');
-        }
+            }
 
             $scope.clearFilter = function () {
                 log.debug('clearFilter');
