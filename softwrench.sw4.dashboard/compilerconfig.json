@@ -1,6 +1,7 @@
 ﻿[
   {
     "outputFile": "web_content/dashboard/styles/dashboards.css",
-    "inputFile": "web_content/dashboard/styles/dashboards.scss"
+    "inputFile": "web_content/dashboard/styles/dashboards.scss",
+    "sourceMap": true
   }
 ]

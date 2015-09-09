@@ -134,9 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\activitystream\scripts\activitystream.js" />
-    <None Include="web_content\activitystream\styles\activitystream.css.map">
-      <DependentUpon>activitystream.css</DependentUpon>
-    </None>
     <None Include="web_content\activitystream\styles\activitystream.scss" />
     <Content Include="web_content\activitystream\styles\activitystream.css">
       <DependentUpon>activitystream.scss</DependentUpon>
