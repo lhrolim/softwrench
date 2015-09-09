@@ -1,19 +1,18 @@
 ﻿.page-signin {
-    background: #e0f3f1 url(../images/signin.jpg) no-repeat center top fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
+  background: #e0f3f1 url(../images/signin.jpg) no-repeat center top fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
 
-    .page-signin .form-signin {
-        background-color: rgba(1, 62, 91, 0.5);
-    }
+.page-signin .form-signin {
+  background-color: rgba(1, 62, 91, 0.5); }
 
 .container header {
-    background: #e0f3f1 url(../images/header.jpg) no-repeat top left;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
+  background: #e0f3f1 url(../images/header.jpg) no-repeat top left;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
+
+/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiLi4vYnJhbmRpbmcuY3NzIiwKCSJzb3VyY2VzIjogWwoJCSIuLi9icmFuZGluZy5zY3NzIgoJXSwKCSJzb3VyY2VzQ29udGVudCI6IFtdLAoJIm1hcHBpbmdzIjogIkFBQUEsWUFBWSxDQUFDO0VBQ1QsVUFBVSxFQUFFLE9BQU8sQ0FBQyx5QkFBRyxDQUF1QixTQUFTLENBQUMsTUFBTSxDQUFDLEdBQUcsQ0FBQyxLQUFLO0VBQ3hFLHVCQUF1QixFQUFFLEtBQU07RUFDL0Isb0JBQW9CLEVBQUUsS0FBTTtFQUM1QixrQkFBa0IsRUFBRSxLQUFNO0VBQzFCLGVBQWUsRUFBRSxLQUFNLEdBTGI7O0FBUUcsWUFBWSxDQUFDLFlBQVksQ0FBWjtFQUN0QixnQkFBZ0IsRUFBRSxvQkFBSSxHQURDOztBQUlwQixVQUFVLENBQUMsTUFBTSxDQUFWO0VBQ2QsVUFBVSxFQUFFLE9BQU8sQ0FBQyx5QkFBRyxDQUF1QixTQUFTLENBQUMsR0FBRyxDQUFDLElBQUk7RUFDaEUsdUJBQXVCLEVBQUUsS0FBTTtFQUMvQixvQkFBb0IsRUFBRSxLQUFNO0VBQzVCLGtCQUFrQixFQUFFLEtBQU07RUFDMUIsZUFBZSxFQUFFLEtBQU0sR0FMUiIsCgkibmFtZXMiOiBbXQp9 */
