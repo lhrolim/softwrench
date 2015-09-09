@@ -116,12 +116,16 @@ namespace softWrench.sW4.Metadata.Security {
             _lastName = mock;
             _maximoPersonId = mock;
             SiteId = mock;
-            _dbId = -1;
+            _dbId = int.MinValue;
             _timezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
         }
 
         public static InMemoryUser NewAnonymousInstance() {
             return new InMemoryUser("anonymous");
+        }
+
+        public Boolean IsAnonymous() {
+            return _login == "anonymous" && _dbId.HasValue && _dbId.Value == int.MinValue;
         }
 
         public string Login {
