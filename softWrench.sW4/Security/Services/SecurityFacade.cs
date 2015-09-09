@@ -14,6 +14,7 @@ using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
@@ -169,17 +170,20 @@ namespace softWrench.sW4.Security.Services {
 
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
             if (string.IsNullOrEmpty(currLogin)) {
-                return null;
+                throw UnauthorizedException.NotAuthenticated(currLogin);
             }
 
             if (!fetchFromDB || Users.ContainsKey(currLogin)) {
-                return Users[currLogin];
+                var inMemoryUser = Users[currLogin];
+                if (inMemoryUser == null) {
+                    throw UnauthorizedException.NotAuthenticated(currLogin);
+                }
             }
             //cookie authenticated already 
             //TODO: remove this in prod?
             var swUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, currLogin);
             if (swUser == null) {
-                throw new InvalidOperationException("user should exist at DB");
+                throw UnauthorizedException.UserNotFound(currLogin);
             }
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
@@ -195,7 +199,11 @@ namespace softWrench.sW4.Security.Services {
             }
             UserFound(fullUser, timezone);
             LogicalThreadContext.FreeNamedDataSlot("executinglogin");
-            return Users[currLogin];
+            var currentUser = Users[currLogin];
+            if (currentUser == null) {
+                throw UnauthorizedException.NotAuthenticated(currLogin);
+            }
+            return currentUser;
         }
 
         //TODO: this could lead to concurrency problems
