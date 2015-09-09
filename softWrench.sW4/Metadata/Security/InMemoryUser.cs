@@ -52,6 +52,9 @@ namespace softWrench.sW4.Metadata.Security {
 
         private InMemoryUser() {
             _roles = new List<Role>();
+            _personGroups = new HashedSet<PersonGroupAssociation>();
+            _profiles = new UserProfile[0];
+            _dataConstraints = new List<DataConstraint>();
         }
 
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, UserPreferences userPreferences, int? timezoneOffset) {
@@ -105,6 +108,20 @@ namespace softWrench.sW4.Metadata.Security {
             _dataConstraints = dataConstraints;
             Identity = new GenericIdentity(_login);
             _userPreferences = userPreferences;
+        }
+
+        private InMemoryUser(string mock) : this() {
+            _login = mock;
+            _firstName = mock;
+            _lastName = mock;
+            _maximoPersonId = mock;
+            SiteId = mock;
+            _dbId = -1;
+            _timezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
+        }
+
+        public static InMemoryUser NewAnonymousInstance() {
+            return new InMemoryUser("anonymous");
         }
 
         public string Login {

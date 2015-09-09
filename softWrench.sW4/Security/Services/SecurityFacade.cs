@@ -155,9 +155,21 @@ namespace softWrench.sW4.Security.Services {
         public static string CurrentPrincipalLogin {
             get { return CurrentPrincipal.Identity.Name; }
         }
-
-
-        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true) {
+        /// <summary>
+        /// <para>
+        /// Finds the currently authenticated user.
+        /// </para>
+        /// <para>
+        /// If requiresAuth is <code>true</code> and there is no authenticated user it will throw a <see cref="UnauthorizedException"/>.
+        /// </para>
+        /// <para>
+        /// If requiresAuth is <code>false</code> and there is no authenticated user it returns an 'anonymous' user instance (<see cref="InMemoryUser.NewAnonymousInstance"/>)
+        /// </para>
+        /// </summary>
+        /// <param name="fetchFromDB"></param>
+        /// <param name="requiresAuth"></param>
+        /// <returns>current autheticated user</returns>
+        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true, Boolean requiresAuth = false) {
             if (ApplicationConfiguration.IsUnitTest) {
                 return InMemoryUser.TestInstance("test");
             }
@@ -167,10 +179,12 @@ namespace softWrench.sW4.Security.Services {
                 return null;
             }
 
-
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
             if (string.IsNullOrEmpty(currLogin)) {
-                throw UnauthorizedException.NotAuthenticated(currLogin);
+                if (requiresAuth) {
+                    throw UnauthorizedException.NotAuthenticated(currLogin);
+                }
+                return InMemoryUser.NewAnonymousInstance();
             }
 
             if (!fetchFromDB || Users.ContainsKey(currLogin)) {
