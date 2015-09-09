@@ -18,6 +18,7 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
@@ -36,9 +37,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         Dictionary<string, string> securityGroupsNotificationsQueries = new Dictionary<string, string>();
 
-        public NotificationFacade(MaximoHibernateDAO maxDAO, IWhereClauseFacade whereClauseFacade) {
+        public NotificationFacade(MaximoHibernateDAO maxDAO, IWhereClauseFacade whereClauseFacade, IContextLookuper contextLookuper) {
             MaxDAO = maxDAO;
-            _queryBuilder = new NotificationQueryBuilder(whereClauseFacade);
+            _queryBuilder = new NotificationQueryBuilder(whereClauseFacade, contextLookuper);
         }
 
         //Sets up the default notification stream.
