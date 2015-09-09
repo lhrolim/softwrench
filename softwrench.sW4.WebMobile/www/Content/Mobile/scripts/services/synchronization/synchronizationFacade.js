@@ -179,41 +179,33 @@
         }
 
         /**
-         * Checks if there's data to sync.
-         * If there's no data, resolve according to fastFail parameter.
-         * If there's data, attemps a synchronization.
+         * Attemps a synchronization.
          * If it succeeds resolve with <code>true</code> indicating sync was successfull.
          * If it fails prompts the user with a confirm popup ("continue anyway?").
          * Resolve with the user's response.
          * Before attempting synchronization show loading; after synchronization (success or fail) loading is toggled off.
          * 
          * @param {} failPopupConfig configuration of the confirm popup. Defaults to {title:"Synchronization failed",template:"Continue anyway?"}
-         * @param Boolean fastFail should fail if there's no data to sync. Defaults to <code>false</code>
          * @returns Promise resolved with Boolean indicating the caller it can continue it's workflow. 
          */
-        function attempSyncAndContinue(failPopupConfig, fastFail) {
-            return hasDataToSync().then(function (has) {
-                if (!has) {
-                    return !fastFail;
-                }
-                $ionicLoading.show({
-                    template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Synchronizing data<span>"
-                });
-                // try to sync
-                return fullSync().then(function () {
-                        $ionicLoading.hide();
-                        return true;
-                    }).catch(function () {
-                        $ionicLoading.hide();
-                        // sync failed: check if user wishes to logout regardless
-                        return $ionicPopup.confirm({
-                            title: failPopupConfig.title || "Synchronization failed",
-                            template: failPopupConfig.template || "Continue anyway?"
-                        }).then(function (continueAnyway) {
-                            return !!continueAnyway;
-                        });
-                    });
+        function attempSyncAndContinue(failPopupConfig) {
+            $ionicLoading.show({
+                template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Synchronizing data<span>"
             });
+            // try to sync
+            return fullSync().then(function () {
+                    $ionicLoading.hide();
+                    return true;
+                }).catch(function () {
+                    $ionicLoading.hide();
+                    // sync failed: check if user wishes to logout regardless
+                    return $ionicPopup.confirm({
+                        title: failPopupConfig.title || "Synchronization failed",
+                        template: failPopupConfig.template || "Continue anyway?"
+                    }).then(function (continueAnyway) {
+                        return !!continueAnyway;
+                    });
+                });
         }
 
         //#endregion
