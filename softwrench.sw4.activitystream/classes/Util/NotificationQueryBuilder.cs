@@ -36,10 +36,9 @@ namespace softwrench.sw4.activitystream.classes.Util
         {
             var roles = securityGroup.Roles;
             string notificationsQuery = "";
-            var context = _contextLookuper.LookupContext().ShallowCopy();
-            context.UserProfiles.Clear();
+            var context = new ContextHolder();
             if (securityGroup.Id != null) {
-                context.UserProfiles.Add(securityGroup.Id);
+                context.UserProfiles = new SortedSet<int?> {securityGroup.Id};
             }
             foreach (var role in roles) {
                 switch (role.Name.ToLower()) {
