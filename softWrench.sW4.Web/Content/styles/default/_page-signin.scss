@@ -12,6 +12,7 @@
     .form-signin {
         padding: 40px 15px;
         background-color: rgba(1, 62, 91, 0.5);
+        min-height: 580px;
 
         .logo {
             text-align: center;
@@ -46,6 +47,10 @@
 
         .forgot-password {
             margin-left: 20px;
+        }
+
+        .forgotpasswordform {
+            margin-bottom: 58px;
         }
 
         .control-label {
