@@ -103,7 +103,7 @@
     <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
       <arg value="--browsers=PhantomJS"/>
-      <arg value="--singleRun=true"/>
+      <arg value="--single-run"/> <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
     </exec>
 
   </target>
