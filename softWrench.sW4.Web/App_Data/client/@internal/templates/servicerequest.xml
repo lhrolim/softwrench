@@ -197,7 +197,7 @@
           <section id="compositions"/>
         </schema>
 
-        <schema parentschema="adetail" id="newdetail" title="New Service Request" >
+        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
@@ -216,7 +216,7 @@
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Service Request Details">
+        <schema id="editdetail" parentschema="adetail" title="Service Request Details">
           <section id="siteidsection">
            <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
@@ -248,7 +248,7 @@
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id ="dispatchwo" icon="fa-tachometer" label="Dispatch Work Order"
+                <command id ="dispatchwo" icon="fa-tachometer" label="Create Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatch"/>
               </container>
             </commandgroup>
