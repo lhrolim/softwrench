@@ -1,4 +1,4 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, ionic) {
     "use strict";
 
     function securityService($rootScope, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
@@ -109,7 +109,7 @@
          * response status (indicating the user requires remote authentication).
          * For now just calls logout.
          */
-        var handleUnauthorizedRemoteAccess = function () {
+        var handleUnauthorizedRemoteAccess = ionic.debounce(function () {
             var logoutPromise = logout();
             // not at login state, transition to it with proper message
             if (!isLoginState()) {
@@ -117,7 +117,7 @@
                     routeService.go("login", { message: config.message.unauthorizedaccess });
                 });
             }
-        };
+        }, 0, true); //debouncing for when multiple parallel requests are unauthorized
 
         //#endregion
 
@@ -142,4 +142,4 @@
 
     //#endregion
 
-})(mobileServices);
+})(mobileServices, ionic);

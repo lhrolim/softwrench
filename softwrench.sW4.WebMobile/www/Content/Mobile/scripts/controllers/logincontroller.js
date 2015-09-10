@@ -1,19 +1,16 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "$ionicPopup", "routeService", "securityService", "$timeout", "$stateParams", "$ionicLoading",
-        function($scope, $ionicPopup, routeService, securityService, $timeout, $stateParams, $ionicLoading) {
+    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "$ionicLoading",
+        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, $ionicLoading) {
 
             $scope.data = {};
 
             var showAlert = function(title, message) {
-                var alertPopup = $ionicPopup.alert({
+                swAlertPopup.show({
                     title: title,
                     template: message
                 });
-                $timeout(function () {
-                    alertPopup.close();
-                }, 3000);
             }
 
             var showMessage = function() {

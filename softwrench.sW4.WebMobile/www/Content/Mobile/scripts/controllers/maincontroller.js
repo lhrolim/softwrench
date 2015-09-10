@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('MainController', ["$scope", "routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "$ionicPopup", "securityService", "$timeout", "synchronizationFacade", "networkConnectionService",
-        function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, $ionicPopup, securityService, $timeout, synchronizationFacade, networkConnectionService) {
+    softwrench.controller('MainController', ["$scope", "routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "swAlertPopup", "$ionicPopup", "securityService", "synchronizationFacade", "networkConnectionService",
+        function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, swAlertPopup, $ionicPopup, securityService, synchronizationFacade, networkConnectionService) {
 
             $scope.data = {};
 
@@ -36,25 +36,15 @@
                 $ionicSideMenuDelegate.toggleLeft();
             }
 
-            var alertPopup = function(config, timeout) {
-                var alert = $ionicPopup.alert({
-                    title: config.title,
-                    template: config.message
-                });
-                $timeout(function () {
-                    alert.close();
-                }, timeout || 3000);
-            };
 
             var doLogout = function() {
                 return securityService.logout().then(function() {
                     return true;
                 }).catch(function() {
-                    alertPopup({
+                    swAlertPopup.show({
                         title: "Logout failed",
-                        message: "Unexpected logout error.<br>" +
-                                "Please contact support"
-                    });
+                        template: "Unexpected logout error.<br>Please contact support."
+                    }, 3000);
                     return false;
                 });
             };
@@ -69,11 +59,11 @@
                         // has data to sync
                         if (networkConnectionService.isOffline()) {
                             // not online: no logout action will be executed
-                            alertPopup({
+                            swAlertPopup.show({
                                 title: "No internet connection detected",
-                                message: "You still have data to synchronize.<br>" +
+                                template: "You still have data to synchronize.<br>" +
                                         "Please connect to the internet to logout."
-                            });
+                            }, 3000);
                             return false;
                         }
                         // is online: prompt user for confirmation
