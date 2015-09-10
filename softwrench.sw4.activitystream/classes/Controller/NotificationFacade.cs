@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
@@ -22,8 +23,7 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
-    public class NotificationFacade : ISingletonComponent
-    {
+    public class NotificationFacade : ISingletonComponent {
         private const int HoursToPurge = 24;
 
         public static readonly IDictionary<string, InMemoryNotificationStream> NotificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
@@ -62,11 +62,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         public void InsertNotificationsIntoStreams(string securityGroup, List<Notification> notifications) {
             //var defaultStream = NotificationStreams["default"];
-            foreach (var notification in notifications)
-            {
+            foreach (var notification in notifications) {
                 // If the stream has not already been created, create it
-                if (!NotificationStreams.Keys.Contains(securityGroup))
-                {
+                if (!NotificationStreams.Keys.Contains(securityGroup)) {
                     NotificationStreams[securityGroup] = new InMemoryNotificationStream();
                 }
                 // Add to the proper security group stream
@@ -91,66 +89,65 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     notification["id"].ToString(), Convert.ToInt64(notification["rowstamp"]), true);
             }
         }
-        
+
         // This will query against the base notification dataset to pull the necessary columns
         // for notifications and will use the security groups to determine which tables to get
         // notifications for and append any necessary where clauses to the query
-        public void UpdateNotificationStreams()
-        {
+        public void UpdateNotificationStreams() {
             securityGroupsNotificationsQueries = _queryBuilder.BuildNotificationsQueries();
-            var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
             var currentTime = DateTime.Now.FromServerToRightKind();
-            foreach (var notificationQuery in securityGroupsNotificationsQueries)
-            {
-                var formattedQuery = string.Format(notificationQuery.Value , HoursToPurge, currentTime, Counter["servicerequest"]);
-                var queryResult = MaxDAO.FindByNativeQuery(formattedQuery, null);
-                List<Notification> notifications = new List<Notification>();
-                foreach (var record in queryResult)
-                {
-                    var application = record["application"];
-                    var targetschema = record["targetschema"];
-                    var id = record["id"];
-                    var label = record["label"];
-                    var icon = record["icon"];
-                    var uid = Int64.Parse(record["uid"]);
-                    var flag = "changed";
-                    if (Counter[application] < uid)
-                    {
-                        flag = "created";
-                        Counter[application] = uid;
-                    }
-                    var parentid = record["parentid"];
-                    long parentuid = -1;
-                    if (record["parentuid"] != null)
-                    {
-                        Int64.TryParse(record["parentuid"], out parentuid);
-                    }
-                    var parentapplication = record["parentapplication"];
-                    string parentlabel = null;
-                    if (parentapplication == "servicerequest")
-                    {
-                        parentlabel = "service request";
-                    }
-                    else if (parentapplication == "WORKORDER")
-                    {
-                        parentlabel = "work order";
-                    }
-                    else if (parentapplication == "INCIDENT")
-                    {
-                        parentlabel = "incident";
-                    }
-                    var summary = record["summary"];
-                    var changeby = record["changeby"];
-                    var changedate = DateTime.Parse(record["changedate"]);
-                    var rowstamp = Convert.ToInt64(record["rowstamp"]);
-                    var notification = new Notification(application, targetschema, label, icon, id, uid, parentid,
-                        parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
-                    notifications.Add(notification);
-                }
-                InsertNotificationsIntoStreams(notificationQuery.Key, notifications);
+            var tasks = new Task[securityGroupsNotificationsQueries.Count];
+            var i = 0;
+            foreach (var securityGroupsNotificationsQuery in securityGroupsNotificationsQueries) {
+                tasks[i++] = Task.Factory.NewThread(() => ExecuteNotificationsQuery(securityGroupsNotificationsQuery, currentTime));
             }
+            Task.WaitAll(tasks);
         }
 
+        private void ExecuteNotificationsQuery(KeyValuePair<string, string> securityGroupsNotificationsQuery, DateTime currentTime) {
+            var formattedQuery = string.Format(securityGroupsNotificationsQuery.Value,
+                        HoursToPurge, currentTime, Counter["servicerequest"]);
+            var queryResult = MaxDAO.FindByNativeQuery(formattedQuery, null);
+            if (queryResult == null) {
+                return;
+            }
+            List<Notification> notifications = new List<Notification>();
+            foreach (var record in queryResult) {
+                var application = record["application"];
+                var targetschema = record["targetschema"];
+                var id = record["id"];
+                var label = record["label"];
+                var icon = record["icon"];
+                var uid = Int64.Parse(record["uid"]);
+                var flag = "changed";
+                if (Counter[application] < uid) {
+                    flag = "created";
+                    Counter[application] = uid;
+                }
+                var parentid = record["parentid"];
+                long parentuid = -1;
+                if (record["parentuid"] != null) {
+                    Int64.TryParse(record["parentuid"], out parentuid);
+                }
+                var parentapplication = record["parentapplication"];
+                string parentlabel = null;
+                if (parentapplication == "servicerequest") {
+                    parentlabel = "service request";
+                } else if (parentapplication == "WORKORDER") {
+                    parentlabel = "work order";
+                } else if (parentapplication == "INCIDENT") {
+                    parentlabel = "incident";
+                }
+                var summary = record["summary"];
+                var changeby = record["changeby"];
+                var changedate = DateTime.Parse(record["changedate"]);
+                var rowstamp = Convert.ToInt64(record["rowstamp"]);
+                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid,
+                    parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
+                notifications.Add(notification);
+            }
+            InsertNotificationsIntoStreams(securityGroupsNotificationsQuery.Key, notifications);
+        }
 
         //By default this is purging the notification streams
         //of any record changed more than 24 hours old
@@ -159,7 +156,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 stream.Value.PurgeNotificationsFromStream(24);
             }
         }
-        
+
         public NotificationResponse GetNotificationStream(string securityGroup) {
             return NotificationStreams[securityGroup].GetNotifications();
         }

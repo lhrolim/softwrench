@@ -7,21 +7,16 @@ using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Security.Context;
 
-namespace softwrench.sw4.activitystream.classes.Util
-{
-    public class NotificationQueryBuilder
-    {
+namespace softwrench.sw4.activitystream.classes.Util {
+    public class NotificationQueryBuilder {
         private readonly IWhereClauseFacade _whereClauseFacade;
         private readonly IContextLookuper _contextLookuper;
 
-        public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade, IContextLookuper contextLookuper)
-        {
+        public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade, IContextLookuper contextLookuper) {
             _whereClauseFacade = whereClauseFacade;
             _contextLookuper = contextLookuper;
         }
-
-        public Dictionary<string, string> BuildNotificationsQueries()
-        {
+        public Dictionary<string, string> BuildNotificationsQueries() {
             Dictionary<string, string> notificationQueries = new Dictionary<string, string>();
             var securityGroups = UserProfileManager.FetchAllProfiles(true);
             foreach (var securityGroup in securityGroups) {
@@ -32,13 +27,12 @@ namespace softwrench.sw4.activitystream.classes.Util
             }
             return notificationQueries;
         }
-        private KeyValuePair<string, string> BuildNotificationsQuery(UserProfile securityGroup)
-        {
+        private KeyValuePair<string, string> BuildNotificationsQuery(UserProfile securityGroup) {
             var roles = securityGroup.Roles;
             string notificationsQuery = "";
             var context = new ContextHolder();
             if (securityGroup.Id != null) {
-                context.UserProfiles = new SortedSet<int?> {securityGroup.Id};
+                context.UserProfiles = new SortedSet<int?> { securityGroup.Id };
             }
             foreach (var role in roles) {
                 switch (role.Name.ToLower()) {
