@@ -83,7 +83,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
         }
         [HttpGet]
-        [SPFRedirect("StatusColour Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
+        [SPFRedirect("StatusColor Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
         public IGenericResponseResult StatuscolorEditor() {
             using (var reader = new MetadataProvider().GetStream("statuscolors.json")) {
                 var result = reader.ReadToEnd();
