@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using Common.Logging;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Quartz.Util;
@@ -31,15 +32,15 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         private readonly MaximoHibernateDAO MaxDAO;
         private NotificationQueryBuilder _queryBuilder;
-
+        private readonly ILog _log = LogManager.GetLogger(typeof(NotificationFacade));
         private DataSet BaseNotificationDataset = new DataSet();
         private DateTime lastRun;
 
         Dictionary<string, string> securityGroupsNotificationsQueries = new Dictionary<string, string>();
 
-        public NotificationFacade(MaximoHibernateDAO maxDAO, IWhereClauseFacade whereClauseFacade, IContextLookuper contextLookuper) {
+        public NotificationFacade(MaximoHibernateDAO maxDAO, NotificationQueryBuilder queryBuilder) {
             MaxDAO = maxDAO;
-            _queryBuilder = new NotificationQueryBuilder(whereClauseFacade, contextLookuper);
+            _queryBuilder = queryBuilder;
         }
 
         //Sets up the default notification stream.
@@ -99,6 +100,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var tasks = new Task[securityGroupsNotificationsQueries.Count];
             var i = 0;
             foreach (var securityGroupsNotificationsQuery in securityGroupsNotificationsQueries) {
+                _log.DebugFormat("Updating notifications for security group {0}", securityGroupsNotificationsQuery.Key);
                 tasks[i++] = Task.Factory.NewThread(() => ExecuteNotificationsQuery(securityGroupsNotificationsQuery, currentTime));
             }
             Task.WaitAll(tasks);
@@ -153,11 +155,13 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         //of any record changed more than 24 hours old
         public void PurgeNotificationsFromStream() {
             foreach (var stream in NotificationStreams) {
-                stream.Value.PurgeNotificationsFromStream(24);
+                _log.DebugFormat("Purging notification older than {0} hours for security group {1}", HoursToPurge, stream.Key);
+                stream.Value.PurgeNotificationsFromStream(HoursToPurge);
             }
         }
 
         public NotificationResponse GetNotificationStream(string securityGroup) {
+            _log.DebugFormat("Getting notifications for security group {0}", securityGroup);
             return NotificationStreams[securityGroup].GetNotifications();
         }
     }
