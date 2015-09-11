@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
-using Common.Logging;
+using log4net;
 using Microsoft.Ajax.Utilities;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.activitystream.classes.Util {
@@ -37,31 +39,8 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 context.UserProfiles = new SortedSet<int?> { securityGroup.Id };
             }
             foreach (var role in roles) {
-                switch (role.Name.ToLower()) {
-                    case "sr":
-                        _log.DebugFormat("Appening Service Request query for security group {0}", securityGroup.Name);
-                        var srResult = _whereClauseFacade.Lookup("servicerequest", null, context);
-                        var srQuery = srResult.Query.Trim() != "" ? " AND " + srResult.Query + " UNION " : " UNION ";
-                        notificationsQuery += GetRoleQuery(role.Name, srQuery);
-                        notificationsQuery += GetRoleQuery(role.Name + "Worklogs", srQuery);
-                        notificationsQuery += GetRoleQuery(role.Name + "Commlogs", srQuery);
-                        break;
-                    case "incident":
-                        _log.DebugFormat("Appening Incident query for security group {0}", securityGroup.Name);
-                        var incidentResult = _whereClauseFacade.Lookup("incident", null, context);
-                        var incidentQuery = incidentResult.Query.Trim() != "" ? " AND " + incidentResult.Query + " UNION " : " UNION ";
-                        notificationsQuery += GetRoleQuery(role.Name, incidentQuery);
-                        notificationsQuery += GetRoleQuery(role.Name + "Worklogs", incidentQuery);
-                        notificationsQuery += GetRoleQuery(role.Name + "Commlogs", incidentQuery);
-                        break;
-                    case "workorders":
-                        _log.DebugFormat("Appening Workorder query for security group {0}", securityGroup.Name);
-                        var woResult = _whereClauseFacade.Lookup("workorder", null, context);
-                        var woQuery = woResult.Query.Trim() != "" ? " AND " + woResult.Query + " UNION " : " UNION ";
-                        notificationsQuery += GetRoleQuery(role.Name, woQuery);
-                        notificationsQuery += GetRoleQuery(role.Name + "Worklogs", woQuery);
-                        break;
-                }
+                _log.DebugFormat("Appending {0} query for security group {1}", role.Name.ToLower(), securityGroup.Name);
+                notificationsQuery += AppendQuery(role.Name.ToLower(), context);
             }
             if (notificationsQuery.EndsWith(" UNION ")) {
                 notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
@@ -69,10 +48,39 @@ namespace softwrench.sw4.activitystream.classes.Util {
             return new KeyValuePair<string, string>(securityGroup.Name, notificationsQuery);
         }
 
-        private string GetRoleQuery(string key, string whereClause) {
-            var result = ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(key)).Value;
-            result += whereClause;
-            return result;
+        private string AppendQuery(string key, ContextHolder context) {
+            var applicationName = GetApplicationNameByRole(key);
+            var sb = new StringBuilder();
+
+            var whereClauseResult = _whereClauseFacade.Lookup(applicationName, null, context);
+            var convertedValue = DataConstraintsWhereBuilder.GetConvertedWhereClause(whereClauseResult, SecurityFacade.CurrentUser(), "");
+            var whereClause = whereClauseResult.IsEmpty() ? " UNION " : " AND " + convertedValue + " UNION ";
+
+            sb.Append(GetRoleQuery(key)).Append(whereClause);
+            sb.Append(GetRoleQuery(key + "Worklogs")).Append(whereClause);
+
+            if (!key.EqualsIc("workorder")) {
+                sb.Append(GetRoleQuery(key + "Commlogs")).Append(whereClause);
+            }
+
+            return sb.ToString();
+        }
+
+        private static string GetApplicationNameByRole(string key) {
+            //TODO: adjust role names to match application names, or create a external translator
+            if (key.Equals("sr")) {
+                return "servicerequest";
+            }
+            if (key.Equals("workorders")) {
+                return "workorder";
+            }
+            return key;
+
+        }
+
+
+        private string GetRoleQuery(string key) {
+            return ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(key)).Value;
         }
     }
 }

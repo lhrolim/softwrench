@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace softwrench.sw4.activitystream.classes.Util {
     internal class ActivityStreamConstants
     {
+        public const int HoursToPurge = 24;
 
         public static string CreatedByCol = "createby";
         public static string CreatedDateCol = "createdate";

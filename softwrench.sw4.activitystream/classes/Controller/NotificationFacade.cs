@@ -1,45 +1,30 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using Common.Logging;
-using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Quartz.Util;
 using softwrench.sw4.activitystream.classes.Model;
 using softwrench.sw4.activitystream.classes.Util;
-using softwrench.sw4.Shared2.Metadata.Applications.Notification;
-using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.Relational;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications.DataSet;
-using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
     public class NotificationFacade : ISingletonComponent {
-        private const int HoursToPurge = 24;
+        
 
         public static readonly IDictionary<string, InMemoryNotificationStream> NotificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
         public static IDictionary<string, long> Counter = new ConcurrentDictionary<string, long>();
 
-        private readonly MaximoHibernateDAO MaxDAO;
-        private NotificationQueryBuilder _queryBuilder;
+        private readonly MaximoHibernateDAO _maxDAO;
+        private readonly NotificationQueryBuilder _queryBuilder;
         private readonly ILog _log = LogManager.GetLogger(typeof(NotificationFacade));
-        private DataSet BaseNotificationDataset = new DataSet();
-        private DateTime lastRun;
 
-        Dictionary<string, string> securityGroupsNotificationsQueries = new Dictionary<string, string>();
+        Dictionary<string, string> _securityGroupsNotificationsQueries = new Dictionary<string, string>();
 
         public NotificationFacade(MaximoHibernateDAO maxDAO, NotificationQueryBuilder queryBuilder) {
-            MaxDAO = maxDAO;
+            _maxDAO = maxDAO;
             _queryBuilder = queryBuilder;
         }
 
@@ -54,9 +39,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     "select max(workorderid) as max, 'workorder' as application from workorder union " +
                     "select max(commloguid) as max, 'commlog' as application from commlog union " +
                     "select max(worklogid) as max, 'worklog' as application from worklog");
-            var result = MaxDAO.FindByNativeQuery(query, null);
+            var result = _maxDAO.FindByNativeQuery(query, null);
             foreach (var record in result) {
-                Counter.Add(record["application"], Int32.Parse((record["max"] ?? "0")));
+                Counter.Add(record["application"], int.Parse((record["max"] ?? "0")));
             }
             //NotificationStreams["default"] = notificationBuffer;
         }
@@ -95,11 +80,11 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         // for notifications and will use the security groups to determine which tables to get
         // notifications for and append any necessary where clauses to the query
         public void UpdateNotificationStreams() {
-            securityGroupsNotificationsQueries = _queryBuilder.BuildNotificationsQueries();
+            _securityGroupsNotificationsQueries = _queryBuilder.BuildNotificationsQueries();
             var currentTime = DateTime.Now.FromServerToRightKind();
-            var tasks = new Task[securityGroupsNotificationsQueries.Count];
+            var tasks = new Task[_securityGroupsNotificationsQueries.Count];
             var i = 0;
-            foreach (var securityGroupsNotificationsQuery in securityGroupsNotificationsQueries) {
+            foreach (var securityGroupsNotificationsQuery in _securityGroupsNotificationsQueries) {
                 _log.DebugFormat("Updating notifications for security group {0}", securityGroupsNotificationsQuery.Key);
                 tasks[i++] = Task.Factory.NewThread(() => ExecuteNotificationsQuery(securityGroupsNotificationsQuery, currentTime));
             }
@@ -108,8 +93,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         private void ExecuteNotificationsQuery(KeyValuePair<string, string> securityGroupsNotificationsQuery, DateTime currentTime) {
             var formattedQuery = string.Format(securityGroupsNotificationsQuery.Value,
-                        HoursToPurge, currentTime, Counter["servicerequest"]);
-            var queryResult = MaxDAO.FindByNativeQuery(formattedQuery, null);
+                        ActivityStreamConstants.HoursToPurge, currentTime, Counter["servicerequest"]);
+            var queryResult = _maxDAO.FindByNativeQuery(formattedQuery, null);
             if (queryResult == null) {
                 return;
             }
@@ -120,7 +105,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var id = record["id"];
                 var label = record["label"];
                 var icon = record["icon"];
-                var uid = Int64.Parse(record["uid"]);
+                var uid = long.Parse(record["uid"]);
                 var flag = "changed";
                 if (Counter[application] < uid) {
                     flag = "created";
@@ -129,7 +114,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var parentid = record["parentid"];
                 long parentuid = -1;
                 if (record["parentuid"] != null) {
-                    Int64.TryParse(record["parentuid"], out parentuid);
+                    long.TryParse(record["parentuid"], out parentuid);
                 }
                 var parentapplication = record["parentapplication"];
                 string parentlabel = null;
@@ -155,8 +140,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         //of any record changed more than 24 hours old
         public void PurgeNotificationsFromStream() {
             foreach (var stream in NotificationStreams) {
-                _log.DebugFormat("Purging notification older than {0} hours for security group {1}", HoursToPurge, stream.Key);
-                stream.Value.PurgeNotificationsFromStream(HoursToPurge);
+                _log.InfoFormat("Purging notification older than {0} hours for security group {1}", ActivityStreamConstants.HoursToPurge, stream.Key);
+                stream.Value.PurgeNotificationsFromStream(ActivityStreamConstants.HoursToPurge);
             }
         }
 
