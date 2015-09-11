@@ -184,7 +184,6 @@ app.directive('activitystream', function(contextService) {
                 var parameters = {};
                 parameters.role = 'default';
 
-
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl, { avoidspin: true }).success(
                     function (data) {
@@ -192,6 +191,9 @@ app.directive('activitystream', function(contextService) {
                         $scope.activities = data.notifications;
                         $scope.refreshRate = data.refreshRate;
                         $scope.statusAllHidden = $scope.getAllHidden();
+
+                        //TODO: remove for production
+                        //$scope.activities = demoNotifications;
 
                         //resize the scroll pane if needed
                         if (typeof jScrollPaneAPI !== 'undefined') {
@@ -307,6 +309,46 @@ app.directive('activitystream', function(contextService) {
             //$timeout(function () {
             //    $('#activitystream .handle').trigger('click');
             //}, 0);
+
+            //var demoNotifications = [];
+
+            //var newNotification = {};
+            //newNotification.application = "commlog";
+            //newNotification.createBy = "JBREIDENTHAL";
+            //newNotification.flag = "created";
+            //newNotification.icon = "fa-envelope-o";
+            //newNotification.id = "22967305";
+            //newNotification.isRead = false;
+            //newNotification.label = "communication";
+            //newNotification.notificationDate = "2015-09-11T09:51:24";
+            //newNotification.parentApplication = "servicerequest";
+            //newNotification.parentId = "79788";
+            //newNotification.parentLabel = "service request";
+            //newNotification.parentUId = 62671;
+            //newNotification.rowstamp = 185626997;
+            //newNotification.summary = "UPDATE: SR##79788## -DWL -DWLRR7 User on Rowan Rentless rig";
+            //newNotification.targetSchema = null;
+            //newNotification.uId = 23162490;
+            //demoNotifications.push(newNotification);
+
+            //newNotification = {};
+            //newNotification.application = "servicerequest";
+            //newNotification.createBy = "RKLIBERT";
+            //newNotification.flag = "changed";
+            //newNotification.icon = "fa-ticket";
+            //newNotification.id = "79788";
+            //newNotification.isRead = false;
+            //newNotification.label = "service request";
+            //newNotification.notificationDate = "2015-09-11T09:38:34";
+            //newNotification.parentApplication = null;
+            //newNotification.parentId = null;
+            //newNotification.parentLabel = null;
+            //newNotification.parentUId = -1;
+            //newNotification.rowstamp = 185625112;
+            //newNotification.summary = "DWLRR7 User on Rowan Rentless rig";
+            //newNotification.targetSchema = "editdetail";
+            //newNotification.uId = 62671;
+            //demoNotifications.push(newNotification);
         }
     }
 });

@@ -6,10 +6,9 @@
     <application id="SR" icon="fa fa-table" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid" role="sr"/>
     <application id="NSR" icon="fa fa-plus" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request" role="sr"/>
   </container>
-  
-  <container title="Quick Request" tooltip="Click to access your request tasks" icon="fa fa-ticket" id="qservicereq">
-    <application id="QSR" icon="fa fa-table" title="Quick Grid" ref="quickservicerequest" schema="quicksrgrid" tooltip="Click to view your Service Request Grid" role="ssr"/>
-    <application id="QNSR" icon="fa fa-plus" title="Quick Request" ref="quickservicerequest" schema="quicknewdetail" tooltip="Click to Create a New Service Request" role="ssr"/>
+  <container title="Quick Requests" tooltip="Click to access your quick request tasks" icon="fa fa-ticket" id="qservicereq">
+    <application id="QSR" icon="fa fa-table" title="Quick Request Grid" ref="quickservicerequest" schema="quicksrgrid" tooltip="Click to view your Quick Request Grid" role="ssr"/>
+    <application id="QNSR" icon="fa fa-plus" title="New Quick Request" ref="quickservicerequest" schema="quicknewdetail" tooltip="Click to Create a New Quick Request" role="ssr"/>
   </container>
   <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
     <application id="WO" icon="fa fa-table" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>

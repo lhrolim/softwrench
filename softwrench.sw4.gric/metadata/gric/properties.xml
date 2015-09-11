@@ -11,12 +11,15 @@
   <property key="composition.mainbuttonstoshow" value="cancel"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <property key="targetmapping" value="maximo7.5"/>
-  <property key="maximoutc" value="-7"/>
   <property key="maxAttachmentSize" value="20"/>
   <property key="maxScreenshotSize" value="5"/>
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-
-
+  <!--
+      maximoutc property set to the full name of the timezone the maximo 
+      server is set to, refer to the maximoutc.txt in the doc folder for 
+      a list of accepted values
+  -->
+  <property key="maximoutc" value="US Mountain Standard Time"/>
 
   <environment key="dev">
     <property key="basewsURL" value="http://10.50.100.125/meaweb/wsdl/" />
