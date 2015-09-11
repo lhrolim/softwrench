@@ -50,6 +50,9 @@ namespace softwrench.sw4.activitystream.classes.Util {
 
         private string AppendQuery(string key, ContextHolder context) {
             var applicationName = GetApplicationNameByRole(key);
+            if (!applicationName.EqualsAny("servicerequest", "workorder", "incident")) {
+                return "";
+            }
             var sb = new StringBuilder();
 
             var whereClauseResult = _whereClauseFacade.Lookup(applicationName, null, context);
@@ -59,7 +62,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
             sb.Append(GetRoleQuery(key)).Append(whereClause);
             sb.Append(GetRoleQuery(key + "Worklogs")).Append(whereClause);
 
-            if (!key.EqualsIc("workorder")) {
+            if (!applicationName.EqualsIc("workorder")) {
                 sb.Append(GetRoleQuery(key + "Commlogs")).Append(whereClause);
             }
 
@@ -68,7 +71,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
 
         private static string GetApplicationNameByRole(string key) {
             //TODO: adjust role names to match application names, or create a external translator
-            if (key.Equals("sr")) {
+            if (key.Equals("sr") || key.Equals("ssr")) {
                 return "servicerequest";
             }
             if (key.Equals("workorders")) {
