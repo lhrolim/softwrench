@@ -2183,7 +2183,7 @@
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="mobile.fetchlimit" value="300"/>
-        <property key ="icon.composition.tab" value="fa fa-users"/>
+        <property key ="icon.composition.tab" value="fa fa-clock-o"/>
       </properties>
       <schemas>
         <list>
@@ -2452,7 +2452,7 @@
 
     <application entity="woactivity" name="woactivity" title="WO Activity">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-gavel"/>
+        <property key ="icon.composition.tab" value="fa fa-tasks"/>
       </properties>
       <schemas>
         <list stereotype="compositionlist">

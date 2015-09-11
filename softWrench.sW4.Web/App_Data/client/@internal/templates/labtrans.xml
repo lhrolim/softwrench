@@ -32,7 +32,7 @@
   <applications>
     <application name="labtrans" entity="labtrans" title="Labor">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-users"/>
+        <property key ="icon.composition.tab" value="fa fa-clock-o"/>
       </properties>
       <schemas>
         <list>

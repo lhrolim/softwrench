@@ -4,7 +4,7 @@
   <applications>
     <application entity="woactivity" name="woactivity" title="WO Activity">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-gavel"/>
+        <property key ="icon.composition.tab" value="fa fa-tasks"/>
       </properties>
       <schemas>
         <schema id="list" title="woactivity" stereotype="compositionlist">
