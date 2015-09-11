@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem="SR">
 
+  <reference id="servicereq"/>
+  <reference id="qservicereq"/>
+  <reference id="workorder"/>
+  <reference id="solution"/>
   
-  <container title="Service Requests" tooltip="Click to access your request tasks" role="sr" icon="fa fa-ticket">
-    <application id="SR" icon="fa fa-table" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
-    <application id="NSR" icon="fa fa-plus" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
-  </container>
-  <container title="Quick Requests" tooltip="Click to access your request tasks" icon="fa fa-ticket" id="servicereq">
-    <application id="QSR" icon="fa fa-table" title="Quick Grid" ref="quickservicerequest" schema="quicksrgrid" tooltip="Click to view your Service Request Grid" role="qsr"/>
-    <application id="QNSR" icon="fa fa-plus" title="Quick Request" ref="quickservicerequest" schema="quicknewdetail" tooltip="Click to Create a New Service Request" role="qsr"/>
-  </container>
-  <container title="Work Orders" tooltip="Click to access your work order tasks" role="workorders" icon="fa fa-wrench">
-    <application id="WO" icon="fa fa-table" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
-    <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
-  </container>
-  <container title="Solutions" icon="fa fa-book" role="solution" id="solution">
-    <application id="SOL" icon="fa fa-table" title="Solution Grid" ref="solution" schema="list" tooltip="Click to view solution"/>
-    <application id="SOLNEW" icon="fa fa-plus" title="New Solution" ref="solution" schema="newdetail" tooltip="Click to Create a New Solution"/>
-  </container>
-
   <link title="Move Request" link="https://secure.spaceplanfm.com/deltadental/default.asp" parameters="email=@user.email;target=Request.asp"/>
   <link title="Floor Plans" link="https://www.manhattan-online.com/DeltaDental_CorpMap/default.asp?App=CorpMap" />
 </Menu>

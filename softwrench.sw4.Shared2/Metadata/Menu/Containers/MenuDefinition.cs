@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sw4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Modules;
 
 namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
 
-    public class MenuDefinition {
+    public class MenuDefinition :IMenuRootDefinition{
         public enum MenuDisplacement {
             Vertical, Horizontal, Breadcrumb,
         }

@@ -42,7 +42,7 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
                 }
             }
             return !secureLeafs.Any() ? null : new MenuContainerDefinition(container.Id,
-                container.Title, container.Role, container.Tooltip, container.Icon, container.Module, container.Controller, container.Action, container.HasMainAction, secureLeafs);
+                container.Title, container.Role, container.Tooltip, container.Icon, container.Module, container.Controller, container.Action, container.HasMainAction,container.CustomizationPosition, secureLeafs);
         }
     }
 }

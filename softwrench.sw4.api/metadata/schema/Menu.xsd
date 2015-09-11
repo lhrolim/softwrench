@@ -1,73 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.controltechnologysolutions.com/menumetadata"
-	xmlns:tns="http://www.controltechnologysolutions.com/menumetadata" elementFormDefault="qualified">
-
-  <element name="Menu">
-    <complexType>
-      <choice maxOccurs="unbounded" minOccurs="0">
-        <element name="container" type="tns:MenuContainer"
-          maxOccurs="unbounded" minOccurs="0">
-        </element>
-        <element name="application"
-          type="tns:MenuApplicationItem" maxOccurs="unbounded"
-          minOccurs="0">
-        </element>
-        <element name="resourceref" type="tns:MenuResourceItem"
-          maxOccurs="unbounded" minOccurs="0">
-          <annotation>
-            <documentation>
-              Specifies a resource to be renderized inside
-              the menu.
-            </documentation>
-          </annotation>
-        </element>
-        <element name="action" type="tns:MenuActionItem"
-          maxOccurs="unbounded" minOccurs="0">
-          <annotation>
-            <documentation>
-              Specifies an action to be executed when the
-              menu gets clicked
-            </documentation>
-          </annotation>
-        </element>
-
-        <element name="link" type="tns:MenuLinkItem"
-        maxOccurs="unbounded" minOccurs="0">
-          <annotation>
-            <documentation>
-              Specifies an external link to be opened as a sepparate tab
-            </documentation>
-          </annotation>
-        </element>
-
-        <element name="divider" type="tns:MenuDividerItem"
-         maxOccurs="unbounded" minOccurs="0">
-          <annotation>
-            <documentation>
-              Draw a line divider
-            </documentation>
-          </annotation>
-        </element>
-
-
-
-      </choice>
-      <attribute name="mainmenudisplacement"
-        type="tns:displayment" default="vertical">
-      </attribute>
-      <attribute name="indexitem" type="string" >
-        <annotation>
-          <documentation>The Id of a item to be displayed when the menu gets renderized.</documentation>
-        </annotation>
-      </attribute>
-    </complexType>
-  </element>
-
-
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.controltechnologysolutions.com/menumetadata"
+	xmlns:tns="http://www.controltechnologysolutions.com/menumetadata"
+	elementFormDefault="qualified">
 
   <attribute name="displacement" type="string"></attribute>
-
-
 
   <simpleType name="displayment">
     <restriction base="string">
@@ -76,6 +13,84 @@
       <enumeration value="breadcrumb"></enumeration>
     </restriction>
   </simpleType>
+
+
+  <complexType name="AMenuRoot" abstract="true">
+    <choice maxOccurs="unbounded" minOccurs="0">
+      <element name="container" type="tns:MenuContainer"
+				maxOccurs="unbounded" minOccurs="0">
+      </element>
+      <element name="application" type="tns:MenuApplicationItem"
+				maxOccurs="unbounded" minOccurs="0">
+      </element>
+      <element name="resourceref" type="tns:MenuResourceItem"
+				maxOccurs="unbounded" minOccurs="0">
+        <annotation>
+          <documentation>
+            Specifies a resource to be renderized inside the
+            menu.
+          </documentation>
+        </annotation>
+      </element>
+      <element name="action" type="tns:MenuActionItem"
+				maxOccurs="unbounded" minOccurs="0">
+        <annotation>
+          <documentation>
+            Specifies an action to be executed when the menu
+            gets clicked
+          </documentation>
+        </annotation>
+      </element>
+
+      <element name="link" type="tns:MenuLinkItem"
+				maxOccurs="unbounded" minOccurs="0">
+        <annotation>
+          <documentation>
+            Specifies an external link to be opened as a
+            sepparate tab
+          </documentation>
+        </annotation>
+      </element>
+
+      <element name="divider" type="tns:MenuDividerItem"
+				maxOccurs="unbounded" minOccurs="0">
+        <annotation>
+          <documentation>Draw a line divider</documentation>
+        </annotation>
+      </element>
+
+
+
+      <element name="reference" type="tns:MenuReference" maxOccurs="unbounded" minOccurs="0"></element>
+    </choice>
+  </complexType>
+
+  <complexType name="MenuRoot">
+    <complexContent>
+      <extension base="tns:AMenuRoot">
+        <attribute name="mainmenudisplacement"
+					type="tns:displayment" default="vertical">
+        </attribute>
+        <attribute name="indexitem" type="string">
+          <annotation>
+            <documentation>
+              The Id of a item to be displayed when the
+              menu gets renderized.
+            </documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="TemplateRoot">
+    <complexContent>
+      <extension base="tns:AMenuRoot">
+
+      </extension>
+    </complexContent>
+  </complexType>
+
 
   <complexType name="MenuApplicationItem">
     <complexContent>
@@ -87,13 +102,14 @@
             </documentation>
           </annotation>
         </attribute>
-        <attribute name="schema" type="string" default="list"
-          use="optional">
+        <attribute name="schema" type="string" default="list" use="optional">
           <annotation>
             <documentation>
               name of the view of the application to
-              render when the item is clicked. If not
-              specified, the list view will be assumed
+              render when
+              the item is clicked. If not
+              specified, the list view will be
+              assumed
             </documentation>
           </annotation>
         </attribute>
@@ -105,37 +121,40 @@
             </restriction>
           </simpleType>
         </attribute>
-        <attribute name="parameters" type="string"/>
+        <attribute name="parameters" type="string" />
       </extension>
     </complexContent>
   </complexType>
 
 
   <complexType name="MenuBase" abstract="true">
-    <attribute name="title" type="string" use="required">
+    <attribute name="id" type="string" use="required">
+      <annotation>
+        <documentation>
+          An id of the menu structure. must be unique along the
+          entire menu declaration. Its used, among other, for
+          authorization
+          (role matching) and I18n (catalog key
+          matching) purposes.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="title" type="string" use="optional">
       <annotation>
         <documentation>
           The value to display on screen. If a I18n catalog is
-          found for the current language, it will override
-          this value with the value found on the catalog.
+          found for the current language, it will override this
+          value with the
+          value found on the catalog.
         </documentation>
       </annotation>
     </attribute>
-    <attribute name="id" type="string" use="optional">
-      <annotation>
-        <documentation>
-          An id of the menu structure. must be unique along
-          the entire menu declaration. Its used, among other,
-          for authorization (role matching) and I18n (catalog
-          key matching) purposes.
-        </documentation>
-      </annotation>
-    </attribute>
+
     <attribute name="tooltip" type="string">
       <annotation>
         <documentation>
-          The value of the tip to be exhibited when the mouse
-          is over this item. If a 18n catalog is present, the
+          The value of the tip to be exhibited when the mouse is
+          over this item. If a 18n catalog is present, the
           tooltip must be identified by the element´s id.tip
           (ex: workorder.tip, asset.tip) catalog key
         </documentation>
@@ -150,6 +169,21 @@
       </annotation>
     </attribute>
     <attribute name="icon" type="string"></attribute>
+    <attribute name="customizationposition" type="string">
+      <annotation>
+        <documentation>
+          This property indicates where should this element
+          should be placed, related to the original referenced element. It
+          should use the syntax:
+
+          -id --> top of of the referred id element
+          +id --> bottom of the reffered id element
+          id --> replacing the referred id element
+
+          This attribute will be ignored on the menu template declaration
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
 
@@ -164,7 +198,10 @@
     </attribute>
     <attribute name="role" type="string" use="optional">
       <annotation>
-        <documentation>If present, overrides the id attribute as the role matching property</documentation>
+        <documentation>
+          If present, overrides the id attribute as the role
+          matching property
+        </documentation>
       </annotation>
     </attribute>
     <attribute name="path" type="string">
@@ -196,19 +233,49 @@
     </attribute>
   </complexType>
 
+  <complexType name="MenuReference">
+    <annotation>
+      <documentation>
+        Use this type to point to an existing Menu element.
+
+        Id is required by all means, and it would throw an exception if the given element could not be located.
+
+      </documentation>
+    </annotation>
+    <complexContent>
+      <extension base="tns:MenuContainer">
+        <sequence>
+          
+        </sequence>
+
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+  <complexType name="MenuRemoval">
+
+    <attribute name="id" type="string">
+      <annotation>
+        <documentation>The id of the original item to be removed</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
   <complexType name="MenuActionItem">
     <annotation>
-      <documentation>a list of key=value pairs, separated by ;</documentation>
+      <documentation>
+        a list of key=value pairs, separated by ;
+      </documentation>
     </annotation>
     <complexContent>
       <extension base="tns:MenuBase">
         <attribute name="action" type="string" use="optional"
-  				default="index">
+					default="index">
         </attribute>
-        <attribute name="controller" type="string"
-  				use="required">
+        <attribute name="controller" type="string" use="required">
         </attribute>
-        <attribute name="parameters" type="string"/>
+        <attribute name="parameters" type="string" />
         <attribute name="target" default="self">
           <simpleType>
             <restriction base="string">
@@ -223,13 +290,15 @@
 
   <complexType name="MenuLinkItem">
     <annotation>
-      <documentation>a list of key=value pairs, separated by ;</documentation>
+      <documentation>
+        a list of key=value pairs, separated by ;
+      </documentation>
     </annotation>
     <complexContent>
       <extension base="tns:MenuBase">
         <attribute name="link" type="string" use="required">
         </attribute>
-        <attribute name="parameters" type="string"/>
+        <attribute name="parameters" type="string" />
       </extension>
     </complexContent>
   </complexType>
@@ -244,20 +313,17 @@
       <extension base="tns:MenuBase">
         <choice minOccurs="0" maxOccurs="unbounded">
           <element name="container" type="tns:MenuContainer"
-  					maxOccurs="unbounded" minOccurs="0">
+						maxOccurs="unbounded" minOccurs="0">
           </element>
-          <element name="application"
-  					type="tns:MenuApplicationItem" maxOccurs="unbounded"
-  					minOccurs="0" />
-          <element name="link"
-          type="tns:MenuLinkItem" maxOccurs="unbounded"
-          minOccurs="0" />
-          <element name="resourceref"
-  					type="tns:MenuResourceItem" maxOccurs="unbounded"
-  					minOccurs="0">
+          <element name="application" type="tns:MenuApplicationItem"
+						maxOccurs="unbounded" minOccurs="0" />
+          <element name="link" type="tns:MenuLinkItem" maxOccurs="unbounded"
+						minOccurs="0" />
+          <element name="resourceref" type="tns:MenuResourceItem"
+						maxOccurs="unbounded" minOccurs="0">
           </element>
-          <element name="action" type="tns:MenuActionItem"
-  					maxOccurs="unbounded" minOccurs="0">
+          <element name="action" type="tns:MenuActionItem" maxOccurs="unbounded"
+						minOccurs="0">
             <annotation>
               <documentation>
                 Specifies an action to be executed when
@@ -266,27 +332,34 @@
             </annotation>
           </element>
           <element name="divider" type="tns:MenuDividerItem"
-  					maxOccurs="unbounded" minOccurs="0">
+						maxOccurs="unbounded" minOccurs="0">
             <annotation>
               <documentation>
                 Draw a line divider
               </documentation>
             </annotation>
           </element>
+          <element name="removal" type="tns:MenuRemoval" minOccurs="0" maxOccurs="unbounded"></element>
         </choice>
-        <attribute name="modulename" type="string"/>
-        <attribute name="modulealias" type="string"/>
-        <attribute name="action" type="string"/>
-        <attribute name="controller" type="string"/>
+        <attribute name="modulename" type="string" />
+        <attribute name="modulealias" type="string" />
+        <attribute name="action" type="string" />
+        <attribute name="controller" type="string" />
         <attribute name="hasmainaction" type="boolean">
           <annotation>
             <documentation>
-              If true, the menu should render a main button with a drop down to the right, clicking the button should perform an action,
-              instead of the default renderer when clicking it would just expand the menu options.
+              If true, the menu should render a main button with a drop down to
+              the right, clicking the button should perform an action,
+              instead of the default renderer when clicking it would just expand the
+              menu options.
             </documentation>
           </annotation>
         </attribute>
       </extension>
     </complexContent>
   </complexType>
+
+  <element name="TemplateCatalog" type="tns:TemplateRoot"></element>
+
+  <element name="Menu" type="tns:MenuRoot"></element>
 </schema>

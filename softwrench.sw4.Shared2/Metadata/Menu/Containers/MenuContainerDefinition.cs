@@ -27,8 +27,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
 
         public MenuContainerDefinition() { }
 
-        public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, IEnumerable<MenuBaseDefinition> leafs)
-            : base(id, title, role, tooltip, icon) {
+        public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, string customizationPosition, IEnumerable<MenuBaseDefinition> leafs)
+            : base(id, title, role, tooltip, icon, customizationPosition) {
             Module = module;
             var menuBaseDefinitions = leafs as MenuBaseDefinition[] ?? leafs.ToArray();
             Leafs = menuBaseDefinitions;

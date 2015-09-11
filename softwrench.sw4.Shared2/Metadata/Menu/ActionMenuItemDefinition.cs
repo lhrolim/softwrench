@@ -16,8 +16,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu {
         }
 
         public ActionMenuItemDefinition(string id, string title, string role, string tooltip, string icon, 
-            string action, string controller, string target, IDictionary<string, object> parameters,string moduleName)
-            : base(id, title, role, tooltip, icon) {
+            string action, string controller, string target, IDictionary<string, object> parameters,string moduleName,string customizationPosition)
+            : base(id, title, role, tooltip, icon, customizationPosition) {
             Action = action;
             Controller = controller;
             Parameters = parameters;

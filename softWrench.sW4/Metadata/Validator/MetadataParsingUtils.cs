@@ -2,6 +2,7 @@
 using System.IO;
 using cts.commons.portable.Util;
 using log4net;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Metadata.Properties;
 using softWrench.sW4.Util;
 
@@ -11,6 +12,8 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";
         internal const string TemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\{0}";
+        internal const string MenuTemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\menu\\menutemplate.{0}.xml";
+        internal const string TestMenuTemplatesInternalPath = "\\Client\\@internal\\templates\\menu\\menutemplate.{0}.xml";
         internal const string TestTemplatesInternalPath = "\\Client\\@internal\\templates\\{0}";
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
@@ -64,6 +67,14 @@ namespace softWrench.sW4.Metadata.Validator {
             return @"" + baseDirectory + ClientMetadataPattern.Fmt(ApplicationConfiguration.ClientName) + resource;
         }
 
+        public static string GetMenuTemplatePath(ClientPlatform platform) {
+            if (ApplicationConfiguration.IsUnitTest) {
+                return AppDomain.CurrentDomain.BaseDirectory +TestMenuTemplatesInternalPath.Fmt(platform.ToString().ToLower());
+            }
+            return AppDomain.CurrentDomain.BaseDirectory+ MenuTemplatesInternalPath.Fmt(platform.ToString().ToLower());
+
+        }
+
 
         public static string GetEntitiesInternalPath(bool source = false) {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -100,15 +111,15 @@ namespace softWrench.sW4.Metadata.Validator {
                 return DoGetStream(realPath);
             }
 
-//            if (templatePath.StartsWith("@")) {
-//                var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
-//                var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", templatePath.Substring(1));
-//                var stream = assembly.GetManifestResourceStream(resourceName);
-//                if (stream == null) {
-//                    return null;
-//                }
-//                return new StreamReader(stream);
-//            }
+            //            if (templatePath.StartsWith("@")) {
+            //                var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
+            //                var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", templatePath.Substring(1));
+            //                var stream = assembly.GetManifestResourceStream(resourceName);
+            //                if (stream == null) {
+            //                    return null;
+            //                }
+            //                return new StreamReader(stream);
+            //            }
             return DoGetStream(realPath);
         }
 
