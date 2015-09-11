@@ -2,6 +2,15 @@
 // Generated on Sat Jan 31 2015 15:14:08 GMT-0200 (E. South America Daylight Time)
 
 module.exports = function (config) {
+
+    // pseudo-random port: 9876 (default) +/- pseudo-random offset (0-9)
+    var SERVER_PORT = (function() {
+        var base = 9876;
+        var issum = Math.floor(Math.random() * 10) >= 5;
+        var offset = Math.floor(Math.random() * 10);
+        return issum ? base + offset : base - offset;
+    })();
+
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -68,7 +77,7 @@ module.exports = function (config) {
 
 
         // web server port
-        port: 9876,
+        port: SERVER_PORT,
 
 
         // enable / disable colors in the output (reporters and logs)

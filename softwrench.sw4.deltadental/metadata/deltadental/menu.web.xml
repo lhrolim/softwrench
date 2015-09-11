@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="breadcrumb" indexitem="SR">
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem="SR">
 
   <reference id="servicereq"/>
   <reference id="qservicereq"/>
   <reference id="workorder"/>
   <reference id="solution"/>
-
-  <link id="movereq" title="Move Request" link="https://secure.spaceplanfm.com/deltadental/default.asp" parameters="email=@user.email;target=Request.asp"/>
-  <link id="floorplan" title="Floor Plans" link="https://www.manhattan-online.com/DeltaDental_CorpMap/default.asp?App=CorpMap" />
   
+  <link title="Move Request" link="https://secure.spaceplanfm.com/deltadental/default.asp" parameters="email=@user.email;target=Request.asp"/>
+  <link title="Floor Plans" link="https://www.manhattan-online.com/DeltaDental_CorpMap/default.asp?App=CorpMap" />
 </Menu>

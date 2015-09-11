@@ -2,8 +2,8 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "$ionicPopup", "$ionicLoading", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate",
-        function ($scope, service, routeService, synchronizationFacade, $ionicPopup, $ionicLoading, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$ionicLoading", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate",
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $ionicLoading, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate) {
 
             $scope.data = {
                 operation: null,
@@ -77,13 +77,13 @@
                 $ionicLoading.show(loadingOptions);
                 synchronizationFacade.fullSync()
                     .then(function (operation) {
-                        $ionicPopup.alert({
+                        swAlertPopup.show({
                             title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
                         });
                         return loadData();
                     })
                     .catch(function (error) {
-                        $ionicPopup.alert({
+                        swAlertPopup.show({
                             title: "Error Synchronizing Data",
                             template: !!error && !!error.message ? error.message : ""
                         });
