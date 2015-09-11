@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using Quartz.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -13,8 +14,8 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest {
     class DispatchOperationHandler : BaseMaximoCustomConnector {
-        private EntityMetadata _woEntity;
-        private ApplicationMetadata _woApplication;
+        private readonly EntityMetadata _woEntity;
+        private readonly ApplicationMetadata _woApplication;
 
         public DispatchOperationHandler() {
             _woEntity = MetadataProvider.Entity("WORKORDER", false);
@@ -26,7 +27,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
         }
 
         public object DispatchWO(DispatchOperationData srData) {
-            MaximoOperationExecutionContext maximoExecutionContext = null;
             var srCrudData = srData.CrudData;
 
             var woCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _woEntity, _woApplication, new JObject(), null);
@@ -51,9 +51,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             woCrudData.SetAttribute("siteid", srCrudData.GetStringAttribute("siteid"));
             woCrudData.SetAttribute("orgid", srCrudData.GetStringAttribute("orgid"));
 
-            TargetResult result = (TargetResult)Maximoengine.Create(woCrudData);
+            var result = (TargetResult)Maximoengine.Create(woCrudData);
 
-            result.SuccessMessage = "Work Order {0} sucessfully dispatched".FormatInvariant(result.Id);
+            //customization for deltadental here
+            var label = ApplicationConfiguration.ClientName.EqualsIc("deltadental") ? "dispatched" : "created";
+
+            result.SuccessMessage = "Work Order {0} sucessfully {1}".FormatInvariant(result.Id,label);
 
             return result;
         }
