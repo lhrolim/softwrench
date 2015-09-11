@@ -3,7 +3,7 @@
   ="WO">
 
 
-  <reference id="workorders">
+  <reference id="workorder">
     <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch" customizationposition="+NWO"/>
   </reference>
   
