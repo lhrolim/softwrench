@@ -1,4 +1,8 @@
 ﻿$(function () {
+
+    //ensure that english is the current locale for moment.js
+    moment.locale('en');
+
     $(window).resize(function () {
         //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
         if ($('.site-header').css('position') == 'fixed') {
