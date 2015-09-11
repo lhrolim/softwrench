@@ -9,6 +9,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
+using softWrench.sW4.Metadata.Stereotypes;
 
 namespace softWrench.sW4.Metadata.Applications.Association
 {
@@ -21,8 +22,9 @@ namespace softWrench.sW4.Metadata.Applications.Association
         {
 
             var association = new ApplicationAssociationDefinition(from, labelData, target, qualifier, applicationAssociationSchema, showExpression,
-                                                                   toolTip, requiredExpression, defaultValue, hideDescription, orderbyfield,defaultExpression, isEnabled, events,
-                                                                   forceDistinctOptions, valueField,detailSection);
+                                                                   toolTip, requiredExpression, defaultValue, hideDescription, orderbyfield, 
+                                                                   defaultExpression, isEnabled, events, forceDistinctOptions, 
+                                                                   valueField, detailSection);
 
             var labelField = labelData.LabelField;
             association.LabelFields = ParseLabelFields(labelField);
@@ -62,6 +64,7 @@ namespace softWrench.sW4.Metadata.Applications.Association
                 result.Add("schema", schema);
                 return result;
             }));
+            MergeWithStereotypeComponent(association);
             return association;
         }
 
@@ -123,6 +126,21 @@ namespace softWrench.sW4.Metadata.Applications.Association
                 }
             }
             return schema;
+        }
+
+        private static void MergeWithStereotypeComponent(ApplicationAssociationDefinition association)
+        {
+            var stereotypeProvider = ComponentStereotypeFactory.LookupStereotype(association.RendererStereotype);
+            var stereotypeProperties = stereotypeProvider.StereotypeProperties();
+
+            foreach (var stereotypeProperty in stereotypeProperties)
+            {
+                string key = stereotypeProperty.Key;
+                if (!association.RendererParameters.ContainsKey(key))
+                {
+                    association.RendererParameters.Add(key, stereotypeProperty.Value);
+                }
+            }
         }
     }
 }

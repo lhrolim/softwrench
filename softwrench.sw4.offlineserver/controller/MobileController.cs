@@ -19,7 +19,6 @@ using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
-using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.controller {
 
@@ -31,7 +30,7 @@ namespace softwrench.sw4.offlineserver.controller {
     ///  delegating to the inner tiers of the application</para>
     /// 
     /// </summary>
-    //    [Authorize]
+    [Authorize]
     public class MobileController : ApiController {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));

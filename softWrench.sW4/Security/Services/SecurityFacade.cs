@@ -14,6 +14,7 @@ using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
@@ -154,9 +155,21 @@ namespace softWrench.sW4.Security.Services {
         public static string CurrentPrincipalLogin {
             get { return CurrentPrincipal.Identity.Name; }
         }
-
-
-        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true) {
+        /// <summary>
+        /// <para>
+        /// Finds the currently authenticated user.
+        /// </para>
+        /// <para>
+        /// If requiresAuth is <code>true</code> and there is no authenticated user it will throw a <see cref="UnauthorizedException"/>.
+        /// </para>
+        /// <para>
+        /// If requiresAuth is <code>false</code> and there is no authenticated user it returns an 'anonymous' user instance (<see cref="InMemoryUser.NewAnonymousInstance"/>)
+        /// </para>
+        /// </summary>
+        /// <param name="fetchFromDB"></param>
+        /// <param name="requiresAuth"></param>
+        /// <returns>current autheticated user</returns>
+        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true, Boolean requiresAuth = false) {
             if (ApplicationConfiguration.IsUnitTest) {
                 return InMemoryUser.TestInstance("test");
             }
@@ -166,20 +179,25 @@ namespace softWrench.sW4.Security.Services {
                 return null;
             }
 
-
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
             if (string.IsNullOrEmpty(currLogin)) {
-                return null;
+                if (requiresAuth) {
+                    throw UnauthorizedException.NotAuthenticated(currLogin);
+                }
+                return InMemoryUser.NewAnonymousInstance();
             }
 
             if (!fetchFromDB || Users.ContainsKey(currLogin)) {
-                return Users[currLogin];
+                var inMemoryUser = Users[currLogin];
+                if (inMemoryUser == null) {
+                    throw UnauthorizedException.NotAuthenticated(currLogin);
+                }
             }
             //cookie authenticated already 
             //TODO: remove this in prod?
             var swUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, currLogin);
             if (swUser == null) {
-                throw new InvalidOperationException("user should exist at DB");
+                throw UnauthorizedException.UserNotFound(currLogin);
             }
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
@@ -195,7 +213,11 @@ namespace softWrench.sW4.Security.Services {
             }
             UserFound(fullUser, timezone);
             LogicalThreadContext.FreeNamedDataSlot("executinglogin");
-            return Users[currLogin];
+            var currentUser = Users[currLogin];
+            if (currentUser == null) {
+                throw UnauthorizedException.NotAuthenticated(currLogin);
+            }
+            return currentUser;
         }
 
         //TODO: this could lead to concurrency problems

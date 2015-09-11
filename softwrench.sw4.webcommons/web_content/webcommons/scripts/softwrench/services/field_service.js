@@ -1,5 +1,7 @@
-﻿
-modules.webcommons.factory('fieldService', function ($injector, $log,$filter, expressionService, eventService, userService,formatService) {
+﻿(function (modules) {
+    "use strict";
+
+    modules.webcommons.factory('fieldService', ["$injector", "$log", "$filter", "expressionService", "eventService", "userService", "formatService", function ($injector, $log, $filter, expressionService, eventService, userService, formatService) {
 
     var isFieldHidden = function (datamap, schema, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -98,7 +100,7 @@ modules.webcommons.factory('fieldService', function ($injector, $log,$filter, ex
                 var target = value.attribute;
                 if (value.displayables && value.displayables.length > 0) {
                     //section
-                    fn(value.displayables, datamap, scope);
+                    fn.call(this,value.displayables, datamap, scope);
                 }
 
                 //Only continues if datmap for the current attribute is null
@@ -415,6 +417,6 @@ modules.webcommons.factory('fieldService', function ($injector, $log,$filter, ex
         }
     };
 
-});
+}]);
 
-
+})(modules);

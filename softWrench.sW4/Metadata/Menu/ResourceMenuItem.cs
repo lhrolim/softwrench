@@ -10,8 +10,8 @@ namespace softWrench.sW4.Metadata.Menu {
         private readonly string _path;
         private readonly IDictionary<string, object> _params = new Dictionary<string, object>();
 
-        public ResourceMenuItem(string id, string role, string path, string @params, string tooltip,string moduleName)
-            : base(id, null, role, tooltip, null) {
+        public ResourceMenuItem(string id, string role, string path, string @params, string tooltip,string moduleName, string customizationPosition)
+            : base(id, null, role, tooltip, null, customizationPosition) {
             ModuleName = moduleName;
 
             _path = path;

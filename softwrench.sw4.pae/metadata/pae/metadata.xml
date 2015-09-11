@@ -26,11 +26,11 @@
 
     <!--Person-->
     <template path="@person.xml"/>
-    
-    
-    
+
+
+
   </templates>
-  
+
   <entities>
     <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
       <attributes>
@@ -40,6 +40,7 @@
         <attribute name="prophr" type="varchar" required="false" />
         <attribute name="partnum" type="varchar" required="false" />
         <attribute name="proptype" type="varchar" required="false" />
+        <attribute name="proplinenum" type="bigint" required="false" />
         <attribute name="propmanuf" type="varchar" required="false" />
         <attribute name="description" type="varchar" required="true"/>
         <attribute name="invdate" type="datetime" required="true"/>
@@ -49,11 +50,17 @@
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="assettype">
-            <relationshipAttribute from="assettype" to="value" primary="true"/>
-            <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
-            <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
-            <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
-          </relationship>
+          <relationshipAttribute from="assettype" to="value" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
+          <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
+          <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="alndomain" qualifier="assetstatus">
+          <relationshipAttribute from="assettype" to="value" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
+          <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
+          <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWASSET" />
@@ -77,6 +84,10 @@
     </application>
 
     <application name="asset" title="Asset" entity="paeasset" audit="true">
+      <properties>
+        <property key="mobile.presyncservice" value="paeAssetService.preSync"/>
+      </properties>
+      
       <schemas>
         <list>
           <field attribute="assetid" hidden="true"/>
@@ -104,28 +115,33 @@
           <field attribute="invcost" hidden="true"/>
           <field attribute="location_.locationsid" hidden="true"/>
           <field attribute="assetid" hidden="true" />
-          
+
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
-          <field attribute="status" label="Status" readonly="true"/>
-          <association target="proptype" label="Asset Type" labelfield="assettype_.description">
+          
+          <association label="Status:" target="status" hideDescription="true" labelfield="assetstatus.description">
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+          
+          
+          <association target="proptype" label="Property Type" labelfield="assettype_.description">
             <renderer type="lookup" />
           </association>
           <field attribute="description" label="Description" readonly="true"  />
           <field attribute="locinfo" label="Location Info" />
-          <field attribute="plustmodel" label="Model" />
-          <field attribute="partnum" label="Part Number" />
+          <field attribute="plustmodel" label="Model" requiredexpression="true"/>
+          <field attribute="partnum" label="Part Number" requiredexpression="true"/>
           <field attribute="propmanuf" label="Manufacturer"/>
-          <field attribute="serialnum" label="Serial Number"/>
-            <association target="location" label="Location" labelfield="location_.description">
+          <field attribute="serialnum" label="Serial Number" requiredexpression="true"/>
+          <association target="location" label="Location" labelfield="location_.description">
             <renderer type="lookup" />
           </association>
-          <field attribute="prophr" label="Hand Receipt No." readonly="true"/>
+          <field attribute="prophr" label="Hand Receipt No." hidden="true"/>
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
           <event type="onload" service="paeAssetService" method="initAssetDetailListener"/>
         </detail>
-   
+
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
@@ -149,6 +165,6 @@
         </schema>
       </schemas>
     </application>
-    
+
   </applications>
 </metadata>

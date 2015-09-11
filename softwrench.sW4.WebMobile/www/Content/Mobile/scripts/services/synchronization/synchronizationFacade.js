@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService) {
+    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, $ionicLoading, $ionicPopup) {
         
         //#region Utils
 
@@ -86,6 +86,12 @@
 
         //#region Public methods
 
+        function hasDataToSync() {
+            return swdbDAO.countByQuery("DataEntry", "isDirty=1 and pending=0").then(function(count) {
+                return count > 0;
+            });
+        }
+
         /**
          * Executes a full download (data, metadata and association data) and creates a SyncOperation
          * reflecting the execution.
@@ -112,7 +118,7 @@
                     var dataDownloadedResult = results.subarray(2);
                     var totalNumber = getDownloadDataCount(dataDownloadedResult);
                     
-                    synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
+                    return synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
                 });
         }
 
@@ -172,6 +178,36 @@
                 });
         }
 
+        /**
+         * Attemps a synchronization.
+         * If it succeeds resolve with <code>true</code> indicating sync was successfull.
+         * If it fails prompts the user with a confirm popup ("continue anyway?").
+         * Resolve with the user's response.
+         * Before attempting synchronization show loading; after synchronization (success or fail) loading is toggled off.
+         * 
+         * @param {} failPopupConfig configuration of the confirm popup. Defaults to {title:"Synchronization failed",template:"Continue anyway?"}
+         * @returns Promise resolved with Boolean indicating the caller it can continue it's workflow. 
+         */
+        function attempSyncAndContinue(failPopupConfig) {
+            $ionicLoading.show({
+                template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Synchronizing data<span>"
+            });
+            // try to sync
+            return fullSync().then(function () {
+                    $ionicLoading.hide();
+                    return true;
+                }).catch(function () {
+                    $ionicLoading.hide();
+                    // sync failed: check if user wishes to logout regardless
+                    return $ionicPopup.confirm({
+                        title: failPopupConfig.title || "Synchronization failed",
+                        template: failPopupConfig.template || "Continue anyway?"
+                    }).then(function (continueAnyway) {
+                        return !!continueAnyway;
+                    });
+                });
+        }
+
         //#endregion
 
         //#region Service instance
@@ -182,8 +218,10 @@
         asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
         var api = {
+            hasDataToSync: hasDataToSync,
             fullDownload: fullDownload,
-            fullSync: fullSync
+            fullSync: fullSync,
+            attempSyncAndContinue: attempSyncAndContinue
         }
 
         return api;
@@ -191,7 +229,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", synchronizationFacade]);
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "$ionicLoading", "$ionicPopup", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular);

@@ -55,8 +55,13 @@
 
 @media all and (min-width: 768px) {
     .container.desktop .dash-header {
+        .listgrid-table {
+             margin-top: 83px !important;
+        }
+
         .affix-pagination, .listgrid-thead {
-            position: initial;
+            position: absolute;
+            top: -83px !important;
         }
     }
 }

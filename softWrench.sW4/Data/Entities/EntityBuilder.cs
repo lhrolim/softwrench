@@ -153,6 +153,10 @@ namespace softWrench.sW4.Data.Entities {
 
                 var stValue = value.ToString();
                 if (stValue == "") {
+                    if (type.EqualsAny("datetime", "timestamp")) {
+                        return null;
+                    }
+
                     return value.Type == JTokenType.Null ? null : value.ToString();
                 }
                 if (stValue == "$null$ignorewatch") {
@@ -166,6 +170,10 @@ namespace softWrench.sW4.Data.Entities {
                 if (array[i] != null) {
                     array[i] = ConversionUtil.ConvertFromMetadataType(type, array[i].ToString());
                 }
+            }
+
+            if (array.Length == 0) {
+                return null;
             }
 
             return array;

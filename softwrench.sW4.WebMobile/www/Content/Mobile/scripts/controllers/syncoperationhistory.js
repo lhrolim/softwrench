@@ -1,5 +1,4 @@
-﻿// /// <reference path="maincontroller.js" />
-(function (softwrench) {
+﻿(function (softwrench) {
     "use strict";
 
     softwrench.controller("SyncOperationHistoryController",

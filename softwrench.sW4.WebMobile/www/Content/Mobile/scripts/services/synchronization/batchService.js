@@ -348,7 +348,7 @@
                         // execute per application registered pre-sync service
                         var mobilePresyncserviceName = dbapplication.data.parameters["mobile.presyncservice"];
                         if (!!mobilePresyncserviceName) {
-                            dispatcherService.invokeServiceByString(mobilePresyncserviceName, [entry.datamap]);
+                            dispatcherService.invokeServiceByString(mobilePresyncserviceName, [entry.datamap, entry.originaldatamap]);
                         }
 
                         // if batch submission fails, remember to rollback this state (otherwise dataentry will be in limbo)

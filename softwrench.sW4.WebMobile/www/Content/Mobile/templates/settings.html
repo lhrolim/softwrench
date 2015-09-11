@@ -1,17 +1,17 @@
-﻿<ion-view title="Settings">
+﻿<ion-view title="Settings" class="page-settings">
     <ion-nav-buttons side="left">
         <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-content class="padding" has-header="true">
-        <div class="list list-inset">
+        
+        <div class="settings-form list list-inset responsive-container lg">
             <label class="item item-input">
-                <input type="text" placeholder="URL" ng-model="settings.serverurl">
+                <input type="text" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off" readonly="readonly">
             </label>
-            <button class="button button-calm button-block" ng-click="save()">Save</button>
         </div>
 
-        <div class="list card" ng-if="config">
+        <div class="list card responsive-container lg" ng-if="config">
             <div class="item item-divider">
                 About
             </div>
@@ -27,6 +27,10 @@
             <div class="item item-text-wrap" ng-show="config.client">
                 App version:&nbsp;{{config.client.version}}
             </div>
+            <div class="item item-text-wrap" ng-show="config.client && config.client.commit">
+                Commit:&nbsp;{{config.client.commit}}
+            </div>
+            
         </div>
 
     </ion-content>

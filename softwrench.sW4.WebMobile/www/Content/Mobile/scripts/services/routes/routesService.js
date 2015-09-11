@@ -1,7 +1,7 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-mobileServices.factory('routeService', function ($state, contextService) {
+mobileServices.factory('routeService', ["$state", "contextService", function ($state, contextService) {
 
     return {
 
@@ -40,6 +40,6 @@ mobileServices.factory('routeService', function ($state, contextService) {
 
     };
 
-});
+}]);
 
 })(mobileServices)

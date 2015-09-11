@@ -327,6 +327,10 @@
     <Compile Include="Util\RequestUtil.cs" />
     <Compile Include="Util\RowStampScriptHelper.cs" />
     <Content Include="apple-touch-icon.png" />
+    <Content Include="App_Data\Client\%40internal\templates\menu\menutemplate.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\%40internal\source\maximo7.2.1.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -451,6 +455,7 @@
     <Content Include="App_Data\Client\tva\workorderbatch.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\angular-ui-select\selectize.css" />
     <Content Include="Content\angular-ui-select\angular-ui-select.css" />
     <Content Include="Content\bootstrap\css\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
@@ -496,6 +501,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
     <Content Include="Content\Scripts\client\noMenuLayoutController.js" />
@@ -608,6 +614,8 @@
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
+    <Content Include="Content\Scripts\vendor\other\selectize\selectize.js" />
+    <Content Include="Content\Scripts\vendor\other\selectize\angular-selectize.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latin.woff2" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latinext.woff2" />
@@ -645,6 +653,9 @@
     <Content Include="Content\font-awesome\fonts\FontAwesome.otf" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\styles\default\_define-password.scss" />
+    <Content Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </Content>
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
@@ -749,6 +760,8 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\breadcrumbDropdown.html" />
+    <Content Include="Content\Templates\breadcrumb.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />

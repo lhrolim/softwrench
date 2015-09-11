@@ -1,5 +1,7 @@
-﻿mobileServices.factory('offlineSaveService', function ($log, swdbDAO, $ionicPopup, offlineEntities) {
-    'use strict';
+﻿(function (mobileServices) {
+    "use strict";
+
+    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", function ($log, swdbDAO, $ionicPopup, offlineEntities) {
 
     var entities = offlineEntities;
 
@@ -22,8 +24,6 @@
 
     return {
 
-
-
         saveItem: function (applicationName, item) {
             return doSave(applicationName, item, applicationName);
         },
@@ -38,4 +38,6 @@
         },
     }
 
-});
+}]);
+
+})(mobileServices);

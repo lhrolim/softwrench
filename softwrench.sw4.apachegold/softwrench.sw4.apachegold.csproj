@@ -62,11 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
-    <None Include="web_content\apachegold\styles\branding.css.map">
-      <DependentUpon>branding.css</DependentUpon>
-    </None>
     <None Include="web_content\apachegold\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>

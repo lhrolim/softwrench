@@ -1,19 +1,16 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "$ionicPopup", "routeService", "loginService", "$timeout", "$stateParams", "$ionicLoading",
-        function($scope, $ionicPopup, routeService, loginService, $timeout, $stateParams, $ionicLoading) {
+    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "$ionicLoading",
+        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, $ionicLoading) {
 
             $scope.data = {};
 
             var showAlert = function(title, message) {
-                var alertPopup = $ionicPopup.alert({
+                swAlertPopup.show({
                     title: title,
                     template: message
                 });
-                $timeout(function () {
-                    alertPopup.close();
-                }, 3000);
             }
 
             var showMessage = function() {
@@ -27,14 +24,14 @@
                 $ionicLoading.show({
                     template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>"
                 });
-                loginService.login($scope.data.username, $scope.data.password)
+                securityService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');
                         //enforcing SWOFF-93
                         $scope.data = {};
                     })
-                    .catch(function () {
-                        showAlert("Login failed!", "Please check your credentials!");
+                    .catch(function (error) {
+                        showAlert("Login failed", !!error && !!error.message ? error.message : "Please check your credentials.");
                     })
                     .finally(function() {
                         $ionicLoading.hide();

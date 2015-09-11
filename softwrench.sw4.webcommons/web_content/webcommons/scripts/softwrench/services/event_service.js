@@ -1,4 +1,7 @@
-﻿modules.webcommons.factory('eventService', function ($log, dispatcherService,crudContextHolderService) {
+﻿(function (modules) {
+    "use strict";        
+
+modules.webcommons.factory('eventService', ["$log", "dispatcherService", "crudContextHolderService", function ($log, dispatcherService, crudContextHolderService) {
     var loadEvent = function(schema, eventName) {
         if (schema.events === undefined) {
             return null;
@@ -58,6 +61,6 @@
         }
     };
 
-});
+}]);
 
-
+})(modules);

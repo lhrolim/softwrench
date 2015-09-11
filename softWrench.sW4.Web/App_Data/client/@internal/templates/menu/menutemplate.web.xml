@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TemplateCatalog xmlns="http://www.controltechnologysolutions.com/menumetadata">
+  
+  <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
+  <container title="Service Requests" tooltip="Click to access your request tasks" icon="fa fa-ticket" id="servicereq">
+    <application id="SR" icon="fa fa-table" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid" role="sr"/>
+    <application id="NSR" icon="fa fa-plus" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request" role="sr"/>
+  </container>
+  
+  <container title="Quick Request" tooltip="Click to access your request tasks" icon="fa fa-ticket" id="qservicereq">
+    <application id="QSR" icon="fa fa-table" title="Quick Grid" ref="quickservicerequest" schema="quicksrgrid" tooltip="Click to view your Service Request Grid" role="ssr"/>
+    <application id="QNSR" icon="fa fa-plus" title="Quick Request" ref="quickservicerequest" schema="quicknewdetail" tooltip="Click to Create a New Service Request" role="ssr"/>
+  </container>
+  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
+    <application id="WO" icon="fa fa-table" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
+    <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
+    <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
+  </container>
+  <container title="Solutions" icon="fa fa-book" role="solution" id="solution">
+    <application id="SOL" icon="fa fa-table" title="Solution Grid" ref="solution" schema="list" tooltip="Click to view solution"/>
+    <application id="SOLNEW" icon="fa fa-plus" title="New Solution" ref="solution" schema="newdetail" tooltip="Click to Create a New Solution"/>
+  </container>
+  <container title="Changes" role="changes" id="change" icon="fa fa-random" >
+    <application id="CHGRID" icon="fa fa-table" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
+    <application id="CHNEW" icon="fa fa-plus" title="New Change" ref="change" schema="newdetail" tooltip="Click to Create a New Changes"/>
+  </container>
+  <container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
+    <application id ="PGRID" icon="fa fa-table" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
+    <application id ="POGRID" icon="fa fa-table" title="Purchase Orders Grid" ref="po" schema="list" tooltip="Click to view your Purchase Order Grid"/>
+    <application id="RECEIPTS" icon="fa fa-table" title="Receiving" ref="receiving" schema="list" tooltip="Click to view your Receipts"/>
+    <application id ="PNEW" icon="fa fa-plus" title="New Purchase Request" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
+  </container>
+  <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="Incident"  role="incidents">
+    <application id="ING" icon="fa fa-table" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
+    <application id="INNEW" icon="fa fa-plus" title="New Incident" ref="incident" schema="newdetail" tooltip="Click to create new Incidents" />
+  </container>
+  <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
+    <application id="IN" icon="fa fa-table" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" />
+    <container title="Issues and Returns" tooltip="Click to access your issues and returns" icon="fa fa-exchange" id="IssuesAndReturns" role="issuesandreturns" >
+      <application id="IRG" icon="fa fa-table" title="Issues and Returns Grid" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" />
+      <application id="NIR" icon="fa fa-plus" title="New Issue and Return" ref="invissue" schema="newInvIssueDetail" tooltip="Click to add an New Issue and Return"/>
+    </container>
+    <container title="Inventory Transfer" tooltip="Click to access your inventory transfer" icon="fa fa-long-arrow-right" id="InventoryTransfer" role="inventorytransfer" >
+      <application id="ITG" icon="fa fa-table" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid"/>
+      <application id="NIT" icon="fa fa-plus" title="New Inventory Transfer" ref="invuse" schema="newdetail" tooltip="Click to add an New Inventory Transfer"/>
+    </container>
+    <application id="PC" icon="fa fa-table" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
+    <application id="PD" icon="fa fa-table" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
+    <application id="RM" icon="fa fa-plus" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
+  </container>
+
+  <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory_old" role="inventory">
+    <application id="IN" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" icon="fa fa-table"/>
+    <application id="IR" title="Issues and Returns" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" icon="fa fa-table" />
+    <application id="IT" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid" icon="fa fa-table"/>
+    <application id="PC" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid" icon="fa fa-table"/>
+    <application id="PD" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid" icon="fa fa-table"/>
+    <application id="RM" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials" icon="fa fa-plus"/>
+  </container>
+  
+  
+</TemplateCatalog>

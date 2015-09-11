@@ -1,7 +1,7 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, ionic) {
     "use strict";
 
-    function securityService($rootScope, localStorageService, routeService) {
+    function securityService($rootScope, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
 
         //#region Utils
 
@@ -9,17 +9,17 @@
             eventnamespace:"sw4:security:",
             authkey: "security:auth:user",
             previouskey: "security:auth:previous",
-            sessionexpiredmessage: "Your session has expired. Please log in to resume your activities."
+            message: {
+                sessionexpired: "Your session has expired. Please log in to resume your activities.",
+                unauthorizedaccess: "You're not authorized to access this resource.<br>" +
+                    "Contact support if you think you're not supposed to receive this message."
+            }
         };
 
-        var isLoginState = function() {
+        var isLoginState = function () {
             var current = routeService.$state.current.name;
             return current === "login";
         };
-
-        //#endregion
-
-        //#region Public methods
 
         /**
          * Authenticates the user locally initializing it's client-side session
@@ -28,12 +28,45 @@
          * 
          * @param String username 
          */
-        var loginLocal = function(username) {
+        var loginLocal = function (username) {
             var previous = localStorageService.get(config.authkey);
             previous = !!previous ? previous : localStorageService.get(config.previouskey);
             localStorageService.put(config.authkey, username);
             $rootScope.$broadcast(config.eventnamespace + "login", username, previous);
         };
+
+        //#endregion
+
+        //#region Public methods
+
+        /**
+         * Authenticates the user remotelly then locally.
+         * 
+         * @param String username 
+         * @param String password 
+         * @returns Promise resolved with username 
+         */
+        var login = function(username, password) {
+            //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
+            var loginUrl = routeService.loginURL();
+            return $http({
+                method: "POST",
+                url: loginUrl,
+                data: { username: username, password: password },
+                timeout: 20 * 1000 // 20 seconds
+            })
+            .then(function (response) {
+                //cleaning history so that back button does not return user to login page
+                $ionicHistory.clearCache();
+
+                var userdata = response.data;
+                if (userdata.Found) {
+                    loginLocal(userdata.UserName);
+                    return userdata;
+                }
+                return $q.reject(new Error("Invalid username or password"));
+            });
+        }
 
         /**
          * @returns username of the logged user. 
@@ -51,8 +84,10 @@
         };
 
         /**
-         * Finishes the current user session, redirects to login state (if not already at login state)
+         * Finishes the current user session, wipes the database
          * and $broadcasts the event "security:logout" with the just now logged out user's username.
+         * 
+         * @return Promise resolved with username of the logged out user 
          */
         var logout = function () {
             // invalidate current session
@@ -62,10 +97,11 @@
                 localStorageService.put(config.previouskey, current);
             }
             $rootScope.$broadcast(config.eventnamespace + "logout", current);
-            // if not already at login state transition to it with a message
-            if (!isLoginState()) {
-                routeService.go("login", { message: config.sessionexpiredmessage });
-            }
+
+            return swdbDAO.resetDataBase(["Settings"]).then(function () {
+                $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
+                return current;
+            });
         };
 
         /**
@@ -73,16 +109,22 @@
          * response status (indicating the user requires remote authentication).
          * For now just calls logout.
          */
-        var handleUnauthorizedRemoteAccess = function() {
-            logout();
-        };
+        var handleUnauthorizedRemoteAccess = ionic.debounce(function () {
+            var logoutPromise = logout();
+            // not at login state, transition to it with proper message
+            if (!isLoginState()) {
+                logoutPromise.then(function () {
+                    routeService.go("login", { message: config.message.unauthorizedaccess });
+                });
+            }
+        }, 0, true); //debouncing for when multiple parallel requests are unauthorized
 
         //#endregion
 
         //#region Service Instance
 
         var service = {
-            loginLocal: loginLocal,
+            login: login,
             currentUser: currentUser,
             hasAuthenticatedUser: hasAuthenticatedUser,
             logout: logout,
@@ -96,8 +138,8 @@
 
     //#region Service registration
 
-    mobileServices.factory("securityService", ["$rootScope", "localStorageService", "routeService", securityService]);
+    mobileServices.factory("securityService", ["$rootScope", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", securityService]);
 
     //#endregion
 
-})(mobileServices);
+})(mobileServices, ionic);

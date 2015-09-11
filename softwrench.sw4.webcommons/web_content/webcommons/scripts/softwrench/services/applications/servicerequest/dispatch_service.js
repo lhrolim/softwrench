@@ -1,16 +1,8 @@
 ﻿
-(function () {
+(function (angular) {
     'use strict';
 
-    angular.module('maximo_applications').factory('dispatchService', ['$rootScope', 'applicationService', 'alertService', 'commandService', dispatchService]);
-
-    function dispatchService($rootScope, applicationService, alertService, commandService) {
-
-        var service = {
-            dispatch: dispatch
-        };
-
-        return service;
+    function dispatchService($rootScope, applicationService, alertService,contextService) {
 
         function dispatch(schema, datamap) {
             var localDatamap = datamap;
@@ -18,8 +10,8 @@
                 localDatamap = datamap.fields;
             }
 
-            if (!localDatamap.owner && !localDatamap.ownergroup) {
-                alertService.alert("Owner or owner group must be filled before dispatch can be performed.");
+            if (contextService.isClient("deltadental") && !localDatamap.owner && !localDatamap.ownergroup) {
+                alertService.alert("Owner or owner group must be filled before this action can be performed.");
                 return 0;
             }
 
@@ -32,5 +24,12 @@
             return applicationService.invokeOperation("servicerequest", "editdetail", "DispatchWO", crudData, extraParameters);
         }
 
+        var service = {
+            dispatch: dispatch
+        };
+
+        return service;
     }
-})();
+
+    angular.module('maximo_applications').factory('dispatchService', ['$rootScope', 'applicationService', 'alertService','contextService', dispatchService]);
+})(angular);

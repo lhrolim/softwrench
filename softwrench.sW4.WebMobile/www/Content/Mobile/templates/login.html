@@ -1,20 +1,36 @@
 ﻿<ion-view view-title="Login" name="login-view" class="page-login">
     <ion-content class="padding">
-        <div class="list list-inset">
-            <label class="item item-input">
-                <input type="text" placeholder="Username" ng-model="data.username">
-            </label>
-            <label class="item item-input">
-                <input type="password" placeholder="Password" ng-model="data.password">
-            </label>
-            <div class="row action-bar">
+        <div class="login-form-container">
+            <section class="login-form list list-inset">
+                <label class="login-input item item-input item-floating-label">
+                    <span class="input-label show-tablet">Username</span>
+                    <input type="text" placeholder="Username" ng-model="data.username" autocapitalize="off" autocorrect="off">
+                </label>
+                <label class="login-input item item-input item-floating-label">
+                    <span class="input-label show-tablet">Password</span>
+                    <input type="password" placeholder="Password" ng-model="data.password">
+                </label>
+            </section>
+            <section class="row action-bar show-phone">
                 <div class="col col-80 action-button">
-                    <button class="button button-calm button-full" ng-click="login()">Login</button>
+                    <button class="button button-calm button-block" ng-click="login()">Login</button>
                 </div>
                 <div class="col col-20 action-button">
                     <a class="button button-icon icon ion-gear-a login-settings" ng-click="settings()"></a>
                 </div>
-            </div>
+            </section>
+            <section class="action-bar show-tablet">
+                <div class="action-button">
+                    <button class="button button-calm button-block" ng-click="login()">
+                        Login
+                    </button>
+                </div>
+                <div class="action-button">
+                    <button class="button button-block button-outline button-positive icon ion-gear-a icon-left" ng-click="settings()">
+                        Settings
+                    </button>
+                </div>
+            </section>
         </div>
 
     </ion-content>

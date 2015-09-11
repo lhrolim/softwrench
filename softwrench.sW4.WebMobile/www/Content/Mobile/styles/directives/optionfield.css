@@ -1,0 +1,26 @@
+﻿option-field .list {
+    margin: -1px 0;
+}
+
+.option-field-items {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+    .option-field-items .item {
+        overflow: hidden;
+    }
+
+    .option-field-items label p {
+        height: 32px;
+        line-height: 32px;
+    }
+
+.option-field-icon {
+    float: left;
+    margin-right: 10px;
+    width: 30px;
+    text-align: center;
+}

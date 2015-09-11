@@ -10,7 +10,7 @@ app.directive('activitystream', function(contextService) {
         },
 
         link: function(scope) {
-            scope.$name = 'crudbody';
+            scope.$name = 'crudbody';          
         },
         controller: function($scope, $http, $log, $interval, $timeout, redirectService,
             contextService, $rootScope, alertService) {
@@ -23,8 +23,12 @@ app.directive('activitystream', function(contextService) {
             $scope.enableFilter = false;
      
             $scope.activityStreamEnabled = function () {
-                return contextService.fetchFromContext("activityStreamFlag", false, true);
+                return contextService.fetchFromContext('activityStreamFlag', false, true);
             };
+
+            if ($scope.activityStreamEnabled()) {
+                $('html').addClass('activitystream');
+            }
 
             $scope.clearFilter = function () {
                 log.debug('clearFilter');

@@ -1,4 +1,5 @@
 ﻿using System;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.UI
 {
@@ -11,10 +12,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI
         public OptionFieldRenderer() {
             EnumRendererType = OptionRendererType.COMBO;
             RendererType = EnumRendererType.ToString();
+            Stereotype = null;
         }
 
-        public OptionFieldRenderer(string renderertype, string parameters, string targetName)
-            : base(renderertype, parameters, targetName) {
+        public OptionFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
+            : base(renderertype, parameters, targetName, stereotype) {
             OptionRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;

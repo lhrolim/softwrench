@@ -5,32 +5,29 @@
 
         $provide.decorator("$exceptionHandler", ["$delegate", "$injector", "rollingLogFileConstants", function ($delegate, $injector, rollingLogFileConstants) {
             
-            var $ionicPopup, $timeout, $log, logger;
+            var swAlertPopup, $log, logger, contextService;
 
             function alertLogLocation() {
-                if (!rollingLogFileConstants.logToFileEnabled) {
+                // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScop
+                if (!contextService) contextService = $injector.get("contextService");
+                if (!rollingLogFileConstants.logToFileEnabled || contextService.isDev()) {
                     return;
                 }
-                // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- $exceptionHandler <- $rootScope
-                if (!$ionicPopup) $ionicPopup = $injector.get("$ionicPopup");
+                // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- swAlertPopup <- $exceptionHandler <- $rootScope
+                if (!swAlertPopup) swAlertPopup = $injector.get("swAlertPopup");
 
                 var path = cordova.file[rollingLogFileConstants.logFileDirectory];
                 if (!path.endsWith("/")) {
                     path += "/";
                 }
                 path += rollingLogFileConstants.logFileName;
-                var popup = $ionicPopup.alert({
+                swAlertPopup.alert({
                     title: "Unexpected error",
                     template: "Check the application logs in the files " + path
-                });
-                $timeout(function() {
-                    popup.close();
                 }, 3000);
             }
 
             return function (exception, cause) {
-                // getting around circular deps: $rootScope <- $timeout <- $exceptionHandler <- $rootScope
-                if(!$timeout) $timeout = $injector.get("$timeout");
                 // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScope
                 if (!logger) {
                     $log = $injector.get("$log");
@@ -39,7 +36,7 @@
                 // default behavior (from angular.js source): $log.error.apply($log, arguments);
                 logger.error.apply(logger, arguments);
                 // alerting log file location for support
-                $timeout(alertLogLocation);
+                // alertLogLocation(); -> removed: due to unstable dev environment it was getting in the way
             };
 
         }]);

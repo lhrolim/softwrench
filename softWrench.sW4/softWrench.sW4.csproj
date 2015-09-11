@@ -165,6 +165,7 @@
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
+    <Compile Include="Data\Entities\Commlog\EmailCounterHandler.cs" />
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
@@ -183,6 +184,8 @@
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Email\EmailHistory.cs" />
+    <Compile Include="Exceptions\MenuMetadataException.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Extension\MigrationExtensions.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Person\BasePhoneDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\BaseInventoryReturnDataSet.cs" />
@@ -200,6 +203,9 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
+    <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
+    <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
+    <Compile Include="Metadata\Menu\XmlTemplateMenuMetadataParser.cs" />
     <Compile Include="Metadata\OffLineMetadataProvider.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
@@ -333,6 +339,9 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
+    <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />
+    <Compile Include="Metadata\Stereotypes\Component\EmailComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />

@@ -240,6 +240,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RendererAttributeType = "type";
         public const string RendererAttributeDataProvider = "dataprovider";
         public const string RendererAttributeParams = "params";
+        public const string RendererAttributeStereotype = "stereotype";
 
         public const string FilterElement = "filter";
         public const string FilterOperationType = "operation";

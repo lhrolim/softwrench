@@ -1,17 +1,23 @@
-﻿mobileServices.factory('metadataModelService', function ($q, $log, swdbDAO, dispatcherService) {
+﻿(function (mobileServices) {
+    "use strict";
 
-    var metadataModel = {
+    mobileServices.factory('metadataModelService', ["$q", "$log", "swdbDAO", "dispatcherService", function ($q, $log, swdbDAO, dispatcherService) {
+
+    var initialMetadataModel = {
         topLevelApplications: [],
         compositionApplications: [],
-        associationApplications: [],
-    };
+        associationApplications: []
+    }
+    
+    //so that we have the original object available for resetting it
+    var metadataModel = angular.copy(initialMetadataModel);
 
     function loadEntityInstance(serverMetadata, memoryArrayName, mergefunctionCBK) {
 
         var applicationName = serverMetadata.applicationName;
         var applications = metadataModel[memoryArrayName];
         var loadedEntity = $.findFirst(applications, function (el) {
-            return el.application == applicationName;
+            return el.application === applicationName;
         });
         var dbId = null;
         if (loadedEntity) {
@@ -55,7 +61,7 @@
         for (var j = 0; j < memoryArray.length; j++) {
             var entity = memoryArray[j];
             var serverInstance = $.findFirst(serverMetadatas, function (el) {
-                return el.applicationName == entity.application;
+                return el.applicationName === entity.application;
             });
             if (!serverInstance) {
                 //this means that this entry was not returned from the server, and hence needs to be deleted
@@ -84,7 +90,7 @@
             var metadatas = this.getMetadatas();
             for (var i = 0; i < metadatas.length; i++) {
                 var metadata = metadatas[i];
-                if (metadata.application == applicationName) {
+                if (metadata.application === applicationName) {
                     return metadata;
                 }
             }
@@ -132,9 +138,6 @@
         },
 
 
-
-
-
         initAndCacheFromDB: function () {
             var log = $log.getInstance("metadataModelService#initAndCacheFromDB");
             var defer = $q.defer();
@@ -152,11 +155,17 @@
                         metadataModel.topLevelApplications.push(application);
                     }
                 }
-
+                defer.resolve();
             });
             return defer.promise;
 
         },
 
+        reset:function() {
+            metadataModel = angular.copy(initialMetadataModel);
+        }
+
     }
-});
+}]);
+
+})(mobileServices);

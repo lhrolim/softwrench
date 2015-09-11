@@ -100,6 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
   </ItemGroup>
@@ -149,9 +153,6 @@
     <Content Include="web_content\dashboard\scripts\dashboarddirective.js" />
     <Content Include="web_content\dashboard\scripts\dashboardauxService.js" />
     <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
-    <None Include="web_content\dashboard\styles\dashboards.css.map">
-      <DependentUpon>dashboards.css</DependentUpon>
-    </None>
     <None Include="web_content\dashboard\styles\dashboards.scss" />
     <Content Include="web_content\dashboard\styles\dashboards.css">
       <DependentUpon>dashboards.scss</DependentUpon>

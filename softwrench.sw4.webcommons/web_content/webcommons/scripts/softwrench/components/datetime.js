@@ -16,7 +16,6 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
         link: function (scope, element, attrs, ngModel) {
 
             if (!ngModel) {
-                //console.log('no model, returning');
                 return;
             }
 
@@ -49,8 +48,6 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                 var endDate = allowfuture ? false : new Date();
                 var minStartDateExpression = attrs.minDateexpression;
 
-                var futureOnly = (attrs.futureOnly != undefined && attrs.futureOnly.toLowerCase() == "true");
-
                 if (minStartDateExpression != null && minStartDateExpression != "") {
                     startDate = expressionService.evaluate(minStartDateExpression, datamap);
                     startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
@@ -63,14 +60,20 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         }
                     });
                 }
-
-                element.datetimepicker({
-                    format: dateFormat,
-                    locale: attrs.language,
-                    maxDate: endDate,
-                    minDate: startDate,
-                    sideBySide: true,
-                });
+                $timeout(function () {
+                    //timeout to avoid $digest is already in progress exception... using false keyword postergates this to next digest loop
+                    element.datetimepicker({
+                        format: dateFormat,
+                        locale: attrs.language,
+                        maxDate: endDate,
+                        minDate: startDate,
+                        sideBySide: true,
+                        showClose: true,
+                        toolbarPlacement: 'top',
+                        useCurrent: false
+                        //debug: true
+                    });
+                }, 0, false);
             }
 
             function datetimeclassHandler(timeOnly) {

@@ -2,8 +2,8 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "$ionicPopup", "$ionicLoading", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate",
-        function ($scope, service, routeService, synchronizationFacade, $ionicPopup, $ionicLoading, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$ionicLoading", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate",
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $ionicLoading, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate) {
 
             $scope.data = {
                 operation: null,
@@ -76,16 +76,16 @@
                 $scope.data.isSynching = true;
                 $ionicLoading.show(loadingOptions);
                 synchronizationFacade.fullSync()
-                    .then(function (message) {
-                        $ionicPopup.alert({
-                            title: "Synchronization Succeeded",
-                            template: message
+                    .then(function (operation) {
+                        swAlertPopup.show({
+                            title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
                         });
                         return loadData();
                     })
-                    .catch(function () {
-                        $ionicPopup.alert({
-                            title: "Error Synchronizing Data"
+                    .catch(function (error) {
+                        swAlertPopup.show({
+                            title: "Error Synchronizing Data",
+                            template: !!error && !!error.message ? error.message : ""
                         });
                     })
                     .finally(function () {

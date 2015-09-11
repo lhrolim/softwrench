@@ -1436,6 +1436,10 @@
           <relationshipAttribute from="wonum" to="refwo" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="relatedrecord" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />

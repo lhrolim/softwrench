@@ -2,6 +2,7 @@
 using cts.commons.persistence;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Email;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
@@ -16,15 +17,26 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             _swdbDAO = swdbDAO;
         }
 
+        public SearchRequestDto EmailPreFilter(AssociationPreFilterFunctionParameters preparams){
+            preparams.BASEDto.AppendWhereClause("1=2");
+            return preparams.BASEDto;
+        }
+
         public IEnumerable<IAssociationOption> EmailPostFilter(AssociationPostFilterFunctionParameters postParams) {
 
-            InMemoryUser currentUser = SecurityFacade.CurrentUser();
+            var currentUser = SecurityFacade.CurrentUser();
 
-            var addresses = _swdbDAO.FindByQuery<EmailHistory>(EmailHistory.byUserId, currentUser.MaximoPersonId);
+            var addresses = _swdbDAO.FindByQuery<EmailHistory>(EmailHistory.byUserId, currentUser.Login);
+
+
 
             foreach (var address in addresses) {
                 postParams.Options.Add(new AssociationOption(address.EmailAddress, address.EmailAddress));
             }
+
+//            for (var i = 0; i < 10000; i++) {
+//                postParams.Options.Add(new AssociationOption("testemail" + i + "@a.com", "testemail" + i + "@a.com"));
+//            }
 
             return postParams.Options;
         }

@@ -66,35 +66,7 @@
         <property key ="icon" value="fa fa-envelope-o"/>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
-
-      <!-- Concept example of notification configuration highlighting the ability to configure independent roles on an application -->
-      <!--<notifications>-->
-        
-        <!-- if role is not specified, by default application.notifications will be the role-->
-      <notifications>
-        <notification label="communication" targetSchema="editdetail" targetApplication="servicerequest">
-          <attributes>
-            <uid attribute="commloguid"/>
-            <summary attribute="subject"/>
-            <createddate attribute="createdate"/>
-            <changeby attribute="createby"/>
-            <parentAttributes>
-              <application attribute="ownertable"/>
-              <parentuid attribute="ownerid"/>
-              <parentid attribute="sr_.ticketid"/>
-            </parentAttributes>
-            <!--<extraAttributes>
-              <extraAttribute attribute="sendtoreceiving"/>
-            </extraAttributes>-->
-          </attributes>
-        </notification>
-        
-
-      </notifications>
-      
       <schemas>
-        
-        
         <schema id="list" stereotype="compositionlist">
           <properties>
             <property key="expansible" value="false"/>
@@ -142,16 +114,16 @@
           <!--<field attribute="sendto" label="To:" requiredexpression="true">
             <renderer type="email"/>
           </field>-->
-          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-            <renderer type="multiselectautocompleteclient"/>
+          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
+            <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
           <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-            <renderer type="multiselectautocompleteclient"/>
+            <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
 
-          <field attribute="sendfrom" label="From:" requiredexpression="true" >
+          <field attribute="sendfrom" label="From:" requiredexpression="true" default="@user.email" readonly="true" >
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>

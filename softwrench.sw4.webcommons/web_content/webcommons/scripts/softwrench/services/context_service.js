@@ -1,16 +1,21 @@
-﻿modules.webcommons.factory('contextService', function ($rootScope) {
+﻿(function(modules) {
+    "use strict";
+
+modules.webcommons.factory('contextService', ["$rootScope", function ($rootScope) {
 
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.
         //see SWWEB-239
         insertIntoContext: function (key, value, userootscope) {
+            var urlContext = url("");
+
             if (userootscope) {
-                $rootScope['ctx_' + key] = value;
+                $rootScope[urlContext + ':ctx_' + key] = value;
             } else {
                 if (value != null && !isString(value)) {
                     value = JSON.stringify(value);
                 }
-                sessionStorage['ctx_' + key] = value;
+                sessionStorage[urlContext+':ctx_' + key] = value;
             }
 
 
@@ -42,16 +47,18 @@
         },
 
         retrieveFromContext: function (key, userootscope, removeentry) {
+            var urlContext = url("");
+
             if (userootscope) {
-                var object = $rootScope['ctx_' + key];
+                var object = $rootScope[urlContext+':ctx_' + key];
                 if (removeentry) {
-                    delete $rootScope['ctx_' + key];
+                    delete $rootScope[urlContext+':ctx_' + key];
                 }
                 return object;
             }
-            var sessionContextValue = sessionStorage['ctx_' + key];
+            var sessionContextValue = sessionStorage[urlContext+':ctx_' + key];
             if (removeentry) {
-                sessionStorage.removeItem(['ctx_' + key]);
+                sessionStorage.removeItem([urlContext +':ctx_' + key]);
             }
             if (sessionContextValue == "null") {
                 return null;
@@ -60,8 +67,9 @@
         },
 
         deleteFromContext: function (key) {
-            delete sessionStorage["ctx_" + key];
-            delete $rootScope["ctx_" + key];
+            var urlContext = url("");
+            delete sessionStorage[urlContext+":ctx_" + key];
+            delete $rootScope[urlContext+":ctx_" + key];
         },
 
         isLocal: function () {
@@ -207,10 +215,11 @@
         },
 
         clearContext: function () {
+            var urlContext = url("");
             var i = sessionStorage.length;
             while (i--) {
                 var key = sessionStorage.key(i);
-                if (key.startsWith('ctx_')) {
+                if (key.startsWith(urlContext+':ctx_')) {
                     sessionStorage.removeItem(key);
                 }
             }
@@ -233,6 +242,6 @@
         },
     }
 
-});
+}]);
 
-
+})(modules);

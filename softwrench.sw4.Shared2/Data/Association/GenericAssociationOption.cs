@@ -37,18 +37,10 @@ namespace softwrench.sw4.Shared2.Data.Association {
             }
             return labelComparison;
         }
+
+     
     }
 
-    public class OptionComparer : IEqualityComparer<GenericAssociationOption> {
-
-        public bool Equals(GenericAssociationOption x, GenericAssociationOption y) {
-            return x.CompareTo(y) == 0;
-        }
-
-        public int GetHashCode(GenericAssociationOption obj) {
-            return obj.Value.GetHashCode() & obj.Label.GetHashCode();
-        }
-    }
 
     public class ValueComparer : IEqualityComparer<IAssociationOption> {
 

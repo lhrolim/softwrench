@@ -56,12 +56,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\bering\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\bering\styles\branding.css">
+      <DependentUpon>branding.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\bering\styles\branding.min.css">
+      <DependentUpon>branding.css</DependentUpon>
+    </Content>
     <EmbeddedResource Include="metadata\bering\commands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -87,7 +97,7 @@
     <Content Include="web_content\bering\images\logo-byline.png" />
     <Content Include="web_content\bering\images\logo-main.png" />
     <Content Include="web_content\bering\images\signin.jpg" />
-    <Content Include="web_content\bering\styles\branding.css" />
+    <None Include="web_content\bering\styles\branding.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

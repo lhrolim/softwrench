@@ -1,17 +1,14 @@
-/*******************************************************************************
+﻿/*******************************************************************************
  *******************************************************************************
  * Place form specific CSS (based on data-application/data-schema attributes)  *
  *******************************************************************************
  *******************************************************************************/
 @media all and (min-width: 1px) {
   [data-class="commandbar"] .commandButton {
-    width: 100%;
-  }
-}
+    width: 100%; } }
+
 @media all and (min-width: 380px) {
   [data-class="commandbar"] .commandButton {
-    width: auto;
-  }
-}
+    width: auto; } }
 
-/*# sourceMappingURL=application.css.map */
+/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiLi4vYXBwbGljYXRpb24uY3NzIiwKCSJzb3VyY2VzIjogWwoJCSIuLi9hcHBsaWNhdGlvbi5zY3NzIiwKCQkiLi4vX2Zvcm1zLnNjc3MiCgldLAoJInNvdXJjZXNDb250ZW50IjogW10sCgkibWFwcGluZ3MiOiAiQUNBQTs7OztpRkFJaUY7QUFDakYsTUFBTSxDQUFOLEdBQUcsTUFBTSxTQUFTLEVBQUUsR0FBRztHQUNPLEFBQUEsVUFBQyxDQUFXLFlBQVksQUFBdkIsRUFBeUIsY0FBYyxDQUF6QjtJQUNyQyxLQUFLLEVBQUUsSUFBSyxHQUQwQjs7QUFLOUMsTUFBTSxDQUFOLEdBQUcsTUFBTSxTQUFTLEVBQUUsS0FBSztHQUNLLEFBQUEsVUFBQyxDQUFXLFlBQVksQUFBdkIsRUFBeUIsY0FBYyxDQUF6QjtJQUNyQyxLQUFLLEVBQUUsSUFBSyxHQUQwQiIsCgkibmFtZXMiOiBbXQp9 */

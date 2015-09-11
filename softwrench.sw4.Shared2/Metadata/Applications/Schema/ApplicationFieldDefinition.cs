@@ -66,11 +66,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private FieldRenderer BuildFromWidget() {
             if (_widgetDefinition is DateWidgetDefinition) {
                 var dateWidget = ((DateWidgetDefinition)_widgetDefinition);
-                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), String.Format("time={0};format={1}", dateWidget.Time, dateWidget.Format), Attribute);
+                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), String.Format("time={0};format={1}", dateWidget.Time, dateWidget.Format), Attribute, null);
             }
             if (_widgetDefinition is NumberWidgetDefinition) {
                 var numberWidget = ((NumberWidgetDefinition)_widgetDefinition);
-                return new FieldRenderer(FieldRenderer.BaseRendererType.NUMERICINPUT.ToString().ToLower(), String.Format("min={0};max={1};decimals={2}", numberWidget.Min, numberWidget.Max, numberWidget.Decimals), Attribute);
+                return new FieldRenderer(FieldRenderer.BaseRendererType.NUMERICINPUT.ToString().ToLower(), String.Format("min={0};max={1};decimals={2}", numberWidget.Min, numberWidget.Max, numberWidget.Decimals), Attribute, null);
             }
             return null;
         }

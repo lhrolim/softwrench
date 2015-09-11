@@ -10,11 +10,11 @@ namespace softWrench.sW4.Data.Entities.Labor {
     public class UserLaborCraftFetcher : ISWEventListener<UserLoginEvent> {
 
 
-        private static ILog Log = LogManager.GetLogger(typeof(UserLaborCraftFetcher));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UserLaborCraftFetcher));
 
         private readonly EntityRepository _repository;
 
-        private EntityMetadata _entity;
+        private readonly EntityMetadata _entity;
 
         public UserLaborCraftFetcher(EntityRepository repository) {
             _repository = repository;

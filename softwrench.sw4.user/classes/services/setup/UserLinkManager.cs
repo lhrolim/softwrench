@@ -23,7 +23,7 @@ namespace softwrench.sw4.user.classes.services.setup {
             _dao = dao;
         }
 
-        public UserActivationLink GetLinkByUser(User user){
+        public UserActivationLink GetLinkByUser(User user) {
             var existingLink = _dao.FindSingleByQuery<UserActivationLink>(UserActivationLink.TokenByUser, user);
             return existingLink;
         }
@@ -64,13 +64,17 @@ namespace softwrench.sw4.user.classes.services.setup {
 
         public User RetrieveUserByLink(string link, out bool hasExpired) {
             var activationLink = _dao.FindSingleByQuery<UserActivationLink>(UserActivationLink.UserByToken, link);
+            hasExpired = false;
+            if (activationLink == null) {
+                return null;
+            }
             if (activationLink.HasExpired()) {
                 DoDeleteLink(activationLink);
                 hasExpired = true;
                 return null;
             }
-            hasExpired = false;
-            return activationLink == null ? null : activationLink.User;
+
+            return activationLink.User;
         }
 
         private void DoDeleteLink(UserActivationLink activationLink) {

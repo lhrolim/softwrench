@@ -17,8 +17,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu {
         }
 
         public ExternalLinkMenuItemDefinition(string id, string title, string role, string tooltip, string icon,
-            string link, IDictionary<string, object> parameters, string moduleName)
-            : base(id, title, role, tooltip, icon) {
+            string link, IDictionary<string, object> parameters, string moduleName, string customizationPosition)
+            : base(id, title, role, tooltip, icon, customizationPosition) {
             Link = link;
 
             Parameters = parameters;

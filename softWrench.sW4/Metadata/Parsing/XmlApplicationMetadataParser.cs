@@ -70,7 +70,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                             if (entity != null) {
                                 var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
                                 if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
-                                    return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName);
+                                    return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
                                 }
                             }
                             return new FieldRenderer();
@@ -81,16 +81,16 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             var type = renderer.Attribute(XmlMetadataSchema.RendererAttributeType).Value;
             var parameters = renderer.Attribute(XmlMetadataSchema.RendererAttributeParams).ValueOrDefault((string)null);
-
+            var stereotype = renderer.Attribute(XmlMetadataSchema.RendererAttributeStereotype).ValueOrDefault((string) null);
             switch (ftype) {
                 case FieldRendererType.ASSOCIATION:
-                    return new AssociationFieldRenderer(type, parameters, targetName);
+                    return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
                 case FieldRendererType.COMPOSITION:
                     return new CompositionFieldRenderer(type, parameters, targetName);
                 case FieldRendererType.OPTION:
                     return new OptionFieldRenderer(type, parameters, targetName);
                 default:
-                    return new FieldRenderer(type, parameters, targetName);
+                    return new FieldRenderer(type, parameters, targetName, stereotype);
             }
         }
 

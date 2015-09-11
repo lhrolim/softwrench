@@ -137,7 +137,7 @@
                 return swdbDAO.executeStatement(entities.AuditEntry.listApplicationsStatement, [createdBy])
                     .then(function (results) {
                         return results.map(function (r) {
-                            return r.application;
+                            return r.refApplication;
                         });
                     });
             }
@@ -158,7 +158,7 @@
             function listEntries(refApplication, paginationOptions) {
                 var createdBy = securityService.currentUser();
                 var query = entities.AuditEntry.listPattern.format(refApplication, createdBy);
-                var options = { orderby: "createDate", orderbyascendig: false };
+                var options = { orderby: "createdDate", orderbyascendig: false };
                 if (!!paginationOptions) {
                     options.pagesize = paginationOptions["pagesize"];
                     options.pageNumber = paginationOptions["pagenumber"];

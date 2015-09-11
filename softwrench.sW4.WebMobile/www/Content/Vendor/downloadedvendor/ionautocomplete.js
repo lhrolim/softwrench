@@ -1,3 +1,6 @@
+(function (angular) {
+    "use strict";
+
 angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     '$ionicTemplateLoader', '$ionicBackdrop', '$ionicScrollDelegate', '$rootScope', '$document', '$q', '$parse', '$ionicPlatform',
     function ($ionicTemplateLoader, $ionicBackdrop, $ionicScrollDelegate, $rootScope, $document, $q, $parse, $ionicPlatform) {
@@ -223,18 +226,31 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         doQuery(query);
                     });
 
+                    // object to store search container state
+                    var searchContainer = {
+                        showing: false
+                    };
+
                     var displaySearchContainer = function () {
+                        // container already showing: do nothing
+                        if (searchContainer.showing) {
+                            return;
+                        }
                         $ionicBackdrop.retain();
                         compiledTemplate.element.css('display', 'block');
                         scope.$deregisterBackButton = $ionicPlatform.registerBackButtonAction(function () {
                             hideSearchContainer();
                         }, 300);
+                        // mark container as showing
+                        searchContainer.showing = true;
                     };
 
                     var hideSearchContainer = function () {
                         compiledTemplate.element.css('display', 'none');
                         $ionicBackdrop.release();
                         scope.$deregisterBackButton && scope.$deregisterBackButton();
+                        // mark container as not showing anymore
+                        searchContainer.showing = false;
                     };
 
                     // object to store if the user moved the finger to prevent opening the modal
@@ -268,7 +284,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     };
 
                     // click handler on the input field to show the search container
-                    var onClick = function (event) {
+                    var onClick =  ionic.debounce(function (event) {
                         // only open the dialog if was not touched at the beginning of a legitimate scroll event
                         if (scrolling.moved) {
                             return;
@@ -293,7 +309,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                         // force the collection repeat to redraw itself as there were issues when the first items were added
                         $ionicScrollDelegate.resize();
-                    };
+                    }, 0);
 
                     var isKeyValueInObjectArray = function (objectArray, key, value) {
                         for (var i = 0; i < objectArray.length; i++) {
@@ -370,3 +386,5 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
         replace: true
     }
 });
+
+})(angular);

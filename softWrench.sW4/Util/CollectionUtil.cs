@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using NHibernate.Util;
+using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softWrench.sW4.Util {
     class CollectionUtil {
@@ -8,5 +10,8 @@ namespace softWrench.sW4.Util {
         }
 
 
+        public static bool NullOrEmpty(IEnumerable<MenuBaseDefinition> leafs) {
+            return leafs == null || leafs.Any();
+        }
     }
 }

@@ -13,7 +13,7 @@
                    ng-if="isLabelVisible(fieldMetadata,false)"
                    ng-style="getLabelStyle(fieldMetadata)"
                    ng-class="getLabelClass(fieldMetadata)">
-                <span ng-show="isFieldRequired(fieldMetadata.requiredExpression)" class="requiredfieldmark">* </span>
+                <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
                 <!--this will bring either label or header in case of section-->
                 {{i18NLabel(fieldMetadata)}}
             </label>
@@ -173,12 +173,10 @@
                     </div>
                 </div>
                 <div ng-switch-when="multiselectautocompleteclient">
-                    <ui-select multiple tagging tagging-label="(new option)" ng-model="datamap[fieldMetadata.target]">
-                        <ui-select-match placeholder="">{{$item}}</ui-select-match>
-                        <ui-select-choices repeat="option in associationOptionsToStringArray(associationOptions[fieldMetadata.associationKey]) | filter: $select.search track by option">
-                            {{option}}
-                        </ui-select-choices>
-                    </ui-select>
+                    <selectize config="{create:true, valueField:'value', labelField:'label', searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
+                               options="associationOptions[fieldMetadata.associationKey]"
+                               ng-model="datamap[fieldMetadata.target]">
+                    </selectize>
                 </div>
                 <div ng-switch-when="autocompleteserver">
                     <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{fieldMetadata.associationKey}}" data-target="{{fieldMetadata.attribute}}" />

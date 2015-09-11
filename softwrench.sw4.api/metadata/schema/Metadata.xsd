@@ -498,6 +498,7 @@
   <complexType name="Renderer">
     <attribute name="type" type="string" use="required"></attribute>
     <attribute name="params" type="string"></attribute>
+    <attribute name="stereotype" type="string"></attribute>
   </complexType>
 
   <complexType name="Filter">

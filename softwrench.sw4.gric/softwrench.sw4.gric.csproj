@@ -80,9 +80,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="customer.placeholder" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\gric\styles\application\grids.css">
+      <DependentUpon>grids.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\gric\styles\branding.css">
+      <DependentUpon>branding.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\gric\styles\branding.min.css">
+      <DependentUpon>branding.css</DependentUpon>
+    </Content>
     <EmbeddedResource Include="metadata\gric\deploy.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -102,8 +115,8 @@
     <Content Include="web_content\gric\images\logo-byline.png" />
     <Content Include="web_content\gric\images\logo-main.png" />
     <Content Include="web_content\gric\scripts\sr_service.js" />
-    <Content Include="web_content\gric\styles\branding.css" />
-    <Content Include="web_content\gric\styles\application\grids.css" />
+    <None Include="web_content\gric\styles\branding.scss" />
+    <None Include="web_content\gric\styles\application\grids.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -27,7 +27,7 @@ app.factory('fileService', function ($rootScope, contextService) {
                     $rootScope.$broadcast('sw_ajaxend');
                     if (failCallback) {
                         if (formURL.indexOf("SignIn") != -1) {
-                            sessionStorage.removeItem("swGlobalRedirectURL");
+//                            sessionStorage.removeItem("swGlobalRedirectURL");
                             contextService.clearContext();
                             //this means that the server wanted a redirection to login page (302), due to session expiration.
                             //Since we´re using an inner iframe the contents of the signin might not be show. Let´s redirect manually, and there´s no way to override that.

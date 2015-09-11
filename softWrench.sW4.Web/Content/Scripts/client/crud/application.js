@@ -54,21 +54,19 @@ function ApplicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
     checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
+
     $scope.$name = 'applicationController';
-
-
     var currentFocusedIdx = 0;
 
     $rootScope.$on("sw_resetFocusToCurrent", function (event, schema, field) {
         focusService.resetFocusToCurrent(schema, field);
     });
-    //
+
     $rootScope.$on("sw_movefocus", function (event, datamap, schema, attribute) {
         if (datamap[attribute] != null && datamap[attribute] != '') {
             focusService.moveFocus(datamap, schema, attribute);
         }
     });
-
 
     function switchMode(mode, scope) {
         if (scope == null) {
@@ -167,7 +165,7 @@ function ApplicationController($scope, $http, $log, $timeout,
         var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
         if (printMode == undefined) {
             //avoid the print url to be saved on the sessionStorage, breaking page refresh
-            sessionStorage.swGlobalRedirectURL = urlToCall;
+            contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
         }
         log.info("calling url".format(urlToCall));
 
@@ -279,6 +277,9 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }
         $scope.requestpopup = null;
+
+        //broadcast schema for the breadcrumbs 
+        $rootScope.$broadcast('schemaChange', $scope.schema);
     };
 
 

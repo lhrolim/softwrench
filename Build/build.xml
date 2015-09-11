@@ -44,6 +44,14 @@
     <property name="version" value="${environment::get-variable('version')}" />
   </if>
 
+  <if test="${environment::variable-exists('offlineversion')}">
+    <property name="offlineversion" value="${environment::get-variable('offlineversion')}" />
+  </if>
+
+  <if test="${environment::variable-exists('GIT_COMMIT')}">
+    <property name="git_commit" value="${environment::get-variable('GIT_COMMIT')}" />
+  </if>
+
   <if test="${property::exists('platform')==false}">
     <property name="platform" value="web" />
   </if>
@@ -95,7 +103,7 @@
     <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
       <arg value="--browsers=PhantomJS"/>
-      <arg value="--singleRun=true"/>
+      <arg value="--single-run"/> <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
     </exec>
 
   </target>
@@ -175,7 +183,7 @@
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
       <property name="length" value="${string::get-length(foldername)}" />
       <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
-      
+
 
       <property name="projectname" value="${string::substring(foldername,indexof,size)}" />
 
@@ -235,6 +243,38 @@
                xpath="/configuration/appSettings/add[@key = 'version']/@value"
                value="${version}" failonerror="true"/>
 
+
+    <xmlpoke file="../softWrench.sW4.WebMobile/config.xml"
+              xpath="//x:widget/@version"
+              value="${offlineversion}" failonerror="true">
+      <namespaces>
+        <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
+      </namespaces>
+    </xmlpoke>
+    
+  </target>
+
+
+  <target name="appendofflinecommit" >
+
+    <xmlpeek property="currentofflineversion" file="../softWrench.sW4.WebMobile/config.xml"
+            xpath="//x:widget/@version">
+      <namespaces>
+        <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
+      </namespaces>
+    </xmlpeek>
+
+
+    <if test="${string::contains(currentofflineversion, 'SNAPSHOT')}">
+      <xmlpoke file="../softWrench.sW4.WebMobile/config.xml"
+                 xpath="//x:widget/@version"
+                 value="${currentofflineversion}#${git_commit}" failonerror="true">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
+        </namespaces>
+      </xmlpoke>
+    </if>
+    
   </target>
 
 
@@ -401,9 +441,9 @@
       </if>
 
 
-      
-      
-      
+
+
+
     </foreach>
 
   </target>
@@ -429,7 +469,7 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-<!--
+        <!--
         <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>

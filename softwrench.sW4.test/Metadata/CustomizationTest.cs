@@ -117,5 +117,19 @@ namespace softwrench.sW4.test.Metadata {
             
         }
 
+        [TestMethod]
+        public void TestAssociationSWWEB1333() {
+
+
+            var app = MetadataProvider.Application("workorder");
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("editdetail"));
+
+            var associations = detailSchema.Associations;
+            var count = associations.Count(c => c.Attribute == "failurecode");
+            Assert.AreEqual(1,count);
+           
+
+        }
+
     }
 }

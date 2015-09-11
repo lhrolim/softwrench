@@ -203,7 +203,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application name="poline" entity="poline" title="PO Lines">
       <properties>
         <!--will need to change the icon later-->
-        <property key ="icon.composition.tab" value="fa fa-tags"/>
+        <property key ="icon.composition.tab" value="fa fa-clipboard"/>
       </properties>
       <schemas>
 
@@ -372,7 +372,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
     <application entity="prline" name="prline" title="Purchase Request Line">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-tags"/>
+        <property key ="icon.composition.tab" value="fa fa-money"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">

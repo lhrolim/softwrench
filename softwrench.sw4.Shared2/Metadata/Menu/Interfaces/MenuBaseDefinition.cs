@@ -13,16 +13,19 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Interfaces {
 
         public string Module { get; set; }
 
+        public string CustomizationPosition { get; set; }
+
         public MenuBaseDefinition() {
 
         }
 
-        protected MenuBaseDefinition(string id, string title, string role, string tooltip, string icon) {
+        protected MenuBaseDefinition(string id, string title, string role, string tooltip, string icon,string customizationPosition) {
             Id = id;
             Title = title;
             Role = role;
             Tooltip = tooltip;
             Icon = icon;
+            CustomizationPosition = customizationPosition;
         }
 
 
@@ -31,6 +34,10 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Interfaces {
 
         public override string ToString() {
             return string.Format("Title: {0}, Id: {1}", Title, Id);
+        }
+
+        public MenuBaseDefinition ShallowCopy() {
+            return (MenuBaseDefinition)MemberwiseClone();
         }
     }
 }

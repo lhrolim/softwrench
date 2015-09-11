@@ -52,6 +52,9 @@ namespace softWrench.sW4.Metadata.Security {
 
         private InMemoryUser() {
             _roles = new List<Role>();
+            _personGroups = new HashedSet<PersonGroupAssociation>();
+            _profiles = new UserProfile[0];
+            _dataConstraints = new List<DataConstraint>();
         }
 
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, UserPreferences userPreferences, int? timezoneOffset) {
@@ -60,7 +63,7 @@ namespace softWrench.sW4.Metadata.Security {
             SiteId = dbUser.Person.SiteId?? dbUser.SiteId;
             _firstName = dbUser.Person.FirstName ?? dbUser.FirstName;
             _lastName = dbUser.Person.LastName ?? dbUser.LastName;
-            _email = dbUser.Person.Email;
+            _email = dbUser.Person.Email ?? dbUser.Email;
             _orgId = dbUser.Person.OrgId ?? dbUser.OrgId;
             _storeloc = dbUser.Person.Storeloc;
             _department = dbUser.Person.Department;
@@ -105,6 +108,24 @@ namespace softWrench.sW4.Metadata.Security {
             _dataConstraints = dataConstraints;
             Identity = new GenericIdentity(_login);
             _userPreferences = userPreferences;
+        }
+
+        private InMemoryUser(string mock) : this() {
+            _login = mock;
+            _firstName = mock;
+            _lastName = mock;
+            _maximoPersonId = mock;
+            SiteId = mock;
+            _dbId = int.MinValue;
+            _timezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
+        }
+
+        public static InMemoryUser NewAnonymousInstance() {
+            return new InMemoryUser("anonymous");
+        }
+
+        public Boolean IsAnonymous() {
+            return _login == "anonymous" && _dbId.HasValue && _dbId.Value == int.MinValue;
         }
 
         public string Login {

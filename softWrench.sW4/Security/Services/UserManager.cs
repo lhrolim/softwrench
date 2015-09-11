@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -145,7 +144,12 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
-            return _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
+            var user = _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
+            if (user != null) {
+                var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+                user.MergeMaximoWithNewUser(maximoUser);
+            }
+            return user;
         }
 
         public string ForgotPassword(string userNameOrEmail) {
@@ -161,6 +165,7 @@ namespace softWrench.sW4.Security.Services {
                 if (email == null) {
                     return "User {0} has no primary email registered. Please contact your administrator".Fmt(userNameOrEmail);
                 }
+                emailToSend = email;
             } else {
                 emailToSend = userNameOrEmail;
                 var personid = _maxDAO.FindSingleByNativeQuery<string>("select personid from email where emailaddress = ? and isPrimary = 1", userNameOrEmail);

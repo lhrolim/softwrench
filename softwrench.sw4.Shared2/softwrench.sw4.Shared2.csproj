@@ -63,6 +63,7 @@
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationKey.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSectionOrientation.cs" />
+    <Compile Include="Metadata\Applications\Schema\ComponentStereotype.cs" />
     <Compile Include="Metadata\Applications\Schema\DisplayableComponent.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationIndentifiedDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />
@@ -120,6 +121,9 @@
     <Compile Include="Metadata\FieldRendererMetadata.cs" />
     <Compile Include="Metadata\IDefinition.cs" />
     <Compile Include="Metadata\IPCLCloneable.cs" />
+    <Compile Include="Metadata\Menu\Containers\IMenuRootDefinition.cs" />
+    <Compile Include="Metadata\Menu\Containers\MenuTemplateCatalogDefinition.cs" />
+    <Compile Include="Metadata\Menu\ReferenceMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ExternalLinkMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ActionMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ApplicationMenuItemDefinition.cs" />

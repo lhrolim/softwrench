@@ -16,7 +16,6 @@
     transition-property: transform, all !important;
 }
 
-
 .button-status {
     z-index: 12 !important;
     border-radius: 50% !important;
@@ -40,7 +39,6 @@
     color: #fff;
 }
 
-
 .ion-autocomplete-container {
     position: fixed;
     top: 0;
@@ -58,7 +56,7 @@ input.ion-autocomplete[readonly] {
 
 .header-item {
     right: 20px !important;
-    left: 30px !important
+    left: 30px !important;
 }
 
 .missingsync {
@@ -72,21 +70,25 @@ input.ion-autocomplete[readonly] {
 .page-syncoperation-list .operation-list .operation-item {
     padding: 10px 0;
 }
-.page-syncoperation-list .operation-list .operation-item .operation-item-col {
-    vertical-align: middle;
-    padding: 0 5px 0 0;
-}
-.page-syncoperation-list .operation-list .operation-item .operation-item-col:first-child {
-    text-align: center;
-}
-.page-syncoperation-list .operation-list .operation-item .operation-item-col:last-child {
-    padding-right: 0;
-    text-align: right;
-}
-.page-syncoperation-list .operation-list .operation-item .operation-status-text {
-    padding-left: 0;
-    font-size: 14px;
-}
+
+    .page-syncoperation-list .operation-list .operation-item .operation-item-col {
+        vertical-align: middle;
+        padding: 0 5px 0 0;
+    }
+
+        .page-syncoperation-list .operation-list .operation-item .operation-item-col:first-child {
+            text-align: center;
+        }
+
+        .page-syncoperation-list .operation-list .operation-item .operation-item-col:last-child {
+            padding-right: 0;
+            text-align: right;
+        }
+
+    .page-syncoperation-list .operation-list .operation-item .operation-status-text {
+        padding-left: 0;
+        font-size: 14px;
+    }
 
 .page-audit-entrylist .entry-item {
     padding-right: 0;

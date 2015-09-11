@@ -1,4 +1,4 @@
-function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService) {
+function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
 
     $scope.save = function () {
 
@@ -25,7 +25,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 data: ace.edit("editor").getValue()
             })
                 .success(function () {
-                    sessionStorage.removeItem("swGlobalRedirectURL");
+                    contextService.deleteFromContext("swGlobalRedirectURL");
                     $window.location.href = url("/stub/reset");
                 });
 

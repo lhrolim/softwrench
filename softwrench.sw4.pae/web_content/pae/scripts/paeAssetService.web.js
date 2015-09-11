@@ -64,7 +64,10 @@
         //#region Public methods
 
 
-        function initAssetDetailListener (scope, schema, datamap, parameters) {
+        function initAssetDetailListener(scope, schema, datamap, parameters) {
+
+            datamap["#originallocation"] = datamap["location"];
+
 
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({

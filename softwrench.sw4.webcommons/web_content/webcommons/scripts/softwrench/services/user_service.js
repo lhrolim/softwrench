@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function (angular) {
     'use strict';
 
     angular.module('webcommons_services').factory('userService', ['contextService', userService]);
@@ -26,6 +25,9 @@
 
             if (propertyExpression.startsWith("@user.")) {
                 var propName = propertyExpression.substring(6);
+                if (user.hasOwnProperty(propName)) {
+                    return user[propName];
+                }
                 return user.genericproperties[propName];
             }
             else if (propertyExpression.equalsAny("@userid")) {
@@ -75,7 +77,4 @@
         };
 
     }
-})();
-
-
-
+})(angular);

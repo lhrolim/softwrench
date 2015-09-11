@@ -1,6 +1,5 @@
-.container header .menu-admin {
-  padding: 0 60px 0 20px !important;
-}
+﻿.activitystream .container header .admin-area {
+  padding-right: 55px; }
 
 #activitystream {
   background: #f2f2f2;
@@ -13,163 +12,130 @@
   border-left: 1px solid #bfbfbf;
   -webkit-box-shadow: -3px 3px 20px 0 rgba(0, 0, 0, 0.25);
   -moz-box-shadow: -3px 3px 20px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: -3px 3px 20px 0 rgba(0, 0, 0, 0.25);
-}
-#activitystream.open {
-  width: 325px;
-}
-#activitystream .handle {
-  -ms-transform: rotate(-90deg);
-  -webkit-transform: rotate(-90deg);
-  -moz-transform: rotate(-90deg);
-  -o-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-  background: #f2f2f2;
-  text-align: center;
-  display: inline-block;
-  position: absolute;
-  top: 80px;
-  left: -102px;
-  min-width: 170px;
-  padding: 12px 15px 5px;
-  text-transform: uppercase;
-  border-top: 1px solid #bfbfbf;
-  border-left: 1px solid #bfbfbf;
-  border-right: 1px solid #bfbfbf;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  cursor: pointer;
-  font-size: 12px;
-}
-#activitystream .unread {
-  position: absolute;
-  top: 4px;
-  left: -46px;
-}
-#activitystream .badge {
-  background: #cf4044;
-}
-#activitystream .pane {
-  padding: 20px 20px 0 20px;
-  display: none;
-}
-#activitystream .pane .scroll {
-  width: 100%;
-  outline: none;
-}
-#activitystream.open .pane {
-  display: block;
-}
-#activitystream header h2 {
-  font-weight: bold;
-  font-size: 14px;
-  margin-top: 0;
-}
-#activitystream header .buttons {
-  margin-top: -13px;
-}
-#activitystream header .buttons.togglehide {
-  margin-left: -8px;
-}
-#activitystream header .buttons.controls {
-  margin-right: -12px;
-}
-#activitystream .button {
-  cursor: pointer;
-  padding: 10px 8px;
-}
-#activitystream header .button {
-  float: left;
-}
-#activitystream .hide-toggle .button {
-  padding: 10px 11px;
-  position: absolute;
-  right: 12px;
-  margin-top: -10px;
-  color: #ccc;
-  width: 14px;
-}
-#activitystream .mobile header .button {
-  padding: 10px 12px;
-}
-#activitystream header .button.off {
-  color: #999;
-}
-#activitystream header .filter {
-  margin-bottom: 5px;
-}
-#activitystream header .filter .button {
-  padding: 0;
-}
-#activitystream header .filter .clearer {
-  position: absolute;
-  top: 46px;
-  right: 18px;
-  width: 34px;
-  height: 34px;
-  line-height: 34px;
-  text-align: center;
-}
-#activitystream .messages {
-  clear: both;
-}
-#activitystream .message {
-  padding: 10px 15px;
-  border-bottom: 1px solid #e5e5e5;
-  line-height: normal;
-  background: #fff;
-}
-#activitystream .message.even {
-  background: none;
-}
-#activitystream .message:first-child {
-  border-top: 1px solid #e5e5e5;
-}
-#activitystream .message .read {
-  width: 20px;
-  color: #428bca;
-  font-size: 8px;
-  margin-top: 3px;
-}
-#activitystream .message .icon {
-  width: 25px;
-  color: #999;
-}
-#activitystream .message .text {
-  width: 50%;
-  width: -moz-calc(100% - 60px);
-  width: -webkit-calc(100% - 60px);
-  width: calc(100% - 60px);
-}
-#activitystream .message .text .info a, #activitystream .message .text .info .by {
-  font-weight: bold;
-}
-#activitystream .message .text .date {
-  color: #999;
-  font-size: 12px;
-  margin-top: 8px;
-}
-#activitystream .messages .nomessages {
-  font-weight: bold;
-  color: #999;
-  margin-top: 40px;
-}
+  box-shadow: -3px 3px 20px 0 rgba(0, 0, 0, 0.25); }
+  #activitystream.open {
+    width: 325px; }
+  #activitystream .handle {
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    background: #f2f2f2;
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    top: 80px;
+    left: -102px;
+    min-width: 170px;
+    padding: 12px 15px 5px;
+    text-transform: uppercase;
+    border-top: 1px solid #bfbfbf;
+    border-left: 1px solid #bfbfbf;
+    border-right: 1px solid #bfbfbf;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    cursor: pointer;
+    font-size: 12px; }
+  #activitystream .unread {
+    position: absolute;
+    top: 4px;
+    left: -46px; }
+  #activitystream .badge {
+    background: #cf4044; }
+  #activitystream .pane {
+    padding: 20px 20px 0 20px;
+    display: none; }
+    #activitystream .pane .scroll {
+      width: 100%;
+      outline: none; }
+  #activitystream.open .pane {
+    display: block; }
+  #activitystream header h2 {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 0; }
+  #activitystream header .buttons {
+    margin-top: -13px; }
+    #activitystream header .buttons.togglehide {
+      margin-left: -8px; }
+  #activitystream header .buttons.controls {
+    margin-right: -12px; }
+  #activitystream .button {
+    cursor: pointer;
+    padding: 10px 8px; }
+  #activitystream header .button {
+    float: left; }
+  #activitystream .hide-toggle .button {
+    padding: 10px 11px;
+    position: absolute;
+    right: 12px;
+    margin-top: -10px;
+    color: #ccc;
+    width: 14px; }
+  #activitystream .mobile header .button {
+    padding: 10px 12px; }
+  #activitystream header .button.off {
+    color: #999; }
+  #activitystream header .filter {
+    margin-bottom: 5px; }
+  #activitystream header .filter .button {
+    padding: 0; }
+  #activitystream header .filter .clearer {
+    position: absolute;
+    top: 46px;
+    right: 18px;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center; }
+  #activitystream .messages {
+    clear: both; }
+  #activitystream .message {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e5e5e5;
+    line-height: normal;
+    background: #fff; }
+    #activitystream .message.even {
+      background: none; }
+    #activitystream .message:first-child {
+      border-top: 1px solid #e5e5e5; }
+    #activitystream .message .read {
+      width: 20px;
+      color: #428bca;
+      font-size: 8px;
+      margin-top: 3px; }
+    #activitystream .message .icon {
+      width: 25px;
+      color: #999; }
+    #activitystream .message .text {
+      width: 50%;
+      width: -moz-calc(100% - 60px);
+      width: -webkit-calc(100% - 60px);
+      width: calc(100% - 60px); }
+      #activitystream .message .text .info a, #activitystream .message .text .info .by {
+        font-weight: bold; }
+      #activitystream .message .text .date {
+        color: #999;
+        font-size: 12px;
+        margin-top: 8px; }
+  #activitystream .messages .nomessages {
+    font-weight: bold;
+    color: #999;
+    margin-top: 40px; }
 
 .no-touch #activitystream header .button:hover {
-  color: #666;
-}
+  color: #666; }
+
 .no-touch #activitystream header .button.off:hover {
-  color: #000;
-}
+  color: #000; }
+
 .no-touch #activitystream .hide-toggle .button:hover {
-  color: #000;
-}
+  color: #000; }
 
 @media all and (min-width: 330px) {
   #activitystream header .buttons.togglehide {
     display: none;
-    margin-left: 0px;
-  }
-}
+    margin-left: 0px; } }
 
-/*# sourceMappingURL=activitystream.css.map */
+/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiLi4vYWN0aXZpdHlzdHJlYW0uY3NzIiwKCSJzb3VyY2VzIjogWwoJCSIuLi9hY3Rpdml0eXN0cmVhbS5zY3NzIgoJXSwKCSJzb3VyY2VzQ29udGVudCI6IFtdLAoJIm1hcHBpbmdzIjogIkFBQWtDLGVBQWUsQ0FBQyxVQUFVLENBQUMsTUFBTSxDQUFDLFdBQVcsQ0FBakM7RUFDMUMsYUFBYSxFQUFFLElBQUssR0FEdUI7O0FBSS9DLGVBQWUsQ0FBQztFQUNaLFVBQVUsRUFBRSxPQUFRO0VBQ3BCLFFBQVEsRUFBRSxLQUFNO0VBQ2hCLE9BQU8sRUFBRSxJQUFLO0VBQ2QsS0FBSyxFQUFFLENBQUU7RUFDVCxHQUFHLEVBQUUsQ0FBRTtFQUNQLEtBQUssRUFBRSxDQUFFO0VBQ1QsS0FBSyxFQUFFLEtBQU07RUFDYixXQUFXLEVBQUUsaUJBQWtCO0VBQy9CLGtCQUFrQixFQUFHLElBQUcsQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxtQkFBSTtFQUN4QyxlQUFlLEVBQUcsSUFBRyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLG1CQUFJO0VBQ3JDLFVBQVUsRUFBRyxJQUFHLENBQUMsR0FBRyxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsbUJBQUksR0FYbkI7RUFhWixlQUFlLEFBQUEsS0FBSyxDQUFkO0lBQ0gsS0FBSyxFQUFFLEtBQU0sR0FEVDtFQUlSLGVBQWUsQ0FBQyxPQUFPLENBQWY7SUFDSixhQUFhLEVBQUUsY0FBTTtJQUNyQixpQkFBaUIsRUFBRSxjQUFNO0lBQ3pCLGNBQWMsRUFBRSxjQUFNO0lBQ3RCLFlBQVksRUFBRSxjQUFNO0lBQ3BCLFNBQVMsRUFBRSxjQUFNO0lBQ2pCLFVBQVUsRUFBRSxPQUFRO0lBQ3BCLFVBQVUsRUFBRSxNQUFPO0lBQ25CLE9BQU8sRUFBRSxZQUFhO0lBQ3RCLFFBQVEsRUFBRSxRQUFTO0lBQ25CLEdBQUcsRUFBRSxJQUFLO0lBQ1YsSUFBSSxFQUFFLE1BQU87SUFDYixTQUFTLEVB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 */
