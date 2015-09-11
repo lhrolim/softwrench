@@ -2,30 +2,12 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="ASS">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
 
-  <container title="Service Requests" tooltip="Click to access your request tasks" icon ="fa fa-ticket" id="servicereq" role="sr">
-    <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
-    <application id="NSR" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
-  </container>
+  <reference id="servicereq"/>
+  <reference id="workorder"/>
+  <reference id="change"/>
+  <reference id="purchase"/>
+  <reference id="Incident"/>
 
-  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
-    <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
-    <application id="NWO" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
-    <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
-  </container>
-  <container title="Changes" role="changes" id="change" icon="fa fa-random" >
-    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-    <application id="CHNEW" title="New Change" ref="change" schema="newdetail" tooltip="Click to Create a New Changes"/>
-  </container>
-  <container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
-    <application id ="PGRID" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
-    <application id ="POGRID" title="Purchase Orders Grid" ref="po" schema="list" tooltip="Click to view your Purchase Order Grid"/>
-    <application id="RECEIPTS" title="Receiving" ref="receiving" schema="list" tooltip="Click to view your Receipts"/>
-    <application id ="PNEW" title="New Purchase Request" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
-  </container>
-  <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="Incident"  role="incidents">
-    <application id="ING" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
-    <application id="INNEW" title="New Incident" ref="incident" schema="newdetail" tooltip="Click to create new Incidents" />
-  </container>
   <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
     <application id="IN" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" />
     <application id="IR" title="Issues and Returns" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" />
@@ -35,4 +17,11 @@
     <application id="RM" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
     <application id="ASS" title="Asset Grid" ref="asset" schema="list" tooltip="Click to view your Service Request Grid"/>
   </container>
+
+  <!---Missing leaf customization impl -->
+  <!--  <reference id="inventory_OLD">-->
+  <!--    <removal id="IT"/>-->
+  <!--    <application id="ASS" title="Asset Grid" ref="asset" schema="list" tooltip="Click to view your Service Request Grid" customizationposition="+RM"/>-->
+  <!--  </reference>-->
+
 </Menu>

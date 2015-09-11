@@ -19,8 +19,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu {
         public ApplicationMenuItemDefinition() { }
 
         public ApplicationMenuItemDefinition(string id, string title, string role, string tooltip, string icon, string application,
-            string schema, SchemaMode mode, IDictionary<string, object> parameters, string moduleName)
-            : base(id, title, role, tooltip, icon) {
+            string schema, SchemaMode mode, IDictionary<string, object> parameters, string moduleName, string customizationPosition)
+            : base(id, title, role, tooltip, icon, customizationPosition) {
             Application = application;
             Schema = schema;
             Mode = mode;

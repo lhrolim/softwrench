@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" indexitem ="SR" mainmenudisplacement="horizontal">
-  <container title="Service Requests" tooltip="Click to access your request tasks" role="sr">
-    <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
-    <application id="NSR" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
-  </container>
-  <container title="Work Orders" tooltip="Click to access your work order tasks" role="workorders">
-    <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
-    <application id="NWO" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
-  </container>
-  <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory">
-    <application id="IN" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" />
-    <application id="IR" title="Issues and Returns" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" />
-    <application id="IT" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid"/>
-    <application id="PC" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
-    <application id="PD" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
-    <application id="RM" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
-  </container>
+
+
+  <reference id="servicereq"/>
+  <reference id="workorder"/>
+  <reference id="Inventory"/>
+
+  <reference id="Inventory_old"/>
+ 
 </Menu>
