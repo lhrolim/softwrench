@@ -2624,7 +2624,7 @@
 
     <application entity="prline" name="prline" title="Purchase Request Line">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-tags"/>
+        <property key ="icon.composition.tab" value="fa fa-money"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">

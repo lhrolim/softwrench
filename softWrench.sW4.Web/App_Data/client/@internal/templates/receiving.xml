@@ -91,6 +91,9 @@
     </application>
 
     <application name="matrectrans" entity="matrectrans" title="Material Receipts">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-file"/>
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
           <field attribute="ponum" hidden="true"/>
