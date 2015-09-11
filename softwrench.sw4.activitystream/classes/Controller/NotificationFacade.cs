@@ -34,7 +34,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 string.Format(
                     "select max(ticketuid) as max, 'servicerequest' as application from ticket where class ='SR' union " +
                     "select max(ticketuid) as max, 'incident' as application from ticket where class ='INCIDENT' union " +
-                    "select max(workorderid) as max, 'workoder' as application from workorder union " +
+                    "select max(workorderid) as max, 'workorder' as application from workorder union " +
                     "select max(commloguid) as max, 'commlog' as application from commlog union " +
                     "select max(worklogid) as max, 'worklog' as application from worklog");
             var result = MaxDAO.FindByNativeQuery(query, null);
