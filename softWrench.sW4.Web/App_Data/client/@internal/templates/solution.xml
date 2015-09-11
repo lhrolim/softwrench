@@ -39,7 +39,7 @@
       </properties>
       <schemas>
         <list title="Solution Grid" platform="web">
-          <field attribute="solution" label="Solution No">
+          <field attribute="solution" label="Solution#">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="description" label="Description">
@@ -54,12 +54,12 @@
         </list>
 
         <schema id="complist" stereotype="compositionlist">
-          <field attribute="solution" label="Solution No" />
+          <field attribute="solution" label="Solution#" />
           <field attribute="description" label="Description" />
         </schema>
 
         <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution No" readonly="true" />
+          <field attribute="solution" label="Solution#" readonly="true" />
           <field attribute="problemcode" label="Symptom:" />
           <field attribute="fr1code" label="Cause:" />
           <field attribute="fr2code" label="Resolution:" />
@@ -68,7 +68,7 @@
         <schema id="adetail" title="Solution Details" abstract="true" stereotype="detail" platform="web">
 
           <section orientation="horizontal">
-            <field attribute="solution" label="Solution No" readonly="true">
+            <field attribute="solution" label="Solution#" readonly="true">
               <renderer type="default" />
             </field>
             <section id="statussection" />

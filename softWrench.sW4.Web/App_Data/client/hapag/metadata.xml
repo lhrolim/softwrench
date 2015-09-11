@@ -582,7 +582,7 @@
         </schema>
 
         <schema id="tapebackupreport" stereotype="list" title="Tape BackUp Report">
-          <field label="Incident Number" attribute="ticketid">
+          <field label="Incident#" attribute="ticketid">
             <renderer type="default" params="minwidth=109.1428571428571px;wordwrap=break-word" />
           </field>
           <field label="Location" attribute="hlagpluspcustomer">
@@ -646,7 +646,7 @@
 
         <schema id="incidentperlocation" stereotype="list" title="Incident Per Location/SCIM">
           <field attribute="#currentdatetime" hidden="true" />
-          <field label="Incident Number" attribute="ticketid" />
+          <field label="Incident#" attribute="ticketid" />
           <field label="Incident Summary" attribute="description" />
           <field label="status" attribute="status" />
           <field label="Affected Date and Time" attribute="reportdate">
@@ -687,7 +687,7 @@
 
         <schema id="hardwarerepair" stereotype="list" title="Hardware Repair Report">
           <field attribute="#currentdatetime" hidden="true" />
-          <field label="Incident Number" attribute="ticketid">
+          <field label="Incident#" attribute="ticketid">
             <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
           </field>
           <field attribute="asset_.assetnum" hidden="true"/>
@@ -721,7 +721,7 @@
 
         <schema id="escalationincident" stereotype="list" title="Escalation HLAG Incident Report">
           <field attribute="#currentdatetime" hidden="true" />
-          <field label="Incident Number" attribute="ticketid">
+          <field label="Incident#" attribute="ticketid">
             <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
           </field>
           <field label="Severity" attribute="internalpriority">
@@ -797,7 +797,7 @@
             <renderer type="checkbox" params="minwidth=84.88888888888889px" />
             <option label="" value="checking"/>
           </optionfield>
-          <field label="Incident Number" attribute="ticketid">
+          <field label="Incident#" attribute="ticketid">
             <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
           </field>
           <field label="Commodity Description" attribute="commodities_.description" hidden="false">
@@ -1208,7 +1208,7 @@
 
         <schema id="creationSummary" mode="output" stereotype="detail" title="Service Request Detail">
           <field attribute="ticketuid" hidden="true"/>
-          <field label="SR Number:" attribute="ticketid"/>
+          <field label="SR#" attribute="ticketid"/>
           <field label="Asset:" attribute="asset_.description" />
           <field label="Location:" attribute="pluspcustomer_.hlagpluspcustomer" />
           <field label="Affected Person" attribute="affectedperson_.hlagdisplayname" />
@@ -1254,7 +1254,7 @@
 
         <schema abstract="true" id="parentgrid">
           <field attribute="workorderid" hidden="true" />
-          <field attribute="wonum" label="Change ID">
+          <field attribute="wonum" label="Change#">
             <renderer type="default" params="minwidth=63px;wordwrap=break-word;" />
           </field>
           <field attribute="hlagchangesummary" label="Summary">
@@ -1309,7 +1309,7 @@
 
         <schema id="changeApprovalsDashboardList" stereotype="list">
           <field attribute="workorderid" hidden="true" />
-          <field attribute="wonum" label="Change ID">
+          <field attribute="wonum" label="Change#">
             <renderer type="default" params="minwidth=95px;maxwidth=95px;wordwrap=break-word" />
           </field>
           <field attribute="description" label="Summary">
@@ -1345,7 +1345,7 @@
 
         <detail id="detail" mode="output" title="Change Details">
           <field attribute="workorderid" hidden="true" />
-          <field attribute="wonum" label="Change Id"/>
+          <field attribute="wonum" label="Change#"/>
           <field attribute="ownergroup" label="Owner Group"/>
           <field attribute="location" label="Location"/>
           <field attribute="hlagpluspcustomer" label="Site"/>
@@ -2282,7 +2282,7 @@
           <section id="assetremarks" resourcepath="/Content/Templates/hapag/assetremarks.html">
             <header label="Asset Remarks" />
           </section>
-          <field label="Purchase Order Number" attribute="assettrans_.ponum"/>
+          <field label="Purchase Order#" attribute="assettrans_.ponum"/>
           <!-- ponumber -->
           <field label="Install Date" attribute="installdate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
@@ -2459,10 +2459,10 @@
           <field label="NO_ID" attribute="#noid">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
-          <field label="IBM Asset Num" attribute="assetnum">
+          <field label="IBM Asset Number" attribute="assetnum">
             <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
-          <field label="HL Invent Num" attribute="itdalttag">
+          <field label="HL Invent Number" attribute="itdalttag">
             <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
           <field label="Install Date" attribute="installdate">
@@ -2555,7 +2555,7 @@
     <application name="parentasset" title="" entity="asset">
       <schemas>
         <schema stereotype="compositiondetail" id="asset_composition">
-          <field label="Asset Num" attribute="assetnum"/>
+          <field label="Asset Number" attribute="assetnum"/>
           <field label="Description" attribute="description"/>
           <field label="Serial Number" attribute="serialnum"/>
           <field label="Parent" attribute="parent"/>
@@ -2567,7 +2567,7 @@
     <application name="childassets" title="" entity="asset">
       <schemas>
         <schema stereotype="compositionlist" id="asset_composition">
-          <field label="Asset Num" attribute="assetnum"/>
+          <field label="Asset Number" attribute="assetnum"/>
           <field label="Description" attribute="description"/>
           <field label="Serial Number" attribute="serialnum"/>
           <field label="Parent" attribute="parent"/>
@@ -2722,7 +2722,7 @@
 
         <schema id="creationSummary" mode="output" stereotype="detail" title="Change Request Detail">
           <field attribute="ticketuid" hidden="true"/>
-          <field label="SR Number:" attribute="ticketid"/>
+          <field label="SR#" attribute="ticketid"/>
           <field label="Summary:" attribute="description"/>
           <composition relationship="attachment" label="Attachments" hidden="true"/>
           <field label="Attachment:" attribute="#attachmentsummary" />
@@ -3063,7 +3063,7 @@
             <property key="detail.cancel.lbl" value="Close"/>
           </properties>
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="wonum" label="WO Number" />
+          <field attribute="wonum" label="WO#" />
           <field attribute="wosequence" label="Sequence" />
           <field attribute="ownergroup" label="Owner Group" />
           <field attribute="status" label="Status"/>

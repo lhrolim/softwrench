@@ -173,8 +173,8 @@
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
-          <field attribute="ticketid" label="SR No:" readonly="true"/>
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+          <field attribute="ticketid" label="SR#" readonly="true"/>
+          <field attribute="ticketuid" label="SR#" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           <field attribute="actlabcost" hidden="true" />
           <field attribute="actlabhrs" hidden="true"/>
@@ -322,7 +322,7 @@
            <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
            <field attribute="woclass" hidden="true"/>
            <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-           <field attribute="wonum" label="WO No:" readonly="true"/>
+           <field attribute="wonum" label="WO#" readonly="true"/>
 
            <field attribute="description" label="Summary:"/>
            

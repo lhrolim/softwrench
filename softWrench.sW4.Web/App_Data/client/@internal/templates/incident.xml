@@ -116,7 +116,7 @@
           <field attribute="cinum" hidden="true"/>
 
           <section orientation="horizontal">
-            <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true" />
+            <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
           </section>
 

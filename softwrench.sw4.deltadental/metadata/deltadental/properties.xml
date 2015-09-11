@@ -21,7 +21,7 @@
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
-  <property key="notifications.activityStream.enabled" value="false"/>
+  <property key="notifications.activityStream.enabled" value="true"/>
 
   <environment key="dev">
     <property key="basewsURL" value="http://10.50.100.153:9080/meaweb/wsdl/" />

@@ -22,7 +22,7 @@
             </commandgroup>
           </commandbars>
 
-          <field attribute="wonum" label="WO No" >
+          <field attribute="wonum" label="WO#" >
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute="description" label="Summary">

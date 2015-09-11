@@ -70,7 +70,7 @@
         <schemas>
           <list>
             <field attribute="tooltransid" hidden="true"/>
-            <field attribute="itemnum" label="Item No." qualifier="title"/>
+            <field attribute="itemnum" label="Item#" qualifier="title"/>
             <field attribute="tool_.description" label="Description" qualifier="subtitle"/>
             <field attribute="toolqty" label="Quantity" qualifier="subtitle"/>
             <field attribute="toolhrs" label="Hours" qualifier="subtitle"/>
