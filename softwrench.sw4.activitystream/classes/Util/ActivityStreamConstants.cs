@@ -46,7 +46,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 {
                     "srWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
-                    "'work log' AS label, 'fa fa-wrench' AS icon, " +
+                    "'work log' AS label, 'fa fa-gavel' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
                     "CONVERT(varchar(10), l.worklogid) AS uid, " +
                     "l.recordkey AS parentid, sr.ticketuid AS parentuid, " +
@@ -88,7 +88,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 {
                     "ssrWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
-                    "'work log' AS label, 'fa fa-wrench' AS icon, " +
+                    "'work log' AS label, 'fa fa-gavel' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
                     "CONVERT(varchar(10), l.worklogid) AS uid, " +
                     "l.recordkey AS parentid, sr.ticketuid AS parentuid, " +
@@ -128,7 +128,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 {
                     "incidentWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
-                    "'work log' AS label, 'fa fa-wrench' AS icon, " +
+                    "'work log' AS label, 'fa fa-gavel' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
                     "CONVERT(varchar(10), l.worklogid) AS uid, " +
                     "l.recordkey AS parentid, incident.ticketuid AS parentuid, " +
@@ -154,7 +154,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 {
                     "workordersWorklogs",
                     "SELECT 'worklog' AS application, null AS targetschema, " +
-                    "'work log' AS label, 'fa fa-wrench' AS icon, " +
+                    "'work log' AS label, 'fa fa-gavel' AS icon, " +
                     "CONVERT(varchar(10), l.worklogid) AS id, " +
                     "CONVERT(varchar(10), l.worklogid) AS uid, " +
                     "l.recordkey AS parentid, workorder.workorderid AS parentuid, " +
