@@ -17,7 +17,11 @@ namespace softwrench.sw4.user.classes.services {
         }
 
         public void UpdateStatistcsAsync(User user) {
+            if (user.UserName.Equals("jobuser")) {
+                return;
+            }
             Task.Factory.StartNew(() => {
+
                 var statistics = _dao.FindSingleByQuery<UserStatistics>(UserStatistics.ByUser, user);
                 if (statistics == null) {
                     statistics = new UserStatistics {

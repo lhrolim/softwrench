@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.activitystream.classes.Model;
-using softwrench.sw4.Shared2.Metadata.Applications.Notification;
+using softwrench.sw4.activitystream.classes.Util;
 using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.Relational;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
@@ -21,56 +18,58 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         public static readonly IDictionary<string, InMemoryNotificationStream> NotificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
         public static IDictionary<string, long> Counter = new ConcurrentDictionary<string, long>();
 
-        private readonly MaximoHibernateDAO MaxDAO;
+        private readonly MaximoHibernateDAO _maxDAO;
+        private readonly NotificationQueryBuilder _queryBuilder;
+        private readonly ILog _log = LogManager.GetLogger(typeof(NotificationFacade));
 
-        public NotificationFacade(MaximoHibernateDAO maxDAO) {
-            MaxDAO = maxDAO;
+        Dictionary<string, string> _securityGroupsNotificationsQueries = new Dictionary<string, string>();
+
+        public NotificationFacade(MaximoHibernateDAO maxDAO, NotificationQueryBuilder queryBuilder) {
+            _maxDAO = maxDAO;
+            _queryBuilder = queryBuilder;
         }
 
         //Sets up the default notification stream.
         public void InitNotificationStreams() {
-            var allRoleNotificationBuffer = new InMemoryNotificationStream();
+            //var notificationBuffer = new InMemoryNotificationStream();
+            //var srRoleNotificationBuffer = new InMemoryNotificationStream();
             var query =
                 string.Format(
-                    "select max(ticketuid) as max, 'servicerequest' as application from ticket where class ='SR' union " +
+                    "select max(ticketuid) as max, 'servicerequest' as application from ticket where class = 'SR' union " +
                     "select max(ticketuid) as max, 'incident' as application from ticket where class ='INCIDENT' union " +
                     "select max(workorderid) as max, 'workorder' as application from workorder union " +
                     "select max(commloguid) as max, 'commlog' as application from commlog union " +
                     "select max(worklogid) as max, 'worklog' as application from worklog");
-            var result = MaxDAO.FindByNativeQuery(query, null);
+            var result = _maxDAO.FindByNativeQuery(query, null);
             foreach (var record in result) {
-                Counter.Add(record["application"], Int32.Parse((record["max"] ?? "0")));
+                Counter.Add(record["application"], int.Parse((record["max"] ?? "0")));
             }
-            NotificationStreams["allRole"] = allRoleNotificationBuffer;
+            //NotificationStreams["default"] = notificationBuffer;
         }
 
-        public static InMemoryNotificationStream CurrentNotificationStream() {
-            return NotificationStreams["allRole"];
-        }
-
-        //Currently only inserts notifications into the 'allRole' stream.
-        //This would need to be updated in the future to determine which
-        //role stream needs to be inserted based on which roles have a
-        //notificationstream attribute set to true
-        public void InsertNotificationsIntoStreams(Iesi.Collections.Generic.ISet<Notification> notifications) {
-            var streamToUpdate = NotificationStreams["allRole"];
+        public void InsertNotificationsIntoStreams(string securityGroup, List<Notification> notifications) {
+            //var defaultStream = NotificationStreams["default"];
             foreach (var notification in notifications) {
+                // If the stream has not already been created, create it
+                if (!NotificationStreams.Keys.Contains(securityGroup)) {
+                    NotificationStreams[securityGroup] = new InMemoryNotificationStream();
+                }
+                // Add to the proper security group stream
+                var streamToUpdate = NotificationStreams[securityGroup];
                 streamToUpdate.InsertNotificationIntoStream(notification);
+                // Add to the default notification stream
+                //defaultStream.InsertNotificationIntoStream(notification);
             }
         }
 
-        //Currently only updates notifications into the 'allRole' stream.
-        //This would need to be updated in the future to determine which
-        //role stream needs to be updated based on which roles have a
-        //notificationstream attribute set to true
-        public void UpdateNotificationReadFlag(string role, string application, string id, long rowstamp, bool isRead) {
-            var streamToUpdate = NotificationStreams[role];
+        public void UpdateNotificationReadFlag(string securityGroup, string application, string id, long rowstamp, bool isRead) {
+            var streamToUpdate = NotificationStreams[securityGroup];
             streamToUpdate.UpdateNotificationReadFlag(application, id, rowstamp, isRead);
         }
 
         //Implementation to update read flag for multiple notifications
-        public void UpdateNotificationReadFlag(string role, JArray notifications, bool isRead) {
-            var streamToUpdate = NotificationStreams[role];
+        public void UpdateNotificationReadFlag(string securityGroup, JArray notifications, bool isRead) {
+            var streamToUpdate = NotificationStreams[securityGroup];
 
             foreach (var notification in notifications) {
                 streamToUpdate.UpdateNotificationReadFlag(notification["application"].ToString(),
@@ -78,122 +77,36 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             }
         }
 
-        public void UpdateNotificationStreams()
-        {
-            var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
+        // This will query against the base notification dataset to pull the necessary columns
+        // for notifications and will use the security groups to determine which tables to get
+        // notifications for and append any necessary where clauses to the query
+        public void UpdateNotificationStreams() {
+            _securityGroupsNotificationsQueries = _queryBuilder.BuildNotificationsQueries();
             var currentTime = DateTime.Now.FromServerToRightKind();
+            var tasks = new Task[_securityGroupsNotificationsQueries.Count];
+            var i = 0;
+            foreach (var securityGroupsNotificationsQuery in _securityGroupsNotificationsQueries) {
+                _log.DebugFormat("Updating notifications for security group {0}", securityGroupsNotificationsQuery.Key);
+                tasks[i++] = Task.Factory.NewThread(() => ExecuteNotificationsQuery(securityGroupsNotificationsQuery, currentTime));
+            }
+            Task.WaitAll(tasks);
+        }
 
-            var streamToUpdate = NotificationStreams["allRole"];
-            //foreach (var slicedEntity in slicedMetadataEntities) {
-
-            //    var searchRequestDTO = new SearchRequestDto();
-            //    foreach (var field in slicedEntity.AppSchema.Fields) {
-            //        searchRequestDTO.AppendProjectionField(new ProjectionField(field.Label, field.Attribute));
-            //    }
-            //    searchRequestDTO.AppendProjectionField(new ProjectionField(slicedEntity.IdFieldName, slicedEntity.IdFieldName));
-                
-            //    searchRequestDTO.AppendProjectionField(new ProjectionField("rowstamp", "rowstamp"));
-            //    var createddateFieldAlias = (from p in searchRequestDTO.ProjectionFields
-            //                                 where p.Alias == "createddate"
-            //                                 select p.Name).Single();
-            //    var createddateField = slicedEntity.Name + "." + createddateFieldAlias;
-
-            //    var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateField,
-            //        HoursToPurge, currentTime);
-            //    searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
-            //    EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
-            //    var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
-
-            //    foreach (var result in resultList) {
-            //        var notificationSchema = (ApplicationNotificationDefinition)slicedEntity.AppSchema;
-            //        var application = notificationSchema.TargetApplication;
-            //        var targetschema = notificationSchema.TargetSchema;
-            //        var id = result.Attributes[slicedEntity.IdFieldName].ToString();
-            //        var label = notificationSchema.Label;
-            //        var icon = notificationSchema.Icon;
-
-            //        long uId;
-            //        Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
-
-            //        var flag = "changed";
-            //        if (Counter[application] < uId) {
-            //            flag = "created";
-            //            Counter[application] = uId;
-            //        }
-
-            //        string parentid = null;
-            //        if (result.Attributes.ContainsKey("parentid")) {
-            //            parentid = result.Attributes["parentid"].ToString();    
-            //        }
-                    
-            //        long parentuid = -1;
-            //        if (result.Attributes.ContainsKey("parentuid")) {
-            //            Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);    
-            //        }
-
-
-            //        string parentapplication = null;
-            //        string parentlabel = null;
-            //        if (result.Attributes.ContainsKey("parentid") || result.Attributes.ContainsKey("parentuid")) {
-            //            parentapplication = result.Attributes["targetapplication"].ToString();
-
-
-            //            if (parentapplication == "servicerequest") {
-            //                parentlabel = "service request";
-            //            } else if (parentapplication == "WORKORDER") {
-            //                parentlabel = "work order";
-            //            } else if (parentapplication == "INCIDENT") {
-            //                parentlabel = "incident";
-            //            }
-            //        }
-            //        var summary = result.Attributes["summary"].ToString();
-            //        var changeby = result.Attributes["changeby"].ToString();
-            //        var changedate = DateTime.Parse(result.Attributes["createddate"].ToString());
-            //        var rowstamp = Convert.ToInt64(result.Attributes["rowstamp"]);
-            //        var notification = new Notification(application, targetschema, label, icon, id, uId, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
-            //        streamToUpdate.InsertNotificationIntoStream(notification);
-            //    }
-            //}
-
-            
-            var hardcodedQuery = string.Format(
-                                      "select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
-                                      "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
-                                      "c.createby as changeby, c.createdate as changedate, CONVERT(bigint, c.rowstamp) as rowstamp from commlog c " +
-                                      "left join ticket t on t.ticketuid = c.ownerid " +
-                                      "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < '{1}' union " + 
-                                      "select 'worklog' as application, null as targetschema, 'work log' as label, 'fa fa-gavel' as icon, CONVERT(varchar(10), l.worklogid) as id, CONVERT(varchar(10), l.worklogid) as uid, l.recordkey as parentid, t.ticketuid as parentuid, " +
-                                      "CASE l.class WHEN 'SR' THEN 'servicerequest' ELSE l.class END AS parentapplication, l.description as summary, " +
-                                      "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
-                                      "left join ticket t on t.ticketid = l.recordkey " + 
-                                      " where l.class in ('SR','INCIDENT') and logtype = 'clientnote' and " +
-                                      "modifydate >  DATEADD(HOUR,-{0},GETDATE()) and modifydate < '{1}' union " +
-                                      "select 'worklog' as application, null as targetschema, 'work log' as label, 'fa fa-gavel' as icon, CONVERT(varchar(10), l.worklogid) as id, CONVERT(varchar(10), l.worklogid) as uid, l.recordkey as parentid, w.workorderid as parentuid, " +
-                                      "CASE l.class WHEN 'WORKORDER' THEN 'WORKORDER' ELSE l.class END AS parentapplication, l.description as summary, " +
-                                      "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
-                                      "left join workorder w on w.wonum = l.recordkey " +
-                                      "where class in ('WORKORDER') and logtype = 'clientnote' and modifydate >  DATEADD(HOUR,-{0},GETDATE()) and modifydate < '{1}' union " +
-                                      "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
-                                      "CASE WHEN {2} < ticketuid THEN changeby ELSE reportedby END changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' and class='SR' union " +
-                                      "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
-                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' and class='INCIDENT' union " +
-                                      "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary, " +
-                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from workorder " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' " +
-                                      "order by rowstamp desc", HoursToPurge, currentTime, Counter["servicerequest"]);
-
-            var hardcodedQueryResult = MaxDAO.FindByNativeQuery(hardcodedQuery, null);
-
-            foreach (var record in hardcodedQueryResult)
-            {
+        private void ExecuteNotificationsQuery(KeyValuePair<string, string> securityGroupsNotificationsQuery, DateTime currentTime) {
+            var formattedQuery = string.Format(securityGroupsNotificationsQuery.Value,
+                        ActivityStreamConstants.HoursToPurge, currentTime, Counter["servicerequest"]);
+            var queryResult = _maxDAO.FindByNativeQuery(formattedQuery, null);
+            if (queryResult == null) {
+                return;
+            }
+            List<Notification> notifications = new List<Notification>();
+            foreach (var record in queryResult) {
                 var application = record["application"];
                 var targetschema = record["targetschema"];
                 var id = record["id"];
                 var label = record["label"];
                 var icon = record["icon"];
-                var uid = Int64.Parse(record["uid"]);
+                var uid = long.Parse(record["uid"]);
                 var flag = "changed";
                 if (Counter[application] < uid) {
                     flag = "created";
@@ -201,8 +114,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 }
                 var parentid = record["parentid"];
                 long parentuid = -1;
-                if (record["parentuid"] != null) { 
-                    Int64.TryParse(record["parentuid"], out parentuid);
+                if (record["parentuid"] != null) {
+                    long.TryParse(record["parentuid"], out parentuid);
                 }
                 var parentapplication = record["parentapplication"];
                 string parentlabel = null;
@@ -217,21 +130,25 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var changeby = record["changeby"];
                 var changedate = DateTime.Parse(record["changedate"]);
                 var rowstamp = Convert.ToInt64(record["rowstamp"]);
-                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
-                streamToUpdate.InsertNotificationIntoStream(notification);
+                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid,
+                    parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
+                notifications.Add(notification);
+            }
+            InsertNotificationsIntoStreams(securityGroupsNotificationsQuery.Key, notifications);
+        }
+
+        //By default this is purging the notification streams
+        //of any record changed more than 24 hours old
+        public void PurgeNotificationsFromStream() {
+            foreach (var stream in NotificationStreams) {
+                _log.InfoFormat("Purging notification older than {0} hours for security group {1}", ActivityStreamConstants.HoursToPurge, stream.Key);
+                stream.Value.PurgeNotificationsFromStream(ActivityStreamConstants.HoursToPurge);
             }
         }
 
-
-        //By default this is only purging the allRole notification stream
-        //by any record changed more than 24 hours ago
-        public void PurgeNotificationsFromStream() {
-            var streamToUpdate = NotificationStreams["allRole"];
-            streamToUpdate.PurgeNotificationsFromStream(24);
-        }
-        
-        public NotificationResponse GetNotificationStream(string role) {
-            return NotificationStreams[role].GetNotifications();
+        public NotificationResponse GetNotificationStream(string securityGroup) {
+            _log.DebugFormat("Getting notifications for security group {0}", securityGroup);
+            return NotificationStreams[securityGroup].GetNotifications();
         }
     }
 }

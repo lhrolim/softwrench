@@ -10,8 +10,8 @@ namespace softWrench.sW4.Configuration.Definitions.WhereClause {
             return string.Format("Query: {0}, ServiceName: {1}, MethodName: {2}", Query, ServiceName, MethodName);
         }
 
-        public Boolean IsEmpty() {
-            return string.IsNullOrEmpty(Query) && ServiceName == null;
+        public bool IsEmpty() {
+            return (Query== null || "".Equals(Query.Trim())) && ServiceName == null;
         }
     }
 }

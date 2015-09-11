@@ -192,6 +192,7 @@ namespace softWrench.sW4.Security.Services {
                 if (inMemoryUser == null) {
                     throw UnauthorizedException.NotAuthenticated(currLogin);
                 }
+                return inMemoryUser;
             }
             //cookie authenticated already 
             //TODO: remove this in prod?

@@ -207,7 +207,7 @@
         
         <schema parentschema="adetail" id="detail" title="Incident Details">
           <section id="compositions">
-            <tab label="Solution" id="solution">
+            <tab label="Solution" id="solution" icon="fa fa-book">
               <field attribute="solution" hidden="true"/>
               <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
                 <renderer type="lookup"/>

@@ -81,7 +81,7 @@ app.directive('activitystream', function(contextService) {
                     var controllerToUse = "Notification";
                     var actionToUse = "UpdateNotificationReadFlag";
                     var parameters = {};
-                    parameters.role = 'allRole';
+                    parameters.role = contextService.getUserData().roles[0].label;
 
                     var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                     $http.post(rawUrl, angular.toJson($scope.activities)).success(function () {
@@ -106,7 +106,7 @@ app.directive('activitystream', function(contextService) {
                 var actionToUse = "UpdateNotificationReadFlag";
 
                 var parameters = {};
-                parameters.role = 'allRole';
+                parameters.role = contextService.getUserData().roles[0].label;
                 parameters.application = activity.application;
                 parameters.id = activity.id;
                 parameters.rowstamp = activity.rowstamp;
@@ -133,7 +133,7 @@ app.directive('activitystream', function(contextService) {
                 var controllerToUse = "Notification";
                 var actionToUse = "UpdateNotificationReadFlag";
                 var parameters = {};
-                parameters.role = 'allRole';
+                parameters.role = contextService.getUserData().roles[0].label;
                 parameters.application = activity.application;
                 parameters.id = activity.id;
                 parameters.rowstamp = activity.rowstamp;
@@ -182,7 +182,7 @@ app.directive('activitystream', function(contextService) {
                 var actionToUse = "GetNotifications";
 
                 var parameters = {};
-                parameters.role = 'allRole';
+                parameters.role = 'default';
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl, { avoidspin: true }).success(
