@@ -12,7 +12,8 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
     public class NotificationFacade : ISingletonComponent {
-        
+
+        private const int HoursToPurge = 24;
 
         public static readonly IDictionary<string, InMemoryNotificationStream> NotificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
         public static IDictionary<string, long> Counter = new ConcurrentDictionary<string, long>();
