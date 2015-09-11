@@ -42,40 +42,24 @@ namespace softwrench.sw4.activitystream.classes.Util {
                         _log.DebugFormat("Appening Service Request query for security group {0}", securityGroup.Name);
                         var srResult = _whereClauseFacade.Lookup("servicerequest", null, context);
                         var srQuery = srResult.Query.Trim() != "" ? " AND " + srResult.Query + " UNION " : " UNION ";
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
-                        //append where clause
-                        notificationsQuery += srQuery;
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Worklogs")).Value;
-                        //append where clause
-                        notificationsQuery += srQuery;
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Commlogs")).Value;
-                        //append where clause
-                        notificationsQuery += srQuery;
+                        notificationsQuery += GetRoleQuery(role.Name, srQuery);
+                        notificationsQuery += GetRoleQuery(role.Name + "Worklogs", srQuery);
+                        notificationsQuery += GetRoleQuery(role.Name + "Commlogs", srQuery);
                         break;
                     case "incident":
                         _log.DebugFormat("Appening Incident query for security group {0}", securityGroup.Name);
                         var incidentResult = _whereClauseFacade.Lookup("incident", null, context);
                         var incidentQuery = incidentResult.Query.Trim() != "" ? " AND " + incidentResult.Query + " UNION " : " UNION ";
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
-                        //append where clause
-                        notificationsQuery += incidentQuery;
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Worklogs")).Value;
-                        //append where clause
-                        notificationsQuery += incidentQuery;
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Commlogs")).Value;
-                        //append where clause
-                        notificationsQuery += incidentQuery;
+                        notificationsQuery += GetRoleQuery(role.Name, incidentQuery);
+                        notificationsQuery += GetRoleQuery(role.Name + "Worklogs", incidentQuery);
+                        notificationsQuery += GetRoleQuery(role.Name + "Commlogs", incidentQuery);
                         break;
                     case "workorders":
                         _log.DebugFormat("Appening Workorder query for security group {0}", securityGroup.Name);
                         var woResult = _whereClauseFacade.Lookup("workorder", null, context);
                         var woQuery = woResult.Query.Trim() != "" ? " AND " + woResult.Query + " UNION " : " UNION ";
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name)).Value;
-                        //append where clause
-                        notificationsQuery += woQuery;
-                        notificationsQuery += ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(role.Name + "Worklogs")).Value;
-                        //append where clause
-                        notificationsQuery += woQuery;
+                        notificationsQuery += GetRoleQuery(role.Name, woQuery);
+                        notificationsQuery += GetRoleQuery(role.Name + "Worklogs", woQuery);
                         break;
                 }
             }
@@ -83,6 +67,12 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
             }
             return new KeyValuePair<string, string>(securityGroup.Name, notificationsQuery);
+        }
+
+        private string GetRoleQuery(string key, string whereClause) {
+            var result = ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(key)).Value;
+            result += whereClause;
+            return result;
         }
     }
 }
