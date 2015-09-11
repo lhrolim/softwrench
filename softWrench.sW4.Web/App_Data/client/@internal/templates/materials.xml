@@ -196,7 +196,7 @@
       <schemas>
         <list>
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="itemnum" label="Item No." qualifier="title"/>
+          <field attribute="itemnum" label="Item#" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>
           <field attribute="linetype" label="Type" qualifier="subtitle"/>
           <field attribute="storeloc" label="Storeroom" qualifier="subtitle"/>

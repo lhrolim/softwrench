@@ -44,7 +44,7 @@
     <application entity="receiving" name="receiving" title="Receiving">
       <schemas>
         <list title="Receiving Grid">
-          <field attribute ="ponum" label="PO">
+          <field attribute ="ponum" label="PO#">
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute ="description" label="Description">
@@ -76,7 +76,7 @@
         <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
           <section id="siteidsection">
             <section orientation="horizontal">
-              <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true" />
+              <field attribute="ponum" label="PO#" readonly="true" requiredexpression="true" />
               <field label="Site:" attribute="siteid" readonly="true" />
             </section>
           </section>

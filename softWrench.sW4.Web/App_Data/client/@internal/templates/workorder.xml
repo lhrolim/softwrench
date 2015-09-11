@@ -108,7 +108,7 @@
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-          <field attribute="wonum" label="WO No" >
+          <field attribute="wonum" label="WO#" >
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="description" label="Summary">
@@ -180,7 +180,7 @@
 <!--          <field attribute="failurecode"  hidden="true"/>-->
 
           <section orientation="horizontal">
-            <field attribute="wonum" label="WO No:" readonly="true">
+            <field attribute="wonum" label="WO#" readonly="true">
               <renderer type="default" />
             </field>
             <section id="statussection" />

@@ -63,7 +63,7 @@
         <list title="Change Grid">
           <field attribute="workorderid" hidden="true">
           </field>
-          <field attribute="wonum" label="Change ID">
+          <field attribute="wonum" label="Change#">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="description" label="Summary">
@@ -92,7 +92,7 @@
         <schema id="adetail" title="Change Detail" abstract="true" stereotype="detail" platform="web">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
+            <field attribute="wonum" label="Change#" requiredexpression="true"/>
             <section id="statussection"/>
           </section>
 

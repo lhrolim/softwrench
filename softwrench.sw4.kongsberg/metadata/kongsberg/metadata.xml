@@ -1171,7 +1171,7 @@
       </notifications>
       <schemas>
         <list title="Service Request Grid">
-          <field attribute="ticketid" label="SR No">
+          <field attribute="ticketid" label="SR#">
             <renderer type="default"  params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=10%" />
           </field>
           <field attribute="description" label="Summary">
@@ -1455,7 +1455,7 @@
         </schema>
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="srsection">
-            <field attribute="ticketid" label="SR No:" hidden="true" />
+            <field attribute="ticketid" label="SR#" hidden="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true" />
           </section>
           <!--SSWEB 173-->
@@ -1467,7 +1467,7 @@
         </schema>
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="srsection">
-            <field attribute="ticketid" label="SR No:" readonly="true" requiredexpression="true">
+            <field attribute="ticketid" label="SR#" readonly="true" requiredexpression="true">
               <renderer type="default" params="inputsize=medium" />
             </field>
             <optionfield label="Status:" attribute="status">
@@ -1652,7 +1652,7 @@
     <application name="incident" title="Incident" entity="incident">
       <schemas>
         <list title="Incident Grid">
-          <field attribute="ticketid" label="Incident No">
+          <field attribute="ticketid" label="Incident#">
             <renderer type="default" params="widthXS=25%;widthSM=20%;widthMD=12%;widthLG=8%"/>
           </field>
           <field attribute="description" label="Summary">
@@ -1823,7 +1823,7 @@
         </schema>
         <schema id="newdetail" parentschema="adetail" title="New Incident">
           <section id="ticketsection">
-            <field attribute="ticketid" label="Incident No:" hidden="true" />
+            <field attribute="ticketid" label="Incident#" hidden="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true" />
           </section>
           <section id="attachmentsection">
@@ -1834,7 +1834,7 @@
         </schema>
         <schema id="editdetail" parentschema="adetail" title="Incident Details">
           <section id="ticketsection">
-            <field attribute="ticketid" label="Incident No:" readonly="true">
+            <field attribute="ticketid" label="Incident#" readonly="true">
               <renderer type="default" params="inputsize=medium" />
             </field>
             <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
@@ -1891,7 +1891,7 @@
           <field attribute="workorderid" hidden="true">
 
           </field>
-          <field attribute="wonum" label="Change ID">
+          <field attribute="wonum" label="Change#">
             <renderer type="default" params="width=16%" />
           </field>
           <field attribute="description" label="Summary">
@@ -1931,7 +1931,7 @@
           <field attribute="workorder_.status" hidden="true" />
 
 
-          <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
+          <field attribute="wonum" label="Change#" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
           <!--<field attribute="location" label="Location:"/>-->
 
@@ -1977,7 +1977,7 @@
         </schema>
 
         <schema id="newdetail" title="New Change" abstract="true" stereotype="detail" platform="web">
-          <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
+          <field attribute="wonum" label="Change#" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
           <!--<field attribute="location" label="Location:"/>-->
           <field attribute="estdur"            default="0" hidden="true"/>
@@ -2365,7 +2365,7 @@
       </properties>
       <schemas>
         <list title="Inventory Grid" platform="web">
-          <field attribute="itemnum" label="Item No">
+          <field attribute="itemnum" label="Item#">
             <renderer type="default" params="width=16%" />
           </field>
           <field attribute="item_.description" label="Description">
@@ -2488,7 +2488,7 @@
       <schemas>
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Grid">
-          <field attribute="prnum" label="PR No.">
+          <field attribute="prnum" label="PR#">
             <renderer type="default" params="width=13%"/>
           </field>
           <field attribute="description" label="Summary">
@@ -2519,13 +2519,13 @@
         </list>
 
         <schema id="detail" stereotype="detail" mode="input" title="Purchase Request Details">
-          <!--field attribute="prnum" label="PR No:" readonly="true"/-->
+          <!--field attribute="prnum" label="PR#" readonly="true"/-->
           <!--SWWEB 192: Reported Priority Field-->
           <field attribute="description" label="Summary" hidden="true">
             <renderer type="default"/>
 
           </field>
-          <field attribute="prnum" label="PR No:" hidden="true">
+          <field attribute="prnum" label="PR#" hidden="true">
             <renderer type="default"/>
           </field>
           <field attribute="priority" label="Priority:" requiredexpression="true">
@@ -2628,8 +2628,8 @@
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
-          <field attribute="prnum" label="PR No" readonly="true"/>
-          <field attribute="prlinenum" label="Line No" />
+          <field attribute="prnum" label="PR#" readonly="true"/>
+          <field attribute="prlinenum" label="Line#" />
           <field attribute="itemnum" label="Item"/>
           <field attribute="description" label="Description"/>
           <field attribute="orderqty" label="Quantity"/>
@@ -2646,7 +2646,7 @@
             <option label="Item" value="item"/>
             <option label="Material" value="material"/>
           </optionfield>
-          <field attribute="prnum" label="PR No:" readonly="true"/>
+          <field attribute="prnum" label="PR#" readonly="true"/>
           <field attribute="prlinenum" label="Line:"  >
             <renderer type="default"/>
           </field>
@@ -2688,18 +2688,18 @@
     <application entity="prterm" name="prterm" title="Terms and Conditions">
       <schemas>
         <schema id="list" stereotype="compositionlist">
-          <field attribute="prnum" label="PR No" readonly="true"/>
+          <field attribute="prnum" label="PR#" readonly="true"/>
           <field attribute="prtermid" label="Term ID" />
-          <field attribute="seqnum" label="Sequence No"/>
+          <field attribute="seqnum" label="Sequence#"/>
           <field attribute="description" label="Description"/>
 
         </schema>
 
         <detail stereotype="compositiondetail">
 
-          <field attribute="prnum" label="PR No:" readonly="true"/>
+          <field attribute="prnum" label="PR#" readonly="true"/>
           <field attribute="prtermid" label="Term ID:" />
-          <field attribute="seqnum" label="Sequence No:"/>
+          <field attribute="seqnum" label="Sequence#"/>
           <field attribute="description" label="Description:"/>
         </detail>
       </schemas>
@@ -2711,7 +2711,7 @@
       </properties>
       <schemas>
         <list title="Solution Grid" platform="web">
-          <field attribute="solution" label="Solution No" >
+          <field attribute="solution" label="Solution#" >
             <renderer type="default"/>
           </field>
           <field attribute="description" label="Description">
@@ -2741,12 +2741,12 @@
         </list>
 
         <schema id="complist" stereotype="compositionlist" >
-          <field attribute="solution" label="Solution No"/>
+          <field attribute="solution" label="Solution#"/>
           <field attribute="description" label="Description"/>
         </schema>
 
         <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution No" readonly="true" />
+          <field attribute="solution" label="Solution#" readonly="true" />
           <field attribute="problemcode" label="Symptom:" />
           <field attribute="fr1code" label="Cause:" />
           <field attribute="fr2code" label="Resolution:" />
@@ -2794,7 +2794,7 @@
         </schema>
         <schema id="editdetail" parentschema="adetail" title="Solution Details">
           <section id="idsection">
-            <field attribute="solution" label="Solution No" readonly="true">
+            <field attribute="solution" label="Solution#" readonly="true">
               <renderer type="default" params="inputsize=medium" />
             </field>
           </section>

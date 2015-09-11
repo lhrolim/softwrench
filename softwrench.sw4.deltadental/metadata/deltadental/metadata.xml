@@ -302,7 +302,7 @@
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="ticketid" label="SR No:" readonly="true"/>
+            <field attribute="ticketid" label="SR#" readonly="true"/>
           </section>
 
           <section>
@@ -319,7 +319,7 @@
             <renderer type="default" params="childinputsize=medium" />
             <section id ="siteidsection"/>
 
-            <field attribute="ticketuid" label="SR No:" hidden="true"/>
+            <field attribute="ticketuid" label="SR#$" hidden="true"/>
             <field attribute="class" label="" hidden="true"/>
             <field attribute="actlabcost" hidden="true" />
             <field attribute="actlabhrs" hidden="true"/>

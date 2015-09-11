@@ -135,7 +135,7 @@
           <association target="location" label="Location" labelfield="location_.description">
             <renderer type="lookup" />
           </association>
-          <field attribute="prophr" label="Hand Receipt No." hidden="true"/>
+          <field attribute="prophr" label="Hand Receipt#" hidden="true"/>
           <field attribute="siteid"  label="Site" hidden="true"/>
           <field attribute="orgid"  label="Site" hidden="true"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
