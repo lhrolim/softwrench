@@ -41,6 +41,10 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -83,6 +87,7 @@
     <Compile Include="classes\Controller\NotificationFacade.cs" />
     <Compile Include="classes\Model\NotificationResponse.cs" />
     <Compile Include="classes\Util\ActivityStreamConstants.cs" />
+    <Compile Include="classes\Util\NotificationQueryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
@@ -114,6 +119,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
+      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
+      <Name>softwrench.sw4.user</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>

@@ -6,7 +6,8 @@ using cts.commons.simpleinjector;
 namespace softWrench.sW4.Configuration.Services.Api {
     public interface IWhereClauseFacade : ISingletonComponent {
 
-        WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null);
+        //TODO: refactor it so that the evaluation is done inside of the facade and the return is already a string
+        WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null);
 
         void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null,bool validate=true);
 

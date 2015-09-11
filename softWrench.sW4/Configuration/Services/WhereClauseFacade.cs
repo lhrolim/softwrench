@@ -34,8 +34,11 @@ namespace softWrench.sW4.Configuration.Services {
             _dao = dao;
         }
 
-        public WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null) {
+        public WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null) {
             var context = _contextLookuper.LookupContext();
+            if (contextHolder != null) {
+                context = contextHolder;
+            }
             if (lookupContext != null) {
                 context.ApplicationLookupContext = lookupContext;
             }
