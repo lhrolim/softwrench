@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
-using Common.Logging;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.activitystream.classes.Model;
 using softwrench.sw4.activitystream.classes.Util;
