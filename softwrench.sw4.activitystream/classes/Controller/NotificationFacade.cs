@@ -148,6 +148,10 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         public NotificationResponse GetNotificationStream(string securityGroup) {
             _log.DebugFormat("Getting notifications for security group {0}", securityGroup);
+            if (!NotificationStreams.ContainsKey(securityGroup)) {
+                _log.WarnFormat("Unable to retrieve notifications for security group {0}. Is it a group with no permissions?", securityGroup);
+                return null;
+            }
             return NotificationStreams[securityGroup].GetNotifications();
         }
     }
