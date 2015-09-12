@@ -64,7 +64,7 @@ app.directive('activitystream', function(contextService) {
             $scope.getAllHidden = function () {
                 log.debug('getAllHidden');
 
-                if ($scope.activities.length > 0) {
+                if ($scope.activities != null && $scope.activities.length > 0) {
                     if ($scope.activities.length === $scope.readCount) {
                         return true;
                     }
