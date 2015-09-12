@@ -108,7 +108,7 @@
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <field attribute="createdate" label="Created Date/Time" hidden="true">
+          <field attribute="createdate" label="Created Date/Time" readonly="true">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
