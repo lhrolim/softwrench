@@ -122,10 +122,18 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="schedstart" label="Scheduled Start Date:"/>
-            <field attribute="schedfinish" label="Scheduled Finish Date:"/>
-            <field attribute="targstartdate" label="Target Start Date:"/>
-            <field attribute="targcompdate" label="Target Finish Date:"/>
+            <field attribute="schedstart" label="Scheduled Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy"/>
+            </field>
+            <field attribute="schedfinish" label="Scheduled Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy"/>
+            </field>
+            <field attribute="targstartdate" label="Target Start Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy"/>
+            </field>
+            <field attribute="targcompdate" label="Target Finish Date:">
+              <renderer type="datetime" params="format=MM/dd/yyyy"/>
+            </field>
           </section>
 
           <section orientation="horizontal">

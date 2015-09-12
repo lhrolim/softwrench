@@ -325,10 +325,10 @@
                 <renderer type="default" params="inputsize=small" />
               </field>
             <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field label="Count Date" attribute="physcntdate">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field label="New Count" attribute="physcnt">
               <renderer type="numericinput" params="min=0;"/>
@@ -398,10 +398,10 @@
             <field label="Condition Code" attribute="conditioncode" readonly="true"/>
             <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
             <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field label="Count Date" attribute="physcntdate">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field label="New Count" attribute="physcnt">
               <renderer type="numericinput" params="min=0;"/>
@@ -679,7 +679,7 @@
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="actualdate" label="Transfer Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>
@@ -709,7 +709,7 @@
             <field attribute="issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="quantity" label="Quantity" readonly="true"/>
             <field attribute="actualdate" label="Transfer Date" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </section>
         <commandbars>

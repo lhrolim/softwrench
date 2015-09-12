@@ -408,24 +408,23 @@
            <field attribute="schedfinish" hidden="true"/>
 
            <field attribute="targstartdate" label="Target Start Date:">
-             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+             <renderer type="datetime" params="format=MM/dd/yyyy;"/>
            </field>
            <field attribute="targcompdate" label="Target Finish Date:">
-             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+             <renderer type="datetime" params="format=MM/dd/yyyy;"/>
            </field>
            <field attribute="schedstart" label="Scheduled Start Date:" requiredexpression="true">
-             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+             <renderer type="datetime" params="format=MM/dd/yyyy;"/>
            </field>
            <field attribute="schedfinish" label="Scheduled Finish Date:">
-             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+             <renderer type="datetime" params="format=MM/dd/yyyy;"/>
            </field>
            <field attribute="actstart" label="Actual Start Date:">
-             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+             <renderer type="datetime" params="format=MM/dd/yyyy;"/>
            </field>
            <field attribute="actfinish" label="Actual Finish Date:">
-             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+             <renderer type="datetime" params="format=MM/dd/yyyy;"/>
            </field>
-
 
            <!-- Code added from gric metadata.xml SWWEB 173-->
            <section id="attachmentsection" />

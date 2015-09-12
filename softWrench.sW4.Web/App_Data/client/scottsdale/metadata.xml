@@ -573,7 +573,7 @@
           <field  attribute="class" label="Class" hidden="true" />
           <field  attribute="createby" label="Created By" />
           <field  attribute="createdate" label="Created Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy"/>
           </field>
 
           <field  attribute="logtype" label="Log Type" hidden="true" />

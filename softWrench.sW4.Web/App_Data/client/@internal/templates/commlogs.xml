@@ -104,7 +104,6 @@
           </section>
         </schema>
 
-
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
           <field attribute="createdate" label="Created Date/Time" hidden="true">

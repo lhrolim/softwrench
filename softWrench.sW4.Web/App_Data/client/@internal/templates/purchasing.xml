@@ -177,10 +177,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <field attribute="orderdate" label="Reported Date:" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field attribute="targetstart" label="Required Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </section>
           

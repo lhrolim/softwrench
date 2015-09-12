@@ -23,7 +23,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             var showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.formatString, showTime);
             var angularDateFormat = formatService.adjustDateFormatForAngular(attrs.formatString, showTime);
-            attrs.language = (userLanguage != '') ? userLanguage : "en-US";
+            attrs.language = (userLanguage != '') ? userLanguage : 'en';
             var istimeOnly = showTime && !showDate;
             var datamap = scope.datamap;
             datetimeclassHandler(istimeOnly);
@@ -48,7 +48,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                 var endDate = allowfuture ? false : new Date();
                 var minStartDateExpression = attrs.minDateexpression;
 
-                if (minStartDateExpression != null && minStartDateExpression != "") {
+                if (minStartDateExpression != null && minStartDateExpression != '') {
                     startDate = expressionService.evaluate(minStartDateExpression, datamap);
                     startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
                     var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
@@ -60,6 +60,13 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         }
                     });
                 }
+
+                //only show close button if both date and time are shown
+                var showCloseButton = false;
+                if (dateFormat.indexOf("/") > -1 && dateFormat.indexOf(":") > -1) {
+                    showCloseButton = true;
+                }
+
                 $timeout(function () {
                     //timeout to avoid $digest is already in progress exception... using false keyword postergates this to next digest loop
                     element.datetimepicker({
@@ -68,7 +75,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         maxDate: endDate,
                         minDate: startDate,
                         sideBySide: true,
-                        showClose: true,
+                        showClose: showCloseButton,
                         toolbarPlacement: 'top',
                         useCurrent: false
                         //debug: true

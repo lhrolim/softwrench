@@ -17,7 +17,7 @@
           <field attribute="createdate" label="Date" hidden="true"/>
           <field attribute="createby" label="Created By" />
           <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy"/>
           </field>
           <field attribute="synonymdomain_.description" label="Log Type"/>
           <field attribute="description" label="Summary" qualifier="title"/>

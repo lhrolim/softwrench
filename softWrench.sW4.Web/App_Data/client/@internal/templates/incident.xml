@@ -175,16 +175,16 @@
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
             <field attribute="actualfinish" label="Actual Start Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </section>
 
