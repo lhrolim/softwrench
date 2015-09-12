@@ -526,7 +526,7 @@
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="saveIssue" icon="fa fa-save" label="Submit" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
+              <command id="saveIssue" icon="fa fa-check" label="Save" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
             </commandgroup>
           </commandbars>
           <properties>

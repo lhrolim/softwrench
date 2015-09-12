@@ -38,7 +38,7 @@
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-save" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" tooltip="Confirm" position="&lt;cancel" />
+              <command id="save" icon="fa-check" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
@@ -103,14 +103,11 @@
             <optionfield attribute="panel" providerattribute="availablepanels" />
             <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
           </section>
-
-
-
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-save" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
+              <command id="save" icon="fa-check" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
@@ -148,7 +145,7 @@
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-save" service="dashboardAuxService" method="createAndAssociatePanel"
+              <command id="save" icon="fa-check" service="dashboardAuxService" method="createAndAssociatePanel"
                        parameters="datamap"
                        label="Add Panel" tooltip="Add Widget" position="&lt;cancel" />
             </commandgroup>

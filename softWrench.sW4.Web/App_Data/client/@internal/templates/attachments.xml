@@ -41,8 +41,8 @@
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
               <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>
-              <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
-              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+              <command id="save" icon="fa-check" service="$scope" method="save" label="Save" />
+              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" />
             </commandgroup>
           </commandbars>
         </list>

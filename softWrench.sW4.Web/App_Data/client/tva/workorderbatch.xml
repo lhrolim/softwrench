@@ -17,7 +17,7 @@
             <commandgroup position="gridtop" removeundeclared="true">
               <command id="refresh" icon="fa-refresh" tooltip="refresh" service="searchService" method="refreshGrid"/>
               <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch" icon="fa-times"/>
-              <command label="Save Batch" id="generatebatch" service="wobatchService" method="generatebatch" parameters="datamap" icon="fa-save"/>
+              <command label="Save Batch" id="generatebatch" service="wobatchService" method="generatebatch" parameters="datamap" icon="fa-check"/>
               <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>
           </commandbars>
@@ -58,7 +58,7 @@
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
               <command id="submit" label="Submit" tooltip="Submit Batch to Maximo" service ="wobatchService" method="submitBatch" icon="fa-cloud-upload" parameters="datamap" />
-              <command id="save" label="Save Batch" tooltip="Save Batch without Submiting it" service ="wobatchService" method="savebatch" parameters="datamap" icon="fa-save" />
+              <command id="save" label="Save Batch" tooltip="Save Batch without Submiting it" service ="wobatchService" method="savebatch" parameters="datamap" icon="fa-check" />
               <command id="exit" label="Exit" service ="wobatchService" method="exit" icon="fa-times"/>
               <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>

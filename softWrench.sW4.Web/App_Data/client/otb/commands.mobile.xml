@@ -22,16 +22,16 @@
   
   
   <commandgroup position="detailform">
-    <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" showexpression="$scope:shouldshowsave"/>
-    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" tooltip="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>
+    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
   <commandgroup position="compositionbottom">
     <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
-    <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
-    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" tooltip="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save"/>
+    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" showexpression="$scope:shouldshowprint"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
 
