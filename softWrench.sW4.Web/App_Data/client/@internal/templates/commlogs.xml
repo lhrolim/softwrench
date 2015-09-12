@@ -71,6 +71,8 @@
           <properties>
             <property key="expansible" value="false"/>
           </properties>
+          <field attribute="commloguid" hidden="true"/>
+          
           <!--<field attribute="#inboundicon">
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
