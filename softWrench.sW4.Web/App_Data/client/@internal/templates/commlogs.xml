@@ -119,7 +119,11 @@
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
-<!--          <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">-->
+          <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+            <renderer type="multiselectautocompleteclient" stereotype="email"/>
+            <dataprovider postfilterfunction="EmailPostFilter"/>
+          </association>
+<!--          <association label="BCc:" target="bcc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">-->
 <!--            <renderer type="multiselectautocompleteclient" stereotype="email"/>-->
 <!--            <dataprovider postfilterfunction="EmailPostFilter"/>-->
 <!--          </association>-->

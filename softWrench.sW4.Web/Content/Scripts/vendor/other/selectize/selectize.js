@@ -2471,7 +2471,8 @@
                 var i, active, value_next, wasFull;
                 value = hash_key(value);
 
-                if (value == null || self.items.indexOf(value.trim()) !== -1) {
+                if (self.items.indexOf(value) !== -1) {
+                    //alread added
                     if (inputMode === 'single') self.close();
                     return;
                 }

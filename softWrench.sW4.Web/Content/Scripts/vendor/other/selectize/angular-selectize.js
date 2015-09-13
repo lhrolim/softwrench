@@ -21,10 +21,10 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
 
             function createItem(input) {
                 var data = {};
-                data[config.labelField] = input;
+                data[config.labelField] = input.toLowerCase().trim();
                 //cts:luiz --> small change here to solve SWWEB-1643
                 //disregarded comment on https://github.com/machineboy2045/angular-selectize/issues/89 and solved it here
-                data[config.valueField] = input.toLowerCase();
+                data[config.valueField] = input.toLowerCase().trim();
                 return data;
             }
 
