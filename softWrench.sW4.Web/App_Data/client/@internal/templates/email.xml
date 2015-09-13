@@ -1,7 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <entities>
-
+    <entity name="email" idAttribute="emailid">
+      <attributes>
+        <attribute name="loweremail" query="LOWER(emailaddress)" type="string"/>
+      </attributes>
+      
+    </entity>
+    
   </entities>
 
   <applications>
@@ -13,6 +19,7 @@
         <schema id="list" stereotype="compositionlist" title="Email List">
           <field attribute="personid" hidden="true"/>
           <field attribute="emailid" hidden="true"/>
+          <field attribute="loweremail" hidden="true"/>
           <field attribute="emailaddress" label="Email Address"/>
           <field attribute="type" label="Type"/>
           <field attribute="isprimary" label="Primary"/>
@@ -20,6 +27,7 @@
         <schema id="detail" stereotype="compositiondetail" title="Email Detail">
           <field attribute="personid" hidden="true"/>
           <field attribute="emailid" hidden="true"/>
+          <field attribute="loweremail" hidden="true"/>
           <field attribute="emailaddress" label="Email Address"/>
           <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions">
             <renderer type="autocompleteclient" />

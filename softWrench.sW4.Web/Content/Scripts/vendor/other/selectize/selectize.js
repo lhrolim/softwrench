@@ -2471,19 +2471,26 @@
                 var i, active, value_next, wasFull;
                 value = hash_key(value);
 
-                if (self.items.indexOf(value) !== -1) {
+                if (value == null || self.items.indexOf(value.trim()) !== -1) {
                     if (inputMode === 'single') self.close();
                     return;
                 }
                 
-                if (!self.options.hasOwnProperty(value)) return;
+                if (!self.options.hasOwnProperty(value.toLowerCase()) && !self.options.hasOwnProperty(value)) {
+                    //cts:luiz --> add lower case comparison
+                    return;
+                }
                 if (inputMode === 'single') self.clear(silent);
                 if (inputMode === 'multi' && self.isFull()) return;
-
-                $item = $(self.render('item', self.options[value]));
-                if (self.settings.beforeItemAdd != null & !self.settings.beforeItemAdd(value)) return;
+                //cts:luiz --> add lower case comparison
+                $item = $(self.render('item', self.options[value.toLowerCase()]));
+                if (self.settings.beforeItemAdd != null && !self.settings.beforeItemAdd(value)) {
+                    //cts:ken --> adding before item hook
+                     return;
+                }
                 wasFull = self.isFull();
-                self.items.splice(self.caretPos, 0, value);
+                //cts:luiz --> add lower case comparison
+                self.items.splice(self.caretPos, 0, value.toLowerCase());
                 self.insertAtCaret($item);
                 if (!self.isPending || (!wasFull && self.isFull())) {
                     self.refreshState();
@@ -3290,6 +3297,7 @@
 
                 var value = hash_key($option.attr('value'));
                 if (!value && !settings.allowEmptyOption) return;
+
 
                 // if the option already exists, it's probably been
                 // duplicated in another optgroup. in this case, push

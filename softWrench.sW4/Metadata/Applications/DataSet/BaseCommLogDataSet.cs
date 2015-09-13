@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
             foreach (var address in addresses) {
-                postParams.Options.Add(new AssociationOption(address.EmailAddress, address.EmailAddress));
+                postParams.Options.Add(new AssociationOption(address.EmailAddress.ToLower().Trim(), address.EmailAddress.ToLower().Trim()));
             }
 
 //            for (var i = 0; i < 10000; i++) {

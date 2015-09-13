@@ -21,8 +21,10 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
 
             function createItem(input) {
                 var data = {};
-                data[config.labelField] = input;
-                data[config.valueField] = input;
+                data[config.labelField] = input.toLowerCase().trim();
+                //cts:luiz --> small change here to solve SWWEB-1643
+                //disregarded comment on https://github.com/machineboy2045/angular-selectize/issues/89 and solved it here
+                data[config.valueField] = input.toLowerCase().trim();
                 return data;
             }
 
@@ -36,8 +38,9 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
             };
 
             function generateOptions(data) {
-                if (!data)
+                if (!data) {
                     return [];
+                }
 
                 data = angular.isArray(data) || angular.isObject(data) ? data : [data]
 
@@ -93,7 +96,8 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
 
             if (scope.options) {
                 // replace scope options with generated options while retaining a reference to the same array
-                scope.options.splice(0, scope.options.length, generateOptions(scope.options));
+                //                scope.options.splice(0, scope.options.length, generateOptions(scope.options));
+                scope.options = generateOptions(scope.options)
             } else {
                 // default options = [ngModel] if no options specified
                 scope.options = generateOptions(angular.copy(scope.ngModel));
@@ -112,9 +116,36 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                     angularCallback(selectize);
                 }
 
-                scope.$watch('options', function () {
+                //cts:luiz --> add model to list to include the cases where for some reason the element gets created with pre-filled elements, and then a lsit comes from the server without these elements 
+                //(ex: reply all to an email which doesn´t belong to original list)
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1643
+                function updateOptionsWithSelectedModel(model, options) {
+                    if (model == null) {
+                        return;
+                    }
+                    options = options || [];
+                    if (angular.isArray(model)) {
+                        for (var i = 0; i < model.length; i++) {
+                            var item = model[i];
+                            if (angular.isString(item)) {
+                                var newItem = createItem(item);
+                                if (!options.some(function (element) {
+                                    return element.value === newItem.value;
+                                })) {
+                                    selectize.addOption(newItem);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                scope.$watch('options', function (newValue, oldValue) {
+                    if (newValue === oldValue) {
+                        return;
+                    }
                     scope.disableOnChange = true;
                     selectize.clearOptions();
+                    updateOptionsWithSelectedModel(scope.ngModel, scope.options);
                     selectize.addOption(scope.options);
                     selectize.setValue(scope.ngModel);
                     scope.disableOnChange = false;

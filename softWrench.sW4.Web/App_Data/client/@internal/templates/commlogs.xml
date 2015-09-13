@@ -89,14 +89,14 @@
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=-1%"/>
           </field>
           <field attribute="sendto" label="To">
-            <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%"/>
+            <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%;formatter=lower"/>
           </field>
           <field attribute="cc" hidden="true"/>
           <field attribute="ccflag" label="Cc">
             <renderer type="checkbox"  params="widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=5%"/>
           </field>
           <field attribute="sendfrom" label="From">
-            <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%"/>
+            <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%;formatter=lower"/>
           </field>
           <field attribute="subject" label="Subject">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;"/>
@@ -115,7 +115,7 @@
           <!--<field attribute="sendto" label="To:" requiredexpression="true">
             <renderer type="email"/>
           </field>-->
-          <association label="To:" target="sendto" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
+          <association label="To:" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
@@ -123,6 +123,10 @@
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
+<!--          <association label="BCc:" target="bcc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">-->
+<!--            <renderer type="multiselectautocompleteclient" stereotype="email"/>-->
+<!--            <dataprovider postfilterfunction="EmailPostFilter"/>-->
+<!--          </association>-->
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" default="@user.email" readonly="true" >
             <renderer type="email"/>
