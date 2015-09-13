@@ -2471,16 +2471,18 @@
                 var i, active, value_next, wasFull;
                 value = hash_key(value);
 
-                if (self.items.indexOf(value) !== -1) {
+                if (value == null || self.items.indexOf(value.trim()) !== -1) {
                     if (inputMode === 'single') self.close();
                     return;
                 }
                 
-                if (!self.options.hasOwnProperty(value)) return;
+                if (!self.options.hasOwnProperty(value.toLowerCase()) && !self.options.hasOwnProperty(value)) {
+                    return;
+                }
                 if (inputMode === 'single') self.clear(silent);
                 if (inputMode === 'multi' && self.isFull()) return;
 
-                $item = $(self.render('item', self.options[value]));
+                $item = $(self.render('item', self.options[value.toLowerCase()]));
                 if (self.settings.beforeItemAdd != null & !self.settings.beforeItemAdd(value)) return;
                 wasFull = self.isFull();
                 self.items.splice(self.caretPos, 0, value);
@@ -3290,6 +3292,7 @@
 
                 var value = hash_key($option.attr('value'));
                 if (!value && !settings.allowEmptyOption) return;
+
 
                 // if the option already exists, it's probably been
                 // duplicated in another optgroup. in this case, push

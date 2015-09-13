@@ -101,6 +101,7 @@ var DeviceDetect =
 };
 DeviceDetect.init();
 
+
 function isMobile() {
     return DeviceDetect.catagory == 'Mobile';
 };

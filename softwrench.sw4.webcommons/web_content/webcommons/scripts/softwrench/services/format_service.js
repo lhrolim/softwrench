@@ -45,7 +45,7 @@
         //#region Public methods
 
         function format (value, field, datamap) {
-            if (field == undefined) {
+            if (field == undefined || value==null) {
                 return value;
             }
 
@@ -67,6 +67,13 @@
                     };
                     return fn(parameters);
                 }
+                else if (field.rendererParameters['formatter'] === "lower") {
+                    return value.toLowerCase().trim();
+                }
+                else if (field.rendererParameters['formatter'] === "upper") {
+                    return value.toUpperCase().trim();
+                }
+
             }
 
             var dateFormat;

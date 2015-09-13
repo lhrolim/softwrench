@@ -22,7 +22,9 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
             function createItem(input) {
                 var data = {};
                 data[config.labelField] = input;
-                data[config.valueField] = input;
+                //cts:luiz --> small change here to solve SWWEB-1643
+                //disregarded comment on https://github.com/machineboy2045/angular-selectize/issues/89 and solved it here
+                data[config.valueField] = input.toLowerCase();
                 return data;
             }
 
@@ -36,8 +38,9 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
             };
 
             function generateOptions(data) {
-                if (!data)
+                if (!data) {
                     return [];
+                }
 
                 data = angular.isArray(data) || angular.isObject(data) ? data : [data]
 
@@ -112,7 +115,7 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                     angularCallback(selectize);
                 }
 
-                scope.$watch('options', function () {
+                scope.$watch('options', function (newValue,oldValue) {
                     scope.disableOnChange = true;
                     selectize.clearOptions();
                     selectize.addOption(scope.options);
