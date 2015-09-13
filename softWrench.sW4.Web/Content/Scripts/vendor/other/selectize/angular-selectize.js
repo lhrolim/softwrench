@@ -24,7 +24,7 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                 data[config.labelField] = input.toLowerCase().trim();
                 //cts:luiz --> small change here to solve SWWEB-1643
                 //disregarded comment on https://github.com/machineboy2045/angular-selectize/issues/89 and solved it here
-                data[config.valueField] = input.toLowerCase();
+                data[config.valueField] = input.toLowerCase().trim();
                 return data;
             }
 
@@ -116,6 +116,9 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                     angularCallback(selectize);
                 }
 
+                //cts:luiz --> add model to list to include the cases where for some reason the element gets created with pre-filled elements, and then a lsit comes from the server without these elements 
+                //(ex: reply all to an email which doesn´t belong to original list)
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1643
                 function updateOptionsWithSelectedModel(model, options) {
                     if (model == null) {
                         return;
@@ -145,13 +148,6 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                     updateOptionsWithSelectedModel(scope.ngModel, scope.options);
                     selectize.addOption(scope.options);
                     selectize.setValue(scope.ngModel);
-
-                    //cts:luiz --> add model to list to include the cases where for some reason the element gets created with pre-filled elements, and then a lsit comes from the server without these elements 
-                    //(ex: reply all to an email which doesn´t belong to original list)
-                    if (scope.ngModel) {
-
-                    }
-
                     scope.disableOnChange = false;
                 }, true);
 
