@@ -2471,8 +2471,7 @@
                 var i, active, value_next, wasFull;
                 value = hash_key(value);
 
-                if (self.items.indexOf(value) !== -1) {
-                    //alread added
+                if (value == null || self.items.indexOf(value.trim()) !== -1) {
                     if (inputMode === 'single') self.close();
                     return;
                 }
@@ -2484,7 +2483,9 @@
                 if (inputMode === 'multi' && self.isFull()) return;
 
                 $item = $(self.render('item', self.options[value.toLowerCase()]));
-                if (self.settings.beforeItemAdd != null & !self.settings.beforeItemAdd(value)) return;
+                if (self.settings.beforeItemAdd != null & !self.settings.beforeItemAdd(value)) {
+                     return;
+                }
                 wasFull = self.isFull();
                 self.items.splice(self.caretPos, 0, value);
                 self.insertAtCaret($item);
