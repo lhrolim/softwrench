@@ -593,6 +593,7 @@
     <Compile Include="Util\DBConnectionResult.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Util\EntityUtil.cs" />
+    <Compile Include="Util\EnvironmentUtil.cs" />
     <Compile Include="Util\ExceptionUtil.cs" />
     <Compile Include="Util\FileUtils.cs" />
     <Compile Include="Util\I18NResolver.cs" />

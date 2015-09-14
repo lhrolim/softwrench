@@ -37,13 +37,16 @@ namespace softWrench.sW4.log4net {
             }
         }
 
-        public static void InitDefaultLog(){
+        public static void InitDefaultLog() {
             XmlConfigurator.Configure();
         }
 
         public static void ConfigureDevLogging() {
 
-            if (!ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsLocal()) {
+            var swFolder = EnvironmentUtil.GetLocalSWFolder();
+
+            var needsFolderReplacement = !swFolder.Equals("c:\\softwrench\\");
+            if (!needsFolderReplacement && (!ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsLocal())) {
                 return;
             }
 
@@ -58,6 +61,10 @@ namespace softWrench.sW4.log4net {
                     }
                     rollingFileAppender.MaxSizeRollBackups = ApplicationConfiguration.IsLocal() ? 1 : 3;
                     rollingFileAppender.File = rollingFileAppender.File.Replace("\\sw4\\", "\\sw4\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
+                    if (needsFolderReplacement) {
+                        //this is the value that was registered on the web.config file
+                        rollingFileAppender.File = rollingFileAppender.File.Replace("C:\\softwrench\\", swFolder);
+                    }
                     rollingFileAppender.ActivateOptions();
                 }
             } else {
@@ -66,7 +73,6 @@ namespace softWrench.sW4.log4net {
             }
             LoggingUtil.DefaultLog.InfoFormat("finish log system setup for client {0}", ApplicationConfiguration.ClientName);
         }
-
 
     }
 }

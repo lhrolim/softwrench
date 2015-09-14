@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using cts.commons.portable.Util;
 using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Properties;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Validator {
 
@@ -16,7 +18,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 var metadata = new XmlPropertyMetadataParser().Parse(stream);
                 metadata.ValidateRequiredProperties();
 
-                var localFilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\properties.xml";
+                var localFilePath = EnvironmentUtil.GetLocalSWFolder() + "properties.xml";
                 var fileInfo = new FileInfo(localFilePath);
                 if (fileInfo.Exists && fileInfo.Length != 0) {
                     var localStream = new StreamReader(localFilePath);
@@ -30,6 +32,6 @@ namespace softWrench.sW4.Metadata.Validator {
             }
         }
 
-
+       
     }
 }
