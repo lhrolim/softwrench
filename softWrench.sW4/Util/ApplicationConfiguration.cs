@@ -395,7 +395,7 @@ namespace softWrench.sW4.Util {
             } else {
                 if (IsLocal() && IsDev()) {
                     //this code is playing safe forcing developers to always configure a local db instead of running the risk of pointing to a wrong instance
-                    var localFilePath = EnvironmentUtil.GetLocalSWFolder() + "\\local.properties";
+                    var localFilePath = EnvironmentUtil.GetLocalSWFolder() + "local.properties";
                     if (new FileInfo(localFilePath).Length != 0) {
                         var stream = new StreamReader(localFilePath);
                         var localProperties = new XmlPropertyMetadataParser().Parse(stream);
