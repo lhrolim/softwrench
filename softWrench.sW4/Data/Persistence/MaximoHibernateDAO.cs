@@ -63,7 +63,7 @@ namespace softWrench.sW4.Data.Persistence {
                 //Populate with some default properties
                 properties.Add(NHibernate.Cfg.Environment.ConnectionDriver, HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Maximo));
                 properties.Add(NHibernate.Cfg.Environment.Dialect, HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Maximo));
-                properties.Add(NHibernate.Cfg.Environment.ShowSql, "true");
+                properties.Add(NHibernate.Cfg.Environment.ShowSql, "false");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 //                      <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
                 //      <property name="proxyfactory.factory_class">NHibernate.Bytecode.DefaultProxyFactoryFactory, NHibernate</property>

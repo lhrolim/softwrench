@@ -36,6 +36,9 @@ namespace softWrench.sW4.Web {
 
         protected void Application_Start(object sender, EventArgs args) {
 
+            Console.SetOut(new System.IO.StreamWriter(System.IO.Stream.Null));
+            Console.SetError(new System.IO.StreamWriter(System.IO.Stream.Null));
+
             var before = Stopwatch.StartNew();
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
