@@ -42,16 +42,11 @@ namespace softwrench.sw4.offlineserver.services {
         public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
 
-
             var result = new SynchronizationResultDto();
-
-            IDictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>> reverseCompositionMap
-                = new Dictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>>();
 
             foreach (var topLevelApp in topLevelApps) {
                 ResolveApplication(request, user, topLevelApp, result, rowstampMap);
             }
-
 
             return result;
         }

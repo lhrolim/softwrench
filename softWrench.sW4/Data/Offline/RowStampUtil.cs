@@ -19,13 +19,22 @@ namespace softWrench.sW4.Data.Offline {
 
         public static long? Convert(object dbstamp) {
             if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
-                if (BitConverter.IsLittleEndian)
-                    Array.Reverse((Array)dbstamp);
-                var value = (byte[])dbstamp;
-                if (!value.Any()) {
+                
+                // cloning so it doesn't alter parameter
+                // this was necessary because it is being called multiple times on the same dbstamp
+                // TODO: investigate how it is being called multiple times on same dbstamp (and possibly remove the clone)
+                var array = ((byte[])dbstamp);
+                var result = new byte[array.Length];
+                Array.Copy(array, result, array.Length); // Array.Copy is way faster than Array.Clone (fastest method besides buffer copy)
+
+                if (BitConverter.IsLittleEndian) {
+                    Array.Reverse(result);
+                }
+                if (!result.Any()) {
                     return null;
                 }
-                return BitConverter.ToInt64(value, 0);
+                var convert = BitConverter.ToInt64(result, 0);
+                return convert;
             } else if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
                 return System.Convert.ToInt64(dbstamp);
             }
