@@ -113,7 +113,7 @@
         });
 
         entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values (?,?,0,?,?,?)";
-        entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry set datamap='{0}' rowstamp='{1}' where remoteId='{2}' and applicaton='{3}'";
+        entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry set datamap='{0}' rowstamp={1} where remoteId='{2}' and applicaton='{3}'";
         entities.CompositionDataEntry.syncdeletionQuery = "delete from CompositionDataEntry where remoteId in (?)";
 
 
