@@ -4,7 +4,7 @@
         <div class="text userinfo" ng-if="menu.displacement != 'breadcrumb'"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}
         </div>
 
-        <div class="admin-menu" admin-menu>
+        <div class="admin-menu">
             <div ng-if="!showClassicMenu()" class="modern">
                 <a data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-cog"></i>
@@ -72,10 +72,11 @@
                 </ul>
             </div>
 
-            <div class="menu-expand"><i class="fa fa-bars"></i> Admin
-            </div>
-            <div class="menu-items">
-                <div ng-if="showClassicMenu()" class="classic">
+            <div ng-if="showClassicMenu()" class="classic">
+                <div ng-click="clicMenuExpander()" class="menu-expand" menu-expander>
+                    <i class="fa fa-bars"></i> Admin
+                </div>
+                <div class="menu-items">
                     <div class="buttons">
                         <a href="#" ng-click="myProfile()" ng-show="myprofileenabled"
                            rel="tooltip" data-original-title="{{i18N('_headermenu.myprofile_tooltip','View your profile')}}" data-placement="bottom">
@@ -141,7 +142,6 @@
                 </div>
             </div>
         </div>
-
         <div class="clear"></div>
     </div>
 </div>
