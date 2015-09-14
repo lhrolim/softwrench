@@ -14,6 +14,7 @@
             .text {
                 float: left;
                 color: #fff;
+
                 a {
                     color: #fff;
 
@@ -21,44 +22,51 @@
                         text-decoration: none;
                     }
                 }
+
+                &.userinfo {
+                    margin-top: 6px;
+                }
             }
 
             .admin-menu {
                 float: right;
-                font-size: 14px;
 
-                i.fa-cog {
-                    color: #fff;
-                }
+                .modern {
+                    font-size: 14px;
 
-                .dropdown-menu {
-                    top: auto;
-                    left: auto;
-                    right: 55px !important;
-                    border-radius: 6px;
+                    i.fa-cog {
+                        color: #fff;
+                    }
 
-                    .user {
-                        border-bottom: 1px solid #ccc;
-                        margin-bottom: 5px;
-                        padding-bottom: 2px;
+                    .dropdown-menu {
+                        top: auto;
+                        left: auto;
+                        right: 55px !important;
+                        border-radius: 6px;
 
-                        a:hover {
-                            background: none;
-                            color: #333;
+                        .user {
+                            border-bottom: 1px solid #ccc;
+                            margin-bottom: 5px;
+                            padding-bottom: 2px;
+
+                            a:hover {
+                                background: none;
+                                color: #333;
+                            }
                         }
                     }
-                }
 
-                .dropdown-submenu > .dropdown-menu {
-                    top: 0;
-                    left: auto;
-                    right: 148px !important;
+                    .dropdown-submenu > .dropdown-menu {
+                        top: 0;
+                        left: auto;
+                        right: 148px !important;
+                    }
                 }
             }
 
-            .buttons {
-                padding-top: 20px;
-                float: right;
+            .classic {
+                /*padding-top: 20px;*/
+                /*float: right;*/
             }
         }
 
