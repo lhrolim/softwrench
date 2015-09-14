@@ -53,7 +53,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                                     }
 
                                     if (kids[idx].children != null && kids[idx].children.length > 0) {
-                                        var childLeafs = $scope.convertAdminHTMLtoLeafs(log, kids[idx].children);
+                                        var childLeafs = $scope.convertAdminHTMLtoLeafs(kids[idx].children);
 
                                         if (childLeafs.length > 0) {
                                             newObject.leafs = childLeafs;
@@ -68,7 +68,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                             case 'ul':
                                 if (kids[idx].children != null && kids[idx].children.length > 0) {
-                                    leafs = $scope.convertAdminHTMLtoLeafs(log, kids[idx].children);
+                                    leafs = $scope.convertAdminHTMLtoLeafs(kids[idx].children);
                                 }
 
                                 break;
@@ -180,11 +180,11 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
             };
 
             $scope.getCurrentMenu = function () {
-                var currentItem = $('.admin-area .admin-menu .dropdown-menu a:contains("' + $scope.title + '")');
+                var currentItem = $('.admin-area .admin-menu .modern .dropdown-menu a:contains("' + $scope.title + '")');
                 var menu = {};
 
                 if (currentItem.hasOwnProperty(length)) {
-                    var mainMenu = $('.admin-area .admin-menu > .dropdown-menu');
+                    var mainMenu = $('.admin-area .admin-menu .modern > .dropdown-menu');
                     var leafs = $scope.convertAdminHTMLtoLeafs(mainMenu[0].children);
                     menu.displacement = 'admin';
                     menu.leafs = leafs;
@@ -207,7 +207,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 var currentMenu = $scope.getCurrentMenu();
                 var breadcrumbItems = $scope.getBreadcrumbItems(currentMenu);
 
-                log.debug('breadcrumb', $scope, $scope.schema, currentMenu, breadcrumbItems);
+                log.debug('$scope', $scope, 'currentMenu', currentMenu, 'breadcrumbItems', breadcrumbItems);
                 $scope.breadcrumbItems = breadcrumbItems;
             };
 

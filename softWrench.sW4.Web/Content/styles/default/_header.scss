@@ -14,6 +14,7 @@
             .text {
                 float: left;
                 color: #fff;
+
                 a {
                     color: #fff;
 
@@ -21,44 +22,74 @@
                         text-decoration: none;
                     }
                 }
+
+                &.userinfo {
+                    margin-top: 6px;
+                }
             }
 
             .admin-menu {
-                float: right;
-                font-size: 14px;
+                .modern {
+                    float: right;
+                    font-size: 14px;
 
-                i.fa-cog {
-                    color: #fff;
-                }
+                    i.fa-cog {
+                        color: #fff;
+                    }
 
-                .dropdown-menu {
-                    top: auto;
-                    left: auto;
-                    right: 55px !important;
-                    border-radius: 6px;
+                    .dropdown-menu {
+                        top: auto;
+                        left: auto;
+                        right: 55px !important;
+                        border-radius: 6px;
 
-                    .user {
-                        border-bottom: 1px solid #ccc;
-                        margin-bottom: 5px;
-                        padding-bottom: 2px;
+                        .user {
+                            border-bottom: 1px solid #ccc;
+                            margin-bottom: 5px;
+                            padding-bottom: 2px;
 
-                        a:hover {
-                            background: none;
-                            color: #333;
+                            a:hover {
+                                background: none;
+                                color: #333;
+                            }
                         }
                     }
-                }
 
-                .dropdown-submenu > .dropdown-menu {
-                    top: 0;
-                    left: auto;
-                    right: 148px !important;
+                    .dropdown-submenu > .dropdown-menu {
+                        top: 0;
+                        left: auto;
+                        right: 148px !important;
+                    }
                 }
             }
 
-            .buttons {
-                padding-top: 20px;
+            .classic {
                 float: right;
+
+                .menu-expand {
+                    color: #fff;
+                    cursor: pointer;
+                }
+
+                div.menu-open + .menu-items {
+                    display: block;
+                    padding: 10px 0 0;
+                }
+
+                .buttons {
+                    a:hover {
+                        text-decoration: none;
+                    }
+
+                    .dropdown-menu {
+                        top: 30px;
+                        z-index: 1040;
+                    }
+
+                    .dropdown-submenu > .dropdown-menu {
+                        top: 0;
+                    }
+                }
             }
         }
 
@@ -109,6 +140,39 @@
             position: relative;
             z-index: 1010;
 
+            .admin-area {
+                .text {
+                    &.userinfo {
+                        display: none;
+                    }
+                }
+
+                .admin-menu {
+                    .classic {
+                        float: none;
+
+                        .menu-expand {
+                            display: block;
+                        }
+
+                        .menu-items {
+                            display: none;
+                        }
+
+                        .buttons {
+                            button, .btn-group {
+                                width: 100%;
+                                display: block;
+                            }
+
+                            button {
+                                margin-bottom: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
             .menu-grid {
 
                 li {
@@ -142,8 +206,31 @@
 }
 
 @media all and (min-width: 480px) {
-    .container header .menu-grid li {
-        width: 49%;
+    .container {
+        header {
+            .admin-area {
+                .admin-menu {
+                    .classic {
+                        .buttons {
+                            button, .btn-group {
+                                width: 45%;
+                                margin-right: 5px;
+
+                                button {
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .menu-grid {
+                li {
+                    width: 49%;
+                }
+            }
+        }
     }
 }
 
@@ -160,6 +247,36 @@
 
     .container {
         header {
+            .admin-area {
+                .text {
+                    &.userinfo {
+                        display: block;
+                    }
+                }
+
+                .admin-menu {
+                    .classic {
+                        float: right;
+
+                        .menu-expand {
+                            display: none;
+                        }
+
+                        .menu-items {
+                            display: block;
+                        }
+
+                        .buttons {
+                            button, .btn-group {
+                                display: inline-block;
+                                width: auto;
+                                margin-right: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
             .menu-grid {
                 li {
                     width: auto;

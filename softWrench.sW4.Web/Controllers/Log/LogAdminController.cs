@@ -16,7 +16,7 @@ namespace softWrench.sW4.Web.Controllers.Log {
     public class LogAdminController : ApiController {
 
 
-        [SPFRedirect("Administrate Log", "_headermenu.logadmin")]
+        [SPFRedirect("Administrate Logs", "_headermenu.logadmin")]
         [HttpGet]
         public IGenericResponseResult Index() {
             var logs = GetLogs();
