@@ -252,6 +252,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
         contextService.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
+        contextService.insertIntoContext("UIShowClassicAdminMenu", config.uiShowClassicAdminMenu, true);
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;

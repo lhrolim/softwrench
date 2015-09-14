@@ -19,6 +19,7 @@
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="true"/>
   <property key="notifications.activityStream.enabled" value="false"/>
+  <property key="ui.adminmenu.showclassic" value="true"/>
 
   <environment key="dev">
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75DEV;User Id=sw;password=softwrench;" />

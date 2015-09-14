@@ -1,73 +1,81 @@
 ﻿<div>
     <div class="admin-area" ng-if="popupmode == 'none'">
         <div class="breadcrumb" breadcrumb data-menu="menu" data-title="title" ng-if="menu.displacement == 'breadcrumb'"></div>
-        <div class="text" ng-if="menu.displacement != 'breadcrumb'"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}</div>
-
-        <div class="admin-menu">
-            <a data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-cog"></i>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-                <li class="user"><a>{{userInfo()}}</a></li>
-                <li ng-show="myprofileenabled">
-                    <a href="#" ng-click="myProfile()">
-                        <i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.myprofile','Edit My Profile')}}
-                    </a>
-                </li>
-                <li class="dropdown-submenu" ng-show="isSysAdmin">
-                    <a data-toggle="dropdown" aria-expanded="false">
-                        <i class=" fa fa-cogs fa-fw"></i>&ensp;{{i18N('_headermenu.utilities','Utilities')}}
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event.target)"><i class="fa fa-magic fa-fw"></i>&ensp;{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
-                        <li><a href="#" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','StatusColor Editor')}}</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown-submenu" ng-show="isClientAdmin">
-                    <a data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-wrench fa-fw"></i>&ensp;Admin
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-submenu">
-                            <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lock fa-fw"></i>&ensp;Security</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" ng-click="loadApplication('Person','list')"><i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','Users')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown-submenu">
-                            <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i>&ensp;Setup</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown-submenu">
-                            <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-question fa-fw"></i>&ensp;Support</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" ng-click="loadApplication('_SoftwrenchError','list')"><i class="fa fa-file-text-o fa-fw"></i>&ensp;{{i18N('_headermenu.softwrenchError','Softwrench Errors')}}</a></li>
-                                <li><a href="#" ng-click="loadApplication('_audit','auditList')"><i class="fa fa-file-text-o fa-fw"></i>&ensp;{{i18N('_headermenu.audit','Audit Trail')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'LogAdmin','Index')"><i class="fa fa-file-text-o fa-fw"></i>&ensp;{{i18N('_headermenu.logadmin','Administrate Logs')}}</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#" ng-click="refreshMetadata()"><i class="fa fa-refresh fa-fw"></i>&ensp;{{i18N('_headermenu.refreshmetadata','Refresh Metadata')}}</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" ng-click="doAction(null,'Configuration','About',null,$event.target)">
-                        <i class="fa fa-info fa-fw"></i>&ensp;{{i18N('_headermenu.about','About')}}
-                    </a>
-                </li>
-                <li>
-                    <a ng-href="{{contextPath('SignOut/SignOut')}}" ng-click="logout()">
-                        <i class="fa fa-sign-out fa-fw"></i>&ensp;{{i18N('_headermenu.logout','Logout')}}
-                    </a>
-                </li>
-            </ul>
+        <div class="text" ng-if="menu.displacement != 'breadcrumb'"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}
         </div>
-    <div class="clear"></div>
+
+        <div class="admin-menu" admin-menu>
+            <div ng-if="!showClassicMenu()">
+                <a data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="user"><a>{{userInfo()}}</a></li>
+                    <li ng-show="myprofileenabled">
+                        <a href="#" ng-click="myProfile()">
+                            <i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.myprofile','Edit My Profile')}}
+                        </a>
+                    </li>
+                    <li class="dropdown-submenu" ng-show="isSysAdmin">
+                        <a data-toggle="dropdown" aria-expanded="false">
+                            <i class=" fa fa-cogs fa-fw"></i>&ensp;{{i18N('_headermenu.utilities','Utilities')}}
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event.target)"><i class="fa fa-magic fa-fw"></i>&ensp;{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','StatusColor Editor')}}</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu" ng-show="isClientAdmin">
+                        <a data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-wrench fa-fw"></i>&ensp;Admin
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="dropdown-submenu">
+                                <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lock fa-fw"></i>&ensp;Security</a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" ng-click="loadApplication('Person','list')"><i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','Users')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i>&ensp;Setup</a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-question fa-fw"></i>&ensp;Support</a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" ng-click="loadApplication('_SoftwrenchError','list')"><i class="fa fa-file-text-o fa-fw"></i>&ensp;{{i18N('_headermenu.softwrenchError','Softwrench Errors')}}</a></li>
+                                    <li><a href="#" ng-click="loadApplication('_audit','auditList')"><i class="fa fa-file-text-o fa-fw"></i>&ensp;{{i18N('_headermenu.audit','Audit Trail')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'LogAdmin','Index')"><i class="fa fa-file-text-o fa-fw"></i>&ensp;{{i18N('_headermenu.logadmin','Administrate Logs')}}</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" ng-click="refreshMetadata()"><i class="fa fa-refresh fa-fw"></i>&ensp;{{i18N('_headermenu.refreshmetadata','Refresh Metadata')}}</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="doAction(null,'Configuration','About',null,$event.target)">
+                            <i class="fa fa-info fa-fw"></i>&ensp;{{i18N('_headermenu.about','About')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-href="{{contextPath('SignOut/SignOut')}}" ng-click="logout()">
+                            <i class="fa fa-sign-out fa-fw"></i>&ensp;{{i18N('_headermenu.logout','Logout')}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div ng-if="showClassicMenu()">
+                classic
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
 </div>

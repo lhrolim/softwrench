@@ -115,7 +115,8 @@ namespace softWrench.sW4.Web.Controllers {
                 ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
                 MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
                 InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
-                DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail")
+                DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail"),
+                UIShowClassicAdminMenu = ApplicationConfiguration.UIShowClassicAdminMenu
             };
         }
 

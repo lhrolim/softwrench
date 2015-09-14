@@ -501,6 +501,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\directives\adminMenu.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
