@@ -2476,21 +2476,21 @@
                     return;
                 }
                 
-                if (!self.options.hasOwnProperty(value.toLowerCase()) && !self.options.hasOwnProperty(value)) {
+                if (!self.options.hasOwnProperty(value.toLowerCase().trim()) && !self.options.hasOwnProperty(value)) {
                     //cts:luiz --> add lower case comparison
                     return;
                 }
                 if (inputMode === 'single') self.clear(silent);
                 if (inputMode === 'multi' && self.isFull()) return;
                 //cts:luiz --> add lower case comparison
-                $item = $(self.render('item', self.options[value.toLowerCase()]));
+                $item = $(self.render('item', self.options[value.toLowerCase().trim()]));
                 if (self.settings.beforeItemAdd != null && !self.settings.beforeItemAdd(value)) {
                     //cts:ken --> adding before item hook
                      return;
                 }
                 wasFull = self.isFull();
                 //cts:luiz --> add lower case comparison
-                self.items.splice(self.caretPos, 0, value.toLowerCase());
+                self.items.splice(self.caretPos, 0, value.toLowerCase().trim());
                 self.insertAtCaret($item);
                 if (!self.isPending || (!wasFull && self.isFull())) {
                     self.refreshState();
