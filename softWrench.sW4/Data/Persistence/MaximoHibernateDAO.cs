@@ -88,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence {
                     HibernateUtil.GetInstance().HibernateDriverName(DBType.Maximo));
                 properties.Add(NHibernate.Cfg.Environment.Dialect,
                     HibernateUtil.GetInstance().HibernateDialect(DBType.Maximo));
-                properties.Add(NHibernate.Cfg.Environment.ShowSql, "true");
+                properties.Add(NHibernate.Cfg.Environment.ShowSql, "false");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 //                      <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
                 //      <property name="proxyfactory.factory_class">NHibernate.Bytecode.DefaultProxyFactoryFactory, NHibernate</property>

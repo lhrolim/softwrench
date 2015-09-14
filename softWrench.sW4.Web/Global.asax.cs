@@ -37,13 +37,17 @@ namespace softWrench.sW4.Web {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
 
         protected void Application_Start(object sender, EventArgs args) {
+            //FIX for http://stackoverflow.com/questions/12638810/nhibernate-race-condition-when-loading-entity
+            //HAP-1084
+            Console.SetOut(new System.IO.StreamWriter(System.IO.Stream.Null));
+            Console.SetError(new System.IO.StreamWriter(System.IO.Stream.Null));
             DoStartApplication(false);
         }
 
         private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
-            Log.InfoFormat("initing "+ applicationPath);
-            if (!ApplicationConfiguration.IsLocal() &&  ApplicationConfiguration.IsDev()) {
+            Log.InfoFormat("initing " + applicationPath);
+            if (!ApplicationConfiguration.IsLocal() && ApplicationConfiguration.IsDev()) {
                 if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
                     //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
                     var clientName = applicationPath.Substring(4);
@@ -75,7 +79,7 @@ namespace softWrench.sW4.Web {
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
-              
+
             }
             MetadataProvider.DoInit();
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
@@ -85,13 +89,14 @@ namespace softWrench.sW4.Web {
                 dispatcher.Dispatch(new ApplicationStartedEvent());
                 ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
-            
+
             SecurityFacade.InitSecurity();
             Log.Info(String.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
+
         }
 
-      
+
 
         private static void RegisterDataMapFormatter() {
             var index = GlobalConfiguration
@@ -146,9 +151,9 @@ namespace softWrench.sW4.Web {
                 //this is for ripple development where CORS is enabled.
                 //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://" + Request.UrlReferrer.Authority);
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");    
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
             }
-            
+
 
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {
                 //These headers are handling the "pre-flight" OPTIONS call sent by the browser
@@ -186,8 +191,8 @@ namespace softWrench.sW4.Web {
                     Context.Response.RedirectLocation += "&timeout=true";
                 }
             }
-            
-        
+
+
         }
 
 
@@ -239,7 +244,7 @@ namespace softWrench.sW4.Web {
         }
 
         public void HandleEvent(ClearCacheEvent eventToDispatch) {
-            
+
         }
     }
 }
