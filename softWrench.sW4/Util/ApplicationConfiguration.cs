@@ -28,11 +28,11 @@ namespace softWrench.sW4.Util {
 
         private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
 
-        public static String SystemVersion {
+        public static string SystemVersion {
             get { return ConfigurationManager.AppSettings["version"]; }
         }
 
-        public static String SystemRevision {
+        public static string SystemRevision {
             get {
                 var assemblyInfoVersion = Assembly.GetExecutingAssembly().GetName().Version;
                 return assemblyInfoVersion.Build.ToString() + "." + assemblyInfoVersion.Revision.ToString();
@@ -221,7 +221,7 @@ namespace softWrench.sW4.Util {
 
         internal static string TemplateIdHandler(string templateid) {
             var templateids = templateid.Split(',');
-            var strtemplateids = String.Join("','", templateids);
+            var strtemplateids = string.Join("','", templateids);
             strtemplateids = "'" + strtemplateids + "'";
 
             return strtemplateids;
@@ -256,7 +256,7 @@ namespace softWrench.sW4.Util {
             get {
                 var flagStr = MetadataProvider.GlobalProperty("notifications.activityStream.enabled");
                 var flag = false;
-                Boolean.TryParse(flagStr, out flag);
+                bool.TryParse(flagStr, out flag);
                 return flag;
             }
         }
@@ -288,7 +288,7 @@ namespace softWrench.sW4.Util {
                 // var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
                 var ext = _maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions");
 
-                if (!String.IsNullOrWhiteSpace(ext)) {
+                if (!string.IsNullOrWhiteSpace(ext)) {
                     return ext.Split(',');
                 }
 
@@ -303,7 +303,7 @@ namespace softWrench.sW4.Util {
             get {
                 var maxScreenshotSizeStr = MetadataProvider.GlobalProperty("maxScreenshotSize");
                 int maxScreenshotSizeInt = 5;
-                Int32.TryParse(maxScreenshotSizeStr, out maxScreenshotSizeInt);
+                int.TryParse(maxScreenshotSizeStr, out maxScreenshotSizeInt);
                 return maxScreenshotSizeInt;
             }
         }
@@ -315,18 +315,18 @@ namespace softWrench.sW4.Util {
             get {
                 var maxAttachmentSizeStr = MetadataProvider.GlobalProperty("maxAttachmentSize");
                 int maxAttachmentSizeInt = 10;
-                Int32.TryParse(maxAttachmentSizeStr, out maxAttachmentSizeInt);
+                int.TryParse(maxAttachmentSizeStr, out maxAttachmentSizeInt);
                 return maxAttachmentSizeInt;
             }
         }
 
         #endregion
 
-        public static Int32 MaximoRequestTimeout {
+        public static int MaximoRequestTimeout {
             get {
                 var timeoutStr = MetadataProvider.GlobalProperty("maximoRequestTimeout");
                 var timeoutInt = 100000;
-                Int32.TryParse(timeoutStr, out timeoutInt);
+                int.TryParse(timeoutStr, out timeoutInt);
                 return timeoutInt;
             }
         }
@@ -334,19 +334,19 @@ namespace softWrench.sW4.Util {
         private static DBMS? _swdbType = null;
         public static DBMS? _maximodbType = null;
 
-        public static Boolean IsMif() {
+        public static bool IsMif() {
             return WsProvider.Equals("mif", StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static Boolean Is75Maximo() {
+        public static bool Is75Maximo() {
             return WsProvider.Equals("mif", StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static Boolean IsISM() {
+        public static bool IsISM() {
             return WsProvider.Equals("ism", StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static Boolean IsUnitTest {
+        public static bool IsUnitTest {
             get { return GetProfile() == UnitTestProfile; }
         }
 
@@ -359,29 +359,29 @@ namespace softWrench.sW4.Util {
             return SystemBuildDateInMillis;
         }
 
-        public static Boolean IsLocal() {
-            var baseDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\";
+        public static bool IsLocal() {
+            var baseDirectory = EnvironmentUtil.GetLocalSWFolder();
             var isLocal = File.Exists(baseDirectory + "local.properties");
             return isLocal;
         }
 
-        public static Boolean IsDev() {
+        public static bool IsDev() {
             return Profile.Contains("dev");
         }
 
-        public static Boolean IsQA() {
+        public static bool IsQA() {
             return Profile == "qa";
         }
 
-        public static Boolean IsProd() {
+        public static bool IsProd() {
             return Profile.ToLower().StartsWith("prod");
         }
 
-        public static Boolean IsMea() {
+        public static bool IsMea() {
             return !IsMif() && !IsISM();
         }
 
-        public static String DBConnectionString(DBType dbType) {
+        public static string DBConnectionString(DBType dbType) {
             var connectionStringSettings = DBConnection(dbType);
             return connectionStringSettings == null ? null : connectionStringSettings.ConnectionString;
         }
@@ -394,6 +394,7 @@ namespace softWrench.sW4.Util {
                 return new ConnectionStringSettings("maximo", url, provider);
             } else {
                 if (IsLocal() && IsDev()) {
+                    //this code is playing safe forcing developers to always configure a local db instead of running the risk of pointing to a wrong instance
                     var localFilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\local.properties";
                     if (new FileInfo(localFilePath).Length != 0) {
                         var stream = new StreamReader(localFilePath);
@@ -443,7 +444,7 @@ namespace softWrench.sW4.Util {
 
         }
 
-        public static String UIDName(DBType dbType) {
+        public static string UIDName(DBType dbType) {
             var db = DBConnectionString(dbType);
             var idx = 0;
             if (IsDB2(dbType)) {
