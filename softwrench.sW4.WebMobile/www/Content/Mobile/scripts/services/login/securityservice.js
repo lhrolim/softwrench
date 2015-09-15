@@ -12,8 +12,12 @@
             message: {
                 sessionexpired: "Your session has expired. Please log in to resume your activities.",
                 unauthorizedaccess: "You're not authorized to access this resource.<br>" +
-                    "Contact support if you think you're not supposed to receive this message."
+                                    "Contact support if you think you're not supposed to receive this message."
             }
+        };
+
+        var $event = function(name) {
+            return config.eventnamespace + name;
         };
 
         var isLoginState = function () {
@@ -24,15 +28,21 @@
         /**
          * Authenticates the user locally initializing it's client-side session
          * and $broadcasts the event "security:login" in $rootScope with two parameters
-         * the username of the current just logged in user and the username of the last logged user.
+         * the current just logged in user and the last logged user.
+         * Users have the following format:
+         * {
+         * "UserName": String,
+         * "OrgId": String,
+         * "SiteId": String
+         * }
          * 
-         * @param String username 
+         * @param {} user 
          */
-        var loginLocal = function (username) {
+        var loginLocal = function (user) {
             var previous = localStorageService.get(config.authkey);
             previous = !!previous ? previous : localStorageService.get(config.previouskey);
-            localStorageService.put(config.authkey, username);
-            $rootScope.$broadcast(config.eventnamespace + "login", username, previous);
+            localStorageService.put(config.authkey, user);
+            $rootScope.$broadcast($event("login"), user, previous);
         };
 
         //#endregion
@@ -41,10 +51,16 @@
 
         /**
          * Authenticates the user remotelly then locally.
+         * User has the following format:
+         * {
+         * "UserName": String,
+         * "OrgId": String,
+         * "SiteId": String
+         * }
          * 
          * @param String username 
          * @param String password 
-         * @returns Promise resolved with username 
+         * @returns Promise resolved with the user retuned from the server
          */
         var login = function(username, password) {
             //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
@@ -60,8 +76,8 @@
                 $ionicHistory.clearCache();
 
                 var userdata = response.data;
-                if (userdata.Found) {
-                    loginLocal(userdata.UserName);
+                if (!!userdata["Found"]) {
+                    loginLocal(userdata);
                     return userdata;
                 }
                 return $q.reject(new Error("Invalid username or password"));
@@ -69,10 +85,26 @@
         }
 
         /**
+         * User has the following format:
+         * {
+         * "UserName": String,
+         * "OrgId": String,
+         * "SiteId": String
+         * }
+         * 
+         * @returns logged user 
+         */
+        var currentFullUser = function() {
+            return localStorageService.get(config.authkey);
+        };
+
+        /**
          * @returns username of the logged user. 
+         * @deprecated use currentFullUser and querry it for wanted property instead
          */
         var currentUser = function() {
-            return localStorageService.get(config.authkey);
+            var user = currentFullUser();
+            return user["UserName"];
         };
 
         /**
@@ -85,9 +117,15 @@
 
         /**
          * Finishes the current user session, wipes the database
-         * and $broadcasts the event "security:logout" with the just now logged out user's username.
+         * and $broadcasts the event "security:logout" with the just now logged out user.
+         * User has the following format:
+         * {
+         * "UserName": String,
+         * "OrgId": String,
+         * "SiteId": String
+         * }
          * 
-         * @return Promise resolved with username of the logged out user 
+         * @return Promise resolved with the logged out user 
          */
         var logout = function () {
             // invalidate current session
@@ -96,7 +134,7 @@
             if (!!current) {
                 localStorageService.put(config.previouskey, current);
             }
-            $rootScope.$broadcast(config.eventnamespace + "logout", current);
+            $rootScope.$broadcast($event("logout"), current);
 
             return swdbDAO.resetDataBase(["Settings"]).then(function () {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
@@ -126,6 +164,7 @@
         var service = {
             login: login,
             currentUser: currentUser,
+            currentFullUser: currentFullUser,
             hasAuthenticatedUser: hasAuthenticatedUser,
             logout: logout,
             handleUnauthorizedRemoteAccess: handleUnauthorizedRemoteAccess

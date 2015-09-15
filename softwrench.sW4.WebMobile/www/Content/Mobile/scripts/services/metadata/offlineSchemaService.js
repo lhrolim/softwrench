@@ -1,9 +1,9 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_mobile_services').factory('offlineSchemaService', ['$log', 'fieldService', 'schemaService', offlineSchemaService]);
+    angular.module('sw_mobile_services').factory('offlineSchemaService', ['$log', 'fieldService', 'schemaService', 'securityService', offlineSchemaService]);
 
-    function offlineSchemaService($log, fieldService, schemaService) {
+    function offlineSchemaService($log, fieldService, schemaService, securityService) {
 
         var service = {
             loadDetailSchema: loadDetailSchema,
@@ -76,9 +76,22 @@
             return null;
         };
 
+        function setValueIfNotPresent(item, field, value) {
+            if (!item[field]) {
+                item[field] = value;
+            }
+        }
+
+        function fillDefaultOfflineValues(schema, item) {
+            var user = securityService.currentFullUser();
+            // TODO: handle case where no default value is supposed to be used (client forcefully regitered empty default value)
+            setValueIfNotPresent(item, "siteid", user["SiteId"]);
+            setValueIfNotPresent(item, "orgid", user["OrgId"]);
+        };
 
         function fillDefaultValues(schema, item) {
             fieldService.fillDefaultValues(schema.displayables, item, {});
+            fillDefaultOfflineValues(schema, item);
         };
 
         function locateAttributeByQualifier(schema, qualifier) {
