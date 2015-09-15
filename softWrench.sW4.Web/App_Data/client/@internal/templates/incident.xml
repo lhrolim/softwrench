@@ -116,8 +116,7 @@
           <field attribute="cinum" hidden="true"/>
 
           <section orientation="horizontal">
-            <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="true" />
-            <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
+            <section id="statussection"/>
           </section>
 
           <section>
@@ -206,6 +205,11 @@
         </schema>
         
         <schema parentschema="adetail" id="detail" title="Incident Details">
+          <section id="statussection">
+            <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" />
+            <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="false"/>
+          </section>
+          
           <section id="compositions">
             <tab label="Solution" id="solution" icon="fa fa-book">
               <field attribute="solution" hidden="true"/>

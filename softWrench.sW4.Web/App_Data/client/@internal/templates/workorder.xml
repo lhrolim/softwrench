@@ -180,9 +180,6 @@
 <!--          <field attribute="failurecode"  hidden="true"/>-->
 
           <section orientation="horizontal">
-            <field attribute="wonum" label="WO#" readonly="true">
-              <renderer type="default" />
-            </field>
             <section id="statussection" />
           </section>
 
@@ -293,11 +290,14 @@
             </association>
           </section>
 
-          <section id="statussection">
+          <!--<section id="statussection">
+            <field attribute="wonum" label="WO#" readonly="true">
+              <renderer type="default" />
+            </field>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR">
               <renderer type="default" />
             </field>
-          </section>
+          </section>-->
 
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
@@ -313,6 +313,9 @@
             </field>
           </section>
           <section id="statussection">
+            <field attribute="wonum" label="WO#" readonly="true">
+              <renderer type="default" />
+            </field>
             <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>

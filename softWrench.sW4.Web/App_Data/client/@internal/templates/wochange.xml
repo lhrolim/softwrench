@@ -92,7 +92,6 @@
         <schema id="adetail" title="Change Details" abstract="true" stereotype="detail" platform="web">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="wonum" label="Change#" requiredexpression="true"/>
             <section id="statussection"/>
           </section>
 
@@ -148,6 +147,7 @@
         <schema parentschema="adetail" id="editdetail" title="Change Details">
 
           <section id="statussection">
+            <field attribute="wonum" label="Change#" requiredexpression="true"/>
             <field attribute="status" label="Status:" requiredexpression="true"/>
           </section>
 
@@ -161,10 +161,6 @@
         </schema>
         
         <schema parentschema="adetail" id="newdetail" title="New Change">
-          <section id="statussection">
-            <field attribute="status" label="Status:" readonly="true" default="WAPPR" requiredexpression="true"/>
-          </section>
-
           <section id="remainingflieds">
             <field attribute="estdur"            default="0" hidden="true"/>
             <field attribute="estlabhrs"         default="0" hidden="true"/>
