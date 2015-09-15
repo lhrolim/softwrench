@@ -107,7 +107,14 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                             if ($scope.schema != null) {
                                 //if the current leaf matches the current application
-                                if (leafs[id].applicationContainer == $scope.schema.applicationName && childPage == null) {
+                                var isParent = leafs[id].applicationContainer == $scope.schema.applicationName;
+
+                                //if the lcurrent leaf is likely the parent
+                                var possibleParent = leafs[id].application == $scope.schema.applicationName;
+                                possibleParent = possibleParent && leafs[id].schema.toLowerCase().indexOf('list') > -1;
+                                possibleParent = possibleParent && leafs[id].title != $scope.schema.title;
+
+                                if ((isParent || possibleParent) && childPage == null) {
                                     //add to the breadcrumb
                                     if (page == null) {
                                         page = [];
@@ -115,20 +122,23 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                                     page.push(leafs[id]);
 
-                                    //add a breadcrumb item for the unknown page
-                                    var newPage = {};
+                                    if (!$scope.pageFoundInMenu(current)) {
 
-                                    //determine the best icon to use
-                                    var icon = 'fa fa-circle-o';
-                                    if (current.indexOf("Details") > -1) {
-                                        icon = 'fa fa-file-text-o';
+                                        //add a breadcrumb item for the unknown page
+                                        var newPage = {};
+
+                                        //determine the best icon to use
+                                        var icon = 'fa fa-circle-o';
+                                        if (current.indexOf("Detail") > -1) {
+                                            icon = 'fa fa-file-text-o';
+                                        }
+
+                                        newPage.icon = icon;
+                                        newPage.title = current;
+                                        newPage.type = 'UnknownMenuItemDefinition';
+
+                                        page.push(newPage);
                                     }
-
-                                    newPage.icon = icon;
-                                    newPage.title = current;
-                                    newPage.type = 'UnknownMenuItemDefinition';
-
-                                    page.push(newPage);
                                 }
                             }
                         }
@@ -143,7 +153,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
             }
 
             $scope.getBreadcrumbItems = function (currentMenu) {
-                var foundPages = $scope.findCurrentPage(currentMenu.leafs, $scope.title);
+                var foundPages = $scope.findCurrentPage(currentMenu.leafs, $scope.currentTitle);
                 var newPage;
 
                 //add the settings menu
@@ -195,6 +205,17 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 return menu;
             };
 
+            $scope.getCurrentTitle = function () {
+                var menu = $scope.getCurrentMenu();
+
+                $scope.currentTitle = $scope.title;
+                if (menu.displacement != 'admin') {
+                    if ($scope.schema != null) {
+                        $scope.currentTitle = $scope.schema.title;
+                    }
+                }
+            };
+
             $scope.isDesktop = function () {
                 return isDesktop();
             };
@@ -202,6 +223,23 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
             $scope.isMobile = function () {
                 return isMobile();
             };
+
+            $scope.pageFoundInMenu = function (title) {
+                var pageFound = false;
+                var menu = $scope.getCurrentMenu();
+
+                if (menu.explodedLeafs != null) {
+                    for (var id in menu.explodedLeafs) {
+                        if (menu.explodedLeafs[id].hasOwnProperty('title')) {
+                            if (menu.explodedLeafs[id].title == title) {
+                                pageFound = true;
+                            }
+                        }
+                    }
+                }
+
+                return pageFound;
+            }
 
             $scope.processBreadcrumb = function () {
                 var currentMenu = $scope.getCurrentMenu();
@@ -216,11 +254,17 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
             };
 
             $scope.$on('schemaChange', function (event, schema) {
+                //log.debug('schemaChange');
+
                 $scope.schema = schema;
+                $scope.getCurrentTitle();
                 $scope.processBreadcrumb();
             });
 
             $scope.$watch('title', function (newValue, oldValue) {
+                //log.debug('titleChange');
+
+                $scope.getCurrentTitle();
                 $scope.processBreadcrumb();
             });
         }
