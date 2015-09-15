@@ -179,7 +179,7 @@
 
     <application name="physicalcount" entity="physicalCount" title="Physical Count">
       <schemas>
-        <schema stereotype="list" id="physicalcountList" title="Physical Count" redeclaring="true">
+        <schema stereotype="list" id="physicalcountList" title="Physical Count Grid" redeclaring="true">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
           </properties>

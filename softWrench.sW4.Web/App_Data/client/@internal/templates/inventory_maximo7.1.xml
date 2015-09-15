@@ -740,7 +740,7 @@
 
     <application name="physicalcount" entity="physicalCount" title="Physical Count">
       <schemas>
-        <schema stereotype="list" id="physicalcountList" title="Physical Count">
+        <schema stereotype="list" id="physicalcountList" title="Physical Count Grid">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
           </properties>
@@ -765,7 +765,7 @@
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
         
-        <schema id="detail" stereotype="detail" title="Physical Count Entry">
+        <schema id="detail" stereotype="detail" title="Physical Count Details">
           <properties>
             <property key="nextschema.schemaid" value="physicalcountList"/>
             <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
@@ -796,7 +796,7 @@
 
     <application name="physicaldeviation" entity="physicalDeviation" title="Physical Deviation">
       <schemas>
-        <schema stereotype="list" id="physicaldeviationList" title="Physical Count">
+        <schema stereotype="list" id="physicaldeviationList" title="Physical Deviation Grid">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/PhysicalDeviation/ScanBar"/>
           </properties>
@@ -823,7 +823,7 @@
           </field>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
-        <schema id="detail" stereotype="detail" title="Physical Count Entry">
+        <schema id="detail" stereotype="detail" title="Physical Count Details">
           <properties>
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
             <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
@@ -854,7 +854,7 @@
 
     <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
       <schemas>
-        <schema stereotype="list" id="reservedMaterialsList" title="Reserved Mateirals">
+        <schema stereotype="list" id="reservedMaterialsList" title="Reserved Materials">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/ReservedMaterials/ScanBar"/>
           </properties>

@@ -1925,7 +1925,7 @@
           </properties>
         </list>
 
-        <schema id="editdetail" title="Change Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="editdetail" title="Change Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="workorderid" hidden="true" />
           <field attribute="workorder_.wonum" hidden="true" />
           <field attribute="workorder_.status" hidden="true" />
@@ -2790,7 +2790,7 @@
             <renderer type="richtext" />
           </field>
         </schema>
-        <schema id="newdetail" parentschema="adetail" title="Solution Incident">
+        <schema id="newdetail" parentschema="adetail" title="New Solution">
         </schema>
         <schema id="editdetail" parentschema="adetail" title="Solution Details">
           <section id="idsection">
