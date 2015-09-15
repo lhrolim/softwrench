@@ -104,6 +104,9 @@
          */
         var currentUser = function() {
             var user = currentFullUser();
+            if (!user) {
+                return null;
+            }
             return user["UserName"];
         };
 
@@ -111,7 +114,7 @@
          * @returns true if there's a user logged in, false otherwise 
          */
         var hasAuthenticatedUser = function() {
-            var user = currentUser();
+            var user = currentFullUser();
             return !!user;
         };
 
