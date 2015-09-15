@@ -15,8 +15,8 @@
         <ul class="dropdown-menu" role="menu">
             <li>
                 <a href="#" ng-click="toggleFilterMode()">
-                    <span ng-if="basicMode"><i class="fa fa-rocket"></i>&ensp;{{i18N('_grid.filter.advanced','Advanced Mode')}}</span>
-                    <span ng-if="!basicMode"><i class="fa fa-minus"></i>&ensp;{{i18N('_grid.filter.basic','Basic Mode')}}</span>
+                    <span ng-if="basicMode"><i class="fa fa-rocket"></i>&ensp;{{i18N('_grid.filter.advanced','Quick Search')}}</span>
+                    <span ng-if="!basicMode"><i class="fa fa-minus"></i>&ensp;{{i18N('_grid.filter.basic','Hide Search')}}</span>
                 </a>
             </li>
             <li ng-if="selectedfilter">
@@ -51,7 +51,7 @@
         </ul>
     </div>
 
-    <button type="button" class="btn" data-original-title="Advanced Mode" rel="tooltip" ng-show="false">
+    <button type="button" class="btn" data-original-title="Quick Search" rel="tooltip" ng-show="false">
         <i class="fa fa-rocket"></i>
     </button>
 
