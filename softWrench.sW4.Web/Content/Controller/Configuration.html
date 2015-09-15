@@ -19,9 +19,9 @@
                             ng-change="showDefinitions(currentCategory)" class="form-control"></select>
                 </div>
                 <div class="form-group" ng-show="profiles.length >0">
-                    <label>{{i18N('configuration.profile','Profile')}}</label>
+                    <label>{{i18N('configuration.profile','Security Group')}}</label>
                     &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="If this is selected the given configuration would just apply to users which have this profile enabled.
-                                      If Any, then it would be applied to all users"></icon>
+                                      If &quot;Any&quot;, then it would be applied to all users"></icon>
                     <select ng-model="currentprofile" ng-options="profile.name for profile in profiles"
                             ng-change="showDefinitions(currentCategory)" class="form-control"></select>
                 </div>
