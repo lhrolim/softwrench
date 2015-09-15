@@ -145,10 +145,9 @@
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Change Details">
-
           <section id="statussection">
-            <field attribute="wonum" label="Change#" requiredexpression="true"/>
-            <field attribute="status" label="Status:" requiredexpression="true"/>
+            <field attribute="wonum" label="Change#" readonly="true"/>
+            <field attribute="status" label="Status:" readonly="true"/>
           </section>
 
           <section id="remainingflieds">
