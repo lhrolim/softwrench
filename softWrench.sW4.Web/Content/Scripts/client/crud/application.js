@@ -280,6 +280,12 @@ function ApplicationController($scope, $http, $log, $timeout,
 
         //broadcast schema for the breadcrumbs 
         $rootScope.$broadcast('schemaChange', $scope.schema);
+
+        if ($scope.schema != null) {
+            $rootScope.$broadcast('sw_titlechanged', $scope.schema.title);
+        } else {
+            $rootScope.$broadcast('sw_titlechanged', null);
+        }
     };
 
 
