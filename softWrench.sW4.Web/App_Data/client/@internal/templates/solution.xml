@@ -89,7 +89,7 @@
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" stereotype="detail" platform="web">
+        <schema parentschema="adetail" title="Solution Details" id="editdetail" stereotype="detail" platform="web">
           <section id="statussection">
             <optionfield attribute="status" label="Status" requiredexpression="true">
               <renderer type="combo" />
@@ -101,7 +101,7 @@
           <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus" />
         </schema>
 
-        <schema parentschema="adetail" id="newdetail" stereotype="detail" platform="web">
+        <schema parentschema="adetail" title="New Solution" id="newdetail" stereotype="detail" platform="web">
           <section id="statussection">
             <field attribute="status" label="Status" enableexpression="false">
               <renderer type="default" />

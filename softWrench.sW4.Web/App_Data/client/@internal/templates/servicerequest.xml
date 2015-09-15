@@ -261,12 +261,12 @@
       </schemas>
     </application>
 
-    <application entity="SR" name="quickservicerequest" title="Service Request" >
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" >
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
       <schemas>
-        <schema id="quicksrgrid" title="Service Request Grid" stereotype="list">
+        <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list">
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
           </field>
@@ -291,7 +291,7 @@
           </properties>
         </schema>
 
-        <schema id="quicknewdetail" stereotype="detailnew" title="New Service Request">
+        <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request">
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
@@ -321,7 +321,7 @@
           </field>
         </schema>
 
-        <schema id="quickeditdetail" stereotype="detailnew" title="Service Request Details">
+        <schema id="quickeditdetail" stereotype="detailnew" title="Quick Request Details">
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>

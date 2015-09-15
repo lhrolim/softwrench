@@ -279,6 +279,20 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
+        #region UI Options
+
+        public static bool UIShowClassicAdminMenu
+        {
+            get
+            {
+                var flagStr = MetadataProvider.GlobalProperty("ui.adminmenu.showclassic");
+                var flag = false;
+                bool.TryParse(flagStr, out flag);
+                return flag;
+            }
+        }
+
+        #endregion
 
         #region Attachments
 

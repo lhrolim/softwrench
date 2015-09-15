@@ -42,7 +42,6 @@
                 return url(path);
             };
 
-
             scope.isLocal= function (path) {
                 return contextService.isLocal();
             };
@@ -51,10 +50,19 @@
                 adminMenuService.logout();
             };
 
-            //show or hide the menu when the expand button is clicked
-            $('.menu-expand').click(function () {
-                jQuery(this).toggleClass('menu-open');
-            });
+            scope.showClassicMenu = function () {
+                return contextService.fetchFromContext('UIShowClassicAdminMenu', false, true);
+            };
+        }
+    };
+});
+
+app.directive('menuExpander', function () {
+    return {
+        link: function (scope, element, attr) {
+            scope.clicMenuExpander = function () {
+                $(element).toggleClass('menu-open');
+            };
         }
     };
 });

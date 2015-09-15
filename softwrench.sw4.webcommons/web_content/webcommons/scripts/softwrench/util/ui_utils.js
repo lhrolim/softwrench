@@ -40,4 +40,9 @@
             $('.listgrid-table').css('margin-top', 'auto');
         }
     });
+
+    //show or hide the menu when the expand button is clicked
+    $('.menu-expand').click(function () {
+        $(this).toggleClass('menu-open');
+    });
 });

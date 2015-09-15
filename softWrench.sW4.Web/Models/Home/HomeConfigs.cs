@@ -13,7 +13,6 @@ namespace softWrench.sW4.Web.Models.Home {
         public string Environment { get; set; }
         public Boolean IsLocal { get; set; }
         public Boolean ActivityStreamFlag { get; set; }
-
         public string ClientName { get; set; }
         public string ClientSideLogLevel { get; set; }
         public int SuccessMessageTimeOut { get; set; }
@@ -26,5 +25,6 @@ namespace softWrench.sW4.Web.Models.Home {
         public string ReservedMaterialsListScanOrder { get; set; }
         public string InvIssueListBeringScanOrder { get; set; }
         public string DefaultEmail { get; set; }
+        public Boolean UIShowClassicAdminMenu { get; set; }
     }
 }

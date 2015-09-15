@@ -24,16 +24,15 @@
                     <label for="advancedSearch" class="col-xs-12 col-sm-2 col-md-1 control-label">Search</label>
                     <div class="col-xs-12 col-sm-10 col-md-11">
                         <div class="input-group">
-                            <input class="form-control" id="advancedSearch" ng-model="advancedsearchdata" ng-enter="doAdvancedSearch(advancedsearchdata)">
+                            <input type="text" class="form-control" id="advancedSearch" ng-model="advancedsearchdata" ng-enter="doAdvancedSearch(advancedsearchdata)">
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-enabled="advancedsearchdata && advancedsearchdata != ''"
+                                <button class="btn btn-default advancedSearch" type="button" ng-enabled="advancedsearchdata && advancedsearchdata != ''"
                                         ng-click="doAdvancedSearch(advancedsearchdata)">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -25,8 +25,8 @@
   </container>
   <container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
     <application id ="PGRID" icon="fa fa-table" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
-    <application id ="POGRID" icon="fa fa-table" title="Purchase Orders Grid" ref="po" schema="list" tooltip="Click to view your Purchase Order Grid"/>
-    <application id="RECEIPTS" icon="fa fa-table" title="Receiving" ref="receiving" schema="list" tooltip="Click to view your Receipts"/>
+    <application id ="POGRID" icon="fa fa-table" title="Purchase Orders Grid" ref="po" schema="list" tooltip="Click to view your Purchase Orders Grid"/>
+    <application id="RECEIPTS" icon="fa fa-table" title="Receiving Grid" ref="receiving" schema="list" tooltip="Click to view your Receiving Grid"/>
     <application id ="PNEW" icon="fa fa-plus" title="New Purchase Request" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
   </container>
   <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="Incident"  role="incidents">

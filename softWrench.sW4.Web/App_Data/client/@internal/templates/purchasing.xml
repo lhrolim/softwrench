@@ -120,7 +120,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <property key ="mobile.disabled" value="true"/>
       </properties>
       <schemas>
-        <list title="Purchase Order Grid">
+        <list title="Purchase Orders Grid">
           <field attribute ="ponum" label="PO#">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
@@ -280,7 +280,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application entity="pr" name ="pr" title="Purchase Requests">
       <schemas>
         <!--Creating the Grid: SWWEB-232-->
-        <list title="Purchase Grid">
+        <list title="Purchase Request Grid">
           <field attribute="prnum" label="PR#">
             <renderer type="default" params="widthXS=35%;widthSM=25%;widthMD=20%;widthLG=10%"/>
           </field>

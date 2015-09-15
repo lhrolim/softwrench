@@ -86,6 +86,7 @@
     <application name="asset" title="Asset" entity="paeasset" audit="true">
       <properties>
         <property key="mobile.presyncservice" value="paeAssetService.preSync"/>
+        <property key="mobile.fetchlimit" value="1500"/>
       </properties>
       
       <schemas>
