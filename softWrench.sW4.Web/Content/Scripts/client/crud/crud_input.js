@@ -16,6 +16,8 @@
             savefn: '&',
             previousschema: '=',
             previousdata: '=',
+            parentdata: '=',
+            parentschema: '=',
             title: '=',
             elementid: '@',
             isMainTab: '@',
@@ -29,7 +31,8 @@
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
                   "datamap='datamap' association-options='associationOptions' blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
-                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' ismodal='{{ismodal}}'/>"
+                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
+                  "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}'/>"
                );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
@@ -74,6 +77,8 @@ app.directive('crudInput', function (contextService, associationService) {
             savefn: '&',
             previousschema: '=',
             previousdata: '=',
+            parentschema: '=',
+            parentdata: '=',
             title: '=',
             elementid: '@',
             composition: '@',

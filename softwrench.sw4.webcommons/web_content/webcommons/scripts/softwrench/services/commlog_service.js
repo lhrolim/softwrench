@@ -24,6 +24,18 @@ app.factory('commlogService', function ($http, contextService, restService) {
             restService.invokePost("Commlog", "UpdateReadFlag", httpParameters, null, null, function() {
                 parameters.compositionItemData["read"] = false;
             });
+        },
+
+        formatCommTemplate: function (parameters) {
+            var httpParameters = {
+                templateId: parameters.fields['#templateid'],
+                applicationName: parameters.parentdata.application,
+                applicationId: parameters.parentdata.id
+            };
+            restService.invokePost("CommunicationTemplateController", "MergeTemplateDefinition", httpParameters, null, function(data) {
+                parameters.fields['subject'] = data.subject;
+                parameters.fields['message'] = data.message;
+            }, null);
         }
     };
 

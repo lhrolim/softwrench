@@ -98,6 +98,8 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             insidelabellesssection: '@',
             previousdata: '=',
             previousschema: '=',
+            parentdata: '=',
+            parentschema: '=',
             outerassociationcode: '=',
             sectionParameters: '=',
             outerassociationdescription: '=',
