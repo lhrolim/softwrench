@@ -444,9 +444,16 @@ app.directive('crudBody', function (contextService) {
                 var idFieldName = schemaToSave.idFieldName;
                 var id = transformedFields[idFieldName];
 
-                var jsonString = angular.toJson(transformedFields);
+                
 
                 var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id);
+
+                var jsonWrapper = {
+                    json: transformedFields,
+                    requestData: submissionParameters
+                }
+
+                var jsonString = angular.toJson(jsonWrapper);
 
                 $rootScope.savingMain = !isComposition;
 
@@ -466,7 +473,7 @@ app.directive('crudBody', function (contextService) {
                 $log.getInstance("crud_body#submit").debug(jsonString);
 
 
-                var urlToUse = url("/api/data/" + applicationName + "/?" + $.param(submissionParameters));
+                var urlToUse = url("/api/data/" + applicationName + "/");
                 var command = id == null ? $http.post : $http.put;
 
                 command(urlToUse, jsonString)
