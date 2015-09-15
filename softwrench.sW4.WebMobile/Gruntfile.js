@@ -2,6 +2,8 @@ module.exports = function (grunt) {
 
     // Project configuration.
 
+    //#region Scripts
+
     /** downloaded and customized or not distributed by bower */
     var customVendorScripts = [
         "www/Content/Vendor/downloadedvendor/persistence.js",
@@ -50,7 +52,6 @@ module.exports = function (grunt) {
     /** app scripts: required for bootstraping the app */
     var appBootstrapScripts = [
         "www/scripts/platformOverrides.js",
-        "www/scripts/index.js",
         "www/Content/Mobile/scripts/mobile_bootstrap.js",
         "www/Content/Mobile/scripts/utils/mobileconstants.js"
     ];
@@ -85,23 +86,39 @@ module.exports = function (grunt) {
         .concat(appScripts)
         .concat(customerScripts);
 
+    var vendorScripts = [
+        // complete paths to guarantee load order (instead of **/*.js)
+        "www/Content/Vendor/scripts/angular.js",
+        "www/Content/Vendor/scripts/angular-ui-router.js",
+        "www/Content/Vendor/scripts/angular-sanitize.js",
+        "www/Content/Vendor/scripts/angular-animate.js",
+        "www/Content/Vendor/scripts/ionic.min.js",
+        "www/Content/Vendor/scripts/ionic-angular.min.js",
+        "www/Content/Vendor/scripts/jquery.js",
+        "www/Content/Vendor/scripts/ng-cordova.js",
+        "www/Content/Vendor/scripts/moment.js",
+        "www/Content/Vendor/scripts/persistence.store.websql.js"
+    ];
+    
+    
+    var testScripts = [
+        "bower_components/angular-mocks/angular-mocks.js",
+        "tests/**/*.js"
+    ];
+
+    var allScripts = []
+        .concat(vendorScripts)
+        .concat(solutionScripts)
+        .concat(testScripts);
+
+    //#endregion
+
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
 
         app: {
             index: "www/layout.html",
-            vendors: [ // complete paths to guarantee load order (instead of **/*.js)
-                "www/Content/Vendor/scripts/angular.js",
-                "www/Content/Vendor/scripts/angular-ui-router.js",
-                "www/Content/Vendor/scripts/angular-sanitize.js",
-                "www/Content/Vendor/scripts/angular-animate.js",
-                "www/Content/Vendor/scripts/ionic.min.js",
-                "www/Content/Vendor/scripts/ionic-angular.min.js",
-                "www/Content/Vendor/scripts/jquery.js",
-                "www/Content/Vendor/scripts/ng-cordova.js",
-                "www/Content/Vendor/scripts/moment.js",
-                "www/Content/Vendor/scripts/persistence.store.websql.js"
-            ]
+            vendors: vendorScripts
         },
 
         clean: {
@@ -153,7 +170,7 @@ module.exports = function (grunt) {
             },
             fontsrelease: {
                 options: {
-                   destPrefix: "www/Content/public/fonts"
+                    destPrefix: "www/Content/public/fonts"
                 },
                 files: {
                     "ionicons.eot": "ionic/release/fonts/ionicons.eot",
@@ -289,7 +306,7 @@ module.exports = function (grunt) {
         concat: {
             appScripts: {
                 options: {
-                    separator: ";\n"  
+                    separator: ";\n"
                 },
                 src: solutionScripts,
                 dest: "tmp/concat/app.js"
@@ -340,10 +357,38 @@ module.exports = function (grunt) {
         },
 
         copy: {
-            build: { // applies /overrides files
+            build: {
+                // applies /overrides files
                 files: [
                     { expand: true, src: ["**/*"], dest: "platforms/", cwd: "overrides/" }
                 ]
+            }
+        },
+
+        karma: {
+            options: {
+                configFile: "karma.conf.js",
+                logLevel: "WARN",
+                files: ["overrides/cordova.js"].concat(allScripts),
+                browsers: ["PhantomJS"],
+                singleRun: true
+            },
+            tdd: { // dev environment
+                autoWatch: true,
+                singleRun: false,
+                logLevel: "DEBUG",
+                browsers: ["Chrome"]
+            },
+            dev: { // CI dev
+            },
+            release: { // CI release
+                files: [{
+                    src: [
+                        "overrides/cordova.js",
+                        "www/Content/public/vendor/vendor.min.js",
+                        "www/Content/public/app.min.js"
+                    ].concat(testScripts)
+                }]
             }
         }
 
@@ -357,6 +402,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-script-link-tags");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-karma");
 
     // Default task(s).
 
@@ -484,13 +530,13 @@ module.exports = function (grunt) {
             .done(done);
     });
 
-    grunt.registerTask("vs2015", "intended for CI: prepares workspace and builds the app for devices", function (env) {
+    grunt.registerTask("vs2015", "intended for CI: prepares workspace, executes karma tests and builds the app for devices", function (env) {
         env = env || "debug";
         switch (env) {
             case "release":
-                return grunt.task.run(["preparerelease", "build:" + env]);
+                return grunt.task.run(["preparerelease", "karma:" + env, "build:" + env]);
             case "debug":
-                return grunt.task.run(["fulldev", "build:" + env]);
+                return grunt.task.run(["fulldev", "karma:" + env, "build:" + env]);
             default:
                 throw new Error("Unsupported build environment: " + env);
         }

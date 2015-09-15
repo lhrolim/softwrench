@@ -166,6 +166,7 @@
 
         var service = {
             login: login,
+            loginLocal: loginLocal,
             currentUser: currentUser,
             currentFullUser: currentFullUser,
             hasAuthenticatedUser: hasAuthenticatedUser,
