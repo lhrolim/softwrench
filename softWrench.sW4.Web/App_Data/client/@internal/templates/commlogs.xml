@@ -84,7 +84,7 @@
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
           <field attribute="createdate" label="Created Date/Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;widthXS=10%;widthSM=10%;widthMD=10%;widthLG=10%"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;widthXS=10%;widthSM=10%;widthMD=10%;widthLG=10%"/>
           </field>
           <field attribute="sendto" label="To">
             <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%;formatter=lower"/>
