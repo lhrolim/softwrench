@@ -94,7 +94,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
 
                 IApplicationResponse response;
                 var operationRequest = new OperationDataRequest {
-                    Application = application,
+                    ApplicationName = application,
                     CurrentSchemaKey = currentSchemaKey,
                     RouteParametersDTO = new RouterParametersDTO() {
                         NextSchemaKey = nextSchemaKey
@@ -105,10 +105,16 @@ namespace softWrench.sW4.Web.Controllers.Application {
                 };
                 if (String.IsNullOrWhiteSpace(entityId)) {
                     Log.DebugFormat("redirecting to datacontroller post with datamap " + datamap);
-                    response = _dataController.Post(operationRequest, datamap);
+                    response = _dataController.Post(new JsonRequestWrapper {
+                        Json = datamap,
+                        RequestData = operationRequest
+                    });
                 } else {
                     Log.DebugFormat("redirecting to datacontroller put");
-                    response = _dataController.Put(operationRequest, datamap);
+                    response = _dataController.Put(new JsonRequestWrapper {
+                        Json = datamap,
+                        RequestData = operationRequest
+                    });
                 }
                 return RedirectToAction("RedirectToAction", "Home", BuildParameter(application, platform, response, popupmode, applicationMetadata));
             } catch (Exception e) {

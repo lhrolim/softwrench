@@ -163,7 +163,7 @@
           <!--            <collectionproperties allowcreation="true" allowupdate="false"/>-->
           <!--          </composition>-->
 
-          <tab label="Permissions" icon="fa-gear" id="permission" showexpression="" role="sysadmin">
+          <tab label="Security Groups" icon="fa-gear" id="permission" showexpression="" role="sysadmin">
             <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html">
               <header displacement="ontop" label="Profiles" showexpression="true"/>
             </section>
