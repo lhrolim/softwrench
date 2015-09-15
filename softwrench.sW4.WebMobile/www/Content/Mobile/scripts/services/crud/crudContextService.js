@@ -361,6 +361,7 @@
                     datamap: {}
                 };
                 crudContext.newItem = true;
+                // TODO: add support for schema registered hooks
                 offlineSchemaService.fillDefaultValues(this.currentDetailSchema(), crudContext.currentDetailItem.datamap);
                 crudContext.originalDetailItemDatamap = {
                     //to make this new item always dirty!!!
