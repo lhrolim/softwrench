@@ -32,7 +32,7 @@ app.factory('commlogService', function ($http, contextService, restService) {
                 applicationName: parameters.parentdata.application,
                 applicationId: parameters.parentdata.id
             };
-            restService.invokePost("CommunicationTemplateController", "MergeTemplateDefinition", httpParameters, null, function(data) {
+            restService.invokePost("CommTemplate", "MergeTemplateDefinition", httpParameters, null, function (data) {
                 parameters.fields['subject'] = data.subject;
                 parameters.fields['message'] = data.message;
             }, null);

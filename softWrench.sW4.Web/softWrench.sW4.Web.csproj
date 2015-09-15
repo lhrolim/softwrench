@@ -266,6 +266,7 @@
     <Compile Include="Common\WebAPIUtil.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
+    <Compile Include="Controllers\CommTemplateController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
