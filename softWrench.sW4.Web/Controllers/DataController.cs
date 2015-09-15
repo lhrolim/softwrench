@@ -96,7 +96,7 @@ namespace softWrench.sW4.Web.Controllers {
         public IApplicationResponse Delete([FromUri]OperationDataRequest operationDataRequest) {
             operationDataRequest.Operation = OperationConstants.CRUD_DELETE;
             var response = DoExecute(operationDataRequest, new JObject());
-            var application = operationDataRequest.Application;
+            var application = operationDataRequest.ApplicationName;
             var id = operationDataRequest.Id;
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
             response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
@@ -108,20 +108,22 @@ namespace softWrench.sW4.Web.Controllers {
         /// API Method to handle Update operations
         /// </summary>
         [HttpPut]
-        public IApplicationResponse Put([FromUri]OperationDataRequest operationDataRequest, [NotNull] JObject json) {
+        public IApplicationResponse Put([FromBody]JsonRequestWrapper wrapper)
+        {
+            var operationDataRequest = wrapper.RequestData;
             if (operationDataRequest.Operation == null) {
                 //TODO: when Operation api is refactored, remove this one
                 operationDataRequest.Operation = OperationConstants.CRUD_UPDATE;
             }
-            return DoExecute(operationDataRequest, json);
+            return DoExecute(operationDataRequest, wrapper.Json);
         }
 
         /// <summary>
         /// API Method to handle Insert operations
         /// </summary>
-        public IApplicationResponse Post([FromUri]OperationDataRequest operationDataRequest, [NotNull] JObject json) {
-            operationDataRequest.Operation = OperationConstants.CRUD_CREATE;
-            return DoExecute(operationDataRequest, json);
+        public IApplicationResponse Post([FromBody]JsonRequestWrapper wrapper) {
+            wrapper.RequestData.Operation = OperationConstants.CRUD_CREATE;
+            return DoExecute(wrapper.RequestData, wrapper.Json);
         }
         //
         //        /// <summary>
@@ -143,7 +145,7 @@ namespace softWrench.sW4.Web.Controllers {
             currentschemaKey.Platform = platform;
             var mockMaximo = MockingUtils.IsMockingMaximoModeActive(json);
             var operationRequest = new OperationDataRequest {
-                Application = application,
+                ApplicationName = application,
 
                 Id = id,
                 MockMaximo = mockMaximo,
@@ -177,7 +179,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             ContextLookuper.FillContext(currentschemaKey);
 
-            var application = operationDataRequest.Application;
+            var application = operationDataRequest.ApplicationName;
 
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
             var mockMaximo = operationDataRequest.MockMaximo;
@@ -197,7 +199,7 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-            var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTO, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
+            var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTOHandled, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult, operation);
