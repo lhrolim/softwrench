@@ -17,6 +17,7 @@ using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
+using JetBrains.Annotations;
 using log4net;
 using NHibernate;
 using NHibernate.Transform;
@@ -131,7 +132,7 @@ namespace cts.commons.persistence {
             }
             return query;
         }
-
+        [CanBeNull]
         public List<Dictionary<string, string>> FindByNativeQuery(String queryst, params object[] parameters) {
             IList<dynamic> queryResult;
             using (var session = GetSessionManager().OpenSession()) {
