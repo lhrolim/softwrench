@@ -478,9 +478,7 @@
     <Content Include="Content\Images\folder.png" />
     <Content Include="Content\Images\header-email.jpg" />
     <Content Include="Content\Images\header.jpg" />
-    <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
-    <Content Include="Content\Images\icon-opendetails.png" />
     <Content Include="Content\Images\logo-byline.png" />
     <Content Include="Content\Images\logo-main.png" />
     <Content Include="Content\Images\pagination-first.png" />
@@ -732,13 +730,7 @@
     <Content Include="Content\Controller\Configuration.html" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\css\submenu.css" />
-    <Content Include="Content\Images\downarrow.png" />
-    <Content Include="Content\Images\executeNow-icon.png" />
-    <Content Include="Content\Images\pause-icon.png" />
-    <Content Include="Content\Images\rightarrowtree.png" />
-    <Content Include="Content\Images\scheduler-icon.png" />
     <Content Include="Content\Images\softwrench-logo-small.gif" />
-    <Content Include="Content\Images\start-icon.png" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
     <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
@@ -824,11 +816,6 @@
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="IBM.Data.DB2.dll" />
-    <Content Include="Content\Images\update_16.png" />
-    <Content Include="Content\Images\excel_small.gif" />
-    <Content Include="Content\Images\print_small.gif" />
-    <Content Include="Content\Images\refresh_sm.gif" />
-    <Content Include="Content\Images\softWrench-phone.gif" />
     <None Include="Content\styles\default\_site.scss" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -1336,19 +1323,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Content\Images\accent.png" />
-    <Content Include="Content\Images\bullet.png" />
-    <Content Include="Content\Images\heroAccent.png" />
-    <Content Include="Content\Images\orderedList0.png" />
-    <Content Include="Content\Images\orderedList1.png" />
-    <Content Include="Content\Images\orderedList2.png" />
-    <Content Include="Content\Images\orderedList3.png" />
-    <Content Include="Content\Images\orderedList4.png" />
-    <Content Include="Content\Images\orderedList5.png" />
-    <Content Include="Content\Images\orderedList6.png" />
-    <Content Include="Content\Images\orderedList7.png" />
-    <Content Include="Content\Images\orderedList8.png" />
-    <Content Include="Content\Images\orderedList9.png" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
