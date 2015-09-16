@@ -322,8 +322,9 @@
            <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
            <field attribute="woclass" hidden="true"/>
            <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-           <field attribute="wonum" label="WO#" readonly="true"/>
 
+           <section id ="idsection"/>
+           
            <field attribute="description" label="Summary:"/>
            
            <field label="Details:" attribute="longdescription_.ldtext" >
@@ -449,6 +450,10 @@
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
+          <section id="idsection">
+            <field attribute="wonum" label="WO#" readonly="true"/>
+          </section>
+          
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
           </section>

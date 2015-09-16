@@ -198,16 +198,18 @@
             <renderer type="default" params="width=4%"/>
           </section>
         </schema>
-
-        <schema id="viewinvreturndetail" stereotype="detail" mode="input">
+            
+        <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Issues and Returns Details">
+          <field attribute="matusetransid" hidden="true"/>
           <section>
-            <field attribute="matusetransid" hidden="true"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="enterby" label="Entered By" readonly="true"/>
             <field attribute="issuetype" label="Issue Type" readonly="true"/>
             <field attribute="issueto" label="Issued To" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="siteid" label="Site" readonly="true"/>
             <field attribute="storeloc" label="Storeroom" readonly="true"/>
             <field attribute="itemnum" label="Item" readonly="true"/>
@@ -232,6 +234,7 @@
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="refwo" label="Work Order" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="assetnum" label="Asset" readonly="true"/>

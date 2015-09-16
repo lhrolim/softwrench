@@ -163,7 +163,7 @@
         <schema id = "newdetail" platform="web" redeclaring="false">
           <customization position="classstructureid"></customization>
           <customization position="glaccount" />
-          <customization position="wonum"/>
+          <!--<customization position="wonum"/>-->
           <customization position="owner">
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
               <renderer type="lookup"/>

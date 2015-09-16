@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using log4net;
@@ -96,10 +97,10 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var formattedQuery = string.Format(securityGroupsNotificationsQuery.Value,
                         ActivityStreamConstants.HoursToPurge, currentTime, Counter["servicerequest"]);
             var queryResult = _maxDAO.FindByNativeQuery(formattedQuery, null);
-            if (queryResult == null) {
+            if (!queryResult.Any()) {
                 return;
             }
-            List<Notification> notifications = new List<Notification>();
+            var notifications = new List<Notification>();
             foreach (var record in queryResult) {
                 var application = record["application"];
                 var targetschema = record["targetschema"];

@@ -47,7 +47,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
 
         public IEnumerable<IAssociationOption> GetCrews(OptionFieldProviderParameters parameters) {
             var rows = MaxDAO.FindByNativeQuery(WoBatchWhereClauseProvider.GetCrewIdQuery(true));
-            if (rows == null || !rows.Any()) {
+            if (!rows.Any()) {
                 return new List<IAssociationOption>();
             }
             return rows.Select(row => new AssociationOption(row["value"], row["description"])).ToList();

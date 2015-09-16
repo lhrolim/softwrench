@@ -66,7 +66,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            if (result == null) {
+            if (!result.Any()) {
                 return list;
             }
             foreach (var record in result) {

@@ -86,7 +86,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             }
             //we could optimize the left join here to do a in on the group names, but I guess that doesnt worth 
             var list = _dao.FindByNativeQuery("select u.status,u.defsite,p.persongroup from maxuser u left join persongroupview p on u.personid = p.personid where u.personid = ?", user.MaximoPersonId);
-            if (list == null || !list.Any()) {
+            if (!list.Any()) {
                 return _noUserRole;
             }
             var matchedGroup = false;

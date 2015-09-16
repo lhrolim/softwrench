@@ -68,9 +68,6 @@
         <schema id="adetail" title="Solution Details" abstract="true" stereotype="detail" platform="web">
 
           <section orientation="horizontal">
-            <field attribute="solution" label="Solution#" readonly="true">
-              <renderer type="default" />
-            </field>
             <section id="statussection" />
           </section>
 
@@ -91,6 +88,9 @@
 
         <schema parentschema="adetail" title="Solution Details" id="editdetail" stereotype="detail" platform="web">
           <section id="statussection">
+            <field attribute="solution" label="Solution#" readonly="true">
+              <renderer type="default" />
+            </field>
             <optionfield attribute="status" label="Status" requiredexpression="true">
               <renderer type="combo" />
               <option label="DRAFT" value="DRAFT" />
@@ -102,11 +102,6 @@
         </schema>
 
         <schema parentschema="adetail" title="New Solution" id="newdetail" stereotype="detail" platform="web">
-          <section id="statussection">
-            <field attribute="status" label="Status" enableexpression="false">
-              <renderer type="default" />
-            </field>
-          </section>
         </schema>
       </schemas>
     </application>

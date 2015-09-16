@@ -55,7 +55,7 @@ namespace softWrench.sW4.Metadata {
 
         private string HandleGeneric(string query, string tableName, Action<XmlElement, Dictionary<string, string>> rowDelegate) {
             var result = MaximoHibernateDAO.GetInstance().FindByNativeQuery(query, tableName.ToUpper());
-            if (result == null) {
+            if (!result.Any()) {
                 return null;
             }
 //            var rows = result.Cast<IEnumerable<KeyValuePair<string, object>>>();

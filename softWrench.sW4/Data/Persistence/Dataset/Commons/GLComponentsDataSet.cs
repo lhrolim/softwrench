@@ -44,7 +44,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var results = MaxDAO.FindByNativeQuery(query, null);
 
-            if (results != null && results.Any()) {
+            if (results.Any()) {
                 var gllengthquery = String.Format(@"SELECT gllength FROM glconfigure
                                                         where glorder = {0} {1}", parameters.OptionField.ExtraParameter, additionalFilters);
 

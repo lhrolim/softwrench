@@ -50,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
             // CC: Worst case scenario, it will equal the number of records in the datamap. 
             // CC: Note: I did not set remaining records to zero because of Luiz changes in the grid.  
-            if (query != null && query.Any()) {
+            if (query.Any()) {
                 foreach (var entry in query) {
                     // CC: This is now safe because we are guarantee a record before we couldn't determine if we could find a matching record
                     // CC: matusetransid is case sensitive... maybe change the dictionary to case-insensitive.   
@@ -143,7 +143,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
             var result = MaxDAO.FindByNativeQuery(query, null);
             var availableLocations = new List<IAssociationOption>();
-            if (result != null) {
+            if (result.Any()) {
                 foreach (var record in result) {
                     var recordAssociationOption = new AssociationOption(record["lotnum"], record["lotnum"]);
                     if (!availableLocations.Contains(recordAssociationOption)) {
