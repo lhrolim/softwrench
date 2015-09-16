@@ -379,7 +379,7 @@ module.exports = function (grunt) {
                 logLevel: "DEBUG",
                 browsers: ["Chrome"]
             },
-            dev: { // CI dev
+            debug: { // CI dev
             },
             release: { // CI release
                 files: [{
