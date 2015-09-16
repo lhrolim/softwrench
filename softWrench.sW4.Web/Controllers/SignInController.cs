@@ -204,6 +204,8 @@ namespace softWrench.sW4.Web.Controllers {
             public string OrgId { get; set; }
             public string SiteId { get; set; }
 
+            public long? UserTimezoneOffset { get; set; }
+
             public UserReturningData(InMemoryUser user) {
                 if (user == null) {
                     Found = false;
@@ -212,6 +214,7 @@ namespace softWrench.sW4.Web.Controllers {
                     UserName = user.Login;
                     OrgId = user.OrgId;
                     SiteId = user.SiteId;
+                    UserTimezoneOffset = user.TimezoneOffset;
                 }
             }
         }

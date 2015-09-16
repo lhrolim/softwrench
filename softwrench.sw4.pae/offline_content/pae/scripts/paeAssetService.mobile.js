@@ -5,12 +5,12 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications").factory("paeAssetService", [
-        "scanningCommonsService", "$log", "crudContextService", "offlineAuditService", "$ionicPopup", "maximoDataService","swdbDAO",
+        "scanningCommonsService", "$log", "crudContextService", "offlineAuditService", "$ionicPopup", "maximoDataService","swdbDAO","offlineSaveService",
         paeAssetService]);
 
     //#endregion
 
-    function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup, maximoDataService,swdbDAO) {
+    function paeAssetService(scanningCommonsService, $log, crudContextService, offlineAuditService, $ionicPopup, maximoDataService,swdbDAO,offlineSaveService) {
 
   
 
@@ -22,7 +22,8 @@
                 maximoDataService.loadItemByMaximoUid("asset", schema, data)
                     .then(function (asset) {
                         asset.isDirty = true;
-                        return swdbDAO.save(asset);
+                        asset.datamap["#scandate"] = new Date();
+                        return offlineSaveService.saveItem("asset", asset,false);
                     })
                     .then(function (asset) {
                         loadedAsset = asset;
