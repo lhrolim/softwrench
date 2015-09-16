@@ -73,7 +73,7 @@
           <section id ="compositions"/>
         </schema>
         
-        <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
+        <schema id="editdetail" parentschema="adetail" title="Receipt Details">
           <section id="siteidsection">
             <section orientation="horizontal">
               <field attribute="ponum" label="PO#" readonly="true" requiredexpression="true" />
