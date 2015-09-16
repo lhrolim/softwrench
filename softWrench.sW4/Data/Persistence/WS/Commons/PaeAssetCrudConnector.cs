@@ -12,9 +12,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var asset = maximoTemplateData.IntegrationObject;
             var currentTime = DateTime.Now.FromServerToRightKind();
+            var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
+            var dateToUse = crudOperationData.ContainsAttribute("#scandate")
+                ? crudOperationData.GetAttribute("#scandate")
+                : currentTime;
 
-            w.SetValue(asset, "invdate", currentTime);
-            w.SetValue(asset, "invpostdate", currentTime);
+            w.SetValue(asset, "invdate", dateToUse);
+            w.SetValue(asset, "invpostdate", dateToUse);
+
             w.SetValue(asset, "invpostdateby", SecurityFacade.CurrentUser().DBUser.UserName);
             w.SetValue(asset, "invposttype", "Automatic");
 
@@ -23,14 +28,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(asset, "plusttotalmprevenue", 0);
             w.SetValueIfNull(asset, "taxpercent", 0);
 
-            HandleAssetTrans(asset, (CrudOperationData)maximoTemplateData.OperationData);
+
+            HandleAssetTrans(asset, crudOperationData);
 
             base.BeforeUpdate(maximoTemplateData);
         }
 
         private void HandleAssetTrans(object asset, CrudOperationData operationData) {
 
-            if ((operationData.GetAttribute("#originallocation")== null  && operationData.GetAttribute("location") == null) 
+            if ((operationData.GetAttribute("#originallocation") == null && operationData.GetAttribute("location") == null)
                 || operationData.GetAttribute("#originallocation").Equals(operationData.GetAttribute("location"))) {
                 return;
             }
@@ -45,7 +51,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var personId = SecurityFacade.CurrentUser().MaximoPersonId ?? "MAXADMIN";
 
             w.SetValue(assetTrans, "ENTERBY", personId);
-            w.SetValue(assetTrans, "DATEMOVED", currentTime );
+            w.SetValue(assetTrans, "DATEMOVED", currentTime);
             w.SetValue(assetTrans, "TRANSDATE", currentTime);
             w.SetValue(assetTrans, "TRANSTYPE", "MOVED");
             w.SetValue(assetTrans, "ASSETID", operationData.GetAttribute("assetid"));

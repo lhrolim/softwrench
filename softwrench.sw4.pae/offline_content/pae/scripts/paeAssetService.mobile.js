@@ -22,6 +22,7 @@
                 maximoDataService.loadItemByMaximoUid("asset", schema, data)
                     .then(function (asset) {
                         asset.isDirty = true;
+                        asset["#scandate"] = new Date();
                         return swdbDAO.save(asset);
                     })
                     .then(function (asset) {
