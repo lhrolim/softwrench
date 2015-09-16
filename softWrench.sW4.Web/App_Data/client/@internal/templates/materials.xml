@@ -52,7 +52,7 @@
         <attribute name="description" type="varchar" required="false" />
         <attribute name="exchangerate" type="double" required="false" />
         <attribute name="sparepartadded" type="smallint" required="true" />
-        <attribute name="qtyrequested" type="int" required="false" />
+        <attribute name="qtyrequested" type="double" required="false" />
         <attribute name="exchangerate2" type="double" required="false" />
         <attribute name="linecost2" type="double" required="false" />
         <attribute name="mrnum" type="varchar" required="false" />

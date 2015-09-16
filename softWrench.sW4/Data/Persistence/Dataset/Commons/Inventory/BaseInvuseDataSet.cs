@@ -109,7 +109,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
             var result = MaxDAO.FindByNativeQuery(query, null);
             var availableLocations = new List<IAssociationOption>();
-            if (result != null) {
+            if (result.Any()) {
                 foreach (var record in result) {
                     var recordAssociationOption = new AssociationOption(record["lotnum"], record["lotnum"]);
                     if (!availableLocations.Contains(recordAssociationOption)) {

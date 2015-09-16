@@ -123,7 +123,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         }
 
-        protected Boolean IsStdAsset(String classtructureId) {
+        protected bool IsStdAsset(String classtructureId) {
             var list = MaxDAO.FindByNativeQuery(AssetConstants.StdClassificationPathParent);
             return
                 classtructureId.EqualsAny(list.Select(r => r[AssetConstants.ClassStructureIdColumn]).Cast<string>());

@@ -42,7 +42,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            if (result != null && result.Any()) {
+            if (result.Any()) {
                 foreach (var record in result) {
                     list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
                 }

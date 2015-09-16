@@ -66,6 +66,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
+            if (!result.Any()) {
+                return list;
+            }
             foreach (var record in result) {
                 list.Add(new AssociationOption(record["ID"],
                          String.Format("{0}{1}{2}{3}{4}",
@@ -80,8 +83,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return list;
         }
 
-        protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass)
-        {
+        protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass) {
             return string.Format(@"SELECT  c.classstructureid AS ID, 
                                            p3.classificationid AS CLASS_5, 
                                            p2.classificationid AS CLASS_4,  

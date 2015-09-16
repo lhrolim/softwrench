@@ -600,11 +600,11 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 }
 
                 var options = $scope.associationOptions[fieldMetadata.associationKey];
-                
+
                 var strArr = new Array();
                 for (var option in options) {
                     if (!options.hasOwnProperty(option)) {
-                         continue;
+                        continue;
                     }
                     strArr.push(options[option].value);
                 }
@@ -623,10 +623,10 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 return fieldService.nonTabFields(displayables);
             };
 
-            $scope.getDispatchFn = function(serviceCall) {
+            $scope.getDispatchFn = function (serviceCall) {
                 var validationFunction = dispatcherService.loadServiceByString(serviceCall);
                 if (validationFunction == null) {
-                    validationFunction = function() { return true };
+                    validationFunction = function () { return true };
                 }
                 return validationFunction;
             }
@@ -679,14 +679,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             };
 
             $scope.isFieldRequired = function (fieldMetadata) {
-                if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
-                    return "true" === fieldMetadata.parameters["required"];
-                }
-                var requiredExpression = fieldMetadata.requiredExpression;
-                if (requiredExpression != undefined) {
-                    return expressionService.evaluate(requiredExpression, $scope.datamap);
-                }
-                return requiredExpression;
+                return fieldService.isFieldRequired(fieldMetadata, $scope.datamap);
             };
         }
     }

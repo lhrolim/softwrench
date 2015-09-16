@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;
@@ -47,7 +48,7 @@ namespace softWrench.sW4.Metadata.Applications.Classification {
             var result = maxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            if (result != null) {
+            if (result.Any()) {
                 foreach (var record in result)
                 {
                     list.Add(new AssociationOption(record["ID"],

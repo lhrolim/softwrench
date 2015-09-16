@@ -238,7 +238,7 @@
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="ticketid" label="SR#" readonly="true"/>
+            <section id="ticketidsection"/>
           </section>
 
           <section>
@@ -357,6 +357,9 @@
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Details">
+          <section id="ticketidsection">
+            <field attribute="ticketid" label="SR#" readonly="true"/>
+          </section>
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
           </section>

@@ -120,7 +120,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <property key ="mobile.disabled" value="true"/>
       </properties>
       <schemas>
-        <list title="Purchase Orders Grid">
+        <list title="Purchase Order Grid">
           <field attribute ="ponum" label="PO#">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>

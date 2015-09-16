@@ -23,7 +23,7 @@
   
   
   <commandgroup position="detailform" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="save" showexpression="$scope:shouldshowsave"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>

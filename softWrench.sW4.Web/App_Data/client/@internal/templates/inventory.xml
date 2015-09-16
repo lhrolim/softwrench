@@ -369,7 +369,7 @@
           </field>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
-        <schema id="detail" stereotype="detail" title="Physical Count Details">
+        <schema id="detail" stereotype="detail" title="Physical Deviation Details">
           <properties>
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
             <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
@@ -452,7 +452,7 @@
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
-        <schema id="detail" title="Reserved Materials Details" mode="input" stereotype="detail">
+        <schema id="detail" title="Reserved Material Details" mode="input" stereotype="detail">
           <section>
             <field attribute="invreserveid" hidden="true"/>
             <field attribute="requireddate" hidden="true"/>
