@@ -7,20 +7,38 @@
             
             var swAlertPopup, $log, logger, contextService;
 
-            function alertLogLocation() {
-                // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScop
-                if (!contextService) contextService = $injector.get("contextService");
-                if (!rollingLogFileConstants.logToFileEnabled || contextService.isDev()) {
-                    return;
-                }
-                // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- swAlertPopup <- $exceptionHandler <- $rootScope
-                if (!swAlertPopup) swAlertPopup = $injector.get("swAlertPopup");
+            function lazyInstance(instance, name, factory, getter) {
+                factory = factory || $injector;
+                getter = getter || "get";
+                if (!instance) instance = factory[getter](name);
+                return instance;
+            }
 
-                var path = cordova.file[rollingLogFileConstants.logFileDirectory];
+            function logFilePath() {
+               var path = cordova.file[rollingLogFileConstants.logFileDirectory];
                 if (!path.endsWith("/")) {
                     path += "/";
                 }
                 path += rollingLogFileConstants.logFileName;
+                return path;
+            }
+
+            function shouldAlertExceptionLogged(exception) {
+                var message = angular.isString(exception) ? exception : exception.message;
+                // only considered a worthwhile exception if has a message with more than 10 characters
+                return !!message && message.length >= 10;
+            }
+
+            function alertLogLocation() {
+                // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScop
+                contextService = lazyInstance(contextService, "contextService");
+                if (!rollingLogFileConstants.logToFileEnabled || contextService.isDev()) {
+                    return;
+                }
+                // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- swAlertPopup <- $exceptionHandler <- $rootScope
+                swAlertPopup = lazyInstance(swAlertPopup, "swAlertPopup");
+
+                var path = logFilePath();
                 swAlertPopup.alert({
                     title: "Unexpected error",
                     template: "Check the application logs in the files " + path
@@ -29,14 +47,12 @@
 
             return function (exception, cause) {
                 // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScope
-                if (!logger) {
-                    $log = $injector.get("$log");
-                    logger = $log.get("$exceptionHandler");
-                }
+                $log = lazyInstance($log, "$log");
+                logger = lazyInstance(logger, "$exceptionHandler", $log);
                 // default behavior (from angular.js source): $log.error.apply($log, arguments);
                 logger.error.apply(logger, arguments);
                 // alerting log file location for support
-                // alertLogLocation(); -> removed: due to unstable dev environment it was getting in the way
+                if (shouldAlertExceptionLogged(exception)) alertLogLocation();
             };
 
         }]);
