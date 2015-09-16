@@ -68,7 +68,7 @@
             return $http({
                 method: "POST",
                 url: loginUrl,
-                data: { username: username, password: password },
+                data: { username: username, password: password, userTimezoneOffset: new Date().getTimezoneOffset() },
                 timeout: 20 * 1000 // 20 seconds
             })
             .then(function (response) {

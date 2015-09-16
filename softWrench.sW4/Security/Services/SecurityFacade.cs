@@ -58,7 +58,7 @@ namespace softWrench.sW4.Security.Services {
             }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             maximoUser.MergeFromDBUser(dbUser);
-            
+
 
             return UserFound(maximoUser, userTimezoneOffset);
         }
@@ -149,11 +149,15 @@ namespace softWrench.sW4.Security.Services {
 
 
         public static IPrincipal CurrentPrincipal {
-            get { return Thread.CurrentPrincipal; }
+            get {
+                return Thread.CurrentPrincipal;
+            }
         }
 
         public static string CurrentPrincipalLogin {
-            get { return CurrentPrincipal.Identity.Name; }
+            get {
+                return CurrentPrincipal.Identity.Name;
+            }
         }
         /// <summary>
         /// <para>
@@ -204,6 +208,10 @@ namespace softWrench.sW4.Security.Services {
             LogicalThreadContext.SetData("executinglogin", "true");
             if (swUser.MaximoPersonId != null) {
                 fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
+                if (fullUser == null) {
+                    Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
+                    fullUser = new User();
+                }
             }
             fullUser.MergeFromDBUser(swUser);
             var formsIdentity = CurrentPrincipal.Identity as FormsIdentity;

@@ -2,6 +2,7 @@
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
@@ -13,14 +14,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var asset = maximoTemplateData.IntegrationObject;
             var currentTime = DateTime.Now.FromServerToRightKind();
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
-            var dateToUse = crudOperationData.ContainsAttribute("#scandate")
-                ? crudOperationData.GetAttribute("#scandate")
-                : currentTime;
 
+            var dateToUse = currentTime;
+            var user = SecurityFacade.CurrentUser();
+            if (crudOperationData.ContainsAttribute("#scandate")) {
+                dateToUse = HandleScanDate(crudOperationData, dateToUse, user, currentTime);
+            }
             w.SetValue(asset, "invdate", dateToUse);
             w.SetValue(asset, "invpostdate", dateToUse);
 
-            w.SetValue(asset, "invpostdateby", SecurityFacade.CurrentUser().DBUser.UserName);
+            w.SetValue(asset, "invpostdateby", user.DBUser.UserName);
             w.SetValue(asset, "invposttype", "Automatic");
 
             // Additional required fields
@@ -32,6 +35,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             HandleAssetTrans(asset, crudOperationData);
 
             base.BeforeUpdate(maximoTemplateData);
+        }
+
+        private static DateTime HandleScanDate(CrudOperationData crudOperationData, DateTime dateToUse, InMemoryUser user,
+            DateTime currentTime) {
+            //this only occurs when it comes from the offline
+            var scanDate = crudOperationData.GetUnMappedAttribute("#scandate");
+            var datescanDate = Convert.ToDateTime(scanDate);
+            //comes already as utc converted from the client side, but maximo expects local time
+            dateToUse = datescanDate.FromUTCToMaximo();
+            return dateToUse;
         }
 
         private void HandleAssetTrans(object asset, CrudOperationData operationData) {
