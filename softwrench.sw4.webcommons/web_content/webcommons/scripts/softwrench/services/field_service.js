@@ -51,6 +51,17 @@
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
+        isFieldRequired:function(fieldMetadata,datamap) {
+            if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
+                return "true" === fieldMetadata.parameters["required"];
+            }
+            var requiredExpression = fieldMetadata.requiredExpression;
+            if (requiredExpression != undefined) {
+                return expressionService.evaluate(requiredExpression, datamap);
+            }
+            return requiredExpression;
+        },
+
         isFieldReadOnly: function (datamap, application, fieldMetadata) {
             //test the metadata read-only property
             var isReadOnly = fieldMetadata.isReadOnly;

@@ -425,8 +425,10 @@
         if (newValue !== undefined) {
             //if null we should set it
             this.$element.val(newValue);
-        }else if (this.source && this.source.length == 1) {
-            this.$element.val(this.source[0]);
+        } else if (this.source && this.source.length === 1) {
+            if (this.selected) {
+                this.$element.val(this.source[0]);
+            }
         }
         var val = this.$element.val();
         if (!this.source || val.trim() === "") {

@@ -23,7 +23,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 //but we have to take care of a_resolution_.ldtext and reslationship=solution_ that could lead to false positive, thats why startsWith
                 datamap[extrafield] = valueToSet;
             } else {
-                var appendDot = extrafield.indexOf('.') == -1;
+                var appendDot = extrafield.indexOf('.') === -1;
                 var fullKey = key;
                 if (appendDot) {
                     fullKey += ".";
@@ -194,8 +194,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
                 //this iterates for list of fields which were dependant of a first one. 
                 var array = serverOptions[dependantFieldName] || {};
-                var zeroEntriesFound = (array.associationData == null || array.associationData.length == 0);
-                var oneEntryFound = !zeroEntriesFound && array.associationData.length == 1;
+                var zeroEntriesFound = (array.associationData == null || array.associationData.length === 0);
+                var oneEntryFound = !zeroEntriesFound && array.associationData.length === 1;
 
                 log.debug('updating association from server {0} length {1}'.format(dependantFieldName, array.associationData == null ? 0 : array.associationData.length));
 
@@ -240,9 +240,10 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         return;
                     }
 
-                    if (oneEntryFound) {
+                    if (oneEntryFound && fieldService.isFieldRequired(value,datamap)) {
+                        //if there´s just one option available, and the field is required, let´s select it.
                         var entryReturned = array.associationData[0].value;
-                        if (datamapTargetValue != entryReturned) {
+                        if (datamapTargetValue !== entryReturned) {
                             datamap[value.target] = entryReturned;
                         }
                     }
@@ -394,7 +395,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
                     //TODO: Is this needed, I couldn't find where it's used, I was not able to test if needed
                     //move input focus to the next field
-                    if (triggerFieldName != "#eagerassociations") {
+                    if (triggerFieldName !== "#eagerassociations") {
                         $timeout(function () {
                             //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                             scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
