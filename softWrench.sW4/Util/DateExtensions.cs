@@ -96,6 +96,10 @@ namespace softWrench.sW4.Util {
             return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, ConversionKind.MaximoToServer);
         }
 
+        public static DateTime FromUTCToMaximo(this DateTime date) {
+            return MaximoConversion(date, 0, ConversionKind.UserToMaximo, null);
+        }
+
         //to allow testing
         internal static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, ConversionKind fromUserToMaximo, int? maximoOffset = null) {
             if (user == null || !user.TimezoneOffset.HasValue) {
