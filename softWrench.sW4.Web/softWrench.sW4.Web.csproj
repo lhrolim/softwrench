@@ -473,7 +473,6 @@
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
-    <Content Include="Content\Images\changestatus_whitebg.gif" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
@@ -733,8 +732,6 @@
     <Content Include="Content\Controller\Configuration.html" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\css\submenu.css" />
-    <Content Include="Content\Images\1386143954_info.png" />
-    <Content Include="Content\Images\1386143956_info.png" />
     <Content Include="Content\Images\downarrow.png" />
     <Content Include="Content\Images\executeNow-icon.png" />
     <Content Include="Content\Images\pause-icon.png" />
@@ -758,6 +755,7 @@
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
     <None Include="Content\styles\default\_tooltips.scss" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
+    <None Include="Content\styles\default\_alert-messages.scss" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
