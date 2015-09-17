@@ -42,7 +42,7 @@
         </relationship>
         <relationship to="commtemplate" ignoreprimary="true">
           <relationshipAttribute from="ownertable" to="objectname"/>
-          <relationshipAttribute query=" commtemplate_.status = 'ACTIVE' "/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
