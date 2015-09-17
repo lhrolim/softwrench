@@ -3033,5 +3033,33 @@
         <connectorParameter key="dbtable" value="invcost" />
       </connectorParameters>
     </entity>
+
+    <entity idAttribute="commtemplateid" name="COMMTEMPLATE">
+      <attributes>
+        <attribute name="templateid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="sendfrom" type="varchar" required="true" />
+        <attribute name="subject" type="varchar" required="false" />
+        <attribute name="replyto" type="varchar" required="false" />
+        <attribute name="createby" type="varchar" required="true" />
+        <attribute name="createdate" type="datetime" required="true" />
+        <attribute name="objectname" type="varchar" required="true" />
+        <attribute name="commtemplateid" type="bigint" required="true" />
+        <attribute name="status" type="varchar" required="false" />
+        <attribute name="statusdate" type="datetime" required="false" />
+        <attribute name="usewith" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="message" type="text" required="false" />
+        <attribute name="freeform" type="smallint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="logflag" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="trackfailedmessages" type="smallint" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="COMMTEMPLATE" />
+      </connectorParameters>
+    </entity>
   </entities>
 </metadata>
