@@ -1,6 +1,7 @@
 ﻿using System;
 using cts.commons.portable.Util;
 using log4net;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Util {
@@ -59,7 +60,7 @@ namespace softWrench.sW4.Util {
                 return null;
             }
 
-            var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
+            var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71() )? DateTimeKind.Utc : DateTimeKind.Local;
             var user = SecurityFacade.CurrentUser(false);
             try {
                 var dateFromJson = Convert.ToDateTime(stValue);

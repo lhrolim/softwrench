@@ -78,7 +78,8 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 var applicationName = applicationResponse.ApplicationName;
                 applicationResponse.Schema = new ApplicationSchemaDefinition {
                     //to play safe since it might be a delegation method to the schema
-                    ApplicationName = applicationName
+                    ApplicationName = applicationName,
+                    SchemaId = applicationResponse.Schema.SchemaId
                 };
 
             }

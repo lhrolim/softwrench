@@ -17,8 +17,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             var dateToUse = currentTime;
             var user = SecurityFacade.CurrentUser();
-            if (crudOperationData.ContainsAttribute("#scandate")) {
-                dateToUse = HandleScanDate(crudOperationData, dateToUse, user, currentTime);
+            if (crudOperationData.ContainsAttribute("#offlinesavedate")) {
+                //this means it´s coming from offline
+                dateToUse = HandleOfflineDate(crudOperationData);
             }
             w.SetValue(asset, "invdate", dateToUse);
             w.SetValue(asset, "invpostdate", dateToUse);
@@ -32,29 +33,27 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(asset, "taxpercent", 0);
 
 
-            HandleAssetTrans(asset, crudOperationData);
+            HandleAssetTrans(asset, crudOperationData, dateToUse);
 
             base.BeforeUpdate(maximoTemplateData);
         }
 
-        private static DateTime HandleScanDate(CrudOperationData crudOperationData, DateTime dateToUse, InMemoryUser user,
-            DateTime currentTime) {
+        private static DateTime HandleOfflineDate(CrudOperationData crudOperationData) {
             //this only occurs when it comes from the offline
-            var scanDate = crudOperationData.GetUnMappedAttribute("#scandate");
+            var scanDate = crudOperationData.GetUnMappedAttribute("#offlinesavedate");
             var datescanDate = Convert.ToDateTime(scanDate);
-            //comes already as utc converted from the client side, but maximo expects local time
-            dateToUse = datescanDate.FromUTCToMaximo();
-            return dateToUse;
+            DateTime.SpecifyKind(datescanDate, DateTimeKind.Utc);
+            return datescanDate;
         }
 
-        private void HandleAssetTrans(object asset, CrudOperationData operationData) {
+        private void HandleAssetTrans(object asset, CrudOperationData operationData, DateTime dateToUse) {
 
             if ((operationData.GetAttribute("#originallocation") == null && operationData.GetAttribute("location") == null)
                 || operationData.GetAttribute("#originallocation").Equals(operationData.GetAttribute("location"))) {
                 return;
             }
 
-            var currentTime = DateTime.Now;
+            
 
             var assetTransArr = ReflectionUtil.InstantiateArrayWithBlankElements(asset, "ASSETTRANS", 1);
             var assetTrans = assetTransArr.GetValue(0);
@@ -64,8 +63,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var personId = SecurityFacade.CurrentUser().MaximoPersonId ?? "MAXADMIN";
 
             w.SetValue(assetTrans, "ENTERBY", personId);
-            w.SetValue(assetTrans, "DATEMOVED", currentTime);
-            w.SetValue(assetTrans, "TRANSDATE", currentTime);
+            w.SetValue(assetTrans, "DATEMOVED", dateToUse);
+            w.SetValue(assetTrans, "TRANSDATE", dateToUse);
             w.SetValue(assetTrans, "TRANSTYPE", "MOVED");
             w.SetValue(assetTrans, "ASSETID", operationData.GetAttribute("assetid"));
             w.SetValue(assetTrans, "ORGID", operationData.GetAttribute("orgid"));

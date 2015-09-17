@@ -28,6 +28,8 @@ app.directive('messagesection', function (contextService) {
             $scope.$on('sw_successmessage', function (event, data) {
                 log.debug('sw_successmessage#enter');
 
+                //console.log(data.successMessage, data);
+
                 if (!nullOrUndef(data.successMessage) && allowSuccessMessageDisplay(data)) {
                     if (nullOrUndef(data.schema)) {
                         $scope.hasSuccessDetail = true;
@@ -71,7 +73,7 @@ app.directive('messagesection', function (contextService) {
 
                 var allow = true;
                 if (!nullOrUndef(data.schema)) {
-                    if (data.schema.schemaId.indexOf("Summary") > -1) {
+                    if (data.schema.schemaId && data.schema.schemaId.indexOf("Summary") > -1) {
                         allow = false;
                     }
                 }

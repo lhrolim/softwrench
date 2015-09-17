@@ -1,67 +1,62 @@
 <div class="hiddenonprint">
     <div class="alerts">
-    <div id="divsuccessmessagedetail" class="alert alert-success" ng-show="hasSuccessDetail">
-        <div>
-            <ul>
-                <li>{{successMsg}}</li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="divsuccessmessagelist" class="alert alert-success topMessageAux affix-thead" ng-show="hasSuccessList">
-        <div>
-            <ul>
-                <li>{{successMsg}}</li>
-            </ul>
-        </div>
-    </div>
-
-        <div id="diverrormessagedetail" class="alert alert-danger" ng-show="showErrorDetail()">
-            <a class="close" ng-click="removeAlert()">x</a>
-            <img ng-src="{{contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
-            <span class="col-lg-offset-2">
-                {{i18N('general.error','Error')}} {{errorMsg}}.
-            </span>
+        <div id="divsuccessmessagedetail" class="alert alert-success clearfix" ng-show="hasSuccessDetail">
+            <div class="icon"><i class="fa fa-info-circle fa-2x"></i></div>
+            <div class="text"><span class="bold">{{i18N('general.success','Success')}}:</span> {{successMsg}}.</div>
         </div>
 
-    <div id="diverrormessagelist" class="alert alert-danger topMessageAux affix-thead" ng-show="showErrorList()" style="height: 62px;">
-        <a class="close" ng-click="removeAlert()">x</a>
-        <img ng-src="{{contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
-        <span class="col-lg-offset-2">{{i18N('general.error','Error')}} {{errorMsg}}.
-        </span>
-    </div>
-
-    <div class="alert alert-danger" ng-show="hasValidationError">
-        <a class="close" ng-click="removeValidationAlert()">x</a>
-        <div>
-            <ul>
-                <li ng-repeat="error in validationArray">{{error}}
-                </li>
-            </ul>
+        <div id="divsuccessmessagelist" class="alert alert-success topMessageAux affix-thead clearfix" ng-show="hasSuccessList">
+            <div class="icon"><i class="fa fa-info-circle fa-2x"></i></div>
+            <div class="text"><span class="bold">{{i18N('general.success','Success')}}:</span> {{successMsg}}.</div>
         </div>
-    </div>
-    </div>
-    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 900px">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>{{i18N('general.error','Error')}} {{errorMsg}}</h4>
-                    <!--                    <div class="form-horizontal">-->
-                    <!--                        <div class="form-group">-->
-                    <!--                            <label class="control-label">Error</label>-->
-                    <!--                            <textarea class="form-control" ng-model="errorMsg" cols="140" rows="15" style="margin-top: 10px; background-color: white; " />-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                </div>
-                <div class="modal-body">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label">{{i18N('general.mainstack','Main Stack')}}</label>
-                            <textarea class="form-control" ng-model="errorStack" cols="140" rows="15" style="margin-top: 10px; background-color: white;" />
+
+        <div id="diverrormessagedetail" class="alert alert-danger clearfix" ng-show="showErrorDetail()">
+            <a class="close" ng-click="removeAlert()"><i class="fa fa-times"></i></a>
+            <div class="icon" ng-click="openModal()"><i class="fa fa-exclamation-triangle fa-2x"></i></div>
+            <div class="text"><span class="bold">{{i18N('general.error','Error')}}:</span> {{errorMsg}}.</div>
+        </div>
+
+        <div id="diverrormessagelist" class="alert alert-danger topMessageAux affix-thead clearfix" ng-show="showErrorList()" style="height: 62px;">
+            <a class="close" ng-click="removeAlert()"><i class="fa fa-times"></i></a>
+            <div class="icon" ng-click="openModal()"><i class="fa fa-exclamation-triangle fa-2x"></i></div>
+            <div class="text"><span class="bold">{{i18N('general.error','Error')}}:</span> {{errorMsg}}.</div>
+        </div>
+
+        <div class="alert alert-danger clearfix" ng-show="hasValidationError">
+            <a class="close" ng-click="removeValidationAlert()"><i class="fa fa-times"></i></a>
+
+            <div class="icon" ng-click="openModal()"><i class="fa fa-exclamation-triangle fa-2x"></i></div>
+            <div class="text">
+                <span class="bold">{{i18N('general.error','Error')}}:</span>
+                <ul>
+                    <li ng-repeat="error in validationArray">
+                        {{error}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 900px">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>{{i18N('general.error','Error')}} {{errorMsg}}</h4>
+                        <!--                    <div class="form-horizontal">-->
+                        <!--                        <div class="form-group">-->
+                        <!--                            <label class="control-label">Error</label>-->
+                        <!--                            <textarea class="form-control" ng-model="errorMsg" cols="140" rows="15" style="margin-top: 10px; background-color: white; " />-->
+                        <!--                        </div>-->
+                        <!--                    </div>-->
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label">{{i18N('general.mainstack','Main Stack')}}</label>
+                                <textarea class="form-control" ng-model="errorStack" cols="140" rows="15" style="margin-top: 10px; background-color: #fff;" />
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

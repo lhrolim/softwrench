@@ -56,7 +56,9 @@
           <field attribute="refapplication" label="Application"/>
           <field attribute="refid" label="Record Id"/>
           <field attribute="createdby" label="Created By"/>
-          <field attribute="createddate" label="Audit Date"/>
+          <field attribute="createddate" label="Audit Date">
+            <renderer type="datetime"/>
+          </field>
         </schema>
           
         <schema id="auditDetail" stereotype="detail" title="Audit Trail Details">
@@ -64,7 +66,9 @@
           <field attribute="refapplication" label="Application" readonly="true"/>
           <field attribute="refid" label="Record Id" readonly="true"/>
           <field attribute="createdby" label="Created By" readonly="true"/>
-          <field attribute="createddate" label="Audit Date" readonly="true"/>
+          <field attribute="createddate" label="Audit Date" readonly="true">
+            <renderer type="datetime"/>
+          </field>
           <!--<section showexpression="@canCreateBoth">
             <optionfield attribute="policy" label="Policy">
               <option label="Personal" value="personal"/>
