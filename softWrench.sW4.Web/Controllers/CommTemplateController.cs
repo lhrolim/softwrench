@@ -18,8 +18,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IApplicationResponse MergeTemplateDefinition(string templateId, string applicationName, string ApplicationId)
-        {
+        public IApplicationResponse MergeTemplateDefinition(string templateId, string applicationName, string applicationId) {
             var commtemplate = _maximoDao.FindByNativeQuery(
                 string.Format("SELECT * FROM COMMTEMPLATE WHERE templateid = '{0}' and objectname = '{1}'", templateId, applicationName));
 
