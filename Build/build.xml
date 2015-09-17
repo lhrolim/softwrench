@@ -103,7 +103,8 @@
     <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
       <arg value="--browsers=PhantomJS"/>
-      <arg value="--single-run"/> <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
+      <arg value="--single-run"/>
+      <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
     </exec>
 
   </target>
@@ -251,9 +252,25 @@
         <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
       </namespaces>
     </xmlpoke>
-    
+
   </target>
 
+
+  <target name="readofflineversion">
+    <xmlpeek property="currentofflineversion" file="../softWrench.sW4.WebMobile/config.xml"
+           xpath="//x:widget/@version">
+      <namespaces>
+        <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
+      </namespaces>
+    </xmlpeek>
+
+    <setenv name="OFF_VERSION" value="${currentofflineversion}"/>
+
+    <property name="off_versiontest" value="${environment::get-variable('OFF_VERSION')}" />
+
+    <echo message="OffLine Version: ${off_versiontest}"/>
+
+  </target>
 
   <target name="appendofflinecommit" >
 
@@ -274,7 +291,7 @@
         </namespaces>
       </xmlpoke>
     </if>
-    
+
   </target>
 
 
