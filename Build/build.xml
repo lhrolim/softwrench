@@ -264,11 +264,11 @@
       </namespaces>
     </xmlpeek>
 
-    <setenv name="OFF_VERSION" value="${currentofflineversion}"/>
+    <setenv name="OFF_VERSION" value="${currentofflineversion}" />
 
     <property name="off_versiontest" value="${environment::get-variable('OFF_VERSION')}" />
 
-    <echo message="OffLine Version: ${off_versiontest}"/>
+    <echo message="${off_versiontest}" file="tmp_offversion.txt"/>
 
   </target>
 
