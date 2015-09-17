@@ -16,8 +16,8 @@
   "dependencies": {
     "angular": "~1.4.5",
     "angular-animate": "~1.4.5",
-    "angular-sanitize": "~1.4.3",
-    "angular-ui-router": "~0.2.13",
+    "angular-sanitize": "~1.4.5",
+    "angular-ui-router": "0.2.15",
     "ionic": "~1.1.0",
     "jquery": "~2.1.3",
     "ngCordova": "~0.1.20-alpha",
@@ -28,7 +28,7 @@
   "resolutions": {
     "angular": ">= 1.4.5",
     "angular-animate": "~1.4.5",
-    "angular-sanitize": "1.4.3"
+    "angular-sanitize": "1.4.5"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.5"
