@@ -40,6 +40,10 @@
         <relationship to="sr">
           <relationshipAttribute from="ownerid" to="ticketuid" primary="true"/>
         </relationship>
+        <relationship to="commtemplate" ignoreprimary="true">
+          <relationshipAttribute from="ownertable" to="objectname"/>
+          <relationshipAttribute query=" commtemplate_.status = 'ACTIVE' "/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
@@ -106,6 +110,11 @@
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
+          <field attribute="ownertable" defaultexpression="$.parentdata.fields['class']" hidden="true"/>
+          <association target="#templateid" label="Template" labelfield="commtemplate_.description" valuefield="templateid" >
+            <renderer type="lookup"/>
+            <event type="afterchange" service="commlogService" method="formatCommTemplate"/>
+          </association>
           <field attribute="createdate" label="Created Date/Time" readonly="true">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
