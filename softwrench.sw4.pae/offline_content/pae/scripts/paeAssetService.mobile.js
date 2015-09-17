@@ -22,7 +22,7 @@
                 maximoDataService.loadItemByMaximoUid("asset", schema, data)
                     .then(function (asset) {
                         asset.isDirty = true;
-                        asset.datamap["#scandate"] = new Date();
+                        
                         return offlineSaveService.saveItem("asset", asset,false);
                     })
                     .then(function (asset) {

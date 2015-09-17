@@ -9,6 +9,7 @@
             var localId = item.id;
             item.isDirty = true;
             var queryToExecute;
+            item.datamap["#offlinesavedate"] = new Date();
             var jsonString = JSON.stringify(item.datamap);
             if (!localId) {
                 queryToExecute = { query: entities.DataEntry.insertLocalPattern, args: [applicationName, jsonString, persistence.createUUID()] };
