@@ -52,11 +52,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public static User SaveUser(User user, bool updateMaximo = false) {
-            if (user.Id != null) {
-                var dbuser = DAO.FindByPK<User>(typeof(User), (int)user.Id);
-                user.MergeFromDBUser(dbuser);
-            } else {
-                //for creation, assigning MaximoId to be username
+            if (user.Id == null && user.MaximoPersonId == null) {
                 user.MaximoPersonId = user.UserName;
             }
             if (updateMaximo) {
@@ -140,7 +136,9 @@ namespace softWrench.sW4.Security.Services {
         }
 
         private static bool IsHapagProd {
-            get { return ApplicationConfiguration.ClientName == "hapag" && ApplicationConfiguration.IsProd(); }
+            get {
+                return ApplicationConfiguration.ClientName == "hapag" && ApplicationConfiguration.IsProd();
+            }
         }
 
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
