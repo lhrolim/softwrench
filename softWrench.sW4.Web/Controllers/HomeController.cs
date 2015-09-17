@@ -15,6 +15,8 @@ using softWrench.sW4.Web.Models.Home;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using softWrench.sW4.Web.Security;
 
@@ -30,7 +32,7 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly ContextLookuper _lookuper;
         private MenuHelper.MenuHelper _menuHelper;
 
-       
+
 
 
 
@@ -45,17 +47,22 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public ActionResult Index() {
-            
+
 
             var user = SecurityFacade.CurrentUser();
             bool fromCache;
             //TODO: allow mobile
-            var menuModel =_menuHelper.BuildMenu(ClientPlatform.Web);
+            var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
             var indexItemId = menuModel.Menu.ItemindexId;
             var indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
             if (indexItem == null) {
                 //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
                 indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
+            }
+            //if still null logout the user
+            if (indexItem == null) {
+                SignoutController.DoLogout(Session, Response);
+                return Redirect("~/SignIn?forbidden=true&ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
 
             HomeModel model = null;
@@ -75,11 +82,11 @@ namespace softWrench.sW4.Web.Controllers {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
-            model = new HomeModel(url, title, FetchConfigs(),menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
+            model = new HomeModel(url, title, FetchConfigs(), menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);
         }
 
-       
+
 
         private HomeConfigs FetchConfigs() {
             var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
@@ -143,7 +150,7 @@ namespace softWrench.sW4.Web.Controllers {
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), menuModel, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), 
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), menuModel, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(),
                 ApplicationConfiguration.ClientName, windowTitle, message));
         }
 
@@ -185,7 +192,7 @@ namespace softWrench.sW4.Web.Controllers {
             return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
         }
 
-     
+
 
 
 
