@@ -1,26 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService,applicationService) {
-    var buildApplicationURLForBrowser = function (applicationName, parameters) {
-        var crudUrl = $(routes_homeurl)[0].value;
-        var currentModule = contextService.retrieveFromContext('currentmodule');
-        var currentMetadata = contextService.retrieveFromContext('currentmetadata');
 
-        parameters.currentmodule = currentModule;
-        parameters.currentmetadata = currentMetadata;
-        var params = $.param(parameters);
-        params = replaceAll(params, "=", "$");
-        params = replaceAll(params, "&", "@");
-        crudUrl = crudUrl + "?application=" + applicationName + "&popupmode=browser";
-        if (!nullOrUndef(currentModule)) {
-            crudUrl += "&currentModule=" + currentModule;
-        }
-        if (!nullOrUndef(currentMetadata)) {
-            crudUrl += "&currentMetadata=" + currentMetadata;
-        }
-        crudUrl = crudUrl + "&querystring=" + params;
-        return removeEncoding(crudUrl);
-    };
+    
 
 
 

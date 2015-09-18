@@ -1,5 +1,6 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
@@ -25,6 +26,7 @@ namespace softwrench.sW4.audit.classes.Model {
         [Property]
         public virtual string CreatedBy { get; set; }
         [Property]
+        [UTCDateTime]
         public virtual DateTime CreatedDate { get; set; }
 
         public virtual string DataStringValue {

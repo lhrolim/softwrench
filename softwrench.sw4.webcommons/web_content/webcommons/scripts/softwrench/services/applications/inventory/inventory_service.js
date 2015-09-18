@@ -1,13 +1,13 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService,inventoryServiceCommons, $rootScope) {
+app.factory('inventoryService', function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService, inventoryServiceCommons, $rootScope, applicationService) {
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
                 return Math.abs(datamap[column.attribute]);
             }
             else {
-                return "0"; 
+                return "0";
             }
         }
         return datamap[column.attribute];
@@ -68,17 +68,17 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             platform: "web",
             currentSchemaKey: "editinvissuedetail.input.web"
         };
-        restService.invokePost("data", "post", httpParameters, jsonString, function() {
+        restService.invokePost("data", "post", httpParameters, jsonString, function () {
             fields['matusetransid'] = -1;
             submitInvIssueRec(datamap, clonedCompositionData, ++index);
             return;
-        }, function() {
+        }, function () {
             submitInvIssueRec(datamap, clonedCompositionData, ++index);
             return;
         });
     };
 
-    var setBatchIssueBin = function(parameters) {
+    var setBatchIssueBin = function (parameters) {
         var itemnum = parameters['fields']['itemnum'];
         var siteid = parameters['fields']['siteid'];
         var storeloc = parameters['fields']['storeloc'];
@@ -100,7 +100,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
         searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
             var resultObject = data.resultObject;
-            
+
             for (var i = 0; i < resultObject.length; i++) {
                 var fields = resultObject[i]['fields'];
                 if (fields['binnum'] == binnum && fields['lotnum'] == lotnum) {
@@ -114,7 +114,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
     };
 
 
-   
+
 
 
     invIssue_maximo71_afterChangeItem = function (parameters) {
@@ -161,15 +161,15 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
     };
 
     return {
-        createIssue: function(schema, datamap) {
+        createIssue: function (schema, datamap) {
             redirectService.goToApplicationView(schema.applicationName, "newInvIssueDetail", "input", null, null, null);
         },
 
-        navToBatchFilter: function(schema, datamap) {
+        navToBatchFilter: function (schema, datamap) {
             redirectService.goToApplicationView(schema.applicationName, "batchInvIssueFilter", "input", null, null, null);
         },
 
-        formatQtyReturnedList: function(parameters) {
+        formatQtyReturnedList: function (parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -181,7 +181,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             return formatQtyReturned(dm, value, column);
         },
 
-        formatQtyList: function(parameters) {
+        formatQtyList: function (parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -193,7 +193,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             return formatQty(dm, value, column);
         },
 
-        formatQtyReturnedDetail: function(parameters) {
+        formatQtyReturnedDetail: function (parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -208,7 +208,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             return;
         },
 
-        formatQtyDetail: function(parameters) {
+        formatQtyDetail: function (parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -293,7 +293,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
 
-        navToBatchIssueDetail: function(schema, datamap) {
+        navToBatchIssueDetail: function (schema, datamap) {
             var siteid = datamap['siteid'];
 
             if (nullOrEmpty(siteid)) {
@@ -338,16 +338,16 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
 
-        submitNewBatchIssue: function(schema, datamap) {
+        submitNewBatchIssue: function (schema, datamap) {
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        navToIssueReturnList: function(schema, datamap) {
+        navToIssueReturnList: function (schema, datamap) {
             redirectService.goToApplicationView(schema.applicationName, "invIssueList", null, null, null, null);
         },
 
-        displayNewIssueModal: function(parentschema, parentdatamap) {
+        displayNewIssueModal: function (parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
             var user = contextService.getUserData();
             var itemDatamap = {};
@@ -372,7 +372,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             parameters['datamap'] = null;
         },
 
-        batchissuelistclick: function(datamap, column, schema) {
+        batchissuelistclick: function (datamap, column, schema) {
             var newDatamap = {};
             angular.copy(datamap, newDatamap);
 
@@ -380,7 +380,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
 
         },
 
-        cancelNewInvIssueItem: function() {
+        cancelNewInvIssueItem: function () {
             modalService.hide();
         },
 
@@ -423,7 +423,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             modalService.hide();
         },
 
-        updateItemInBatch: function(datamap) {
+        updateItemInBatch: function (datamap) {
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
 
             var compositionItem = null;
@@ -466,7 +466,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             modalService.hide();
         },
 
-        invIssueBatch_afterChangeItem: function(parameters) {
+        invIssueBatch_afterChangeItem: function (parameters) {
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
@@ -488,7 +488,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                 orgid: parameters['fields']['orgid'],
                 itemsetid: parameters['fields']['itemsetid']
             };
-            searchService.searchWithData("inventory", searchData).success(function(data) {
+            searchService.searchWithData("inventory", searchData).success(function (data) {
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
                 var costtype = fields['costtype'];
@@ -506,14 +506,14 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             invIssue_maximo71_afterChangeItem(parameters)
         },
 
-        createTransfer: function(schema) {
+        createTransfer: function (schema) {
             if (schema === undefined) {
                 return;
             }
             createInvUse(schema, "TRANSFER");
         },
 
-        getReserveBinQuantity: function(parameters) {
+        getReserveBinQuantity: function (parameters) {
             var binnum = parameters['fields']['#frombin'];
             var lotnum = parameters['fields']['#fromlot'];
             var searchData = {
@@ -526,7 +526,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
-        getTransferBinQuantity: function(parameters) {
+        getTransferBinQuantity: function (parameters) {
             var binnum = parameters['fields']['invuseline_.frombin'];
             var lotnum = parameters['fields']['invuseline_.fromlot'];
             var searchData = {
@@ -551,7 +551,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
         },
 
 
-        afterChangeTransferFromLocation: function(event) {
+        afterChangeTransferFromLocation: function (event) {
             event.fields['itemnum'] = "";
             event.fields['inventory_.item_.itemtype'] = "";
             event.fields['invuseline_.frombin'] = "";
@@ -563,18 +563,18 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             event.fields['invuseline_.costtype'] = "";
         },
 
-        overrideGlAccount: function(event) {
+        overrideGlAccount: function (event) {
             event.fields['gldebitacct'] = event.fields['#gldebitacct'];
         },
 
-        afterChangeIssueQuantity: function(event) {
+        afterChangeIssueQuantity: function (event) {
             if (event.fields['#issueqty'] > event.fields['reservedqty']) {
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['#issueqty'] = event.fields['reservedqty'];
             }
         },
 
-        submitReservedInventoryIssue: function(schema, datamap) {
+        submitReservedInventoryIssue: function (schema, datamap) {
             if (datamap['#issueqty'] > datamap['invbalances_.curbal']) {
                 alertService.alert("The quantity being issued cannot be greater than the current balance of the From Bin.");
                 return;
@@ -606,13 +606,15 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                 costtype: datamap['inventory_.costtype']
             };
             // Post the new matusetrans record
-            var jsonString = angular.toJson(matusetransDatamap);
             var httpParameters = {
-                application: "invissue",
+                applicationName: "invissue",
                 currentSchemaKey: "newInvIssueDetail.input.web",
                 platform: "web"
             };
-            restService.invokePost('data', 'post', httpParameters, jsonString, function() {
+
+            applicationService.getPostPromise("invissue", "newInvIssueDetail", httpParameters, matusetransDatamap)
+                .then(function (data) {
+
                 // Get the reserved, actual, and issue quantities
                 var reservedQty = Number(datamap["reservedqty"]);
                 var actualQty = Number(datamap["actualqty"]);
@@ -622,7 +624,8 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                 var newActualQty = actualQty + issueQty;
                 httpParameters = {
                     currentSchemaKey: "detail.input.web",
-                    platform: "web"
+                    platform: "web",
+                    applicationName: 'reservedMaterials'
                 };
 
                 // If the reserved quantity reaches 0 then the invreserve record should be deleted but
@@ -634,18 +637,25 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                     datamap["reservedqty"] = newReservedQty;
                     datamap["actualqty"] = newActualQty;
                     // Put the updated invreserve record
-                    jsonString = angular.toJson(datamap);
-                    var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
-                    $http.put(urlToUse, jsonString).success(function() {
+                    var jsonWrapper = {
+                        json: datamap,
+                        requestData: httpParameters
+                    }
+
+                    jsonString = angular.toJson(jsonWrapper);
+                    var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"]);
+
+
+                    $http.put(urlToUse, jsonString).success(function () {
                         // Return to the list of reserved materials
                         redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
-                    }).error(function() {
+                    }).error(function () {
                         // Failed to update the material reservation
                     });
                 } else {
                     // If the reserved quantity has reached 0, delete the record
                     var deleteUrl = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
-                    $http.delete(deleteUrl).success(function() {
+                    $http.delete(deleteUrl).success(function () {
                         // Return to the list of reserved materials
                         redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
                     });
@@ -674,14 +684,14 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
             getBinQuantity(searchData, parameters, '#curbal');
         },
 
-        afterChangeInvreserveAsset: function(parameters) {
+        afterChangeInvreserveAsset: function (parameters) {
             if (parameters['fields']['asset_.binnum'] && !nullOrEmpty(parameters['fields']['asset_.binnum'])) {
                 parameters['fields']['invbalances_.binnum'] = parameters['fields']['asset_.binnum'];
             }
         },
-      
 
-  
+
+
 
     };
 });
