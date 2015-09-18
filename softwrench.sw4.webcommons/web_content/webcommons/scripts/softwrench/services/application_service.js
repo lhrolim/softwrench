@@ -80,7 +80,7 @@
             /// <param name="title"></param>
             /// <param name="parameters">@deprecated --></param>
             /// <param name="jsonData"></param>
-            parameters = fillApplicationParameters(parameters, schemaId, mode);
+            parameters = fillApplicationParameters(parameters,applicationName, schemaId, mode);
 
 
             if (parameters.popupmode === "browser") {
@@ -100,7 +100,7 @@
 
         function getPostPromise(applicationName, schemaId, parameters, datamap) {
             
-            parameters = fillApplicationParameters(parameters, schemaId, mode);
+            parameters = fillApplicationParameters(parameters,applicationName, schemaId, mode);
             var postUrl =url("/api/data/" + applicationName);
 
             var jsonWrapper = {
