@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService,applicationService) {
+
     var buildApplicationURLForBrowser = function (applicationName, parameters) {
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');

@@ -2,7 +2,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').factory('applicationService', ['$http', '$rootScope', applicationService]);
+
+
+    angular.module('webcommons_services').factory('applicationService', ['$http', '$rootScope','contextService', applicationService]);
 
     function fillApplicationParameters(parameters, applicationName,schemaId, mode) {
         /// <returns type=""></returns>
@@ -19,8 +21,28 @@
         return parameters;
     };
 
-    function applicationService($http, $rootScope) {
+    function applicationService($http, $rootScope, contextService) {
 
+        var buildApplicationURLForBrowser = function (applicationName, parameters) {
+            var crudUrl = $(routes_homeurl)[0].value;
+            var currentModule = contextService.retrieveFromContext('currentmodule');
+            var currentMetadata = contextService.retrieveFromContext('currentmetadata');
+
+            parameters.currentmodule = currentModule;
+            parameters.currentmetadata = currentMetadata;
+            var params = $.param(parameters);
+            params = replaceAll(params, "=", "$");
+            params = replaceAll(params, "&", "@");
+            crudUrl = crudUrl + "?application=" + applicationName + "&popupmode=browser";
+            if (!nullOrUndef(currentModule)) {
+                crudUrl += "&currentModule=" + currentModule;
+            }
+            if (!nullOrUndef(currentMetadata)) {
+                crudUrl += "&currentMetadata=" + currentMetadata;
+            }
+            crudUrl = crudUrl + "&querystring=" + params;
+            return removeEncoding(crudUrl);
+        };
 
 
 
@@ -61,7 +83,7 @@
             parameters = fillApplicationParameters(parameters, schemaId, mode);
 
 
-            if (parameters.popupmode == "browser") {
+            if (parameters.popupmode === "browser") {
                 return buildApplicationURLForBrowser(applicationName, parameters);
             }
             if (title != null && title.trim() != "") {
