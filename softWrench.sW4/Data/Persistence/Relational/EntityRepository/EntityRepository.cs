@@ -47,7 +47,24 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
 
-            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => pair.Value, StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
+
+            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => HandleValue(pair.Key, entityMetadata, pair.Value), StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
+        }
+
+        private object HandleValue(string key, EntityMetadata entityMetadata, object value) {
+            if (!(value is DateTime)) {
+                return value;
+            }
+            var attributeDeclaration = entityMetadata.Schema.Attributes.FirstOrDefault(f => f.Name.EqualsIc(key));
+            if (attributeDeclaration == null) {
+                return value;
+            }
+            if (attributeDeclaration.ConnectorParameters.Parameters.ContainsKey("utcdate")) {
+                var date = (DateTime)value;
+                date=DateTime.SpecifyKind(date, DateTimeKind.Utc);
+                return date;
+            }
+            return value;
         }
 
         public IEnumerable<dynamic> RawGet([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
@@ -81,7 +98,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             /// <summary>
             /// Holds the PaginationData for the result
             /// </summary>
-            [CanBeNull] public PaginatedSearchRequestDto PaginationData { get; set; }
+            [CanBeNull]
+            public PaginatedSearchRequestDto PaginationData {
+                get; set;
+            }
         }
 
 
@@ -97,12 +117,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             long? maxRowstamp = 0;
 
             IList<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
-            
+
             foreach (var row in enumerable) {
                 var dict = (IDictionary<string, object>)row;
                 var item = new Dictionary<string, object>();
                 if (fetchMaxRowstamp) {
-                    
+
                     if (dict.ContainsKey(RowStampUtil.RowstampColumnName)) {
                         var rowstamp = RowStampUtil.Convert(dict[RowStampUtil.RowstampColumnName]);
                         if (rowstamp > maxRowstamp) {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using cts.commons.persistence.Util;
+using cts.commons.portable.Util;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -15,7 +17,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         protected override IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
-            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), 
+            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute),
                 typeof(JoinedSubclassAttribute));
             var resultEntities = findTypesAnnotattedWith.Select(Convert).ToList();
 
@@ -79,8 +81,11 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
 
                 Log.DebugFormat("adding swdb attribute {0} to entity {1}", attribute, entityName);
-                resultAttributes.Add(new EntityAttribute(attribute, memberInfo.PropertyType.Name, false, true,
-                    connectorParameters, query));
+                var entityAttribute = new EntityAttribute(attribute, memberInfo.PropertyType.Name, false, true, connectorParameters, query);
+                if (entityAttribute.Type.EqualsIc("datetime") && memberInfo.ReadAttribute<UTCDateTime>() != null) {
+                    entityAttribute.ConnectorParameters.Parameters.Add("utcdate", "true");
+                }
+                resultAttributes.Add(entityAttribute);
             }
             return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>>(resultAttributes, resultAssociations);
         }

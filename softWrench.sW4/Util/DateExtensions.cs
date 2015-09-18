@@ -87,6 +87,13 @@ namespace softWrench.sW4.Util {
             return date.ToUniversalTime();
         }
 
+        public static DateTime FromUTCToUser(this DateTime date, InMemoryUser user) {
+            if (!user.TimezoneOffset.HasValue) {
+                return date;
+            }
+            return MaximoConversion(date, user.TimezoneOffset.Value, ConversionKind.MaximoToUser, 0);
+        }
+
         public static DateTime FromServerToMaximo(this DateTime date, int? maximoOverridenOffset = null) {
             //just needed to inver the timezone so that it is consistent witht the client signal
             return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, ConversionKind.ServerToMaximo, maximoOverridenOffset);
