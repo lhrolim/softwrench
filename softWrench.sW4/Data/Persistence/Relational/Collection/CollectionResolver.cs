@@ -95,7 +95,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var i = 0;
             foreach (var collectionAssociation in collectionAssociations) {
                 var internalParameter = BuildInternalParameter(parameters, collectionAssociation, results);
-                var perThreadPaginatedSearch = (PaginatedSearchRequestDto) paginatedSearch?.ShallowCopy();
+                var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy();
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, perThreadPaginatedSearch));
             }
             Task.WaitAll(tasks);
