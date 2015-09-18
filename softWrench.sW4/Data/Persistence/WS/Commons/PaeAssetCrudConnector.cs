@@ -47,9 +47,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         private void HandleAssetTrans(object asset, CrudOperationData operationData, DateTime dateToUse) {
-
-            if ((operationData.GetAttribute("#originallocation") == null && operationData.GetAttribute("location") == null)
-                || operationData.GetAttribute("location").Equals(operationData.GetAttribute("#originallocation"))) {
+            var location= operationData.GetAttribute("location");
+            var originalLocation = operationData.GetAttribute("#originallocation");
+            if ((originalLocation == null && location == null)||(location!= null && location.Equals(originalLocation))) {
                 return;
             }
 
@@ -57,8 +57,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             var assetTransArr = ReflectionUtil.InstantiateArrayWithBlankElements(asset, "ASSETTRANS", 1);
             var assetTrans = assetTransArr.GetValue(0);
-            w.SetValue(assetTrans, "TOLOC", operationData.GetAttribute("location"));
-            w.SetValue(assetTrans, "FROMLOC", operationData.GetAttribute("#originallocation"));
+            w.SetValue(assetTrans, "TOLOC", location);
+            w.SetValue(assetTrans, "FROMLOC", originalLocation);
 
             var personId = SecurityFacade.CurrentUser().MaximoPersonId ?? "MAXADMIN";
 
