@@ -1,34 +1,43 @@
 <div class="hiddenonprint">
     <div class="alerts">
         <div id="divsuccessmessagedetail" class="alert alert-success clearfix" ng-show="hasSuccessDetail">
-            <div class="icon"><i class="fa fa-info-circle fa-2x"></i>
+            <div class="icon">
+                <i class="fa fa-info-circle fa-2x"></i>
             </div>
-            <div class="text"><span class="bold">{{i18N('general.success','Success')}}:</span> {{successMsg}}.
+            <div class="text">
+                <span class="bold">{{i18N('general.success','Success')}}:</span> {{successMsg}}.
             </div>
         </div>
         <div id="divsuccessmessagelist" class="alert alert-success topMessageAux affix-thead clearfix" ng-show="hasSuccessList">
-            <div class="icon"><i class="fa fa-info-circle fa-2x"></i>
+            <div class="icon">
+                <i class="fa fa-info-circle fa-2x"></i>
             </div>
-            <div class="text"><span class="bold">{{i18N('general.success','Success')}}:</span> {{successMsg}}.
+            <div class="text">
+                <span class="bold">{{i18N('general.success','Success')}}:</span> {{successMsg}}.
             </div>
         </div>
         <div id="diverrormessagedetail" class="alert alert-danger clearfix" ng-show="showErrorDetail()">
             <a class="close" ng-click="removeAlert()"><i class="fa fa-times"></i></a>
-            <div class="icon" ng-click="openModal()"><i class="fa fa-exclamation-triangle fa-2x"></i>
+            <div class="icon" ng-click="openModal()">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
             </div>
-            <div class="text"><span class="bold">{{i18N('general.error','Error')}}:</span> {{errorMsg}}.
+            <div class="text">
+                <span class="bold">{{i18N('general.error','Error')}}:</span> {{errorMsg}}.
             </div>
         </div>
         <div id="diverrormessagelist" class="alert alert-danger topMessageAux affix-thead clearfix" ng-show="showErrorList()" style="height: 62px;">
             <a class="close" ng-click="removeAlert()"><i class="fa fa-times"></i></a>
-            <div class="icon" ng-click="openModal()"><i class="fa fa-exclamation-triangle fa-2x"></i>
+            <div class="icon" ng-click="openModal()">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
             </div>
-            <div class="text"><span class="bold">{{i18N('general.error','Error')}}:</span> {{errorMsg}}.
+            <div class="text">
+                <span class="bold">{{i18N('general.error','Error')}}:</span> {{errorMsg}}.
             </div>
         </div>
         <div class="alert alert-danger clearfix" ng-show="hasValidationError">
             <a class="close" ng-click="removeValidationAlert()"><i class="fa fa-times"></i></a>
-            <div class="icon"><i class="fa fa-exclamation-triangle fa-2x"></i>
+            <div class="icon">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
             </div>
             <div class="text">
                 <span class="bold">{{i18N('general.error','Error')}}:</span>
@@ -40,7 +49,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 900px">
