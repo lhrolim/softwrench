@@ -64,6 +64,8 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
             datamap: '=',
             cancelfn: '&',
             savefn: '&',
+            parentdata: '=',
+            parentschema: '=',
             previousdata: '=',
             previousschema: '='
 
@@ -74,15 +76,19 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
                 fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
                 scope.associationOptions = [];
                 element.append(
-                    "<crud-input schema='schema'" +
-                                "datamap='datamap'" +
-                                "displayables='displayables'" +
-                                "elementid='crudInputNewItemComposition'" +
-                                "association-options='associationOptions'" +
-                                "association-schemas='associationSchemas'" +
-                                "blockedassociations='blockedassociations'" +
-                                "savefn='savefn()'" +
-                                "cancelfn='cancelfn()'" +
+                    "<crud-input schema='schema' " +
+                                "datamap='datamap' " +
+                                "displayables='displayables' " +
+                                "elementid='crudInputNewItemComposition' " +
+                                "association-options='associationOptions' " +
+                                "association-schemas='associationSchemas' " +
+                                "blockedassociations='blockedassociations' " +
+                                "parentdata='parentdata' " +
+                                "parentschema='parentschema' " +
+                                "previousdata='previousdata' " +
+                                "previouschema='previousschema' " +
+                                "savefn='savefn()' " +
+                                "cancelfn='cancelfn()' " +
                                 "composition='true'></crud-input>"
                 );
                 $compile(element.contents())(scope);
@@ -132,14 +138,15 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
                 element.append("<composition-list title='{{tabLabel}}' ismodal='{{ismodal}}'" +
-                    "compositionschemadefinition='compositionschemadefinition'" +
-                    "relationship='{{relationship}}'" +
-                    "compositiondata='compositiondata'" +
-                    "metadatadeclaration='metadata'" +
-                    "parentschema='parentschema'" +
-                    "parentdata='parentdata'" +
-                    "cancelfn='cancel(data,schema)'" +
-                    "previousschema='previousschema' previousdata='previousdata'/>");
+                    "compositionschemadefinition='compositionschemadefinition' " +
+                    "relationship='{{relationship}}' " +
+                    "compositiondata='compositiondata' " +
+                    "metadatadeclaration='metadata' " +
+                    "parentschema='parentschema' " +
+                    "parentdata='parentdata' " +
+                    "cancelfn='cancel(data,schema)' " +
+                    "previousschema='previousschema' " +
+                    "previousdata='previousdata' />");
                 $compile(element.contents())(scope);
                 //controls tab lazy loading
                 scope.loaded = true;

@@ -54,7 +54,7 @@
           <field attribute="id" label="Audit Id"/>
           <field attribute="action" label="Action"/>
           <field attribute="refapplication" label="Application"/>
-          <field attribute="refid" label="Record Id"/>
+          <field attribute="refuserid" label="Record Id"/>
           <field attribute="createdby" label="Created By"/>
           <field attribute="createddate" label="Audit Date">
             <renderer type="datetime"/>
@@ -64,7 +64,7 @@
         <schema id="auditDetail" stereotype="detail" title="Audit Trail Details">
           <field attribute="action" label="Action" readonly="true"/>
           <field attribute="refapplication" label="Application" readonly="true"/>
-          <field attribute="refid" label="Record Id" readonly="true"/>
+          <field attribute="refuserid" label="Record Id" readonly="true"/>
           <field attribute="createdby" label="Created By" readonly="true"/>
           <field attribute="createddate" label="Audit Date" readonly="true">
             <renderer type="datetime"/>

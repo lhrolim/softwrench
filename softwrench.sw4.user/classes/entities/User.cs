@@ -70,8 +70,9 @@ namespace softwrench.sw4.user.classes.entities {
         [OneToMany(2, ClassType = typeof(PersonGroupAssociation))]
         public ISet<PersonGroupAssociation> PersonGroups { get; set; }
 
+
         [Set(0, Table = "sw_user_userprofile",
-        Lazy = CollectionLazy.False, Cascade = "none")]
+        Lazy = CollectionLazy.False)]
         [Key(1, Column = "user_id")]
         [ManyToMany(2, Column = "profile_id", ClassType = typeof(UserProfile))]
         public ISet<UserProfile> Profiles { get; set; }
