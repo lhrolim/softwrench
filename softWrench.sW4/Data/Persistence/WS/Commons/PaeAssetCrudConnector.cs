@@ -49,7 +49,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private void HandleAssetTrans(object asset, CrudOperationData operationData, DateTime dateToUse) {
 
             if ((operationData.GetAttribute("#originallocation") == null && operationData.GetAttribute("location") == null)
-                || operationData.GetAttribute("#originallocation").Equals(operationData.GetAttribute("location"))) {
+                || operationData.GetAttribute("location").Equals(operationData.GetAttribute("#originallocation"))) {
                 return;
             }
 
