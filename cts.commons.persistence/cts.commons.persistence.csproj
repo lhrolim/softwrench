@@ -82,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\MigrationUtil.cs" />
     <Compile Include="Util\MultiAssemblyMigrationLoader.cs" />
+    <Compile Include="Util\UTCDateTime.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
