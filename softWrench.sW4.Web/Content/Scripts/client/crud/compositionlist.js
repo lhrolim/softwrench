@@ -310,7 +310,13 @@ app.directive('compositionList', function (contextService, formatService, schema
                     $scope.addBatchItem();
                 }
 
-                $scope.isNoRecords = $scope.compositiondata.length > 0 ? false : true;
+                $scope.isNoRecords = $scope.compositiondata.length <= 0;
+                
+                $scope.showPagination = !$scope.isNoRecords && // has items to show
+                                        !!$scope.paginationData && // has paginationdata
+                                        $scope.paginationData.paginationOptions.some(function (option) { // totalCount is bigger than at least one option
+                                            return $scope.paginationData.totalCount > option;
+                                        });
             };
 
             $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
@@ -902,7 +908,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     return;
                 }
                 compositionService
-                    .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber)
+                    .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber, $scope.paginationData.pageSize)
                     .then(function (result) {
                         $scope.clonedCompositionData = [];
                         // clear lists
