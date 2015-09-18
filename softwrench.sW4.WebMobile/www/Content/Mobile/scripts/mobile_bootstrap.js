@@ -38,9 +38,10 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 .run(["$ionicPlatform", "swdbDAO", "$log", "securityService",
     "contextService", "menuModelService", "metadataModelService", "routeService",
     "crudContextService", "synchronizationNotificationService",
-    "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope","$q",
+    "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope", "$q",
+    "$cordovaSplashscreen", "$timeout",
     function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
-        entities, configService, $rootScope,$q) {
+        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout) {
 
         function initContext() {
             offlinePersitenceBootstrap.init();
@@ -50,12 +51,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             var serverConfigPromise = configService.loadConfigs();
             var clientConfigPromise = configService.loadClientConfigs();
             return $q.all([menuPromise, metadataPromise, serverConfigPromise, clientConfigPromise]);
-
         }
-
-      
-
-
 
         function initDataBaseDebuggingHelpers() {
             // DataBase debug mode: set swdbDAO service as global variable
@@ -66,18 +62,17 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         function initCordovaPlugins() {
             var log = $log.get("bootstrap#initCordovaPlugins");
+            log.info("init cordova plugins");
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
-            log.info("init cordova plugins");
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
-            // if (window.StatusBar) {
-            //      // org.apache.cordova.statusbar required
-            //      StatusBar.styleDefault();
-            // }
-
-            /* LOCAL NOTIFICATION */
+            // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
+            if (ionic.Platform.isAndroid()) {
+                ionic.Platform.isFullScreen = true;
+            }
+            // local notification 
             synchronizationNotificationService.prepareNotificationFeature();
         }
 
@@ -113,24 +108,24 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             });
         }
 
+        function loadInitialState() {
+            var authenticated = securityService.hasAuthenticatedUser();
+            crudContextService.restoreState();
+            return routeService.loadInitialState(authenticated);
+        }
+
         $ionicPlatform.ready(function () {
             // loading eventual db stored values into context
-            initContext().then(function (result) {
-                
+            initContext().then(function () {
                 attachEventListeners();
                 initCordovaPlugins();
                 initDataBaseDebuggingHelpers();
-
-                // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
-                if (ionic.Platform.isAndroid()) {
-                    ionic.Platform.isFullScreen = true;
-                }
-
-                var authenticated = securityService.hasAuthenticatedUser();
-                crudContextService.restoreState();
-                routeService.loadInitialState(authenticated);
+                return loadInitialState();
+            }).then(function() {
+                $timeout(function() {
+                    $cordovaSplashscreen.hide();
+                }, 1000); // 1 second delay to prevent blank screen right after hiding the splash screen (empirically determined)
             });
-
         });
 
     }])
@@ -283,11 +278,6 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 }
             }
         });
-
-
-
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/main/home');
 
 }]);
 //#endregion
