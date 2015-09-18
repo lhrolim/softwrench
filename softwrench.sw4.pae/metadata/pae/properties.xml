@@ -4,7 +4,6 @@
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
   <property key="basewsURL" value="http://10.50.100.154:9080/meaweb/wsdl/" />
-  <!-- <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=BS7116;User Id=MAXIMO;password=MAXIMO;" /> /-->
   <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=PAE71DEV;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
@@ -24,14 +23,27 @@
   <property key="dashboard.enabled" value="false"/>
 
   <environment key="dev">
+    <!--property key="swdb_url" value="Data Source=172.17.43.101;Initial Catalog=SWDB_MAXDB7;User Id=maximo;password=maximo;" /-->
+    <!--property key="basewsURL" value="http://lsv-fs-rssmxdev:7001/meaweb/wsdl/" /-->
+    <!--property key="maximo_DB_url" value="Data Source=lsv-fs-rssmxdev;Initial Catalog=maxdb7;User Id=maximo;password=maximo;" /-->
+    <!--property key="swdb_url" value="Data Source=lsv-fs-rssmxdev;Initial Catalog=SWDB_MAXDB7;User Id=maximo;password=maximo;" /-->
+
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_PAE71DEV;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.154:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=PAE71DEV;User Id=MAXIMO;password=MAXIMO;" />
   </environment>
 
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_BS7116;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_PAE71DEV;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.154:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=PAE71DEV;User Id=MAXIMO;password=MAXIMO;" />
+  </environment>
+
+  <environment key="prod">
+    <property key="basewsURL" value="http://lsv-fs-rssmxdev:7001/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=lsv-fs-rssmxdev;Initial Catalog=maxdb7;User Id=maximo;password=maximo;" />
+    <property key="swdb_url" value="Data Source=lsv-fs-rssmxdev;Initial Catalog=SWDB_MAXDB7;User Id=maximo;password=maximo;" />
+    <!--property key="swdb_url" value="Data Source=172.17.43.101;Initial Catalog=SWDB_MAXDB7;User Id=maximo;password=maximo;" /-->
   </environment>
 
 </Properties>
-
-
-
