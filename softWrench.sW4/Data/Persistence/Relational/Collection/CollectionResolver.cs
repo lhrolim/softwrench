@@ -95,7 +95,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var i = 0;
             foreach (var collectionAssociation in collectionAssociations) {
                 var internalParameter = BuildInternalParameter(parameters, collectionAssociation, results);
-                var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto) paginatedSearch.ShallowCopy();
+                var perThreadPaginatedSearch = (PaginatedSearchRequestDto) paginatedSearch?.ShallowCopy();
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, perThreadPaginatedSearch));
             }
             Task.WaitAll(tasks);
@@ -179,7 +179,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                     paginatedSearch.PageNumber, 
                     paginatedSearch.PageSize, 
                     paginatedSearch.SearchValues,
-                    new List<int>(1) { paginatedSearch.PageSize }
+                    paginatedSearch.PaginationOptions
                     );
             }
 
@@ -235,12 +235,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
-            // merging the search dto's
-            if (paginatedSearch != null) {
-                searchRequestDto.PageNumber = paginatedSearch.PageNumber;
-                searchRequestDto.PageSize = paginatedSearch.PageSize;
-                searchRequestDto.TotalCount = paginatedSearch.TotalCount;
+            // no pagination intended: return simple search
+            if (paginatedSearch == null || paginatedSearch.PageSize <= 0) {
+                return searchRequestDto;
             }
+            // pagination: merging the search dto's
+            searchRequestDto.PageNumber = paginatedSearch.PageNumber;
+            searchRequestDto.PageSize = paginatedSearch.PageSize;
+            searchRequestDto.TotalCount = paginatedSearch.TotalCount;
             return searchRequestDto;
         }
 
