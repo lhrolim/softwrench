@@ -1,23 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4", "softWrench.sW4\softWrench.sW4.csproj", "{CE228C26-938D-4D6F-95FA-12CC5241AFB5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4.Web", "softWrench.sW4.Web\softWrench.sW4.Web.csproj", "{8F237B59-E434-4A10-9B53-B982CAC34551}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D} = {6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7F0343DC-37A4-41A3-A5E6-773600FA2F1A}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sW4.test", "softwrench.sW4.test\softwrench.sW4.test.csproj", "{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E4B56D9-F11F-40A4-BAF5-51790789122C}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,6 +25,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3FBB2C5
 		..\..\..\..\Desktop\softWrench\Web.TEMPLATE.config = ..\..\..\..\Desktop\softWrench\Web.TEMPLATE.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4", "softWrench.sW4\softWrench.sW4.csproj", "{CE228C26-938D-4D6F-95FA-12CC5241AFB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4.Web", "softWrench.sW4.Web\softWrench.sW4.Web.csproj", "{8F237B59-E434-4A10-9B53-B982CAC34551}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D} = {6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sW4.test", "softwrench.sW4.test\softwrench.sW4.test.csproj", "{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.Shared2", "softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj", "{E3764769-6D4D-4986-BAF4-02D1B479D961}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.Hapag", "softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj", "{22D901FC-310E-4F14-9506-D9433CF192CF}"
@@ -43,33 +43,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4.Controls.WebForms", "softWrench.sW4.Controls.WebForms\softWrench.sW4.Controls.WebForms.csproj", "{C4202D98-E67C-4AEA-B295-225ED65AD5F2}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://66.235.236.86:8080/tfs/softwrench
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = softWrench.sW4\\softWrench.sW4.csproj
-		SccProjectName1 = softWrench.sW4
-		SccLocalPath1 = softWrench.sW4
-		SccProjectUniqueName2 = softWrench.sW4.Web\\softWrench.sW4.Web.csproj
-		SccProjectName2 = softWrench.sW4.Web
-		SccLocalPath2 = softWrench.sW4.Web
-		SccProjectUniqueName3 = softwrench.sW4.test\\softwrench.sW4.test.csproj
-		SccProjectName3 = softwrench.sW4.test
-		SccLocalPath3 = softwrench.sW4.test
-		SccProjectUniqueName4 = softwrench.sw4.Shared2\\softwrench.sw4.Shared2.csproj
-		SccProjectName4 = softwrench.sw4.Shared2
-		SccLocalPath4 = softwrench.sw4.Shared2
-		SccProjectUniqueName5 = softwrench.sw4.Hapag\\softwrench.sw4.Hapag.csproj
-		SccProjectName5 = softwrench.sw4.Hapag
-		SccLocalPath5 = softwrench.sw4.Hapag
-		SccProjectUniqueName6 = WCFDynamicProxy\\src\\DynamicProxyLibrary.csproj
-		SccProjectName6 = WCFDynamicProxy/src
-		SccLocalPath6 = WCFDynamicProxy\\src
-		SccProjectUniqueName7 = softWrench.sW4.Controls.WebForms\\softWrench.sW4.Controls.WebForms.csproj
-		SccProjectName7 = softWrench.sW4.Controls.WebForms
-		SccLocalPath7 = softWrench.sW4.Controls.WebForms
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
 		Ad-Hoc|iPhone = Ad-Hoc|iPhone
