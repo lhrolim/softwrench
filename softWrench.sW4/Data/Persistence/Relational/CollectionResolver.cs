@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
     public class CollectionResolver : ISingletonComponent {
@@ -77,7 +78,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy();
+                var shouldPaginate = ShouldPaginate(compositionSchemas[association.Qualifier], paginatedSearch);
+                var perThreadPaginatedSearch = shouldPaginate ? (PaginatedSearchRequestDto) paginatedSearch.ShallowCopy() : null;
                 //this will avoid that one thread impacts any other
                 var perThreadContext = ctx.ShallowCopy();
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, perThreadContext, results, perThreadPaginatedSearch));
@@ -88,9 +90,17 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
 
             return results;
-
         }
 
+        private bool ShouldPaginate(ApplicationCompositionSchema compositionSchema, PaginatedSearchRequestDto paginatedSearch) {
+            var listSchema = compositionSchema.Schemas.List;
+            var hasPaginatedSearch = paginatedSearch != null;
+            string paginationDisabled;
+            if (listSchema.Properties.TryGetValue("pagination.disabled", out paginationDisabled)) {
+                return paginationDisabled != "True" && hasPaginatedSearch;
+            };
+            return hasPaginatedSearch;
+        }
 
         private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, IEnumerable<AttributeHolder> entitiesList,
             ContextHolder ctx, Dictionary<string, EntityRepository.SearchEntityResult> results, PaginatedSearchRequestDto paginatedSearch) {

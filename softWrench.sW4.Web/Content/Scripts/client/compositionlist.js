@@ -332,7 +332,9 @@ app.directive('compositionList', function (contextService, spinService) {
                 }
                 spinService.stop({ compositionSpin: true });
                 $scope.paginationData = compositiondata[$scope.relationship].paginationData;
-                $scope.paginationData.selectedPage = $scope.paginationData.pageNumber;
+                if (!!$scope.paginationData) {
+                    $scope.paginationData.selectedPage = $scope.paginationData.pageNumber;
+                }
                 $scope.compositiondata = compositiondata[$scope.relationship].list;
                 init();
                 $scope.$digest();
