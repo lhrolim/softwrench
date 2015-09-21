@@ -94,12 +94,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         private bool ShouldPaginate(ApplicationCompositionSchema compositionSchema, PaginatedSearchRequestDto paginatedSearch) {
             var listSchema = compositionSchema.Schemas.List;
-            var hasPaginatedSearch = paginatedSearch != null;
-            string paginationDisabled;
-            if (listSchema.Properties.TryGetValue("pagination.disabled", out paginationDisabled)) {
-                return paginationDisabled != "True" && hasPaginatedSearch;
-            };
-            return hasPaginatedSearch;
+            var paginationDisabled = listSchema.GetProperty("pagination.disabled");
+            // did not disable via metadata and requested paginated content
+            return !"True".EqualsIc(paginationDisabled) && paginatedSearch != null;
         }
 
         private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, IEnumerable<AttributeHolder> entitiesList,
