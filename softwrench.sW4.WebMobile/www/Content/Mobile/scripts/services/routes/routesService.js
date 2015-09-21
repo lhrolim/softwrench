@@ -9,8 +9,6 @@ mobileServices.factory('routeService', ["$state", "contextService", function ($s
             return contextService.getFromContext("serverurl") + "/SignIn/SignInReturningUserData";
         },
 
-       
-
         downloadMetadataURL: function () {
             return contextService.getFromContext("serverurl") + "/api/mobile/DownloadMetadatas";
         },
@@ -25,9 +23,9 @@ mobileServices.factory('routeService', ["$state", "contextService", function ($s
             return $state.go(stateName, params);
         },
 
-        loadInitialState:function(cookieAuthenticated) {
-            if (!cookieAuthenticated) {
-                return this.go("login");
+        loadInitialState: function(authenticated) {
+            if (!authenticated) {
+                return !contextService.get("serverurl") ? this.go("settings") : this.go("login");
             }
             var currentState = contextService.getFromContext("currentstate");
             if (isRippleEmulator() && currentState) {
