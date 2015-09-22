@@ -52,25 +52,28 @@ namespace softWrench.sW4.log4net {
 
             LoggingUtil.DefaultLog.InfoFormat("init custom log system for client {0}", ApplicationConfiguration.ClientName);
 
-            if (ApplicationConfiguration.IsDev()) {
-                var appenders = LogManager.GetRepository().GetAppenders();
-                foreach (var appender in appenders) {
-                    var rollingFileAppender = appender as RollingFileAppender;
-                    if (rollingFileAppender == null) {
-                        continue;
-                    }
-                    rollingFileAppender.MaxSizeRollBackups = ApplicationConfiguration.IsLocal() ? 1 : 3;
-                    rollingFileAppender.File = rollingFileAppender.File.Replace("\\sw4\\", "\\sw4\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
-                    if (needsFolderReplacement) {
-                        //this is the value that was registered on the web.config file
-                        rollingFileAppender.File = rollingFileAppender.File.Replace("C:\\softwrench\\", swFolder);
-                    }
-                    rollingFileAppender.ActivateOptions();
+
+            var appenders = LogManager.GetRepository().GetAppenders();
+            foreach (var appender in appenders) {
+                var rollingFileAppender = appender as RollingFileAppender;
+                if (rollingFileAppender == null) {
+                    continue;
                 }
-            } else {
-                ChangeLevel("MAXIMO.SQL", "WARN", null);
-                ChangeLevel("SWDB.SQL", "WARN", null);
+                rollingFileAppender.MaxSizeRollBackups = ApplicationConfiguration.IsLocal() ? 1 : 3;
+                if (ApplicationConfiguration.IsDev()) {
+                    rollingFileAppender.File = rollingFileAppender.File.Replace("\\logs\\",
+                        "\\logs\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
+                } else {
+                    ChangeLevel("MAXIMO.SQL", "WARN", null);
+                    ChangeLevel("SWDB.SQL", "WARN", null);
+                }
+                if (needsFolderReplacement) {
+                    //this is the value that was registered on the web.config file
+                    rollingFileAppender.File = rollingFileAppender.File.Replace("C:\\softwrench\\", swFolder);
+                }
+                rollingFileAppender.ActivateOptions();
             }
+
             LoggingUtil.DefaultLog.InfoFormat("finish log system setup for client {0}", ApplicationConfiguration.ClientName);
         }
 
