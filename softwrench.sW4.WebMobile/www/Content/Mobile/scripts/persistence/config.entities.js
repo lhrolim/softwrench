@@ -155,6 +155,8 @@
 
         entities.DataEntry.index(['application', 'remoteid'], { unique: true });
 
+        entities.DataEntry.maxRowstampByAppQuery = "select max(rowstamp) as rowstamp,application,id from DataEntry where application = ?";
+
         //query to be performed after synchronization has occurred, for new items
         entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','originaldatamap','datamap','pending','isDirty','remoteId','rowstamp','id') values (:p0,:p1,:p1,0,0,:p2,:p3,:p4)";
         //query to be performed after synchronization has occurred, for existing items
