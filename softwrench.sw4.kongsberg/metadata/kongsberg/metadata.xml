@@ -1437,10 +1437,10 @@
               <field label="Proactive?" attribute="proactive">
                 <renderer type="checkbox" />
               </field>
-              <section id="attachmentsection" />
-              <section id="compositions"/>
             </section>
           </section>
+          <section id="attachmentsection" />
+          <section id="compositions"/>
         </schema>
         
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
@@ -1814,9 +1814,9 @@
             <field label="Proactive?" attribute="proactive">
               <renderer type="checkbox" />
             </field>
-            <section id="attachmentsection" />
-            <section id="compositions" />
           </section>
+          <section id="attachmentsection" />
+          <section id="compositions" />
         </schema>
         <schema id="newdetail" parentschema="adetail" title="New Incident">
           <section id="ticketsection">
