@@ -1159,7 +1159,7 @@
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
-    
+
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR#">
@@ -1298,7 +1298,6 @@
         </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-          <section id="srsection" />
           <field attribute="ticketid" label="Reference ID:" readonly="true" hidden="true"/>
           <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
@@ -1314,141 +1313,136 @@
           <field attribute="reportedemail" hidden="true"/>
           <field attribute="affectedemail" hidden="true"/>
 
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
-            <renderer type="lookup" params="inputsize=medium"/>
-            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
-          </association>
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
-            <dataprovider prefilterfunction="FilterByPersonGroup"/>
-            <renderer type="lookup" params="inputsize=medium"/>
-            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
-          </association>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <section id="srsection" />
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
+              <renderer type="lookup" />
+              <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
+            </association>
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
+              <dataprovider prefilterfunction="FilterByPersonGroup"/>
+              <renderer type="lookup" />
+              <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
+            </association>
+          </section>
 
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true"/>
+            <renderer type="default" params="childinputsize=medium" />
             <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
-              <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
+              <renderer type="lookup" params="columnlabel=Name" />
             </association>
             <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
-              <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
+              <renderer type="lookup" params="columnlabel=Name" />
             </association>
           </section>
+
           <section>
             <header displacement="ontop" label="Service Request Details" params="fieldset=true"/>
-            <field attribute="description" label="Summary:" requiredexpression="true">
-              <renderer type="default" />
-            </field>
+            <field attribute="description" label="Summary:" requiredexpression="true" />
             <field label="Details:" attribute="longdescription_.ldtext">
               <renderer type="richtext" />
             </field>
           </section>
+
+
           <section>
             <header displacement="ontop" label="Project Details" params="fieldset=true"/>
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
-              <renderer type="autocompleteclient" params="inputsize=small"/>
+              <renderer type="autocompleteclient" />
             </optionfield>
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <!-- removed default='@usersite' from the above association label-->
-              <renderer type="combo" params="inputsize=small" />
-            </association>
-            <field label="TFS#:" attribute="tfsnumber">
-              <renderer type="default" params="inputsize=small" />
-            </field>
+
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
+              <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+                <renderer type="combo" />
+              </association>
+              <field label="TFS#:" attribute="tfsnumber" />
+              <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <field label="Region:" attribute="region" />
+              <field label="Service Group:" attribute="commoditygroup" />
+              <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <field label="Rig Name:" attribute="rigname" />
+              <field label="Service:" attribute="commodity" />
+              <field label="Feature Request?" attribute="feature_request">
+                <renderer type="checkbox" />
+              </field>
+              <field label="Well Name:" attribute="wellname" />
+              <field label="Service Company Type:" attribute="servicecompanytype" />
+            </section>
           </section>
 
-          <section>
-            <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small"/>
-            </association>
-            <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-          </section>
-
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
-            <renderer type="lookup" params="inputsize=small" />
-          </association>
-          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
-            <renderer type="lookup" params="inputsize=small" />
-          </association>
-          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
-            <renderer type="lookup" params="inputsize=small" />
-          </association>
-          <field label="Region:" attribute="region">
-            <renderer type="default" params="inputsize=small" />
-          </field>
-          <field label="Service Group:" attribute="commoditygroup">
-            <renderer type="default" params="inputsize=small" />
-          </field>
-          <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
-            <renderer type="lookup" params="inputsize=small" />
-          </association>
-          <field label="Rig Name:" attribute="rigname">
-            <renderer type="default" params="inputsize=small" />
-          </field>
-          <field label="Service:" attribute="commodity">
-            <renderer type="default" params="inputsize=small" />
-          </field>
-          <field label="Feature Request?" attribute="feature_request">
-            <renderer type="checkbox" params="inputsize=small"/>
-          </field>
-
-          <section>
-            <field label="Well Name:" attribute="wellname">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <field label="Service Company Type:" attribute="servicecompanytype">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-          </section>
           <section>
             <header displacement="ontop" label="Key Dates" params="fieldset=true"/>
-            <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="inputsize=small"/>
-            </field>
+            <section>
+              <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
+                <renderer type="datetime"  params="inputsize=small" />
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
+              <field label="Target Start:" attribute="targetstart" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+              <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
+                <renderer type="checkbox" />
+              </field>
+              <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+              <field label="Target Finish:" attribute="targetfinish" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+              <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
+                <renderer type="checkbox" />
+              </field>
+              <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+              <field label="Actual Start Date:" attribute="actualstart" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+              <field label="SLA Met?" attribute="slamet" enableexpression="false">
+                <renderer type="checkbox" />
+              </field>
+              <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
+                <renderer type="default" params="format=MM/dd/yyyy HH:mm;formatter=doubleToTime"/>
+              </field>
+              <field label="Actual End Date:" attribute="actualfinish" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+              <field label="Response SLO?" attribute="responseslo" enableexpression="false">
+                <renderer type="checkbox" />
+              </field>
+              <field label="Proactive?" attribute="proactive">
+                <renderer type="checkbox" />
+              </field>
+            </section>
           </section>
-          <field label="Target Start:" attribute="targetstart" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
-          </field>
-          <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small"/>
-          </field>
-          <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
-          </field>
-          <field label="Target Finish:" attribute="targetfinish" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
-          </field>
-          <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small"/>
-          </field>
-          <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
-          </field>
-          <field label="Actual Start Date:" attribute="actualstart" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
-          </field>
-          <field label="SLA Met?" attribute="slamet" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small"/>
-          </field>
-          <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
-            <renderer type="default" params="format=MM/dd/yyyy HH:mm;inputsize=small;formatter=doubleToTime"/>
-          </field>
-          <field label="Actual End Date:" attribute="actualfinish" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
-          </field>
-          <field label="Response SLO?" attribute="responseslo" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small"/>
-          </field>
-          <field label="Proactive?" attribute="proactive">
-            <renderer type="checkbox" params="inputsize=small"/>
-          </field>
           <section id="attachmentsection" />
           <section id="compositions"/>
         </schema>
+        
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="srsection">
             <field attribute="ticketid" label="SR#" hidden="true" />
@@ -1463,11 +1457,9 @@
         </schema>
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="srsection">
-            <field attribute="ticketid" label="SR#" readonly="true" requiredexpression="true">
-              <renderer type="default" params="inputsize=medium" />
-            </field>
+            <field attribute="ticketid" label="SR#" readonly="true" requiredexpression="true" />
             <optionfield label="Status:" attribute="status">
-              <renderer type="combo" params="inputsize=medium" />
+              <renderer type="combo" />
               <option label="Duplicate" value="DUPLICATE"/>
               <option label="Closed" value="CLOSED"/>
               <option label="Edited in History" value="HISTEDIT"/>
@@ -1717,103 +1709,112 @@
             </field>
           </section>
           <section>
-            <header displacement="ontop" label="Project Details" params="fieldset=true" />
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
-              <renderer type="autocompleteclient" params="inputsize=small" />
-            </optionfield>
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <renderer type="combo" params="inputsize=small" />
-            </association>
-            <field label="TFS#:" attribute="tfsnumber">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <association label="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <association label="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <association label="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <association label="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <field label="Region:" attribute="region">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <field label="Service Group:" attribute="commoditygroup">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <association label="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=small" />
-            </association>
-            <field label="Rig Name:" attribute="rigname">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <field label="Service:" attribute="commodity">
-              <renderer type="default" params="inputsize=small" />
-            </field>
-            <field label="Feature Request:" attribute="feature_request">
-              <renderer type="checkbox" params="inputsize=small" />
-            </field>
             <section>
+              <header displacement="ontop" label="Project Details" params="fieldset=true" />
+              <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
+                <renderer type="autocompleteclient" />
+              </optionfield>
+            </section>
+
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
+
+              <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+                <renderer type="combo" />
+              </association>
+              <field label="TFS#:" attribute="tfsnumber">
+                <renderer type="default" />
+              </field>
+              <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <field label="Region:" attribute="region">
+                <renderer type="default" />
+              </field>
+              <field label="Service Group:" attribute="commoditygroup">
+                <renderer type="default" />
+              </field>
+              <association label="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
+                <renderer type="lookup" />
+              </association>
+              <field label="Rig Name:" attribute="rigname">
+                <renderer type="default" />
+              </field>
+              <field label="Service:" attribute="commodity">
+                <renderer type="default" />
+              </field>
+              <field label="Feature Request:" attribute="feature_request">
+                <renderer type="checkbox" />
+              </field>
               <field label="Well Name:" attribute="wellname">
-                <renderer type="default" params="inputsize=small" />
+                <renderer type="default" />
               </field>
               <field label="Service Company Type:" attribute="servicecompanytype">
-                <renderer type="default" params="inputsize=small" />
+                <renderer type="default" />
               </field>
             </section>
           </section>
+          
           <section>
             <header displacement="ontop" label="Key Dates" params="fieldset=true" />
             <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
             </field>
           </section>
-          <field label="Target Start Date:" attribute="targetstart" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
-          </field>
-          <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small" />
-          </field>
-          <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
-          </field>
-          <field label="Target Finish:" attribute="targetfinish" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
-          </field>
-          <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small" />
-          </field>
-          <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
-          </field>
-          <field label="Actual Start Date:" attribute="actualstart" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
-          </field>
-          <field label="SLA Met?" attribute="slamet" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small" />
-          </field>
-          <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
-            <renderer type="default" params="format=MM/dd/yyyy HH:mm;inputsize=small;formatter=doubleToTime" />
-          </field>
-          <field label="Actual End Date:" attribute="actualfinish" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
-          </field>
-          <field label="Response SLO?" attribute="responseslo" enableexpression="false">
-            <renderer type="checkbox" params="inputsize=small" />
-          </field>
-          <field label="Proactive?" attribute="proactive">
-            <renderer type="checkbox" params="inputsize=small" />
-          </field>
+          <section>
+            <renderer type="default" params="childinputsize=small" />
+            <field label="Target Start Date:" attribute="targetstart" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+            </field>
+            <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
+              <renderer type="checkbox" />
+            </field>
+            <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+            </field>
+            <field label="Target Finish:" attribute="targetfinish" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+            </field>
+            <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
+              <renderer type="checkbox" />
+            </field>
+            <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+            </field>
+            <field label="Actual Start Date:" attribute="actualstart" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+            </field>
+            <field label="SLA Met?" attribute="slamet" enableexpression="false">
+              <renderer type="checkbox" />
+            </field>
+            <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
+              <renderer type="default" params="format=MM/dd/yyyy HH:mm;formatter=doubleToTime" />
+            </field>
+            <field label="Actual End Date:" attribute="actualfinish" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+            </field>
+            <field label="Response SLO?" attribute="responseslo" enableexpression="false">
+              <renderer type="checkbox" />
+            </field>
+            <field label="Proactive?" attribute="proactive">
+              <renderer type="checkbox" />
+            </field>
+          </section>
           <section id="attachmentsection" />
           <section id="compositions" />
         </schema>
@@ -2763,19 +2764,21 @@
           </section>
           <section>
             <header displacement="ontop" label="Solution Details" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
             <association label="Site" target="siteid" labelfield="site_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=medium" />
+              <renderer type="lookup" />
             </association>
             <association label="Asset" target="assetnum" labelfield="asset_.description" hideDescription="true">
-              <renderer type="lookup" params="inputsize=medium" />
+              <renderer type="lookup" />
             </association>
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
-              <renderer type="autocompleteclient" params="inputsize=medium" />
+              <renderer type="autocompleteclient" />
             </optionfield>
             <field label="Keywords" attribute="allkeywords" readonly="true">
-              <renderer type="default" params="inputsize=medium" />
+              <renderer type="default" />
             </field>
           </section>
+          
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext" />
           </field>

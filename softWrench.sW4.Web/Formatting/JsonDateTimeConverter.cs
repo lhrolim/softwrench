@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.portable.Util;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -43,6 +44,8 @@ namespace softWrench.sW4.Web.Formatting {
             var dateConverted = isAlreadyOnUtc ? date.FromUTCToUser(user) : date.FromMaximoToUser(user);
             var formatToUse = isAlreadyOnUtc ? FormatWithoutTimeZone : FormatWithTimeZone;
 
+            //let´s double check if UTC, cause we can´t afford to conver it then
+            isAlreadyOnUtc = DateTimeKind.Utc.Equals(dateConverted.Kind);
 
             if (userOffsetVal == 0 || isAlreadyOnUtc) {
                 var dt = dateConverted.ToString(formatToUse);
@@ -51,6 +54,7 @@ namespace softWrench.sW4.Web.Formatting {
             }
 
             var userOffset = TimeSpan.FromMinutes(userOffsetVal * -1);
+            Log.DebugFormat("converting datetime {0} using offset {1} ".Fmt(dateConverted,userOffset));
             var datetime = new DateTimeOffset(dateConverted, userOffset).ToString(FormatWithTimeZone);
             writer.WriteValue(datetime);
         }
