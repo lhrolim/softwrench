@@ -44,6 +44,7 @@ namespace softWrench.sW4.Web.Formatting {
             var dateConverted = isAlreadyOnUtc ? date.FromUTCToUser(user) : date.FromMaximoToUser(user);
             var formatToUse = isAlreadyOnUtc ? FormatWithoutTimeZone : FormatWithTimeZone;
 
+            isAlreadyOnUtc = DateTimeKind.Utc.Equals(date.Kind);
 
             if (userOffsetVal == 0 || isAlreadyOnUtc) {
                 var dt = dateConverted.ToString(formatToUse);

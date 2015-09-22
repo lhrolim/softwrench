@@ -222,7 +222,7 @@ namespace softWrench.sW4.Web {
         }
 
         public void HandleEvent(ClientChangeEvent eventToDispatch) {
-            var oldKey = ConfigurationManager.AppSettings["clientkey"];
+            var oldKey = ApplicationConfiguration.ClientName;
             if (ConfigurationManager.AppSettings["originalclientkey"] == null) {
                 ConfigurationManager.AppSettings["originalclientkey"] = oldKey;
             }
@@ -233,11 +233,11 @@ namespace softWrench.sW4.Web {
             if (oldKey == newKey) {
                 throw new InvalidOperationException("client key not changed");
             }
-            ConfigurationManager.AppSettings["clientkey"] = newKey;
+            ApplicationConfiguration.FixClientName(newKey);
             try {
                 DoStartApplication(true);
             } catch (Exception e) {
-                ConfigurationManager.AppSettings["clientkey"] = oldKey;
+                ApplicationConfiguration.FixClientName(oldKey);
                 DoStartApplication(true);
                 throw new Exception("Error: could not modify client restoring to {0}".Fmt(oldKey), e);
             }

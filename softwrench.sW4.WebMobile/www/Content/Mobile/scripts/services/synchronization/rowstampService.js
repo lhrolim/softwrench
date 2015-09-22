@@ -3,7 +3,7 @@
 
     mobileServices.constant("rowstampConstants", {
         //above this limit framework shall no longer produce the full rowstamp map, but rather just pass the maxrowstamp to the server
-        maxItemsForFullStrategy: 300
+        maxItemsForFullStrategy: 0
     });
 
     mobileServices.factory('rowstampService', ["$q", "$log", "swdbDAO", "offlineEntities", "rowstampConstants", function ($q, $log, swdbDAO, offlineEntities, rowstampConstants) {
@@ -15,15 +15,13 @@
                 var log = $log.get("rowstampService#generateRowstampMap");
                 var start = new Date().getTime();
                 var applicationQuery = "application ='{0}'".format(application);
-                debugger;
                 //https://controltechnologysolutions.atlassian.net/browse/SWOFF-140
                 var shouldUseFullStrategy = true;
                 return swdbDAO.countByQuery("DataEntry", applicationQuery)
                     .then(function (result) {
-                        debugger;
-                        var shouldUseFullStrategy = result < rowstampConstants.maxItemsForFullStrategy;
-                        if (shouldUseFullStrategy) {
-                            return swdbDAO.findByQuery('DataEntry', null, { fullquery: entities.DataEntry.maxRowstampByAppQuery.fmt(application) });
+                        shouldUseFullStrategy = result < rowstampConstants.maxItemsForFullStrategy;
+                        if (!shouldUseFullStrategy) {
+                            return swdbDAO.findByQuery('DataEntry', null, { fullquery: entities.DataEntry.maxRowstampByAppQuery.format(application) });
                         }
                         return swdbDAO.findByQuery("DataEntry", applicationQuery, { projectionFields: ["remoteId", "rowstamp"] });
                     }).then(function (queryResults) {
@@ -43,7 +41,7 @@
                             log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length, (end - start)));
                             return rowstampMap;
                         } else {
-                            rowstampMap.maxrowstamp = queryResults;
+                            rowstampMap.maxrowstamp = queryResults[0];
                             return rowstampMap;
                         }
                     });
