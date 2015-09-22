@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using softWrench.sW4.Security.Services;
@@ -10,7 +11,19 @@ namespace softWrench.sW4.Web.Formatting {
         private const string FormatWithTimeZone = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
         private const string FormatWithoutTimeZone = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(JsonDateTimeConverter));
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            try {
+                DoWriteJson(writer, value);
+            } catch (Exception e) {
+                Log.Error(e);
+                throw;
+            }
+
+        }
+
+        private static void DoWriteJson(JsonWriter writer, object value) {
             if (!(value is DateTime)) {
                 writer.WriteValue((string)null);
                 return;
@@ -41,6 +54,5 @@ namespace softWrench.sW4.Web.Formatting {
             var datetime = new DateTimeOffset(dateConverted, userOffset).ToString(FormatWithTimeZone);
             writer.WriteValue(datetime);
         }
-
     }
 }
