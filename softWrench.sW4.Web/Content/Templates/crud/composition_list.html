@@ -82,10 +82,9 @@
             </tbody>
         </table>
         
-        <div class="context clearfix" ng-if="!isNoRecords && paginationData && paginationData.pageCount > 1">
-            <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" showactions="false" />
-        </div>
-
+        
+    <div class="context clearfix" ng-if="showPagination">
+        <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)"  showactions="false"/>
     </div>
     <div ng-if="showListCommands()" class="form-actions form-group" data-class="commandbar">
         <div class="col-lg-12 hapag-align-button" style="padding-top: 5px">

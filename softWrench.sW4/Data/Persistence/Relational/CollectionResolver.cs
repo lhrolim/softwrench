@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
     public class CollectionResolver : ISingletonComponent {
@@ -77,7 +78,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy();
+                var shouldPaginate = ShouldPaginate(compositionSchemas[association.Qualifier], paginatedSearch);
+                var perThreadPaginatedSearch = shouldPaginate ? (PaginatedSearchRequestDto) paginatedSearch.ShallowCopy() : null;
                 //this will avoid that one thread impacts any other
                 var perThreadContext = ctx.ShallowCopy();
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, perThreadContext, results, perThreadPaginatedSearch));
@@ -88,9 +90,14 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
 
             return results;
-
         }
 
+        private bool ShouldPaginate(ApplicationCompositionSchema compositionSchema, PaginatedSearchRequestDto paginatedSearch) {
+            var listSchema = compositionSchema.Schemas.List;
+            var paginationDisabled = listSchema.GetProperty("pagination.disabled");
+            // did not disable via metadata and requested paginated content
+            return !"True".EqualsIc(paginationDisabled) && paginatedSearch != null;
+        }
 
         private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, IEnumerable<AttributeHolder> entitiesList,
             ContextHolder ctx, Dictionary<string, EntityRepository.SearchEntityResult> results, PaginatedSearchRequestDto paginatedSearch) {
@@ -141,7 +148,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                     paginatedSearch.PageNumber,
                     paginatedSearch.PageSize,
                     paginatedSearch.SearchValues,
-                    new List<int>(1) { paginatedSearch.PageSize }
+                    paginatedSearch.PaginationOptions
                     );
             }
 
@@ -179,14 +186,14 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
-            if (paginatedSearch != null) {
-                searchRequestDto.PageNumber = paginatedSearch.PageNumber;
-                searchRequestDto.PageSize = paginatedSearch.PageSize;
-                searchRequestDto.TotalCount = paginatedSearch.TotalCount;
+            // no pagination intended: return simple search
+            if (paginatedSearch == null || paginatedSearch.PageSize <= 0) {
+                return searchRequestDto;
             }
-
-            
-
+            // pagination: merging the search dto's
+            searchRequestDto.PageNumber = paginatedSearch.PageNumber;
+            searchRequestDto.PageSize = paginatedSearch.PageSize;
+            searchRequestDto.TotalCount = paginatedSearch.TotalCount;
             return searchRequestDto;
         }
 

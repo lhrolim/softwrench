@@ -3460,6 +3460,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </commands>
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
+            <property key="pagination.disabled" value="True" />
           </properties>
           <field attribute="worklogid" hidden="true"/>
           <field  attribute="recordkey" label="Record Key" />

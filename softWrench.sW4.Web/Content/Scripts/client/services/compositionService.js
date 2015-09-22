@@ -7,7 +7,11 @@
         ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService", "compositionCommons",
         function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons) {
 
-            var __deafultPageSize__ = 10;
+            var config = {
+                defaultPageSize: 10,
+                defaultOptions: [10, 30, "all"],
+                defaultRequestOptions: [0, 10, 30]
+            };
 
             //stores the context of the current detail loaded compositions
             var compositionContext = {};
@@ -26,7 +30,7 @@
             return api;
 
 
-            //private methods
+            //#region private methods
 
             function nonInlineCompositionsDict(schema) {
                 if (schema.nonInlineCompositionsDict != undefined) {
@@ -43,12 +47,12 @@
                 return resultDict;
             };
 
-            function buildPaginatedSearchDTO(pageNumber) {
+            function buildPaginatedSearchDTO(pageNumber, pageSize) {
                 var dto = searchService.buildSearchDTO();
                 dto.pageNumber = pageNumber || 1;
-                dto.pageSize = __deafultPageSize__;
+                dto.pageSize = pageSize === "all" ? 0 : pageSize || config.defaultPageSize;
                 dto.totalCount = 0;
-                // dto.paginationOptions = [__deafultPageSize__];
+                dto.paginationOptions = config.defaultRequestOptions;
                 return dto;
             };
 
@@ -97,13 +101,20 @@
                             log.info('composition {0} returned with {1} entries'.format(composition, resultList.length));
                             //this datamap entry is bound to the whole screen, so we need to set it here as well
                             datamap[composition] = resultList;
+
+                            var paginationData = compositionArray[composition].paginationData;
+                            // enforce composition pagination options
+                            // need to check existence: pagination disabled in metadata
+                            if (!!paginationData) {
+                                paginationData.paginationOptions = config.defaultOptions;
+                            }
                             //setting this case the tabs have not yet been loaded so that they can fetch from here
-                            contextService.insertIntoContext("compositionpagination_{0}".format(composition), compositionArray[composition].paginationData, true);
+                            contextService.insertIntoContext("compositionpagination_{0}".format(composition), paginationData, true);
                             compositionContext[composition] = compositionArray[composition];
                             result[composition] = {
                                 relationship: composition,
                                 list: resultList,
-                                paginationData: compositionArray[composition].paginationData
+                                paginationData: paginationData
                             };
                         }
                         return result;
@@ -154,8 +165,9 @@
                 };
             };
 
+            //#endregion
 
-            // Public methods
+            //#region Public methods
 
             function isCompositionLodaded(relationship) {
                 return compositionContext[relationship] != null;
@@ -229,18 +241,19 @@
              * @param Object schema composition's parent's schema
              * @param Object datamap composition's parent's datamap
              * @param Integer pageNumber number of the requested page
+             * @param Integer pageSize number of items per page
              * @returns Promise 
              *              resolved with parent's datamap populated with the fetched composition list 
              *              and pagination data (datamap[composition] = { list: [Object], paginationData: Object });
              *              rejected with HTTP error 
              */
-            function getCompositionList(composition, schema, datamap, pageNumber) {
-                var pageRequest = buildPaginatedSearchDTO(pageNumber);
+            function getCompositionList(composition, schema, datamap, pageNumber, pageSize) {
+                var pageRequest = buildPaginatedSearchDTO(pageNumber, pageSize);
                 var dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
                 return fetchCompositions(dto, datamap, true);
             }
 
-
+            //#endregion
 
         }]);
 
