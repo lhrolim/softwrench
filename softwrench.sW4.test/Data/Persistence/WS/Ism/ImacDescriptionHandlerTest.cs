@@ -43,11 +43,12 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             DoTest("replaceother", "replaceother.json", "replaceother.txt");
         }
 
-        [TestMethod]
-        [Ignore]
-        public void UpdateAsset() {
-            DoTest("update", "update_asset_data.json", "update_asset_data.txt");
-        }
+//        [TestMethod]
+//        [Ignore]
+//        public void UpdateAsset() {
+//            DoTest("update", "update_asset_data.json", "update_asset_data.txt");
+//        }
+
         [TestMethod]
         public void RemoveAsset() {
             DoTest("removeother", "removeother.json", "removeother.txt");
