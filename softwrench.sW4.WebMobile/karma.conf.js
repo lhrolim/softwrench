@@ -35,6 +35,8 @@ module.exports = function (config) {
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         browsers: ["Chrome"],
 
-        browserNoActivityTimeout: 60000
+        browserNoActivityTimeout: 10000,
+        browserDisconnectTolerance: 10,
+        browserDisconnectTimeout: 5000
     });
 };
