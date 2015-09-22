@@ -1159,16 +1159,7 @@
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
-      <notifications>
-        <notification label="service request" targetSchema="editdetail" targetApplication="servicerequest">
-          <attributes>
-            <uid attribute="ticketuid"/>
-            <summary attribute="description"/>
-            <createddate attribute="changedate"/>
-            <changeby attribute="changeby"/>
-          </attributes>
-        </notification>
-      </notifications>
+    
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR#">
@@ -1317,6 +1308,11 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
           <field attribute="changeby" default="@username" hidden="true"/>
+          <!-- hiddens for communication template -->
+          <field attribute="changedate" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="reportedemail" hidden="true"/>
+          <field attribute="affectedemail" hidden="true"/>
 
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
             <renderer type="lookup" params="inputsize=medium"/>

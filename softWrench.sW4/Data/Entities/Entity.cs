@@ -77,13 +77,14 @@ namespace softWrench.sW4.Data.Entities {
         }
 
         public override object GetAttribute(string attributeName, bool remove = false, bool throwException = false) {
-            if (UnmappedAttributes.ContainsKey(attributeName)) {
-                return GetUnMappedAttribute(attributeName);
+            var lowerAttribute = attributeName.ToLowerInvariant();
+            if (UnmappedAttributes.ContainsKey(lowerAttribute)) {
+                return GetUnMappedAttribute(lowerAttribute);
             }
 
-            if (attributeName.Contains(".")) {
+            if (lowerAttribute.Contains(".")) {
                 string resultAttributeName;
-                var relationshipName = EntityUtil.GetRelationshipName(attributeName, out resultAttributeName);
+                var relationshipName = EntityUtil.GetRelationshipName(lowerAttribute, out resultAttributeName);
                 var relationship = GetRelationship(relationshipName);
                 if (relationship is Entity) {
                     return ((Entity)relationship).GetAttribute(resultAttributeName);
@@ -93,19 +94,21 @@ namespace softWrench.sW4.Data.Entities {
                     return null;
                 }
             }
-            return base.GetAttribute(attributeName, remove, throwException);
+            return base.GetAttribute(lowerAttribute, remove, throwException);
         }
 
-        public override bool ContainsAttribute(string attributeName) {
-            if (attributeName.Contains(".")) {
+        public override bool ContainsAttribute(string attributeName)
+        {
+            var lowerAttribute = attributeName.ToLowerInvariant();
+            if (lowerAttribute.Contains(".")) {
                 string resultAttributeName;
-                var relationshipName = EntityUtil.GetRelationshipName(attributeName, out resultAttributeName);
+                var relationshipName = EntityUtil.GetRelationshipName(lowerAttribute, out resultAttributeName);
                 var relationship = GetRelationship(relationshipName);
                 if (relationship is Entity) {
                     return ((Entity)relationship).ContainsAttribute(resultAttributeName);
                 }
             }
-            return UnmappedAttributes.ContainsKey(attributeName) || Attributes.ContainsKey(attributeName);
+            return UnmappedAttributes.ContainsKey(lowerAttribute) || Attributes.ContainsKey(lowerAttribute);
         }
 
         /// <summary>

@@ -113,6 +113,11 @@
             <field attribute="siteid" hidden="true" />
             <field attribute="orgid" hidden="true"/>
             <field attribute="createby" hidden="true"/>
+            <!-- hiddens for communication template -->
+            <field attribute="changedate" hidden="true"/>
+            <field attribute="classificationid" hidden="true"/>
+            <field attribute="reportedemail" hidden="true"/>
+            <field attribute="affectedemail" hidden="true"/>
 
             <field attribute="class" label="" hidden="true"/>
             <field attribute="solution" hidden="true"/>
@@ -337,6 +342,11 @@
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
 
+          <!-- hiddens for communication template -->
+          <field attribute="changedate" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="reportedemail" hidden="true"/>
+          <field attribute="affectedemail" hidden="true"/>
           <field attribute="solution" hidden="true"/>
           <field attribute="assetsiteid" hidden="true"/>
           <field attribute="location" hidden="true"/>

@@ -184,6 +184,7 @@
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
+    <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
     <Compile Include="Exceptions\MenuMetadataException.cs" />
     <Compile Include="Exceptions\UnauthorizedException.cs" />

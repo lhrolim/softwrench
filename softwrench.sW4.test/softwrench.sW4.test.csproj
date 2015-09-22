@@ -52,6 +52,7 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -93,6 +94,7 @@
     <Compile Include="Data\Relationship\CompositionExpanderHelperTest.cs" />
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
     <Compile Include="Data\Search\SearchTest2.cs" />
+    <Compile Include="Email\CommLogTemplateMergerTest.cs" />
     <Compile Include="Hapag\Data\Connector\Imac\ImacServicePlanHelperTest.cs" />
     <Compile Include="Hapag\Security\HlagGroupedLocationTest.cs" />
     <Compile Include="Metadata\AbstractSchemaTest.cs" />

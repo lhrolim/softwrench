@@ -27,14 +27,23 @@ app.factory('commlogService', function ($http, contextService, restService) {
         },
 
         formatCommTemplate: function (parameters) {
+            var parentSchema = parameters.scope.parentschema;
+
+            var parentIdFieldName = parentSchema.idFieldName;
+            var parentData = parameters.parentdata["fields"];
+
             var httpParameters = {
                 templateId: parameters.fields['#templateid'],
-                applicationName: parameters.parentdata.application,
-                applicationId: parameters.parentdata.id
+                json: parentData,
+                schemaId: parentSchema.schemaId,
+                applicationName: parentSchema.applicationName,
+                applicationItemId: parentData[parentIdFieldName]
             };
-            restService.invokePost("CommTemplate", "MergeTemplateDefinition", httpParameters, null, function (data) {
-                parameters.fields['subject'] = data.subject;
-                parameters.fields['message'] = data.message;
+
+            
+            restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function (data) {
+                parameters.fields['subject'] = data.resultObject.subject;
+                parameters.fields['message'] = data.resultObject.message;
             }, null);
         }
     };
