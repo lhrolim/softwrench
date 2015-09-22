@@ -91,6 +91,8 @@
                     if (focusedInput) {
                         var newValue = $(focusedInput).val() + charBuffer;
                         $(focusedInput).val(newValue);
+                        //to fire model update on angular 1.4.3+
+                        angular.element($(focusedInput)).triggerHandler('input');
                         $(focusedInput).trigger('input');
                     }
                     initScannerDetection();
