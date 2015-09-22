@@ -1136,8 +1136,8 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				
 				// catch DOM XSS via taSanitize
 				// Sanitizing both ways is identical
-				var _sanitize = function(unsafe){
-					return (ngModel.$oldViewValue = taSanitize(taFixChrome(unsafe), ngModel.$oldViewValue, _disableSanitizer));
+				var _sanitize = function (unsafe) {
+				    return (ngModel.$oldViewValue = taSanitize(taFixChrome(unsafe), ngModel.$oldViewValue, _disableSanitizer));
 				};
 				
 				// trigger the validation calls
@@ -1400,55 +1400,232 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				ctrl.$parsers.unshift(validator);
 			}
 		};
-	}).factory('taFixChrome', function(){
+	})
+    // cts:rbotti
+	// copied from textAngular.js-1.4.6: stop automatically closing non-html tags + enhanced parsing
+    .factory('taFixChrome', function () {
 		// get whaterever rubbish is inserted in chrome
-		// should be passed an html string, returns an html string
+	    // should be passed an html string, returns an html string
 		var taFixChrome = function(html){
-			// default wrapper is a span so find all of them
-			var $html = angular.element('<div>' + html + '</div>');
-			var spans = angular.element($html).find('span');
-			for(var s = 0; s < spans.length; s++){
-				var span = angular.element(spans[s]);
-				// chrome specific string that gets inserted into the style attribute, other parts may vary. Second part is specific ONLY to hitting backspace in Headers
-				if(span.attr('style') && span.attr('style').match(/line-height: 1.428571429;|color: inherit; line-height: 1.1;/i)){
-					span.attr('style', span.attr('style').replace(/( |)font-family: inherit;|( |)line-height: 1.428571429;|( |)line-height:1.1;|( |)color: inherit;/ig, ''));
-					if(!span.attr('style') || span.attr('style') === ''){
-						if(span.next().length > 0 && span.next()[0].tagName === 'BR') span.next().remove();
-						span.replaceWith(span[0].innerHTML);
-					}
-				}
-			}
-			// regex to replace ONLY offending styles - these can be inserted into various other tags on delete
-			var result = $html[0].innerHTML.replace(/style="[^"]*?(line-height: 1.428571429;|color: inherit; line-height: 1.1;)[^"]*"/ig, '');
-			// only replace when something has changed, else we get focus problems on inserting lists
-			if(result !== $html[0].innerHTML) $html[0].innerHTML = result;
-			return $html[0].innerHTML;
+		    if (!html || !angular.isString(html) || html.length <= 0) return html;
+		    // grab all elements with a style attibute
+		    var spanMatch = /<([^>\/]+?)style=("([^"]+)"|'([^']+)')([^>]*)>/ig;
+		    var match, styleVal, newTag, finalHtml = '', lastIndex = 0;
+		    while (match = spanMatch.exec(html)) {
+		        // one of the quoted values ' or "
+		        /* istanbul ignore next: quotations match */
+		        styleVal = match[3] || match[4];
+		        // test for chrome inserted junk
+		        if (styleVal && styleVal.match(/line-height: 1.[0-9]{3,12};|color: inherit; line-height: 1.1;/i)) {
+		            // replace original tag with new tag
+		            styleVal = styleVal.replace(/( |)font-family: inherit;|( |)line-height: 1.[0-9]{3,12};|( |)color: inherit;/ig, '');
+		            newTag = '<' + match[1].trim();
+		            if (styleVal.trim().length > 0) newTag += ' style=' + match[2].substring(0, 1) + styleVal + match[2].substring(0, 1);
+		            newTag += match[5].trim() + ">";
+		            finalHtml += html.substring(lastIndex, match.index) + newTag;
+		            lastIndex = match.index + match[0].length;
+		        }
+		    }
+		    finalHtml += html.substring(lastIndex);
+		    // only replace when something has changed, else we get focus problems on inserting lists
+		    if (lastIndex > 0) {
+		        // replace all empty strings
+		        return finalHtml.replace(/<span\s?>(.*?)<\/span>(<br(\/|)>|)/ig, '$1');
+		    } else {
+		        return html;
+		    }
 		};
 		return taFixChrome;
-	}).factory('taSanitize', ['$sanitize', function taSanitizeFactory($sanitize){
-		return function taSanitize(unsafe, oldsafe, ignore){
-			// unsafe and oldsafe should be valid HTML strings
-			// any exceptions (lets say, color for example) should be made here but with great care
-			// setup unsafe element for modification
-			var unsafeElement = angular.element('<div>' + unsafe + '</div>');
-			// replace all align='...' tags with text-align attributes
-			angular.forEach(getByAttribute(unsafeElement, 'align'), function(element){
-				element.css('text-align', element.attr('align'));
-				element.removeAttr('align');
-			});
+	})
+    // cts:rbotti
+    // - copied from textAngular.js-1.4.6: stop automatically closing non-html tags + enhanced parsing
+	// - added $log reference so it stops swallowing errors
+    // - added `escapeAll(unsafe:String):String` function
+    .factory('taSanitize', ['$sanitize', '$log', function taSanitizeFactory($sanitize, $log) {
+	    
+        /**
+         * Escapes any possible 'harmfull' characters from a text.
+         * The goal is to avoid XSS or SQL Injection attacks at any cost.
+         * Should be used as last 'defense' measure since it escapes all characters deemed harmful
+         * (such as '<', '"').
+         * 
+         * @param String unsafe 
+         * @returns escaped unsafe text 
+         */
+	    function escapeAll(unsafe) {
+	        if (!unsafe) return unsafe;
+	        return unsafe
+                .replace(new RegExp("<", "g"), "&lt;")
+                .replace(new RegExp(">", "g"), "&gt;")
+                .replace(new RegExp("'", "g"), "\'")
+                .replace(new RegExp('"', "g"), "\"")
+                .replace(new RegExp(";", "g"), "\;");
+	    }
 
-			// get the html string back
-			var safe;
-			unsafe = unsafeElement[0].innerHTML;
-			try {
-				safe = $sanitize(unsafe);
-				// do this afterwards, then the $sanitizer should still throw for bad markup
-				if(ignore) safe = unsafe;
-			} catch (e){
-				safe = oldsafe || '';
-			}
-			return safe;
-		};
+	    var convert_infos = [
+		    {
+		        property: 'font-weight',
+		        values: ['bold'],
+		        tag: 'b'
+		    },
+		    {
+		        property: 'font-style',
+		        values: ['italic'],
+		        tag: 'i'
+		    }
+	    ];
+
+	    var styleMatch = [];
+	    for (var i = 0; i < convert_infos.length; i++) {
+	        var _partialStyle = '(' + convert_infos[i].property + ':\\s*(';
+	        for (var j = 0; j < convert_infos[i].values.length; j++) {
+	            /* istanbul ignore next: not needed to be tested yet */
+	            if (j > 0) _partialStyle += '|';
+	            _partialStyle += convert_infos[i].values[j];
+	        }
+	        _partialStyle += ');)';
+	        styleMatch.push(_partialStyle);
+	    }
+	    var styleRegexString = '(' + styleMatch.join('|') + ')';
+
+	    function wrapNested(html, wrapTag) {
+	        var depth = 0;
+	        var lastIndex = 0;
+	        var match;
+	        var tagRegex = /<[^>]*>/ig;
+	        while (match = tagRegex.exec(html)) {
+	            lastIndex = match.index;
+	            if (match[0].substr(1, 1) === '/') {
+	                if (depth === 0) break;
+	                else depth--;
+	            } else depth++;
+	        }
+	        return wrapTag +
+                html.substring(0, lastIndex) +
+                // get the start tags reversed - this is safe as we construct the strings with no content except the tags
+                angular.element(wrapTag)[0].outerHTML.substring(wrapTag.length) +
+                html.substring(lastIndex);
+	    }
+
+	    function transformLegacyStyles(html) {
+	        if (!html || !angular.isString(html) || html.length <= 0) return html;
+	        var i;
+	        var styleElementMatch = /<([^>\/]+?)style=("([^"]+)"|'([^']+)')([^>]*)>/ig;
+	        var match, subMatch, styleVal, newTag, lastNewTag = '', newHtml, finalHtml = '', lastIndex = 0;
+	        while (match = styleElementMatch.exec(html)) {
+	            // one of the quoted values ' or "
+	            /* istanbul ignore next: quotations match */
+	            styleVal = match[3] || match[4];
+	            var styleRegex = new RegExp(styleRegexString, 'i');
+	            // test for style values to change
+	            if (angular.isString(styleVal) && styleRegex.test(styleVal)) {
+	                // remove build tag list
+	                newTag = '';
+	                // init regex here for exec
+	                var styleRegexExec = new RegExp(styleRegexString, 'ig');
+	                // find relevand tags and build a string of them
+	                while (subMatch = styleRegexExec.exec(styleVal)) {
+	                    for (i = 0; i < convert_infos.length; i++) {
+	                        if (!!subMatch[(i * 2) + 2]) {
+	                            newTag += '<' + convert_infos[i].tag + '>';
+	                        }
+	                    }
+	                }
+	                // recursively find more legacy styles in html before this tag and after the previous match (if any)
+	                newHtml = transformLegacyStyles(html.substring(lastIndex, match.index));
+	                // build up html
+	                if (lastNewTag.length > 0) {
+	                    finalHtml += wrapNested(newHtml, lastNewTag);
+	                } else finalHtml += newHtml;
+	                // grab the style val without the transformed values
+	                styleVal = styleVal.replace(new RegExp(styleRegexString, 'ig'), '');
+	                // build the html tag
+	                finalHtml += '<' + match[1].trim();
+	                if (styleVal.length > 0) finalHtml += ' style="' + styleVal + '"';
+	                finalHtml += match[5] + '>';
+	                // update the start index to after this tag
+	                lastIndex = match.index + match[0].length;
+	                lastNewTag = newTag;
+	            }
+	        }
+	        if (lastNewTag.length > 0) {
+	            finalHtml += wrapNested(html.substring(lastIndex), lastNewTag);
+	        }
+	        else finalHtml += html.substring(lastIndex);
+	        return finalHtml;
+	    }
+
+	    function transformLegacyAttributes(html) {
+	        if (!html || !angular.isString(html) || html.length <= 0) return html;
+	        // replace all align='...' tags with text-align attributes
+	        var attrElementMatch = /<([^>\/]+?)align=("([^"]+)"|'([^']+)')([^>]*)>/ig;
+	        var match, finalHtml = '', lastIndex = 0;
+	        // match all attr tags
+	        while (match = attrElementMatch.exec(html)) {
+	            // add all html before this tag
+	            finalHtml += html.substring(lastIndex, match.index);
+	            // record last index after this tag
+	            lastIndex = match.index + match[0].length;
+	            // construct tag without the align attribute
+	            var newTag = '<' + match[1] + match[5];
+	            // add the style attribute
+	            if (/style=("([^"]+)"|'([^']+)')/ig.test(newTag)) {
+	                /* istanbul ignore next: quotations match */
+	                newTag = newTag.replace(/style=("([^"]+)"|'([^']+)')/i, 'style="$2$3 text-align:' + (match[3] || match[4]) + ';"');
+	            } else {
+	                /* istanbul ignore next: quotations match */
+	                newTag += ' style="text-align:' + (match[3] || match[4]) + ';"';
+	            }
+	            newTag += '>';
+	            // add to html
+	            finalHtml += newTag;
+	        }
+	        // return with remaining html
+	        return finalHtml + html.substring(lastIndex);
+	    }
+
+	    return function taSanitize(unsafe, oldsafe, ignore) {
+	        // unsafe html should NEVER built into a DOM object via angular.element. This allows XSS to be inserted and run.
+	        if (!ignore) {
+	            try {
+	                unsafe = transformLegacyStyles(unsafe);
+	            } catch (e1) {
+	                $log.error(e1);
+	            }
+	        }
+
+	        // unsafe and oldsafe should be valid HTML strings
+	        // any exceptions (lets say, color for example) should be made here but with great care
+	        // setup unsafe element for modification
+	        unsafe = transformLegacyAttributes(unsafe);
+
+	        var safe;
+	        try {
+	            safe = $sanitize(unsafe);
+	            // do this afterwards, then the $sanitizer should still throw for bad markup
+	            if (ignore) safe = unsafe;
+	        } catch (e2) {
+	            $log.error(e2);
+                // use forcefully sanitized text instead of last safe reference
+	            safe = escapeAll(unsafe) || "";
+	        }
+
+	        // Do processing for <pre> tags, removing tabs and return carriages outside of them
+
+	        var _preTags = safe.match(/(<pre[^>]*>.*?<\/pre[^>]*>)/ig);
+	        var processedSafe = safe.replace(/(&#(9|10);)*/ig, '');
+	        var re = /<pre[^>]*>.*?<\/pre[^>]*>/ig;
+	        var index = 0;
+	        var lastIndex = 0;
+	        var origTag;
+	        safe = '';
+	        while ((origTag = re.exec(processedSafe)) !== null && index < _preTags.length) {
+	            safe += processedSafe.substring(lastIndex, origTag.index) + _preTags[index];
+	            lastIndex = origTag.index + origTag[0].length;
+	            index++;
+	        }
+	        return safe + processedSafe.substring(lastIndex);
+	    };
 	}]).directive('textAngularToolbar', [
 		'$compile', 'textAngularManager', 'taOptions', 'taTools', 'taToolExecuteAction', '$window',
 		function($compile, textAngularManager, taOptions, taTools, taToolExecuteAction, $window){
