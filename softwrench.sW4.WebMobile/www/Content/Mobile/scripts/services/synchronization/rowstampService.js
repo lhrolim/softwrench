@@ -15,11 +15,12 @@
                 var log = $log.get("rowstampService#generateRowstampMap");
                 var start = new Date().getTime();
                 var applicationQuery = "application ='{0}'".format(application);
-                
+                debugger;
                 //https://controltechnologysolutions.atlassian.net/browse/SWOFF-140
                 var shouldUseFullStrategy = true;
                 return swdbDAO.countByQuery("DataEntry", applicationQuery)
                     .then(function (result) {
+                        debugger;
                         var shouldUseFullStrategy = result < rowstampConstants.maxItemsForFullStrategy;
                         if (shouldUseFullStrategy) {
                             return swdbDAO.findByQuery('DataEntry', null, { fullquery: entities.DataEntry.maxRowstampByAppQuery.fmt(application) });

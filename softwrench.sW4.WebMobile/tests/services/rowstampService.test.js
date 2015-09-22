@@ -18,19 +18,27 @@
     beforeEach(module("softwrench"));
 
 
-    beforeEach(inject(function (_rowStampService_, _swdbDAO_, _rowstampConstants_, _$q_) {
-        rowStampService = _rowStampService_;
+    beforeEach(inject(function (_rowstampService_, _swdbDAO_, _rowstampConstants_, _$q_) {
+        rowStampService = _rowstampService_;
         swdbDAO = _swdbDAO_;
         $q = _$q_;
-        console.log('ok');
     }));
 
-    it("Testing Huge DataSets", function () {
+    it("Testing Huge DataSets", function (done) {
         spyOn(swdbDAO, "countByQuery").and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve(2);
             return deferred.promise;
         });
+
+        var failTest = function (error) {
+            expect(error).toBeUndefined();
+        };
+
+        rowStampService.generateRowstampMap("asset").then(function (result) {
+                expect(result).toBe({ rowstampMap: 20000 });
+            }).catch(failTest).finally(done);
+
     });
 
 });
