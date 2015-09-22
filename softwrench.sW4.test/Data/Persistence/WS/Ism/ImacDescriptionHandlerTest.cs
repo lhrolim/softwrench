@@ -44,6 +44,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
         }
 
         [TestMethod]
+        [Ignore]
         public void UpdateAsset() {
             DoTest("update", "update_asset_data.json", "update_asset_data.txt");
         }
