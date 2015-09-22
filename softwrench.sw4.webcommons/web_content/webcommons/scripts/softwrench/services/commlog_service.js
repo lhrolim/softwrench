@@ -1,10 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function(angular) {
+    'use strict';
 
-app.factory('commlogService', function ($http, contextService, restService) {
-
-    return {
-        updatereadflag: function (parameters) {
-
+    function commlogService($http, contextService, restService, richTextService) {
+        function updatereadflag(parameters) {
             if (parameters.compositionItemData["read"]) {
                 return;
             }
@@ -24,9 +22,9 @@ app.factory('commlogService', function ($http, contextService, restService) {
             restService.invokePost("Commlog", "UpdateReadFlag", httpParameters, null, null, function() {
                 parameters.compositionItemData["read"] = false;
             });
-        },
+        };
 
-        formatCommTemplate: function (parameters) {
+        function formatCommTemplate(parameters) {
             var parentSchema = parameters.scope.parentschema;
 
             var parentIdFieldName = parentSchema.idFieldName;
@@ -40,12 +38,22 @@ app.factory('commlogService', function ($http, contextService, restService) {
                 applicationItemId: parentData[parentIdFieldName]
             };
 
-            
-            restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function (data) {
-                parameters.fields['subject'] = data.resultObject.subject;
-                parameters.fields['message'] = data.resultObject.message;
-            }, null);
-        }
-    };
 
-});
+            restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function(data) {
+                parameters.fields['subject'] = data.resultObject.subject;
+                parameters.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
+            }, null);
+        };
+
+        var service = {
+            formatCommTemplate: formatCommTemplate,
+            updatereadflag: updatereadflag
+        };
+
+        return service;
+    }
+
+    angular.module("sw_layout").factory('commlogService', ['$http', 'contextService', 'restService', 'richTextService', commlogService]);
+
+
+})(angular);

@@ -52,6 +52,20 @@ Support24 Email: support@kogtsupport24.com
         }
 
         [TestMethod]
+        public void TestVariableLocation2() {
+            var merger = new CommLogTemplateMerger(null);
+            var list = new List<string>(merger.LocateVariables("ftp://xLedaFlowDL-121:Leda12!34Flow@ftp.km.kongsberg.com/LedaFlow%20Engineering/v1.7/v1.7.248.921/"));
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [TestMethod]
+        public void TestVariableLocation3() {
+            var merger = new CommLogTemplateMerger(null);
+            var list = new List<string>(merger.LocateVariables("<font>:description_longdescription"));
+            Assert.AreEqual(1, list.Count);
+        }
+
+        [TestMethod]
         public void TestMergeTemplateDefinition() {
             var merger = new CommLogTemplateMerger(null);
             IDictionary<string, string> dict = new Dictionary<string, string>

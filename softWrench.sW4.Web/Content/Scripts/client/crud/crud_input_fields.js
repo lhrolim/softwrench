@@ -148,7 +148,8 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
         controller: function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup, layoutservice, attachmentService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup,
+            layoutservice, attachmentService, richTextService) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
 
@@ -657,19 +658,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
             $scope.initRichtextField = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
-                var decodedHtml = content;
-
-                // Matches any encoded html tag - &lt; &gt;
-                var regexEncode = new RegExp("&(lt|gt);");
-                // Also make sure non of these tags are present to truly confirm this is encoded HTML
-                var regexHTML = new RegExp("(<|>)");
-
-                if (regexEncode.test(content) && !regexHTML.test(content)) {
-                    decodedHtml = $('<div/>').html(content).text();
-                }
-
-
-                $scope.datamap[fieldMetadata.attribute] = decodedHtml;
+                $scope.datamap[fieldMetadata.attribute] = richTextService.getDecodedValue(content);
             }
 
             $scope.isMobile = function () {

@@ -11,12 +11,14 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 namespace softWrench.sW4.Email {
     public class CommLogTemplateMerger : ISingletonComponent {
 
-        private ISet<string> _phase1FixedVariables = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
-        {":ticketid",":classificationid",":description",":changedate",":ownerperson.displayname",":DESCRIPTION_LONGDESCRIPTION",":reportedemail", ":affectedperson", ":affectedemail" };
+        private readonly ISet<string> _phase1FixedVariables = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
+        {"ticketid","classificationid","description","changedate","ownerperson.displayname","DESCRIPTION_LONGDESCRIPTION","LONGDESCRIPTION.ldtext","reportedemail", "affectedperson", "affectedemail" };
 
         private readonly EntityRepository _entityRepository;
 
-        private static readonly Regex MaximoVariableRegex = new Regex(@":(\w|\.)+");
+        private static string RegexPattern = @":(\w|\.)+";
+        private static readonly Regex MaximoVariableRegex = new Regex(RegexPattern);
+
 
 
         public CommLogTemplateMerger(EntityRepository entityRepository) {
@@ -24,14 +26,18 @@ namespace softWrench.sW4.Email {
         }
 
         public string MergeTemplateDefinition([NotNull]string rawDatabaseData, IDictionary<string, string> mergedVariables) {
-            rawDatabaseData = Regex.Replace(rawDatabaseData, @":(\w|\.)+", match => RegexEvaluator(match, mergedVariables));
+            rawDatabaseData = Regex.Replace(rawDatabaseData, RegexPattern, match => RegexEvaluator(match, mergedVariables));
             return rawDatabaseData;
         }
 
-        public static string RegexEvaluator(Match match, IDictionary<string, string> mergedVariables)
-        {
-            var variableName =match.Value;
-            return mergedVariables[variableName.Substring(1).ToLower()];
+        public string RegexEvaluator(Match match, IDictionary<string, string> mergedVariables) {
+            var variableName = match.Value;
+            var normalizedVar = variableName.Trim().Substring(1).ToLower();
+            if (_phase1FixedVariables.Contains(normalizedVar)) {
+                return mergedVariables[normalizedVar];
+            }
+            //keep same value if not present on phase1 list
+            return variableName;
         }
 
         public IDictionary<string, string> ApplyVariableResolution(string templateId, IEnumerable<string> templateVariables, Entity data) {
@@ -71,7 +77,10 @@ namespace softWrench.sW4.Email {
 
             var collectionMatches = MaximoVariableRegex.Matches(databaseData);
             foreach (Match match in collectionMatches) {
-                variables.Add(match.Value.Substring(1).ToLower());
+                var variable = match.Value.Trim().Substring(1).ToLower();
+                if (_phase1FixedVariables.Contains(variable)) {
+                    variables.Add(variable);
+                }
             }
             return variables;
         }
