@@ -7,23 +7,37 @@ using softwrench.sw4.offlineserver.dto.association;
 
 namespace softwrench.sw4.offlineserver.services.util {
     public class ClientStateJsonConverter {
-
-        public static IDictionary<string, string> ConvertJSONToDict(JObject rowstampMap) {
-            if (rowstampMap == null || !rowstampMap.HasValues) {
-                return new Dictionary<string, string>();
+        public class AppRowstampDTO {
+            public IDictionary<string, string> ClientState {
+                get; set;
             }
-            var result = new Dictionary<string, string>();
+            public string MaxRowstamp {
+                get; set;
+            }
+        }
+
+        public static AppRowstampDTO ConvertJSONToDict(JObject rowstampMap) {
+            var result = new AppRowstampDTO();
+            if (rowstampMap == null || !rowstampMap.HasValues) {
+                return new AppRowstampDTO();
+            }
             dynamic obj = rowstampMap;
+            var resultDict = new Dictionary<string, string>();
+            result.ClientState = resultDict;
+            result.MaxRowstamp = obj.maxrowstamp;
+            if (obj.items == null) {
+                return result;
+            }
             //Loop over the array
             foreach (dynamic row in obj.items) {
                 var id = row.id;
                 var rowstamp = row.rowstamp;
                 if (id.Value != null) {
                     //new items, generated on the client side, do not need to be included
-                    result.Add(id.Value, "" + rowstamp.Value);
+                    resultDict.Add(id.Value, "" + rowstamp.Value);
                 }
-
             }
+
             return result;
         }
 

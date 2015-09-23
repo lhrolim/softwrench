@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using cts.commons.portable.Util;
 using log4net;
 using Newtonsoft.Json;
