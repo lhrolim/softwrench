@@ -15,11 +15,11 @@
     <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
     <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
   </container>
-  <container title="Solutions" icon="fa fa-book" role="solution" id="solution">
+  <container title="Solutions" tooltip="Click to access your solutions" icon="fa fa-book" role="solution" id="solution">
     <application id="SOL" icon="fa fa-table" title="Solution Grid" ref="solution" schema="list" tooltip="Click to view solution"/>
     <application id="SOLNEW" icon="fa fa-plus" title="New Solution" ref="solution" schema="newdetail" tooltip="Click to Create a New Solution"/>
   </container>
-  <container title="Changes" role="changes" id="change" icon="fa fa-random" >
+  <container title="Changes" role="changes" id="change" tooltip="Click to access your changes" icon="fa fa-random" >
     <application id="CHGRID" icon="fa fa-table" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
     <application id="CHNEW" icon="fa fa-plus" title="New Change" ref="change" schema="newdetail" tooltip="Click to Create a New Changes"/>
   </container>
@@ -29,7 +29,7 @@
     <application id="RECEIPTS" icon="fa fa-table" title="Receiving Grid" ref="receiving" schema="list" tooltip="Click to view your Receiving Grid"/>
     <application id ="PNEW" icon="fa fa-plus" title="New Purchase Request" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
   </container>
-  <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="Incident"  role="incidents">
+  <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="incident"  role="incidents">
     <application id="ING" icon="fa fa-table" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
     <application id="INNEW" icon="fa fa-plus" title="New Incident" ref="incident" schema="newdetail" tooltip="Click to create new Incidents" />
   </container>
