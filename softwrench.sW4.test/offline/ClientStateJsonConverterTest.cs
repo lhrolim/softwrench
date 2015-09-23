@@ -46,7 +46,7 @@ namespace softwrench.sW4.test.offline {
         [TestMethod]
         public void TestJsonConversion() {
             var ob = JObject.Parse(RowstampMapJson);
-            var result = ClientStateJsonConverter.ConvertJSONToDict(ob);
+            var result = ClientStateJsonConverter.ConvertJSONToDict(ob).ClientState;
             Assert.AreEqual(2, result.Count);
             Assert.IsTrue(result.ContainsKey("100"));
             Assert.AreEqual("1000", result["100"]);

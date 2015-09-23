@@ -147,12 +147,7 @@ namespace softWrench.sW4.Web {
 
             ContextLookuper.GetInstance().RegisterHttpContext(Request);
 
-            if (Request.UrlReferrer != null) {
-                //this is for ripple development where CORS is enabled.
-                //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://" + Request.UrlReferrer.Authority);
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
-            }
+            
 
 
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {
@@ -170,6 +165,15 @@ namespace softWrench.sW4.Web {
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
                 Response.Cache.SetNoStore();
             }
+
+
+            if (Request.UrlReferrer != null) {
+                //this is for ripple development where CORS is enabled.
+                //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://" + Request.UrlReferrer.Authority);
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+            }
+
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 //302 ==> not allowed
                 //Context.Response.RedirectLocation.Contains("/SignIn") --> are we redirecting to login

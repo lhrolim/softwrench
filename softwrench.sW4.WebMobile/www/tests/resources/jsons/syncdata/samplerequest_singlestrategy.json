@@ -1,0 +1,8 @@
+﻿{
+   "maxrowstamp": "10000",
+
+    compositionmap: {
+        'worklog': "1000",
+        'attachments': "1001",
+    }
+}

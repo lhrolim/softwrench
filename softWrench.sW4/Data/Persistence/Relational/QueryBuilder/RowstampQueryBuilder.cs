@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Data.Search;
 
@@ -6,9 +7,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
     class RowstampQueryBuilder : IWhereBuilder {
         //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
-        private const string Both = " Cast(rowstamp as BIGINT) > :lowerrowstamp and Cast(rowstamp as BIGINT) < :upperrowstamp ";
-        private const string Upper = " CAST(rowstamp as BIGINT)< :upperrowstamp ";
-        private const string Lower = " CAST(rowstamp as BIGINT) > :lowerrowstamp ";
+        private const string Both = " Cast({0}.rowstamp as BIGINT) > :lowerrowstamp and Cast({0}.rowstamp as BIGINT) < :upperrowstamp ";
+        private const string Upper = " CAST({0}.rowstamp as BIGINT)< :upperrowstamp ";
+        private const string Lower = " CAST({0}.rowstamp as BIGINT) > :lowerrowstamp ";
 
         private readonly Rowstamps _rowstamps;
 
@@ -20,17 +21,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
             if (_rowstamps.CurrentMode() == Rowstamps.RowstampMode.None) {
                 return null;
             }
-            IDictionary<string, object> parameters = _rowstamps.GetParameters();
             string sql = null;
             switch (_rowstamps.CurrentMode()) {
                 case Rowstamps.RowstampMode.Both:
-                    sql = Both;
+                    sql = Both.Fmt(entityName);
                     break;
                 case Rowstamps.RowstampMode.Lower:
-                    sql = Lower;
+                    sql = Lower.Fmt(entityName);
                     break;
                 case Rowstamps.RowstampMode.Upper:
-                    sql = Upper;
+                    sql = Upper.Fmt(entityName);
                     break;
             }
             return sql;
