@@ -112,13 +112,15 @@ namespace softwrench.sw4.offlineserver.services {
                 rowstamps = new Rowstamps(rowstampDTO.MaxRowstamp, null);
             }
 
-            var topLevelAppData = FetchData(entityMetadata, userAppMetadata,rowstamps);
+            var topLevelAppData = FetchData(entityMetadata, userAppMetadata, rowstamps);
             var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO);
 
             result.AddTopApplicationData(appResultData);
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
-            HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
+            if (!appResultData.IsEmpty) {
+                HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
+            }
 
         }
 

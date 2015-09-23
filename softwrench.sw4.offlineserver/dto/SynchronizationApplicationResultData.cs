@@ -56,6 +56,7 @@ namespace softwrench.sw4.offlineserver.dto {
             NewdataMaps = newdataMaps;
             UpdatedDataMaps = updateDataMaps ?? new List<DataMap>();
             DeletedRecordIds = deletedRecords ?? new List<string>();
+            InsertOrUpdateDataMaps = new List<DataMap>();
         }
 
 
