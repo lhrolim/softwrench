@@ -8,7 +8,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         if (status.equalsAny("NEW", "WAPPR", "WSCH", "ACTIVE")) {
             return "#e59323"; //orange
         }
-        if (status.equalsAny("QUEUED", "INPROG", "CANTREPROD", "WAITONINFO", "PENDING","null")) {
+        if (status.equalsAny("QUEUED", "INPROG", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
             return "#fde62f"; //yellow
         }
 
