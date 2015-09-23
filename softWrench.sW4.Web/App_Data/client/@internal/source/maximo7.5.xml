@@ -1686,6 +1686,10 @@
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
+        </relationship>
       </relationships>
     </entity>
 

@@ -207,7 +207,9 @@
         <schema parentschema="adetail" id="detail" title="Incident Details">
           <section id="statussection">
             <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" />
-            <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="false"/>
+            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="false">
+              <renderer type="combo" />
+            </association>
           </section>
           
           <section id="compositions">
