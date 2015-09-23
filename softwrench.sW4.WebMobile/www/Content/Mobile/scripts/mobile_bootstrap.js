@@ -60,9 +60,24 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             }
         }
 
+        function disableRipplePopup() {
+            var dialogBody = parent.document.getElementById("exec-dialog");
+            var overlay = parent.document.querySelector(".ui-widget-overlay");
+            var ngDialog = angular.element(dialogBody.parentElement);
+            var ngOverlay = angular.element(overlay);
+            var hideRules = { "height": "0px", "width": "0px", "display": "none" };
+            ngDialog.css(hideRules); // hide annoying popup
+            ngOverlay.css(hideRules); // hide annoying popup's backdrop
+        }
+
         function initCordovaPlugins() {
             var log = $log.get("bootstrap#initCordovaPlugins");
             log.info("init cordova plugins");
+            
+            // first of all let's schedule the disable of ripple's annoying popup 
+            // that tells us about unregistered plugins
+            if(isRippleEmulator()) $timeout(disableRipplePopup);
+
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
