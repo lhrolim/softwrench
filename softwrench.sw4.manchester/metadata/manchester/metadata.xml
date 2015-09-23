@@ -221,7 +221,9 @@
             <renderer type="lookup"/>
           </association>
 
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="description" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
           
           <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>
@@ -324,8 +326,10 @@
            <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
 
            <section id ="idsection"/>
-           
-           <field attribute="description" label="Summary:"/>
+
+           <field attribute="description" label="Summary:">
+             <renderer type="default" params="maxlength=100"/>
+           </field>
            
            <field label="Details:" attribute="longdescription_.ldtext" >
              <renderer type="richtext"/>
