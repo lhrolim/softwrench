@@ -60,10 +60,10 @@ namespace softWrench.sW4.log4net {
                     continue;
                 }
                 rollingFileAppender.MaxSizeRollBackups = ApplicationConfiguration.IsLocal() ? 1 : 3;
-                if (ApplicationConfiguration.IsDev()) {
+                if (ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
                     rollingFileAppender.File = rollingFileAppender.File.Replace("\\logs\\",
                         "\\logs\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
-                } else {
+                } else if (!ApplicationConfiguration.IsDev()) {
                     ChangeLevel("MAXIMO.SQL", "WARN", null);
                     ChangeLevel("SWDB.SQL", "WARN", null);
                 }

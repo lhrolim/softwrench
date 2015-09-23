@@ -50,13 +50,13 @@
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="assettype">
-          <relationshipAttribute from="assettype" to="value" primary="true"/>
+          <relationshipAttribute from="proptype" to="value" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
           <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
           <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
         </relationship>
         <relationship to="alndomain" qualifier="assetstatus">
-          <relationshipAttribute from="assettype" to="value" primary="true"/>
+          <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
           <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
           <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true"/>
