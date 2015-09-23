@@ -4,13 +4,14 @@
 
     var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"]
 
-    angular.module('sw_layout').factory('attachmentService', ['contextService', 'fieldService', 'schemaService', 'alertService', 'i18NService', attachmentService]);
+    angular.module('sw_layout').factory('attachmentService', ['contextService', 'fieldService', 'schemaService', 'alertService', 'i18NService', 'searchService', attachmentService]);
 
-    function attachmentService(contextService, fieldService, schemaService, alertService, i18NService) {
+    function attachmentService(contextService, fieldService, schemaService, alertService, i18NService, searchService) {
 
         var service = {
             isValid: isValid,
-            downloadFile:downloadFile
+            downloadFile: downloadFile,
+            selectAttachment: selectAttachment
         };
 
         return service;
@@ -21,9 +22,6 @@
             var id = item['docinfoid'];
             parameters.id = id;
             parameters.mode = "http";
-//            parameters.parentId = fieldService.getId(this.parentdata.fields, this.parentschema);
-//            parameters.parentApplication = this.parentschema.applicationName;
-//            parameters.parentSchemaId = this.parentschema.schemaId;
 
             var rawUrl = url("/Attachment/Download" + "?" + $.param(parameters));
 
@@ -34,6 +32,19 @@
                 }
             });
             return false;
+        }
+
+        function getUrl(item, column, schema) {
+            var searchData = {};
+            searchData.docinfoid = item.docinfoid.toString();
+            searchService.searchWithData("attachment", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var resultFields = resultObject[0].fields;
+                var resultUrl = resultFields['docinfo_.urlname'];
+                window.open(resultUrl);
+            }).error(function () {
+                return null;
+            });
         }
 
         function isValid(value) {
@@ -49,6 +60,15 @@
             var extensionIdx = value.lastIndexOf(".");
             var extension = value.substring(extensionIdx + 1).toLowerCase();
             return $.inArray(extension, validFileTypes) !== -1;
+        }
+
+        function selectAttachment(item, column, schema) {
+            if (item.doctype === "Websites") {
+                getUrl(item, column, schema);
+            } else {
+                downloadFile(item, column, schema);
+            }
+            return false;
         }
 
     }

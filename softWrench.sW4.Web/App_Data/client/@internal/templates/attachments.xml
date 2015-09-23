@@ -25,7 +25,7 @@
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
-            <property key="list.click.service" value="attachmentService.downloadFile"/>
+            <property key="list.click.service" value="attachmentService.selectAttachment"/>
           </properties>
           <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>
@@ -33,11 +33,12 @@
           <field label="Application" attribute="ownertable" >
             <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};widthXS=-1%;widthSM=12%;widthMD=12%;widthLG=10%;showattribute=true"/>
           </field>
+          <field hidden="true" attribute="docinfo_.urlname"/>
           <field label="Document"  attribute="document"/>
 <!--          <section attribute="document"-->
 <!--									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>-->
           <field label="Created Date" attribute="createdate"/>
-          
+          <field label="Type" attribute="doctype" hidden="true"/>
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
               <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>
