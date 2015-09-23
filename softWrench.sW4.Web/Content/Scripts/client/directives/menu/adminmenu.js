@@ -60,7 +60,7 @@
 app.directive('menuExpander', function () {
     return {
         link: function (scope, element, attr) {
-            scope.clicMenuExpander = function () {
+            scope.clickMenuExpander = function () {
                 $(element).toggleClass('menu-open');
             };
         }

@@ -354,16 +354,15 @@
           <field attribute="failurecode" hidden="true"/>
           <field attribute="cinum" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
-          <field attribute="ticketuid" label="SR#" hidden="true"/>
+          <field attribute="ticketuid" hidden="true"/>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
+            <field attribute="ticketid" label="SR#" readonly="true"/>
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
+          <field attribute="description" label="Summary:" requiredexpression="true" />
           </section>
           
-          <field attribute="description" label="Summary:" requiredexpression="true">
-            <renderer type="default" params="inputsize=medium" />
-          </field>
           <field label="Details:" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>

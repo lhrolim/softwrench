@@ -69,11 +69,15 @@
                 .menu-expand {
                     color: #fff;
                     cursor: pointer;
+                    
+                }
+
+                div.menu-open {
+                    margin-bottom: 10px;
                 }
 
                 div.menu-open + .menu-items {
                     display: block;
-                    padding: 10px 0 0;
                 }
 
                 .buttons {
@@ -271,6 +275,10 @@
                                 display: inline-block;
                                 width: auto;
                                 margin-right: 0;
+                            }
+
+                            button {
+                                margin-bottom: 0;
                             }
                         }
                     }
