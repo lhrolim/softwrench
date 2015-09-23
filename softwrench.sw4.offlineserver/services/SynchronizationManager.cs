@@ -105,11 +105,16 @@ namespace softwrench.sw4.offlineserver.services {
             var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
 
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
-            var topLevelAppData = FetchData(entityMetadata, userAppMetadata);
+            var rowstampDTO = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
 
+            Rowstamps rowstamps = null;
+            if (rowstampDTO.MaxRowstamp != null) {
+                rowstamps = new Rowstamps(rowstampDTO.MaxRowstamp, null);
+            }
 
+            var topLevelAppData = FetchData(entityMetadata, userAppMetadata,rowstamps);
+            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO);
 
-            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampMap);
             result.AddTopApplicationData(appResultData);
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
@@ -178,19 +183,28 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, JObject rowstampMap) {
+        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO) {
             var watch = Stopwatch.StartNew();
 
             var result = new SynchronizationApplicationResultData {
                 AllData = topLevelAppData
             };
 
-            if (rowstampMap == null || rowstampMap.Count == 0) {
+            if (rowstampDTO.MaxRowstamp != null) {
+                //SWOFF-140 
+                result.InsertOrUpdateDataMaps = topLevelAppData;
+                return result;
+            }
+
+            //this is the full strategy implementation where the client passes the whole state on each synchronization
+            var idRowstampDict = rowstampDTO.ClientState;
+
+            if (idRowstampDict == null || idRowstampDict.Count == 0) {
                 //this should happen for first synchronization, of for "full-forced-synchronization"
                 result.NewdataMaps = topLevelAppData;
                 return result;
             }
-            var idRowstampDict = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
+            //            var idRowstampDict = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
             foreach (var dataMap in topLevelAppData) {
                 var id = dataMap.Id;
                 if (!idRowstampDict.ContainsKey(id)) {

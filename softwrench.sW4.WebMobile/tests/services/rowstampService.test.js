@@ -10,8 +10,8 @@
 
     beforeEach(function () {
         module(function ($provide) {
-            //mocking constant value to 2 instead to make tests easier
-            $provide.constant('rowstampConstants', { maxItemsForFullStrategy: 2 });
+            //mocking constant value to 3 instead to make tests easier
+            $provide.constant('rowstampConstants', { maxItemsForFullStrategy: 3 });
         });
     });
 
@@ -30,11 +30,11 @@
     it("Testing Huge DataSets", function (done) {
 
         spyOn(swdbDAO, 'countByQuery').and.callFake(function () {
-            return $q.when(3);
+            return $q.when(4);
         });
 
         spyOn(swdbDAO, 'findByQuery').and.callFake(function () {
-            return $q.when(["20000"]);
+            return $q.when([{datamap:'aaa', rowstamp:"20000" }]);
         });
 
         rowStampService.generateRowstampMap("asset").then(function (result) {
@@ -52,15 +52,15 @@
     it("Testing small DataSets", function (done) {
 
         spyOn(swdbDAO, 'countByQuery').and.callFake(function () {
-            return $q.when(1);
+            return $q.when(2);
         });
 
         spyOn(swdbDAO, 'findByQuery').and.callFake(function () {
-            return $q.when(["20000"]);
+            return $q.when([{ remoteId: '10', rowstamp: '100' }, { remoteId: '20', rowstamp: '200' }]);
         });
 
         rowStampService.generateRowstampMap("asset").then(function (result) {
-            expect(result).toEqual({ maxrowstamp: "20000" });
+            expect(result).toEqual({ items: [{ id: '10', rowstamp: '100' }, { id: '20', rowstamp: '200' }] });
             expect(swdbDAO.countByQuery).toHaveBeenCalledWith('DataEntry', "application ='asset'");
             expect(swdbDAO.findByQuery).toHaveBeenCalledWith('DataEntry', "application ='asset'", { projectionFields: ["remoteId", "rowstamp"] });
         }).finally(done);

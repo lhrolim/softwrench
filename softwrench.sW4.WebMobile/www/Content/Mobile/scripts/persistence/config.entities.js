@@ -161,6 +161,9 @@
         entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','originaldatamap','datamap','pending','isDirty','remoteId','rowstamp','id') values (:p0,:p1,:p1,0,0,:p2,:p3,:p4)";
         //query to be performed after synchronization has occurred, for existing items
         entities.DataEntry.updateQueryPattern = "update DataEntry set 'originaldatamap'=:p0,'datamap'=:p0,'pending'=0,'rowstamp'=:p1 where remoteId=:p2 and application=:p3";
+
+        entities.DataEntry.insertOrReplacePattern = "INSERT OR REPLACE INTO DataEntry (application,originaldatamap,datamap,pending,isDirty,remoteId,rowstamp,id) values (?,?,?,0,0,?,?,?)";
+
         entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in(?) and 'application'=?";
 
         entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1 where id =?";

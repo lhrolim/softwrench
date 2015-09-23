@@ -41,7 +41,7 @@
                             log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length, (end - start)));
                             return rowstampMap;
                         } else {
-                            rowstampMap.maxrowstamp = queryResults[0];
+                            rowstampMap.maxrowstamp = queryResults[0].rowstamp;
                             return rowstampMap;
                         }
                     });
