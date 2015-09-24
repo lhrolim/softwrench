@@ -522,6 +522,8 @@
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
+    <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
+    <Content Include="Content\Scripts\vendor\angular\angular.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -605,8 +607,6 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
-    <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
-    <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
     <Content Include="Content\Scripts\vendor\other\angular-ui-select.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
@@ -732,8 +732,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\css\submenu.css" />
     <Content Include="Content\Images\softwrench-logo-small.gif" />
-    <Content Include="Content\Scripts\vendor\angular\angular.js" />
-    <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\Scripts\client\crud\crud_output.js" />
     <Content Include="Content\Scripts\client\adminresources\configuration.js" />
@@ -1000,7 +998,6 @@
     <Content Include="Content\Scripts\vendor\ace\worker-xquery.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-datepicker.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-strap.js" />
-    <Content Include="Content\Scripts\vendor\angular\angular-strap-min.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-strap-timepicker.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap.max.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap.js" />

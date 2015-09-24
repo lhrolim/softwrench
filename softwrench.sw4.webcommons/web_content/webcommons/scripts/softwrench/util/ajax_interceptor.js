@@ -1,6 +1,5 @@
-﻿var app = angular.module('sw_layout');
-
-app.config(['$httpProvider', function ($httpProvider) {
+﻿angular.module('sw_layout')
+    .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
@@ -14,7 +13,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
-            if (config.url.indexOf("/Content/") == -1) {
+            if (config.url.indexOf("/Content/") < 0) {
                 //let´s ignore angularjs templates loading, that would pass through here as well
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
@@ -52,14 +51,14 @@ app.config(['$httpProvider', function ($httpProvider) {
                 contextService.insertIntoContext("avoidspin", null, true);
             }
             var idx = activeRequestsArr.indexOf(response.config.url);
-            if (idx != -1) {
+            if (idx >= 0) {
                 activeRequestsArr.splice(idx,1);
             }
         };
 
         function successMessageHandler(data) {
             var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
-            if (data.successMessage != null) {
+            if (!!data && !!data.successMessage) {
                 var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
                 if (!willRefresh) {
                     $rootScope.$broadcast('sw_successmessage', data);
@@ -78,14 +77,14 @@ app.config(['$httpProvider', function ($httpProvider) {
             $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
             $('.no-touch [rel=tooltip]').tooltip('hide');
 
-            if (rejection.status == 401) {
+            if (rejection.status === 401) {
                 window.location = url('');
                 return;
             }
             activeRequests--;
             unLockCommandBars();
             unLockTabs();
-            if (activeRequests == 0) {
+            if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data);
             }
         };
