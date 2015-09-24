@@ -43,7 +43,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                                         //rename the admin function, to avoid confilts
                                         click = click.replace('doAction', '$scope.adminDoAction');
-                                        click = click.replace('$event.target', 'null');
+                                        click = click.replace('$event', 'null');
                                         click = click.replace('myProfile', '$scope.adminMyProfile');
                                         click = click.replace('loadApplication', '$scope.adminLoadApplication');
                                         click = click.replace('logout', '$scope.adminLogout');
@@ -345,8 +345,8 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 eval(click);
             };
 
-            $scope.adminDoAction = function (title, controller, action, parameters, target) {
-                adminMenuService.doAction(title, controller, action, parameters, target);
+            $scope.adminDoAction = function (title, controller, action, parameters, $event) {
+                adminMenuService.doAction(title, controller, action, parameters, $event.target);
                 $scope.closeBreadcrumbs();
             };
 

@@ -21,9 +21,9 @@
                             <i class=" fa fa-cogs fa-fw"></i>&ensp;{{i18N('_headermenu.utilities','Utilities')}}
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event.target)"><i class="fa fa-magic fa-fw"></i>&ensp;{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
-                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
-                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event)"><i class="fa fa-magic fa-fw"></i>&ensp;{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
+                            <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
                             <li><a href="#" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','StatusColor Editor')}}</a></li>
                         </ul>
                     </li>
@@ -36,16 +36,16 @@
                                 <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lock fa-fw"></i>&ensp;Security</a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#" ng-click="loadApplication('Person','list')"><i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','Users')}}</a></li>
-                                    <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
-                                    <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown-submenu">
                                 <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i>&ensp;Setup</a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
-                                    <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
-                                    <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
+                                    <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown-submenu">
@@ -60,7 +60,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#" ng-click="doAction(null,'Configuration','About',null,$event.target)">
+                        <a href="#" ng-click="doAction(null,'Configuration','About',null,$event)">
                             <i class="fa fa-info fa-fw"></i>&ensp;{{i18N('_headermenu.about','About')}}
                         </a>
                     </li>
@@ -89,9 +89,9 @@
                                 <i class="fa fa-cogs"></i>&ensp;{{i18N('_headermenu.utilities','Utilities')}}&ensp;<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event.target)"><i class="fa fa-magic fa-fw"></i>&ensp;{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event.target)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event)"><i class="fa fa-magic fa-fw"></i>&ensp;{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
+                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
                                 <li><a href="#" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','StatusColor Editor')}}</a></li>
                             </ul>
                         </div>
@@ -105,16 +105,16 @@
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="#" ng-click="loadApplication('Person','newPersonDetail')"><i class="fa fa-plus fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','New User')}}</a></li>
                                         <li><a href="#" ng-click="loadApplication('Person','list')"><i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','Users')}}</a></li>
-                                        <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
-                                        <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
+                                        <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
+                                        <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu">
                                     <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i>&ensp;Setup</a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
-                                        <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
-                                        <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
+                                        <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
+                                        <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event)"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
+                                        <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu">
@@ -128,7 +128,7 @@
                                 <li><a href="#" ng-click="refreshMetadata()"><i class="fa fa-refresh fa-fw"></i>&ensp;{{i18N('_headermenu.refreshmetadata','Refresh Metadata')}}</a></li>
                             </ul>
                         </div>
-                        <a href="#" ng-click="doAction(null,'Configuration','About',null,$event.target)" ng-show="isClientAdmin">
+                        <a href="#" ng-click="doAction(null,'Configuration','About',null,$event)" ng-show="isClientAdmin">
                             <button type="button" class="btn btn-default btn-sm">
                                 <i class="fa fa-info"></i>&ensp;{{i18N('_headermenu.about','About')}}
                             </button>

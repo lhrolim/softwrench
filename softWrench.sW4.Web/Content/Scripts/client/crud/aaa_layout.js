@@ -178,8 +178,8 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         return url(path);
     };
 
-    $scope.goToApplicationView = function (applicationName, schemaId, mode, title, parameters, target) {
-        menuService.setActiveLeaf(target);
+    $scope.goToApplicationView = function (applicationName, schemaId, mode, title, parameters, $event) {
+        menuService.setActiveLeaf($event.target);
         redirectService.goToApplicationView(applicationName, schemaId, mode, title, parameters);
     };
 

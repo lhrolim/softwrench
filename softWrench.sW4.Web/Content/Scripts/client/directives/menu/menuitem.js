@@ -160,7 +160,8 @@ app.directive('menuItem', function (contextService) {
            
 
 
-            $scope.goToApplication = function (leaf, target) {
+            $scope.goToApplication = function (leaf, $event) {
+                var target = $event.target;
                 var msg = "Are you sure you want to leave the page?";
                 if (validationService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
@@ -173,7 +174,8 @@ app.directive('menuItem', function (contextService) {
                 }
             };
 
-            $scope.doAction = function (leaf, target) {
+            $scope.doAction = function (leaf, $event) {
+                var target = $event.target;
                 //update title when switching to dashboard
                 $scope.$emit('sw_titlechanged', null);
 
@@ -215,7 +217,8 @@ app.directive('menuItem', function (contextService) {
             };
 
 
-            $scope.handleContainerClick = function (container, target) {
+            $scope.handleContainerClick = function (container, $event) {
+                var target = $event.target;
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
                     var msg = "Are you sure you want to leave the page?";
                     if (validationService.getDirty()) {

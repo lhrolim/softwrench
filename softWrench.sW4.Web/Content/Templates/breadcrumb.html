@@ -8,10 +8,10 @@
         <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(bcItem.click)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
-        <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(bcItem, $event.target)" bc-menu-item>
+        <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(bcItem, $event)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
-        <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(bcItem, $event.target)" bc-menu-item>
+        <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(bcItem, $event)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
         <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{bcItem.link}}" target="_blank">
