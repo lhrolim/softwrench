@@ -42,6 +42,7 @@
             restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function(data) {
                 parameters.fields['subject'] = data.resultObject.subject;
                 parameters.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
+                parameters.fields['sendto'] = [parameters.parentdata['fields']['reportedemail']];
             }, null);
         };
 
