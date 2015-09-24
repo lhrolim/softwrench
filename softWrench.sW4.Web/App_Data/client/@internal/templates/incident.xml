@@ -53,6 +53,11 @@
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
+        </relationship>
+
 
       </relationships>
       <connectorParameters>

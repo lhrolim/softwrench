@@ -23,7 +23,7 @@
       server is set to, refer to the maximoutc.txt in the doc folder for 
       a list of accepted values
   -->
-  <property key="maximoutc" value="Central Standard Time"/>
+  <property key="maximoutc" value="US Mountain Standard Time"/>
   <property key="maxAttachmentSize" value="10"/>
   <!--in MB-->
   <property key="maxScreenshotSize" value="5"/>
@@ -51,6 +51,7 @@
   </environment>
 
   <environment key="prod">
+    <property key="maximoutc" value="Central Standard Time"/>
     <property key="swdb_url" value="Data Source=10.10.10.20;Initial Catalog=SWDB_KOGTPROD;User Id=sw;password=$0ftWr3nch;" />
     <!--<property key="basewsURL" value="https://www.kogtsupport24.com/meaweb/wsdl/" />-->
     <property key="basewsURL" value="http://10.10.10.10:9080/meaweb/wsdl/" />
