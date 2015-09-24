@@ -10,14 +10,14 @@
                     <label class="form-control" ng-if="keyDisabled(data.key)">
                         {{data.value}}
                     </label>
-                    <input type="text" class="form-control" ng-show="!keyDisabled(data.key)" ng-init="newclient = data.value" ng-model="newclient" />
+                    <input type="text" class="form-control" ng-show="!keyDisabled(data.key)" ng-init="newclient = data.value" ng-model="newclient"/>
                 </div>
                 <div class="key buttons col-sm-5 col-md-4 col-lg-3" ng-if="shouldShowRestore(data.key)">
                     <button ng-click="dochangeClient(newclient)" ng-enabled="newclient!='' && newclient!=null" class="btn btn-primary commandButton">
-                        <i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>Change
+                        <i class="fa fa-check"></i>&ensp;Save
                     </button>
                     <button ng-click="restore()" class="btn btn-primary commandButton">
-                        <i style="margin-right: 0.5em" class="fa fa-refresh"></i>Restore
+                        <i class="fa fa-refresh"></i>&ensp;Reset
                     </button>
                 </div>
             </div>

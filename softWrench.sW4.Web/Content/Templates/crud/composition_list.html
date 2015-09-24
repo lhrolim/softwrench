@@ -164,7 +164,7 @@
                     </ng-switch>
                 </td>
                 <td ng-if="isBatch()" ng-hide="firstItem(compositionitem)">
-                    <button class="fa fa-trash-o btn" ng-click="removeBatchItem()"></button>
+                    <button class="fa fa-trash btn" ng-click="removeBatchItem()"></button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
@@ -206,7 +206,7 @@
             <!--This button will only be show at this position in case of an inline composition.
             Otherwise, it shoul join the default command bar-->
             <button type="button" id="additem" class="btn commandButton" ng-click="newDetailFn()" ng-show="allowButton(collectionproperties.allowInsertion)">
-                <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok {{list.schema.icon}}"></i>{{i18N(relationship + '.add','Add ' + title)}}
+                <i class="fa fa-plus {{list.schema.icon}}"></i>&ensp;{{i18N(relationship + '.add','Add ' + title)}}
             </button>
 
         </div>

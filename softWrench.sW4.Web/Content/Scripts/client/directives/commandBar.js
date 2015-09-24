@@ -23,8 +23,8 @@
                         id: "save",
                         method: $scope.save,
                         showExpressionFn: $scope.shouldDisplaySave,
-                        icon: 'fa-floppy-o',
-                        label: 'Submit',
+                        icon: 'fa-check',
+                        label: 'Save',
                         'default': true
                     },
                     print: {

@@ -1,7 +1,7 @@
 ﻿<article class="container" ng-controller="UserProfileController">
     <section ng-show="isList">
         <button type="button" class="btn btn-primary new-button" ng-click="new();">
-            <i style="margin-right: 0.5em" class="glyphicon glyphicon-plus"></i>{{i18N('general.newuserprofile','New Security Group')}}
+            <i class="fa fa-plus"></i>&ensp;{{i18N('general.newuserprofile','New Security Group')}}
         </button>
 
         <div id="dvUserList">
@@ -64,7 +64,7 @@
             <!--                <div class="row">-->
             <!--                    <div class="col-lg-3">-->
             <!--                        <label class="control-label">{{i18N('general.contraints','Constraints')}}</label>-->
-            <!--                        <button type="button" class="btn btn-sm glyphicon glyphicon-plus" ng-click="addConstraint()" />-->
+            <!--                        <button type="button" class="btn btn-sm fa fa-plus" ng-click="addConstraint()" />-->
             <!--                    </div>-->
             <!--                </div>-->
             <!--                <div class="row">-->
@@ -102,9 +102,9 @@
             <!--            </div>-->
             <div class="form-actions hidden-phone">
                 <div class="col-lg-offset-2 col-lg-10">
-                    <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>{{i18N('general.save','Save')}}</button>
-                    <button type="button" class="btn" ng-click="cancel()"><i style="margin-right: 0.5em" class="fa fa-times"></i>{{i18N('general.cancel','Cancel')}}</button>
-                    <button type="button" class="btn" ng-click="delete()"><i style="margin-right: 0.5em" class="fa fa-trash-o"></i>{{i18N('general.delete','Delete')}}</button>
+                    <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}</button>
+                    <button type="button" class="btn" ng-click="cancel()"><i class="fa fa-times"></i>&ensp;{{i18N('general.cancel','Cancel')}}</button>
+                    <button type="button" class="btn" ng-click="delete()"><i class="fa fa-trash"></i>&ensp;{{i18N('general.delete','Delete')}}</button>
                 </div>
             </div>
             <!--this is redundant and is removed from the page since the error message gets printed on the message section above-->
