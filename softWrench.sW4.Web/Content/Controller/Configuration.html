@@ -54,13 +54,13 @@
                                     style="margin-left: 10px"
                                     ng-change="showDefinitionsOfCondition(currentcondition,currentCategory)" />
                             <button style="margin-left: 10px" ng-click="createCondition()" rel="tooltip" data-original-title="Create a new Condition">
-                                <i class=" glyphicon glyphicon-plus"></i>
+                                <i class="fa fa-plus"></i>
                             </button>
                             <button style="margin-left: 10px" ng-click="editCondition(currentcondition)" rel="tooltip" data-original-title="Edit a existing condition" ng-show="getConditions(currentCategory).values.length>1">
-                                <i class="glyphicon glyphicon-edit"></i>
+                                <i class="fa fa-edit"></i>
                             </button>
                             <button style="margin-left: 10px" ng-click="removeCondition(currentcondition)" rel="tooltip" data-original-title="Remove the existing condition" ng-show="getConditions(currentCategory).values.length>1">
-                                <i class="glyphicon glyphicon-remove"></i>
+                                <i class="fa fa-trash"></i>
                             </button>
                         </div>
 
@@ -141,7 +141,7 @@
 
                 <div class="form-actions col-lg-offset-2 col-lg-10" ng-show="showSave">
                     <button type="submit" id="saveBTN" class="btn btn-primary commandButton" ng-click="save()">
-                        <i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>{{i18N('general.save','Save')}}
+                        <i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}
                     </button>
                 </div>
 

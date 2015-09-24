@@ -1,5 +1,5 @@
 ﻿@media print {
-    .no-print, .col-lg-2, .affix, .filter-row, .glyphicon {
+    .hiddenonprint, .no-print, .col-lg-2, .affix, .filter-row, .glyphicon {
         display: none !important;
     }
 
@@ -36,10 +36,6 @@
     .hapag-body {
         margin: 0;
         box-shadow: none;
-    }
-
-    .hiddenonprint {
-        display: none !important;
     }
 
     .listgrid-firefox {
@@ -142,4 +138,8 @@
     .tooltip {
         display: none;
     }
+}
+
+@page {
+    margin: 36px;
 }
