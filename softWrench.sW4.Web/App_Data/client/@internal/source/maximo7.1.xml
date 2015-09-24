@@ -246,7 +246,7 @@
       </connectorParameters>
 
     </entity>
-    
+
     <entity name="organization" idAttribute="orgid">
       <attributes>
         <attribute name="orgid" type="varchar" required="true" />
@@ -817,7 +817,7 @@
         <connectorParameter key="dbtable" value="assetloccomm" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="alndomain" idAttribute="alndomainid">
       <attributes>
         <attribute name="domainid" type="varchar" required="true" />
@@ -1603,6 +1603,7 @@
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
+      
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
@@ -3747,7 +3748,7 @@
         <connectorParameter key="dbtable" value="glcomponents" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="invuse" idAttribute="invuseid">
       <attributes>
         <attribute name="invusenum" type="varchar" required="true" />
@@ -3910,7 +3911,7 @@
         <connectorParameter key="dbtable" value="invuseline" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="meter" idAttribute="meterid">
       <attributes>
         <attribute name="metername" type="varchar" required="true" />
@@ -4060,8 +4061,8 @@
         <connectorParameter key="dbtable" value="assetmeter" />
       </connectorParameters>
     </entity>
-  
-  <entity name="locationmeter" idAttribute="locationmeterid">
+
+    <entity name="locationmeter" idAttribute="locationmeterid">
       <attributes>
         <attribute name="location" type="varchar" required="true" />
         <attribute name="metername" type="varchar" required="true" />
