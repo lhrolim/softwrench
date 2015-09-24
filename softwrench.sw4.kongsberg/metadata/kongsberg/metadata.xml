@@ -1340,7 +1340,9 @@
 
           <section>
             <header displacement="ontop" label="Service Request Details" params="fieldset=true"/>
-            <field attribute="description" label="Summary:" requiredexpression="true" />
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
             <field label="Details:" attribute="longdescription_.ldtext">
               <renderer type="richtext" />
             </field>
@@ -1703,7 +1705,9 @@
           <section>
             <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
             <field attribute="statusdate" hidden="true" />
-            <field attribute="description" label="Summary:" requiredexpression="true" />
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
             <field label="Details:" attribute="longdescription_.ldtext">
               <renderer type="richtext" />
             </field>
@@ -1932,7 +1936,9 @@
           <field attribute="ownergroup" label="Owner Group:"/>
           <!--<field attribute="location" label="Location:"/>-->
 
-          <field attribute="description" label="Summary:"/>
+          <field attribute="description" label="Summary:">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
           <field attribute="reportedby" label="Reported By:"/>
           <field attribute="classstructureid" label="Classification:"/>
 
@@ -2003,7 +2009,9 @@
           <field attribute="outtoolcost"       hidden="true" default="0"/>
           <field attribute="outservcost"       hidden="true" default="0"/>
 
-          <field attribute="description" label="Summary:"/>
+          <field attribute="description" label="Summary:">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
           <field attribute="reportedby" label="Reported By:"/>
           <field attribute="classstructureid" label="Classification:"/>
 
@@ -2472,7 +2480,9 @@
         </list>
 
         <detail stereotype="compositiondetail">
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="description" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
@@ -2637,7 +2647,6 @@
         </schema>
 
         <detail stereotype="compositiondetail">
-          <!--field attribute="description" label="Summary:" requiredexpression="true" /-->
           <optionfield attribute="linetype" label="Line Type:" >
             <renderer type="radio"/>
             <option label="Item" value="item"/>
@@ -2647,7 +2656,6 @@
           <field attribute="prlinenum" label="Line:"  >
             <renderer type="default"/>
           </field>
-          <!--field attribute="itemnum" label="Item"/-->
           <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
             <renderer type="lookup"/>
           </association>

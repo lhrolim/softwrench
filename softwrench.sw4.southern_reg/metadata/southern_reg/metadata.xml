@@ -244,7 +244,7 @@
           <section>
             <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
             <field attribute="description" label="Summary:" requiredexpression="true">
-              <renderer type="default" params="inputsize=medium" />
+              <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
             <field label="Details:" attribute="ld_.ldtext">
               <renderer type="richtext"/>

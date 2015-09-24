@@ -37,7 +37,7 @@
     <application id="IN" icon="fa fa-table" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" />
     <container title="Issues and Returns" tooltip="Click to access your issues and returns" icon="fa fa-exchange" id="IssuesAndReturns" role="issuesandreturns" >
       <application id="IRG" icon="fa fa-table" title="Issues and Returns Grid" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" />
-      <application id="NIR" icon="fa fa-plus" title="New Issue and Return" ref="invissue" schema="newInvIssueDetail" tooltip="Click to add an New Issue and Return"/>
+      <application id="NIR" icon="fa fa-plus" title="New Issue" ref="invissue" schema="newInvIssueDetail" tooltip="Click to add a New Issue"/>
     </container>
     <container title="Inventory Transfer" tooltip="Click to access your inventory transfer" icon="fa fa-long-arrow-right" id="InventoryTransfer" role="inventorytransfer" >
       <application id="ITG" icon="fa fa-table" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid"/>

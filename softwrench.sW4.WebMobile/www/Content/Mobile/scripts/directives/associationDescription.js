@@ -10,7 +10,7 @@
                 modelCtrl.$formatters.push(function (modelValue) {
                     var field = scope.field;
                     if ("true" !== field.hideDescription) {
-                        return modelValue + " - " + scope.datamap[field.labelFields[0]];
+                        return modelValue + " - " + scope.datamap[field.associationKey + "." + field.labelFields[0]];
                     }
                     return modelValue;
                 });

@@ -199,7 +199,7 @@
           </section>
         </schema>
             
-        <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Issues and Returns Details">
+        <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Return Details">
           <field attribute="matusetransid" hidden="true"/>
           <section>
             <renderer type="default" params="childinputsize=medium" />
@@ -250,15 +250,17 @@
           </properties>
         </schema>
 
-        <schema id="viewinvissuedetail" stereotype="detail" mode="input">
+        <schema id="viewinvissuedetail" stereotype="detail" mode="input" title="Issue Details">
           <section>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" hidden="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true" showexpression="@issueto != null"/>
             <field attribute="enterby" label="Entered By" readonly="true"/>
             <field attribute="issuetype" label="Issue Type" readonly="true"/>
-            <field attribute="issueto" label="Issued To" readonly="true" showexpression="@issueto != null"/>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="siteid" label="Site" readonly="true"/>
             <field attribute="storeloc" label="Storeroom" readonly="true"/>
             <field attribute="itemnum" label="Item" readonly="true"/>
@@ -276,11 +278,13 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="refwo" label="Work Order" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="assetnum" label="Asset" readonly="true"/>
@@ -316,9 +320,7 @@
           </section>
         </schema>
         
-
-        <schema title="New Issue and Return" id="newInvIssueDetail" mode="input" stereotype="detailnew">
-
+        <schema title="New Issue" id="newInvIssueDetail" mode="input" stereotype="detailnew">
           <field attribute="mode" label="Mode" qualifier="batchselector" hidden="true" default="batch"></field>
 
 <!--          <optionfield  attribute="mode" label="Mode" qualifier="batchselector">-->

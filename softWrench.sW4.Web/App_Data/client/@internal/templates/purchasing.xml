@@ -388,7 +388,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
         <detail stereotype="compositiondetail">
-          <!--field attribute="description" label="Summary:" requiredexpression="true" /-->
           <optionfield attribute="linetype" label="Line Type:" >
             <renderer type="radio"/>
             <option label="Item" value="item"/>
@@ -398,7 +397,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="prlinenum" label="Line:"  >
             <renderer type="default"/>
           </field>
-          <!--field attribute="itemnum" label="Item"/-->
           <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
             <renderer type="lookup"/>
           </association>

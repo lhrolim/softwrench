@@ -121,7 +121,9 @@
 
           <section>
             <header displacement="ontop" label="Incident Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:"/>
+            <field attribute="description" label="Summary:">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
             <field label="Details:" attribute="ld_.ldtext">
               <renderer type="textarea"/>
             </field>
@@ -207,7 +209,9 @@
         <schema parentschema="adetail" id="detail" title="Incident Details">
           <section id="statussection">
             <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" />
-            <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="false"/>
+            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="false">
+              <renderer type="combo" />
+            </association>
           </section>
           
           <section id="compositions">
