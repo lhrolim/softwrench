@@ -1,7 +1,7 @@
 ﻿<article class="container" ng-controller="RoleController">
     <section ng-show="isList">
         <button type="button" class="btn btn-primary new-button" ng-click="editRole(null,null,null);">
-            <i style="margin-right: 0.5em" class="glyphicon glyphicon-plus"></i>{{i18N('general.newrole','New Permission')}}
+            <i class="fa fa-plus"></i>&ensp;{{i18N('general.newrole','New Permission')}}
         </button>
         <div id="dvUserList">
             <form id="roleForm">
@@ -57,9 +57,9 @@
                 </div>
                 <div class="form-actions hidden-phone">
                     <div class="col-lg-offset-2 col-lg-10">
-                        <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>{{i18N('general.save','Save')}}</button>
-                        <button type="button" class="btn" ng-click="cancel()"><i style="margin-right: 0.5em" class="fa fa-times"></i>{{i18N('general.cancel','Cancel')}}</button>
-                        <button type="button" class="btn" ng-click="delete()"><i style="margin-right: 0.5em" class="fa fa-trash-o"></i>{{i18N('general.delete','Delete')}}</button>
+                        <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}</button>
+                        <button type="button" class="btn" ng-click="cancel()"><i class="fa fa-times"></i>&ensp;{{i18N('general.cancel','Cancel')}}</button>
+                        <button type="button" class="btn" ng-click="delete()"><i class="fa fa-trash"></i>&ensp;{{i18N('general.delete','Delete')}}</button>
                     </div>
                 </div>
             </div>
