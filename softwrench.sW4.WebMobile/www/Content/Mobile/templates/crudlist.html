@@ -28,7 +28,7 @@
 
         <button class="button-icon ion-android-cancel" ng-show="isList() && isSearching()" ng-click="disableSearch()"></button>
         <!--this ng-show is needed due to a possible bug on ionic/ angular ui-router where the button shows on detail-->
-        <button class="button-icon ion-navicon ion-search" ng-show="isList() && !isSearching()" ng-click="enableSearch()"></button>
+        <button class="button-icon ion-search" ng-show="isList() && !isSearching()" ng-click="enableSearch()"></button>
     </ion-nav-buttons>
 
     <ion-content has-header="true">
