@@ -1,4 +1,6 @@
-﻿angular.module('sw_layout')
+﻿(function(angular) {
+    "use strict";
+angular.module('sw_layout')
     .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService) {
         var activeRequests = 0;
@@ -110,24 +112,33 @@
             }
         };
     });
-
+    
     $httpProvider.defaults.transformRequest.push(function (data, headers) {
         if (data == undefined) {
             return data;
         }
         if (sessionStorage.mockerror || sessionStorage.mockmaximo) {
-            var jsonOb = JSON.parse(data);
-            if (sessionStorage.mockerror == "true") {
-                jsonOb['%%mockerror'] = true;
-            }
-            if (sessionStorage.mockmaximo == "true") {
-                jsonOb['%%mockmaximo'] = true;
-            }
-            return JSON.stringify(jsonOb);
+            var jsonOb = angular.fromJson(data);
+            jsonOb['%%mockerror'] = sessionStorage.mockerror === "true";
+            jsonOb['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
+            return angular.toJson(jsonOb);
         }
         return data;
     });
+
+    $httpProvider.defaults.transformResponse.push(
+        // response transformer to maintain compatibility
+        function (data, headers) {
+            if (angular.isUndefined(data)) {
+                return angular.toJson({});
+            } else if (data === null) {
+                return "null";
+            }
+            return data;
+    });
+
 }]);
+})(angular);
 
 
 window.onpopstate = function (e) {

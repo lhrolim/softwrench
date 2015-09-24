@@ -1,9 +1,17 @@
-var app = angular.module('sw_layout');
-
-app.directive('activitystream', function(contextService) {
+angular.module('sw_layout').directive('activitystream', function (contextService) {
     return {
         restrict: 'E',
-        replace: true,
+
+        // with previous config {replace: true, transclude: false} (for some bewildering reason)
+        // the child elements of the directive's element couldn't access it's controller's methods
+        // that way the activity stream's handle tab couldn't toggle it's open/close state 
+        // like so (in jade for simplicity's sake):
+        // activitystream
+        //   div //- parent div could access the methods exposed in $scope by controller
+        //      div(ng-click='acontrollermethod()') //- child div couldn't access the methods
+        replace: false,
+        transclude: true,
+
         templateUrl: contextService.getResourceUrl('/Content/Shared/activitystream/templates/activitystream.html'),
         scope: {
             activities: '='
