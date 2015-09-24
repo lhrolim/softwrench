@@ -121,7 +121,9 @@
 
           <section>
             <header displacement="ontop" label="Incident Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:"/>
+            <field attribute="description" label="Summary:">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
             <field label="Details:" attribute="ld_.ldtext">
               <renderer type="textarea"/>
             </field>
