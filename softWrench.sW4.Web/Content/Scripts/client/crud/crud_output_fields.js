@@ -37,7 +37,7 @@ app.directive('crudOutputFields', function (contextService) {
             orientation: '@'
         },
 
-        controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService) {
+        controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService,richTextService) {
             $scope.$name = 'crud_output_fields';
 
             $scope.contextPath = function (path) {
@@ -192,6 +192,11 @@ app.directive('crudOutputFields', function (contextService) {
 
             $scope.hasLabelOrHeader = function (fieldMetadata) {
                 return fieldMetadata.header || fieldMetadata.label;
+            }
+
+            $scope.initRichtextField = function (fieldMetadata) {
+                var content = $scope.datamap[fieldMetadata.attribute];
+                $scope.datamap[fieldMetadata.attribute] = richTextService.getDecodedValue(content);
             }
 
 
