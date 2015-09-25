@@ -34,6 +34,7 @@
             <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};widthXS=-1%;widthSM=12%;widthMD=12%;widthLG=10%;showattribute=true"/>
           </field>
           <field hidden="true" attribute="docinfo_.urlname"/>
+          <field hidden="true" attribute="docinfo_.urltype"/>
           <field label="Document"  attribute="document"/>
 <!--          <section attribute="document"-->
 <!--									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>-->
