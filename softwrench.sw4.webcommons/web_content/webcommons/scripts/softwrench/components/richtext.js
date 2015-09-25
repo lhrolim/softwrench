@@ -35,8 +35,8 @@
         }
 
         function getDecodedValue(content) {
+            content = replaceAll(content,"\n", "<br/>");
             var decodedHtml = content;
-
             // Matches any encoded html tag - &lt; &gt;
             var regexEncode = new RegExp("&(lt|gt);");
             // Also make sure non of these tags are present to truly confirm this is encoded HTML
