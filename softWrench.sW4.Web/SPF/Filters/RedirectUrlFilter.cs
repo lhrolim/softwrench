@@ -56,9 +56,9 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 }
                 value.CrudSubTemplate = redirectAttribute.CrudSubTemplate;
             }
-            value.TimeStamp = DateTime.Now;
+            value.TimeStamp = DateTime.UtcNow;
             //this should avoid unwanted conversions on JsonDateTimeConverter
-            DateTime.SpecifyKind(value.TimeStamp, DateTimeKind.Local);
+            DateTime.SpecifyKind(value.TimeStamp, DateTimeKind.Utc);
                 
             var actionArguments = LookupArguments(actionExecutedContext.ActionContext);
             if (actionArguments != null && !String.IsNullOrWhiteSpace(actionArguments.Title)) {
