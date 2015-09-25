@@ -63,7 +63,7 @@
         }
 
         function selectAttachment(item, column, schema) {
-            if (item.doctype === "Websites") {
+            if (item['docinfo_.urltype'] === "URL") {
                 getUrl(item, column, schema);
             } else {
                 downloadFile(item, column, schema);
