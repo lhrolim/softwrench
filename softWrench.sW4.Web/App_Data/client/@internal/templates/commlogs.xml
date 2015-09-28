@@ -28,6 +28,7 @@
         <attribute name="issendfail" type="smallint" required="true" />
         <attribute name="keepfailed" type="smallint" required="true" />
         <attribute name="ccflag" query="CASE WHEN !@cc is not null THEN 'true' ELSE 'false' end " type="bool"/>
+        <attribute name="bccflag" query="CASE WHEN !@bcc is not null THEN 'true' ELSE 'false' end " type="bool"/>
       </attributes>
       <relationships>
         <relationship to ="email">
@@ -97,6 +98,10 @@
           <field attribute="ccflag" label="Cc">
             <renderer type="checkbox"  params="widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=5%"/>
           </field>
+          <field attribute="bcc" hidden="true"/>
+          <field attribute="bccflag" label="BCc">
+            <renderer type="checkbox"  params="widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=5%"/>
+          </field>
           <field attribute="sendfrom" label="From">
             <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%;formatter=lower"/>
           </field>
@@ -130,10 +135,10 @@
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
-<!--          <association label="BCc:" target="bcc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">-->
-<!--            <renderer type="multiselectautocompleteclient" stereotype="email"/>-->
-<!--            <dataprovider postfilterfunction="EmailPostFilter"/>-->
-<!--          </association>-->
+          <association label="BCc:" target="bcc" labelfield="2email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+            <renderer type="multiselectautocompleteclient" stereotype="email"/>
+            <dataprovider postfilterfunction="EmailPostFilter"/>
+          </association>
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" default="@user.email" readonly="true" >
             <renderer type="email"/>
@@ -145,6 +150,13 @@
           <field label="Attachment:" attribute="attachment" >
             <renderer type="multipleupload"/>
           </field>
+
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="false">
+              <command id="save" icon="fa-check" service="$scope" method="save" label="Send" />
+            </commandgroup>
+          </commandbars>
+          
         </schema>
       </schemas>
     </application>
