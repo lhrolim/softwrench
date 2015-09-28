@@ -1,8 +1,8 @@
 ﻿
-(function () {
+(function (jQuery) {
     'use strict';
 
-    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService','attachmentService', submitService]);
+    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', 'attachmentService', submitService]);
 
     function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService, attachmentService) {
 
@@ -110,14 +110,16 @@
 
         function removeExtraFields(datamap, clone, schema) {
             if (!datamap.extrafields) {
+                if (clone) {
+                    return jQuery.extend(true, {}, datamap);
+                }
+
                 return datamap;
             }
 
-            var data;
+            var data = datamap;
             if (clone) {
                 data = jQuery.extend(true, {}, datamap);
-            } else {
-                data = datamap;
             }
             $.each(data, function (key, value) {
                 if (data.extrafields[key] != undefined) {
@@ -185,5 +187,5 @@
         }
 
     }
-})();
+})(jquery);
 
