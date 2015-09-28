@@ -131,7 +131,7 @@ app.directive('activitystream', function(contextService) {
                 log.debug('openLink');
 
                 var controllerToUse = "Notification";
-                var actionToUse = " , ";
+                var actionToUse = "UpdateNotificationReadFlag";
                 var parameters = {};
                 parameters.role = contextService.getUserData().roles[0].label;
                 parameters.application = activity.application;

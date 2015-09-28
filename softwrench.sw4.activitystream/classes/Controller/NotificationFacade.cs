@@ -103,8 +103,13 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         }
 
         private void ExecuteNotificationsQuery(KeyValuePair<string, string> securityGroupsNotificationsQuery, DateTime currentTime) {
+            var groupKey = securityGroupsNotificationsQuery.Key;
+            // TODO: Add checking for security group key in the counter. If a Security Group is added while the application is running this will break the activity stream until the application is restarted.
+            if (!Counter.ContainsKey(groupKey)) {
+                return;
+            }
             var formattedQuery = string.Format(securityGroupsNotificationsQuery.Value,
-                        ActivityStreamConstants.HoursToPurge, currentTime, Counter[securityGroupsNotificationsQuery.Key]["servicerequest"]);
+                        ActivityStreamConstants.HoursToPurge, currentTime, Counter[groupKey]["servicerequest"]);
             var queryResult = _maxDAO.FindByNativeQuery(formattedQuery, null);
             if (!queryResult.Any()) {
                 return;
@@ -118,9 +123,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var icon = record["icon"];
                 var uid = long.Parse(record["uid"]);
                 var flag = "changed";
-                if (Counter[securityGroupsNotificationsQuery.Key][application] < uid) {
+                if (Counter[groupKey][application] < uid) {
                     flag = "created";
-                    Counter[securityGroupsNotificationsQuery.Key][application] = uid;
+                    Counter[groupKey][application] = uid;
                 }
                 var parentid = record["parentid"];
                 long parentuid = -1;
@@ -144,7 +149,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
                 notifications.Add(notification);
             }
-            InsertNotificationsIntoStreams(securityGroupsNotificationsQuery.Key, notifications);
+            InsertNotificationsIntoStreams(groupKey, notifications);
         }
 
         //By default this is purging the notification streams
