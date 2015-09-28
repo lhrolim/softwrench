@@ -81,7 +81,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             return null;
         }
 
-        public override object InvokeProxy() {
+        protected override object DoProxyInvocation() {
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
@@ -93,17 +93,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
 
             var parameterList = MifUtils.GetParameterList(RootInterfaceObject);
             var types = new Type[parameterList.Length];
-            try {
-                for (int i = 0; i < parameterList.Length; i++) {
-                    types.SetValue(parameterList.GetValue(i).GetType(), i);
+            for (var i = 0; i < parameterList.Length; i++) {
+                types.SetValue(parameterList.GetValue(i).GetType(), i);
 
-                }
-                var result = Proxy.CallMethod(MethodName(), types, parameterList);
-                return result;
-            } catch (Exception e) {
-                var rootException = ExceptionUtil.DigRootException(e);
-                throw rootException;
             }
+            var result = Proxy.CallMethod(MethodName(), types, parameterList);
+            return result;
         }
 
         internal void CheckCredentials(DynamicObject proxy) {

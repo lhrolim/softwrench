@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.WS.API;
 using WcfSamples.DynamicProxy;
@@ -52,22 +54,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             set { _properties = value; }
         }
 
-
-
         public virtual object InvokeProxy() {
+            var before = Stopwatch.StartNew();
             try {
-                if (Log.IsDebugEnabled) {
-                    Log.Debug(SerializeIntegrationObject());
-                } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
-                    Log.Info(SerializeIntegrationObject());
-                }
-                var result = Proxy.CallMethod(MethodName(),
-                                          new[] { RootInterfaceObject.GetType() },
-                                          new[] { RootInterfaceObject });
-                return result;
+                return DoProxyInvocation();
             } catch (Exception e) {
-                var rootException = ExceptionUtil.DigRootException(e);
-                throw rootException;
+                throw HandleProxyInvocationError(e);
+            } finally {
+                OnProxyInvocationComplete(before);
             }
         }
 
@@ -87,5 +81,43 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         protected abstract string MethodName();
 
         internal abstract object FindById(Object id);
+
+        /// <summary>
+        /// Executes the invocation on the Proxy to MAXIMO's Web Service
+        /// </summary>
+        /// <returns></returns>
+        protected virtual object DoProxyInvocation() {
+            if (Log.IsDebugEnabled) {
+                Log.Debug(SerializeIntegrationObject());
+            } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
+                Log.Info(SerializeIntegrationObject());
+            }
+            var result = Proxy.CallMethod(MethodName(),
+                                      new[] { RootInterfaceObject.GetType() },
+                                      new[] { RootInterfaceObject });
+            return result;
+        }
+
+        /// <summary>
+        /// Treats any exception thrown by executing <see cref="DoProxyInvocation"/>.
+        /// Default: dig's root exception and returns it.
+        /// Override for custom behavior.
+        /// </summary>
+        /// <param name="e">exception thrown</param>
+        /// <returns></returns>
+        protected virtual Exception HandleProxyInvocationError(Exception e) {
+            var rootException = ExceptionUtil.DigRootException(e);
+            return rootException;
+        }
+
+        /// <summary>
+        /// Executed when a <see cref="DoProxyInvocation"/> completes, regardless of failure or success.
+        /// Receives a stopwatch that is started before the remote invocation for tracking/logging purposes.
+        /// Default: does nothing.
+        /// Override for custom behavior.
+        /// </summary>
+        /// <param name="beforeInvocation">stopwatch started before the invocation</param>
+        protected virtual void OnProxyInvocationComplete(Stopwatch beforeInvocation) {}
+
     }
 }
