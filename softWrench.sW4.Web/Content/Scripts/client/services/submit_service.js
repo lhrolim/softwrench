@@ -88,6 +88,9 @@ app.factory('submitService', function ($rootScope, fieldService,contextService,r
 
         removeExtraFields: function (datamap, clone, schema) {
             if (!datamap.extrafields) {
+                if (clone) {
+                    return jQuery.extend(true, {}, datamap);
+                }
                 return datamap;
             }
 
