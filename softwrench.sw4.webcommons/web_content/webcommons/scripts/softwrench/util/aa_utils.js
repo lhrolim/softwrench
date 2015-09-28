@@ -537,6 +537,9 @@ function getCurrentDate() {
 }
 
 function replaceAll(str, find, replace) {
+    if (str == null) {
+        return null;
+    }
     return str.replace(new RegExp(find, 'g'), replace);
 }
 
@@ -722,7 +725,7 @@ var Base64 = {
 
 
 // only create debounce function if underscore is not present
-if (typeof(window.debounce !== "function") && (!window._ || typeof (window._.debounce) !== "function")) {
+if (typeof (window.debounce !== "function") && (!window._ || typeof (window._.debounce) !== "function")) {
     /**
      * Returns a function, that, as long as it continues to be invoked, will not
      * be triggered. The function will be called after it stops being called for

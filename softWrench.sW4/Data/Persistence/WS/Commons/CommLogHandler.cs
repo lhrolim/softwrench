@@ -7,6 +7,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using softwrench.sw4.api.classes.email;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -15,28 +16,29 @@ using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
-using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class CommLogHandler {
 
-        private const string ticketuid = "ticketuid";
-        private const string commloguid = "commloguid";
-        private const string commlog = "commlog";
+        private const string Ticketuid = "ticketuid";
+        private const string Commloguid = "commloguid";
+        private const string Commlog = "commlog";
         private const string Commlogid = "commlogid";
         private const string Ownerid = "ownerid";
-        private const string ownertable = "ownertable";
-        private const string inbound = "inbound";
-        private const string siteid = "siteid";
-        private const string orgid = "orgid";
-        private const string createby = "createby";
-        private const string createdate = "createdate";
-        private const string modifydate = "modifydate";
-        private const string sendto = "sendto";
-        private const string sendfrom = "sendfrom";
-        private const string subject = "subject";
-        private const string message = "message";
-        private const string cc = "cc";
+        private const string Ownertable = "ownertable";
+        private const string Inbound = "inbound";
+        private const string Siteid = "siteid";
+        private const string Orgid = "orgid";
+        private const string Createby = "createby";
+        private const string Createdate = "createdate";
+        private const string Modifydate = "modifydate";
+        private const string Sendto = "sendto";
+        private const string Sendfrom = "sendfrom";
+        private const string Subject = "subject";
+        private const string Message = "message";
+        private const string Cc = "cc";
+        private const string Bcc = "bcc";
 
 
         private static ISWDBHibernateDAO _dao;
@@ -47,15 +49,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
-            var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
+            var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(Commlog);
             var crudOperationDatas = commlogs as CrudOperationData[] ?? commlogs.ToArray();
-            var newCommLogs = crudOperationDatas.Where(r => r.GetAttribute(commloguid) == null);
+            var newCommLogs = crudOperationDatas.Where(r => r.GetAttribute(Commloguid) == null);
             foreach (var commLog in crudOperationDatas) {
                 // Convert sendto array to a comma separated list
-                HandleArrayOfOptions(commLog, sendto);
-                HandleArrayOfOptions(commLog, cc);
+                HandleArrayOfOptions(commLog, Sendto);
+                HandleArrayOfOptions(commLog, Cc);
+                HandleArrayOfOptions(commLog, Bcc);
             }
-            var ownerid = w.GetRealValue(rootObject, ticketuid);
+            var ownerid = w.GetRealValue(rootObject, Ticketuid);
+
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate (object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
                 var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
@@ -63,32 +67,40 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var commlogid = Convert.ToInt32(id) + rnd.Next(1, 10);
                 w.SetValue(integrationObject, Commlogid, commlogid);
                 w.SetValue(integrationObject, Ownerid, ownerid);
-                w.SetValueIfNull(integrationObject, ownertable, entity.TableName);
-                w.SetValueIfNull(integrationObject, inbound, false);
-                w.CopyFromRootEntity(rootObject, integrationObject, siteid, user.SiteId);
-                w.CopyFromRootEntity(rootObject, integrationObject, orgid, user.OrgId);
-                w.CopyFromRootEntity(rootObject, integrationObject, createby, user.Login, "CHANGEBY");
-                w.CopyFromRootEntity(rootObject, integrationObject, createdate, DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
+                w.SetValueIfNull(integrationObject, Ownertable, entity.TableName);
+                w.SetValueIfNull(integrationObject, Inbound, false);
+                w.CopyFromRootEntity(rootObject, integrationObject, Siteid, user.SiteId);
+                w.CopyFromRootEntity(rootObject, integrationObject, Orgid, user.OrgId);
+                w.CopyFromRootEntity(rootObject, integrationObject, Createby, user.Login, "CHANGEBY");
+                w.CopyFromRootEntity(rootObject, integrationObject, Createdate, DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
+                w.CopyFromRootEntity(rootObject, integrationObject, Modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
                 HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
-                if (w.GetRealValue(integrationObject, sendto) != null) {
+                if (w.GetRealValue(integrationObject, Sendto) != null) {
                     maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 } else {
                     throw new System.ArgumentNullException("To:");
                 }
-                var recipientEmail = w.GetRealValue(integrationObject, sendto).ToString();
-                var ccEmail = w.GetRealValue(integrationObject, cc);
-                ccEmail = ccEmail != null ? ccEmail.ToString() : "";
-                var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
                 var username = user.Login;
+                var allAddresses = GetListOfAllAddressesUsed(integrationObject);
                 // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
                 _updateEmailHistory(username, allAddresses.ToLower().Split(','));
             });
         }
 
-        private static void HandleArrayOfOptions(CrudOperationData commLog, string propertyName) {
+        private static string GetListOfAllAddressesUsed(object integrationObject) {
+            var recipientEmail = w.GetRealValue(integrationObject, Sendto).ToString();
+            var ccEmail = w.GetRealValue(integrationObject, Cc);
+            var bccEmail = w.GetRealValue(integrationObject, Bcc);
+            ccEmail = ccEmail != null ? ccEmail.ToString() : "";
+            bccEmail = bccEmail != null ? bccEmail.ToString() : "";
+            var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
+            allAddresses = bccEmail != "" ? allAddresses + "," + bccEmail : allAddresses;
+            return allAddresses;
+        }
+
+        private static void HandleArrayOfOptions(AttributeHolder commLog, string propertyName) {
             var stringOrArray = commLog.GetAttribute(propertyName);
             if (stringOrArray == null) {
                 return;
@@ -96,7 +108,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             if (stringOrArray is string) {
                 //sometimes component is sending a simple string straight
-                commLog.SetAttribute(sendto, stringOrArray);
+                commLog.SetAttribute(propertyName, stringOrArray);
                 return;
             }
             if (!(stringOrArray is Array) || ((Array)stringOrArray).Length == 0) {
@@ -150,12 +162,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 }
             }
 
-            return new EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
-                w.GetRealValue<string>(integrationObject, sendto),
-                w.GetRealValue<string>(integrationObject, subject),
-                w.GetRealValue<string>(integrationObject, message),
-                attachments) {
-                Cc = w.GetRealValue<string>(integrationObject, cc)
+            return new EmailData(w.GetRealValue<string>(integrationObject, Sendfrom),
+                w.GetRealValue<string>(integrationObject, Sendto),
+                w.GetRealValue<string>(integrationObject, Subject),
+                w.GetRealValue<string>(integrationObject, Message), attachments) {
+                Cc = w.GetRealValue<string>(integrationObject, Cc),
+                BCc = w.GetRealValue<string>(integrationObject, Bcc)
             };
 
 
