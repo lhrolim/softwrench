@@ -462,9 +462,6 @@ function encodeEntities(value) {
       // decimal values are: 0-31, 127-159, 173, 1536-1540, 1807, 6068, 6069, 8204-8207, 8232-8239, 8288-8303, 65279, 65520-65535
       var c = value.charCodeAt(0);
         // if unsafe character encode
-      if (c == 10) {
-          return "&lt;/br&gt;";
-      }
       if (c <= 159 ||
           c == 173 ||
           (c >= 1536 && c <= 1540) ||
