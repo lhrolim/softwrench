@@ -10,6 +10,7 @@ using softwrench.sw4.activitystream.classes.Model;
 using softwrench.sw4.activitystream.classes.Util;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Util;
+using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
     public class NotificationFacade : ISingletonComponent {
@@ -17,7 +18,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         private const int HoursToPurge = 24;
 
         public static readonly IDictionary<string, InMemoryNotificationStream> NotificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
-        public static IDictionary<string, long> Counter = new ConcurrentDictionary<string, long>();
+        public static Dictionary<string, Dictionary<string, long>> Counter = new Dictionary<string, Dictionary<string, long>>();
 
         private readonly MaximoHibernateDAO _maxDAO;
         private readonly NotificationQueryBuilder _queryBuilder;
@@ -32,8 +33,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         //Sets up the default notification stream.
         public void InitNotificationStreams() {
-            //var notificationBuffer = new InMemoryNotificationStream();
-            //var srRoleNotificationBuffer = new InMemoryNotificationStream();
+            var securityGroups = UserProfileManager.FetchAllProfiles(true);
             var query =
                 string.Format(
                     "select max(ticketuid) as max, 'servicerequest' as application from ticket where class = 'SR' union " +
@@ -43,9 +43,18 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     "select max(worklogid) as max, 'worklog' as application from worklog");
             var result = _maxDAO.FindByNativeQuery(query, null);
             foreach (var record in result) {
-                Counter.Add(record["application"], int.Parse((record["max"] ?? "0")));
+                foreach (var securityGroup in securityGroups) {
+                    if (!Counter.ContainsKey(securityGroup.Name)) {
+                        Counter.Add(securityGroup.Name, new Dictionary<string, long>());
+                    }
+                    Counter[securityGroup.Name].Add(record["application"], int.Parse((record["max"] ?? "0")));
+                }
             }
             //NotificationStreams["default"] = notificationBuffer;
+        }
+
+        private void UpdateCounters() {
+
         }
 
         public void InsertNotificationsIntoStreams(string securityGroup, List<Notification> notifications) {
@@ -95,7 +104,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         private void ExecuteNotificationsQuery(KeyValuePair<string, string> securityGroupsNotificationsQuery, DateTime currentTime) {
             var formattedQuery = string.Format(securityGroupsNotificationsQuery.Value,
-                        ActivityStreamConstants.HoursToPurge, currentTime, Counter["servicerequest"]);
+                        ActivityStreamConstants.HoursToPurge, currentTime, Counter[securityGroupsNotificationsQuery.Key]["servicerequest"]);
             var queryResult = _maxDAO.FindByNativeQuery(formattedQuery, null);
             if (!queryResult.Any()) {
                 return;
@@ -109,9 +118,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var icon = record["icon"];
                 var uid = long.Parse(record["uid"]);
                 var flag = "changed";
-                if (Counter[application] < uid) {
+                if (Counter[securityGroupsNotificationsQuery.Key][application] < uid) {
                     flag = "created";
-                    Counter[application] = uid;
+                    Counter[securityGroupsNotificationsQuery.Key][application] = uid;
                 }
                 var parentid = record["parentid"];
                 long parentuid = -1;
