@@ -150,6 +150,13 @@
           <field label="Attachment:" attribute="attachment" >
             <renderer type="multipleupload"/>
           </field>
+
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="false">
+              <command id="save" icon="fa-check" service="$scope" method="save" label="Send" />
+            </commandgroup>
+          </commandbars>
+          
         </schema>
       </schemas>
     </application>
