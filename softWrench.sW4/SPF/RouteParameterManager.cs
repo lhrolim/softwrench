@@ -1,4 +1,5 @@
-﻿using cts.commons.portable.Util;
+﻿using System.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata;
@@ -50,6 +51,13 @@ namespace softWrench.sW4.SPF {
                         //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1640
                         var completeCurrentApp = MetadataProvider.Application(currentApplication.Name);
                         var detailSchema = completeCurrentApp.SchemaByStereotype(SchemaStereotype.Detail.ToString());
+                        if (detailSchema != null) {
+                            //this is the preferred way, declaring stereotypes
+                            return completeCurrentApp.ApplyPolicies(detailSchema.GetSchemaKey(), user, platform);
+                        }
+                        detailSchema =
+                            completeCurrentApp.SchemasList.FirstOrDefault(
+                                s => s.SchemaId.EqualsAny("editdetail", "edit"));
                         if (detailSchema != null) {
                             return completeCurrentApp.ApplyPolicies(detailSchema.GetSchemaKey(), user, platform);
                         }

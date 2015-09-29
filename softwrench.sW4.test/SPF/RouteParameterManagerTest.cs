@@ -28,6 +28,14 @@ namespace softwrench.sW4.test.SPF {
             Assert.AreEqual(nextApp.Schema.SchemaId, "editdetail");
         }
 
+        [TestMethod]
+        //test for https://controltechnologysolutions.atlassian.net/browse/SWWEB-1640
+        public void TestNewSchemaRedirectingToDetailEditDetailAsDefault() {
+            var currentApp = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
+            var nextApp = RouteParameterManager.FillNextSchema(currentApp, new RouterParametersDTO(), ClientPlatform.Web, InMemoryUser.TestInstance(), null);
+            Assert.AreEqual(nextApp.Schema.SchemaId, "editdetail");
+        }
+
 
         [TestMethod]
         public void TestDetailSchemaStayOnIt() {
