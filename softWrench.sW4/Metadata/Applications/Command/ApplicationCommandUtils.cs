@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 
 namespace softWrench.sW4.Metadata.Applications.Command {
-    public class ApplicationCommandUtils
-    {
+    public class ApplicationCommandUtils {
 
-        private static ILog Log = LogManager.GetLogger(typeof (ApplicationCommandUtils));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ApplicationCommandUtils));
 
-        public static ApplicationCommand GetApplicationCommand(ApplicationMetadata applicationMetadata, string commandId) {
+        [CanBeNull]
+        public static ApplicationCommand GetApplicationCommand(ApplicationMetadata applicationMetadata, [CanBeNull]string commandId) {
+            if (commandId == null) {
+                return null;
+            }
             var applicationCommands = applicationMetadata.Schema.CommandSchema.ApplicationCommands;
             var commandParts = commandId.Split('.');
             var barKey = commandParts[0];
@@ -33,7 +37,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                 if (!commandBarDefinition.IsDynamic()) {
                     //if there are no roles, simply add it. this will also trigger a cache on the bar for the next user
                     result[commandBar.Key] = commandBarDefinition;
-                    Log.DebugFormat("returning bar {0} due to abscence of roles on it",commandBar.Key);
+                    Log.DebugFormat("returning bar {0} due to abscence of roles on it", commandBar.Key);
                     continue;
                 }
                 var commands = new List<ICommandDisplayable>();
@@ -46,7 +50,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
 
                     if (!user.IsInRole(command.Role) && !user.IsSwAdmin()) {
                         //if not in role, just skip it (unless swadmin that can see everything...)
-                        Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id,command.Role);
+                        Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
                         continue;
                     }
 
@@ -62,7 +66,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
 
                 }
 
-                result[commandBar.Key] = new CommandBarDefinition(commandBarDefinition.Id, commandBarDefinition.Position,commandBarDefinition.ExcludeUndeclared, commands);
+                result[commandBar.Key] = new CommandBarDefinition(commandBarDefinition.Id, commandBarDefinition.Position, commandBarDefinition.ExcludeUndeclared, commands);
             }
 
 

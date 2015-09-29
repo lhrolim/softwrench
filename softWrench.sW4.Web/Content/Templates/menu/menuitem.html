@@ -1,14 +1,14 @@
 <li ng-switch on="leaf.type">
 
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ActionMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
-       ng-click="doAction(leaf, $event.target)" href="#"
+       ng-click="doAction(leaf, $event)" href="#"
        class="level{{level}}">
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
 
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ApplicationMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
-       ng-click="goToApplication(leaf, $event.target)" href="#"
+       ng-click="goToApplication(leaf, $event)" href="#"
        class="level{{level}}">
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
@@ -30,7 +30,7 @@
 
 
         <button ng-if="!leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle non-isolate" data-toggle="dropdown"
-                rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event.target)">
+                rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event)">
             <i class="{{isMenuItemIcon(leaf)}}"> </i>
             {{i18NMenuLabel(leaf,false)}}
             <span class="level{{level}}" ng-class="{'right-caret': displacement == 'vertical', 'bottom-caret' : displacement == 'horizontal'}" />
@@ -38,7 +38,7 @@
 
         
         <button ng-if="leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default btn-split dropdown-toggle" 
-                rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event.target)">
+                rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event)">
             <i class="{{isMenuItemIcon(leaf)}}"> </i>
             {{i18NMenuLabel(leaf,false)}}
         </button>
@@ -50,7 +50,7 @@
 
         <a ng-if="!isButtonStyleContainer(level,leaf)" href="#"
            data-toggle="dropdown" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
-           ng-click="handleContainerClick(leaf,$event.target)" class="level{{level}}">
+           ng-click="handleContainerClick(leaf,$event)" class="level{{level}}">
 
             {{i18NMenuLabel(leaf,false)}}
             <span class="right-caret level{{level}}" />

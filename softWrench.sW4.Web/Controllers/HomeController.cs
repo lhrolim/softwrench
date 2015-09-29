@@ -59,8 +59,8 @@ namespace softWrench.sW4.Web.Controllers {
                 //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
                 indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
             }
-            //if still null logout the user
-            if (indexItem == null) {
+            //if still null logout the user, or an external link that would cause a redirect loop
+            if (indexItem == null || (indexItem is ExternalLinkMenuItemDefinition)) {
                 SignoutController.DoLogout(Session, Response);
                 return Redirect("~/SignIn?forbidden=true&ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             }

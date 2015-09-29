@@ -211,7 +211,7 @@
   <applications>
     <application name="invissuewo" title="Batch Issuing" entity="invissuewo">
       <schemas>
-        <schema id="newdetail" stereotype="detail" mode="input" title="Batch Issue Details">
+        <schema id="newdetail" stereotype="detailnew" mode="input" title="Batch Issue Details">
           <field attribute="wonum" hidden="true"/>
           <field attribute="#issuetype" hidden="true" default="ISSUE"/>
           <field attribute="#refwo" label="Work Order" readonly="true"/>

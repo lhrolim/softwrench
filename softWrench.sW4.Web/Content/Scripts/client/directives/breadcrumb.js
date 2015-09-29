@@ -43,7 +43,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                                         //rename the admin function, to avoid confilts
                                         click = click.replace('doAction', '$scope.adminDoAction');
-                                        click = click.replace('$event.target', 'null');
+                                        click = click.replace('$event', 'null');
                                         click = click.replace('myProfile', '$scope.adminMyProfile');
                                         click = click.replace('loadApplication', '$scope.adminLoadApplication');
                                         click = click.replace('logout', '$scope.adminLogout');
@@ -307,10 +307,10 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
     var log = $log.getInstance('sw4.breadcrumb Menu Item');
 
     return {
-        controller: function ($scope, alertService, validationService) {
+        controller: function ($scope, alertService, validationService, crudContextHolderService) {
             $scope.goToApplication = function (leaf) {
                 var msg = "Are you sure you want to leave the page?";
-                if (validationService.getDirty()) {
+                if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.goToApplication(leaf, null);
                         $scope.$digest();
@@ -328,7 +328,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 $scope.$emit('sw_titlechanged', null);
 
                 var msg = "Are you sure you want to leave the page?";
-                if (validationService.getDirty()) {
+                if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.doAction(leaf, null);
                         $scope.$digest();
@@ -345,8 +345,8 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 eval(click);
             };
 
-            $scope.adminDoAction = function (title, controller, action, parameters, target) {
-                adminMenuService.doAction(title, controller, action, parameters, target);
+            $scope.adminDoAction = function (title, controller, action, parameters, $event) {
+                adminMenuService.doAction(title, controller, action, parameters, $event.target);
                 $scope.closeBreadcrumbs();
             };
 

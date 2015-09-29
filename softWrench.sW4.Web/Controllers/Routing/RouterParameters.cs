@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
 
@@ -37,27 +38,25 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                 }
                 return _nextApplication;
             }
-            set { _nextApplication = value; }
+            set {
+                _nextApplication = value;
+            }
         }
 
 
-        public string NextController
-        {
-            get
-            {
+        public string NextController {
+            get {
                 if (TargetResult != null && TargetResult.NextController != null) {
                     //let´s give a chance that maximo connectors change the next application the user needs to get redirected based upon complex flows
                     return TargetResult.NextController;
                 }
-                
+
                 return _nextController;
             }
         }
 
-        public string NextAction
-        {
-            get
-            {
+        public string NextAction {
+            get {
                 if (TargetResult != null && TargetResult.NextAction != null) {
                     //let´s give a chance that maximo connectors change the next application the user needs to get redirected based upon complex flows
                     return TargetResult.NextAction;
@@ -90,53 +89,14 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             User = user;
             //we could have a custom next action/controller to be executed, although usually it would stay in the crud application context
             FillNextActionAndController(currentApplication, routerDTO);
-            FillNextSchema(currentApplication, routerDTO, platform, user, resolvedNextSchemaKey);
+            NextApplication = RouteParameterManager.FillNextSchema(currentApplication, routerDTO, platform, user,Operation, resolvedNextSchemaKey);
         }
 
-        private void FillNextSchema(ApplicationMetadata currentApplication, RouterParametersDTO routerDTO, ClientPlatform platform, InMemoryUser user, ApplicationMetadataSchemaKey resolvedNextSchemaKey) {
-
-            var nextSchema = resolvedNextSchemaKey;
-            if (nextSchema == null) {
-                //legacy support for operations... they are still coming inside the json
-                //TODO: remove
-                var nextSchemaKey = routerDTO.NextSchemaKey;
-                if (nextSchemaKey == null) {
-
-                    var applicationCommand = ApplicationCommandUtils.GetApplicationCommand(currentApplication, Operation);
-                    if (applicationCommand != null && !String.IsNullOrWhiteSpace(applicationCommand.NextSchemaId)) {
-                        nextSchemaKey = applicationCommand.NextSchemaId;
-                    } else {
-                        //if not specified from the client, let´s search on the schema definition
-                        nextSchemaKey =
-                            currentApplication.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.RoutingNextSchemaId);
-                    }
-                }
-                if (nextSchemaKey != null) {
-                    nextSchema = SchemaUtil.GetSchemaKeyFromString(nextSchemaKey, platform);
-                } else {
-                    //if it was still not specified in any place, stay on the same schema
-                    NextApplication = currentApplication;
-                    return;
-                }
-            }
-
-
-            var nextApplicationName = routerDTO.NextApplicationName;
-            if (nextApplicationName == null) {
-                nextApplicationName =
-                    currentApplication.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.RoutingNextApplication);
-                if (nextApplicationName == null) {
-                    //use the same application as current by default,since it´s rare to 
-                    nextApplicationName = currentApplication.Name;
-                }
-            }
-            var nextApplication = MetadataProvider.Application(nextApplicationName);
-            NextApplication = nextApplication.ApplyPolicies(nextSchema, user, platform);
-        }
+       
 
         private void FillNextActionAndController(ApplicationMetadata currentApplication, RouterParametersDTO routerDTO) {
             if (routerDTO.NextController != null && routerDTO.NextAction != null) {
-                _nextController= routerDTO.NextController;
+                _nextController = routerDTO.NextController;
                 _nextAction = routerDTO.NextAction;
             } else if (currentApplication.Schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.AfterSubmitAction)) {
                 var afterSubmitAction =
@@ -148,48 +108,72 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         }
 
 
-        public InMemoryUser User { get; set; }
+        public InMemoryUser User {
+            get; set;
+        }
 
         /// <summary>
         /// The current Application that the system was prior to performing the routing operation
         /// </summary>
-        public ApplicationMetadata CurrentApplication { get; set; }
+        public ApplicationMetadata CurrentApplication {
+            get; set;
+        }
 
         /// <summary>
         /// The current schema that the system was prior to performing the routing
         /// </summary>
-        public ApplicationMetadataSchemaKey CurrentKey { get { return CurrentApplication.Schema.GetSchemaKey(); } }
+        public ApplicationMetadataSchemaKey CurrentKey {
+            get {
+                return CurrentApplication.Schema.GetSchemaKey();
+            }
+        }
 
-        public ClientPlatform Platform { get; set; }
+        public ClientPlatform Platform {
+            get; set;
+        }
 
 
 
-     
+
 
 
         /// <summary>
         /// The next schema we should redirect the user to
         /// </summary>
-        public ApplicationMetadataSchemaKey NextKey { get { return NextApplication.Schema.GetSchemaKey(); } }
+        public ApplicationMetadataSchemaKey NextKey {
+            get {
+                return NextApplication.Schema.GetSchemaKey();
+            }
+        }
 
 
-        public bool NoApplicationRedirectDetected { get { return NextApplication == CurrentApplication; } }
+        public bool NoApplicationRedirectDetected {
+            get {
+                return NextApplication == CurrentApplication;
+            }
+        }
 
         /// <summary>
         /// The current operation that has just been performed on the backend (i.e SAVE,UPDATE, DELETE, or some custom one). There might be some custom hooks depending on the type of the operation that has just occurred.
         /// </summary>
-        public string Operation { get; set; }
+        public string Operation {
+            get; set;
+        }
 
         /// <summary>
         /// whether or not the target backend (maximo, SAP, etc...) was marked to be mocked. 
         /// If true, we should generate fake values for the next schema screen, since the operation hasn´t actually been called.
         /// </summary>
-        public bool TargetMocked { get; set; }
+        public bool TargetMocked {
+            get; set;
+        }
 
         /// <summary>
         /// the result of the target backeend system invocation
         /// </summary>
-        public TargetResult TargetResult { get; set; }
+        public TargetResult TargetResult {
+            get; set;
+        }
 
 
 
@@ -198,7 +182,9 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         /// Specifies exactly how a certain schema should be routed to. 
         /// </summary>
         [NotNull]
-        public IDictionary<ApplicationKey, CheckPointCrudContext> CheckPointContext { get; set; }
+        public IDictionary<ApplicationKey, CheckPointCrudContext> CheckPointContext {
+            get; set;
+        }
 
 
     }

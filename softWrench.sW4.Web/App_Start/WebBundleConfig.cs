@@ -68,7 +68,6 @@ namespace softWrench.sW4.Web {
             bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
                 "~/Content/Scripts/vendor/angular/angular.js",
                 "~/Content/Scripts/vendor/angular/angular-strap.js",
-                "~/Content/Scripts/vendor/angular/angular-strap.js",
                 "~/Content/Scripts/vendor/angular/angular-sanitize.js",
                 "~/Content/Scripts/vendor/angular/bindonce.js",
                 "~/Content/Scripts/vendor/angular/components/*.js"

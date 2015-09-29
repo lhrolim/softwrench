@@ -249,8 +249,10 @@ function ApplicationController($scope, $http, $log, $timeout,
         scope.originalDatamap = angular.copy(scope.datamap);
 
         scope.extraparameters = instantiateIfUndefined(result.extraParameters);
-
-        scope.mode = result.mode;
+        if (result.mode === "input" || result.mode === "output") {
+            scope.mode = result.mode;
+        }
+        
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
@@ -263,13 +265,13 @@ function ApplicationController($scope, $http, $log, $timeout,
             }
         }
         var log = $log.getInstance("applicationcontroller#renderData");
-        validationService.clearDirty();
-        
-        if (result.type == 'ApplicationDetailResult') {
+        crudContextHolderService.detailLoaded();
+
+        if (result.type === 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
             detailService.fetchRelationshipData(scope, result);
             toDetail(scope);
-        } else if (result.type == 'ApplicationListResult') {
+        } else if (result.type === 'ApplicationListResult') {
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
         } else if (result.crudSubTemplate != null) {
@@ -280,12 +282,8 @@ function ApplicationController($scope, $http, $log, $timeout,
 
         //broadcast schema for the breadcrumbs 
         $rootScope.$broadcast('schemaChange', $scope.schema);
+        $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
 
-        if ($scope.schema != null) {
-            $rootScope.$broadcast('sw_titlechanged', $scope.schema.title);
-        } else {
-            $rootScope.$broadcast('sw_titlechanged', null);
-        }
     };
 
 
@@ -294,9 +292,9 @@ function ApplicationController($scope, $http, $log, $timeout,
     });
 
     $scope.doConfirmCancel = function (data, schema, msg) {
-        if (validationService.getDirty()) {
+        $('.no-touch [rel=tooltip]').tooltip('hide');
+        if (crudContextHolderService.getDirty()) {
             alertService.confirmCancel(null, null, function () {
-                $('.no-touch [rel=tooltip]').tooltip({ container: 'hide' });
                 $scope.toListSchema(data, schema);
                 $scope.$digest();
             }, msg, function () { return; });
@@ -397,7 +395,7 @@ function ApplicationController($scope, $http, $log, $timeout,
 
         $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
             var msg = "Are you sure you want to leave the page?";
-            if (validationService.getDirty()) {
+            if (crudContextHolderService.getDirty()) {
                 alertService.confirmCancel(null, null, function () {
                     $scope.renderView(applicationName, schemaId, mode, title, parameters);
                     $scope.$digest();
@@ -438,7 +436,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             var nextSchema = data.schema;
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
-        
+
 
         doInit();
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {

@@ -12,8 +12,8 @@
             title: '='
         },
         link: function (scope, element, attr) {
-            scope.doAction = function (title, controller, action, parameters, target) {
-                adminMenuService.doAction(title, controller, action, parameters, target);
+            scope.doAction = function (title, controller, action, parameters, $event) {
+                adminMenuService.doAction(title, controller, action, parameters, $event.target);
             };
 
             scope.refreshMetadata = function() {

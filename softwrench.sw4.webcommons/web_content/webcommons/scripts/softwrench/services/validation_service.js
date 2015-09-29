@@ -5,16 +5,7 @@
 
     function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService) {
 
-        var service = {
-            getInvalidLabels: getInvalidLabels,
-            validate: validate,
-            validateInlineComposition: validateInlineComposition,
-            setDirty: setDirty,
-            getDirty: getDirty,
-            clearDirty: clearDirty
-        };
-
-        return service;
+      
 
         function getInvalidLabels(displayables, datamap) {
             /// <summary>
@@ -135,18 +126,16 @@
             return validationArray;
         };
 
+        var service = {
+            getInvalidLabels: getInvalidLabels,
+            validate: validate,
+            validateInlineComposition: validateInlineComposition,
 
-        function setDirty() {
-            $rootScope.isDirty = true;
         };
 
-        function getDirty() {
-            return $rootScope.isDirty;
-        };
+        return service;
 
-        function clearDirty() {
-            $rootScope.isDirty = false;
-        }
+      
 
     }
 

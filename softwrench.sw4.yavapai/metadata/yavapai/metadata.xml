@@ -16,7 +16,7 @@
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
-        <schema id="newdetail" platform="web" redeclaring="false">
+        <schema id="newdetail" platform="web" redeclaring="false" stereotype="detailnew">
           <customization position="classstructureid"></customization>
           <customization position="saddresscode"></customization>
         </schema>
@@ -29,7 +29,7 @@
     
     <application entity="workorder" name="workorder" title="Work Order">
       <schemas>
-        <schema id="newdetail" platform="web" redeclaring="false">
+        <schema id="newdetail" platform="web" redeclaring="false" stereotype="detailnew">
           <customization position="classstructureid"></customization>
           <customization position="failurecode"></customization>
           <customization position="problemcode"></customization>

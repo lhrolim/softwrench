@@ -10,7 +10,10 @@ using System.Linq;
 
 namespace softWrench.sW4.Metadata.Applications {
     public static class ApplicationMetadataExtensions {
+
         private const string NoSchemaFound = "could not find schema {0} in application {1}. Please review your metadata";
+
+        private const string MulitpleStereotypesDeclared = "Multiple stereotypes {0} were defined for application {1} could not determine default route. Please review your metadata";
 
         [NotNull]
         public static ApplicationMetadata ApplyPolicies([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user,
@@ -31,17 +34,20 @@ namespace softWrench.sW4.Metadata.Applications {
             if (application == null) throw new ArgumentNullException("application");
             ApplicationSchemaDefinition resultingSchema;
             if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
-                if (metadataSchemaKey.SchemaId.EqualsAny(ApplicationMetadataConstants.List, ApplicationMetadataConstants.Detail)) {
+                var schemaId = metadataSchemaKey.SchemaId;
+                if (schemaId.EqualsAny(ApplicationMetadataConstants.List, ApplicationMetadataConstants.Detail)) {
                     //let´s give these default schema names a stereotype search fallback and return them case they are uniquely found
-                    return SearchByStereotype(application, metadataSchemaKey, ref resultingSchema);
-                } if (metadataSchemaKey.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
+                    resultingSchema = SchemaByStereotype(application, schemaId);
+                    return resultingSchema;
+                }
+                if (schemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
                     //using list for now
                     var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List));
                     //                    var instance = ApplicationAssociationSchemaSyncFactory.GetInstance(application);
                     application.Schemas().Add(metadataSchemaKey, instance);
                     return instance;
                 }
-                throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
+                throw new InvalidOperationException(string.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
             }
             return resultingSchema;
         }
@@ -51,24 +57,27 @@ namespace softWrench.sW4.Metadata.Applications {
 
             switch (platform) {
                 case ClientPlatform.Web:
-                    return application.IsWebSupported();
+                return application.IsWebSupported();
 
                 case ClientPlatform.Mobile:
-                    return application.IsMobileSupported();
+                return application.IsMobileSupported();
 
                 default:
-                    throw new ArgumentOutOfRangeException(platform.ToString());
+                throw new ArgumentOutOfRangeException(platform.ToString());
             }
         }
 
-        public static ApplicationSchemaDefinition SearchByStereotype(CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey metadataSchemaKey, ref ApplicationSchemaDefinition resultSchema) {
+        [CanBeNull]
+        public static ApplicationSchemaDefinition SchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, bool throwException = false) {
             try {
-                resultSchema = application.Schemas().Values.Single(schema => schema.Stereotype.ToString().EqualsIc(metadataSchemaKey.SchemaId));
+                return application.Schemas().Values.Single(schema => (schema.Stereotype.ToString().EqualsIc(stereotypeName) && !schema.Abstract));
             } catch (Exception) {
-                // More than one schema found of the specified type
-                throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
+                if (throwException) {
+                    // More than one schema found of the specified type
+                    throw new InvalidOperationException(string.Format(MulitpleStereotypesDeclared, stereotypeName, application.ApplicationName));
+                }
+                return null;
             }
-            return resultSchema;
         }
     }
 }

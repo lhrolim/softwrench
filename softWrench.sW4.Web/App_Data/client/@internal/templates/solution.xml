@@ -101,7 +101,7 @@
           <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus" />
         </schema>
 
-        <schema parentschema="adetail" title="New Solution" id="newdetail" stereotype="detail" platform="web">
+        <schema parentschema="adetail" title="New Solution" id="newdetail" stereotype="detailnew" platform="web">
         </schema>
       </schemas>
     </application>

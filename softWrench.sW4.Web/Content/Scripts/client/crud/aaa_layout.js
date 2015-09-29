@@ -12,9 +12,9 @@
      'selectize']);
 
 //angular 1.3 migration reference
-//app.config(['$controllerProvider', function ($controllerProvider) {
-//    $controllerProvider.allowGlobals();
-//}]);
+app.config(['$controllerProvider', function ($controllerProvider) {
+    $controllerProvider.allowGlobals();
+}]);
 
 //app.config(function(uiSelectConfig) {
 //    uiSelectConfig.theme = "bootstrap";
@@ -178,8 +178,8 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         return url(path);
     };
 
-    $scope.goToApplicationView = function (applicationName, schemaId, mode, title, parameters, target) {
-        menuService.setActiveLeaf(target);
+    $scope.goToApplicationView = function (applicationName, schemaId, mode, title, parameters, $event) {
+        menuService.setActiveLeaf($event.target);
         redirectService.goToApplicationView(applicationName, schemaId, mode, title, parameters);
     };
 
@@ -315,3 +315,4 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     initController();
 }
 
+app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", LayoutController]);

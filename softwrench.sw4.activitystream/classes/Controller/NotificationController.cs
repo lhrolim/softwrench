@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using cts.commons.portable.Util;
 using cts.commons.web.Attributes;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -27,6 +28,10 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         [HttpGet]
         public NotificationResponse GetNotifications() {
             var user = SecurityFacade.CurrentUser();
+            if (user.Login.EqualsIc("swadmin"))
+            {
+                return _notificationFacade.GetNotificationStream("default");
+            }
             var securityGroups = user.Profiles;
             if (securityGroups.Count == 0) {
                 if (!user.IsSwAdmin()) {

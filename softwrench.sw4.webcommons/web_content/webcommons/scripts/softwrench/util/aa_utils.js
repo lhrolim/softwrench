@@ -299,10 +299,10 @@ function insertOrUpdateArray(arr, item, property) {
 function lockCommandBars() {
     var bars = $('[data-class=commandbar]');
     bars.each(function (index, element) {
-        var buttons = $(element).children('button');
+        var buttons = $(element).find('button');
         for (var i = 0; i < buttons.length; i++) {
             var button = $(buttons[i]);
-            if (button.prop('disabled') != true) {
+            if (button.prop('disabled') !== true) {
                 //lets disable only those who aren´t already disabled
                 button.attr('disabled', 'disabled');
                 button.attr('forceddisable', 'disabled');
@@ -315,10 +315,10 @@ function lockCommandBars() {
 function unLockCommandBars() {
     var bars = $('[data-class=commandbar]');
     bars.each(function (index, element) {
-        var buttons = $(element).children('button');
+        var buttons = $(element).find('button');
         for (var i = 0; i < buttons.length; i++) {
             var button = $(buttons[i]);
-            if (button.attr('forceddisable') == 'disabled') {
+            if (button.attr('forceddisable') === 'disabled') {
                 button.removeAttr('disabled');
             }
         }

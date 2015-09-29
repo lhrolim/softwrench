@@ -73,6 +73,22 @@
                 "aaaa <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> aaaa"
             ]
         },
+        multipleemailtags: { // <email_pattern(email_pattern)+>
+            input: [
+                "<div> aaaa <mailto:unackdry@outlook.comunackdry@outlook.com> " + // multiple 'weird' emails
+                    "bbbb <rodrigo_rocks@hotmail.comrodrigo_rocks@hotmail.com> " +
+                    "cccc <mailto:rodrigo_brasil@uol.com.brunackdry@outlook.com> " +
+                    "dddd <!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
+                    "eeee <unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> </div>"
+            ],
+            expected: [
+                "<div> aaaa <a href='mailto:unackdry@outlook.comunackdry@outlook.com'>unackdry@outlook.comunackdry@outlook.com</a> " +
+                    "bbbb <a href='mailto:rodrigo_rocks@hotmail.comrodrigo_rocks@hotmail.com'>rodrigo_rocks@hotmail.comrodrigo_rocks@hotmail.com</a> " +
+                    "cccc <a href='mailto:rodrigo_brasil@uol.com.brunackdry@outlook.com'>rodrigo_brasil@uol.com.brunackdry@outlook.com</a> " +
+                    "dddd <a href='mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
+                    "eeee <a href='mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> </div>"
+            ]
+        },
         alltags: {
             input: [
                 "<div> aaaa <mailto:rodrigo.botti@gmail.com> " +
@@ -80,8 +96,9 @@
                     "cccc <mailto:rodrigo_brasil@uol.com.br> " +
                     "dddd <!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
                     "eeee <mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
-                    "ffff <http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti> </div>",
-                "<div><b>DON'T CHANGE ME</b><br><b>I DON'T ANY INVALID MAILTO TAGS</b></div>"
+                    "ffff <http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti> " +
+                    "gggg <mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> </div>",
+                "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ],
             expected: [
                 "<div> aaaa <a href='mailto:rodrigo.botti@gmail.com'>rodrigo.botti@gmail.com</a> " +
@@ -89,8 +106,9 @@
                     "cccc <a href='mailto:rodrigo_brasil@uol.com.br'>rodrigo_brasil@uol.com.br</a> " +
                     "dddd <a href='mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
                     "eeee <a href='mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
-                    "ffff <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> </div>",
-                "<div><b>DON'T CHANGE ME</b><br><b>I DON'T ANY INVALID MAILTO TAGS</b></div>"
+                    "ffff <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> " +
+                    "gggg <a href='mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> </div>",
+                "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ]
         }
     };
@@ -113,7 +131,7 @@
         richTextService = _richTextService_;
     }));
 
-    it("mailto tags replacement: 'blank' inputs", function () {
+    it("invalid tags replacement: 'blank' inputs", function () {
         expect(richTextService.replaceInvalidTags(undefined)).toBeUndefined();
         expect(richTextService.replaceInvalidTags(null)).toBeNull(null);
         expect(richTextService.replaceInvalidTags("")).toBe("");
@@ -133,6 +151,10 @@
 
     it("url tags replacement", function () {
         runInvalidTagReplacementTest(config.urltags);
+    });
+
+    it("multiple email tags replacement", function () {
+        runInvalidTagReplacementTest(config.multipleemailtags);
     });
 
     it("url and email tags replacement", function () {
