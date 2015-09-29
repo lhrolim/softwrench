@@ -71,6 +71,10 @@ namespace softWrench.sW4.Security.Services {
                 return UserFound(dbUser, userTimezoneOffset);
             }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
+            if (maximoUser == null) {
+                Log.WarnFormat("user {0} not found on maximo with maximopersonid {1}, login unauthorized",dbUser.UserName,dbUser.MaximoPersonId);
+                return null;
+            }
             maximoUser.MergeFromDBUser(dbUser);
             return UserFound(maximoUser, userTimezoneOffset);
         }
