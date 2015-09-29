@@ -45,7 +45,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             foreach (var record in result) {
                 Counter.Add(record["application"], int.Parse((record["max"] ?? "0")));
             }
-            //NotificationStreams["default"] = notificationBuffer;
+            NotificationStreams["default"] = new InMemoryNotificationStream();
         }
 
         public void InsertNotificationsIntoStreams(string securityGroup, List<Notification> notifications) {
