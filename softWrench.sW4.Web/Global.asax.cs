@@ -48,9 +48,9 @@ namespace softWrench.sW4.Web {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
             Log.InfoFormat("initing " + applicationPath);
             if (!ApplicationConfiguration.IsLocal() && ApplicationConfiguration.IsDev()) {
-                if (applicationPath != null && applicationPath.StartsWith("/sw4")) {
+                var clientName = EnvironmentUtil.GetIISCustomerName();
+                if (clientName != null) {
                     //all paths should be sw4xxx, where xxx is the name of the customer --> sw4pae, sw4gric, etc
-                    var clientName = applicationPath.Substring(4);
                     Log.InfoFormat("changing clientKey to {0}", clientName);
                     ApplicationConfiguration.FixClientName(clientName);
                 }
@@ -141,9 +141,15 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e) {
-            //            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            //            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-            //            Response.Cache.SetNoStore();
+
+            if (ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
+                //troubleshooting dev environment pointing to OTB
+                var customerName = EnvironmentUtil.GetIISCustomerName();
+                if (!ApplicationConfiguration.ClientName.Equals(customerName)) {
+                    DoStartApplication(false);
+                }
+            }
+
 
             ContextLookuper.GetInstance().RegisterHttpContext(Request);
 
