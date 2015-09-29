@@ -1,4 +1,4 @@
-﻿(function(angular) {
+(function(angular) {
     "use strict";
 angular.module('sw_layout')
     .config(['$httpProvider', function ($httpProvider) {
@@ -29,14 +29,13 @@ angular.module('sw_layout')
             }
             log.trace("url: {0} | current module:{1} | current metadata:{2} | spin avoided:{3} "
                .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata'], spinAvoided));
-            
+
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
-            var spinAvoided = false;
-            spinAvoided = response.config.avoidspin;
+            var spinAvoided = response.config.avoidspin;
             if (!spinAvoided) {
                 activeRequests--;
             }
@@ -54,7 +53,7 @@ angular.module('sw_layout')
             }
             var idx = activeRequestsArr.indexOf(response.config.url);
             if (idx >= 0) {
-                activeRequestsArr.splice(idx,1);
+                activeRequestsArr.splice(idx, 1);
             }
         };
 
@@ -76,7 +75,7 @@ angular.module('sw_layout')
 
         var endederror = function (rejection) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
 
             if (rejection.status === 401) {

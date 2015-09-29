@@ -39,7 +39,7 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                         log.trace('lazy loading tab {0}'.format(tabId));
                         spinService.stop({ compositionSpin: true });
                         $rootScope.$broadcast('sw_lazyloadtab', tabId);
-                        
+
                     });
 
                 });
@@ -91,9 +91,9 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, crudContextHolderService, alertService,
-            validationService, schemaService, $timeout, eventService, $log, expressionService,focusService) {
+            validationService, schemaService, $timeout, eventService, $log, expressionService, focusService) {
 
-            $(document).on("sw_autocompleteselected", function(event, key) {
+            $(document).on("sw_autocompleteselected", function (event, key) {
                 focusService.resetFocusToCurrent($scope.schema, key);
             });
 
@@ -135,9 +135,9 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.$on('sw_compositiondataresolved', function(event,data) {
+            $scope.$on('sw_compositiondataresolved', function (event, data) {
                 var tab = crudContextHolderService.getActiveTab();
-                if (tab != null && data[tab]!=null) {
+                if (tab != null && data[tab] != null) {
                     redirectService.redirectToTab(tab);
                 }
             });
@@ -146,7 +146,7 @@ app.directive('crudBody', function (contextService) {
                 var log = $log.getInstance('on#sw_bodyrenderedevent');
                 log.debug('enter');
 
-                
+
 
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
@@ -182,7 +182,7 @@ app.directive('crudBody', function (contextService) {
                 return datamap.fields[schema.userIdFieldName];
             };
 
-            $scope.shouldShowComposition=function(composition){
+            $scope.shouldShowComposition = function (composition) {
                 if (composition.hidden) {
                     return false;
                 }
@@ -190,7 +190,13 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.toConfirmBack = function (data, schema) {
-                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
+                var previousDataToUse = data;
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1717
+                //this line will assure that the grid is refreshed
+                if (crudContextHolderService.needsServerRefresh()) {
+                    previousDataToUse = null;
+                }
+                $scope.$emit('sw_canceldetail', previousDataToUse, schema, "Are you sure you want to go back?");
             };
 
             $scope.isCommand = function (schema) {
@@ -357,7 +363,7 @@ app.directive('crudBody', function (contextService) {
                     originalDatamap = parameters.originalDatamap;
                 }
 
-             
+
 
                 //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
                 //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
@@ -371,7 +377,7 @@ app.directive('crudBody', function (contextService) {
                 };
 
                 var eventResult = eventService.beforesubmit_prevalidation(schemaToSave, transformedFields, eventParameters);
-                if (eventResult == false) {
+                if (eventResult === false) {
                     //this means that the custom service should call the continue method
                     log.debug('waiting on custom prevalidation to invoke the continue function');
                     return;
@@ -417,7 +423,7 @@ app.directive('crudBody', function (contextService) {
 
             $scope.submitToServer = function (selecteditem, parameters, transformedFields, schemaToSave) {
                 $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
-
+                parameters = parameters || {};
                 var originalDatamap = $scope.originalDatamap;
                 if (parameters.originalDatamap) {
                     originalDatamap = parameters.originalDatamap;
@@ -430,9 +436,7 @@ app.directive('crudBody', function (contextService) {
                 associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields, $scope.associationOptions);
                 submitService.handleDatamapForMIF(schemaToSave, originalDatamap.fields, transformedFields);
 
-                if (parameters == undefined) {
-                    parameters = {};
-                }
+
                 var successCbk = parameters.successCbk;
                 var failureCbk = parameters.failureCbk;
                 var nextSchemaObj = parameters.nextSchemaObj;
@@ -444,7 +448,7 @@ app.directive('crudBody', function (contextService) {
                 var idFieldName = schemaToSave.idFieldName;
                 var id = transformedFields[idFieldName];
 
-                
+
 
                 var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id);
 
@@ -466,7 +470,7 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
-                if ("true" == sessionStorage.logJSON) {
+                if ("true" === sessionStorage.logJSON) {
                     $log.info(jsonString);
                 }
 
@@ -476,28 +480,29 @@ app.directive('crudBody', function (contextService) {
                 var urlToUse = url("/api/data/" + applicationName + "/");
                 var command = id == null ? $http.post : $http.put;
 
-                command(urlToUse, jsonString)
-                    .success(function (data) {
-                        if (data.type != 'BlankApplicationResponse') {
-                            $scope.datamap = data.resultObject;
-                        }
-                        if (data.id && $scope.datamap.fields) {
-                            //updating the id, useful when it´s a creation and we need to update value return from the server side
-                            $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
-                        }
+                command(urlToUse, jsonString).success(function (data) {
+                    crudContextHolderService.afterSave();
+                    
 
-                        if (successCbk == null || applyDefaultSuccess) {
-                            defaultSuccessFunction(data);
-                        }
-                        if (successCbk != null) {
-                            successCbk(data);
-                        }
-                    })
-                    .error(function (data) {
-                        if (failureCbk != null) {
-                            failureCbk(data);
-                        }
-                    });
+                    if (data.type !== 'BlankApplicationResponse') {
+                        $scope.datamap = data.resultObject;
+                    }
+                    if (data.id && $scope.datamap.fields) {
+                        //updating the id, useful when it´s a creation and we need to update value return from the server side
+                        $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
+                    }
+
+                    if (successCbk == null || applyDefaultSuccess) {
+                        defaultSuccessFunction(data);
+                    }
+                    if (successCbk != null) {
+                        successCbk(data);
+                    }
+                }).error(function (data) {
+                    if (failureCbk != null) {
+                        failureCbk(data);
+                    }
+                });
             };
 
 

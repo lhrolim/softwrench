@@ -89,7 +89,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     var controllerToUse = "Notification";
                     var actionToUse = "UpdateNotificationReadFlag";
                     var parameters = {};
-                    parameters.role = contextService.getUserData().roles[0].label;
+                    parameters.role = contextService.getUserData().profiles[0].name;
 
                     var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                     $http.post(rawUrl, angular.toJson($scope.activities)).success(function () {
@@ -114,7 +114,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 var actionToUse = "UpdateNotificationReadFlag";
 
                 var parameters = {};
-                parameters.role = contextService.getUserData().roles[0].label;
+                parameters.role = contextService.getUserData().profiles[0].name;
                 parameters.application = activity.application;
                 parameters.id = activity.id;
                 parameters.rowstamp = activity.rowstamp;
@@ -141,7 +141,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 var controllerToUse = "Notification";
                 var actionToUse = "UpdateNotificationReadFlag";
                 var parameters = {};
-                parameters.role = contextService.getUserData().roles[0].label;
+                parameters.role = contextService.getUserData().profiles[0].name;
                 parameters.application = activity.application;
                 parameters.id = activity.id;
                 parameters.rowstamp = activity.rowstamp;

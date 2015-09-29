@@ -20,7 +20,9 @@ namespace softwrench.sw4.user.classes.entities {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public int? Id { get; set; }
+        public int? Id {
+            get; set;
+        }
 
         [Property]
         public string UserName {
@@ -32,35 +34,55 @@ namespace softwrench.sw4.user.classes.entities {
             }
         }
 
-        public Person Person { get; set; }
+        public Person Person {
+            get; set;
+        }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public Boolean IsActive { get; set; }
+        public Boolean IsActive {
+            get; set;
+        }
 
         [Property]
-        public string CriptoProperties { get; set; }
+        public string CriptoProperties {
+            get; set;
+        }
 
         [Property]
-        public string MaximoPersonId { get; set; }
+        public string MaximoPersonId {
+            get; set;
+        }
 
         [Property]
-        public string Password { get; set; }
+        public string Password {
+            get; set;
+        }
 
         [Property]
-        public string FirstName { get; set; }
+        public string FirstName {
+            get; set;
+        }
 
         [Property]
-        public string LastName { get; set; }
+        public string LastName {
+            get; set;
+        }
 
         [Property]
-        public string Email { get; set; }
+        public string Email {
+            get; set;
+        }
 
 
         [Property]
-        public string SiteId { get; set; }
+        public string SiteId {
+            get; set;
+        }
 
         [Property]
-        public string OrgId { get; set; }
+        public string OrgId {
+            get; set;
+        }
 
 
         [JsonIgnore]
@@ -68,27 +90,35 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(PersonGroupAssociation))]
-        public ISet<PersonGroupAssociation> PersonGroups { get; set; }
+        public ISet<PersonGroupAssociation> PersonGroups {
+            get; set;
+        }
 
 
         [Set(0, Table = "sw_user_userprofile",
         Lazy = CollectionLazy.False)]
         [Key(1, Column = "user_id")]
         [ManyToMany(2, Column = "profile_id", ClassType = typeof(UserProfile))]
-        public ISet<UserProfile> Profiles { get; set; }
+        public ISet<UserProfile> Profiles {
+            get; set;
+        }
 
         [Set(0, Table = "sw_user_customrole",
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomRole))]
-        public ISet<UserCustomRole> CustomRoles { get; set; }
+        public ISet<UserCustomRole> CustomRoles {
+            get; set;
+        }
 
 
         [Set(0, Table = "SW_USER_CUSTOMDATACONSTRAINT",
           Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomConstraint))]
-        public ISet<UserCustomConstraint> CustomConstraints { get; set; }
+        public ISet<UserCustomConstraint> CustomConstraints {
+            get; set;
+        }
 
 
         //public string DisplayName {
@@ -214,7 +244,7 @@ namespace softwrench.sw4.user.classes.entities {
 
         public string FullName {
             get {
-                if (Person == null) {
+                if (Person == null || (Person.FirstName == null && Person.LastName == null)) {
                     return FirstName + " " + LastName;
                 }
                 return Person.FirstName + " " + Person.LastName;

@@ -132,7 +132,7 @@ app.directive('menuItem', function (contextService) {
             displacement: '=',
             level: '='
         },
-        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService, alertService, validationService) {
+        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService, alertService, validationService, crudContextHolderService) {
 
             $scope.level = $scope.level + 1;
 
@@ -163,7 +163,7 @@ app.directive('menuItem', function (contextService) {
             $scope.goToApplication = function (leaf, $event) {
                 var target = $event.target;
                 var msg = "Are you sure you want to leave the page?";
-                if (validationService.getDirty()) {
+                if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.goToApplication(leaf, target);
                         $scope.$digest();
@@ -180,7 +180,7 @@ app.directive('menuItem', function (contextService) {
                 $scope.$emit('sw_titlechanged', null);
 
                 var msg = "Are you sure you want to leave the page?";
-                if (validationService.getDirty()) {
+                if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.doAction(leaf, target);
                         $scope.$digest();
@@ -221,7 +221,7 @@ app.directive('menuItem', function (contextService) {
                 var target = $event.target;
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
                     var msg = "Are you sure you want to leave the page?";
-                    if (validationService.getDirty()) {
+                    if (crudContextHolderService.getDirty()) {
                         alertService.confirmCancel(null, null, function () {
                             menuService.doAction(container, target);
                             $scope.$digest();
