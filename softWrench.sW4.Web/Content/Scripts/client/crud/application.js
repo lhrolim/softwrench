@@ -263,8 +263,8 @@ function ApplicationController($scope, $http, $log, $timeout,
             }
         }
         var log = $log.getInstance("applicationcontroller#renderData");
-        crudContextHolderService.clearDirty();
-        
+        crudContextHolderService.detailLoaded();
+
         if (result.type === 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
             detailService.fetchRelationshipData(scope, result);
@@ -280,12 +280,8 @@ function ApplicationController($scope, $http, $log, $timeout,
 
         //broadcast schema for the breadcrumbs 
         $rootScope.$broadcast('schemaChange', $scope.schema);
+        $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
 
-        if ($scope.schema != null) {
-            $rootScope.$broadcast('sw_titlechanged', $scope.schema.title);
-        } else {
-            $rootScope.$broadcast('sw_titlechanged', null);
-        }
     };
 
 
@@ -438,7 +434,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             var nextSchema = data.schema;
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
-        
+
 
         doInit();
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {

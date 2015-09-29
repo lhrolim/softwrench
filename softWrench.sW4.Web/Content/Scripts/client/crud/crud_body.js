@@ -190,7 +190,13 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.toConfirmBack = function (data, schema) {
-                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
+                var previousDataToUse = data;
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1717
+                //this line will assure that the grid is refreshed
+                if (crudContextHolderService.needsServerRefresh()) {
+                    previousDataToUse = null;
+                }
+                $scope.$emit('sw_canceldetail', previousDataToUse, schema, "Are you sure you want to go back?");
             };
 
             $scope.isCommand = function (schema) {
@@ -475,7 +481,9 @@ app.directive('crudBody', function (contextService) {
                 var command = id == null ? $http.post : $http.put;
 
                 command(urlToUse, jsonString).success(function (data) {
-                    crudContextHolderService.clearDirty();
+                    crudContextHolderService.afterSave();
+                    
+
                     if (data.type !== 'BlankApplicationResponse') {
                         $scope.datamap = data.resultObject;
                     }

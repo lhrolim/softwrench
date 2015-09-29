@@ -20,7 +20,8 @@
             list_elements: [],
             previousData: null,
             paginationData: null,
-            isDirty :false
+            isDirty: false,
+            needsServerRefresh:false
         };
 
         //#endregion
@@ -51,6 +52,16 @@
             schemaCacheService.addSchemaToCache(schema);
         }
 
+        function afterSave() {
+            this.clearDirty();
+            _crudContext.needsServerRefresh = true;
+        }
+
+        function detailLoaded() {
+            this.clearDirty();
+            _crudContext.needsServerRefresh = false;
+        }
+
         function setDirty() {
             _crudContext.isDirty = true;
         };
@@ -63,6 +74,9 @@
             _crudContext.isDirty = false;
         }
 
+        function needsServerRefresh() {
+            return _crudContext.needsServerRefresh;
+        }
 
         //#endregion
 
@@ -76,7 +90,10 @@
             updateCrudContext: updateCrudContext,
             setDirty: setDirty,
             getDirty: getDirty,
-            clearDirty: clearDirty
+            clearDirty: clearDirty,
+            needsServerRefresh: needsServerRefresh,
+            afterSave: afterSave,
+            detailLoaded: detailLoaded
         };
 
         return service;
