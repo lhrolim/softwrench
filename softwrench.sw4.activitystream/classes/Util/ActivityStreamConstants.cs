@@ -121,7 +121,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "c.subject AS summary, c.createby AS changeby, " +
                     "c.createdate AS changedate, " +
                     "CONVERT(bigint, c.rowstamp) AS rowstamp FROM commlog c " +
-                    "LEFT JOIN ticket incident incident.ticketuid = c.ownerid " +
+                    "LEFT JOIN ticket incident ON incident.ticketuid = c.ownerid " +
                     "WHERE c.ownertable = 'INCIDENT' AND createdate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
                     "createdate < '{1}'"
                 },

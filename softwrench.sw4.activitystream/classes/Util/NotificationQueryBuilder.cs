@@ -28,6 +28,8 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     notificationQueries.Add(notificationsQuery.Key, notificationsQuery.Value);
                 }
             }
+            var defaultQuery = GetDefaultQuery();
+            notificationQueries.Add(defaultQuery.Key, defaultQuery.Value);
             return notificationQueries;
         }
         private KeyValuePair<string, string> BuildNotificationsQuery(UserProfile securityGroup) {
@@ -84,6 +86,18 @@ namespace softwrench.sw4.activitystream.classes.Util {
 
         private string GetRoleQuery(string key) {
             return ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(key)).Value;
+        }
+
+        private KeyValuePair<string, string> GetDefaultQuery() {
+            var role = "default";
+            var notificationsQuery = "";
+            notificationsQuery += AppendQuery("sr", null);
+            notificationsQuery += AppendQuery("incident", null);
+            notificationsQuery += AppendQuery("workorders", null);
+            if (notificationsQuery.EndsWith(" UNION ")) {
+                notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
+            }
+            return new KeyValuePair<string, string>(role, notificationsQuery);
         }
     }
 }
