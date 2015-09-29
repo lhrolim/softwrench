@@ -1,13 +1,8 @@
 ﻿
-(function () {
+(function (angular) {
     "use strict";
 
-    //#region Service registration
-
-    angular.module("sw_layout").factory("crudContextHolderService", ["contextService","schemaCacheService", crudContextHolderService]);
-
-    //#endregion
-
+  
     function crudContextHolderService(contextService, schemaCacheService) {
 
         //#region Utils
@@ -25,6 +20,7 @@
             list_elements: [],
             previousData: null,
             paginationData: null,
+            isDirty :false
         };
 
         //#endregion
@@ -55,6 +51,17 @@
             schemaCacheService.addSchemaToCache(schema);
         }
 
+        function setDirty() {
+            _crudContext.isDirty = true;
+        };
+
+        function getDirty() {
+            return _crudContext.isDirty;
+        };
+
+        function clearDirty() {
+            _crudContext.isDirty = false;
+        }
 
 
         //#endregion
@@ -67,13 +74,21 @@
             currentSchema: currentSchema,
             currentApplicationName: currentApplicationName,
             updateCrudContext: updateCrudContext,
+            setDirty: setDirty,
+            getDirty: getDirty,
+            clearDirty: clearDirty
         };
 
         return service;
+
+      
 
         //#endregion
     }
 
 
+    angular.module("sw_layout").factory("crudContextHolderService", ["contextService", "schemaCacheService", crudContextHolderService]);
 
-})();
+
+
+})(angular);

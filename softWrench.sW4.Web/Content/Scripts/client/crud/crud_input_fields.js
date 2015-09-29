@@ -265,8 +265,8 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             $scope.$on("sw_configuredirtywatcher", function () {
                 $timeout(function () {
                     $scope.$watch('datamap', function (newValue, oldValue) {
-                        if (newValue != oldValue) {
-                            validationService.setDirty();
+                        if (newValue !== oldValue) {
+                            crudContextHolderService.setDirty();
                         }
                     }, true);
                 }, 0, false);
