@@ -91,9 +91,12 @@ namespace softwrench.sw4.activitystream.classes.Util {
         private KeyValuePair<string, string> GetDefaultQuery() {
             var role = "default";
             var notificationsQuery = "";
-            notificationsQuery += AppendQuery("servicerequest", null);
+            notificationsQuery += AppendQuery("sr", null);
             notificationsQuery += AppendQuery("incident", null);
-            notificationsQuery += AppendQuery("workorder", null);
+            notificationsQuery += AppendQuery("workorders", null);
+            if (notificationsQuery.EndsWith(" UNION ")) {
+                notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
+            }
             return new KeyValuePair<string, string>(role, notificationsQuery);
         }
     }
