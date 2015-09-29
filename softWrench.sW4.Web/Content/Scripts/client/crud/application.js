@@ -294,9 +294,9 @@ function ApplicationController($scope, $http, $log, $timeout,
     });
 
     $scope.doConfirmCancel = function (data, schema, msg) {
+        $('.no-touch [rel=tooltip]').tooltip('hide');
         if (crudContextHolderService.getDirty()) {
             alertService.confirmCancel(null, null, function () {
-                $('.no-touch [rel=tooltip]').tooltip({ container: 'hide' });
                 $scope.toListSchema(data, schema);
                 $scope.$digest();
             }, msg, function () { return; });
