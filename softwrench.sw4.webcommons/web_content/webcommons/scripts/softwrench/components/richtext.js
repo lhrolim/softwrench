@@ -8,18 +8,29 @@
              * text processors queue
              */
             processors: [],
-            /**
-             * matches '<mailto:(email pattern)>' or '<(email pattern)>'
-             * email pattern (accepts unicode characters and '.' before domain name) from: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript#answer-16181
-             * PS: for some reason, compiling the pattern from a String (using new RegExp(pattern, "g")) did not work (didn't match the pattern)
-             * that's why the regex is in it's literal format
-             */
-            invalidEmailTagsRegex: /\<mailto\:(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})\>|\<(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})\>/g,
-            /**
-             * matches '<(url pattern)>' (url pattern includes query string)
-             * from: mix of http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149 with http://stackoverflow.com/questions/23959352/validate-url-query-string-with-regex#answer-23959662
-             */
-            invalidUrlTagsRegex: /\<(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?\>/g,
+
+            regex: {
+                /**
+                 * matches '<mailto:(email pattern)>' or '<(email pattern)>'
+                 * email pattern (accepts unicode characters and '.' before domain name) from: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript#answer-16181
+                 * PS: for some reason, compiling the pattern from a String (using new RegExp(pattern, "g")) did not work (didn't match the pattern)
+                 * that's why the regex is in it's literal format
+                 */
+                emailtags: /\<(mailto\:)?(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})\>/g,
+                /**
+                 * matches '<mailto:(email pattern)(email pattern)+>' or '<(email pattern)(email pattern)+>'
+                 * email pattern (accepts unicode characters and '.' before domain name) from: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript#answer-16181
+                 * PS: for some reason, compiling the pattern from a String (using new RegExp(pattern, "g")) did not work (didn't match the pattern)
+                 * that's why the regex is in it's literal format
+                 */
+                multipleemailtags: /\<(mailto\:)?(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))(@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})){2,}\>/g,
+                /**
+                 * matches '<(url pattern)>' (url pattern includes query string)
+                 * from: mix of http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149 with http://stackoverflow.com/questions/23959352/validate-url-query-string-with-regex#answer-23959662
+                 */
+                urltags: /\<(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?\>/g,
+            },
+           
             /**
              * pattern to build a valid html link tag
              */
@@ -35,11 +46,13 @@
          * It's an iterative process so the next processor in the queue always receives a 'partially processed'
          * (processed by the previously executed processor) text as parameter.
          * 
-         * @param RegExp regex matcher of the invalid tag the processor handles 
+         * @param Array[RegExp] regex matchers of the invalid tags the processor handles 
          * @param Function processor receives the source (partially processed) text and a problematic tag and returns the processed text 
          */
         function registerInvalidTagProcessor(regex, processor) {
-            invalidTagsConfig.processors.push({ 'regex': regex, 'processor': processor });
+            angular.forEach(regex, function(r) {
+                invalidTagsConfig.processors.push({ 'regex': r, 'processor': processor });
+            });
         }
 
         function executeInvalidTagProcessors(text) {
@@ -85,17 +98,19 @@
 
         function init() {
             // email
-            registerInvalidTagProcessor(invalidTagsConfig.invalidEmailTagsRegex, function (source, tag) {
-                // extract email address from tag: between ':' or '<'(first character) and '>'(last character)
-                var start = tag.indexOf(":");
-                start = start >= 0 ? start + 1 : 1;
-                var email = tag.substring(start, tag.length - 1);
-                // creating valid html link tag and replacing invalid tag by it
-                var htmlLink = buildHtmlLinkTag(email, "mailto:");
-                return source.replace(tag, htmlLink);
-            });
+            registerInvalidTagProcessor([invalidTagsConfig.regex.emailtags, invalidTagsConfig.regex.multipleemailtags],
+                function (source, tag) {
+                    // extract email address from tag: 
+                    // between ':'(from '<mailto:') or '<'(first character) and '>'(last character)
+                    var hasmailto = tag.indexOf("<mailto:") >= 0;
+                    var start = hasmailto ? tag.indexOf(":") + 1 : 1;
+                    var email = tag.substring(start, tag.length - 1);
+                    // creating valid html link tag and replacing invalid tag by it
+                    var htmlLink = buildHtmlLinkTag(email, "mailto:");
+                    return source.replace(tag, htmlLink);
+                });
             // url
-            registerInvalidTagProcessor(invalidTagsConfig.invalidUrlTagsRegex, function (source, tag) {
+            registerInvalidTagProcessor([invalidTagsConfig.regex.urltags], function (source, tag) {
                 // extract url from tag: between '<'(first character) and '>'(last character)
                 var url = tag.substring(1, tag.length - 1);
                 // creating valid html link tag and replacing invalid tag by it
