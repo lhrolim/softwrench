@@ -28,14 +28,13 @@ app.config(['$httpProvider', function ($httpProvider) {
             }
             log.trace("url: {0} | current module:{1} | current metadata:{2} | spin avoided:{3} "
                .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata'], spinAvoided));
-            
+
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
-            var spinAvoided = false;
-            spinAvoided = response.config.avoidspin;
+            var spinAvoided = response.config.avoidspin;
             if (!spinAvoided) {
                 activeRequests--;
             }
@@ -53,7 +52,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             }
             var idx = activeRequestsArr.indexOf(response.config.url);
             if (idx != -1) {
-                activeRequestsArr.splice(idx,1);
+                activeRequestsArr.splice(idx, 1);
             }
         };
 
@@ -75,7 +74,7 @@ app.config(['$httpProvider', function ($httpProvider) {
 
         var endederror = function (rejection) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
 
             if (rejection.status == 401) {

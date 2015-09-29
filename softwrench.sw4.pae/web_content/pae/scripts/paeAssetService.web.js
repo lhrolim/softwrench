@@ -11,7 +11,7 @@
 
     //#endregion
 
-    function paeAssetService(scanningCommonsService, validationService, $http, submitService, contextService, searchService, redirectService, alertService) {
+    function paeAssetService(scanningCommonsService, validationService, $http, submitService, contextService, searchService, redirectService, alertService, crudContextHolderService) {
 
         //#region Service Instance
 
@@ -73,7 +73,7 @@
             $(document).scannerDetection({
                 avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
-                    if (!validationService.getDirty()) {
+                    if (!crudContextHolderService.getDirty()) {
                         navigateToAsset(data);
                         return;
                     }
