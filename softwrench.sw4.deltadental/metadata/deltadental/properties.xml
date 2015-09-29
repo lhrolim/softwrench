@@ -8,8 +8,8 @@
   <property key="maxScreenshotSize" value="5"/>
   <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <property key="defaultOrgId" value="EAGLENA"/>
-  <property key="defaultSiteId" value="BEDFORD"/>
+  <property key="defaultOrgId" value="DD"/>
+  <property key="defaultSiteId" value="SF"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <!--
