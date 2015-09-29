@@ -33,6 +33,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         //Sets up the default notification stream.
         public void InitNotificationStreams() {
+            Counter.Add("default", new Dictionary<string, long>());
             var securityGroups = UserProfileManager.FetchAllProfiles(true);
             var query =
                 string.Format(
@@ -49,8 +50,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     }
                     Counter[securityGroup.Name].Add(record["application"], int.Parse((record["max"] ?? "0")));
                 }
+                Counter["default"].Add(record["application"], int.Parse((record["max"] ?? "0")));
             }
-            //NotificationStreams["default"] = notificationBuffer;
         }
 
         private void UpdateCounters() {
