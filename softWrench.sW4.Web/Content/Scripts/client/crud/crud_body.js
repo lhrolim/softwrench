@@ -324,7 +324,13 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.cancel = function (data, schema) {
-                $scope.cancelfn({ data: data, schema: schema });
+                var previousDataToUse = data;
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1717
+                //this line will assure that the grid is refreshed
+                if (crudContextHolderService.needsServerRefresh()) {
+                    previousDataToUse = null;
+                }
+                $scope.cancelfn({ data: previousDataToUse, schema: schema });
             }
 
 
