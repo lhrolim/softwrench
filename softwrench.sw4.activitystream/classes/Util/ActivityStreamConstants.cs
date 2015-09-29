@@ -23,7 +23,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "'fa-ticket' AS icon,ticketid AS id, ticketuid AS uid, " +
                     "null AS parentid, null AS parentuid, " +
                     "null AS parentapplication, description AS summary," +
-                    "CASE WHEN {2} < ticketuid THEN changeby ELSE reportedby " +
+                    "CASE WHEN {2} > ticketuid THEN changeby ELSE reportedby " +
                     "END changeby, changedate, " +
                     "CONVERT(bigint, rowstamp) AS rowstamp FROM ticket sr " +
                     "WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) AND " +
@@ -65,7 +65,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "'fa-ticket' AS icon,ticketid AS id, ticketuid AS uid, " +
                     "null AS parentid, null AS parentuid, " +
                     "null AS parentapplication, description AS summary," +
-                    "CASE WHEN {2} < ticketuid THEN changeby ELSE reportedby " +
+                    "CASE WHEN {2} > ticketuid THEN changeby ELSE reportedby " +
                     "END changeby, changedate, " +
                     "CONVERT(bigint, rowstamp) AS rowstamp FROM ticket sr " +
                     "WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) AND " +
