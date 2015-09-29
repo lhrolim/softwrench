@@ -283,7 +283,7 @@
           <section id="compositions"/>
         </schema>
 
-        <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web">
+        <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
           <section id="siteidsection">
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
               <renderer type="lookup" />

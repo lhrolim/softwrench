@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <entities>
     <entity name="po" idAttribute="ponum">
@@ -187,7 +186,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section id="compositions"/>
         </schema>
         
-        <schema parentschema="adetail" id="newdetail" title="New PO" >
+        <schema parentschema="adetail"  id="newdetail" title="New PO" stereotype="detailnew">
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="PO Details">
@@ -364,9 +363,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </section>
         </schema>
           
-        <schema parentschema="adetail" id="newdetail" stereotype="detail" mode="input" title="New Purchase Request">
-
-        </schema>
+        <schema parentschema="adetail" id="newdetail" stereotype="detailnew" mode="input" title="New Purchase Request" />
       </schemas>
     </application>
 
@@ -462,7 +459,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="quantity" label="quantity received"/>
         </list>
 
-        <schema id="newdetail" platform="web" stereotype="detail" mode="input">
+        <schema id="newdetail" platform="web" stereotype="detailnew" mode="input">
           <field attribute="matrectransid" hidden="true"/>
           <field attribute="ponum" label="ponum"/>
           <field attribute="polinenum" label="polinenum"/>
