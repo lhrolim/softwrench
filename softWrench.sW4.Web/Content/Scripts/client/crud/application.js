@@ -249,8 +249,10 @@ function ApplicationController($scope, $http, $log, $timeout,
         scope.originalDatamap = angular.copy(scope.datamap);
 
         scope.extraparameters = instantiateIfUndefined(result.extraParameters);
-
-        scope.mode = result.mode;
+        if (result.mode === "input" || result.mode === "output") {
+            scope.mode = result.mode;
+        }
+        
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
