@@ -1,6 +1,7 @@
-﻿var app = angular.module('sw_layout');
-
-app.config(['$httpProvider', function ($httpProvider) {
+(function(angular) {
+    "use strict";
+angular.module('sw_layout')
+    .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
@@ -14,7 +15,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
-            if (config.url.indexOf("/Content/") == -1) {
+            if (config.url.indexOf("/Content/") < 0) {
                 //let´s ignore angularjs templates loading, that would pass through here as well
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
@@ -51,14 +52,14 @@ app.config(['$httpProvider', function ($httpProvider) {
                 contextService.insertIntoContext("avoidspin", null, true);
             }
             var idx = activeRequestsArr.indexOf(response.config.url);
-            if (idx != -1) {
+            if (idx >= 0) {
                 activeRequestsArr.splice(idx, 1);
             }
         };
 
         function successMessageHandler(data) {
             var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
-            if (data.successMessage != null) {
+            if (!!data && !!data.successMessage) {
                 var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
                 if (!willRefresh) {
                     $rootScope.$broadcast('sw_successmessage', data);
@@ -77,14 +78,14 @@ app.config(['$httpProvider', function ($httpProvider) {
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
 
-            if (rejection.status == 401) {
+            if (rejection.status === 401) {
                 window.location = url('');
                 return;
             }
             activeRequests--;
             unLockCommandBars();
             unLockTabs();
-            if (activeRequests == 0) {
+            if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data);
             }
         };
@@ -110,24 +111,33 @@ app.config(['$httpProvider', function ($httpProvider) {
             }
         };
     });
-
+    
     $httpProvider.defaults.transformRequest.push(function (data, headers) {
         if (data == undefined) {
             return data;
         }
         if (sessionStorage.mockerror || sessionStorage.mockmaximo) {
-            var jsonOb = JSON.parse(data);
-            if (sessionStorage.mockerror == "true") {
-                jsonOb['%%mockerror'] = true;
-            }
-            if (sessionStorage.mockmaximo == "true") {
-                jsonOb['%%mockmaximo'] = true;
-            }
-            return JSON.stringify(jsonOb);
+            var jsonOb = angular.fromJson(data);
+            jsonOb['%%mockerror'] = sessionStorage.mockerror === "true";
+            jsonOb['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
+            return angular.toJson(jsonOb);
         }
         return data;
     });
+
+    $httpProvider.defaults.transformResponse.push(
+        // response transformer to maintain compatibility
+        function (data, headers) {
+            if (angular.isUndefined(data)) {
+                return angular.toJson({});
+            } else if (data === null) {
+                return "null";
+            }
+            return data;
+    });
+
 }]);
+})(angular);
 
 
 window.onpopstate = function (e) {
