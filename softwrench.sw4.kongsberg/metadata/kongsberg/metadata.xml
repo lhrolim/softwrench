@@ -1445,7 +1445,7 @@
           <section id="compositions"/>
         </schema>
         
-        <schema parentschema="adetail" title="New Service Request" id="newdetail">
+        <schema parentschema="adetail" title="New Service Request" id="newdetail" stereotype="detailnew">
           <section id="srsection">
             <field attribute="ticketid" label="SR#" hidden="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true" />
@@ -1822,7 +1822,7 @@
           <section id="attachmentsection" />
           <section id="compositions" />
         </schema>
-        <schema id="newdetail" parentschema="adetail" title="New Incident">
+        <schema id="newdetail" parentschema="adetail" title="New Incident" stereotype="detailnew">
           <section id="ticketsection">
             <field attribute="ticketid" label="Incident#" hidden="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true" />
@@ -1979,7 +1979,7 @@
           </section>
         </schema>
 
-        <schema id="newdetail" title="New Change" abstract="true" stereotype="detail" platform="web">
+        <schema id="newdetail" title="New Change" abstract="true" stereotype="detailnew" platform="web">
           <field attribute="wonum" label="Change#" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
           <!--<field attribute="location" label="Location:"/>-->
@@ -2584,7 +2584,7 @@
         </schema>
 
 
-        <schema id="newdetail" stereotype="detail" mode="input" title="Purchase Request Details">
+        <schema id="newdetail" stereotype="detailnew" mode="input" title="Purchase Request Details">
           <!--SWWEB 192: Add Reported Priority Field-->
           <field attribute="priority" label="Priority:" requiredexpression="true" default="0">
             <renderer type="numericinput" params="min=0;max=9;decimals=0" />
@@ -2797,7 +2797,7 @@
             <renderer type="richtext" />
           </field>
         </schema>
-        <schema id="newdetail" parentschema="adetail" title="New Solution">
+        <schema id="newdetail" parentschema="adetail" title="New Solution" stereotype="detailnew">
         </schema>
         <schema id="editdetail" parentschema="adetail" title="Solution Details">
           <section id="idsection">

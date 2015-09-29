@@ -581,6 +581,7 @@
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
     <Compile Include="SPF\RedirectService.cs" />
+    <Compile Include="SPF\RouteParameterManager.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
     <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
     <Compile Include="Util\AttributeUtil.cs" />

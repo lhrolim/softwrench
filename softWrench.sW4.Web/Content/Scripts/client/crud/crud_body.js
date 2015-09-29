@@ -231,10 +231,10 @@ app.directive('crudBody', function (contextService) {
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
                 if (data != null) {
-                    if (data.type == 'ActionRedirectResponse') {
+                    if (data.type === 'ActionRedirectResponse') {
                         //we´ll not do a crud action on this case, so totally different workflow needed
                         redirectService.redirectToAction(null, data.controller, data.action, data.parameters);
-                    } else if (data.type != 'BlankApplicationResponse') {
+                    } else if (data.type !== 'BlankApplicationResponse') {
                         var nextSchema = data.schema;
                         $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                     }

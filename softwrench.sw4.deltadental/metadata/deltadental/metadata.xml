@@ -417,7 +417,7 @@
           <section id="compositions"/>
         </schema>
       
-        <schema parentschema="adetail" id="newdetail" title="New Service Request" >
+        <schema parentschema="adetail" id="newdetail" title="New Service Request" stereotype="detailnew" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association target="siteid" label="Site:" labelfield="site_.description" default="DPW" requiredexpression="true">
@@ -532,7 +532,7 @@
           </customization>
         </schema>
         
-        <schema id="newdetail" platform="web" redeclaring="false">
+        <schema id="newdetail" platform="web" redeclaring="false" stereotype="detailnew">
           <customization position="classstructureid">
             <optionfield attribute="classstructureid" label="Request Code:" dependantfields="siteid" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />

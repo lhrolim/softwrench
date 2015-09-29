@@ -253,7 +253,7 @@
           <section id="compositions"/>
         </schema>
       
-        <schema parentschema="adetail" id="newdetail" title="New Service Request" >
+        <schema parentschema="adetail" id="newdetail" title="New Service Request" stereotype="detailnew" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <field attribute="siteid" label="Site:" default="DPW" readonly="true"/>
@@ -436,7 +436,7 @@
            <section id="compositions"/>
         </schema>
 
-        <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
+        <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web" stereotype="detailnew">
           <section id="siteidsection">
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup"/>

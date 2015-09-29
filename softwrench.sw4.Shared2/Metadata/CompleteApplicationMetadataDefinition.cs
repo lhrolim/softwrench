@@ -167,10 +167,7 @@ namespace softwrench.sW4.Shared2.Metadata {
                 return listSchema;
             }
             listSchema = SchemasList.FirstOrDefault(a => SchemaStereotype.CompositionList.Equals(a.Stereotype));
-            if (listSchema != null) {
-                return listSchema;
-            }
-            return null;
+            return listSchema;
         }
 
 

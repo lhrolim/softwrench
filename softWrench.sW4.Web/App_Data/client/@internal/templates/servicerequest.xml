@@ -339,7 +339,7 @@
           </section>
         </schema>
 
-        <schema id="quickeditdetail" stereotype="detailnew" title="Quick Request Details">
+        <schema id="quickeditdetail" stereotype="detail" title="Quick Request Details">
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>

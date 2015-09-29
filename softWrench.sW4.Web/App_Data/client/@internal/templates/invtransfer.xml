@@ -67,7 +67,7 @@
 
         </schema>
 
-        <schema id="newdetail" stereotype="detail" mode="input" title="New Inventory Transfer">
+        <schema id="newdetail" stereotype="detailnew" mode="input" title="New Inventory Transfer">
 
           <properties>
             <property key="routing.nextapplication" value="matrectransTransfers"/>

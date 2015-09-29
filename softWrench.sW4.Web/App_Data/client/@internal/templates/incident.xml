@@ -203,7 +203,7 @@
           <section id="compositions"/>
         </schema>
         
-        <schema stereotype="detail" parentschema="adetail" id="newdetail" mode="input" title="New Incident">
+        <schema id="newdetail" stereotype="detailnew" parentschema="adetail" mode="input" title="New Incident">
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
               <renderer type="upload"/>

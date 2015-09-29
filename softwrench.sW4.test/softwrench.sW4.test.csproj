@@ -116,6 +116,7 @@
     <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
+    <Compile Include="SPF\RouteParameterManagerTest.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PaginationUtilsTest.cs" />
