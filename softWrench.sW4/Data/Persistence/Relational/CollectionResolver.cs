@@ -53,7 +53,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         public Dictionary<string, EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             AttributeHolder mainEntity, PaginatedSearchRequestDto paginatedSearch = null) {
-            return ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder>() { mainEntity },paginatedSearch);
+            return ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder>() { mainEntity }, paginatedSearch);
         }
 
         public Dictionary<string, EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
@@ -78,8 +78,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                var shouldPaginate = ShouldPaginate(compositionSchemas[association.Qualifier], paginatedSearch);
-                var perThreadPaginatedSearch = shouldPaginate ? (PaginatedSearchRequestDto) paginatedSearch.ShallowCopy() : null;
+                var shouldPaginate = ShouldPaginate(compositionSchemas[association.Qualifier], paginatedSearch) && paginatedSearch != null;
+                var perThreadPaginatedSearch = shouldPaginate ? (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy() : null;
                 //this will avoid that one thread impacts any other
                 var perThreadContext = ctx.ShallowCopy();
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, perThreadContext, results, perThreadPaginatedSearch));
@@ -127,21 +127,25 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 
+
+
             EntityRepository.SearchEntityResult queryResult = null;
-            // one thread to fetch results
-            var tasks = new Task[2];
-            tasks[0] = Task.Factory.NewThread(() => {
+
+            if (paginatedSearch == null) {
+                //if there´s no pagination needed we can just do one thread-query
                 queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
-            });
-            // one thread to count results for paginations
-            tasks[1] = Task.Factory.NewThread(() => {
-                if (paginatedSearch != null) {
+            } else {
+                var tasks = new Task[2];
+                tasks[0] = Task.Factory.NewThread(() => {
+                    queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
+                });
+                // one thread to count results for paginations
+                tasks[1] = Task.Factory.NewThread(() => {
                     paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, searchRequestDto);
-                }
-            });
-            Task.WaitAll(tasks);
-            // add paginationData to result 
-            if (paginatedSearch != null) {
+                });
+                Task.WaitAll(tasks);
+                // add paginationData to result 
+
                 // creating a new pagination data in order to have everything calculated correctly
                 queryResult.PaginationData = new PaginatedSearchRequestDto(
                     paginatedSearch.TotalCount,
@@ -151,21 +155,22 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                     paginatedSearch.PaginationOptions
                     );
             }
+            // one thread to fetch results
 
-            var listOfCollections = _repository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
-            if (attributeHolders.Count() == 1) {
+
+            if (attributeHolders.Length == 1) {
                 //default scenario, we have just one entity here
                 results.Add(collectionAssociation.Qualifier, queryResult);
-                firstAttributeHolder.Attributes.Add(targetCollectionAttribute, listOfCollections.ResultList);
+                firstAttributeHolder.Attributes.Add(targetCollectionAttribute, queryResult.ResultList);
                 return;
             }
-            MatchResults(listOfCollections, matchingResultWrapper, targetCollectionAttribute);
+            MatchResults(queryResult, matchingResultWrapper, targetCollectionAttribute);
         }
 
-        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema, IEnumerable<EntityAssociationAttribute> lookupattributes, 
+        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema, IEnumerable<EntityAssociationAttribute> lookupattributes,
             CollectionMatchingResultWrapper matchingResultWrapper, AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata, PaginatedSearchRequestDto paginatedSearch) {
 
-            var searchRequestDto = new PaginatedSearchRequestDto();
+            var searchRequestDto = (paginatedSearch == null || paginatedSearch.PageSize <= 0) ? new SearchRequestDto() : new PaginatedSearchRequestDto();
 
             searchRequestDto.BuildProjection(applicationCompositionSchema, ContextLookuper.LookupContext().PrintMode);
 
@@ -187,19 +192,21 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
             // no pagination intended: return simple search
-            if (paginatedSearch == null || paginatedSearch.PageSize <= 0) {
+            var paginatedDTO = searchRequestDto as PaginatedSearchRequestDto;
+            if (paginatedDTO == null || paginatedSearch==null) {
                 return searchRequestDto;
             }
+
             // pagination: merging the search dto's
-            searchRequestDto.PageNumber = paginatedSearch.PageNumber;
-            searchRequestDto.PageSize = paginatedSearch.PageSize;
-            searchRequestDto.TotalCount = paginatedSearch.TotalCount;
+            paginatedDTO.PageNumber = paginatedSearch.PageNumber;
+            paginatedDTO.PageSize = paginatedSearch.PageSize;
+            paginatedDTO.TotalCount = paginatedSearch.TotalCount;
             return searchRequestDto;
         }
 
         private static void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper,
             AttributeHolder[] attributeHolders, EntityAssociationAttribute lookupAttribute,
-            PaginatedSearchRequestDto searchRequestDto) {
+            SearchRequestDto searchRequestDto) {
             var searchValues = new List<string>();
             var enumerable = attributeHolders as AttributeHolder[] ?? attributeHolders.ToArray();
             var hasMainEntity = enumerable.Any();
