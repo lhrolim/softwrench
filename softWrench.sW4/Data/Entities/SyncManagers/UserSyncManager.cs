@@ -43,6 +43,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
         }
 
+        [CanBeNull]
         public static User GetUserFromMaximoByUserName([NotNull] string userName, int? swId) {
             if (userName == null) throw new ArgumentNullException("userName");
             User user = null;
