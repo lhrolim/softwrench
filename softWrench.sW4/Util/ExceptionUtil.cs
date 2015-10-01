@@ -1,5 +1,6 @@
 ﻿using NHibernate.Util;
 using System;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Util {
     public class ExceptionUtil {
@@ -25,11 +26,11 @@ namespace softWrench.sW4.Util {
             throw new InvalidOperationException(String.Format(msg, args));
         }
 
-        public static string[] StackTraceLines(Exception e) {
+        public static string[] StackTraceLines([NotNull]Exception e) {
             return e.StackTrace.Split('\n', '\r', '\t');
         }
 
-        public static string LastStackTraceLine(Exception e) {
+        public static string LastStackTraceLine([NotNull]Exception e) {
             var lines = StackTraceLines(e);
             return lines[lines.Length - 1];
         }

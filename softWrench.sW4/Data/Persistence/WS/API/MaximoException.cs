@@ -1,9 +1,10 @@
 ﻿using System;
+using JetBrains.Annotations;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
     /// <summary>
-    /// Exception to indicate an error when invoking Maximo's Web Service
+    /// Exception to indicate an error when invoking Maximo's Web Services
     /// </summary>
     public class MaximoException : Exception {
 
@@ -12,14 +13,25 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         
         public Exception ImmediateCause { get { return _immediate; } }
         public Exception RootCause { get { return _root; } }
-        public string Type { get { return GetType().Name; } }
-        public string FullStackTrace { get { return RootCause.StackTrace + "\n" + ImmediateCause.StackTrace + "\n" + StackTrace; } }
-        public string OutlineInformation {
+        public virtual string FullStackTrace { get { return RootCause.StackTrace + "\n" + ImmediateCause.StackTrace + "\n" + StackTrace; } }
+        public virtual string OutlineInformation {
             get {
                 var immediateLine = ExceptionUtil.LastStackTraceLine(ImmediateCause);
                 var rootLine = ExceptionUtil.LastStackTraceLine(RootCause);
-                return string.Format("[immediate]: {0}\n [root]: {1}", immediateLine, rootLine);
+                return string.Format("[immediate]:\n{0}\n [root]:\n{1}", immediateLine, rootLine);
             }
+        }
+
+        /// <summary>
+        /// Creates a MaximoException instance setting rootCause as this.RootCause 
+        /// and immediateCause as this.ImmediateCause
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="immediateCause"></param>
+        /// <param name="rootCause"></param>
+        public MaximoException([NotNull]string message, [NotNull]Exception immediateCause, [NotNull]Exception rootCause) : base(message) {
+            _immediate = immediateCause;
+            _root = rootCause;
         }
 
         /// <summary>
@@ -28,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         /// </summary>
         /// <param name="immediateCause"></param>
         /// <param name="rootCause"></param>
-        public MaximoException(Exception immediateCause, Exception rootCause) : base(rootCause.Message) {
+        public MaximoException([NotNull]Exception immediateCause, [NotNull]Exception rootCause) : base(rootCause.Message) {
             _immediate = immediateCause;
             _root = rootCause;
         }

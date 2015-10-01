@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softWrench.sW4.Util;
 
@@ -20,7 +21,7 @@ namespace softWrench.sW4.Web.Common {
             FullStack = fullStack;
         }
 
-        public ErrorDto(Exception rootException) {
+        public ErrorDto([NotNull]Exception rootException) {
             ErrorMessage = GetErrorMessage(rootException);
             ErrorStack = rootException.StackTrace;
             FullStack = rootException.StackTrace;
