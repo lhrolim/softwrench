@@ -224,7 +224,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             }
 
             $scope.isFieldRequired = function (item, requiredExpression) {
-                return expressionService.evaluate(requiredExpression);
+                return expressionService.evaluate(requiredExpression,item);
             };
 
             $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
