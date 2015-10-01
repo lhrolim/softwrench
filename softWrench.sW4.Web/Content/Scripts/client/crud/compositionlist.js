@@ -224,10 +224,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             }
 
             $scope.isFieldRequired = function (item, requiredExpression) {
-                if (requiredExpression != undefined && item) {
-                    return expressionService.evaluate(requiredExpression, item);
-                }
-                return requiredExpression;
+                return expressionService.evaluate(requiredExpression);
             };
 
             $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
