@@ -358,10 +358,10 @@ modules.webcommons.factory('expressionService', ["$rootScope", "contextService",
 
 
         evaluate: function (expression, datamap, scope) {
-            if (expression === undefined || expression === "true" || expression === true) {
+            if (expression === "true" || expression === true) {
                 return true;
             }
-            if (expression === "false" || expression === false) {
+            if (expression === undefined || expression === "false" || expression === false) {
                 return false;
             }
             //            var expressionToEval = this.getVariables(expression, datamap);
