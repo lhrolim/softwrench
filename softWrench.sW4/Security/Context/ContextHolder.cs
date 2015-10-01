@@ -11,6 +11,8 @@ namespace softWrench.sW4.Security.Context {
 
         public SortedSet<int?> UserProfiles { get; set; }
 
+        public int? CurrentSelectedProfile {get; set;}
+
         public string User { get; set; }
 
         public string Mode { get; set; }
