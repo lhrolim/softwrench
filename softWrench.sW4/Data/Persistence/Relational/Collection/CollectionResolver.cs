@@ -154,30 +154,33 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
 
             EntityRepository.EntityRepository.SearchEntityResult queryResult = null;
-            // one thread to fetch results
-            var ctx = ContextLookuper.LookupContext();
-            var tasks = new Task[2];
-            tasks[0] = Task.Factory.NewThread(c => {
+
+            if (paginatedSearch == null) {
+                //if there´s no pagination needed we can just do one thread-query
                 var dto = searchRequestDto.ShallowCopy();
-                Quartz.Util.LogicalThreadContext.SetData("context", c);
                 queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
-            }, ctx);
-            // one thread to count results for paginations
-            tasks[1] = Task.Factory.NewThread(c => {
-                var dto = searchRequestDto.ShallowCopy();
-                Quartz.Util.LogicalThreadContext.SetData("context", c);
-                if (paginatedSearch != null) {
+            } else {
+                // one thread to fetch results
+                var ctx = ContextLookuper.LookupContext();
+                var tasks = new Task[2];
+                tasks[0] = Task.Factory.NewThread(c => {
+                    var dto = searchRequestDto.ShallowCopy();
+                    Quartz.Util.LogicalThreadContext.SetData("context", c);
+                    queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
+                }, ctx);
+                // one thread to count results for paginations
+                tasks[1] = Task.Factory.NewThread(c => {
+                    var dto = searchRequestDto.ShallowCopy();
+                    Quartz.Util.LogicalThreadContext.SetData("context", c);
                     paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, dto);
-                }
-            }, ctx);
-            Task.WaitAll(tasks);
-            // add paginationData to result 
-            if (paginatedSearch != null) {
+                }, ctx);
+                Task.WaitAll(tasks);
+                // add paginationData to result 
                 // creating a new pagination data in order to have everything calculated correctly
                 queryResult.PaginationData = new PaginatedSearchRequestDto(
-                    paginatedSearch.TotalCount, 
-                    paginatedSearch.PageNumber, 
-                    paginatedSearch.PageSize, 
+                    paginatedSearch.TotalCount,
+                    paginatedSearch.PageNumber,
+                    paginatedSearch.PageSize,
                     paginatedSearch.SearchValues,
                     paginatedSearch.PaginationOptions
                     );
@@ -189,7 +192,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 return;
             }
 
-            if (attributeHolders.Count() == 1) {
+            if (attributeHolders.Length == 1) {
                 //default scenario, we have just one entity here
                 firstAttributeHolder.Attributes.Add(targetCollectionAttribute, queryResult.ResultList);
                 parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
@@ -207,9 +210,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
             var collectionAssociation = parameter.CollectionAssociation;
 
-
             var lookupAttributes = collectionAssociation.Attributes;
-            var searchRequestDto = new PaginatedSearchRequestDto();
+            var searchRequestDto = (paginatedSearch == null || paginatedSearch.PageSize <= 0) ? new SearchRequestDto() : new PaginatedSearchRequestDto();
 
             var lookupContext = ContextLookuper.LookupContext();
             var printMode = lookupContext.PrintMode;
@@ -221,7 +223,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 if (lookupAttribute.From != null) {
                     matchingResultWrapper.AddKey(lookupAttribute.To);
 
-                    BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto,collectionAssociation.To);
+                    BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto, collectionAssociation.To);
                 } else if (lookupAttribute.Literal != null) {
                     //if the from is a literal, don´t bother with the entities values
                     searchRequestDto.AppendSearchEntry(lookupAttribute.To, lookupAttribute.Literal);
@@ -236,18 +238,20 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
             // no pagination intended: return simple search
-            if (paginatedSearch == null || paginatedSearch.PageSize <= 0) {
+            var paginatedDTO = searchRequestDto as PaginatedSearchRequestDto;
+            if (paginatedDTO == null || paginatedSearch == null) {
                 return searchRequestDto;
             }
+
             // pagination: merging the search dto's
-            searchRequestDto.PageNumber = paginatedSearch.PageNumber;
-            searchRequestDto.PageSize = paginatedSearch.PageSize;
-            searchRequestDto.TotalCount = paginatedSearch.TotalCount;
+            paginatedDTO.PageNumber = paginatedSearch.PageNumber;
+            paginatedDTO.PageSize = paginatedSearch.PageSize;
+            paginatedDTO.TotalCount = paginatedSearch.TotalCount;
             return searchRequestDto;
         }
 
         protected virtual void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper, InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute,
-            SearchRequestDto searchRequestDto,string relationshipName) {
+            SearchRequestDto searchRequestDto, string relationshipName) {
             var searchValues = new HashSet<string>();
             var attributeHolders = parameter.EntitiesList;
             var enumerable = attributeHolders as AttributeHolder[] ?? attributeHolders.ToArray();
@@ -262,10 +266,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
             if (searchValues.Any()) {
                 searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
-            } else if (hasMainEntity && lookupAttribute.Primary){
+            } else if (hasMainEntity && lookupAttribute.Primary) {
                 //if nothing was provided, it should return nothing, instead of all the values --> 
                 //if the main entity had a null on a primary element of the composition, nothing should be seen
-                searchRequestDto.AppendSearchEntry(lookupAttribute.To, new[]{"-1231231312"});
+                searchRequestDto.AppendSearchEntry(lookupAttribute.To, new[] { "-1231231312" });
             }
         }
 
