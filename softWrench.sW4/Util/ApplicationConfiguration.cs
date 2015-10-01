@@ -16,7 +16,7 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Data.Entities;
 
 namespace softWrench.sW4.Util {
-    public class ApplicationConfiguration : ISWEventListener<ClearCacheEvent> {
+    public class ApplicationConfiguration : ISWEventListener<ClientChangeEvent> {
         private const string UnitTestProfile = "unittest";
 
         private static string _testclientName;
@@ -541,7 +541,7 @@ namespace softWrench.sW4.Util {
             return connString.Contains("localhost");
         }
 
-        public void HandleEvent(ClearCacheEvent eventToDispatch) {
+        public void HandleEvent(ClientChangeEvent eventToDispatch) {
             _clientName = null;
             _swdbType = null;
             _environment = null;
