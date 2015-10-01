@@ -4,6 +4,7 @@
      'ngSanitize',
      'textAngular',
      'angularFileUpload',
+     'angular-clipboard',
      "xeditable",
      'sw_lookup',
      "sw_scan",

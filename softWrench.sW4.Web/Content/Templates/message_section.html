@@ -65,11 +65,25 @@
                 <div class="modal-body">
                     <div class="form-horizontal">
                         <div class="form-group">
+                            <label class="control-label">{{i18N('general.errortype','Error Type')}}</label>
+                            <input type="text" readonly class="form-control" ng-model="fullError.type" style="margin-top: 10px; background-color: #fff;"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">{{i18N('general.erroroutline','Error Outline')}}</label>
+                            <textarea class="form-control" ng-model="fullError.outline" cols="140" rows="5" style="margin-top: 10px; background-color: #fff;"></textarea>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label">{{i18N('general.mainstack','Main Stack')}}</label>
-                            <textarea class="form-control" ng-model="errorStack" cols="140" rows="15" style="margin-top: 10px; background-color: #fff;" />
+                            <textarea class="form-control" ng-model="errorStack" cols="140" rows="15" style="margin-top: 10px; background-color: #fff;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button clipboard text="fullError.text" type="button" class="btn btn-primary" rel="tooltip" data-original-title="Copy Details to Clipboard">
+                                <i class="fa fa-clipboard"></i>
+                            </button> 
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
-using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.WS.API;
 using WcfSamples.DynamicProxy;
@@ -100,14 +99,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         /// <summary>
         /// Treats any exception thrown by executing <see cref="DoProxyInvocation"/>.
-        /// Default: dig's root exception and returns it.
+        /// Default: determines the root exception of e and returns a <see cref="MaximoException"/> 
+        /// with e as its ImmediateCause and root as it's RootCause.
         /// Override for custom behavior.
         /// </summary>
         /// <param name="e">exception thrown</param>
         /// <returns></returns>
         protected virtual Exception HandleProxyInvocationError(Exception e) {
             var rootException = ExceptionUtil.DigRootException(e);
-            return rootException;
+            return new MaximoException(e, rootException);
         }
 
         /// <summary>

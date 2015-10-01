@@ -52,7 +52,7 @@ app.directive('messagesection', function (contextService) {
 
             $scope.showErrorList = function () {
                 var isLoggedIn = sessionStorage['ctx_loggedin'];
-                if (isLoggedIn != "true") {
+                if (isLoggedIn !== "true") {
                     //this is a workaround for the COMSW-40. Couldn´t track down why this was needed at all
                     return false;
                 }
@@ -61,7 +61,7 @@ app.directive('messagesection', function (contextService) {
 
             $scope.showErrorDetail = function () {
                 var isLoggedIn = sessionStorage['ctx_loggedin'];
-                if (isLoggedIn != "true") {
+                if (isLoggedIn !== "true") {
                     //this is a workaround for the COMSW-40. Couldn´t track down why this was needed at all
                     return false;
                 }
@@ -96,6 +96,26 @@ app.directive('messagesection', function (contextService) {
 
                 hideSuccessMessage();
             });
+
+            function buildFullError(errordata) {
+                if (!errordata) return null;
+                var message = errordata.errorMessage;
+                var type = errordata.errorType;
+                var outline = errordata.outlineInformation;
+                var fullstack = errordata.fullStack || errordata.errorStack;
+                return {
+                    message: message,
+                    type: type,
+                    outline: outline,
+                    fullstack: fullstack,
+                    text: ("Error description:\n\n" +
+                            "Type: {0}\n\n" +
+                            "Message: {1}\n\n" +
+                            "Outline:\n{2}\n\n" +
+                            "StackTrace:\n{3}\n\n")
+                            .format(type, message, outline, fullstack)
+                }
+            }
 
             $scope.$on('sw_ajaxerror', function (event, errordata) {
 
@@ -134,6 +154,7 @@ app.directive('messagesection', function (contextService) {
                     $scope.errorStack = errordata.stackTrace;
                 }
 
+                $scope.fullError = buildFullError(errordata);
                 
                 $scope.$broadcast('sw_errormessage', true);
 
@@ -148,7 +169,7 @@ app.directive('messagesection', function (contextService) {
                     return;
                 }
 
-                if (validationArray == null || validationArray.length == 0) {
+                if (validationArray == null || validationArray.length <= 0) {
                     return;
                 }
 
@@ -178,6 +199,7 @@ app.directive('messagesection', function (contextService) {
                 $rootScope.hasErrorList = false;
                 $scope.errorMsg = null;
                 $scope.errorStack = null;
+                $scope.fullError = null;
                 $scope.$broadcast('sw_errormessage', false);
 
                 fixHeaderService.callWindowResize();
@@ -208,6 +230,7 @@ app.directive('messagesection', function (contextService) {
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
+
         }
     };
 });

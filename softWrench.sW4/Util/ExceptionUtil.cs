@@ -24,5 +24,14 @@ namespace softWrench.sW4.Util {
         public static InvalidOperationException MetadataException(String msg, params object[] args) {
             throw new InvalidOperationException(String.Format(msg, args));
         }
+
+        public static string[] StackTraceLines(Exception e) {
+            return e.StackTrace.Split('\n', '\r', '\t');
+        }
+
+        public static string LastStackTraceLine(Exception e) {
+            var lines = StackTraceLines(e);
+            return lines[lines.Length - 1];
+        }
     }
 }
