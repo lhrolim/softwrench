@@ -198,6 +198,7 @@
           <field attribute="matusetransid" hidden="true" />
           <field attribute="itemnum" label="Item#" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>
+          <field attribute="transdate" label="Created Date" />
           <field attribute="linetype" label="Type" qualifier="subtitle"/>
           <field attribute="storeloc" label="Storeroom" qualifier="subtitle"/>
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
