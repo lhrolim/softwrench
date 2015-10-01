@@ -75,6 +75,10 @@ namespace softWrench.sW4.Web {
                 AreaRegistration.RegisterAllAreas();
                 EnableJsonCamelCasing();
                 RegisterDataMapFormatter();
+                GlobalConfiguration.Configuration.Filters.Clear();
+                GlobalConfiguration.Configuration.Routes.Clear();
+                GlobalFilters.Filters.Clear();
+                RouteTable.Routes.Clear();
 
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -146,6 +150,7 @@ namespace softWrench.sW4.Web {
                 //troubleshooting dev environment pointing to OTB
                 var customerName = EnvironmentUtil.GetIISCustomerName();
                 if (!ApplicationConfiguration.ClientName.Equals(customerName)) {
+                    Log.DebugFormat("restoring application client to {0} was {1}",customerName, ApplicationConfiguration.ClientName);
                     DoStartApplication(false);
                 }
             }
