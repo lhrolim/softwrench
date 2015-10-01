@@ -183,7 +183,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             searchOperator[printSchema.idFieldName] = searchService.getSearchOperationById('EQ');
 
             parameters.searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator, {});
-
+            parameters.searchDTO.pageSize = ids.length;
 
             parameters.searchDTO.compositionsToFetch = [];
             var compositionsToFetch = {};
