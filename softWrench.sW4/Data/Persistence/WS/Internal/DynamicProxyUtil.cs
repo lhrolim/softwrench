@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using cts.commons.portable.Util;
 using log4net;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -13,6 +12,7 @@ using softWrench.sW4.Util;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Net;
+using softWrench.sW4.Data.Persistence.WS.API;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     internal class DynamicProxyUtil : ISWEventListener<ClearCacheEvent> {
@@ -31,13 +31,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public static DynamicObject LookupProxy(EntityMetadata metaData, bool queryProxy = false) {
             var wsdlUri = GetWsdlUri(metaData, queryProxy);
             try {
-                
                 var factory = LookupFactory(wsdlUri);
                 return factory.CreateMainProxy();
             } catch (Exception e) {
-                var httpException =new HttpRequestException("wsdl cannot be downloaded at {0}".Fmt(wsdlUri),e);
-                Log.Error("Error LookupProxy", httpException);
-                throw httpException;
+                var root = ExceptionUtil.DigRootException(e);
+                var maximoException = new MaximoWebServiceNotResolvedException(string.Format("wsdl cannot be downloaded at {0}", wsdlUri), e, root);
+                Log.Error("Error LookupProxy", maximoException);
+                throw maximoException;
             }
         }
 

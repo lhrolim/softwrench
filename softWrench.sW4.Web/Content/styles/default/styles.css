@@ -1,19 +1,25 @@
 ﻿messagesection .alerts .alert {
-  padding: 20px; }
-  messagesection .alerts .alert .icon {
+    padding: 20px; 
+}
+messagesection .alerts .alert .icon {
     float: left;
-    margin-right: 10px; }
-  messagesection .alerts .alert .text {
+    margin-right: 10px; 
+}
+messagesection .alerts .alert .text {
     float: left;
     width: calc(100% - 80px);
-    margin-top: 5px; }
-    messagesection .alerts .alert .text .bold {
-      font-weight: bold; }
-    messagesection .alerts .alert .text ul {
-      display: inline-table;
-      list-style: none; }
-  messagesection .alerts .alert .close {
-    font-size: 14px; }
+    margin-top: 5px; 
+}
+messagesection .alerts .alert .text .bold {
+    font-weight: bold; 
+}
+messagesection .alerts .alert .text ul {
+    display: inline-table;
+    list-style: none; 
+}
+messagesection .alerts .alert .close {
+    font-size: 14px; 
+}
 
 .breadcrumb {
   padding: 0;
