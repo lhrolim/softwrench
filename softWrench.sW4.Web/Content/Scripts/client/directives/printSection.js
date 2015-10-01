@@ -16,7 +16,7 @@ app.directive('printsectionrendered', function ($timeout, $log) {
 
                         //to avoid opening it twice
                         scope.$$listeners['sw_bodyrenderedevent'] = null;
-                    }, 0, false);
+                    }, 2000, false);
                 });
 
             }
