@@ -19,6 +19,7 @@
           <field attribute="status" label="Status"/>
           <field attribute="owner" label="Owner" />
           <field attribute="ownergroup" label="Owner Group" />
+          <field attribute="reportdate" label="Reported Date"/>
           <section resourcepath="/Content/Templates/otb/WotaskchangeStatus.html"/>
           <commandbars>
             <commandgroup position="compositionbottom">
