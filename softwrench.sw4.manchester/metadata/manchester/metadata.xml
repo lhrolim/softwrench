@@ -500,6 +500,7 @@
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+          <field attribute="transdate" label="Created Date"/>
         </list>
 
         <detail platform="web">

@@ -72,6 +72,7 @@
             <field attribute="tooltransid" hidden="true"/>
             <field attribute="itemnum" label="Item#" qualifier="title"/>
             <field attribute="tool_.description" label="Description" qualifier="subtitle"/>
+            <field attribute="transdate" label="Created Date" />
             <field attribute="toolqty" label="Quantity" qualifier="subtitle"/>
             <field attribute="toolhrs" label="Hours" qualifier="subtitle"/>
             <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
