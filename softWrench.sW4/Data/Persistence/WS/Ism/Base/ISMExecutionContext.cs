@@ -44,51 +44,51 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             throw new NotSupportedException(String.Format("entity {0} is not supported", entityMetadata.Name));
         }
 
-        public override object InvokeProxy() {
+        protected override object DoProxyInvocation() {
             var arg0 = SerializeIntegrationObject();
-            var before = Stopwatch.StartNew();
-            try {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
-                var soapEnvelopeXml = new XmlDocument();
+            var soapEnvelopeXml = new XmlDocument();
 
-                var isChange = Metadata.Name.Equals("wochange", StringComparison.InvariantCultureIgnoreCase);
-                var path = isChange ? MetadataProvider.GlobalProperty("globaservletpath_chg") : MetadataProvider.GlobalProperty("globaservletpath_inc");
+            var isChange = Metadata.Name.Equals("wochange", StringComparison.InvariantCultureIgnoreCase);
+            var path = isChange ? MetadataProvider.GlobalProperty("globaservletpath_chg") : MetadataProvider.GlobalProperty("globaservletpath_inc");
 
-                Log.InfoFormat("PERFORMANCE - ISM WS request started at {0}.", DateTime.Now);
-                Log.DebugFormat("Calling ISM WS on {0}. Content: {1}", path, arg0);
-                soapEnvelopeXml.LoadXml(@arg0);
-                var webRequest = CreateWebRequest(path);
+            Log.InfoFormat("PERFORMANCE - ISM WS request started at {0}.", DateTime.Now);
+            Log.DebugFormat("Calling ISM WS on {0}. Content: {1}", path, arg0);
+            soapEnvelopeXml.LoadXml(@arg0);
+            var webRequest = CreateWebRequest(path);
 
-                webRequest.Timeout = ApplicationConfiguration.MaximoRequestTimeout;
+            webRequest.Timeout = ApplicationConfiguration.MaximoRequestTimeout;
 
-                using (Stream stream = webRequest.GetRequestStream()) {
-                    soapEnvelopeXml.Save(stream);
-                }
-                // begin async call to web request.
-                var asyncResult = webRequest.BeginGetResponse(null, null);
-
-                // suspend this thread until call is complete. You might want to
-                // do something usefull here like update your UI.
-                asyncResult.AsyncWaitHandle.WaitOne();
-
-                // get the response from the completed web request.
-                var result = "";
-                using (var webResponse = webRequest.EndGetResponse(asyncResult)) {
-                    using (var rd = new StreamReader(webResponse.GetResponseStream())) {
-                        result = rd.ReadToEnd();
-                    }
-                }
-
-                return result;
-            } catch (Exception e) {
-                Log.Error("Error invoking ISM proxy", e);
-                var rootException = ExceptionUtil.DigRootException(e);
-                throw rootException;
-            } finally {
-                var msDelta = LoggingUtil.MsDelta(before);
-                Log.InfoFormat("PERFORMANCE - ISM WS request took {0} ms to be executed.", msDelta);
+            using (Stream stream = webRequest.GetRequestStream()) {
+                soapEnvelopeXml.Save(stream);
             }
+            // begin async call to web request.
+            var asyncResult = webRequest.BeginGetResponse(null, null);
+
+            // suspend this thread until call is complete. You might want to
+            // do something usefull here like update your UI.
+            asyncResult.AsyncWaitHandle.WaitOne();
+
+            // get the response from the completed web request.
+            var result = "";
+            using (var webResponse = webRequest.EndGetResponse(asyncResult)) {
+                using (var rd = new StreamReader(webResponse.GetResponseStream())) {
+                    result = rd.ReadToEnd();
+                }
+            }
+
+            return result;
+        }
+
+        protected override Exception HandleProxyInvocationError(Exception e) {
+            Log.Error("Error invoking ISM proxy", e);
+            return base.HandleProxyInvocationError(e);
+        }
+
+        protected override void OnProxyInvocationComplete(Stopwatch beforeInvocation) {
+            var msDelta = LoggingUtil.MsDelta(beforeInvocation);
+            Log.InfoFormat("PERFORMANCE - ISM WS request took {0} ms to be executed.", msDelta);
         }
 
         private HttpWebRequest CreateWebRequest(string path) {
@@ -101,7 +101,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             webRequest.Headers["Authorization"] = "Basic " + authInfo;
             return webRequest;
         }
-
        
 
         protected override string MethodName() {

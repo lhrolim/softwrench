@@ -176,6 +176,8 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
+    <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\MultiAssetLocciHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />

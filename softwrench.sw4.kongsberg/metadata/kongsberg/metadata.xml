@@ -2098,6 +2098,7 @@
         <list>
           <field attribute="matusetransid" hidden="true" />
           <field attribute="item_.description" label="Description" qualifier="title"/>
+          <field attribute="transdate" label="Created Date" />
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
         </list>
 
@@ -2195,6 +2196,7 @@
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+          <field attribute="transdate" label="Created Date"/>
         </list>
 
         <detail platform="web">
@@ -2477,6 +2479,7 @@
           <field attribute="status" label="Status"/>
           <field attribute="owner" label="Owner" />
           <field attribute="ownergroup" label="Owner Group" />
+          <field attribute="reportdate" label="Reported Date"/>
         </list>
 
         <detail stereotype="compositiondetail">
