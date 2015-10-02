@@ -1,4 +1,7 @@
-﻿$(document).ready(function () {
+﻿// IMPORTANT:
+// DO NOT INCLUDE ME IN _layout.cshtml
+// I SHOULD NOT BE LOADED AFTER THE USER HAS LOGGED IN
+$(document).ready(function () {
     $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
     sessionStorage['ctx_loggedin'] = false;
 

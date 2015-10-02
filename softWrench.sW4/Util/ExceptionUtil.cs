@@ -34,5 +34,10 @@ namespace softWrench.sW4.Util {
             var lines = StackTraceLines(e);
             return lines[lines.Length - 1];
         }
+
+        public static string FirstStackTraceLine([NotNull] Exception e) {
+            var lines = StackTraceLines(e);
+            return lines[0];
+        }
     }
 }

@@ -93,7 +93,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/ace/ace.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin").Include(
-                "~/Content/Scripts/client/signin.js"
+                "~/Content/Scripts/client/signin/signin.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application").Include(
@@ -102,8 +102,8 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/client/*.js",
                 "~/Content/Scripts/client/adminresources/*.js",
                 "~/Content/Scripts/client/directives/*.js",
-                "~/Content/Scripts/client/directives/menu/*.js"
-                ).IncludeDirectory("~/Content/Templates/commands", "*.js", true)
+                "~/Content/Scripts/client/directives/menu/*.js")
+                .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
                 .IncludeDirectory("~/Content/modules", "*.js", true));
         }
 

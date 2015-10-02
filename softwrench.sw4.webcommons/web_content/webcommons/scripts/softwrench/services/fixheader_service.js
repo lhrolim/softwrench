@@ -235,15 +235,15 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         topErrorMessageHandler: function (show, isDetail, schema) {
-            if (show) {
-                if (!isDetail) {
-                    addClassErrorMessageListHander(true);
-                    $rootScope.hasErrorList = true;
-                } else {
-                    $rootScope.hasErrorDetail = true;
-                }
-            } else {
+            if (!show) {
                 addClassErrorMessageListHander(false);
+                return;
+            }
+            if (isDetail) {
+                $rootScope.hasErrorDetail = true;
+            } else {
+                addClassErrorMessageListHander(true);
+                $rootScope.hasErrorList = true;
             }
         },
 

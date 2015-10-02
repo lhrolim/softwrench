@@ -1305,7 +1305,7 @@
     <Content Include="Content\Templates\hapag\hapagsearch.html" />
     <Content Include="Content\Templates\menu\menuitem.html" />
     <Content Include="softWrench.sW4.Controls.WebForms.dll" />
-    <Content Include="Content\Scripts\client\signin.js" />
+    <Content Include="Content\Scripts\client\signin\signin.js" />
     <Content Include="UserControls\Report.ascx" />
     <Content Include="UserControls\RichTextBox.aspx" />
     <Content Include="UserControls\SasActiveX.dll">
