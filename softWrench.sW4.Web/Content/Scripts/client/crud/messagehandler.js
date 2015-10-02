@@ -5,7 +5,7 @@ app.directive('messagesection', function (contextService) {
         restrict: 'E',
         //TODO: missing scope isolation here
         templateUrl: contextService.getResourceUrl('Content/Templates/message_section.html'),
-        controller: function ($scope, i18NService, $rootScope, fixHeaderService, $log, $timeout) {
+        controller: ["$scope", "i18NService", "$rootScope", "fixHeaderService", "$log", "$timeout", function ($scope, i18NService, $rootScope, fixHeaderService, $log, $timeout) {
 
             var log = $log.getInstance('sw4.messagesection');
 
@@ -158,9 +158,9 @@ app.directive('messagesection', function (contextService) {
                 
                 $scope.$broadcast('sw_errormessage', true);
 
-//                if (nullOrUndef($rootScope.hasErrorDetail) && nullOrUndef($rootScope.hasErrorList)) {
-                    $rootScope.hasErrorDetail = true;
-//                }
+                //if (nullOrUndef($rootScope.hasErrorDetail) && nullOrUndef($rootScope.hasErrorList)) {
+                $rootScope.hasErrorDetail = true;
+                //}
             });
 
             $scope.$on('sw_validationerrors', function (event, validationArray,modal) {
@@ -231,7 +231,7 @@ app.directive('messagesection', function (contextService) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
 
-        }
+        }]
     };
 });
 
