@@ -68,7 +68,9 @@ namespace softwrench.sW4.test.ActivityStream {
                 UserProfile.TestInstance(3,"p3"),
             });
             //p1 and default
+
             Assert.AreEqual(result.AvailableProfiles.Count, 3);
+            Assert.AreEqual(result.AvailableProfiles.First().Name,"default");
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p1"));
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p2"));
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "default"));

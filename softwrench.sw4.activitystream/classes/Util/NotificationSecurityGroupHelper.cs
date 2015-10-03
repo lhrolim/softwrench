@@ -18,12 +18,12 @@ namespace softwrench.sw4.activitystream.classes.Util {
             var result = new NotificationSecurityGroupDTO();
             var availableProfiles = profiles.Where(p => notificationStreams.ContainsKey(p.Name)).Select(s => s.ToDTO());
             var userProfileDtos = availableProfiles as UserProfile.UserProfileDTO[] ?? availableProfiles.ToArray();
-            result.AvailableProfiles.AddRange(userProfileDtos);
             var deafaultProfile = new UserProfile.UserProfileDTO(FakeDefaultProfileId, "default");
             if (userProfileDtos.Length != profiles.Count || !profiles.Any()) {
                 //this means that some profiles use the default notification, so let´s add a default one which will represent the merge of any groups which don´t have a specific stream
                 result.AvailableProfiles.Add(deafaultProfile);
             }
+            result.AvailableProfiles.AddRange(userProfileDtos);
             if (clientSelectedProfile != null) {
                 result.SelectedProfile = result.AvailableProfiles.First(p => p.Id == clientSelectedProfile);
             } else {
