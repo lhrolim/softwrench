@@ -21,7 +21,11 @@
             previousData: null,
             paginationData: null,
             isDirty: false,
-            needsServerRefresh:false
+            needsServerRefresh: false,
+            //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
+            affectedProfiles: [],
+            //current profile selected, if multiple are available, considering whereclauses
+            currentSelectedProfile:null
         };
 
         //#endregion
@@ -62,6 +66,23 @@
             _crudContext.needsServerRefresh = false;
         }
 
+        function gridLoaded(applicationListResult) {
+            _crudContext.affectedProfiles = applicationListResult.affectedProfiles;
+            _crudContext.currentSelectedProfile = applicationListResult.currentSelectedProfile;
+        }
+
+        function getAffectedProfiles() {
+            return _crudContext.affectedProfiles;
+        }
+
+        function getCurrentSelectedProfile() {
+            return _crudContext.currentSelectedProfile;
+        }
+
+        function setCurrentSelectedProfile(currentProfile) {
+            return _crudContext.currentSelectedProfile = currentProfile;
+        }
+
         function setDirty() {
             _crudContext.isDirty = true;
         };
@@ -83,8 +104,11 @@
         //#region Service Instance
 
         var service = {
+            getAffectedProfiles: getAffectedProfiles,
             getActiveTab: getActiveTab,
             setActiveTab: setActiveTab,
+            getCurrentSelectedProfile:getCurrentSelectedProfile,
+            setCurrentSelectedProfile:setCurrentSelectedProfile,
             currentSchema: currentSchema,
             currentApplicationName: currentApplicationName,
             updateCrudContext: updateCrudContext,
@@ -93,7 +117,9 @@
             clearDirty: clearDirty,
             needsServerRefresh: needsServerRefresh,
             afterSave: afterSave,
-            detailLoaded: detailLoaded
+            detailLoaded: detailLoaded,
+            gridLoaded: gridLoaded
+            
         };
 
         return service;

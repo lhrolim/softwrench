@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Configuration.Services {
 
@@ -28,6 +29,7 @@ namespace softWrench.sW4.Configuration.Services {
             _dao = dao;
         }
 
+        [NotNull]
         public T Lookup<T>(string configKey, ContextHolder lookupContext) {
             ConcurrentDictionary<ContextHolder, object> fromContext;
             if (ConfigCache.TryGetValue(configKey, out fromContext)) {
@@ -51,7 +53,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (values.Count == 1) {
                 var propertyValue = values.First();
                 if (!ConditionMatch.No.Equals(propertyValue.MatchesConditions(lookupContext).MatchType)) {
-                    return ValueMatched<T>(definition, propertyValue, fromContext, lookupContext);
+                    return ValueMatched<T>(propertyValue, fromContext, lookupContext);
                 }
                 return DefaultValueCase<T>(definition, fromContext, lookupContext);
             }
@@ -100,7 +102,7 @@ namespace softWrench.sW4.Configuration.Services {
                 return DefaultValueCase<T>(definition, fromContext, configCacheKey);
             }
 
-            return ValueMatched<T>(definition, resultingValues.First().Value, fromContext, configCacheKey);
+            return ValueMatched<T>(resultingValues.First().Value, fromContext, configCacheKey);
 
         }
 
@@ -116,8 +118,7 @@ namespace softWrench.sW4.Configuration.Services {
             return resultingValues;
         }
 
-        private static T ValueMatched<T>(PropertyDefinition definition, PropertyValue propertyValue,
-            IDictionary<ContextHolder, object> fromContext, ContextHolder configCacheKey) {
+        private static T ValueMatched<T>(PropertyValue propertyValue,IDictionary<ContextHolder, object> fromContext, ContextHolder configCacheKey) {
             var value = propertyValue.StringValue;
             if (String.IsNullOrEmpty(propertyValue.StringValue)) {
                 value = propertyValue.SystemStringValue;

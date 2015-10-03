@@ -2,13 +2,14 @@
     "use strict";
 angular.module('sw_layout')
     .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService) {
+    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService,crudContextHolderService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
         var started = function (config) {
             lockCommandBars();
             lockTabs();
             config.headers['currentmodule'] = config.headers['currentmodule'] || contextService.retrieveFromContext('currentmodule');
+            config.headers['currentprofile'] = config.headers['currentprofile'] || crudContextHolderService.getCurrentSelectedProfile();
             config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['requesttime'] = new Date().getTime();

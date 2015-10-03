@@ -9,33 +9,48 @@ angular.module('sw_layout').directive('activitystream', function (contextService
         // activitystream
         //   div //- parent div could access the methods exposed in $scope by controller
         //      div(ng-click='acontrollermethod()') //- child div couldn't access the methods
-        replace: false,
-        transclude: true,
+        //        replace: true,
+        //        transclude: false,
 
         templateUrl: contextService.getResourceUrl('/Content/Shared/activitystream/templates/activitystream.html'),
         scope: {
             activities: '='
         },
 
-        link: function(scope) {
-            scope.$name = 'crudbody';          
+        link: function (scope) {
+            scope.$name = 'crudbody';
         },
-        controller: function($scope, $http, $log, $interval, $timeout, redirectService,
+
+        controller: function ($scope, $http, $log, $interval, $timeout, redirectService,
             contextService, $rootScope, alertService) {
 
             var log = $log.getInstance('sw4.activityStream');
             var jScrollPaneAPI;
             var throttleTimeout;
             $scope.hiddenToggle = false;
-            var rootAvoidingSpin;
             $scope.enableFilter = false;
-     
+            $scope.availableProfiles = [];
+
+
             $scope.activityStreamEnabled = function () {
                 return contextService.fetchFromContext('activityStreamFlag', false, true);
             };
 
             if ($scope.activityStreamEnabled()) {
                 $('html').addClass('activitystream');
+            }
+
+
+            $scope.hasmultipleprofiles = function () {
+                return this.getMultiplesProfiles().length > 1;
+            }
+
+            $scope.getMultiplesProfiles = function () {
+                return $scope.availableProfiles;
+            }
+
+            $scope.changeCurrentProfile = function () {
+                this.refreshStream();
             }
 
             $scope.clearFilter = function () {
@@ -58,7 +73,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 return DeviceDetect.catagory.toLowerCase();
             }
 
-            $scope.formatDate = function(notificationDate) {
+            $scope.formatDate = function (notificationDate) {
                 var currentDate = new Date();
                 var nowMils = currentDate.getTime();
 
@@ -81,22 +96,22 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 }
             }
 
-            $scope.markAllRead = function() {
+            $scope.markAllRead = function () {
                 log.debug('markAllRead');
 
                 var confirmationMessage = "Mark all notifications as read?";
-                return alertService.confirm(null, null, function() {
+                return alertService.confirm(null, null, function () {
                     var controllerToUse = "Notification";
                     var actionToUse = "UpdateNotificationReadFlag";
                     var parameters = {};
-                    parameters.role = contextService.getUserData().profiles[0].name;
+                    parameters.securityGroup = $scope.activityProfile;
 
                     var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                     $http.post(rawUrl, angular.toJson($scope.activities)).success(function () {
                         log.debug('Mark All Read Complete');
                         $scope.refreshStream();
                     }).error(
-                        function(data) {
+                        function (data) {
                             var errordata = {
                                 errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                                 errorStack: data.message
@@ -114,7 +129,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 var actionToUse = "UpdateNotificationReadFlag";
 
                 var parameters = {};
-                parameters.role = contextService.getUserData().profiles[0].name;
+                parameters.securityGroup = $scope.activityProfile;
                 parameters.application = activity.application;
                 parameters.id = activity.id;
                 parameters.rowstamp = activity.rowstamp;
@@ -135,16 +150,18 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     });
             }
 
-            $scope.openLink = function(activity, parent) {
+            $scope.openLink = function (activity, parent) {
                 log.debug('openLink');
 
                 var controllerToUse = "Notification";
                 var actionToUse = "UpdateNotificationReadFlag";
-                var parameters = {};
-                parameters.role = contextService.getUserData().profiles[0].name;
-                parameters.application = activity.application;
-                parameters.id = activity.id;
-                parameters.rowstamp = activity.rowstamp;
+                var parameters = {
+                    securityGroup: $scope.activityProfile,
+                    application: activity.application,
+                    id: activity.id,
+                    rowstamp: activity.rowstamp
+                };
+
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
@@ -165,15 +182,15 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                             redirectService.goToApplicationView(activity.application, "editdetail", "input", null, param, null);
                         } else {
                             param.id = activity.parentId;
-                            if (parent!= null && parent.equalIc('true')) {
+                            if (parent != null && parent.equalIc('true')) {
                                 redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null);
-                            }else 
-                                redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function() { contextService.setActiveTab(activity.application + '_'); });
+                            } else
+                                redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function () { contextService.setActiveTab(activity.application + '_'); });
                         }
 
                         $scope.refreshStream();
                     }).error(
-                    function(data) {
+                    function (data) {
                         var errordata = {
                             errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                             errorStack: data.message
@@ -183,14 +200,16 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 );
             }
 
-            $scope.refreshStream = function(silent) {
+            $scope.refreshStream = function (silent) {
                 log.debug('refreshStream');
 
                 var controllerToUse = "Notification";
                 var actionToUse = "GetNotifications";
 
-                var parameters = {};
-                parameters.role = 'default';
+                var parameters = {
+                    currentProfile: $scope.activityProfile
+                };
+
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl, { avoidspin: true }).success(
@@ -198,7 +217,11 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $scope.readCount = data.readCount;
                         $scope.activities = data.notifications;
                         $scope.refreshRate = data.refreshRate;
+                        $scope.availableProfiles = data.availableProfiles;;
+                        $scope.activityProfile = data.selectedProfile;
+
                         $scope.statusAllHidden = $scope.getAllHidden();
+
 
                         //TODO: remove for production
                         //$scope.activities = demoNotifications;
@@ -211,19 +234,19 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         //restore spinner to orginal value
                         log.debug($scope.activities);
                     }).error(
-                    function(data) {
+                    function (data) {
                         var errordata = {
                             errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                             errorStack: data.message
                         }
-                        
+
                         //restore spinner to orginal value
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
                     }
                 );
             }
 
-            $scope.setPaneHeight = function() {
+            $scope.setPaneHeight = function () {
                 log.debug('setPaneHeight');
 
                 var headerHeight = $('#activitystream header').height();
@@ -266,13 +289,13 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             };
 
             //set window height and reinitialize scroll pane if windows is resized
-            $(window).bind('resize', function() {
+            $(window).bind('resize', function () {
                 // IE fires multiple resize events while you are dragging the browser window which
                 // causes it to crash if you try to update the scrollpane on every one. So we need
                 // to throttle it to fire a maximum of once every 50 milliseconds...
                 if (typeof jScrollPaneAPI !== 'undefined') {
                     if (!throttleTimeout) {
-                        throttleTimeout = setTimeout(function() {
+                        throttleTimeout = setTimeout(function () {
                             $scope.setPaneHeight();
 
                             jScrollPaneAPI.reinitialise();
@@ -299,7 +322,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
                 var refreshTimeout;
 
-                if (typeof $scope.refreshRate == 'undefined' || $scope.refreshRate == 0) {
+                if (typeof $scope.refreshRate == 'undefined' || $scope.refreshRate === 0) {
                     //refresh every five minutes if the refreshRate is not set
                     refreshTimeout = 5;
                 } else {

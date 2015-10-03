@@ -265,15 +265,17 @@ function ApplicationController($scope, $http, $log, $timeout,
             }
         }
         var log = $log.getInstance("applicationcontroller#renderData");
-        crudContextHolderService.detailLoaded();
+        
 
         if (result.type === 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
             detailService.fetchRelationshipData(scope, result);
             toDetail(scope);
+            crudContextHolderService.detailLoaded();
         } else if (result.type === 'ApplicationListResult') {
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
+            crudContextHolderService.gridLoaded(result);
         } else if (result.crudSubTemplate != null) {
             log.debug("Crud Sub Template handled");
             $scope.crudsubtemplate = url(result.crudSubTemplate);

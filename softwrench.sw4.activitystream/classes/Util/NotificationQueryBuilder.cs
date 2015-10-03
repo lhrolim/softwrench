@@ -5,6 +5,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using log4net;
 using Microsoft.Ajax.Utilities;
+using softwrench.sw4.activitystream.classes.Model;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Services.Api;
@@ -19,6 +20,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
         public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade) {
             _whereClauseFacade = whereClauseFacade;
         }
+
         public Dictionary<string, string> BuildNotificationsQueries() {
             Dictionary<string, string> notificationQueries = new Dictionary<string, string>();
             var securityGroups = UserProfileManager.FetchAllProfiles(true);
@@ -32,6 +34,8 @@ namespace softwrench.sw4.activitystream.classes.Util {
             notificationQueries.Add(defaultQuery.Key, defaultQuery.Value);
             return notificationQueries;
         }
+
+
         private KeyValuePair<string, string> BuildNotificationsQuery(UserProfile securityGroup) {
             _log.DebugFormat("Building notifiations query for security group {0}", securityGroup.Name);
             var roles = securityGroup.Roles;
@@ -51,45 +55,40 @@ namespace softwrench.sw4.activitystream.classes.Util {
         }
 
         private string AppendQuery(string key, ContextHolder context) {
-            var applicationName = GetApplicationNameByRole(key);
+            var applicationName = NotificationSecurityGroupHelper.GetApplicationNameByRole(key);
             if (!applicationName.EqualsAny("servicerequest", "workorder", "incident")) {
                 return "";
             }
             var sb = new StringBuilder();
 
             var whereClauseResult = _whereClauseFacade.Lookup(applicationName, null, context);
+            //to apply eventual method implementations
             var convertedValue = DataConstraintsWhereBuilder.GetConvertedWhereClause(whereClauseResult, SecurityFacade.CurrentUser(), "");
             var whereClause = whereClauseResult.IsEmpty() ? " UNION " : " AND " + convertedValue + " UNION ";
 
-            sb.Append(GetRoleQuery(key)).Append(whereClause);
-            sb.Append(GetRoleQuery(key + "Worklogs")).Append(whereClause);
+            sb.Append(GetRoleQuery(applicationName)).Append(whereClause);
+            sb.Append(GetRoleQuery(applicationName + "worklogs")).Append(whereClause);
 
             if (!applicationName.EqualsIc("workorder")) {
-                sb.Append(GetRoleQuery(key + "Commlogs")).Append(whereClause);
+                sb.Append(GetRoleQuery(applicationName + "commlogs")).Append(whereClause);
             }
 
             return sb.ToString();
         }
 
-        private static string GetApplicationNameByRole(string key) {
-            //TODO: adjust role names to match application names, or create a external translator
-            if (key.Equals("sr") || key.Equals("ssr")) {
-                return "servicerequest";
-            }
-            if (key.Equals("workorders")) {
-                return "workorder";
-            }
-            return key;
-
-        }
+      
 
 
         private string GetRoleQuery(string key) {
+            if (!ActivityStreamConstants.baseQueries.ContainsKey(key)) {
+                _log.WarnFormat("base query {0} not found for activitystream setup", key);
+                return "";
+            }
             return ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(key)).Value;
         }
 
         private KeyValuePair<string, string> GetDefaultQuery() {
-            var role = "default";
+            const string role = "default";
             var notificationsQuery = "";
             notificationsQuery += AppendQuery("sr", null);
             notificationsQuery += AppendQuery("incident", null);

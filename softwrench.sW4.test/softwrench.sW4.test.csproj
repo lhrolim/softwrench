@@ -80,6 +80,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ActivityStream\NotificationSecurityGroupHelperTest.cs" />
     <Compile Include="Category\CategoryUtilTest.cs" />
     <Compile Include="Category\CategoryTreeCacheTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
@@ -246,6 +247,10 @@
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
       <Name>cts.commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.activitystream\softwrench.sw4.activitystream.csproj">
+      <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
+      <Name>softwrench.sw4.activitystream</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>

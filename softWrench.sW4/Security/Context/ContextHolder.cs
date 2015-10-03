@@ -2,32 +2,61 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Security.Context {
     public class ContextHolder {
 
-        public string OrgId { get; set; }
-        public string SiteId { get; set; }
+        public string OrgId {
+            get; set;
+        }
+        public string SiteId {
+            get; set;
+        }
 
-        public SortedSet<int?> UserProfiles { get; set; }
+        public SortedSet<int?> UserProfiles {
+            get; set;
+        }
 
-        public int? CurrentSelectedProfile {get; set;}
+        public int? CurrentSelectedProfile {
+            get; set;
+        }
 
-        public string User { get; set; }
+        public IEnumerable<UserProfile> AvailableProfilesForGrid {
+            get; set;
+        }
 
-        public string Mode { get; set; }
+        public string User {
+            get; set;
+        }
 
-        public string Platform { get; set; }
+        public string Mode {
+            get; set;
+        }
 
-        public string Environment { get; set; }
+        public string Platform {
+            get; set;
+        }
 
-        public string Module { get; set; }
+        public string Environment {
+            get; set;
+        }
 
-        public bool PrintMode { get; set; }
+        public string Module {
+            get; set;
+        }
 
-        public bool ScanMode { get; set; }
+        public bool PrintMode {
+            get; set;
+        }
 
-        public bool OfflineMode { get; set; }
+        public bool ScanMode {
+            get; set;
+        }
+
+        public bool OfflineMode {
+            get; set;
+        }
 
         private IDictionary<string, object> _parameters;
 
@@ -38,10 +67,14 @@ namespace softWrench.sW4.Security.Context {
                 }
                 return _parameters;
             }
-            set { _parameters = value; }
+            set {
+                _parameters = value;
+            }
         }
 
-        public ApplicationLookupContext ApplicationLookupContext { get; set; }
+        public ApplicationLookupContext ApplicationLookupContext {
+            get; set;
+        }
 
         public ConditionMatch ProfileMatches(int? storedProfile) {
             if (storedProfile == null) {
@@ -80,6 +113,10 @@ namespace softWrench.sW4.Security.Context {
                 if (other.UserProfiles != null) {
                     profileEqual = UserProfiles.SequenceEqual(other.UserProfiles);
                 }
+            }
+
+            if (other.CurrentSelectedProfile != CurrentSelectedProfile) {
+                profileEqual = false;
             }
 
             var appContextEqual = ApplicationLookupContext == null ? other.ApplicationLookupContext == null :
