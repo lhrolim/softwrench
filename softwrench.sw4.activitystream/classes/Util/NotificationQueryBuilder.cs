@@ -43,6 +43,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
             var context = new ContextHolder();
             if (securityGroup.Id != null) {
                 context.UserProfiles = new SortedSet<int?> { securityGroup.Id };
+                context.CurrentSelectedProfile = securityGroup.Id;
             }
             foreach (var role in roles) {
                 _log.DebugFormat("Appending {0} query for security group {1}", role.Name.ToLower(), securityGroup.Name);
@@ -76,19 +77,18 @@ namespace softwrench.sw4.activitystream.classes.Util {
             return sb.ToString();
         }
 
-      
+
 
 
         private string GetRoleQuery(string key) {
-            if (!ActivityStreamConstants.baseQueries.ContainsKey(key)) {
+            if (!ActivityStreamConstants.BaseQueries.ContainsKey(key)) {
                 _log.WarnFormat("base query {0} not found for activitystream setup", key);
                 return "";
             }
-            return ActivityStreamConstants.baseQueries.Single(q => q.Key.EqualsIc(key)).Value;
+            return ActivityStreamConstants.BaseQueries.Single(q => q.Key.EqualsIc(key)).Value;
         }
 
         private KeyValuePair<string, string> GetDefaultQuery() {
-            const string role = "default";
             var notificationsQuery = "";
             notificationsQuery += AppendQuery("sr", null);
             notificationsQuery += AppendQuery("incident", null);
@@ -96,7 +96,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
             if (notificationsQuery.EndsWith(" UNION ")) {
                 notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
             }
-            return new KeyValuePair<string, string>(role, notificationsQuery);
+            return new KeyValuePair<string, string>(ActivityStreamConstants.DefaultStreamName, notificationsQuery);
         }
     }
 }

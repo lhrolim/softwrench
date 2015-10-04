@@ -12,6 +12,7 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Iesi.Collections.Generic;
 using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
@@ -80,12 +81,15 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         public Iesi.Collections.Generic.ISet<UserProfile> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
-            var result = new HashedSet<UserProfile>();
+
             var profiles = loggedUser.Profiles;
-            if (!EnumerableExtensions.Any(profiles)) {
+            if (!profiles.Any()) {
                 //no profiles at all, nothing to consider
-                return result;
+                return new HashedSet<UserProfile>();
             }
+            int? defaultId = null;
+            var sb = new StringBuilder();
+            var result = new List<UserProfile>();
             foreach (var profile in profiles) {
                 var holder = new ContextHolder {
                     CurrentSelectedProfile = profile.Id,
@@ -94,9 +98,20 @@ namespace softWrench.sW4.Configuration.Services {
                 var wc = _configurationService.Lookup<string>(GetFullKey(applicationName), holder);
                 if (!string.IsNullOrEmpty(wc)) {
                     result.Add(profile);
+                } else {
+                    sb.Append(profile.Name).Append(" | ");
+                    defaultId = profile.Id;
                 }
             }
-            return result;
+            if (result.Any()) {
+                result.Insert(0, new UserProfile() {
+                    Id = defaultId,
+                    Name = sb.ToString(0, sb.Length - 3)
+                });
+
+            }
+
+            return new Iesi.Collections.Generic.HashedSet<UserProfile>(result);
         }
 
         private static string GetFullKey(string applicationName) {

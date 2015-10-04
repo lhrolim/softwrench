@@ -15,16 +15,16 @@ namespace softwrench.sW4.test.ActivityStream {
         {
             {"p1",new InMemoryNotificationStream()},
             {"p2",new InMemoryNotificationStream()},
-            {"default",new InMemoryNotificationStream()},
+            {"defaultstream",new InMemoryNotificationStream()},
         };
 
 
         /// <summary>
-        /// Test case where user is not informing the current profile and we have some profiles that default to the default stream.
+        /// Test case where user is not informing the current profile and we have some profiles that defaultstream to the defaultstream stream.
         /// 
-        /// The only non-default profile should be used, and 3 available ones only:
+        /// The only non-defaultstream profile should be used, and 3 available ones only:
         /// 
-        /// The ones which has its own stream, plus a "default fake profile" which will in turn merge all activities
+        /// The ones which has its own stream, plus a "defaultstream fake profile" which will in turn merge all activities
         /// 
         /// </summary>
         [TestMethod]
@@ -35,11 +35,11 @@ namespace softwrench.sW4.test.ActivityStream {
                 UserProfile.TestInstance(2,"p2"),
                 UserProfile.TestInstance(3,"p3"),
             });
-            //p1 and default
+            //p1 and defaultstream
             Assert.AreEqual(result.AvailableProfiles.Count, 3);
             Assert.IsTrue(result.AvailableProfiles.Any(f=> f.Name == "p1"));
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p2"));
-            Assert.IsTrue(result.AvailableProfiles.Any(f=> f.Name == "default"));
+            Assert.IsTrue(result.AvailableProfiles.Any(f=> f.Name == "defaultstream"));
             Assert.AreEqual(result.SelectedProfile.Id, -1);
         }
 
@@ -51,33 +51,33 @@ namespace softwrench.sW4.test.ActivityStream {
                 UserProfile.TestInstance(2,"p2"),
                 UserProfile.TestInstance(3,"p3"),
             });
-            //p1 and default
+            //p1 and defaultstream
             Assert.AreEqual(result.AvailableProfiles.Count, 3);
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p1"));
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p2"));
-            Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "default"));
+            Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "defaultstream"));
             Assert.AreEqual(result.SelectedProfile.Id, 2);
         }
 
         [TestMethod]
-        public void UserAskingForDefault() {
+        public void UserAskingFordefaultstream() {
 
             var result = NotificationSecurityGroupHelper.GetNotificationProfile(_notificationStreams, -1, new List<UserProfile>{
                 UserProfile.TestInstance(1,"p1"),
                 UserProfile.TestInstance(2,"p2"),
                 UserProfile.TestInstance(3,"p3"),
             });
-            //p1 and default
+            //p1 and defaultstream
 
             Assert.AreEqual(result.AvailableProfiles.Count, 3);
-            Assert.AreEqual(result.AvailableProfiles.First().Name,"default");
+            Assert.AreEqual(result.AvailableProfiles.First().Name,"defaultstream");
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p1"));
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p2"));
-            Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "default"));
+            Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "defaultstream"));
             Assert.AreEqual(result.SelectedProfile.Id, -1);
         }
 
-        //No default
+        //No defaultstream
         [TestMethod]
         public void UserWithAllExactProfiles() {
 
@@ -85,11 +85,11 @@ namespace softwrench.sW4.test.ActivityStream {
                 UserProfile.TestInstance(1,"p1"),
                 UserProfile.TestInstance(2,"p2"),
             });
-            //p1 and default
+            //p1 and defaultstream
             Assert.AreEqual(result.AvailableProfiles.Count, 2);
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p1"));
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p2"));
-            Assert.IsFalse(result.AvailableProfiles.Any(f => f.Name == "default"));
+            Assert.IsFalse(result.AvailableProfiles.Any(f => f.Name == "defaultstream"));
             Assert.AreEqual(result.SelectedProfile.Id, 1);
         }
 
@@ -99,7 +99,7 @@ namespace softwrench.sW4.test.ActivityStream {
             var result = NotificationSecurityGroupHelper.GetNotificationProfile(_notificationStreams, null, new List<UserProfile>{
                 UserProfile.TestInstance(10,"p1"),
             });
-            //p1 and default
+            //p1 and defaultstream
             Assert.AreEqual(result.AvailableProfiles.Count, 1);
             Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "p1"));
             Assert.AreEqual(result.SelectedProfile.Id, 10);
@@ -109,9 +109,9 @@ namespace softwrench.sW4.test.ActivityStream {
         public void UserWithNoProfile() {
 
             var result = NotificationSecurityGroupHelper.GetNotificationProfile(_notificationStreams, null, new List<UserProfile>());
-            //p1 and default
+            //p1 and defaultstream
             Assert.AreEqual(result.AvailableProfiles.Count, 1);
-            Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "default"));
+            Assert.IsTrue(result.AvailableProfiles.Any(f => f.Name == "defaultstream"));
             Assert.AreEqual(result.SelectedProfile.Id, -1);
         }
     }

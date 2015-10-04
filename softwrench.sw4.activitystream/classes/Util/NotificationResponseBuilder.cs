@@ -24,7 +24,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
 
 
         public void InitMaxIdCache() {
-            MaxIdCache.Add("default", new Dictionary<string, long>());
+            MaxIdCache.Add(ActivityStreamConstants.DefaultStreamName, new Dictionary<string, long>());
             var securityGroups = UserProfileManager.FetchAllProfiles(true);
             var query = ActivityStreamConstants.BaseIdCacheQuery;
             var result = _maxDAO.FindByNativeQuery(query, null);
@@ -37,7 +37,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     }
                     MaxIdCache[securityGroup.Name].Add(application, idValue);
                 }
-                MaxIdCache["default"].Add(application, idValue);
+                MaxIdCache[ActivityStreamConstants.DefaultStreamName].Add(application, idValue);
             }
         }
 

@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\config\UserConfigurationConstants.cs" />
+    <Compile Include="classes\entities\ApplicationPermission.cs" />
     <Compile Include="classes\entities\DataConstraint.cs" />
     <Compile Include="classes\entities\Person.cs" />
     <Compile Include="classes\entities\PersonGroup.cs" />

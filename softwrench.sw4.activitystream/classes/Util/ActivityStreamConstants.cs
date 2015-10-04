@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace softwrench.sw4.activitystream.classes.Util {
     internal class ActivityStreamConstants {
@@ -11,6 +7,9 @@ namespace softwrench.sw4.activitystream.classes.Util {
         public static string CreatedByCol = "createby";
         public static string CreatedDateCol = "createdate";
         public static string RowstampCol = "rowstamp";
+
+        public static string DefaultStreamName = "defaultstream";
+
 
 
         public static string BaseIdCacheQuery =
@@ -21,7 +20,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     select max(worklogid) as max, 'worklog' as application from worklog";
 
 
-        public static Dictionary<string, string> baseQueries =
+        public static Dictionary<string, string> BaseQueries =
             new Dictionary<string, string>
             {
                 {
