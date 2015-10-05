@@ -180,7 +180,7 @@ app.directive('crudList', function (contextService) {
                         log.info('Scroll To', scrollPosition, scrollObject);
                     }, 100, false);
 
-                $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+                $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
                 log.debug('finish table rendered listener');
             });
 
