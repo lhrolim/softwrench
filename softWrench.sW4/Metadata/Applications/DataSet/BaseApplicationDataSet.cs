@@ -145,11 +145,14 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
 
+            Dictionary<string, EntityRepository.SearchEntityResult> result;
+            if (request is ListReportCompositionFetchRequest) {
+                result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, ((ListReportCompositionFetchRequest)request).PrefetchEntities);
+                return new CompositionFetchResult(result, null);
+            }
             var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
                application, currentData, request.Id);
-
-            var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
-
+            result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
             return new CompositionFetchResult(result, cruddata);
         }
 
@@ -206,6 +209,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 }
                 Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
                 entities = _maximoConnectorEngine.Find(entityMetadata, searchDto, applicationCompositionSchemata);
+                // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
+                if (applicationCompositionSchemata.Count > 0) {
+                    GetCompositionData(application, new ListReportCompositionFetchRequest(entities) {
+                        CompositionList = new List<string>(applicationCompositionSchemata.Keys)
+                    }, null);
+
+                }
             }, ctx);
 
             Task.WaitAll(tasks);
@@ -401,11 +411,15 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
 
             public ContextHolder Context {
-                get { return _context; }
+                get {
+                    return _context;
+                }
             }
 
             public PaginatedSearchRequestDto Dto {
-                get { return _dto; }
+                get {
+                    return _dto;
+                }
             }
 
         }
@@ -483,7 +497,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         internal MaximoConnectorEngine MaximoConnectorEngine {
-            get { return _maximoConnectorEngine; }
+            get {
+                return _maximoConnectorEngine;
+            }
         }
 
 

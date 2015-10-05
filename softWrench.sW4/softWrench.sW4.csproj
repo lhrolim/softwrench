@@ -169,6 +169,7 @@
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\BlankApplicationResponse.cs" />
+    <Compile Include="Data\API\Composition\ListReportCompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />

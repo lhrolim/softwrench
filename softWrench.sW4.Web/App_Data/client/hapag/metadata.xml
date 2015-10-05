@@ -3549,7 +3549,9 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         </schema>
 
         <schema id="detailPrint" stereotype="compositiondetail" mode="output">
-          <field label="Document" attribute="docinfo_.description"/>
+          <field label="Document" hidden="true" attribute="document"/>
+          <field label="Document" hidden="true" attribute="docinfo_.urlname"/>
+          <field label="Document" attribute="urldescription"/>
           <field label="Created Date" attribute="createdate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>

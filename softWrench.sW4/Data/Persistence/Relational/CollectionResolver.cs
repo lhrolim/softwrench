@@ -157,10 +157,10 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             }
             // one thread to fetch results
 
+            results.Add(collectionAssociation.Qualifier, queryResult);
 
             if (attributeHolders.Length == 1) {
                 //default scenario, we have just one entity here
-                results.Add(collectionAssociation.Qualifier, queryResult);
                 firstAttributeHolder.Attributes.Add(targetCollectionAttribute, queryResult.ResultList);
                 return;
             }

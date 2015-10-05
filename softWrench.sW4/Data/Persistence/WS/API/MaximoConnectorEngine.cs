@@ -126,12 +126,6 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
-
-            // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
-            if (compositionSchemas != null && compositionSchemas.Count > 0) {
-                _collectionResolver.ResolveCollections(slicedEntityMetadata, compositionSchemas, list);
-            }
-
             return list;
         }
 
