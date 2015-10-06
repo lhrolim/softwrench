@@ -499,6 +499,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
@@ -655,6 +656,7 @@
     <Content Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </Content>
+    <Content Include="Content\styles\default\_notifications.scss" />
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
@@ -745,11 +747,13 @@
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
     <Content Include="Content\Scripts\vendor\other\spin-min.js" />
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
+    <Content Include="Content\styles\default\_sw-colors.scss" />
     <None Include="Content\styles\default\_tooltips.scss" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <None Include="Content\styles\default\_alert-messages.scss" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />

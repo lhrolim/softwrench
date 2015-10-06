@@ -1,0 +1,129 @@
+﻿notifications {
+    position: fixed;
+    z-index: 9999;
+    right: 10px;
+    /* top: 15px; */
+    .messages {
+        .message {
+            background: #fff;
+            border: 2px solid $cts_orange;
+            border-radius: 5px;
+            width: 420px;
+                margin-top: 10px;
+
+            /*.close {
+                margin-right: 10px;
+                margin-top: 7px;
+            }*/
+
+            .info {
+                padding: 20px 40px 60px;
+
+                .icon {
+                    color: $cts_orange;
+                    font-size: 60px;
+                    text-align: center;
+                }
+
+                .title {
+                    margin-top: 10px;
+                    color: #4d4d4d;
+                    font-size: 22px;
+                    text-align: center;
+                }
+
+                .body {
+                    /*margin-top: 5px;*/
+                    color: #999;
+                    font-size: 15px;
+                    line-height: 1.5;
+                }
+
+                /*.more {
+                     color: #4d4d4d;
+                    font-size: 15px;
+                    text-transform: uppercase;
+                }*/
+                .buttons {
+                    margin-top: 35px;
+
+                    .button {
+                        color: #fff;
+                        border-radius: 5px;
+                        padding: 11px 10px 9px;
+                        width: -moz-calc(50% - 5px);
+                        width: -webkit-calc(50% - 5px;
+                        width: calc(50% - 5px);
+                        text-align: center;
+                        text-transform: uppercase;
+                        font-weight: bold;
+                        font-size: 15px;
+                        cursor: pointer;
+
+                        &.primary {
+                            background: $cts_orange;
+                            float: right;
+
+                            &:hover {
+                                background: darken($cts_orange, 5%);
+                            }
+                        }
+
+                        &.secondary {
+                            background: #999;
+                            float: left;
+
+                            &:hover {
+                                background: darken(#999, 5%);
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.error {
+                border: 2px solid $cts_red;
+
+                .info {
+                    .icon {
+                        color: $cts_red;
+                    }
+
+                    .buttons {
+                        .button {
+                            &.primary {
+                                background: $cts_red;
+
+                                &:hover {
+                                    background: darken($cts_red, 5%);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.success {
+                border: 2px solid $cts_green;
+
+                .info {
+                    .icon {
+                        color: $cts_green;
+                    }
+
+                    .buttons {
+                        .button {
+                            &.primary {
+                                background: $cts_green;
+
+                                &:hover {
+                                    background: darken($cts_green, 5%);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
