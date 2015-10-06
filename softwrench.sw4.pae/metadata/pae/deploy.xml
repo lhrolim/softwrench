@@ -3,7 +3,7 @@
   <globalproperties >
 
     <environment key="qa">
-      <property key="iispath" value="softwrench/paeqa" />
+      <property key="iispath" value="softwrench/pae" />
       <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
     
