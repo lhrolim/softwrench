@@ -4551,6 +4551,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7F0343DC-37A4-41A3-A5E6-773600FA2F1A} = {1E4B56D9-F11F-40A4-BAF5-51790789122C}
+		{93DC42A0-9FDE-40C2-899E-61A67C553851} = {F3FBB2C5-70CE-41A1-81B0-A58FCFFA8B96}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = softWrench.sW4.vsmdi
