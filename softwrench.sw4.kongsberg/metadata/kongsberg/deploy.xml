@@ -2,10 +2,10 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/deploymetadata">
 <globalproperties>
 
-  <!--MAximo Properties-->
-  <environment key="dev">
+
+  <environment key="qa">
     <property key="iispath" value="softwrench/softwrench" />
-    <property key="msdeploy_url" value="https://10.50.100.128:8172/msdeploy.axd,username=KOGT75DEV\Jenkins,password=N3wPass" />
+    <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=KOGT75DEV\Jenkins,password=N3wPass" />
   </environment>
 
 </globalproperties>

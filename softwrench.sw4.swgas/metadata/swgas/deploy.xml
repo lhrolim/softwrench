@@ -6,6 +6,12 @@
       <property key="iispath" value="softwrench/softwrench" />
       <property key="msdeploy_url" value="https://10.50.100.127:8172/msdeploy.axd,username=COM75DEV\Administrator,password=$@$Adm1n" />
     </environment>
+
+    <environment key="qa">
+      <property key="iispath" value="softwrench/swgqa" />
+      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
+    </environment>
+
   </globalproperties>
 
 </metadata>
