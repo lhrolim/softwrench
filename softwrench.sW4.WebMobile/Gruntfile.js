@@ -146,6 +146,7 @@ module.exports = function (grunt) {
                     "moment.js": "moment/moment.js",
                     "ionic.min.js": "ionic/release/js/ionic.js",
                     "ionic-angular.min.js": "ionic/release/js/ionic-angular.js",
+                    "underscore.js" : "underscore/underscore.js"
                 }
             },
             css: {
@@ -193,7 +194,8 @@ module.exports = function (grunt) {
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/min/moment.min.js",
                     "ionic.min.js": "ionic/release/js/ionic.min.js",
-                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js"
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
+                    "underscore.js": "underscore/underscore-min.js"
                 }
             }
         },
@@ -336,7 +338,7 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 mangle: {
-                    except: ["jQuery", "angular", "persistence", "constants", "ionic"]
+                    except: ["jQuery", "angular", "persistence", "constants", "ionic", "_"]
                 }
             },
             release: {
