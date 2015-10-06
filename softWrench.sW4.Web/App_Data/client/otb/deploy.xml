@@ -9,9 +9,8 @@
       <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
     <environment key="qa">
-      <!-- http://10.50.100.218/agqa -->
       <property key="iispath" value="softwrench/softwrench" />
-      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
+      <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
     
     <environment key="dev-sm">
