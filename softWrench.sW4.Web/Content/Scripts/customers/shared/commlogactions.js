@@ -39,7 +39,11 @@
             return transFrom.concat(transTo);
         }
 
-
+        // Forward message
+        // Send to: User entered
+        // Send from: Default address, if none then current user email
+        // CC: User entered
+        // Subject: "Fw:" + Original subject
         $scope.forward = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] }).then(function(result) {
                 var clonedItem = {};
@@ -60,6 +64,11 @@
 
         };
 
+        // Reply to Original sender
+        // Send to: Original sendfrom
+        // Send from: Default address, if none then current user email
+        // CC: Same CC as the original communication
+        // Subject: "Re:" + Original subject
         $scope.reply = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] })
                 .then(function(result) {
@@ -92,7 +101,11 @@
         };
 
 
-
+        // Reply to all
+        // Send to: Original sendfrom, all send to's
+        // Send from: Default address, if none then current user email
+        // CC: Same CC as the original communication
+        // Subject: "Re:" + Original subject
         $scope.replyAll = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] })
                 .then(function(result) {
