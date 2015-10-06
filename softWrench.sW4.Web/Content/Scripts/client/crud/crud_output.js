@@ -28,12 +28,12 @@
                 scope.loaded = true;
             }
 
-            if (scope.schema.mode == "output" && ("true" == scope.isMainTab)) {
+            if (("true" === scope.isMainTab)) {
                 doLoad();
             }
 
             scope.$on("sw_lazyloadtab", function (event, tabid) {
-                if (scope.tabid == tabid && !scope.loaded) {
+                if (scope.tabid === tabid && !scope.loaded) {
                     doLoad();
                 }
             });

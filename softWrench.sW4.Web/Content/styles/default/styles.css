@@ -403,13 +403,18 @@ input[type=search] {
   -webkit-appearance: none; }
 
 .crud_output .field label {
-  text-align: left;
+  
   word-break: break-all;
   word-break: break-word; }
+
   .crud_output .field label img {
     max-width: 100%;
     height: auto;
     width: auto; }
+
+  .crud_output .ta-toolbar {
+      display: none
+  }
 
 .issue-items [ng-switch-when="ApplicationCompositionDefinition"], .expandeddetails, .expanded-item-composition {
   background-image: -webkit-gradient(linear, left 0, left 100%, from(#f7f7f7), to(#ebebeb));

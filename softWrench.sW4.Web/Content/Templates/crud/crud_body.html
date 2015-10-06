@@ -56,9 +56,6 @@
                 <div class="tab-content">
                     <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="main">
                         <ng-switch on="schema.mode">
-                            <!--<div ng-if="isNotHapagTest()">
-                    <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
-                </div>-->
                             <div ng-switch-when="input">
                                 <crud-input-wrapper ismodal="{{ismodal}}"
                                                     extraparameters="extraparameters"
