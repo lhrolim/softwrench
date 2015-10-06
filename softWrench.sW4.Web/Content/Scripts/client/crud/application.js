@@ -249,9 +249,12 @@ function ApplicationController($scope, $http, $log, $timeout,
         scope.originalDatamap = angular.copy(scope.datamap);
 
         scope.extraparameters = instantiateIfUndefined(result.extraParameters);
-        if (result.mode === "input" || result.mode === "output") {
-            scope.mode = result.mode;
+        if (result.mode === undefined || "none".equalsIc(result.mode)) {
+            //FIX SWWEB 1640 and SWWEB 1797
+            result.mode = "input";
         }
+        scope.mode = result.mode;
+        
         
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
