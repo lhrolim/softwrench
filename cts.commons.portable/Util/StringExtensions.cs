@@ -54,5 +54,13 @@ namespace cts.commons.portable.Util {
             }
             return source.Remove(place, find.Length).Insert(place, replace);
         }
+        public static bool Contains(this string source, string find, StringComparison comparison) {
+            return source.IndexOf(find, comparison) >= 0;
+        }
+
+        public static bool ContainsIgnoreCase(this string source, string find) {
+            return source.Contains(find, StringComparison.OrdinalIgnoreCase);
+        }
+
     }
 }
