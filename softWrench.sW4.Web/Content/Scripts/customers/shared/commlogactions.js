@@ -39,7 +39,11 @@
             return transFrom.concat(transTo);
         }
 
-
+        // Forward message
+        // Send to: User entered
+        // Send from: Default address, if none then current user email
+        // CC: User entered
+        // Subject: "Fw:" + Original subject
         $scope.forward = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] }).then(function(result) {
                 var clonedItem = {};
@@ -60,6 +64,11 @@
 
         };
 
+        // Reply to Original sender
+        // Send to: Original sendfrom
+        // Send from: Default address, if none then current user email
+        // CC: Same CC as the original communication
+        // Subject: "Re:" + Original subject
         $scope.reply = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] })
                 .then(function(result) {
@@ -78,7 +87,7 @@
                         }
                     }
                     fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
-
+                    // The clonedItem['sendfrom'] should now have the default value filled or be null, in which case it should be set to the users email address
                     clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
 
                     clonedItem['sendto'] = origSendFrom.indexOf(",") > -1 ? origSendFrom.split(',') : [origSendFrom];
@@ -92,7 +101,11 @@
         };
 
 
-
+        // Reply to all
+        // Send to: Original sendfrom, all send to's
+        // Send from: Default address, if none then current user email
+        // CC: Same CC as the original communication
+        // Subject: "Re:" + Original subject
         $scope.replyAll = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] })
                 .then(function(result) {
@@ -112,12 +125,11 @@
                         }
                     }
                     fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, clonedItem, $scope);
+                    // The clonedItem['sendfrom'] should now have the default value filled or be null, in which case it should be set to the users email address
+                    clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
                     clonedItem['commloguid'] = null;
-
                     clonedItem['sendto'] = buildReplyAllSendTo(origSendTo, origSendFrom);
                     clonedItem['cc'] = nullOrCommaSplit(origCc);
-
-                    clonedItem['sendfrom'] = origSendFrom ? origSendFrom : contextService.getUserData().email;
                     clonedItem['subject'] = "Re: " + origSubject;
                     clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, emptyIfNull(origCc), origSubject, origMessage);
                     $scope.$emit("sw.composition.edit", clonedItem);
