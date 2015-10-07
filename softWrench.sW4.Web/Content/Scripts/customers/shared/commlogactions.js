@@ -2,18 +2,28 @@
 (function (angular) {
     'use strict';
 
-    angular
-      .module('sw_layout')
+    var module = angular.module('sw_layout');
+
+    module.constant("commlog_messagheader", {
+        //above this limit framework shall no longer produce the full rowstamp map, but rather just pass the maxrowstamp to the server
+        messageHeader: "<br/><br/>________________________________________________________________________________________________________" +
+            "<br/><b>From:</b> {0}" +
+            "<br/><b>To:</b> {1}" +
+            "<br/><b>Cc:</b> {2}" +
+            "<br/><b>Subject: </b> {3}" +
+            "<br/><br/>{4}"
+    });
+
+
+
+    module
       .controller('CommLogActionsController', ['$rootScope', '$scope', 'contextService', 'fieldService', 'applicationService', CommLogActionsController]);
 
-    function CommLogActionsController($rootScope, $scope, contextService, fieldService, applicationService) {
 
-        var messageHeader = "<br/><br/>________________________________________________________________________________________________________" +
-                              "<br/><b>From:</b> {0}" +
-                              "<br/><b>To:</b> {1}" +
-                              "<br/><b>Cc:</b> {2}" +
-                              "<br/><b>Subject: </b> {3}" +
-                              "<br/><br/>{4}";
+
+
+    function CommLogActionsController($rootScope, $scope, contextService, fieldService, applicationService, commlog_messagheader) {
+
 
         function nullOrCommaSplit(value) {
             if (value == null) {
@@ -45,7 +55,7 @@
         // CC: User entered
         // Subject: "Fw:" + Original subject
         $scope.forward = function (commlogitem) {
-            applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] }).then(function(result) {
+            applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] }).then(function (result) {
                 var clonedItem = {};
                 angular.copy(result.data.resultObject.fields, clonedItem);
                 var origSendFrom = clonedItem['sendfrom'] == null ? "" : clonedItem['sendfrom'];
@@ -71,7 +81,7 @@
         // Subject: "Re:" + Original subject
         $scope.reply = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] })
-                .then(function(result) {
+                .then(function (result) {
                     var clonedItem = {};
                     angular.copy(result.data.resultObject.fields, clonedItem);
                     var origSendFrom = clonedItem['sendfrom'] == null ? "" : clonedItem['sendfrom'];
@@ -108,7 +118,7 @@
         // Subject: "Re:" + Original subject
         $scope.replyAll = function (commlogitem) {
             applicationService.getApplicationDataPromise("commlog", "detail", { id: commlogitem["commloguid"] })
-                .then(function(result) {
+                .then(function (result) {
                     var clonedItem = {};
                     angular.copy(result.data.resultObject.fields, clonedItem);
 
