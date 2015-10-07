@@ -89,7 +89,7 @@
         parameters = addCurrentSchemaDataToJson(parameters, schema);
         var json = angular.toJson(parameters);
         $http.post(urlToUse, json).success(function () {
-            window.location.reload();
+            window.location.href = window.location.href;
         });
     };
 

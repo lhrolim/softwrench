@@ -356,7 +356,7 @@ app.directive('compositionList', function (contextService, spinService) {
 
             $scope.refresh = function () {
                 //TODO: make a composition refresh only --> now it will be samething as F5
-                window.location.reload();
+                window.location.href = window.location.href;
             };
 
             $scope.allowButton = function (value) {
@@ -391,12 +391,12 @@ app.directive('compositionList', function (contextService, spinService) {
                     successCbk: function (data) {
 
                         if (alwaysrefresh) {
-                            window.location.reload();
+                            window.location.href = window.location.href;
                             return;
                         }
                         var updatedArray = data.resultObject.fields[$scope.relationship];
                         if (updatedArray == null || updatedArray.length == 0) {
-                            window.location.reload();
+                            window.location.href = window.location.href;
                             return;
                         }
                         $scope.clonedCompositionData = updatedArray;
