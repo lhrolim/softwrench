@@ -146,16 +146,6 @@ namespace softWrench.sW4.Web {
 
         protected void Application_BeginRequest(object sender, EventArgs e) {
 
-            if (ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
-                //troubleshooting dev environment pointing to OTB
-                var customerName = EnvironmentUtil.GetIISCustomerName();
-                if (!ApplicationConfiguration.ClientName.Equals(customerName)) {
-                    Log.DebugFormat("restoring application client to {0} was {1}",customerName, ApplicationConfiguration.ClientName);
-                    DoStartApplication(false);
-                }
-            }
-
-
             ContextLookuper.GetInstance().RegisterHttpContext(Request);
 
             if (Request.UrlReferrer != null) {

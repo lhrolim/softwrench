@@ -4,7 +4,7 @@
 
 
   <environment key="qa">
-    <property key="iispath" value="softwrench/softwrench" />
+    <property key="iispath" value="softwrench/kongsberg" />
     <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=KOGT75DEV\Jenkins,password=N3wPass" />
   </environment>
 
