@@ -164,14 +164,10 @@ app.directive('crudList', function (contextService) {
                 //restore the last scroll position, else scroll to the top of the page
                 var scrollObject = contextService.fetchFromContext('scrollto', true);
 
-                if (typeof scrollObject === 'undefined') {
-                    scrollPosition = 0;
+                if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
+                    scrollPosition = scrollObject.scrollTop;
                 } else {
-                    if ($scope.schema.applicationName === scrollObject.applicationName) {
-                        scrollPosition = scrollObject.scrollTop;
-                    } else {
-                        scrollPosition = 0;
-                    }
+                    scrollPosition = 0;
                 }
 
                 $timeout(

@@ -43,6 +43,8 @@
 
             $scope.nextPage = function () {
                 var pageNumber = $scope.paginationData.pageNumber;
+                // Set the scroll position to the top of the new page
+                contextService.insertIntoContext('scrollto', { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                 if (pageNumber < $scope.paginationData.pageCount) {
                     $scope.selectPage(pageNumber + 1);
                 }
