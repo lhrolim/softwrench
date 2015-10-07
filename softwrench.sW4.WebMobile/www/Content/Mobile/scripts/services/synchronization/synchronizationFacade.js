@@ -21,6 +21,15 @@
             return count;
         }
 
+        /**
+         * Deletes the 'deletable' DataEntries related to the batches.
+         * A 'deletable' DataEntry is one which's related BatchItem: 
+         * - has a crudoperation === crudConstants.operation.create
+         * - has no problem associated with it
+         * 
+         * @param [Batch] batches 
+         * @returns Promise resolved with the batches, rejected with database error 
+         */
         function handleDeletableDataEntries(batches) {
             var statements = _.chain(batches)
                 .pluck("loadeditems") // [[BatchItem]]
@@ -252,7 +261,8 @@
             hasDataToSync: hasDataToSync,
             fullDownload: fullDownload,
             fullSync: fullSync,
-            attempSyncAndContinue: attempSyncAndContinue
+            attempSyncAndContinue: attempSyncAndContinue,
+            handleDeletableDataEntries: handleDeletableDataEntries
         }
 
         return api;
