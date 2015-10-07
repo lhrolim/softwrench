@@ -84,32 +84,20 @@
         padding-bottom: 40px;
     }
 
-    /*.ticketid, .ticketid_spacer {
-        display: none;
-    }*/
-
-    /*.ticketid.well {
-        margin-bottom: 0;
-        background: #999 !important;
-
-        h5 {
-            color: #fff !important;
-        }
-    }*/
-
     #rootprintdiv {
-        /*h4.text-center {
-            display: none;
-        }*/
+        h4 {
+            margin: 40px 0 40px;
+        }
+
         .form-group {
-            margin-bottom: 5px;
+            margin-bottom: 0;
 
             .legend-label {
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: bold;
-                padding-left: 0;
-                padding-right: 0;
+                padding: 20px 0 0;
                 border-bottom: 1px solid #999;
+                display: none;
             }
 
             .control-label {
@@ -117,22 +105,22 @@
                 float: left;
                 padding-right: 20px;
                 text-align: right;
+                font-size: 12px;
+                padding-top: 5px;
             }
 
             .form-control {
                 font-weight: normal;
                 border-bottom: 1px solid #ccc;
                 border-radius: 0;
-                /*padding-left: 0;*/
-                /*padding-right: 0;*/
                 padding: 0;
                 height: auto;
-                min-height: 25px;
+                min-height: 18px;
                 float: right;
+                font-size: 12px;
             }
 
             .field {
-                /*width: 70% !important;*/
                 width: 100%;
             }
 
@@ -142,7 +130,13 @@
                 margin-top: 5px;
             }
 
+            .richtextbox, .image-holder {
+                min-height: initial;
+            }
+
             .richtext {
+                margin-bottom: 5px;
+
                 .ta-toolbar {
                     display: none;
                 }
@@ -150,40 +144,21 @@
                 .form-control {
                     width: 100% !important;
                 }
+
+                .ta-scroll-window {
+                    p:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    & > .ta-bind {
+                        height: auto;
+                        min-height: initial;
+                        padding: 0;
+                    }
+                }
             }
         }
     }
-
-
-    /*#rootprintdiv .control-label, #rootprintdiv .field {
-        float: left;
-    }
-
-    #rootprintdiv .control-label {
-        width: 25%;
-    }
-
-    #rootprintdiv .field {
-        width: 70%;
-    }
-
-    #rootprintdiv .field .samelinepickers {
-        margin-top: -6px;
-    }
-
-    #rootprintdiv .field .samelinepickers .col-md-6 {
-        padding-left: 0;
-    }
-
-    #rootprintdiv .field .samelinepickers input {
-        padding-left: 0;
-        padding-right: 20px;
-    }
-
-    #rootprintdiv .field label {
-        padding: 0;
-        font-weight: normal;
-    }*/
 
     .container header {
         position: initial;
