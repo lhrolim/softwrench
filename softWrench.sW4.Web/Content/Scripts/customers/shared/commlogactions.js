@@ -29,14 +29,15 @@
             return value;
         }
 
-        function buildReplyAllSendTo(origTo, origFrom) {
+        function buildReplyAllSendTo(origTo, origFrom, newFrom) {
             var transFrom = nullOrCommaSplit(origFrom);
             var transTo = nullOrCommaSplit(origTo);
-            var userAddressIndex = transTo.indexOf(contextService.getUserData().email);
+            var newTo = transFrom.concat(transTo);
+            var userAddressIndex = newTo.indexOf(newFrom);
             if (userAddressIndex > -1) {
-                transTo.splice(userAddressIndex, 1);
+                newTo.splice(userAddressIndex, 1);
             }
-            return transFrom.concat(transTo);
+            return newTo;
         }
 
         // Forward message
@@ -102,7 +103,7 @@
 
 
         // Reply to all
-        // Send to: Original sendfrom, all send to's
+        // Send to: Original sendfrom, all send to's, removing the new sendfrom from the list if it is present
         // Send from: Default address, if none then current user email
         // CC: Same CC as the original communication
         // Subject: "Re:" + Original subject
@@ -128,7 +129,7 @@
                     // The clonedItem['sendfrom'] should now have the default value filled or be null, in which case it should be set to the users email address
                     clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
                     clonedItem['commloguid'] = null;
-                    clonedItem['sendto'] = buildReplyAllSendTo(origSendTo, origSendFrom);
+                    clonedItem['sendto'] = buildReplyAllSendTo(origSendTo, origSendFrom, clonedItem['sendfrom']);
                     clonedItem['cc'] = nullOrCommaSplit(origCc);
                     clonedItem['subject'] = "Re: " + origSubject;
                     clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, emptyIfNull(origCc), origSubject, origMessage);
