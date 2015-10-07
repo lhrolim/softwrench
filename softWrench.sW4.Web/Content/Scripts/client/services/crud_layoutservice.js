@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('layoutservice', function (fieldService) {
+
     function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
         var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 

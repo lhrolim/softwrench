@@ -1,16 +1,22 @@
 ﻿<section class="crud_output">
-    <div ng-repeat="fieldMetadata in nonTabFields(displayables)"
-         class="row {{getFieldClass(fieldMetadata)}}"
-         style="width: 100%;"
-         ng-show="!isFieldHidden(schema,fieldMetadata)"
-         ng-class="getSectionClass(fieldMetadata)"
-         ng-style="getSectionStyle(fieldMetadata)"
-         ng-if="datamap[fieldMetadata.attribute]">
-        <label class="control-label detail-output {{getLabelClass(fieldMetadata)}}"
-               ng-style="getHeaderStyle(fieldMetadata)"
+    
+    <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
+         class="form-group {{getFieldClass(fieldMetadata)}}"
+         ng-show="!isFieldHidden(schema,fieldMetadata)">
+
+        <label class="control-label"
+               ng-style="getLabelStyle(fieldMetadata)"
+               ng-class="getLabelClass(fieldMetadata)"
                ng-if="hasLabelOrHeader(fieldMetadata)">
             {{i18NLabel(fieldMetadata)}}<span ng-show="i18NLabel(fieldMetadata)!='' && hasSameLineLabel(fieldMetadata)">:</span>
         </label>
+        <legend ng-if="isLabelVisible(fieldMetadata,true)"
+                rel="tooltip"
+                data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                class="legend-label">
+            {{i18NLabel(fieldMetadata)}}
+        </legend>
+
         <div class="field" ng-class="getInputClass(fieldMetadata)">
             <ng-switch on="fieldMetadata.type">
                 <div ng-switch-when="ApplicationCompositionDefinition">
@@ -25,7 +31,8 @@
                                                 datamap="datamap"
                                                 displayables="fieldMetadata.displayables"
                                                 orientation="{{fieldMetadata.orientation}}"
-                                                data-id="{{fieldMetadata.id}}">
+                                                data-id="{{fieldMetadata.id}}"
+                                                renderer-parameters="fieldMetadata.rendererParameters">
                             <!--keep it like this, do not close-->
                         </section-element-output>
                     </div>
@@ -89,9 +96,9 @@
                                 </div>
                                 <div ng-switch-default>
                                     <label class="form-control"
-                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap) | linebreak"
-                                            ng-init="bindEvalExpression(fieldMetadata)"
-                                            data-attribute="{{fieldMetadata.attribute}}">
+                                           ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap) | linebreak"
+                                           ng-init="bindEvalExpression(fieldMetadata)"
+                                           data-attribute="{{fieldMetadata.attribute}}">
                                     </label>
                                 </div>
                             </div>
@@ -100,5 +107,5 @@
                 </div>
             </ng-switch>
         </div>
-    </div>
+    </fieldset>
 </section>
