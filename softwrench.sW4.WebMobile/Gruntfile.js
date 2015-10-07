@@ -58,14 +58,14 @@ module.exports = function (grunt) {
 
     /** app scripts: angular constructs */
     var appScripts = [
+        "www/Content/Mobile/scripts/utils/**/*.js",
+        "www/Content/Mobile/scripts/constants/**/*.js",
         "www/Content/Mobile/scripts/controllers/**/*.js",
         "www/Content/Mobile/scripts/services/**/*.js",
         "www/Content/Mobile/scripts/directives/**/*.js",
         "www/Content/Mobile/scripts/maximoservices/**/*.js",
-        "www/Content/Mobile/scripts/utils/**/*.js",
         "www/Content/Mobile/scripts/filters/**/*.js",
-        "www/Content/Mobile/scripts/decorators/**/*.js",
-        "www/Content/Mobile/scripts/constants/**/*.js"
+        "www/Content/Mobile/scripts/decorators/**/*.js"
     ];
 
     //TODO: make a client-based build??
@@ -97,6 +97,7 @@ module.exports = function (grunt) {
         "www/Content/Vendor/scripts/jquery.js",
         "www/Content/Vendor/scripts/ng-cordova.js",
         "www/Content/Vendor/scripts/moment.js",
+        "www/Content/Vendor/scripts/underscore.js",
         "www/Content/Vendor/scripts/persistence.store.websql.js"
     ];
     
@@ -146,6 +147,7 @@ module.exports = function (grunt) {
                     "moment.js": "moment/moment.js",
                     "ionic.min.js": "ionic/release/js/ionic.js",
                     "ionic-angular.min.js": "ionic/release/js/ionic-angular.js",
+                    "underscore.js" : "underscore/underscore.js"
                 }
             },
             css: {
@@ -193,7 +195,8 @@ module.exports = function (grunt) {
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/min/moment.min.js",
                     "ionic.min.js": "ionic/release/js/ionic.min.js",
-                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js"
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
+                    "underscore.js": "underscore/underscore-min.js"
                 }
             }
         },
@@ -336,7 +339,7 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 mangle: {
-                    except: ["jQuery", "angular", "persistence", "constants", "ionic"]
+                    except: ["jQuery", "angular", "persistence", "constants", "ionic", "_"]
                 }
             },
             release: {

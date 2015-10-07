@@ -73,6 +73,20 @@
                 "aaaa <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> aaaa"
             ]
         },
+        multipleurltags: { // <url_pattern>
+            input: [
+                "aaaa <http://google.comhttp://google.com> aaaa",
+                "aaaa <https://google.comhttp://mail.outlook.com> aaaa",
+                "aaaa <https://google.comhttps://google.com> aaaa",
+                "aaaa <http://api.icndb.com/jokes/random?firstName=Boris&lastName=Bottihttp://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti> aaaa"
+            ],
+            expected: [
+                "aaaa <a href='http://google.comhttp://google.com'>http://google.comhttp://google.com</a> aaaa",
+                "aaaa <a href='https://google.comhttp://mail.outlook.com'>https://google.comhttp://mail.outlook.com</a> aaaa",
+                "aaaa <a href='https://google.comhttps://google.com'>https://google.comhttps://google.com</a> aaaa",
+                "aaaa <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Bottihttp://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Bottihttp://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> aaaa"
+            ]
+        },
         multipleemailtags: { // <email_pattern(email_pattern)+>
             input: [
                 "<div> aaaa <mailto:unackdry@outlook.comunackdry@outlook.com> " + // multiple 'weird' emails
@@ -97,7 +111,8 @@
                     "dddd <!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
                     "eeee <mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
                     "ffff <http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti> " +
-                    "gggg <mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> </div>",
+                    "gggg <mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
+                    "hhhh <https://google.comhttp://mail.outlook.com> </div>",
                 "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ],
             expected: [
@@ -107,7 +122,8 @@
                     "dddd <a href='mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
                     "eeee <a href='mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
                     "ffff <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> " +
-                    "gggg <a href='mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> </div>",
+                    "gggg <a href='mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
+                    "hhhh <a href='https://google.comhttp://mail.outlook.com'>https://google.comhttp://mail.outlook.com</a> </div>",
                 "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ]
         }
@@ -151,6 +167,10 @@
 
     it("url tags replacement", function () {
         runInvalidTagReplacementTest(config.urltags);
+    });
+
+    it("multiple url tags replacement", function () {
+        runInvalidTagReplacementTest(config.multipleurltags);
     });
 
     it("multiple email tags replacement", function () {

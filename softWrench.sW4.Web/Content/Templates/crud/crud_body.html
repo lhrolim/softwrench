@@ -55,8 +55,8 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="main">
-                        <ng-switch on="schema.mode">
-                            <div ng-switch-when="input">
+                        <ng-switch on="schema.mode.equalsAny('input', 'none') ">
+                            <div ng-switch-when="true">
                                 <crud-input-wrapper ismodal="{{ismodal}}"
                                                     extraparameters="extraparameters"
                                                     elementid="crudInputMainComposition"
@@ -73,7 +73,7 @@
                                                     is-main-tab='true' tabid="main" />
 
                             </div>
-                            <div ng-switch-when="output">
+                            <div ng-switch-when="false">
                                 <crud-output-wrapper extraparameters="extraparameters"
                                                      schema="schema" datamap="datamap.fields"
                                                      displayables="schema.displayables"
@@ -96,8 +96,8 @@
                             <div ng-switch-when="false">
                             </div>
                         </div>
-                        <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode">
-                            <div ng-switch-when="input">
+                        <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode.equalsAny('input', 'none')">
+                            <div ng-switch-when="true">
                                 <crud-input-wrapper ismodal="{{ismodal}}"
                                                     extraparameters="extraparameters"
                                                     elementid="tab_{{tab.tabid}}"
@@ -110,7 +110,7 @@
                                                     savefn="save(selecteditem, parameters)"
                                                     previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                             </div>
-                            <div ng-switch-when="output">
+                            <div ng-switch-when="false">
                                 <crud-output-wrapper extraparameters="extraparameters"
                                                      schema="schema" datamap="datamap.fields"
                                                      displayables="tab.displayables"
@@ -123,8 +123,8 @@
 
             <!-- the false == no tabs at all. like on a new screen-->
             <div ng-switch-when="false" class="hiddenonprint detail-body" tabsrendered>
-                <ng-switch on="schema.mode">
-                    <div ng-switch-when="input">
+                <ng-switch on="schema.mode.equalsAny('input','none') ">
+                    <div ng-switch-when="true">
                         <crud-input-wrapper ismodal="{{ismodal}}"
                                             elementid="crudInputMain"
                                             extraparameters="extraparameters"
@@ -137,7 +137,7 @@
                                             savefn="save(selecteditem, parameters)"
                                             previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
                     </div>
-                    <div ng-switch-when="output">
+                    <div ng-switch-when="false">
                         <crud-output-wrapper schema="schema"
                                              extraparameters="extraparameters"
                                              datamap="datamap.fields"

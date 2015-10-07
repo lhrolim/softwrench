@@ -240,7 +240,7 @@
                 if (successItem.problem) successItem.problem = null; // problem shouldn't be deleted for history purposes
             });
             // update items's DataEntries's flags
-            batch.loadeditems.forEach(function (item) {
+            angular.forEach(batch.loadeditems, function (item) {
                 item.dataentry.pending = false;
                 item.dataentry.isDirty = !!item.problem;
             });

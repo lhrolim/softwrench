@@ -110,7 +110,7 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $('#crudmodal').modal('hide');
                 $rootScope.showingModal = false;
 
-                $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+                $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
                 $('.no-touch [rel=tooltip]').tooltip('hide');
             }
 
