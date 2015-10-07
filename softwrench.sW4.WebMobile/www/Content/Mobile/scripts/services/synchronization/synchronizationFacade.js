@@ -1,7 +1,7 @@
-﻿(function (mobileServices, angular) {
+﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, $ionicLoading, $ionicPopup) {
+    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, $ionicLoading, $ionicPopup, crudConstants, entities) {
         
         //#region Utils
 
@@ -21,8 +21,34 @@
             return count;
         }
 
+        function handleDeletableDataEntries(batches) {
+            var statements = _.chain(batches)
+                .pluck("loadeditems") // [[BatchItem]]
+                .flatten() // [BatchItem]
+                .filter(function (item) {
+                    return item.crudoperation === crudConstants.operation.create && !item.problem;
+                }) // [BatchItem] crud_create and doesn't have problem  
+                .pluck("dataentry") // [DataEntry]
+                .groupBy("application") // { DataEntry['application'] : [DataEntry] }
+                .map(function (entries, application) {
+                    var ids = _.map(entries, function(entry) {
+                        return "'{0}'".format(entry.id);
+                    });
+                    return { query: entities.DataEntry.deleteInIdsStatement, args: [ids, application] }
+                }) // [PreparedStatement]
+                .value();
+
+            // nothing to delete: resolve with batches immediately
+            if (statements.length <= 0) return $q.when(batches);
+            // resolve with batches if delete wass successful
+            return swdbDAO.executeQueries(statements).then(function() {
+                return batches;
+            });
+        }
+
         /**
-         * Updates the Batches and creates a SyncOperation.
+         * Updates the Batches, deletes DataEntries that should be deleted 
+         * and creates a SyncOperation.
          * 
          * @param Object completionResult 
          */
@@ -30,13 +56,15 @@
             var log = $log.get("dataSynchronizationService#onBatchesCompleted");
             var start = completionResult.start;
             var batchTuples = completionResult.batchTuples;
-            var promises = [];
-            angular.forEach(batchTuples, function (tuple) {
+            var promises = _.map(batchTuples, function (tuple) {
                 var remoteBatch = tuple.remote;
                 var batch = tuple.local;
-                promises.push(batchService.updateBatch(batch, remoteBatch));
+                return batchService.updateBatch(batch, remoteBatch);
             });
             $q.all(promises)
+                .then(function(batches) {
+                    return handleDeletableDataEntries(batches);
+                })
                 .then(function (batches) {
                     // update the related syncoperations as 'COMPLETE'
                     // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
@@ -167,13 +195,16 @@
                                 // create batch/offline SyncOperation
                                 return synchronizationOperationService.createBatchOperation(start, batchResults);
                             }
-                            // sync case: download ONLY data and create a SyncOperation indicating both a Batch submission and a download
-                            return dataSynchronizationService.syncData()
-                                .then(function (downloadResults) {
-                                    log.debug("Batch returned synchronously --> performing download");
-                                    var dataCount = getDownloadDataCount(downloadResults);
-                                    return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
-                                });
+                            // sync case: 
+                            // - delete DataEntries that should be deleted
+                            // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
+                            return handleDeletableDataEntries(batchResults).then(function() {
+                                return dataSynchronizationService.syncData();
+                            }).then(function (downloadResults) {
+                                log.debug("Batch returned synchronously --> performing download");
+                                var dataCount = getDownloadDataCount(downloadResults);
+                                return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                            });
                         });
                 });
         }
@@ -229,7 +260,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "$ionicLoading", "$ionicPopup", synchronizationFacade]);
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "$ionicLoading", "$ionicPopup", "crudConstants", "offlineEntities", synchronizationFacade]);
     //#endregion
 
-})(mobileServices, angular);
+})(mobileServices, angular, _);
