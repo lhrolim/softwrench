@@ -58,7 +58,8 @@ namespace softWrench.sW4.Data {
                 if (pair.Key == RowStampUtil.RowstampColumnName || pair.Key.Contains("." + RowStampUtil.RowstampColumnName)) {
                     value = RowStampUtil.Convert(pair.Value);
                 } else {
-                    value = pair.Value == null ? null : Convert.ToString(pair.Value);
+                    // let the serializer take care of date convertion
+                    value = pair.Value == null ? null : (pair.Value is DateTime ? pair.Value : Convert.ToString(pair.Value));
                 }
                 attributes[pair.Key] = value;
             }
