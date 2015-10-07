@@ -1,4 +1,4 @@
-﻿(function (mobileServices) {
+﻿(function (mobileServices, angular) {
     "use strict";
 
     var buildIdsString = function (deletedRecordIds) {
@@ -40,34 +40,29 @@
                 var insertUpdateDatamap = application.insertOrUpdateDataMaps;
                 var deletedIds = application.deletedRecordIds;
                 log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
-                for (var j = 0; j < newDataMaps.length; j++) {
-                    var newDataMap = newDataMaps[j];
+
+                angular.forEach(newDataMaps, function (newDataMap) {
                     var id = persistence.createUUID();
                     var newJson = JSON.stringify(newDataMap.fields);
                     //newJson = datamapSanitizationService.sanitize(newJson);
-
                     var insertQuery = { query: entities.DataEntry.insertionQueryPattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id] };
                     queryArray.push(insertQuery);
-                }
+                });
 
-                for (j = 0; j < insertUpdateDatamap.length; j++) {
-                    var insertOrUpdateDatamap = insertUpdateDatamap[j];
+                angular.forEach(insertUpdateDatamap, function(insertOrUpdateDatamap) {
                     var id = persistence.createUUID();
                     var newJson = JSON.stringify(insertOrUpdateDatamap.fields);
                     //newJson = datamapSanitizationService.sanitize(newJson);
-
                     var insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson,newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
                     queryArray.push(insertOrUpdateQuery);
-                }
+                });
 
-                for (j = 0; j < updatedDataMaps.length; j++) {
-                    var updateDataMap = updatedDataMaps[j];
+                angular.forEach(updatedDataMaps, function(updateDataMap) {
                     var updateJson = JSON.stringify(updateDataMap.fields);
                     //updateJson = datamapSanitizationService.sanitize(updateJson);
-
                     var updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), updateDataMap.id, updateDataMap.application] };
                     queryArray.push(updateQuery);
-                }
+                });
 
                 if (deletedIds.length > 0) {
                     var deleteQuery = { query: entities.DataEntry.deleteQueryPattern, args: [buildIdsString(deletedIds), application.applicationName] };
@@ -141,4 +136,4 @@
 
     mobileServices.factory('dataSynchronizationService', service);
 
-})(mobileServices);
+})(mobileServices, angular);

@@ -165,6 +165,7 @@
         entities.DataEntry.insertOrReplacePattern = "INSERT OR REPLACE INTO DataEntry (application,originaldatamap,datamap,pending,isDirty,remoteId,rowstamp,id) values (?,?,?,0,0,?,?,?)";
 
         entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in(?) and 'application'=?";
+        entities.DataEntry.deleteInIdsStatement = "delete from DataEntry where id in(?) and application=?";
 
         entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1 where id =?";
         entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id') values (?,?,1,0,null,null,?)";

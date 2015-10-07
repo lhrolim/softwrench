@@ -1,9 +1,9 @@
 ﻿(function (mobileServices) {
-    'use strict';
+    "use strict";
 
-    mobileServices.factory('operationService', ['schemaService', operationService]);
+    mobileServices.factory("operationService", ["schemaService", "crudConstants", operationService]);
 
-    function operationService(schemaService) {
+    function operationService(schemaService, crudConstants) {
 
         var service = {
             getCrudOperation: getCrudOperation
@@ -13,7 +13,7 @@
 
         function getCrudOperation(dataEntry, detailSchema) {
             var isNew = schemaService.getId(dataEntry.datamap, detailSchema) == null;
-            return isNew ? "crud_create" : "crud_update";
+            return isNew ? crudConstants.operation.create : crudConstants.operation.update;
         }
 
     }
