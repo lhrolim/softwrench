@@ -262,9 +262,3 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
 });
 
-
-// In chrome you have to fire the window.location.reload event to fire a print event when a socket event is in progress.. 
-// http://stackoverflow.com/questions/18622626/chrome-window-print-print-dialogue-opens-only-after-page-reload-javascript
-//if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-//                    window.location.reload();
-//}
