@@ -204,6 +204,60 @@
 .datetimepicker table tr td.today.disabled:hover.active {
   background-color: #fbf069 \9;
 }
+
+
+
+.datetimepicker table tr td.closecal,
+.datetimepicker table tr td.closecal:hover,
+.datetimepicker table tr td.closecal.disabled,
+.datetimepicker table tr td.closecal.disabled:hover {
+  background-color: #fde19a;
+  background-image: -moz-linear-gradient(top, #fdd49a, #fdf59a);
+  background-image: -ms-linear-gradient(top, #fdd49a, #fdf59a);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fdd49a), to(#fdf59a));
+  background-image: -webkit-linear-gradient(top, #fdd49a, #fdf59a);
+  background-image: -o-linear-gradient(top, #fdd49a, #fdf59a);
+  background-image: linear-gradient(top, #fdd49a, #fdf59a);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdd49a', endColorstr='#fdf59a', GradientType=0);
+  border-color: #fdf59a #fdf59a #fbed50;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+.datetimepicker table tr td.closecal:hover,
+.datetimepicker table tr td.closecal:hover:hover,
+.datetimepicker table tr td.closecal.disabled:hover,
+.datetimepicker table tr td.closecal.disabled:hover:hover,
+.datetimepicker table tr td.closecal:active,
+.datetimepicker table tr td.closecal:hover:active,
+.datetimepicker table tr td.closecal.disabled:active,
+.datetimepicker table tr td.closecal.disabled:hover:active,
+.datetimepicker table tr td.closecal.active,
+.datetimepicker table tr td.closecal:hover.active,
+.datetimepicker table tr td.closecal.disabled.active,
+.datetimepicker table tr td.closecal.disabled:hover.active,
+.datetimepicker table tr td.closecal.disabled,
+.datetimepicker table tr td.closecal:hover.disabled,
+.datetimepicker table tr td.closecal.disabled.disabled,
+.datetimepicker table tr td.closecal.disabled:hover.disabled,
+.datetimepicker table tr td.closecal[disabled],
+.datetimepicker table tr td.closecal:hover[disabled],
+.datetimepicker table tr td.closecal.disabled[disabled],
+.datetimepicker table tr td.closecal.disabled:hover[disabled] {
+  background-color: #fdf59a;
+}
+.datetimepicker table tr td.closecal:active,
+.datetimepicker table tr td.closecal:hover:active,
+.datetimepicker table tr td.closecal.disabled:active,
+.datetimepicker table tr td.closecal.disabled:hover:active,
+.datetimepicker table tr td.closecal.active,
+.datetimepicker table tr td.closecal:hover.active,
+.datetimepicker table tr td.closecal.disabled.active,
+.datetimepicker table tr td.closecal.disabled:hover.active {
+  background-color: #fbf069 \9;
+}
+
+
 .datetimepicker table tr td.active,
 .datetimepicker table tr td.active:hover,
 .datetimepicker table tr td.active.disabled,

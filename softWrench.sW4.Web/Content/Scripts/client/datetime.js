@@ -41,6 +41,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             }
 
             var showTime = parseBooleanValue(attrs.showTime);
+            var showIgnoreTime = attrs.showIgnoretime==="true";
             var originalAttribute = attrs.originalAttribute;
             var showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.dateFormat, showTime);
@@ -111,7 +112,11 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         formatViewType: 'time',
                         startView: istimeOnly ? 1 : 2,
                         maxView: istimeOnly ? 1 : 3,
-                        readonly: isReadOnly
+                        readonly: isReadOnly,
+                        ignoretimeBtn: showIgnoreTime,
+                        forceParse :!showIgnoreTime
+
+
                     });
                 }
                 else {

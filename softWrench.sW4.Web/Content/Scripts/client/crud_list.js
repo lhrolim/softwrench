@@ -94,6 +94,15 @@ app.directive('crudList', function (contextService) {
                     return true;
                 }
             };
+
+            $scope.getOpenCalendarTooltip = function (attribute) {
+                var currentData = $scope.searchData[attribute];
+                if (currentData) {
+                    return currentData;
+                }
+                return this.i18N('calendar.date_tooltip', 'Open the calendar popup');
+            }
+
             $scope.isNotHapagTest = function () {
                 return $rootScope.clientName != 'hapag';
             }

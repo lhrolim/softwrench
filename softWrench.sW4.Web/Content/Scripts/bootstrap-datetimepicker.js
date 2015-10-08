@@ -196,6 +196,7 @@
         }
 
         this.todayBtn = (options.todayBtn || this.element.data('date-today-btn') || false);
+        this.ignoreTimeBtn = (options.ignoretimeBtn || this.element.data('date-ignoretime-btn') || false);
         this.todayHighlight = (options.todayHighlight || this.element.data('date-today-highlight') || false);
 
         this.weekStart = ((options.weekStart || this.element.data('date-weekstart') || dates[this.language].weekStart || 0) % 7);
@@ -295,7 +296,7 @@
             });
         },
 
-        hide: function (e) {
+        hide: function (e,ignoreTimeFormat) {
             if (!this.isVisible) return;
             if (this.isInline) return;
             this.picker.hide();
@@ -313,7 +314,7 @@
 							this.hasInput && this.element.find('input').val()
 						)
 				)
-                this.setValue();
+                this.setValue(ignoreTimeFormat);
             this.isVisible = false;
             this.element.trigger({
                 type: 'hide',
@@ -370,8 +371,15 @@
             }
         },
 
-        setValue: function () {
-            var formatted = this.getFormattedDate();
+        setValue: function (ignoreTimeFormat) {
+            var declaredFormat = null;
+            if (ignoreTimeFormat) {
+                var ignoreMinutesOnly = this.viewMode === 0;
+                declaredFormat = {};
+                declaredFormat.parts = this.format.parts.slice(0, ignoreMinutesOnly ? 4:3);
+                declaredFormat.separators = this.format.separators.slice(0, ignoreMinutesOnly ? 4:3);
+            }
+            var formatted = this.getFormattedDate(declaredFormat);
             if (!this.isInput) {
                 if (this.component) {
                     this.element.find('input').val(formatted);
@@ -546,6 +554,12 @@
             this.picker.find('tfoot th.today')
 				.text(dates[this.language].today)
 				.toggle(this.todayBtn !== false);
+
+            //cts:luiz
+            this.picker.find('tfoot th.closecal')
+                .text("Close")
+                .toggle(this.ignoreTimeBtn !== false);
+
             this.updateNavArrows();
             this.fillMonths();
             /*var prevMonth = UTCDate(year, month, 0,0,0,0,0);
@@ -849,6 +863,15 @@
                                     this.hide();
                                 }
                                 break;
+                            case 'closecal':
+                                var year = this.viewDate.getUTCFullYear(),
+                                    month = this.viewDate.getUTCMonth(),
+                                    day = this.viewDate.getUTCDate(),
+                                    hours = this.viewDate.getUTCHours();
+                                this._setDate(UTCDate(year, month, day, hours, 0, 0, 0),"date",true);
+//                                this.fill();
+                                this.hide(null,true);
+                                break;
                         }
                         break;
                     case 'span':
@@ -970,13 +993,13 @@
             }
         },
 
-        _setDate: function (date, which) {
+        _setDate: function (date, which,ignoreTimeFormat) {
             if (!which || which == 'date')
                 this.date = date;
             if (!which || which == 'view')
                 this.viewDate = date;
             this.fill();
-            this.setValue();
+            this.setValue(ignoreTimeFormat);
             var element;
             if (this.isInput) {
                 element = this.element;
@@ -1598,21 +1621,22 @@
 							  '</tr>' +
 			'</thead>',
         contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
-        footTemplate: '<tfoot><tr><th colspan="7" class="today"></th></tr></tfoot>'
+        footTemplate: '<tfoot><tr><th colspan="7" class="today"></th></tr></tfoot>',
+        hourfootTemplate: '<tfoot><tr><th colspan="7" class="closecal"></th></tr></tfoot>'
     };
     DPGlobal.template = '<div class="datetimepicker">' +
 		'<div class="datetimepicker-minutes">' +
 		'<table class=" table-condensed">' +
 		DPGlobal.headTemplate +
 		DPGlobal.contTemplate +
-		DPGlobal.footTemplate +
+		DPGlobal.hourfootTemplate +
 		'</table>' +
 		'</div>' +
 		'<div class="datetimepicker-hours">' +
 		'<table class=" table-condensed">' +
 		DPGlobal.headTemplate +
 		DPGlobal.contTemplate +
-		DPGlobal.footTemplate +
+		DPGlobal.hourfootTemplate +
 		'</table>' +
 		'</div>' +
 		'<div class="datetimepicker-days">' +
@@ -1642,14 +1666,14 @@
 		'<table class=" table-condensed">' +
 		DPGlobal.headTemplateV3 +
 		DPGlobal.contTemplate +
-		DPGlobal.footTemplate +
+		DPGlobal.hourfootTemplate +
 		'</table>' +
 		'</div>' +
 		'<div class="datetimepicker-hours">' +
 		'<table class=" table-condensed">' +
 		DPGlobal.headTemplateV3 +
 		DPGlobal.contTemplate +
-		DPGlobal.footTemplate +
+		DPGlobal.hourfootTemplate +
 		'</table>' +
 		'</div>' +
 		'<div class="datetimepicker-days">' +
