@@ -3426,6 +3426,9 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
     </application>
 
     <application name="approvals" title="Approvals" entity="pmchgotherapprovers">
+      <properties>
+        <property key="pagination.disabled" value="True" />
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
           <commands>
