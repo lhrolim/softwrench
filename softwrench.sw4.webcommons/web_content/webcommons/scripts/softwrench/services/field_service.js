@@ -425,6 +425,13 @@
             };
             $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
             fn(afterchangeEvent);
+        },
+
+        /// <summary>
+        /// simple function to allow mocking of dates on unittests
+        /// </summary>
+        currentDate: function () {
+            return new Date();
         }
     };
 

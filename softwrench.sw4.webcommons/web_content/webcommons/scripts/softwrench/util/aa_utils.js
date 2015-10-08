@@ -221,6 +221,20 @@ Array.prototype.subarray = function (start, end) {
     return this.slice(start, this.length + 1 - (end * -1));
 }
 
+function nullOrCommaSplit(value) {
+    if (value == null || value === "") {
+        return null;
+    }
+    return value.split(",");
+}
+
+function emptyIfNull(value) {
+    if (value == null) {
+        return "";
+    }
+    return value;
+}
+
 var nullOrEmpty = function (s) {
     return nullOrUndef(s) || String(s).trim().length == 0;
 };

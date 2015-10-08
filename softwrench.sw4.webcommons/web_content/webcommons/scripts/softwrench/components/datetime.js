@@ -3,11 +3,23 @@
 app.directive('dateTime', function ($timeout, formatService, expressionService) {
 
     function parseBooleanValue(attrValue) {
-        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
+        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() === "true";
     }
 
     function parseBooleanValueDefaultFalse(attrValue) {
-        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
+        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() === "true";
+    }
+
+    function updateView(ngModel, scope, element, datamap, angularDateFormat) {
+        if (scope.fieldMetadata != undefined) {
+            var value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
+            ngModel.$setViewValue(value);
+            element.val(value);
+            if (datamap != undefined && scope.fieldMetadata != undefined) {
+                datamap[scope.fieldMetadata.attribute] = value;
+            }
+            ngModel.$render();
+        }
     }
 
     return {
@@ -28,16 +40,15 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
             var datamap = scope.datamap;
             datetimeclassHandler(istimeOnly);
 
+            scope.$watch(function () {
+                return ngModel.$modelValue;
+            }, function (newValue) {
+                //let´s make sure that the view keeps getting update if the model changes via an api call
+                updateView(ngModel, scope, element, datamap, angularDateFormat);
+            });
+
             $timeout(function () {
-                if (scope.fieldMetadata != undefined) {
-                    var value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
-                    ngModel.$setViewValue(value);
-                    element.val(value);
-                    if (datamap != undefined && scope.fieldMetadata != undefined) {
-                        datamap[scope.fieldMetadata.attribute] = value;
-                    }
-                    ngModel.$render();
-                }
+                updateView(ngModel, scope, element, datamap, angularDateFormat);
             });
 
             if (dateFormat != '' && dateFormat != undefined) {
