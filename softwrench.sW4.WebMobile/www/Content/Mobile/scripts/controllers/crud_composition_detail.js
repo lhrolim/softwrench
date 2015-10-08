@@ -15,8 +15,8 @@
             return field.label + ":" + item[field.attribute];
         }
 
-        $scope.associationSearch = function (queryparameters) {
-            return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, queryparameters.identifier, queryparameters.query);
+        $scope.associationSearch = function (query, componentId) {
+            return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
         }
 
         $scope.getAssociationLabelField = function (fieldMetadata) {
