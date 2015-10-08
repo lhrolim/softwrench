@@ -26,9 +26,7 @@ app.directive('messagesection', function (contextService) {
             });
 
             $scope.$on('sw_successmessage', function (event, data) {
-                log.debug('sw_successmessage#enter');
-
-                //console.log(data.successMessage, data);
+                log.debug('sw_successmessage#enter', $scope);
 
                 if (!nullOrUndef(data.successMessage) && allowSuccessMessageDisplay(data)) {
                     if (nullOrUndef(data.schema)) {

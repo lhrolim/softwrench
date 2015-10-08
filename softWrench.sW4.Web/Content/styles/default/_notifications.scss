@@ -4,7 +4,6 @@
     right: 5px;
     top: 5px;
 
-
     .messages {
         .message {
             background: #fff;
@@ -12,10 +11,14 @@
             border-radius: 5px;
             width: 420px;
             margin-bottom: 5px;
+            -webkit-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+            -moz-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+            box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
 
             .close {
                 margin-right: 10px;
                 margin-top: 7px;
+                display: none;
             }
 
             .info {
@@ -25,18 +28,18 @@
                     color: $cts_orange;
                     font-size: 60px;
                     text-align: center;
+                    height: 68px;
                 }
 
                 .text {
                     .title {
-                        margin-top: 10px;
+                        margin-top: 15px;
                         color: #4d4d4d;
                         font-size: 22px;
                         text-align: center;
                     }
 
                     .body {
-                        /*margin-top: 5px;*/
                         color: #999;
                         font-size: 15px;
                         line-height: 1.5;
@@ -48,6 +51,8 @@
                         font-weight: bold;
                         text-transform: uppercase;
                         cursor: pointer;
+                        display: none;
+
                         &:hover {
                             text-decoration: underline;
                         }
@@ -90,41 +95,43 @@
                     }
                 }
             }
-
+            /* Message Themes */
             &.dev {
-                /*border: 2px solid $cts_blue;*/
+                .close {
+                    display: block;
+                }
 
                 .info {
-                    padding: 3px 20px 20px;
+                    padding: 5px 20px 20px;
 
                     .icon {
                         text-align: left;
                         float: left;
-                        /*color: $cts_blue;*/
                     }
 
                     .text {
                         float: left;
                         margin-top: 20px;
                         margin-left: 20px;
+                        width: 298px;
+
+                        .title {
+                            display: none;
+                        }
+
+                        .more {
+                            display: block;
+                        }
                     }
 
-                     /*.buttons {
-                        .button {
-                            &.primary {
-                                background: $cts_blue;
-
-                                &:hover {
-                                    background: darken($cts_blue, 5%);
-                                }
-                            }
-                        }
-                    }*/
+                    .buttons {
+                        display: none;
+                    }
                 }
             }
 
             &.error {
-                border: 2px solid $cts_red;
+                border-color: $cts_red;
 
                 .info {
                     .icon {
@@ -146,7 +153,7 @@
             }
 
             &.success {
-                border: 2px solid $cts_green;
+                border-color: $cts_green;
 
                 .info {
                     .icon {
