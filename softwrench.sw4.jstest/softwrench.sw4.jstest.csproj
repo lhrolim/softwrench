@@ -1439,6 +1439,7 @@
     <Content Include="templates\fake.html" />
     <Content Include="tests\controllers\application_test.js" />
     <Content Include="tests\controllers\crud_list_test.js" />
+    <Content Include="tests\controllers\commlogaction_test.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
     <Content Include="tests\services\menu_service_test.js" />

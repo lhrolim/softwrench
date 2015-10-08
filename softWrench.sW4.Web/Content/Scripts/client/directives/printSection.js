@@ -29,13 +29,13 @@ app.directive('printSection', function (contextService) {
             $scope.showPrintSection = false;
             $scope.showPrintSectionCompostions = false;
 
-            $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain) {               
+            $scope.doStartPrint = function (compositionData, shouldPageBreak, shouldPrintMain, mockprint) {
                 fixHeaderService.unfix();
                 var compositionstoprint = [];
                 $scope.shouldPageBreak = shouldPageBreak;
                 $scope.shouldPrintMain = shouldPrintMain;
                 $scope.printSchema = $scope.schema.printSchema != null ? $scope.schema.printSchema : $scope.schema;
-                
+
                 $.each(compositionData, function (key, value) {
                     var compositionToPrint = {};
                     if (value.schema != undefined) {
@@ -56,6 +56,10 @@ app.directive('printSection', function (contextService) {
                 $scope.showPrintSection = true;
                 $scope.showPrintSectionCompostions = compositionstoprint.length > 0;
                 fixHeaderService.fixThead($scope.schema);
+            }
+
+            $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain) {
+                $scope.doStartPrint(compositionData, shouldPageBreak, shouldPrintMain);
             });
 
             $scope.$on('sw_readytoprintdetailedlistevent', function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain) {
@@ -75,7 +79,7 @@ app.directive('printSection', function (contextService) {
                     }
                     compositionstoprint.push(compositionToPrint);
                 });
-                
+
                 $scope.compositionstoprint = compositionstoprint;
                 $scope.printDatamap = detailedListData;
                 $scope.showPrintSection = true;
@@ -87,12 +91,19 @@ app.directive('printSection', function (contextService) {
             };
 
             $scope.$on('sw_printsectionrendered', function () {
+                if (sessionStorage.mockprint) {
+                    return;
+                }
                 printService.hidePrintModal();
-                printService.doPrint();                
+                printService.doPrint();
                 $scope.showPrintSection = false;
                 $scope.showPrintSectionCompostions = false;
                 $scope.printSchema = null;
             });
+
+            if (sessionStorage.mockprint && contextService.isDev()) {
+                $scope.doStartPrint([], true, true, true);
+            }
         }
     };
 });

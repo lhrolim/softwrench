@@ -750,7 +750,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     successCbk: function (data) {
                         var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
                         if (alwaysrefresh || updatedArray == null || updatedArray.length === 0) {
-                            window.location.reload();
+                            window.location.href = window.location.href;
                             return;
                         }
                         //we need to clone it again here, to avoid binding, otherwise the data would be shown in the list before submission confirms on server side
@@ -813,7 +813,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
             this.refresh = function () {
                 //TODO: make a composition refresh only --> now it will be samething as F5
-                window.location.reload();
+                window.location.href = window.location.href;
             };
 
 

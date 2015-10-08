@@ -49,6 +49,8 @@
             };
 
             $scope.selectPage = function (page) {
+                // Set the scroll position to the top of the new page
+                contextService.insertIntoContext('scrollto', { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                 $scope.renderfn({ pageNumber: page });
             };
 

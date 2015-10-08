@@ -509,16 +509,6 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 }
                 return result;
             }
-            $scope.getFieldClass = function (fieldMetadata) {
-                return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
-            }
-            $scope.getLabelClass = function (fieldMetadata) {
-                return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
-            }
-
-            $scope.getInputClass = function (fieldMetadata) {
-                return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
-            }
             $scope.showLabelTooltip = function (fieldMetadata) {
                 if (fieldMetadata.label !== fieldMetadata.toolTip) {
                     return 'tooltip';
@@ -526,22 +516,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                     return '';
                 }
             }
-            ///
-            // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
-            ////
-            $scope.isLabelVisible = function (fieldMetadata, legendEvaluationMode) {
-                //                if (!$scope.isVerticalOrientation()) {
-                //                    return false;
-                //                }
-                var header = fieldMetadata.header;
-                if (!header) {
-                    return !legendEvaluationMode && fieldMetadata.label;
-                }
-                var isVisible = expressionService.evaluate(header.showExpression, $scope.datamap);
-                var isFieldSet = header.parameters != null && "true" == header.parameters['fieldset'];
-                //if header is declared as fieldset return true only for the legendEvaluation
-                return isVisible && (isFieldSet == legendEvaluationMode);
-            }
+          
             $scope.isVerticalOrientation = function () {
                 return $scope.orientation == 'vertical';
             };
@@ -647,7 +622,9 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
-                    formatService: formatService
+                    formatService: formatService,
+                    layoutservice: layoutservice,
+                    expressionService: expressionService
                 });
             }
             init();

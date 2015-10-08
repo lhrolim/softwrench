@@ -1,4 +1,10 @@
 ﻿@media print {
+    #rootprintdiv {
+        .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+            width: 100% !important;
+        }
+    }
+
     .hiddenonprint, .no-print, .col-lg-2, .affix, .filter-row, .glyphicon {
         display: none !important;
     }
@@ -78,34 +84,80 @@
         padding-bottom: 40px;
     }
 
-    #rootprintdiv .control-label, #rootprintdiv .field {
-        float: left;
-    }
+    #rootprintdiv {
+        h4 {
+            margin: 40px 0 40px;
+        }
 
-    #rootprintdiv .control-label {
-        width: 25%;
-    }
+        .form-group {
+            margin-bottom: 0;
 
-    #rootprintdiv .field {
-        width: 70%;
-    }
+            .legend-label {
+                font-size: 14px;
+                font-weight: bold;
+                padding: 20px 0 0;
+                border-bottom: 1px solid #999;
+                display: none;
+            }
 
-    #rootprintdiv .field .samelinepickers {
-        margin-top: -6px;
-    }
+            .control-label {
+                width: 30% !important;
+                float: left;
+                padding-right: 20px;
+                text-align: right;
+                font-size: 12px;
+                padding-top: 5px;
+            }
 
-    #rootprintdiv .field .samelinepickers .col-md-6 {
-        padding-left: 0;
-    }
+            .form-control {
+                font-weight: normal;
+                border-bottom: 1px solid #ccc;
+                border-radius: 0;
+                padding: 0;
+                height: auto;
+                min-height: 18px;
+                float: right;
+                font-size: 12px;
+            }
 
-    #rootprintdiv .field .samelinepickers input {
-        padding-left: 0;
-        padding-right: 20px;
-    }
+            .field {
+                width: 100%;
+            }
 
-    #rootprintdiv .field label {
-        padding: 0;
-        font-weight: normal;
+            .control-label + .field {
+                width: 70% !important;
+                float: right;
+                margin-top: 5px;
+            }
+
+            .richtextbox, .image-holder {
+                min-height: initial;
+            }
+
+            .richtext {
+                margin-bottom: 5px;
+
+                .ta-toolbar {
+                    display: none;
+                }
+
+                .form-control {
+                    width: 100% !important;
+                }
+
+                .ta-scroll-window {
+                    p:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    & > .ta-bind {
+                        height: auto;
+                        min-height: initial;
+                        padding: 0;
+                    }
+                }
+            }
+        }
     }
 
     .container header {

@@ -159,10 +159,6 @@ app.directive('crudBody', function (contextService) {
                         $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
-
-                //make sure we are seeing the top of the detail page 
-                log.debug('scroll to top');
-                window.scrollTo(0, 0);
             });
 
             $scope.setActiveTab = function (tabId) {
