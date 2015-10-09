@@ -91,6 +91,12 @@ namespace softWrench.sW4.Configuration.Services {
             var sb = new StringBuilder();
             var result = new List<UserProfile>();
             foreach (var profile in profiles) {
+
+                if (!profile.HasApplicationPermission(applicationName)) {
+                    //if the profile has no permissions over the application there´s no point adding it to this list
+                    continue;
+                }
+
                 var holder = new ContextHolder {
                     CurrentSelectedProfile = profile.Id,
                     UserProfiles = new System.Collections.Generic.SortedSet<int?>(loggedUser.ProfileIds)
@@ -104,7 +110,7 @@ namespace softWrench.sW4.Configuration.Services {
                 }
             }
             if (result.Any()) {
-                result.Insert(0, new UserProfile() {
+                result.Insert(0, new UserProfile {
                     Id = defaultId,
                     Name = sb.ToString(0, sb.Length - 3)
                 });

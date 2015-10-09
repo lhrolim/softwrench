@@ -1,7 +1,6 @@
 ﻿using cts.commons.web.Attributes;
 using JetBrains.Annotations;
 using log4net;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API.Response;
@@ -51,9 +50,6 @@ namespace softWrench.sW4.Web.Controllers {
             CompositionExpander = expander;
             _auditManager = auditManager;
         }
-
-        private const string MockingMaximoKey = "%%mockmaximo";
-        private const string MockingErrorKey = "%%mockerror";
 
         /// <summary>
         ///  Method responsible for fetching either list or detail data from the server
@@ -108,8 +104,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// API Method to handle Update operations
         /// </summary>
         [HttpPut]
-        public IApplicationResponse Put([FromBody]JsonRequestWrapper wrapper)
-        {
+        public IApplicationResponse Put([FromBody]JsonRequestWrapper wrapper) {
             var operationDataRequest = wrapper.RequestData;
             if (operationDataRequest.Operation == null) {
                 //TODO: when Operation api is refactored, remove this one
@@ -165,17 +160,14 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
             if (Log.IsDebugEnabled) {
-                Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented, new JsonConverter[] { new StringEnumConverter() }));
+                Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented, new StringEnumConverter()));
             }
 
 
 
             var platform = operationDataRequest.Platform;
-            var currentschemaKey = resolvedSchema;
-            if (currentschemaKey == null) {
-                //for compatibility reasons, the Operation API receives the schemaKey inside the json
-                currentschemaKey = SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
-            }
+            var currentschemaKey = resolvedSchema ??
+                                   SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
 
             ContextLookuper.FillContext(currentschemaKey);
 
@@ -205,7 +197,7 @@ namespace softWrench.sW4.Web.Controllers {
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult, operation);
 
             // TODO: Implement some sort of interception
-            if (applicationMetadata.AuditEnabled) {
+            if (true.Equals(applicationMetadata.AuditEnabled)) {
                 _auditManager.CreateAuditEntry(
                     operationDataRequest.Operation,
                     applicationMetadata.Name,
@@ -230,7 +222,6 @@ namespace softWrench.sW4.Web.Controllers {
         /// <returns></returns>
         [HttpGet]
         public IApplicationResponse Search(string application, string searchFields, string searchText, string schema = "list") {
-            var user = SecurityFacade.CurrentUser();
             var app = MetadataProvider.Application(application);
             var schemas = app.Schemas();
             var key = new ApplicationMetadataSchemaKey(schema, SchemaMode.input, ClientPlatform.Web);
@@ -277,9 +268,15 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public class ListSchemaFilter {
-            public string NamePattern { get; set; }
-            public SchemaStereotype? Stereotype { get; set; }
-            public SchemaMode Mode { get; set; }
+            public string NamePattern {
+                get; set;
+            }
+            public SchemaStereotype? Stereotype {
+                get; set;
+            }
+            public SchemaMode Mode {
+                get; set;
+            }
 
 
 

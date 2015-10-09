@@ -35,8 +35,7 @@ namespace softWrench.sW4.Metadata.Applications {
                 originalMetadata.IdFieldName,
                 originalMetadata.UserIdFieldName,
                 originalMetadata.Parameters, securedSchemas, originalMetadata.DisplayableComponents,
-                originalMetadata.Service,
-                originalMetadata.Notifications);
+                originalMetadata.Service,originalMetadata.Role,originalMetadata.AuditFlag);
         }
 
         public static bool IsWebSupported(this CompleteApplicationMetadataDefinition metadata) {

@@ -239,6 +239,7 @@
     <attribute name="entity" type="string" use="required"></attribute>
     <attribute name="id" type="string"></attribute>
     <attribute name="service" type="string"></attribute>
+    <attribute name="role" type="string"></attribute>
   </complexType>
 
   <complexType name="Schema">

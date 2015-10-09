@@ -11,20 +11,53 @@ using softwrench.sW4.Shared2.Metadata.Applications.Notification;
 namespace softwrench.sW4.Shared2.Metadata {
 
     public class CompleteApplicationMetadataDefinition : BaseDefinition, IApplicationIdentifier {
-        public CompleteApplicationMetadataDefinition() { }
+        public CompleteApplicationMetadataDefinition() {
+        }
 
-        public Guid? Id { get; set; }
-        public string ApplicationName { get; set; }
-        public string Entity { get; set; }
-        public string Title { get; set; }
-        public string IdFieldName { get; set; }
-        public bool AuditFlag { get; set; }
+        public Guid? Id {
+            get; set;
+        }
+        public string ApplicationName {
+            get; set;
+        }
+        public string Entity {
+            get; set;
+        }
+        public string Title {
+            get; set;
+        }
+        public string IdFieldName {
+            get; set;
+        }
+        public bool? AuditFlag {
+            get; set;
+        }
 
-        public string UserIdFieldName { get; set; }
+        public string UserIdFieldName {
+            get; set;
+        }
 
-        public string Service { get; set; }
-        public IDictionary<string, string> Parameters { get; set; }
-        public int? FetchLimit { get; set; }
+        public string Service {
+            get; set;
+        }
+
+        private string _role;
+
+        public string Role {
+            get {
+                return _role;
+            }
+            set {
+                _role = value;
+            }
+        }
+
+        public IDictionary<string, string> Parameters {
+            get; set;
+        }
+        public int? FetchLimit {
+            get; set;
+        }
         //        public ToStringExpression _toStringExpression;
         //        public MobileApplicationSchema _mobileSchema;
         private readonly IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> _schemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
@@ -33,9 +66,6 @@ namespace softwrench.sW4.Shared2.Metadata {
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
-        [JsonIgnore]
-        public IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> Notifications { get; set; }
-
 
         public CompleteApplicationMetadataDefinition(Guid? id, string applicationName, string title, string entity,
              string idFieldName, string userIdFieldName,
@@ -43,8 +73,8 @@ namespace softwrench.sW4.Shared2.Metadata {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
             IEnumerable<DisplayableComponent> components,
             string service,
-            IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> notifications,
-            bool auditFlag = false
+            string role,
+            bool? auditFlag = false
             ) {
             if (applicationName == null) throw new ArgumentNullException("name");
             if (title == null) throw new ArgumentNullException("title");
@@ -69,7 +99,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             }
             _schemasList = _schemas.Values;
             DisplayableComponents = components;
-            Notifications = notifications;
+            Role = role ?? applicationName;
             AuditFlag = auditFlag;
             //            _mobileSchema = BuildMobileSchema();
         }
@@ -95,7 +125,9 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
 
         public IEnumerable<ApplicationSchemaDefinition> SchemasList {
-            get { return _schemasList; }
+            get {
+                return _schemasList;
+            }
         }
 
         public IEnumerable<ApplicationSchemaDefinition> MobileSchemas() {
@@ -133,9 +165,7 @@ namespace softwrench.sW4.Shared2.Metadata {
 
 
 
-        public string Role {
-            get { return ApplicationName; }
-        }
+
 
         protected bool Equals(CompleteApplicationMetadataDefinition other) {
             return string.Equals(ApplicationName, other.ApplicationName);

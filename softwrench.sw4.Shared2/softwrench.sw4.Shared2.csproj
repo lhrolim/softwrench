@@ -151,6 +151,13 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations.PCL328, Version=8.0.5.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Dependencies\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -160,5 +167,8 @@
       <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
       <Name>cts.commons.portable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
