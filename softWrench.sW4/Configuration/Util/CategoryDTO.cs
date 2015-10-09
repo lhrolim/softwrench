@@ -12,6 +12,13 @@ namespace softWrench.sW4.Configuration.Util {
         public ModuleDefinition Module { get; set; }
         public int? UserProfile { get; set; }
 
+        /// <summary>
+        /// Only the profiles that have permissions to use the application should be able to set whereclauses
+        /// </summary>
+        public HashSet<int?> AllowedForProfiles {
+            get; set;
+        }
+
         public WhereClauseRegisterCondition Condition { get; set; }
 
         public string FullKey { get; set; }

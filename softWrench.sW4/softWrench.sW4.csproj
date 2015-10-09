@@ -100,6 +100,11 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\softWrench.sW4.Web\Dependencies\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -343,6 +348,7 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />
     <Compile Include="Metadata\Stereotypes\Component\EmailComponentStereotype.cs" />

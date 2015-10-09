@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.Util;
 
 namespace softWrench.sW4.Configuration.Definitions {
     public class ConditionMatchResult : IComparable<ConditionMatchResult> {
@@ -33,14 +34,22 @@ namespace softWrench.sW4.Configuration.Definitions {
                 }
                 return _matchType;
             }
-            set { _matchType = value; }
+            set {
+                _matchType = value;
+            }
         }
 
-        public int NumberOfExacts { get; set; }
+        public int NumberOfExacts {
+            get; set;
+        }
 
 
-        public Boolean ProfileAsked { get; set; }
-        public Boolean ModuleAsked { get; set; }
+        public Boolean ProfileAsked {
+            get; set;
+        }
+        public Boolean ModuleAsked {
+            get; set;
+        }
 
         public int CompareTo(ConditionMatchResult other) {
             var comparison = other.MatchType.GetPriority().CompareTo(MatchType.GetPriority());
@@ -71,7 +80,7 @@ namespace softWrench.sW4.Configuration.Definitions {
             return this;
         }
 
-        public ConditionMatchResult AppendProfile(int? storedProfile, ICollection<int?> userProfiles) {
+        public ConditionMatchResult AppendAvailableProfile(int? storedProfile, ICollection<int?> userProfiles) {
             if (storedProfile == null) {
                 return this;
             }
@@ -84,6 +93,23 @@ namespace softWrench.sW4.Configuration.Definitions {
                     NumberOfExacts++;
                     ProfileAsked = _profile != null;
                 }
+            }
+            return this;
+        }
+
+        public ConditionMatchResult AppendSelectedProfile(int? userProfile, int? selectedProfile) {
+            if (selectedProfile == null) {
+                return this;
+            }
+            if (userProfile == null) {
+                LoggingUtil.DefaultLog.WarnFormat("Inconsistent behavior detected. A selected profile was informed for an application that doesn´t contain any");
+                return this;
+            }
+            if (selectedProfile != userProfile) {
+                _matchType = _matchType.And(ConditionMatch.No);
+            } else {
+                _matchType = _matchType.And(ConditionMatch.Exact);
+                NumberOfExacts++;
             }
             return this;
         }
@@ -131,7 +157,8 @@ namespace softWrench.sW4.Configuration.Definitions {
             }
             if (conditionString == Conditions.AnyCondition) {
                 return ConditionMatch.GeneralMatchAll;
-            } if (conditionString.Contains(",")) {
+            }
+            if (conditionString.Contains(",")) {
                 var any = conditionString.Split(',').Any(a => a.Equals(contextString, StringComparison.CurrentCultureIgnoreCase));
                 return any ? ConditionMatch.Exact : ConditionMatch.No;
             }

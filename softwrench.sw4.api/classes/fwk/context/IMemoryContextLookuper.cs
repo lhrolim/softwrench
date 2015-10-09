@@ -10,6 +10,7 @@ namespace softwrench.sw4.api.classes.fwk.context {
         /// <param name="key"></param>
         void FillContext(ApplicationMetadataSchemaKey key);
 
+        
         /// <summary>
         /// Sets an object in the memory context, that would be accessible by any thread
         /// </summary>

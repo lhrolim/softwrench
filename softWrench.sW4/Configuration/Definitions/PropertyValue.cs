@@ -87,7 +87,8 @@ namespace softWrench.sW4.Configuration.Definitions {
         public virtual ConditionMatchResult MatchesConditions(ContextHolder context) {
             var result = new ConditionMatchResult(Module, UserProfile);
             result.AppendModule(Module, context.Module);
-            result.AppendProfile(UserProfile, context.UserProfiles);
+            result.AppendSelectedProfile(UserProfile, context.CurrentSelectedProfile);
+            result.AppendAvailableProfile(UserProfile, context.UserProfiles);
             context.MatchesCondition(Condition, result);
             return result;
         }

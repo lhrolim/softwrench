@@ -23,10 +23,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         private readonly SWDBHibernateDAO _swdbDao;
         private readonly MaximoHibernateDAO _maximoHibernateDao;
+        private readonly EntityQueryBuilder _entityQueryBuilder; 
 
         public EntityRepository(SWDBHibernateDAO swdbDao, MaximoHibernateDAO maximoHibernateDao) {
             _swdbDao = swdbDao;
             _maximoHibernateDao = maximoHibernateDao;
+            _entityQueryBuilder = new EntityQueryBuilder();
         }
 
 
@@ -37,7 +39,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         public IReadOnlyList<AttributeHolder> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
-            var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
+            var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
                .Select(r => BuildDataMap(entityMetadata, r))
@@ -70,7 +72,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         public IEnumerable<dynamic> RawGet([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
-            var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
+            var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
             return rows;
         }
@@ -82,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             if (searchDto == null) {
                 searchDto = new SearchRequestDto();
             }
-            var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
+            var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, rowstamp, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
                .Select(r => BuildDataMap(entityMetadata, r))
@@ -110,7 +112,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         public SearchEntityResult GetAsRawDictionary([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto, Boolean fetchMaxRowstamp = false) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
-            var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
+            var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
             var enumerable = rows as dynamic[] ?? rows.ToArray();
             Log.DebugFormat("returning {0} rows", enumerable.Count());
@@ -191,7 +193,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (id == null) throw new ArgumentNullException("id");
 
-            var query = new EntityQueryBuilder().ById(entityMetadata, id);
+            var query = _entityQueryBuilder.ById(entityMetadata, id);
 
 
             var rows = Query(entityMetadata, query, new SearchRequestDto());
@@ -202,7 +204,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         public IList<IEnumerable<KeyValuePair<string, object>>> GetSynchronizationData(SlicedEntityMetadata entityMetadata, Rowstamps rowstamps) {
 
-            var query = new EntityQueryBuilder().AllRowsForSync(entityMetadata, rowstamps);
+            var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps);
             //TODO: hack to avoid garbage data and limit size of list queries.
             var sql = query.Sql;
             var queryResult = GetDao(entityMetadata).FindByNativeQuery(sql, query.Parameters);
@@ -219,7 +221,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         public int Count([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
-            var query = new EntityQueryBuilder().CountRows(entityMetadata, searchDto);
+            var query = _entityQueryBuilder.CountRows(entityMetadata, searchDto);
 
             return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters, searchDto.QueryAlias);
 

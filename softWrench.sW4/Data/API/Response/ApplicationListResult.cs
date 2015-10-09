@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
 using softwrench.sW4.Shared2.Data;
@@ -10,7 +10,6 @@ namespace softWrench.sW4.Data.API.Response {
         public PaginatedSearchRequestDto PageResultDto;
         private string _mode;
         //this is for grids that have optionfields inside of it
-        private IDictionary<string, BaseAssociationUpdateResult> _associationOptions = new Dictionary<string, BaseAssociationUpdateResult>();
 
         public ApplicationListResult(int totalCount, PaginatedSearchRequestDto searchDTO,
             IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, IDictionary<string, BaseAssociationUpdateResult> associationOptions)
@@ -19,16 +18,17 @@ namespace softWrench.sW4.Data.API.Response {
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
             PageResultDto.SearchParams = searchDTO.SearchParams;
             PageResultDto.FilterFixedWhereClause = searchDTO.FilterFixedWhereClause;
-            _associationOptions = associationOptions;
+            AssociationOptions = associationOptions;
         }
 
         public ApplicationSchemaDefinition Schema { get; set; }
         public string CachedSchemaId { get; set; }
 
-        public IDictionary<string, BaseAssociationUpdateResult> AssociationOptions {
-            get { return _associationOptions; }
-            set { _associationOptions = value; }
-        }
+        public IEnumerable<UserProfile.UserProfileDTO> AffectedProfiles {get; set;}
+
+        public int? CurrentSelectedProfile {get; set;}
+
+        public IDictionary<string, BaseAssociationUpdateResult> AssociationOptions { get; set; }
 
         public string Mode {
             get { return Schema.Mode.ToString().ToLower(); }
@@ -56,7 +56,7 @@ namespace softWrench.sW4.Data.API.Response {
 
         public int PageCount { get { return PageResultDto.PageCount; } }
 
-        public String FilterFixedWhereClause { get { return PageResultDto.FilterFixedWhereClause; } }
+        public string FilterFixedWhereClause { get { return PageResultDto.FilterFixedWhereClause; } }
 
 
         public IEnumerable<PageToShow> PagesToShow { get { return PageResultDto.PagesToShow; } }

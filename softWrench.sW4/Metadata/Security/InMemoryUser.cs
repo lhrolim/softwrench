@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using cts.commons.portable.Util;
+using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
@@ -248,7 +249,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
-
+        [NotNull]
         public ICollection<UserProfile> Profiles {
             get { return _profiles; }
         }

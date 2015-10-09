@@ -34,8 +34,8 @@ namespace softwrench.sw4.activitystream.classes.Controller.Jobs {
         }
 
         public override void HandleEvent(ApplicationStartedEvent eventToDispatch) {
-            _notificationFacade.InitNotificationStreams();
             if (RunAtStartup() && IsEnabled) {
+                _notificationFacade.InitNotificationStreams();
                 Task.Factory.StartNew(DoExecute);
             }
         }

@@ -754,6 +754,8 @@
     <Content Include="Content\Templates\breadcrumb.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
+    <Content Include="Content\Templates\commands\grid\multipleprofile_selector.js" />
+    <Content Include="Content\Templates\commands\grid\multipleprofile_selector.html" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />
     <Content Include="Content\Templates\commands\grid\gridfilter.js" />
     <Content Include="Content\Templates\commands\scan\scanfilter.js" />
