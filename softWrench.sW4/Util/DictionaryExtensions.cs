@@ -5,8 +5,10 @@ using System.Dynamic;
 namespace softWrench.sW4.Util {
     public static class DictionaryExtensions {
 
-        public static ExpandoObject ToExpando(this IDictionary<string, string> dictionary)
-        {
+
+
+
+        public static ExpandoObject ToExpando(this IDictionary<string, string> dictionary){
             var tempDict = dictionary.ToObjectDir();
             return tempDict.ToExpando();
         }
@@ -18,6 +20,8 @@ namespace softWrench.sW4.Util {
             }
             return tempDict;
         }
+
+
 
         /// <summary>
         /// Extension method that turns a dictionary of string and object to an ExpandoObject

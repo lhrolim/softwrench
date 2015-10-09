@@ -56,9 +56,10 @@
   </entities>
 
   <applications>
-    <application entity="SR" name="servicerequest" title="Service Request" >
+    <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <properties>
         <property key="mobile.disabled" value="true"/>
+        <property key="rolealias" value="sr"/>
       </properties>
       <schemas>
         <list title="Service Request Grid">
@@ -270,7 +271,7 @@
       </schemas>
     </application>
 
-    <application entity="SR" name="quickservicerequest" title="Quick Requests" >
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>

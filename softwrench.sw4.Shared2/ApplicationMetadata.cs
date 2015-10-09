@@ -8,7 +8,7 @@ namespace softWrench.sW4.Metadata.Applications {
 
 
         public ApplicationMetadata(Guid? id, string name,  string title,  string entity,
-             string idFieldName, ApplicationSchemaDefinition schema, string service, bool auditFlag)
+             string idFieldName, ApplicationSchemaDefinition schema, string service, bool? auditFlag)
             : base(id, name, title, entity, idFieldName, schema, service, auditFlag) {
         }
 

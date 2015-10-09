@@ -9,6 +9,8 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.fwk.context;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
@@ -21,14 +23,28 @@ namespace softWrench.sW4.Web.Security {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ContextLookuper));
 
+        private IWhereClauseFacade _whereClauseFacade;
+
+        //To avoid circular dependencies
+        private IWhereClauseFacade WhereClauseFacade {
+            get {
+                if (_whereClauseFacade != null) {
+                    return _whereClauseFacade;
+                }
+                _whereClauseFacade =
+                    SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
+                return _whereClauseFacade;
+            }
+        }
+
         public static ContextLookuper GetInstance() {
             return SimpleInjectorGenericFactory.Instance.GetObject<ContextLookuper>(typeof(ContextLookuper));
         }
 
 
         public ContextHolder LookupContext() {
-            var isHttp = System.Web.HttpContext.Current != null;
-            var context = isHttp ? System.Web.HttpContext.Current.Items["context"] : LogicalThreadContext.GetData<ContextHolder>("context");
+            var isHttp = HttpContext.Current != null;
+            var context = isHttp ? HttpContext.Current.Items["context"] : LogicalThreadContext.GetData<ContextHolder>("context");
             return (ContextHolder)(context ?? AddContext(new ContextHolder(), isHttp));
         }
 
@@ -46,9 +62,26 @@ namespace softWrench.sW4.Web.Security {
             appContext.Mode = key.Mode.ToString();
             context.ApplicationLookupContext = appContext;
 
-            var isHttp = System.Web.HttpContext.Current != null;
+            var isHttp = HttpContext.Current != null;
             if (isHttp) {
-                System.Web.HttpContext.Current.Items["context"] = context;
+                HttpContext.Current.Items["context"] = context;
+            } else {
+                LogicalThreadContext.SetData("context", context);
+            }
+        }
+
+        public void FillGridContext(string applicationName, InMemoryUser user) {
+            var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
+
+            var availableProfiles = WhereClauseFacade.ProfilesByApplication(applicationName, user);
+            context.AvailableProfilesForGrid = availableProfiles;
+            if (availableProfiles.Any() && context.CurrentSelectedProfile == null) {
+                //if the profile was already set at client side, let´s not change it
+                context.CurrentSelectedProfile = availableProfiles.First().Id;
+            }
+            var isHttp = HttpContext.Current != null;
+            if (isHttp) {
+                HttpContext.Current.Items["context"] = context;
             } else {
                 LogicalThreadContext.SetData("context", context);
             }
@@ -86,7 +119,7 @@ namespace softWrench.sW4.Web.Security {
         public ContextHolder AddContext(ContextHolder context, bool isHttp) {
             context.Environment = ApplicationConfiguration.Profile;
             if (isHttp) {
-                System.Web.HttpContext.Current.Items["context"] = context;
+                HttpContext.Current.Items["context"] = context;
             } else {
                 LogicalThreadContext.SetData("context", context);
             }
@@ -97,7 +130,7 @@ namespace softWrench.sW4.Web.Security {
                 context.OrgId = user.OrgId;
                 context.SiteId = user.SiteId;
                 if (isHttp) {
-                    System.Web.HttpContext.Current.Items["context"] = context;
+                    HttpContext.Current.Items["context"] = context;
                 } else {
                     LogicalThreadContext.SetData("context", context);
                 }
@@ -116,7 +149,10 @@ namespace softWrench.sW4.Web.Security {
                 return;
             }
             var uri = request.Url;
-            MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, request.ApplicationPath));
+            if (!MemoryContext.ContainsKey("httpcontext")) {
+                MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, request.ApplicationPath));
+            }
+
         }
     }
 
@@ -140,7 +176,7 @@ namespace softWrench.sW4.Web.Security {
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((UserKey)obj);
         }
 

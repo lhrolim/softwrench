@@ -53,14 +53,18 @@ namespace softWrench.sW4.Metadata {
         private static IDictionary<ClientPlatform, MenuDefinition> _menus;
         private static readonly IDictionary<SlicedEntityMetadataKey, SlicedEntityMetadata> SlicedEntityMetadataCache = new Dictionary<SlicedEntityMetadataKey, SlicedEntityMetadata>();
 
-        public static MetadataProviderInternalCache InternalCache { get; set; }
+        public static MetadataProviderInternalCache InternalCache {
+            get; set;
+        }
 
 
 
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
         private const string MenuPattern = "menu.{0}.xml";
-        public static bool FinishedParsing { get; set; }
+        public static bool FinishedParsing {
+            get; set;
+        }
 
         private static MetadataXmlSourceInitializer _metadataXmlInitializer;
 
@@ -158,23 +162,6 @@ namespace softWrench.sW4.Metadata {
             }
             LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}", LoggingUtil.MsDelta(watch));
         }
-
-        public static IList<SlicedEntityMetadata> GetSlicedMetadataNotificationEntities() {
-            var applicationsWithNotifications = (from a in _applicationMetadata
-                                                 where a.Notifications.Count > 0
-                                                 select a).ToList<CompleteApplicationMetadataDefinition>();
-
-            var resultList = new List<SlicedEntityMetadata>();
-            if (applicationsWithNotifications.Any()) {
-                resultList.AddRange(from app in applicationsWithNotifications
-                                    let entityName = app.Entity
-                                    let entityMetadata = Entity(entityName)
-                                    from notification in app.Notifications
-                                    select SlicedEntityMetadataBuilder.GetInstance(entityMetadata, notification.Value, app.FetchLimit));
-            }
-            return resultList;
-        }
-
 
 
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
@@ -445,6 +432,16 @@ namespace softWrench.sW4.Metadata {
 
         public static bool IsApplicationEnabled(string application) {
             return Application(application, false) != null;
+        }
+
+        [CanBeNull]
+        public static string RoleByApplication(string applicationName) {
+            var application = Application(applicationName);
+            if (application == null) {
+                return null;
+            }
+            return application.Role;
+
         }
     }
 }

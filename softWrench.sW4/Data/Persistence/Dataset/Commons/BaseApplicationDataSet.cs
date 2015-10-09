@@ -33,6 +33,8 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
@@ -69,7 +71,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private IBatchSubmissionService _batchSubmissionService;
 
-        internal BaseApplicationDataSet() { }
+        private IWhereClauseFacade _whereClauseFacade;
+
+        internal BaseApplicationDataSet() {
+        }
 
         protected IContextLookuper ContextLookuper {
             get {
@@ -90,6 +95,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 _batchSubmissionService =
                     SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>(typeof(IBatchSubmissionService));
                 return _batchSubmissionService;
+            }
+        }
+
+        protected IWhereClauseFacade WhereClauseFacade {
+            get {
+                if (_whereClauseFacade != null) {
+                    return _whereClauseFacade;
+                }
+                _whereClauseFacade =
+                    SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
+                return _whereClauseFacade;
             }
         }
 
@@ -192,6 +208,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
+            ContextLookuper.FillGridContext(application.Name,SecurityFacade.CurrentUser());
 
             if (searchDto.Context != null && searchDto.Context.MetadataId != null) {
                 searchDto.QueryAlias = searchDto.Context.MetadataId;
@@ -242,7 +259,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             Task.WaitAll(tasks);
             var listOptionsPrefetchRequest = new ListOptionsPrefetchRequest();
             var associationResults = BuildAssociationOptions(DataMap.BlankInstance(application.Name), application, listOptionsPrefetchRequest);
-            return new ApplicationListResult(totalCount, searchDto, entities, schema, associationResults);
+            return new ApplicationListResult(totalCount, searchDto, entities, schema, associationResults) {
+                AffectedProfiles = ctx.AvailableProfilesForGrid.Select(s => s.ToDTO()),
+                CurrentSelectedProfile = ctx.CurrentSelectedProfile
+            };
         }
 
 

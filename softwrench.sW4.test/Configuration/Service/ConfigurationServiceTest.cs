@@ -153,6 +153,16 @@ namespace softwrench.sW4.test.Configuration.Service {
         }
 
         [TestMethod]
+        public void AskWithCurrentSelectedProfile() {
+            var context = new ContextHolder {
+                UserProfiles = new SortedSet<int?> { 2,3 },
+                CurrentSelectedProfile = 3
+            };
+            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            Assert.AreEqual("5", result.First().Value.Value);
+        }
+
+        [TestMethod]
         public void AskForSchemaWithProfile2() {
             var context = new ContextHolder {
                 UserProfiles = new SortedSet<int?> { 4 },

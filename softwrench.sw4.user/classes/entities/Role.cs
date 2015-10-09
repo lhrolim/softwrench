@@ -29,14 +29,14 @@ namespace softwrench.sw4.user.classes.entities {
         public virtual string Description { get; set; }
 
         [Property(Column = "deletable", TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Deletable { get; set; }
+        public virtual bool Deletable { get; set; }
 
         [ManyToOne(Column = "rolegroup_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
         public virtual RoleGroup RoleGroup { get; set; }
 
 
         [Property(Column = "isactive", TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Active { get; set; }
+        public virtual bool Active { get; set; }
 
         protected bool Equals(Role other) {
             return Name.EqualsIc(other.Name);

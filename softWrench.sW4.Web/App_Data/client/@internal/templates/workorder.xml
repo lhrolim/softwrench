@@ -101,7 +101,7 @@
   </entities>
 
   <applications>
-    <application name="workorder" title="Work Order" entity="workorder">
+    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>

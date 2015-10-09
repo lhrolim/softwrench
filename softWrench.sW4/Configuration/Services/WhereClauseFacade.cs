@@ -12,7 +12,11 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Text;
+using Iesi.Collections.Generic;
+using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Configuration.Services {
     class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
@@ -42,7 +46,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (lookupContext != null) {
                 context.ApplicationLookupContext = lookupContext;
             }
-            var resultString = _configurationService.Lookup<string>(String.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName), context);
+            var resultString = _configurationService.Lookup<string>(GetFullKey(applicationName), context);
             return BuildWhereClauseResult(resultString);
         }
 
@@ -74,6 +78,50 @@ namespace softWrench.sW4.Configuration.Services {
             } else {
                 DoRegister(configKey, query, condition);
             }
+        }
+
+        public Iesi.Collections.Generic.ISet<UserProfile> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
+
+            var profiles = loggedUser.Profiles;
+            if (!profiles.Any()) {
+                //no profiles at all, nothing to consider
+                return new HashedSet<UserProfile>();
+            }
+            int? defaultId = null;
+            var sb = new StringBuilder();
+            var result = new List<UserProfile>();
+            foreach (var profile in profiles) {
+
+                if (!profile.HasApplicationPermission(applicationName)) {
+                    //if the profile has no permissions over the application there´s no point adding it to this list
+                    continue;
+                }
+
+                var holder = new ContextHolder {
+                    CurrentSelectedProfile = profile.Id,
+                    UserProfiles = new System.Collections.Generic.SortedSet<int?>(loggedUser.ProfileIds)
+                };
+                var wc = _configurationService.Lookup<string>(GetFullKey(applicationName), holder);
+                if (!string.IsNullOrEmpty(wc)) {
+                    result.Add(profile);
+                } else {
+                    sb.Append(profile.Name).Append(" | ");
+                    defaultId = profile.Id;
+                }
+            }
+            if (result.Any()) {
+                result.Insert(0, new UserProfile {
+                    Id = defaultId,
+                    Name = sb.ToString(0, sb.Length - 3)
+                });
+
+            }
+
+            return new Iesi.Collections.Generic.HashedSet<UserProfile>(result);
+        }
+
+        private static string GetFullKey(string applicationName) {
+            return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
         }
 
         private static void Validate(string applicationName) {
@@ -162,6 +210,10 @@ namespace softWrench.sW4.Configuration.Services {
 
 
         //execute last
-        public int Order { get { return 100; } }
+        public int Order {
+            get {
+                return 100;
+            }
+        }
     }
 }

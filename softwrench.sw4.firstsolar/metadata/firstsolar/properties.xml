@@ -4,8 +4,8 @@
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
-  <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
+  <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
+  <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76DEV;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/> <!--in MB-->
@@ -29,25 +29,21 @@
   <property key="ui.adminmenu.showclassic" value="false"/>
 
   <environment key="dev">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76DEV;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76DEV;User Id=sw;password=softwrench;" />
   </environment>
 
-  <environment key="qa-wk">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Wk;User Id=sw;password=softwrench;" />
-  </environment>
-
-  <environment key="dev-sm">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_sm;User Id=sw;password=softwrench;" />
-  </environment>
-
-  <environment key="dev-76">
-    <property key="basewsURL" value="http://10.50.100.147:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
+  <environment key="prod">
+    <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76MAX;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76MAX;User Id=sw;password=softwrench;" />
   </environment>
   
 </Properties>

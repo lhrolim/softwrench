@@ -3,6 +3,7 @@ using System.Linq;
 using cts.commons.persistence.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using NHibernate.Linq.Visitors;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities {
@@ -12,29 +13,39 @@ namespace softwrench.sw4.user.classes.entities {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public virtual int? Id { get; set; }
+        public virtual int? Id {
+            get; set;
+        }
 
         [Property]
-        public virtual string Name { get; set; }
+        public virtual string Name {
+            get; set;
+        }
 
-        [Property(Column = "deletable",TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Deletable { get; set; }
+        [Property(Column = "deletable", TypeType = typeof(BooleanToIntUserType))]
+        public virtual Boolean Deletable {
+            get; set;
+        }
 
         [Property(Column = "description")]
-        public virtual string Description { get; set; }
+        public virtual string Description {
+            get; set;
+        }
 
         [Set(0, Table = "sw_userprofile_role",
         Lazy = CollectionLazy.False)]
         [Key(1, Column = "profile_id")]
         [ManyToMany(2, Column = "role_id", ClassType = typeof(Role))]
-        public virtual ISet<Role> Roles { get; set; }
+        public virtual ISet<Role> Roles {
+            get; set;
+        }
 
-//
-//        [Set(0, Table = "sw_userprofile_dataconstraint",
-//        Lazy = CollectionLazy.False, Cascade = "all")]
-//        [Key(1, Column = "profile_id")]
-//        [ManyToMany(2, ClassType = typeof(DataConstraint), Column = "constraint_id")]
-//        public virtual ISet<DataConstraint> DataConstraints { get; set; }
+        //
+        //        [Set(0, Table = "sw_userprofile_dataconstraint",
+        //        Lazy = CollectionLazy.False, Cascade = "all")]
+        //        [Key(1, Column = "profile_id")]
+        //        [ManyToMany(2, ClassType = typeof(DataConstraint), Column = "constraint_id")]
+        //        public virtual ISet<DataConstraint> DataConstraints { get; set; }
 
         protected bool Equals(UserProfile other) {
             return string.Equals(Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
@@ -54,20 +65,52 @@ namespace softwrench.sw4.user.classes.entities {
         public static UserProfile FromJson(JToken jObject) {
             var profile = new UserProfile();
             profile.Roles = new HashedSet<Role>();
-            
+
             JToken roles = jObject["roles"];
-            if (roles != null) {		
-                foreach (var jToken in roles.ToArray()) {		
-                    profile.Roles.Add(new Role {		
+            if (roles != null) {
+                foreach (var jToken in roles.ToArray()) {
+                    profile.Roles.Add(new Role {
                         Id = (int?)jToken["id"],
-	                    Name = (string)jToken["name"]
-                    });		
-                }		
+                        Name = (string)jToken["name"]
+                    });
+                }
             }
             profile.Name = (string)jObject["name"];
             profile.Description = (string)jObject["description"];
             profile.Id = (int?)jObject["id"];
             return profile;
+        }
+
+        public static UserProfile TestInstance(int? id, string name) {
+            return new UserProfile { Id = id, Name = name };
+        }
+
+        public virtual UserProfileDTO ToDTO() {
+            if (Id == null) {
+                return null;
+            }
+
+            return new UserProfileDTO(Id.Value, Name);
+
+        }
+
+        /// <summary>
+        /// Lightweight implementation to return to client side to avoid any performance implications
+        /// </summary>
+        public class UserProfileDTO {
+
+            public UserProfileDTO(int id, string name) {
+                Id = id;
+                Name = name;
+
+            }
+
+            public int Id {
+                get; set;
+            }
+            public string Name {
+                get; set;
+            }
         }
     }
 }
