@@ -5,11 +5,15 @@ softwrench.directive('crudOutputFields', ["$log", "fieldService", "crudContextSe
 
     return {
         restrict: 'E',
-        replace: true,
+
+        // has to have this configuration otherwise the controller's methods are not accessible by the template
+        replace: false,
+        transclude: true,
+
         templateUrl: 'Content/Mobile/templates/directives/crud/crud_output_fields.html',
         scope: {
             displayables: '=',
-            datamap:'=',
+            datamap:'='
         },
 
         link: function (scope, element, attrs) {

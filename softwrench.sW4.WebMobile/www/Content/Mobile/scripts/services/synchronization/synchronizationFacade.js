@@ -40,9 +40,8 @@
                 .pluck("dataentry") // [DataEntry]
                 .groupBy("application") // { DataEntry['application'] : [DataEntry] }
                 .map(function (entries, application) {
-                    var ids = _.map(entries, function(entry) {
-                        return "'{0}'".format(entry.id);
-                    });
+                    // for some reason this query only works if there are no '' around the ids
+                    var ids = _.pluck(entries, "id"); 
                     return { query: entities.DataEntry.deleteInIdsStatement, args: [ids, application] }
                 }) // [PreparedStatement]
                 .value();

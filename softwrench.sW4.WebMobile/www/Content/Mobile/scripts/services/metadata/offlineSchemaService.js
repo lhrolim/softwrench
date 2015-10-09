@@ -89,8 +89,9 @@
             setValueIfNotPresent(item, "orgid", user["OrgId"]);
         };
 
-        function fillDefaultValues(schema, item) {
-            fieldService.fillDefaultValues(schema.displayables, item, {});
+        function fillDefaultValues(schema, item, parent) {
+            var scope = !!parent ? { previousdata: { fields: parent }, parentdata: { fields: parent } } : {};
+            fieldService.fillDefaultValues(schema.displayables, item, scope);
             fillDefaultOfflineValues(schema, item);
         };
 

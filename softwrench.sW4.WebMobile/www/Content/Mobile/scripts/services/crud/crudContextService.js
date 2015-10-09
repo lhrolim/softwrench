@@ -172,8 +172,9 @@
 
             createNewCompositionItem: function () {
                 var crudContext = crudContextHolderService.getCrudContext();
+                var compositionParentDatamap = crudContext.currentDetailItem.datamap;
                 crudContext.composition.currentDetailItem = {};
-                offlineSchemaService.fillDefaultValues(crudContext.composition.currentDetailSchema, crudContext.composition.currentDetailItem);
+                offlineSchemaService.fillDefaultValues(crudContext.composition.currentDetailSchema, crudContext.composition.currentDetailItem, compositionParentDatamap);
                 crudContext.composition.originalDetailItemDatamap = {
                     //to make this new item always dirty!!!
                     "_newitem#$": true

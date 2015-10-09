@@ -22,7 +22,7 @@
         PreparedStatement.prototype.query = null; // to be defined after
         function PreparedStatement(args) {
             var ids = _.map(args[0], function (id) {
-                return "'" + (String(id)) + "'";
+                return (String(id));
             });
             this.args = [ids, args[1]];
         }
@@ -32,7 +32,7 @@
 
     //#region test config
     var config = {
-        stataments: [],
+        statements: [],
         results: {
             noitems: {
                 input: [
@@ -131,23 +131,21 @@
             });
         });
     }));
-    afterEach(function () {
-        // resolve promises
-        $rootScope.$digest();
-    });
+    
     //#endregion test config
 
-    function runHandleDeletableDataEntriesTest(testConfig) {
-        var inputBatches = testConfig.input;
-        synchronizationFacade.handleDeletableDataEntries(inputBatches).then(function(batches) {
+    function runHandleDeletableDataEntriesTest(testConfig, done) {
+        synchronizationFacade.handleDeletableDataEntries(testConfig.input).then(function (batches) {
             var expectedStatements = testConfig.expected;
-            var resultStatements = testConfig.statements;
+            var resultStatements = config.statements;
             // resolved with the input value
-            expect(batches).toEqual(inputBatches); 
+            expect(batches).toEqual(testConfig.input);
             // testing result length
             expect(resultStatements.length).toBe(expectedStatements.length);
             // testing each statement
             _.each(expectedStatements, function (statement, index) {
+                console.log("expected:", statement);
+                console.log("result:", resultStatements[index]);
                 // testing query
                 expect(resultStatements[index].query).toEqual(statement.query);
                 // testing args length
@@ -159,19 +157,21 @@
                 expect(_.sortBy(resultStatements[index].args[0])).toEqual(_.sortBy(statement.args[0]));
             });
 
-        });
+        }).finally(done);
+        // resolve promises
+        $rootScope.$digest();
     }
 
-    it("Testing 'handleDeletableDataEntries': no statements", function () {
-        runHandleDeletableDataEntriesTest(config.results.noitems);
+    it("Testing 'handleDeletableDataEntries': no statements", function (done) {
+        runHandleDeletableDataEntriesTest(config.results.noitems, done);
     });
 
-    it("Testing 'handleDeletableDataEntries': single application", function () {
-        runHandleDeletableDataEntriesTest(config.results.singleapplication);
+    it("Testing 'handleDeletableDataEntries': single application", function (done) {
+        runHandleDeletableDataEntriesTest(config.results.singleapplication, done);
     });
 
-    it("Testing 'handleDeletableDataEntries': multiple applications", function () {
-        runHandleDeletableDataEntriesTest(config.results.multipleapplications);
+    it("Testing 'handleDeletableDataEntries': multiple applications", function (done) {
+        runHandleDeletableDataEntriesTest(config.results.multipleapplications, done);
     });
 
 });
