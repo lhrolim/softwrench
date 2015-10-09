@@ -281,18 +281,20 @@
                 if (!crudFilterContextService.showDirty()) {
                     baseQuery += ' and isDirty = 0 ';
                 }
+                baseQuery += "order by rowstamp is null desc, rowstamp desc ";
 
-                return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded }).then(function (results) {
-                    internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
-                    if (filteredMode) {
-                        crudContext.filteredList = [];
-                    }
-                    var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
-                    for (var i = 0; i < results.length; i++) {
-                        listToPush.push(results[i]);
-                    }
-                    return $q.when(results);
-                });
+                return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded })
+                    .then(function (results) {
+                        internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
+                        if (filteredMode) {
+                            crudContext.filteredList = [];
+                        }
+                        var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
+                        for (var i = 0; i < results.length; i++) {
+                            listToPush.push(results[i]);
+                        }
+                        return $q.when(results);
+                    });
             },
 
 
