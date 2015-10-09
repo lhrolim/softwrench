@@ -26,7 +26,7 @@ namespace softWrench.sW4.Web.Common {
             ErrorStack = rootException.StackTrace;
             FullStack = rootException.StackTrace;
             ErrorNativeType = rootException.GetType();
-            OutlineInformation = ExceptionUtil.LastStackTraceLine(rootException);
+            OutlineInformation = ExceptionUtil.FirstProjectStackTraceLine(rootException);
         }
 
         private static string PrettyMessage(string message) {

@@ -6,7 +6,7 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            if (scope.schema.mode != 'output' && scope.isSelectEnabled) {
+            if (scope.schema.mode !== 'output' && scope.isSelectEnabled) {
                 element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
             }
             if (scope.$last === true) {
@@ -249,9 +249,12 @@ function ApplicationController($scope, $http, $log, $timeout,
         scope.originalDatamap = angular.copy(scope.datamap);
 
         scope.extraparameters = instantiateIfUndefined(result.extraParameters);
-        if (result.mode === "input" || result.mode === "output") {
-            scope.mode = result.mode;
+        if (result.mode === undefined || "none".equalsIc(result.mode)) {
+            //FIX SWWEB 1640 and SWWEB 1797
+            result.mode = "input";
         }
+        scope.mode = result.mode;
+        
         
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null

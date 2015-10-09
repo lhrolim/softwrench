@@ -29,7 +29,7 @@
 
             var logMethods = ["log", "info", "warn", "debug", "trace", "error"];
 
-            var startRollingLogService = debounce(function () {
+            var startRollingLogService = ionic.debounce(function () {
                 // deboucing as workaround to the fact that $roll.start is async:
                 // multiple $roll.starts called before setting rollingLog.started = true
                 // debounce makes all those calls 'turn into' a single one (debounce time determined empirically)

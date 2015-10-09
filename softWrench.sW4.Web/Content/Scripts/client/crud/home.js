@@ -3,7 +3,8 @@
     $scope.$name = 'HomeController';
 
     function initController() {
-
+        //workaround for knowing where the user is already loggedin
+        sessionStorage['ctx_loggedin'] = true;
 
         var redirectUrl = url(homeModel.Url);
 
@@ -18,7 +19,7 @@
         
 
         var sessionRedirectURL = contextService.fetchFromContext("swGlobalRedirectURL",false,false);
-        if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") == -1) && (redirectUrl.indexOf("MakeSWAdmin") == -1))) {
+        if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0))) {
             redirectUrl = sessionRedirectURL;
         }
         //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
@@ -30,20 +31,19 @@
             url: redirectUrl,
             cache: $templateCache
         })
-        .success(function (result) {
-            //workaround for knowing where the user is already loggedin
-            sessionStorage['ctx_loggedin'] = true;
+        .then(function (response) {
+            var result = response.data;
 
             $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
             $scope.$parent.resultData = result.resultObject;
             $scope.$parent.resultObject = result;
-            //            if (nullOrUndef($rootScope.currentmodule) && !nullOrUndef(currentModule) && currentModule != "") {
-            //                $rootScope.currentmodule = currentModule;
-            //            }
+            // if (nullOrUndef($rootScope.currentmodule) && !nullOrUndef(currentModule) && currentModule != "") {
+            // $rootScope.currentmodule = currentModule;
+            // }
 
             $scope.$emit('sw_indexPageLoaded', redirectUrl);
             $scope.$emit('sw_titlechanged', result.title);
-            if (homeModel.Message != undefined) {
+            if (!angular.isUndefined(homeModel.Message)) {
                 alertService.success(homeModel.Message, true);
                 homeModel.Message = null;
             }

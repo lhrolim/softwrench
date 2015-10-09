@@ -16,19 +16,12 @@
                  * PS: for some reason, compiling the pattern from a String (using new RegExp(pattern, "g")) did not work (didn't match the pattern)
                  * that's why the regex is in it's literal format
                  */
-                emailtags: /\<(mailto\:)?(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})\>/g,
-                /**
-                 * matches '<mailto:(email pattern)(email pattern)+>' or '<(email pattern)(email pattern)+>'
-                 * email pattern (accepts unicode characters and '.' before domain name) from: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript#answer-16181
-                 * PS: for some reason, compiling the pattern from a String (using new RegExp(pattern, "g")) did not work (didn't match the pattern)
-                 * that's why the regex is in it's literal format
-                 */
-                multipleemailtags: /\<(mailto\:)?(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))(@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})){2,}\>/g,
+                emailtags: /\<(mailto\:)?((([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,}))+\>/g,
                 /**
                  * matches '<(url pattern)>' (url pattern includes query string)
                  * from: mix of http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149 with http://stackoverflow.com/questions/23959352/validate-url-query-string-with-regex#answer-23959662
                  */
-                urltags: /\<(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?\>/g,
+                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g
             },
            
             /**
@@ -98,7 +91,7 @@
 
         function init() {
             // email
-            registerInvalidTagProcessor([invalidTagsConfig.regex.emailtags, invalidTagsConfig.regex.multipleemailtags],
+            registerInvalidTagProcessor([invalidTagsConfig.regex.emailtags],
                 function (source, tag) {
                     // extract email address from tag: 
                     // between ':'(from '<mailto:') or '<'(first character) and '>'(last character)

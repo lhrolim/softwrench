@@ -20,14 +20,14 @@
     $scope.dochangeClient = function (newclient) {
         if (contextService.isLocal()) {
             restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
-                window.location.reload();
+                window.location.href = window.location.href;
             });
             return;
         }
 
         alertService.confirmMsg('Are you sure you want to change client to {0}'.format(newclient.toUpperCase()), function () {
             restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
-                window.location.reload();
+                window.location.href = window.location.href;
             });
         });
     }
@@ -35,14 +35,14 @@
     $scope.restore = function () {
         if (contextService.isLocal()) {
             restService.invokePost("Configuration", "Restore", null, null, function (s) {
-                window.location.reload();
+                window.location.href = window.location.href;
             });
             return;
         }
 
         alertService.confirmMsg('Are you sure you want to restore to default client', function () {
             restService.invokePost("Configuration", "Restore", null, null, function (s) {
-                window.location.reload();
+                window.location.href = window.location.href;
             });
         });
     }

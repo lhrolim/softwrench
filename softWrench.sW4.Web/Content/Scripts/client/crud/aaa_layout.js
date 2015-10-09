@@ -162,12 +162,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     });
 
     $scope.$on('ngLoadFinished', function (ngLoadFinishedEvent) {
-        $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
+        $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
         menuService.adjustHeight();
     });
 
     $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-        $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
+        $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
 
         var sidebarWidth = $('.col-side-bar').width();
         if (sidebarWidth != null) {

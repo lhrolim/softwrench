@@ -1,5 +1,5 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseController($scope, i18NService, fieldService, commandService, formatService) {
+function BaseController($scope, i18NService, fieldService, commandService, formatService, layoutservice,expressionService) {
 
     /* i18N functions */
     $scope.i18NLabelTooltip = function (fieldMetadata) {
@@ -93,7 +93,7 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
 
 
     $scope.getSectionClass = function (fieldMetadata) {
-        if (fieldMetadata.rendererType == "TABLE") {
+        if (fieldMetadata.rendererType === "TABLE") {
             //workaround because compositions are appending "" as default label values, but we dont want it!
             return null;
         }
@@ -103,6 +103,35 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         return null;
     };
 
+
+    $scope.getFieldClass = function (fieldMetadata) {
+        return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
+    }
+
+    $scope.getLabelClass = function (fieldMetadata) {
+        return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
+    }
+
+    $scope.getInputClass = function (fieldMetadata) {
+        return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
+    }
+
+    ///
+    // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
+    ////
+    $scope.isLabelVisible = function (fieldMetadata, legendEvaluationMode) {
+        //                if (!$scope.isVerticalOrientation()) {
+        //                    return false;
+        //                }
+        var header = fieldMetadata.header;
+        if (!header) {
+            return !legendEvaluationMode && fieldMetadata.label;
+        }
+        var isVisible = expressionService.evaluate(header.showExpression, $scope.datamap);
+        var isFieldSet = header.parameters != null && "true" === header.parameters['fieldset'];
+        //if header is declared as fieldset return true only for the legendEvaluation
+        return isVisible && (isFieldSet === legendEvaluationMode);
+    }
 
 
 

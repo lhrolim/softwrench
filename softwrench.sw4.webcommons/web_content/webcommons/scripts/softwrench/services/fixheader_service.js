@@ -223,7 +223,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var table = $(".listgrid-table");
             table.removeClass("affixed");
             table.addClass("unfixed");
-            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
             log.debug('unfix finished');
         },
@@ -235,15 +235,15 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         topErrorMessageHandler: function (show, isDetail, schema) {
-            if (show) {
-                if (!isDetail) {
-                    addClassErrorMessageListHander(true);
-                    $rootScope.hasErrorList = true;
-                } else {
-                    $rootScope.hasErrorDetail = true;
-                }
-            } else {
+            if (!show) {
                 addClassErrorMessageListHander(false);
+                return;
+            }
+            if (isDetail) {
+                $rootScope.hasErrorDetail = true;
+            } else {
+                addClassErrorMessageListHander(true);
+                $rootScope.hasErrorList = true;
             }
         },
 
@@ -262,9 +262,3 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
 });
 
-
-// In chrome you have to fire the window.location.reload event to fire a print event when a socket event is in progress.. 
-// http://stackoverflow.com/questions/18622626/chrome-window-print-print-dialogue-opens-only-after-page-reload-javascript
-//if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-//                    window.location.reload();
-//}

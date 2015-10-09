@@ -34,7 +34,7 @@ angular.module('sw_layout')
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
             var spinAvoided = response.config.avoidspin;
             if (!spinAvoided) {
@@ -76,7 +76,7 @@ angular.module('sw_layout')
 
         var endederror = function (rejection) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
 
             if (rejection.status === 401) {

@@ -164,14 +164,10 @@ app.directive('crudList', function (contextService) {
                 //restore the last scroll position, else scroll to the top of the page
                 var scrollObject = contextService.fetchFromContext('scrollto', true);
 
-                if (typeof scrollObject === 'undefined') {
-                    scrollPosition = 0;
+                if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
+                    scrollPosition = scrollObject.scrollTop;
                 } else {
-                    if ($scope.schema.applicationName === scrollObject.applicationName) {
-                        scrollPosition = scrollObject.scrollTop;
-                    } else {
-                        scrollPosition = 0;
-                    }
+                    scrollPosition = 0;
                 }
 
                 $timeout(
@@ -180,7 +176,7 @@ app.directive('crudList', function (contextService) {
                         log.info('Scroll To', scrollPosition, scrollObject);
                     }, 100, false);
 
-                $('.no-touch [rel=tooltip]').tooltip({container: 'body'});
+                $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
                 log.debug('finish table rendered listener');
             });
 
@@ -444,6 +440,8 @@ app.directive('crudList', function (contextService) {
                 });
 
                 searchPromise.success(function (data) {
+                    // Set the scroll position to the top of the new page
+                    contextService.insertIntoContext('scrollto', { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                     $scope.gridRefreshed(data, $scope.panelid);
                 });
 

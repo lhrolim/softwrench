@@ -3,27 +3,13 @@
   <globalproperties>
 
     <!--MAximo Properties-->
-    <environment key="dev">
-      <!--http://10.50.100.125:8090/SW4OTB/-->
-      <property key="iispath" value="softwrench-dev/SW4OTB" />
-      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
-    </environment>
+ 
     <environment key="qa">
-      <property key="iispath" value="softwrench/softwrench" />
-      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAX7506DEV\Administrator,password=$@$Adm1n" />
+      <!-- http://10.50.100.218/agqa -->
+      <property key="iispath" value="softwrench/apachegold" />
+      <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
-    <environment key="qa-wk">
-      <property key="iispath" value="softwrench-wk/SW4OTB" />
-      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAX7506DEV\Administrator,password=$@$Adm1n" />
-    </environment>
-    <environment key="dev-activity">
-      <property key="iispath" value="softwrench-activity/SW4OTB" />
-      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAX7506DEV\Administrator,password=$@$Adm1n" />
-    </environment>
-    <environment key="dev-sm">
-      <property key="iispath" value="softwrench-sm/softwrench" />
-      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
-    </environment>
+   
 
   </globalproperties>
 
