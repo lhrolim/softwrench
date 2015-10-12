@@ -77,15 +77,33 @@ app.directive('notifications', function (contextService, $log) {
             $scope.$on('sw_notificationmessage', function (event, data) {
                 log.debug(event.name, data);
 
-                data.display = true;
-                $scope.messages.push(data);
-       
-                //add automatic timeout for success messages
-                if (data.type == 'success') {
-                    $timeout(function () {
-                        $scope.removeMessage(data);
-                        //TODO: test message timeouts
-                    }, contextService.retrieveFromContext('successMessageTimeOut'));
+                //make sure some type of message exists
+                if (typeof (data) != 'undefined') {
+                    var message = {};
+
+                    //convert simple message to object
+                    if (typeof (data) == 'object') {
+                        message = data;
+                    } else {
+                        message.body = data;
+                    }
+
+                    //if we have a message
+                    if (message.body) {
+                        message.display = true;
+                        $scope.messages.push(message);
+
+                        //add automatic timeout for success messages
+                        if (message.type == 'success') {
+                            $timeout(function() {
+                                $scope.removeMessage(message);
+                            }, contextService.retrieveFromContext('successMessageTimeOut'));
+                        }
+                    } else {
+                        log.error('Unable to create notification, message body is missing.');
+                    }
+                } else {
+                    log.error('Unable to create notification, message body is missing.');
                 }
             });
 
@@ -108,20 +126,22 @@ app.directive('notifications', function (contextService, $log) {
             message = {};
             message.type = 'success';
             message.body = 'Service Request 1718 successfully updated.';
-            $scope.$emit('sw_notificationmessage', message);
+            //$scope.$emit('sw_notificationmessage', message);
 
             message = {};
             message.type = 'error';
             message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
             message.more = 'yes';
-            $scope.$emit('sw_notificationmessage', message);
+            //$scope.$emit('sw_notificationmessage', message);
 
             $scope.addTestMessage = function () {
                 var message = {};
-                message.type = 'dev';
-                message.body = moment().format();;
+                message.type = 'success';
+                message.body = moment().format();
                 message.more = 'yes';
                 $scope.$emit('sw_notificationmessage', message);
+                //$scope.$emit('sw_notificationmessage', moment().format());
+                //$scope.$emit('sw_notificationmessage');
             }
 
             log.debug($scope.messages);
