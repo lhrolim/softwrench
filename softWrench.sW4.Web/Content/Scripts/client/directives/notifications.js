@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+﻿var app = angular.module('sw_layout', ['ngAnimate']);
 
 app.directive('notifications', function (contextService, $log) {
     var log = $log.getInstance('sw4.notifications');
@@ -126,13 +126,13 @@ app.directive('notifications', function (contextService, $log) {
             message = {};
             message.type = 'success';
             message.body = 'Service Request 1718 successfully updated.';
-            //$scope.$emit('sw_notificationmessage', message);
+            $scope.$emit('sw_notificationmessage', message);
 
             message = {};
             message.type = 'error';
             message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
             message.more = 'yes';
-            //$scope.$emit('sw_notificationmessage', message);
+            $scope.$emit('sw_notificationmessage', message);
 
             $scope.addTestMessage = function () {
                 var message = {};
