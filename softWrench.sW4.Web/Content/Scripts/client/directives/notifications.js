@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout', ['ngAnimate']);
+﻿var app = angular.module('sw_layout');
 
 app.directive('notifications', function (contextService, $log) {
     var log = $log.getInstance('sw4.notifications');
@@ -49,7 +49,7 @@ app.directive('notifications', function (contextService, $log) {
                     classText = '';
                 }
 
-                return classText;
+                return classText + ' show';
             }
 
             $scope.getTitleText = function (title, type) {
@@ -90,8 +90,12 @@ app.directive('notifications', function (contextService, $log) {
 
                     //if we have a message
                     if (message.body) {
-                        message.display = true;
                         $scope.messages.push(message);
+
+                        //update so the notification will slide in
+                        $timeout(function() {
+                            message.display = true;
+                        }, 0);
 
                         //add automatic timeout for success messages
                         if (message.type == 'success') {
@@ -113,21 +117,6 @@ app.directive('notifications', function (contextService, $log) {
             //TODO: push test messages
             var message = {};
 
-            message.type = 'dev';
-            message.body = '23 JavaScript Errors found.';
-            message.more = 'yes';
-            //$scope.$emit('sw_notificationmessage', message);
-
-            message = {};
-            message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time.';
-            message.more = 'yes';
-            //$scope.$emit('sw_notificationmessage', message);
-
-            message = {};
-            message.type = 'success';
-            message.body = 'Service Request 1718 successfully updated.';
-            $scope.$emit('sw_notificationmessage', message);
-
             message = {};
             message.type = 'error';
             message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
@@ -137,12 +126,14 @@ app.directive('notifications', function (contextService, $log) {
             $scope.addTestMessage = function () {
                 var message = {};
                 message.type = 'success';
-                message.body = moment().format();
+                message.body = moment().format() + ' A connection attempt failed because the connected party did not properly respond after a period of time.';
                 message.more = 'yes';
                 $scope.$emit('sw_notificationmessage', message);
-                //$scope.$emit('sw_notificationmessage', moment().format());
-                //$scope.$emit('sw_notificationmessage');
             }
+
+            //$timeout(function () {
+                $scope.addTestMessage();
+            //}, 3000);
 
             log.debug($scope.messages);
         }
