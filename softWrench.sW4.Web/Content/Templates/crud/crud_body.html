@@ -29,13 +29,13 @@
                         <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered >
                             <a ng-switch-when="ApplicationCompositionDefinition"
                                ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowComposition(tab)" ng-click="setActiveTab(tab.tabId)">
-                                <i class="{{getTabIcon(tab)}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
+                                <i class="{{getTabIcon(tab)}}"></i> {{i18N(tab.tabId + '._title',tab.label)}} <span ng-show="showTabRecordCount(tab)" class="tabRecordCount">{{getTabRecordCount(tab)}}</span>
                             </a>
                             <a ng-switch-when="ApplicationTabDefinition"
                                ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
                                 <i class="fa {{tab.icon}} ">
                                 </i>
-                                {{i18NTabLabel(tab)}}
+                                {{i18NTabLabel(tab)}} <span ng-show="showTabRecordCount(tab)" class="tabRecordCount">{{getTabRecordCount(tab)}}</span>
                             </a>
                         </li>
                     </ul>

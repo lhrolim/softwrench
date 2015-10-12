@@ -115,6 +115,14 @@ app.directive('crudBody', function (contextService) {
 
             });
 
+            $scope.getTabRecordCount = function (tab) {
+                return crudContextHolderService.getTabRecordCount(tab);
+            }
+
+            $scope.showTabRecordCount = function(tab) {
+                return crudContextHolderService.shouldShowRecordCount(tab);
+            }
+
             $scope.setForm = function (form) {
                 $scope.crudform = form;
             };

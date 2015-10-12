@@ -4,8 +4,8 @@
     var app = angular.module('sw_layout');
 
     app.factory('compositionService',
-        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService", "compositionCommons",
-        function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons) {
+        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService", "compositionCommons", "crudContextHolderService",
+    function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons, crudContextHolderService) {
 
             var config = {
                 defaultPageSize: 10,
@@ -125,6 +125,7 @@
 
                         $timeout(function () {
                             $rootScope.$broadcast("sw_compositiondataresolved", result);
+                            crudContextHolderService.compositionsLoaded(result);
                         });
                         return result;
                     });
