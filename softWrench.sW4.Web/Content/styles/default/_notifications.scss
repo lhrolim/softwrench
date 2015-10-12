@@ -14,6 +14,28 @@
             -webkit-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
             -moz-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
             box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+            /*.animate-show {*/
+            /*line-height: 20px;*/
+            /*opacity: 1;*/
+            /*padding: 10px;
+                border: 1px solid black;
+                background: white;
+            }*/
+            &.ng-hide-add, &.ng-hide-remove {
+                /*transition: 5s linear all;*/
+            }
+
+            &.ng-hide-add-active, &.ng-hide-remove-active {
+                /* the transition is defined in the active class */
+                /*transition: 5s linear all;*/
+            }
+
+            &.ng-hide {
+                /*line-height: 0;*/
+                /*opacity: 0;*/
+                /*padding: 0 10px;*/
+            }
+
 
             .close {
                 margin-right: 10px;
@@ -174,5 +196,25 @@
                 }
             }
         }
+    }
+}
+
+.message {
+    opacity: 1;
+    position: relative;
+    right: 0;
+
+    &.ng-hide-add, &.ng-hide-remove {
+        transition: 5s linear all;
+    }
+
+    &.ng-hide-add-active, &.ng-hide-remove-active {
+        /* the transition is defined in the active class */
+        transition: 5s linear all;
+    }
+
+    &.ng-hide {
+        opacity: 0;
+        right: -500px;
     }
 }
