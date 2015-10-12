@@ -658,6 +658,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </Content>
     <Content Include="Content\styles\default\_notifications.scss" />
+    <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
