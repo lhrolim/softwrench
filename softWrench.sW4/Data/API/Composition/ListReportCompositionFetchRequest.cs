@@ -8,11 +8,11 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
 
 namespace softWrench.sW4.Data.API.Composition {
-    public class ListReportCompositionFetchRequest : CompositionFetchRequest {
+    public class PreFetchedCompositionFetchRequest : CompositionFetchRequest {
 
         public IReadOnlyList<AttributeHolder> PrefetchEntities { get; set; }
 
-        public ListReportCompositionFetchRequest(IReadOnlyList<AttributeHolder> entities) {
+        public PreFetchedCompositionFetchRequest(IReadOnlyList<AttributeHolder> entities) {
             PrefetchEntities = entities;
         }
     }

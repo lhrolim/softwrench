@@ -53,7 +53,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         public Dictionary<string, EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             AttributeHolder mainEntity, PaginatedSearchRequestDto paginatedSearch = null) {
-            return ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder>() { mainEntity }, paginatedSearch);
+            return ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder> { mainEntity }, paginatedSearch);
         }
 
         public Dictionary<string, EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
@@ -96,7 +96,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var listSchema = compositionSchema.Schemas.List;
             var paginationDisabled = listSchema.GetProperty("pagination.disabled");
             // did not disable via metadata and requested paginated content
-            return !"True".EqualsIc(paginationDisabled) && paginatedSearch != null;
+            //hapag asked to disable whole pagination
+            return false;
         }
 
         private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, IEnumerable<AttributeHolder> entitiesList,

@@ -20,7 +20,7 @@ using System.Linq;
 using NHibernate.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagBaseApplicationDataSet : BaseApplicationDataSet {
+    public class HapagBaseApplicationDataSet : BaseApplicationDataSet {
 
         private readonly IHlagLocationManager _locationManager;
 

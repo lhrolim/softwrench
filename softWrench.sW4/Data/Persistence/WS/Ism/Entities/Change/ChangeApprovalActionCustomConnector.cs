@@ -9,6 +9,8 @@ using System.Collections.Generic;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
     class ChangeApprovalActionCustomConnector : IsmChangeCrudConnector {
+
+
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
             var changeRequest = (ChangeRequest)maximoTemplateData.IntegrationObject;

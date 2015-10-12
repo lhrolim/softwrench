@@ -25,6 +25,8 @@ namespace softWrench.sW4.Data.API {
 
         public string AssociationsToFetch { get; set; }
 
+        public string CompositionsToFetch {get; set;}
+
 
         public DetailRequest() { }
 

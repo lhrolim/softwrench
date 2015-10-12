@@ -40,7 +40,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         /// </summary>
         private const string EagerAssociationTrigger = "#eagerassociations";
 
-        protected readonly ILog Log = LogManager.GetLogger(typeof(BaseApplicationDataSet));
+        protected static readonly ILog Log = LogManager.GetLogger(typeof(BaseApplicationDataSet));
 
         //        protected readonly MaximoConnectorEngine _maximoConnectorEngine;
 
@@ -122,9 +122,27 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
-            var associationResults = BuildAssociationOptions(dataMap, application, request);
-            var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
+            DataMap datamap;
+            if (id == null) {
+                datamap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            } else {
+                datamap =
+                    (DataMap)
+                        _maximoConnectorEngine.FindById(application.Schema, entityMetadata, id);
+                var prefetchCompositions = "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) || "#all".Equals(request.CompositionsToFetch);
+                var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+                foreach (var compositionEntry in applicationCompositionSchemas) {
+                    if (prefetchCompositions || FetchType.Eager.Equals(compositionEntry.Value.FetchType) || compositionEntry.Value.INLINE) {
+                        compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+                    }
+                }
+                if (compostionsToUse.Any()) {
+                    GetCompositionData(application, new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { datamap }), null);
+                }
+            }
+
+            var associationResults = BuildAssociationOptions(datamap, application, request);
+            var detailResult = new ApplicationDetailResult(datamap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
         }
 
@@ -146,9 +164,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
 
             Dictionary<string, EntityRepository.SearchEntityResult> result;
-            if (request is ListReportCompositionFetchRequest) {
-                result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, ((ListReportCompositionFetchRequest)request).PrefetchEntities);
-                return new CompositionFetchResult(result, null);
+            if (request is PreFetchedCompositionFetchRequest) {
+                //this might be a list or either a single entity, depending whether it´s coming from a list report or from the after save operation
+                var listOfEntities = ((PreFetchedCompositionFetchRequest)request).PrefetchEntities;
+                result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, listOfEntities);
+                return new CompositionFetchResult(result, listOfEntities.FirstOrDefault());
             }
             var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
                application, currentData, request.Id);
@@ -211,7 +231,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 entities = _maximoConnectorEngine.Find(entityMetadata, searchDto, applicationCompositionSchemata);
                 // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
                 if (applicationCompositionSchemata.Count > 0) {
-                    GetCompositionData(application, new ListReportCompositionFetchRequest(entities) {
+                    GetCompositionData(application, new PreFetchedCompositionFetchRequest(entities) {
                         CompositionList = new List<string>(applicationCompositionSchemata.Keys)
                     }, null);
 

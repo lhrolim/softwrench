@@ -1,4 +1,4 @@
-﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService) {
+﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService, schemaService) {
 
     var imacOptions = [
                 { label: 'Select One', value: 'Select One' },
@@ -37,7 +37,7 @@
             var xitcLocations = user.genericproperties["hlaglocationxitc"];
             for (var j = 0; j < xitcLocations.length; j++) {
                 var xitcLocation = xitcLocations[j];
-                if (xitcLocation== ownerGroup) {
+                if (xitcLocation === ownerGroup) {
                     return true;
                 }
             }
@@ -49,7 +49,7 @@
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };
-    
+
     $scope.getAvailableOptions = function (schema, compositionschema) {
         if (schema == null) {
             //this would happen only for printing
@@ -57,13 +57,13 @@
         }
         var applicationName = schema.applicationName;
         var schemaId = compositionschema.schemaId;
-        if (applicationName == "imac") {
+        if (applicationName === "imac") {
             return imacOptions;
         }
-        if (compositionschema.applicationName == "woactivity") {
+        if (compositionschema.applicationName === "woactivity") {
             return woactivityOptions;
         }
-        if (compositionschema.applicationName == "approvals") {
+        if (compositionschema.applicationName === "approvals") {
             return approvalsOptions;
         }
     }
@@ -83,13 +83,19 @@
             datamap.fields['#lastaction'] = numberOfActions == 1;
         }
 
-        var parameters = datamap.fields;        
+        var parameters = datamap.fields;
         var actionname = isJobPlan ? "completeaction" : "approvalaction";
-        var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + parameters.ticketid);
+        var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + schemaService.getId(datamap, $scope.parentschema));
         parameters = addCurrentSchemaDataToJson(parameters, schema);
         var json = angular.toJson(parameters);
-        $http.post(urlToUse, json).success(function () {
-            window.location.href = window.location.href;
+        $http.post(urlToUse, json).success(function (result) {
+            var relName = isJobPlan ? "woactivity_" : "approvals_";
+            var eventData = {};
+            eventData[relName] = {
+                list: result.resultObject.fields[relName],
+                relationship: relName
+            };
+            $scope.$emit("sw_compositiondataresolved", eventData);
         });
     };
 
@@ -107,7 +113,7 @@
         var isJobPlan = schemaId == "woactivity";
         if (isJobPlan) {
             var group = getgroup(compositionitem, true);
-            return compositionitem.status == "INPRG" && isMemberOfOwnerGroup(group);
+            return compositionitem.status === "INPRG" && isMemberOfOwnerGroup(group);
         }
         //calculated at server side ChangeDataSet
         return compositionitem["#shouldshowaction"] == true;

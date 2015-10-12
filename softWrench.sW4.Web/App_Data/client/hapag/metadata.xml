@@ -52,6 +52,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="integration_interface" value="MXISSR" />
         <connectorParameter key="mif_integration_interface" value="MXSW4SR" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.HapagServiceRequestCrudConnector" />
+        <connectorParameter key="mif_customconnector" value="" />
         <connectorParameter key="submitaction_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.SubmitactionCrudConnector" />
         <connectorParameter key="crud_find_by_id_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.MifFindByIdCrudConnector" />
       </connectorParameters>
@@ -3483,7 +3484,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="textarea" params="formatter=descriptionDataHandler;format=dd/MM/yyyy HH:mm"/>
           </field>
           <properties>
-            <property key="compositions.alwaysrefresh" value="true"/>
+<!--            <property key="compositions.alwaysrefresh" value="true"/>-->
           </properties>
         </detail>
 
@@ -3506,12 +3507,15 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
     </application>
 
     <application name="attachment" title="Attachment" entity="DOCLINKS">
+      <properties>
+        <property key="pagination.disabled" value="True" />
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
-            <property key="compositions.alwaysrefresh" value="true"/>
+<!--            <property key="compositions.alwaysrefresh" value="true"/>-->
           </properties>
           <commands>
             <command id="print" remove="true" label=""/>
@@ -3563,7 +3567,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <detail>
           <properties>
-            <property key="compositions.alwaysrefresh" value="true"/>
+<!--            <property key="compositions.alwaysrefresh" value="true"/>-->
             <property key="oncrudsaveevent.validationservice" value="attachmentservice.validateNewForm"/>
           </properties>
 

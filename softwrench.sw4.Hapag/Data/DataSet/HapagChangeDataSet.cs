@@ -14,10 +14,11 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sW4.Shared2.Data;
 using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagChangeDataSet : HapagBaseApplicationDataSet {
+    public class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
 
         public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
@@ -88,7 +89,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return !approval.ContainsKey(c.StatusColumn) || !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus, c.RejectedStatus);
         }
 
-        private Boolean HandleCustomerApprovers(InMemoryUser user, Entity result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval
+        private Boolean HandleCustomerApprovers(InMemoryUser user, AttributeHolder result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval
             ) {
 
             var latestAuthStatusDate = result.GetAttribute("statusdate") as DateTime?;

@@ -82,10 +82,11 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var nextMetadata = metadata.ApplyPolicies(nextSchemaKey, user, ClientPlatform.Web);
             var dataSet = _dataSetProvider.LookupAsBaseDataSet(applicationName);
             if (resultSchema.Stereotype == SchemaStereotype.Detail) {
-                if (maximoMocked) {
+                if (maximoMocked && id==null) {
                     return MockingUtils.GetMockedDataMap(applicationName, resultSchema, nextMetadata);
                 }
                 var detailRequest = new DetailRequest(nextSchemaKey, null) { Id = id };
+                detailRequest.CompositionsToFetch = operation != OperationConstants.CRUD_CREATE ? "#all" : null;
                 var response = dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
                 return response;
             }

@@ -337,7 +337,9 @@ app.directive('compositionList', function (contextService, spinService) {
                 }
                 $scope.compositiondata = compositiondata[$scope.relationship].list;
                 init();
-                $scope.$digest();
+                if (!$scope.$$phase && !$scope.$root.$$phase) {
+                    $scope.$digest();
+                }
             });
 
             $scope.cancelComposition = function () {

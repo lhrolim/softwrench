@@ -68,13 +68,13 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
             switch (operationWrapper.OperationName) {
                 case OperationConstants.CRUD_CREATE:
-                    return crudConnector.Create(crudOperationData);
+                return crudConnector.Create(crudOperationData);
                 case OperationConstants.CRUD_UPDATE:
-                    return crudConnector.Update(crudOperationData);
+                return crudConnector.Update(crudOperationData);
                 case OperationConstants.CRUD_DELETE:
-                    return crudConnector.Delete(crudOperationData);
+                return crudConnector.Delete(crudOperationData);
                 case OperationConstants.CRUD_FIND_BY_ID:
-                    return crudConnector.FindById(crudOperationData);
+                return crudConnector.FindById(crudOperationData);
             }
 
             return null;
@@ -96,26 +96,11 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             return _entityRepository.Count(entityMetadata, searchDto);
         }
 
-        public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
-            IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
+        public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id) {
             var mainEntity = _entityRepository.Get(entityMetadata, id);
             if (mainEntity == null) {
                 return null;
             }
-            if ("true".EqualsIc(schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions))) {
-                _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
-            }
-            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
-
-            foreach (var compositionEntry in compositionSchemas) {
-                if (FetchType.Eager.Equals(compositionEntry.Value.FetchType) || compositionEntry.Value.INLINE) {
-                    compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
-                }
-            }
-            if (compostionsToUse.Any()) {
-                _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, mainEntity);
-            }
-
             return mainEntity;
         }
 

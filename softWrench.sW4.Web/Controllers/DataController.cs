@@ -189,14 +189,13 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
             if (Log.IsDebugEnabled) {
-                Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented,
-                    new JsonConverter[] { new StringEnumConverter() }));
+                Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented, new StringEnumConverter()));
             }
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(currentschemaKey, user, platform);
 
-            var maximoResult = new MaximoResult(null, null);
+            var maximoResult = new MaximoResult(id, null);
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupAsBaseDataSet(application)
                     .Execute(applicationMetadata, json, id, operation);
@@ -205,8 +204,12 @@ namespace softWrench.sW4.Web.Controllers {
                 //mobile requests doesn´t have to handle success messages or redirections
                 return null;
             }
-            if (nextSchemaKey != null && id == null) {
-                // if the id is not null then we´re on a update context, and for hapag that would imply on refreshing the screen afterwards, making no sense to fetch the data twice
+            if (nextSchemaKey == null){
+                //keep on same schema unless explicetely told otherwise
+                nextSchemaKey = currentschemaKey;
+            }
+
+            if (nextSchemaKey != null) {
                 var response = _nextSchemaRouter.RedirectToNextSchema(applicationMetadata, operation,
                         maximoResult.Id, platform, currentschemaKey, nextSchemaKey, mockMaximo);
                 response.SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id, operation);

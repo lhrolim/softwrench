@@ -59,6 +59,7 @@
 
     <connectorParameters>
       <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR.IsmSRCrudConnectorDecorator" />
+      <connectorParameter key="mif_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.HapagServiceRequestCrudConnector" />
     </connectorParameters>
     <relationships>
       <relationship targetpath="Activity" attribute="worklog_">
