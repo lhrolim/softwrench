@@ -136,15 +136,17 @@ app.directive('crudBody', function (contextService) {
                 var log = $log.getInstance('on#sw_bodyrenderedevent');
                 log.debug('enter');
 
-
-
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
-                    //if we have a message to display upon page load
-                    var message = {};
-                    message.type = 'success';
-                    message.body = onLoadMessage;
-                    $rootScope.$broadcast('sw_notificationmessage', message);
+
+                    //use $timeout to make sure the notification timing works correctly
+                    $timeout(function () {
+                        //if we have a message to display upon page load
+                        var message = {};
+                        message.type = 'success';
+                        message.body = onLoadMessage;
+                        $rootScope.$broadcast('sw_notificationmessage', message);
+                    }, 0);
                 }
 
                 //make sure we are seeing the top of the detail page 

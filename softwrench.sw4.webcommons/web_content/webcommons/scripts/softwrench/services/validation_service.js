@@ -125,6 +125,9 @@
                     message.type = 'error';
                     message.body = validationArray.join(', ');
                     $rootScope.$broadcast('sw_notificationmessage', message);
+
+                    //TODO: scroll to the first error message
+                    $('html, body').animate({ scrollTop: 0 }, 'fast');
                 }
             }
             return validationArray;
