@@ -25,8 +25,10 @@
             //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
             affectedProfiles: [],
             //current profile selected, if multiple are available, considering whereclauses
-            currentSelectedProfile:null
-        };
+            currentSelectedProfile: null,
+            tabRecordCount: {},
+            compositionLoadComplete: false,
+    };
 
         //#endregion
 
@@ -63,10 +65,12 @@
 
         function detailLoaded() {
             this.clearDirty();
+            this.disposeDetail();
             _crudContext.needsServerRefresh = false;
         }
 
         function gridLoaded(applicationListResult) {
+            this.disposeDetail();
             _crudContext.affectedProfiles = applicationListResult.affectedProfiles;
             _crudContext.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
@@ -99,6 +103,31 @@
             return _crudContext.needsServerRefresh;
         }
 
+        function compositionsLoaded(result) {
+            for (var relationship in result) {
+                var tab = result[relationship];
+                _crudContext.tabRecordCount = _crudContext.tabRecordCount || {};
+                _crudContext.tabRecordCount[relationship] = tab.list.length;
+            }
+            _crudContext.compositionLoadComplete = true;
+        }
+
+        function getTabRecordCount(tab) {
+            if (_crudContext.tabRecordCount  && _crudContext.tabRecordCount[tab.tabId]) {
+                return _crudContext.tabRecordCount[tab.tabId];
+            }
+            return 0;
+        }
+
+        function disposeDetail() {
+            _crudContext.tabRecordCount = {};
+            _crudContext.compositionLoadComplete = false;
+        }
+
+        function shouldShowRecordCount(tab) {
+            return _crudContext.tabRecordCount && _crudContext.tabRecordCount[tab.tabId];
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -107,6 +136,8 @@
             getAffectedProfiles: getAffectedProfiles,
             getActiveTab: getActiveTab,
             setActiveTab: setActiveTab,
+            getTabRecordCount: getTabRecordCount,
+            shouldShowRecordCount: shouldShowRecordCount,
             getCurrentSelectedProfile:getCurrentSelectedProfile,
             setCurrentSelectedProfile:setCurrentSelectedProfile,
             currentSchema: currentSchema,
@@ -116,10 +147,12 @@
             getDirty: getDirty,
             clearDirty: clearDirty,
             needsServerRefresh: needsServerRefresh,
+            // Hook methods
             afterSave: afterSave,
             detailLoaded: detailLoaded,
-            gridLoaded: gridLoaded
-            
+            disposeDetail: disposeDetail,
+            gridLoaded: gridLoaded,
+            compositionsLoaded: compositionsLoaded
         };
 
         return service;

@@ -26,6 +26,15 @@
                 border-bottom-left-radius: 3px;
                 border-bottom-right-radius: 3px;
             }
+
+            &.active > a .badge {
+                background: #fff;
+                color: #428bca;
+            }
+
+            .badge {
+                background: #428bca;
+            }
         }
 
         & > li.active > a, & > li.active > a:hover, & > li.active > a:focus {
