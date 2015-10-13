@@ -144,8 +144,6 @@
             expect(resultStatements.length).toBe(expectedStatements.length);
             // testing each statement
             _.each(expectedStatements, function (statement, index) {
-                console.log("expected:", statement);
-                console.log("result:", resultStatements[index]);
                 // testing query
                 expect(resultStatements[index].query).toEqual(statement.query);
                 // testing args length
