@@ -26,7 +26,7 @@
             affectedProfiles: [],
             //current profile selected, if multiple are available, considering whereclauses
             currentSelectedProfile: null,
-            tabRecordCount: [],
+            tabRecordCount: {},
             compositionLoadComplete: false,
     };
 
@@ -106,9 +106,7 @@
         function compositionsLoaded(result) {
             for (var relationship in result) {
                 var tab = result[relationship];
-                if (_crudContext.tabRecordCount == undefined) {
-                    _crudContext.tabRecordCount = [];
-                }
+                _crudContext.tabRecordCount = _crudContext.tabRecordCount || {};
                 _crudContext.tabRecordCount[relationship] = tab.list.length;
             }
             _crudContext.compositionLoadComplete = true;
@@ -127,10 +125,7 @@
         }
 
         function shouldShowRecordCount(tab) {
-            if (_crudContext.tabRecordCount && _crudContext.tabRecordCount[tab.tabId]) {
-                return true;
-            }
-            return false;
+            return _crudContext.tabRecordCount && _crudContext.tabRecordCount[tab.tabId];
         }
 
         //#endregion
