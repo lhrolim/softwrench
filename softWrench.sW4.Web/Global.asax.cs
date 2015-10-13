@@ -138,7 +138,7 @@ namespace softWrench.sW4.Web {
         //        }
         //
         protected void Application_EndRequest(object sender, EventArgs e) {
-            if (ApplicationConfiguration.IsLocal() || Response.ContentType == "text/html") {
+            if (Response.ContentType == "text/html") {
                 //fix back button browser bug that would "relogin" users (would show page that was cached)
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));

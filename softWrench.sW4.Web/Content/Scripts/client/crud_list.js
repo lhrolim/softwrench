@@ -70,7 +70,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, contextService) {
+            associationService, contextService, schemaCacheService) {
 
             $scope.$name = 'crudlist';
 

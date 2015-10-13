@@ -7,6 +7,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -505,9 +506,11 @@
     <Content Include="Content\Scripts\client\components\combobox.js" />
     <Content Include="Content\Scripts\client\responsive.js" />
     <Content Include="Content\Scripts\client\services\compositioncommons.js" />
+    <Content Include="Content\Scripts\client\services\crudcontextService.js" />
     <Content Include="Content\Scripts\client\services\detailService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
     <Content Include="Content\Scripts\client\services\restService.js" />
+    <Content Include="Content\Scripts\client\services\schemaCacheService.js" />
     <Content Include="Content\Scripts\client\services\spinService.js" />
     <Content Include="Content\Scripts\client\services\user_service.js" />
     <Content Include="Content\Scripts\client\services\dispatcher_service.js" />

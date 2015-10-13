@@ -4,7 +4,7 @@ app.config(['$httpProvider', function ($httpProvider) {
 
     var logName = "sw4.ajaxint";
 
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log,logoutService) {
+    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, logoutService, schemaCacheService) {
         var activeRequests = 0;
         var started = function (config) {
             lockCommandBars();
@@ -13,6 +13,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['requesttime'] = new Date().getTime();
+            config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
             if (activeRequests == 0 || config.url.indexOf("/Content/")==-1) {

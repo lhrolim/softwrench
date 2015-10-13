@@ -56,7 +56,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService,spinService) {
+function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService, spinService, schemaCacheService, crudContextHolderService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -209,7 +209,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             $scope.previousdata = $scope.datamap;
         }
         var scope = isModal ? $scope.modal : $scope;
-        scope.schema = result.schema;
+        scope.schema = schemaCacheService.getSchemaFromResult(result);
 
         // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
         scope.datamap = instantiateIfUndefined(result.resultObject);
@@ -218,6 +218,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
         scope.mode = result.mode;
         if (scope.schema != null) {
             scope.schema.mode = scope.mode;
+            crudContextHolderService.updateCrudContext(scope.schema);
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);

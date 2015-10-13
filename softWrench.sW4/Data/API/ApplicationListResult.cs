@@ -8,23 +8,24 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 namespace softWrench.sW4.Data.API {
     public class ApplicationListResult : GenericResponseResult<IEnumerable<AttributeHolder>>, IApplicationResponse {
 
-        private readonly ApplicationSchemaDefinition _schema;
         public PaginatedSearchRequestDto PageResultDto;
         private string _mode;
 
         public ApplicationListResult(int totalCount, PaginatedSearchRequestDto searchDTO,
             IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema)
             : base(dataMap, null) {
-            _schema = schema;
+            Schema = schema;
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
             PageResultDto.SearchParams = searchDTO.SearchParams;
             PageResultDto.FilterFixedWhereClause = searchDTO.FilterFixedWhereClause;
             PageResultDto.UnionFilterFixedWhereClause = searchDTO.UnionFilterFixedWhereClause;
         }
 
-        public ApplicationSchemaDefinition Schema {
-            get { return _schema; }
+        public string CachedSchemaId {
+            get; set;
         }
+
+        public ApplicationSchemaDefinition Schema { get; set; }
 
         public string Mode {
             get { return Schema.Mode.ToString().ToLower(); }

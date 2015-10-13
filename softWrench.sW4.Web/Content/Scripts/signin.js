@@ -1,6 +1,6 @@
 ﻿$(window).load(function () {
             $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
-
+            delete sessionStorage['schemaCache'];
             $('#btnLogin').click(function () {
                 var username = $('#userName');
                 var password = $('#password');

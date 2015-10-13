@@ -68,11 +68,11 @@ app.directive("ngEnabled", function () {
 
 
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, $location, $window, logoutService, spinService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, $location, $window, logoutService, spinService, schemaCacheService) {
 
     $scope.$name = 'LayoutController';
 
-    
+    schemaCacheService.wipeSchemaCacheIfNeeded();
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;

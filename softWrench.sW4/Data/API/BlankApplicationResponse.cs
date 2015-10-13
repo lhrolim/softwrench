@@ -10,7 +10,8 @@ namespace softWrench.sW4.Data.API {
         public long RequestTimeStamp { get; set; }
         public DateTime TimeStamp { get; set; }
         public string Type { get; private set; }
-        public ApplicationSchemaDefinition Schema { get; private set; }
+        public ApplicationSchemaDefinition Schema { get; set; }
+        public string CachedSchemaId { get; set; }
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }
     }

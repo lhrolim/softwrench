@@ -7,7 +7,8 @@ namespace softWrench.sW4.Data.API {
     public class SchemaChoosingDataResponse : IApplicationResponse {
         private string _mode;
         public string Type { get { return null; } }
-        public ApplicationSchemaDefinition Schema { get { return null; } }
+        public ApplicationSchemaDefinition Schema { get { return null; }set {} }
+        public string CachedSchemaId { get; set; }
 
         public string Mode
         {

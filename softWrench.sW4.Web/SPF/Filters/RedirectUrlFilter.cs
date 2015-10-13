@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.SPF.Filters {
@@ -38,6 +39,8 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 return;
             }
             var value = objectContent.Value as IGenericResponseResult;
+            var applicationResponse = objectContent.Value as IApplicationResponse;
+            ClearSchemaIfCached(applicationResponse, actionExecutedContext);
             if (value == null) {
                 return;
             }
@@ -71,6 +74,25 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 value.Title = actionArguments.Title;
             } else if (value.Title == null && redirectAttribute != null) {
                 value.Title = redirectAttribute.Title;
+            }
+        }
+
+        private void ClearSchemaIfCached(IApplicationResponse applicationResponse, HttpActionExecutedContext actionExecutedContext) {
+            if (applicationResponse == null) {
+                return;
+            }
+            var cachedSchemas = RequestUtil.GetValue(actionExecutedContext.Request, "cachedschemas");
+            if (cachedSchemas != null && cachedSchemas.Contains(";" + applicationResponse.Schema.GetApplicationKey() + ";")) {
+                //to reduce payload SWWEB-1317
+                applicationResponse.CachedSchemaId = applicationResponse.Schema.SchemaId;
+                var applicationName = applicationResponse.ApplicationName;
+                applicationResponse.Schema = new ApplicationSchemaDefinition {
+                    //to play safe since it might be a delegation method to the schema
+                    ApplicationName = applicationName,
+                    SchemaId = applicationResponse.Schema.SchemaId,
+                    Mode = applicationResponse.Schema.Mode
+                };
+
             }
         }
 

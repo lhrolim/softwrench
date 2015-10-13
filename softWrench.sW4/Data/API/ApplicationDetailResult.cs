@@ -37,6 +37,8 @@ namespace softWrench.sW4.Data.API {
             : base(dataMap, null) {
             _compositions = compositions;
             _associationOptions = associationOptions;
+            Schema = main;
+            Schema.CompositionSchemas = compositions;
             _main = main;
             _id = id;
         }
@@ -45,9 +47,12 @@ namespace softWrench.sW4.Data.API {
             get { return _associationOptions; }
         }
 
-        public ApplicationSchemaDefinition Schema {
-            get { return _main; }
+        public ApplicationSchemaDefinition Schema
+        {
+            get; set;
         }
+
+        public string CachedSchemaId { get; set; }
 
         public string Mode {
             get;

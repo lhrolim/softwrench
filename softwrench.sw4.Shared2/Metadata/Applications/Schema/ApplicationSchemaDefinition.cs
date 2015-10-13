@@ -85,7 +85,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private Boolean referencesResolved = false;
 
-
+        public IDictionary<string, ApplicationCompositionSchema> CompositionSchemas {
+            get; set;
+        }
 
         public ApplicationSchemaDefinition() {
         }
@@ -357,6 +359,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ApplicationSchemaDefinition PaginationSize()
         {
             throw new NotImplementedException();
+        }
+
+        public String GetApplicationKey() {
+            return ApplicationName + "." + SchemaId;
         }
     }
 }
