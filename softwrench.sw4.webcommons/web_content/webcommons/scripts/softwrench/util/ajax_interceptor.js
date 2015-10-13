@@ -58,14 +58,17 @@ angular.module('sw_layout')
         };
 
         function successMessageHandler(data) {
-            var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
             if (!!data && !!data.successMessage) {
                 var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
                 if (!willRefresh) {
-                    $rootScope.$broadcast('sw_successmessage', data);
+                    //use $timeout to make sure the notification timing works correctly
                     $timeout(function () {
-                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
-                    }, timeOut);
+                        var message = {};
+                        message.type = 'success';
+                        message.body = data.successMessage;
+                        $rootScope.$broadcast('sw_notificationmessage', message);
+                    }, 0);
+
                 } else {
                     contextService.insertIntoContext("onloadMessage", data.successMessage);
                     contextService.deleteFromContext("refreshscreen");

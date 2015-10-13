@@ -97,14 +97,14 @@
                     }
 
                     if (displayable.rendererType == "upload" && nullOrEmpty(datamap.newattachment_path)) {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0}{1} is required', [label, qualifier]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', '<strong>{0}{1}</strong> is required', [label, qualifier]));
                         continue;
                     }
 
                     if (label.endsWith('s') || label.endsWith('S')) {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0}{1} are required', [label, qualifier]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', '<strong>{0}{1}</strong> are required', [label, qualifier]));
                     } else {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0}{1} is required', [label, qualifier]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', '<strong>{0}{1}</strong> is required', [label, qualifier]));
                     }
                 }
                 if (displayable.displayables != undefined) {
@@ -120,7 +120,11 @@
                     validationArray = validationArray.concat(customErrorArray);
                 }
                 if (validationArray.length > 0) {
-                    $rootScope.$broadcast('sw_validationerrors', validationArray, $rootScope.showingModal);
+                    //TODO: replace ntification message with in-line error messages
+                    var message = {};
+                    message.type = 'error';
+                    message.body = validationArray.join(', ');
+                    $rootScope.$broadcast('sw_notificationmessage', message);
                 }
             }
             return validationArray;

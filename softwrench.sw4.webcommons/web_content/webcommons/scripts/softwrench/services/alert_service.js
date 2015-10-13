@@ -69,24 +69,25 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
         /// <param name="message">the message</param>
         /// <param name="autoHide">whether the message should hide after some time</param>
         /// <param name="timeout">the time that the messa will be displayed on the screen. Only makes sense if autoHide is true. Defaults to 5000</param>/
-        success: function (message, autoHide, timeout) {
-         
-            if (!timeout) {
-                timeout = 5000;
-            }
-            var data = {}
-            data.successMessage = message;
-            $rootScope.$broadcast('sw_successmessage', data);
-            if (autoHide) {
-                $timeout(function () {
-                    data.successMessage = null;
-                    $rootScope.$broadcast('sw_successmessage', data);
-                }, timeout);
-            }
+        success: function (message_body, autoHide, timeout) {
+            var message = {};
+            message.type = 'success';
+            message.body = message_body;
+            $rootScope.$broadcast('sw_notificationmessage', message);
         },
 
-        error: function (message) {
-            $rootScope.$broadcast('sw_ajaxerror', { errorMessage: message });
+        info: function (message_body) {
+            var message = {};
+            message.type = 'info';
+            message.body = message_body;
+            $rootScope.$broadcast('sw_notificationmessage', message);
+        },
+
+        error: function (message_body) {
+            var message = {};
+            message.type = 'error';
+            message.body = message_body;
+            $rootScope.$broadcast('sw_notificationmessage', message);
         }
 
     };
