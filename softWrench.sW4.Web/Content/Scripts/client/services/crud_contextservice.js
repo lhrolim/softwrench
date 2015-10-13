@@ -107,7 +107,7 @@
             for (var relationship in result) {
                 var tab = result[relationship];
                 _crudContext.tabRecordCount = _crudContext.tabRecordCount || {};
-                _crudContext.tabRecordCount[relationship] = tab.list.length;
+                _crudContext.tabRecordCount[relationship] = tab.paginationData.totalCount;
             }
             _crudContext.compositionLoadComplete = true;
         }
