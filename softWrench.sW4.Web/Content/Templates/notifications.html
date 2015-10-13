@@ -1,6 +1,6 @@
 ﻿<div class="messages">
     <div ng-repeat="message in messages" ng-class="getMessageClass(message.type)" ng-show="message.display" class="message clearfix">
-        <div  ng-click="removeMessage(message)" class="close">
+        <div ng-click="removeMessage(message)" class="close">
             <i class="fa fa-times"></i>
         </div>
         <div class="info clearfix">
@@ -9,13 +9,45 @@
             </div>
             <div class="text">
                 <div class="title">{{getTitleText(message.title, message.type)}}</div>
-                <div class="body">{{message.body}}</div>
-                <div ng-click="addTestMessage()" class="more">More Info...</div>
+                <div class="body" ng-bind-html="message.body"></div>
+                <div ng-click="openModal()" class="more">More Info...</div>
             </div>
             <div class="buttons clearfix">
-                <div ng-click="addTestMessage()" class="button secondary" ng-show="displayMoreInfo(message.more)">More Info...</div>
+                <div ng-click="openModal()" class="button secondary" ng-show="displayMoreInfo(message)">More Info...</div>
                 <div ng-click="removeMessage(message)" class="button primary">OK, Got It</div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 900px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>{{i18N('general.error','Error')}} {{errorMsg}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label">{{i18N('general.errortype','Error Type')}}</label>
+                        <input type="text" readonly class="form-control" ng-model="fullError.type" style="margin-top: 10px; background-color: #fff;" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">{{i18N('general.erroroutline','Error Outline')}}</label>
+                        <textarea class="form-control" ng-model="fullError.outline" cols="140" rows="5" style="margin-top: 10px; background-color: #fff;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">{{i18N('general.mainstack','Main Stack')}}</label>
+                        <textarea class="form-control" ng-model="errorStack" cols="140" rows="10" style="margin-top: 10px; background-color: #fff;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button clipboard text="fullError.text" type="button" class="btn btn-primary" rel="tooltip" data-original-title="Copy Details to Clipboard">
+                            <i class="fa fa-clipboard"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

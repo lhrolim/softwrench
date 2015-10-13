@@ -133,16 +133,6 @@ app.directive('crudBody', function (contextService) {
                 $scope.save(parameters);
             });
 
-            $scope.$on('sw_successmessagetimeout', function (event, data) {
-                if (!$rootScope.showSuccessMessage) {
-                    fixHeaderService.resetTableConfig($scope.schema);
-                }
-            });
-
-            $scope.$on('sw_errormessage', function (event, show) {
-                fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
-            });
-
             $scope.$on('sw_compositiondataresolved', function (event, data) {
                 var tab = crudContextHolderService.getActiveTab();
                 if (tab != null && data[tab] != null) {
@@ -159,13 +149,10 @@ app.directive('crudBody', function (contextService) {
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
                     //if we have a message to display upon page load
-                    var data = {
-                        successMessage: onLoadMessage
-                    };
-                    $rootScope.$broadcast('sw_successmessage', data);
-                    $timeout(function () {
-                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
-                    }, contextService.retrieveFromContext('successMessageTimeOut'));
+                    var message = {};
+                    message.type = 'success';
+                    message.body = onLoadMessage;
+                    $rootScope.$broadcast('sw_notificationmessage', message);
                 }
             });
 
