@@ -7,12 +7,22 @@ app.directive('notifications', function (contextService, $log) {
         templateUrl: contextService.getResourceUrl('/Content/Templates/notifications.html'),
         controller: function ($scope, $timeout) {
             $scope.removeMessage = function (message) {
+                /// <summary>
+                /// Hide the user selected message when the close button is clicked
+                /// </summary>
+                /// <param name="message" type="object">Notification message</param>
+                /// <returns></returns>
                 log.debug('removeMessage', message);
 
                 message.display = false;
             }
 
             $scope.displayMoreInfo = function (message) {
+                /// <summary>
+                /// Determine is the more info button/link should be displayed
+                /// </summary>
+                /// <param name="message" type="object">Notification message</param>
+                /// <returns></returns>
                 if (message.exception) {
                     return true;
                 } else {
@@ -21,6 +31,11 @@ app.directive('notifications', function (contextService, $log) {
             }
 
             $scope.getIconClass = function (type) {
+                /// <summary>
+                /// Determine the correct icon to display
+                /// </summary>
+                /// <param name="type" type="string">Notification message type</param>
+                /// <returns></returns>
                 var classText = 'fa ';
 
                 switch (type) {
@@ -38,6 +53,11 @@ app.directive('notifications', function (contextService, $log) {
             }
 
             $scope.getMessageClass = function (type) {
+                /// <summary>
+                /// Add the notification message type as a class to the DOM element
+                /// </summary>
+                /// <param name="type" type="string">Notification message type</param>
+                /// <returns></returns>
                 var classText = '';
 
                 if (type != 'undefined') {
@@ -46,10 +66,16 @@ app.directive('notifications', function (contextService, $log) {
                     classText = '';
                 }
 
-                return classText + ' show';
+                return classText;
             }
 
             $scope.getTitleText = function (title, type) {
+                /// <summary>
+                /// Determine the correct title to display
+                /// </summary>
+                /// <param name="title" type="string">Custom title to be used</param>
+                /// <param name="type" type="string">Notification message type</param>
+                /// <returns></returns>
                 var titleText = '';
 
                 if (title) {
@@ -70,13 +96,46 @@ app.directive('notifications', function (contextService, $log) {
                 return titleText;
             }
 
-            $scope.openModal = function () {
+            $scope.openModal = function (message) {
+                /// <summary>
+                /// Display the exception data modal when more info is clicked
+                /// </summary>
+                /// <param name="message" type="object">Notification message</param>
+                /// <returns></returns>
+                $scope.moreInfo = message.exception;
+                $scope.moreInfo.title = message.body;
+                //$scope.moreInfo.type = message.exception.exceptionType;
+                //$scope.moreInfo.outline = message.exception.outlineInformation;
+                //$scope.moreInfo.stack = message.exception.fullStack || message.exception.stackTrace;
+
+                $scope.moreInfo.text = ("Error description:\n\n" +
+                        "Type: \n{0}\n\n" +
+                        "Message: \n{1}\n\n" +
+                        "Outline:\n{2}\n\n" +
+                        "StackTrace:\n{3}\n\n")
+                    .format($scope.moreInfo.type, $scope.moreInfo.title, $scope.moreInfo.outline, $scope.moreInfo.stack);
+
                 $('#errorModal').modal('show');
                 $("#errorModal").draggable();
             };
 
             //Event Handlers
             $scope.$on('sw_notificationmessage', function (event, data) {
+                /// <summary>
+                /// Receive message data and crete user notification
+                /// </summary>
+                /// <param name="event" type="object">Angular event data</param>
+                /// <param name="data" type="string">The string will be used as the message body</param>
+                /// <param name="data" type="object">The object allows more control of the notification, but must be formatted as follows:
+                /// data.type: Optional, [dev, error, info (default), null, success]
+                /// data.title: Optional, if no value the default title will be used based on the data.type. For consistency the default title should be used.
+                /// data.body: Required
+                /// data.exception: Optional, when present will display the more info button, the exception is formatted as follow
+                /// data.exception.type: Optional
+                /// data.exception.outline: Optional
+                /// data.exception.stack: Optional
+                /// </param>
+                /// <returns></returns>
                 log.debug(event.name, data);
 
                 //make sure some type of message exists
@@ -112,15 +171,55 @@ app.directive('notifications', function (contextService, $log) {
             });
 
             $scope.$on('sw_ajaxerror', function (event, data) {
+                /// <summary>
+                /// Receive exception data and crete user notification with the exception data embedded in standard format (see sw_notificationmessage)
+                /// </summary>
+                /// <param name="event" type="object">Angular event data</param>
+                /// <param name="data" type="object">The exception must be formatted as follows:
+                /// data.exceptionMessage: Required, used for the user notification body
+                /// data.innerException: Optional, inner exception will be processed into a regular exception
+                /// data.exceptionType: Optional
+                /// data.outlineInformation: Optional
+                /// data.stackTrace: Optional
+                /// </param>
+                /// <returns></returns>
                 log.debug(event.name, data);
 
                 if (typeof (data) != 'undefined') {
-                    var message = {};
 
+                    //process the innerException, if present
+                    var innerException;
+                    var limit = 3; // to avoid unwanted infinite recursion
+                    var i = 0;
+                    var prependMessage = data.prependMessage;
+
+                    while (data.hasOwnProperty('innerException') && i < limit) {
+                        innerException = data.innerException;
+                        data = data.innerException;
+                        i++;
+                    }
+
+                    if (innerException != null) {
+                        data = {};
+                        data.errorStack = innerException.stackTrace;
+                        data.errorMessage = innerException.message;
+                    }
+
+                    if (prependMessage) {
+                        data.errorMessage = prependMessage + ' --> ' + data.errorMessage;
+                    }
+
+                    //create new message
+                    var message = {};
                     message.type = 'error';
-                    message.body = data.exceptionMessage;
-                    message.exception = data;
-                    //message.more = 'yes';
+                    message.body = data.errorMessage || data.exceptionMessage;
+
+                    //convert error data into a common exception format
+                    var exception = {};
+                    exception.type = data.exceptionType;
+                    exception.outline = data.outlineInformation;
+                    exception.stack = data.errorStack || data.stackTrace;
+                    message.exception = exception;
 
                     //if we have a message
                     if (message.body) {
@@ -132,7 +231,7 @@ app.directive('notifications', function (contextService, $log) {
                         }, 0);
                     }
                 } else {
-                    log.error('Unable to create notification, data is missing.');
+                    log.error('Unable to create ajax error, data is missing.');
                 }
             });
 
@@ -140,18 +239,18 @@ app.directive('notifications', function (contextService, $log) {
             $scope.messages = [];
 
             //TODO: push test messages
-            var message = {};
+            //var message = {};
 
-            message.type = 'error';
-            message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
-            $scope.$emit('sw_notificationmessage', message);
+            //message.type = 'dev';
+            //message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
+            //$scope.$emit('sw_notificationmessage', message);
 
-            message = {};
-            message.exceptionMessage = "Object reference not set to an instance of an object.";
-            message.exceptionType = "System.NullReferenceException";
-            message.message = "An error has occurred.";
-            message.stackTrace = " at softWrench.sW4.Util.ExceptionUtil.StackTraceLines(Exception e) in C:\git\softwrench\softWrench.sW4\Util\ExceptionUtil.cs:line 33 at softWrench.sW4.Util.ExceptionUtil.FirstStackTraceLine(Exception e) in C:\git\softwrench\softWrench.sW4\Util\ExceptionUtil.cs:line 73 at softWrench.sW4.Util.ExceptionUtil.FirstProjectStackTraceLine(Exception e) in C:\git\softwrench\softWrench.sW4\Util\ExceptionUtil.cs:line 50 at softWrench.sW4.Web.Common.ErrorDto..ctor(Exception rootException) in C:\git\softwrench\softWrench.sW4.Web\Common\ErrorDto.cs:line 29 at softWrench.sW4.Web.Common.GenericExceptionFilter.BuildErrorDto(Exception e) in C:\git\softwrench\softWrench.sW4.Web\Common\GenericExceptionFilter.cs:line 44 at softWrench.sW4.Web.Common.GenericExceptionFilter.OnException(HttpActionExecutedContext context) in C:\git\softwrench\softWrench.sW4.Web\Common\GenericExceptionFilter.cs:line 51 at System.Web.Http.Tracing.Tracers.ExceptionFilterAttributeTracer.<>c__DisplayClass4.<OnException>b__1() at System.Web.Http.Tracing.ITraceWriterExtensions.TraceBeginEnd(ITraceWriter traceWriter, HttpRequestMessage request, String category, TraceLevel level, String operatorName, String operationName, Action`1 beginTrace, Action execute, Action`1 endTrace, Action`1 errorTrace) at System.Web.Http.Tracing.Tracers.ExceptionFilterAttributeTracer.OnException(HttpActionExecutedContext actionExecutedContext) at System.Web.Http.Filters.ExceptionFilterAttribute.System.Web.Http.Filters.IExceptionFilter.ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken) at System.Web.Http.ApiController.<>c__DisplayClass8.<>c__DisplayClassa.<InvokeActionWithExceptionFilters>b__6(IExceptionFilter filter) at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext() at System.Threading.Tasks.TaskHelpers.IterateImpl(IEnumerator`1 enumerator, CancellationToken cancellationToken)";
-            $scope.$emit('sw_ajaxerror', message);
+            //message = {};
+            //message.exceptionMessage = "Object reference not set to an instance of an object.";
+            //message.exceptionType = "System.NullReferenceException";
+            //message.outlineInformation = "Some ountline info...";
+            //message.stackTrace = "Some stack trace text...";
+            //$scope.$emit('sw_ajaxerror', message);
         }
     }
 });
