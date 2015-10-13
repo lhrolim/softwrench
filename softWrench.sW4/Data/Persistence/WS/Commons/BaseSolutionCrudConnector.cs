@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
             LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData, "PROBLEMCODE_LONGDESCRIPTION", "symptom");
             LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData, "FR1CODE_LONGDESCRIPTION", "cause");
-            LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData, "FR2CODE_LONGDESCRIPTION", "resol");
+            LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData, "FR2CODE_LONGDESCRIPTION", "resolution");
         }
     }
 }
