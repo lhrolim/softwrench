@@ -1,10 +1,10 @@
-﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
-using softwrench.sw4.Hapag.Data.Init;
+﻿using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using System;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 
 namespace softwrench.sw4.Hapag.Data {
@@ -47,6 +47,11 @@ namespace softwrench.sw4.Hapag.Data {
 
         public string DashboardChangeTasksWhereClause() {
             var user = SecurityFacade.CurrentUser();
+            var ctx = _contextLookuper.LookupContext();
+            var appContext = ctx.ApplicationLookupContext;
+            if ("detail".Equals(appContext.Schema)) {
+                return null;
+            }
             return ChangeOpenTasks.Fmt(user.GetPersonGroupsForQuery());
         }
 
@@ -55,11 +60,11 @@ namespace softwrench.sw4.Hapag.Data {
             return ChangeOpenTasksViewAll.Fmt(user.GetPersonGroupsForQuery());
         }
 
-//        public string GetWorkLogJoinQuery() {
-//            return
-//                @"(dashapprovals_apprwo_.logtype = 'APPROVAL OBTAINED' and dashapprovals_apprwo_.DESCRIPTION = 'Approved by group ' 
-//                || dashapprovals_.approvergroup )";
-//        }
+        //        public string GetWorkLogJoinQuery() {
+        //            return
+        //                @"(dashapprovals_apprwo_.logtype = 'APPROVAL OBTAINED' and dashapprovals_apprwo_.DESCRIPTION = 'Approved by group ' 
+        //                || dashapprovals_.approvergroup )";
+        //        }
 
         public string GetPersonGroupsForQuery() {
             var user = SecurityFacade.CurrentUser();
