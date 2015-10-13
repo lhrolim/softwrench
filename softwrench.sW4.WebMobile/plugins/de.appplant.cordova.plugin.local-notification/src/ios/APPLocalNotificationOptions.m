@@ -29,7 +29,7 @@ NSString* const DEFAULT_SOUND = @"res://platform_default";
 @interface APPLocalNotificationOptions ()
 
 // The dictionary which contains all notification properties
-@property(nonatomic, retain) NSDictionary* dict;
+@property(readwrite, assign) NSDictionary* dict;
 
 @end
 
@@ -46,7 +46,7 @@ NSString* const DEFAULT_SOUND = @"res://platform_default";
  */
 - (id) initWithDict:(NSDictionary*)dictionary
 {
-    self = [self init];
+    self = [super init];
 
     self.dict = dictionary;
 
@@ -59,11 +59,9 @@ NSString* const DEFAULT_SOUND = @"res://platform_default";
 /**
  * The notification's ID.
  */
-- (NSNumber*) id
+- (NSString*) id
 {
-    NSInteger id = [[dict objectForKey:@"id"] integerValue];
-
-    return [NSNumber numberWithInteger:id];
+    return [dict objectForKey:@"id"];
 }
 
 /**
@@ -188,14 +186,6 @@ NSString* const DEFAULT_SOUND = @"res://platform_default";
  */
 - (NSDictionary*) userInfo
 {
-    if ([dict objectForKey:@"updatedAt"]) {
-        NSMutableDictionary* data = [dict mutableCopy];
-
-        [data removeObjectForKey:@"updatedAt"];
-
-        return data;
-    }
-
     return dict;
 }
 

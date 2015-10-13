@@ -23,16 +23,6 @@
 
 package de.appplant.cordova.plugin.notification;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.StrictMode;
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,6 +32,16 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.StrictMode;
+import android.util.Log;
 
 /**
  * Util class to map unified asset URIs to native URIs. URIs like file:///
@@ -60,7 +60,7 @@ class AssetUtil {
     // Ref to the context passed through the constructor to access the
     // resources and app directory.
     private final Context context;
-
+	
 	/**
 	 * Constructor
 	 *
@@ -102,7 +102,7 @@ class AssetUtil {
 
 	/**
 	 * The URI for a path.
-	 *
+	 * 
 	 * @param path
      *      The given path
 	 */
@@ -120,13 +120,15 @@ class AssetUtil {
 
 		return Uri.EMPTY;
 	}
+    
 
+    
 	/**
 	 * URI for a file.
-	 *
+	 * 
 	 * @param path
 	 *      Absolute path like file:///...
-	 *
+	 * 
 	 * @return
      *      URI pointing to the given path
 	 */
@@ -144,10 +146,10 @@ class AssetUtil {
 
 	/**
 	 * URI for an asset.
-	 *
+	 * 
 	 * @param path
 	 *      Asset path like file://...
-	 *
+	 * 
 	 * @return
      *      URI pointing to the given path
 	 */
@@ -189,10 +191,10 @@ class AssetUtil {
 
 	/**
 	 * The URI for a resource.
-	 *
+	 * 
 	 * @param path
 	 *            The given relative path
-	 *
+	 * 
 	 * @return
      *      URI pointing to the given path
 	 */
@@ -238,7 +240,7 @@ class AssetUtil {
 
         return Uri.EMPTY;
 	}
-
+	
 	/**
 	 * Uri from remote located content.
      *
@@ -284,11 +286,11 @@ class AssetUtil {
 
 			outStream.flush();
 			outStream.close();
-
+			
 			return Uri.fromFile(file);
 
 		} catch (MalformedURLException e) {
-			Log.e("Asset", "Incorrect URL");
+			Log.e("Asset", "Incorrect URL");			
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			Log.e("Asset", "Failed to create new File from HTTP Content");
@@ -303,7 +305,7 @@ class AssetUtil {
 
 	/**
 	 * Copy content from input stream into output stream.
-	 *
+	 * 
 	 * @param in
 	 *      The input stream
 	 * @param out
