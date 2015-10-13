@@ -2,13 +2,22 @@
 
     var mockCompositionResult = {
         "attachment_": {
-            "list": [{}, {}, {}]
+            "paginationData": {
+                "totalCount" : 5
+            },
+            "list": [{}, {}, {}, {}, {}]
         },
         "commlog_": {
-            "list": [{}]
+            "paginationData": {
+                "totalCount": 11
+            },
+            "list": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}] // Only 10 object in the list because it is paginated to 10 per page
         },
         "worklog_": {
-            "list": [{}, {}]
+            "paginationData": {
+                "totalCount": 10
+            },
+            "list": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
         }
     };
 
@@ -29,9 +38,9 @@
         var commlogLength = crudContextService.getTabRecordCount(commlogTab);
         var worklogLength = crudContextService.getTabRecordCount(worklogTab);
         // Make sure they match the values from the mockCompositionResult
-        expect(attachmentLength).toBe(3);
-        expect(commlogLength).toBe(1);
-        expect(worklogLength).toBe(2);
+        expect(attachmentLength).toBe(5);
+        expect(commlogLength).toBe(11);
+        expect(worklogLength).toBe(10);
     });
 
     it('should remove record counts on disposeDetail', function () {
