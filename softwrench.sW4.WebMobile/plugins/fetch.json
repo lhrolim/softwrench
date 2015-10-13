@@ -74,14 +74,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "de.appplant.cordova.plugin.local-notification": {
-        "source": {
-            "type": "registry",
-            "id": "de.appplant.cordova.plugin.local-notification@0.8.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-file": {
         "source": {
             "type": "registry",
@@ -94,6 +86,15 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-whitelist@1.1.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/controltechnologysolutions/cordova-plugin-local-notifications",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}

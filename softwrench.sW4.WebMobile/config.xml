@@ -96,7 +96,7 @@
   <vs:plugin name="cordova-plugin-device" version="1.0.1" />
   <!--<vs:plugin name="android.support.v4" version="21.0.1" />-->
   <vs:plugin name="cordova-plugin-network-information" version="1.0.1" />
-  <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" src="https://github.com/katzer/cordova-plugin-local-notifications.git" />
+  <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.2-dev" src="https://github.com/controltechnologysolutions/cordova-plugin-local-notifications.git" />
   <vs:plugin name="cordova-plugin-file" version="3.0.0" src="https://github.com/apache/cordova-plugin-file" />
   <vs:plugin name="com.ionic.keyboard" version="1.0.4" />
   <vs:plugin name="cordova-plugin-splashscreen" version="2.1.0" />
