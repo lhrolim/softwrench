@@ -65,10 +65,12 @@
 
         function detailLoaded() {
             this.clearDirty();
+            this.disposeDetail();
             _crudContext.needsServerRefresh = false;
         }
 
         function gridLoaded(applicationListResult) {
+            this.disposeDetail();
             _crudContext.affectedProfiles = applicationListResult.affectedProfiles;
             _crudContext.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
