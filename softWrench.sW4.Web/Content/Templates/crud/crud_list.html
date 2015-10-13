@@ -76,14 +76,38 @@
                 <div ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
                     <input type="checkbox" ng-change="toggleSelectAll(selectAllChecked)" ng-model="selectAllChecked">
                 </div>
-                <div class="row">
-                    <div class="col-md-2" ng-repeat="column in schema.displayables" ng-if="!isFieldHidden(schema,column) && shouldShowHeaderFilter(column)">
-                        <div>
-                            <span>{{i18N('_grid.filter.placeholder','{0}',[column.label])}}</span>
-                            <i class="fa fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
+                <table class="filter-row">
+                    <tr>
+                        <td class="filter-label"
+                            ng-repeat="column in schema.displayables"
+                            ng-show="!isFieldHidden(schema,column) && shouldShowHeaderFilter(column)"
+                            filterrowrendered>
+                            <div class="filter-label-wrapper">
+                                <span>{{i18N('_grid.filter.placeholder','{0}',[column.label])}}</span>
+                                <div class="dropdown">
+                                    <i class="fa fa-caret-down dropdown-toggle grid-filter-button"
+                                       ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
+                                       rel="tooltip"
+                                       data-original-title="{{getOperator(column.attribute).tooltip}}"></i>
+                                    <div class="dropdown-menu">
+                                        <div>
+                                            <div class="filter-dropdown-toolbar">
+                                                <div>
+                                                    <i class="fa fa-check"></i>
+                                                    Apply
+                                                </div>
+                                                <div>
+                                                    <i class="fa fa-remove"></i>
+                                                    Clear
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
@@ -119,7 +143,103 @@
                     </th>
                     <th class="clear"><!--SWWEB-841--></th>
                 </tr>
-
+                <!-- Filter row -->
+                <tr class="filter-row hidden-too-much-columns hiddenonprint" ng-if="schema.properties['list.disablefilter'] != 'true'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
+                        <input type="checkbox"
+                               ng-change="toggleSelectAll(selectAllChecked)" ng-model="selectAllChecked">
+                    </th>
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
+                        <!--Singleselect-->
+                    </th>
+                    <th class="{{safeCSSselector(column.attribute)}}"
+                        ng-repeat="column in schema.displayables"
+                        ng-show="!isFieldHidden(schema,column)"
+                        filterrowrendered>
+                        <div ng-if="shouldShowHeaderFilter(column)">
+                            <ng-switch on="column.type">
+                                <div ng-switch-when="ApplicationFieldDefinition">
+                                    <ng-switch on="column.rendererType">
+                                        <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
+                                            <input type="text" ng-model="searchData[column.attribute]" class="form-control"
+                                                   data-date-time
+                                                   data-show-time="false"
+                                                   data-show-date="{{column.rendererParameters['showdate']}}"
+                                                   data-date-format="{{column.rendererParameters['format']}}"
+                                                   data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
+                                                   data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                                                   placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}"
+                                                   ng-enter="filterSearch(column.attribute,$event)"
+                                                   ng-disabled="advancedfiltermode" />
+                                            <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </span>
+                                            <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
+                                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                            <div class="input-group-addon dropdown">
+                                                <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" rel="tooltip"
+                                                      data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                                        ng-show="shouldShowFilter(operation,column)"
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        <a href="#">{{operation.title}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div ng-switch-default class="input-group input-group-sm">
+                                            <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
+                                                   ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" ng-disabled="advancedfiltermode" />
+                                            <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
+                                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                            <div class="input-group-addon dropdown">
+                                                <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" rel="tooltip"
+                                                      data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                                        ng-show="shouldShowFilter(operation,column)"
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        <a href="#">{{operation.title}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-switch>
+                                </div>
+                                <div ng-switch-when="OptionField">
+                                    <div ng-switch on="column.rendererType">
+                                        <div class="input-group" ng-switch-when="combo" class="sw-combobox-container">
+                                            <select class="hidden-phone form-control combobox"
+                                                    ng-init="handleDefaultValue(dm.fields,column)"
+                                                    ng-model="searchData[column.target]"
+                                                    ng-change="refreshGrid()"
+                                                    ng-disabled="advancedfiltermode"
+                                                    ng-options="option.value as i18NOptionField(option,column,schema)
+                                for option in GetAssociationOptions(column,true)" />
+                                            <div class="input-group-addon dropdown">
+                                                <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
+                                                      rel="tooltip"
+                                                      data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                                        ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        <a href="#">{{operation.title}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-switch>
+                        </div>
+                    </th>
+                    <th class="clear"><!--SWWEB-841--></th>
+                </tr>
                 
             </thead>
             <tbody crudtbody schema="schema" datamap="datamap" panelid="panelid" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />

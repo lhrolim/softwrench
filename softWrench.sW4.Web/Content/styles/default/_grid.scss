@@ -52,6 +52,53 @@
     }
 }
 
+.filter-container { // filter detached from grid table
+    .filter-row {
+        .filter-label {
+            padding-left: 15px;
+            padding-right: 15px;
+            &:first-child {
+                padding-left: 0;
+            }
+            &:last-child {
+                padding-right: 0;
+            }
+            .filter-label-wrapper {
+                display: table;
+                > span { //column name
+                    display: table-cell;
+                    padding-right: 5px;
+                }
+                .dropdown { // dropdown icon
+                    display: table-cell;
+                    .dropdown-menu {
+                        padding-bottom: 0;
+                        .filter-dropdown-toolbar {
+                            display: table;
+                            width: 100%;
+                            border-top: 1px solid #ddd; 
+                            > div {
+                                display: table-cell;
+                                width: 50%;
+                                vertical-align: middle;
+                                cursor: pointer;
+                                text-align: center;
+                                padding: 5px 0px 5px 0px;
+                                &:first-child {
+                                    border-right: 1px solid #ddd;  
+                                }
+                                &:last-child {
+                                    border-left: 1px solid #ddd;  
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 #listgrid {
     color: #000;
     width: 100%;

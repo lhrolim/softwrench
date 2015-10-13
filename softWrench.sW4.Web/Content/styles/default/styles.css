@@ -517,6 +517,50 @@ input[type="date"], input[type="time"] {
     .filter-row .input-group .dropdown .dropdown-toggle {
       padding: 5px 8px; }
 
+.filter-container .filter-row .filter-label {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.filter-container .filter-row .filter-label:first-child {
+    padding-left: 0; 
+}
+.filter-container .filter-row .filter-label:last-child {
+    padding-right: 0;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper {
+    display: table;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper > span {
+    display: table-cell;
+    padding-right: 5px;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown {
+    display: table-cell;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu {
+    padding-bottom: 0;
+}
+.filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar {
+    display: table;
+    width: 100%;
+    border-top: 1px solid #ddd; 
+}
+.filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar > div {
+    display: table-cell;
+    width: 50%;
+    vertical-align: middle;
+    cursor: pointer;
+    text-align: center;
+    padding: 5px 0px 5px 0px;
+}
+.filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar > div:first-child {
+   border-right: 1px solid #ddd;  
+}
+.filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar > div:last-child {
+   border-left: 1px solid #ddd;  
+}           
+
+
 #listgrid {
   color: #000;
   width: 100%;
