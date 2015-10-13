@@ -32,6 +32,7 @@ exports.defineAutoTests = function () {
     var isWindows = (cordova.platformId === "windows" || cordova.platformId === "windows8");
     
     var MEDIUM_TIMEOUT = 15000;
+    var LONG_TIMEOUT = 60000;
 
     describe('File API', function () {
         // Adding a Jasmine helper matcher, to report errors when comparing to FileError better.
@@ -3302,8 +3303,6 @@ exports.defineAutoTests = function () {
                     expectedPaths.push('externalRootDirectory', 'sharedDirectory');
                 } else if (cordova.platformId == 'ios') {
                     expectedPaths.push('syncedDataDirectory', 'documentsDirectory', 'tempDirectory');
-                } else if (cordova.platformId == 'osx') {
-                    expectedPaths.push('documentsDirectory', 'tempDirectory', 'rootDirectory');
                 } else {
                     console.log('Skipping test due on unsupported platform.');
                     return;
@@ -3485,23 +3484,19 @@ exports.defineAutoTests = function () {
                     }, failed.bind(null, done, 'resolveLocalFileSystemURL failed for content provider'));
                 });
             });
-
-            // these tests ensure that you can read and copy from android_asset folder
-            // for details see https://issues.apache.org/jira/browse/CB-6428
-            // and https://mail-archives.apache.org/mod_mbox/cordova-dev/201508.mbox/%3C782154441.8406572.1440182722528.JavaMail.yahoo%40mail.yahoo.com%3E
             describe('asset: URLs', function() {
                 it("file.spec.141 filePaths.applicationStorage", function() {
                     expect(cordova.file.applicationDirectory).toEqual('file:///android_asset/');
                 }, MEDIUM_TIMEOUT);
                 it("file.spec.142 assets should be enumerable", function(done) {
-                    resolveLocalFileSystemURL('file:///android_asset/www/fixtures/asset-test', function(entry) {
+                    resolveLocalFileSystemURL('file:///android_asset/www/', function(entry) {
                         var reader = entry.createReader();
                         reader.readEntries(function (entries) {
                             expect(entries.length).not.toBe(0);
                             done();
                         }, failed.bind(null, done, 'reader.readEntries - Error during reading of entries from assets directory'));
                     }, failed.bind(null, done, 'resolveLocalFileSystemURL failed for assets'));
-                }, MEDIUM_TIMEOUT);
+                }, LONG_TIMEOUT);
                 it("file.spec.143 copyTo: asset -> temporary", function(done) {
                     var file2 = "entry.copy.file2b",
                     fullPath = joinURL(temp_root.fullPath, file2),
@@ -3527,7 +3522,7 @@ exports.defineAutoTests = function () {
                 }, MEDIUM_TIMEOUT);
             });
             it("file.spec.144 copyTo: asset directory", function (done) {
-                var srcUrl = 'file:///android_asset/www/fixtures/asset-test';
+                var srcUrl = 'file:///android_asset/www';
                 var dstDir = "entry.copy.dstDir";
                 var dstPath = joinURL(root.fullPath, dstDir);
                 // create a new directory entry to kick off it
@@ -3547,7 +3542,7 @@ exports.defineAutoTests = function () {
                                 expect(dirEntry.isDirectory).toBe(true);
                                 expect(dirEntry.fullPath).toCanonicallyMatch(dstPath);
                                 expect(dirEntry.name).toCanonicallyMatch(dstDir);
-                                dirEntry.getFile('asset-test.txt', {
+                                dirEntry.getFile('cordova.js', {
                                     create : false
                                 }, function (fileEntry) {
                                     expect(fileEntry).toBeDefined();
@@ -3559,7 +3554,7 @@ exports.defineAutoTests = function () {
                         }, failed.bind(null, done, 'directory.copyTo - Error copying directory'));
                     }, failed.bind(null, done, 'resolving src dir'));
                 }, failed.bind(null, done, 'deleteEntry - Error removing directory : ' + dstDir));
-            }, MEDIUM_TIMEOUT);
+            }, LONG_TIMEOUT);
         }
     });
 
@@ -3631,7 +3626,6 @@ exports.defineManualTests = function (contentEl, createActionButton) {
 
     var fsRoots = {
         "ios" : "library,library-nosync,documents,documents-nosync,cache,bundle,root,private",
-        "osx" : "library,library-nosync,documents,documents-nosync,cache,bundle,root,private",
         "android" : "files,files-external,documents,sdcard,cache,cache-external,root",
         "amazon-fireos" : "files,files-external,documents,sdcard,cache,cache-external,root",
         "windows": "temporary,persistent"

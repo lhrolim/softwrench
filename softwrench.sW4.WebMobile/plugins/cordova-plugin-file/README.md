@@ -59,7 +59,6 @@ Although in the global scope, it is not available until after the `deviceready` 
 - BlackBerry 10
 - Firefox OS
 - iOS
-- OS X
 - Windows Phone 7 and 8*
 - Windows 8*
 - Windows*
@@ -74,12 +73,12 @@ Each URL is in the form _file:///path/to/spot/_, and can be converted to a
 `DirectoryEntry` using `window.resolveLocalFileSystemURL()`.
 
 * `cordova.file.applicationDirectory` - Read-only directory where the application 
-  is installed. (_iOS_, _Android_, _BlackBerry 10_, _OSX_)
+  is installed. (_iOS_, _Android_, _BlackBerry 10_)
 
 * `cordova.file.applicationStorageDirectory` - Root directory of the application's 
   sandbox; on iOS this location is read-only (but specific subdirectories [like 
   `/Documents`] are read-write). All data contained within is private to the app. (
-  _iOS_, _Android_, _BlackBerry 10_, _OSX_)
+  _iOS_, _Android_, _BlackBerry 10_)
 
 * `cordova.file.dataDirectory` - Persistent and private data storage within the 
   application's sandbox using internal memory (on Android, if you need to use 
@@ -89,7 +88,7 @@ Each URL is in the form _file:///path/to/spot/_, and can be converted to a
 * `cordova.file.cacheDirectory` -  Directory for cached data files or any files 
   that your app can re-create easily. The OS may delete these files when the device 
   runs low on storage, nevertheless, apps should not rely on the OS to delete files 
-  in here. (_iOS_, _Android_, _BlackBerry 10_, _OSX_)
+  in here. (_iOS_, _Android_, _BlackBerry 10_)
 
 * `cordova.file.externalApplicationStorageDirectory` - Application space on 
   external storage. (_Android_)
@@ -104,13 +103,13 @@ Each URL is in the form _file:///path/to/spot/_, and can be converted to a
 
 * `cordova.file.tempDirectory` - Temp directory that the OS can clear at will. Do not 
   rely on the OS to clear this directory; your app should always remove files as 
-  applicable. (_iOS_, _OSX_)
+  applicable. (_iOS_)
 
 * `cordova.file.syncedDataDirectory` - Holds app-specific files that should be synced 
   (e.g. to iCloud). (_iOS_)
 
 * `cordova.file.documentsDirectory` - Files private to the app, but that are meaningful 
-  to other application (e.g. Office files). Note that for _OSX_ this is the user's `~/Documents` directory. (_iOS_, _OSX_)
+  to other application (e.g. Office files). (_iOS_)
 
 * `cordova.file.sharedDirectory` - Files globally available to all applications (_BlackBerry 10_)
 
@@ -185,29 +184,6 @@ properties are `null`.
 | `file:///accounts/1000/shared`                               | sharedDirectory             | r/w  |     Yes     |     No    |   No    |
 
 *Note*: When application is deployed to work perimeter, all paths are relative to /accounts/1000-enterprise.
-
-### OS X File System Layout
-
-| Device Path                                      | `cordova.file.*`            | `iosExtraFileSystems` | r/w? |  OS clears | private |
-|:-------------------------------------------------|:----------------------------|:----------------------|:----:|:---------:|:-------:|
-| `/Applications/<appname>.app/`                   | -                           | bundle                | r    |     N/A   |   Yes   |
-| &nbsp;&nbsp;&nbsp;&nbsp;`Content/Resources/`    | applicationDirectory        | -                     | r    |     N/A   |   Yes   |
-| `~/Library/Application Support/<bundle-id>/`     | applicationStorageDirectory | -                     | r/w  |     No    |   Yes   |
-| &nbsp;&nbsp;&nbsp;&nbsp;`files/`                 | dataDirectory               | -                     | r/w  |     No    |   Yes   |
-| `~/Documents/`                                   | documentsDirectory          | documents             | r/w  |     No    |    No   |
-| `~/Library/Caches/<bundle-id>/`                  | cacheDirectory              | cache                 | r/w  |     No    |   Yes   |
-| `/tmp/`                                          | tempDirectory               | -                     | r/w  |    Yes\*  |   Yes   |
-| `/`                                              | rootDirectory               | root                  | r/w  |    No\*\* |    No   |
-
-**Note**: This is the layout for non sandboxed applications. I you enable sandboxing, the `applicationStorageDirectory` will be below ` ~/Library/Containers/<bundle-id>/Data/Library/Application Support`.
-
-\* Files persist across app restarts and upgrades, but this directory can 
-     be cleared whenever the OS desires. Your app should be able to recreate any 
-     content that might be deleted. You should clear this directory as 
-     appropriate for your application.
-
-\*\* Allows access to the entire file system. This is only available for non sandboxed apps.
-
 
 ## Android Quirks
 
@@ -424,52 +400,6 @@ This method will now return filesystem URLs of the form
     cdvfile://localhost/persistent/path/to/file
 
 which can be used to identify the file uniquely.
-
-## cdvfile protocol
-**Purpose**
-
-`cdvfile://localhost/persistent|temporary|another-fs-root*/path/to/file` can be used for platform-independent file paths. 
-cdvfile paths are supported by core plugins - for example you can download an mp3 file to cdvfile-path via `cordova-plugin-file-transfer` and play it via `cordova-plugin-media`.
-
-__*Note__: See [Where to Store Files](#where-to-store-files), [File System Layouts](#file-system-layouts) and [Configuring the Plugin](#configuring-the-plugin-optional) for more details about available fs roots.
-
-To use `cdvfile` as a tag' `src` you can convert it to native path via `toURL()` method of the resolved fileEntry, which you can get via `resolveLocalFileSystemURL` - see examples below.
-
-You can also use `cdvfile://` paths directly in the DOM, for example:
-```HTML
-<img src="cdvfile://localhost/persistent/img/logo.png" />
-```
-
-__*Note__: This method requires following Content Security rules updates:
-* Add `cdvfile:` scheme to `Content-Security-Policy` meta tag of the index page, e.g.:
-  - `<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: `**cdvfile:**` https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">`
-* Add `<access origin="cdvfile://*" />` to `config.xml`.
-
-**Converting cdvfile:// to native path**
-
-```javascript
-resolveLocalFileSystemURL('cdvfile://localhost/temporary/path/to/file.mp4', function(entry) {
-    var nativePath = entry.toURL();
-    console.log('Native URI: ' + nativePath);
-    document.getElementById('video').src = nativePath;
-```
-
-**Converting native path to cdvfile://**
-
-```javascript
-resolveLocalFileSystemURL(nativePath, function(entry) {
-    console.log('cdvfile URI: ' + entry.toInternalURL());
-```
-
-**Using cdvfile in core plugins**
-
-```javascript
-fileTransfer.download(uri, 'cdvfile://localhost/temporary/path/to/file.mp3', function (entry) { ... 
-```
-```javascript
-var my_media = new Media('cdvfile://localhost/temporary/path/to/file.mp3', ...);
-my_media.play();
-```
 
 ## List of Error Codes and Meanings
 When an error is thrown, one of the following codes will be used. 
