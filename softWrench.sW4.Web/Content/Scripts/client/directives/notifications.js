@@ -216,9 +216,9 @@ app.directive('notifications', function (contextService, $log) {
 
                     //convert error data into a common exception format
                     var exception = {};
-                    exception.type = data.exceptionType;
+                    exception.type = data.errorType || data.exceptionType;
                     exception.outline = data.outlineInformation;
-                    exception.stack = data.errorStack || data.stackTrace;
+                    exception.stack = data.errorStack || (data.fullStack || data.stackTrace);
                     message.exception = exception;
 
                     //if we have a message
@@ -240,8 +240,7 @@ app.directive('notifications', function (contextService, $log) {
 
             //TODO: push test messages
             //var message = {};
-
-            //message.type = 'dev';
+            //message.type = 'error';
             //message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
             //$scope.$emit('sw_notificationmessage', message);
 

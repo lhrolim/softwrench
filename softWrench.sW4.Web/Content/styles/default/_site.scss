@@ -172,18 +172,6 @@ input.ng-dirty.ng-invalid, .not-found:focus {
         margin-top: 0;
     }
 
-    messagesection {
-        .alerts {
-            position: relative;
-            z-index: 1000;
-            width: 100%;
-        }
-
-        .alert {
-            margin-bottom: 0;
-        }
-    }
-
     .affix-pagination {
         position: relative;
         z-index: 1000;
@@ -208,10 +196,6 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 }
 
 @media all and (min-width: 768px) {
-    .desktop messagesection .alerts {
-        position: fixed;
-    }
-
     .container.desktop {
         .affix-pagination {
             position: fixed;

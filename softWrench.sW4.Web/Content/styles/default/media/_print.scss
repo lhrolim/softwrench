@@ -1,5 +1,5 @@
 ﻿@media print {
-    .hiddenonprint, .no-print, .col-lg-2, .affix, .filter-row, .glyphicon {
+    .hiddenonprint, .no-print, .col-lg-2, .affix, .filter-row, .glyphicon, notifications, #errorModal {
         display: none !important;
     }
 
@@ -110,11 +110,6 @@
 
     .container header {
         position: initial;
-    }
-
-    messagesection .alerts {
-        position: initial;
-        margin-top: initial !important;
     }
 
     .affix-pagination {
