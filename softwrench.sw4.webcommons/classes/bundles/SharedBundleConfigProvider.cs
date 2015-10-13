@@ -41,6 +41,7 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             const string basePath = "~/Content/styles/default/";
             const string baseAppPath = basePath + "/application";
             const string baseMediaPath = basePath + "/media";
+            const string baseVendorPath = basePath + "/vendor";
 
             var clientPath = String.Format("~/Content/styles/{0}", clientName); ;
             if (AssemblyLocator.CustomerAssemblyExists()) {
@@ -49,6 +50,7 @@ namespace softwrench.sw4.webcommons.classes.bundles {
 
             var clientPathAppCustom = clientPath + "/application";
             var clientPathMediaCustom = clientPath + "/media";
+            var clientPathVendorCustom = clientPath + "/vendor";
 
             var styleBundle = new StyleBundle("~/Content/styles/client/client-css");
 
@@ -57,6 +59,7 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             bundles.Add(styleBundle.IncludeDirectory(basePath, "*.css"));
             bundles.Add(styleBundle.IncludeDirectory(baseAppPath, "*.css"));
             bundles.Add(styleBundle.IncludeDirectory(baseMediaPath, "*.css"));
+            bundles.Add(styleBundle.IncludeDirectory(baseVendorPath, "*.css"));
 
             bundles.IgnoreList.Ignore("*.mobile.css");
 
@@ -76,10 +79,14 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             } catch {
                 //nothing to do
             }
+            try
+            {
+                bundles.Add(styleBundle.IncludeDirectory(clientPathVendorCustom, "*.css"));
+            }
+            catch
+            {
+                //nothing to do
+            }
         }
-
-
-
-
     }
 }
