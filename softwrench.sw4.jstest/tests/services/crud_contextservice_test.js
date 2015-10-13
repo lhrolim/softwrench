@@ -4,17 +4,20 @@
         "attachment_": {
             "paginationData": {
                 "totalCount" : 5
-            }
+            },
+            "list": [{}, {}, {}, {}, {}]
         },
         "commlog_": {
             "paginationData": {
                 "totalCount": 11
-            }
+            },
+            "list": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}] // Only 10 object in the list because it is paginated to 10 per page
         },
         "worklog_": {
             "paginationData": {
                 "totalCount": 10
-            }
+            },
+            "list": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
         }
     };
 
