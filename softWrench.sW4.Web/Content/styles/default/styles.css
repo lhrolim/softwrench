@@ -504,19 +504,6 @@ input[type="date"], input[type="time"] {
   cursor: pointer;
   color: black; }
 
-.filter-row .grid-filter-button {
-  font-weight: bold; }
-
-.filter-row .dropdown {
-  text-align: left; }
-
-.filter-row .input-group {
-  width: 100%; }
-  .filter-row .input-group .dropdown {
-    padding: 0; }
-    .filter-row .input-group .dropdown .dropdown-toggle {
-      padding: 5px 8px; }
-
 .filter-container .filter-row .filter-label {
     padding-right: 15px;
     padding-left: 15px;
@@ -533,7 +520,7 @@ input[type="date"], input[type="time"] {
 .filter-container .filter-row .filter-label .filter-label-wrapper > span {
     display: table-cell;
     padding-right: 5px;
-    vertical-align: middle;
+    vertical-align: top;
 }
 .filter-container .filter-row .filter-label .filter-label-wrapper > span.glyphicon {
     font-size: 10px;

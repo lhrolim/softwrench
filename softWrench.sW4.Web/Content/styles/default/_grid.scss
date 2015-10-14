@@ -30,28 +30,6 @@
     color: black;
 }
 
-.filter-row {
-    .grid-filter-button {
-        font-weight: bold;
-    }
-
-    .dropdown {
-        text-align: left;
-    }
-
-    .input-group {
-        width: 100%;
-
-        .dropdown {
-            padding: 0;
-
-            .dropdown-toggle {
-                padding: 5px 8px;
-            }
-        }
-    }
-}
-
 .filter-container { // filter detached from grid table
     .filter-row {
         .filter-label {
@@ -68,7 +46,7 @@
                 > span { //column name
                     display: table-cell;
                     padding-right: 5px;
-                    vertical-align: middle;
+                    vertical-align: top;
 
                     &.glyphicon { // appended operation icon
                         font-size: 10px;
