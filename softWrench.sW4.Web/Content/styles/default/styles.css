@@ -533,13 +533,53 @@ input[type="date"], input[type="time"] {
 .filter-container .filter-row .filter-label .filter-label-wrapper > span {
     display: table-cell;
     padding-right: 5px;
+    vertical-align: middle;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper > span.glyphicon {
+    font-size: 10px;
+    font-weight: bold;
 }
 .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown {
     display: table-cell;
 }
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown > i.fa {
+    color: #767676;
+}
 .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu {
     padding-bottom: 0;
+    width: 250px;
 }
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content {
+    padding-top: 10px;
+    padding-bottom: 0;
+    width: 100%;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .input-group {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .bootstrap-datetimepicker-widget {
+    z-index: 9999 !important;
+    width: 38em !important;
+}
+@media (max-width: 768px) {
+    .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .bootstrap-datetimepicker-widget {
+        width: 19em !important;
+    }
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group {
+    max-height: 250px;
+    overflow-y: scroll;
+    margin-bottom: 0;
+}
+.filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group .list-group-item {
+    cursor: pointer;
+    border: none;
+    font-size: 12px;
+}
+
 .filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar {
     display: table;
     width: 100%;
@@ -551,7 +591,12 @@ input[type="date"], input[type="time"] {
     vertical-align: middle;
     cursor: pointer;
     text-align: center;
-    padding: 5px 0px 5px 0px;
+    height: 40px;
+    color: #989898;
+    font-weight: bold;
+}
+.filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar > div.active {
+    color: #3a7ebd;
 }
 .filter-container .filter-row .filter-label .dropdown .dropdown-menu .filter-dropdown-toolbar > div:first-child {
    border-right: 1px solid #ddd;  

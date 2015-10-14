@@ -68,22 +68,75 @@
                 > span { //column name
                     display: table-cell;
                     padding-right: 5px;
+                    vertical-align: middle;
+
+                    &.glyphicon { // appended operation icon
+                        font-size: 10px;
+                        font-weight: bold;
+                    }
+                    
                 }
                 .dropdown { // dropdown icon
                     display: table-cell;
-                    .dropdown-menu {
+                    
+                    > i.fa {
+                        color: #767676;
+                    }
+
+                    .dropdown-menu { // dropdown-menu
                         padding-bottom: 0;
-                        .filter-dropdown-toolbar {
+                        width: 250px;
+
+                        .dropdown-content {
+                            padding-top: 10px;
+                            padding-bottom: 0;
+                            width: 100%;
+
+                            .input-group {
+                                width: 90%;
+                                margin-left: auto;
+                                margin-right: auto;
+                                margin-bottom: 15px;
+                            }
+
+                            .list-group {
+                                max-height: 250px;
+                                overflow-y: scroll;
+                                margin-bottom: 0;
+                                .list-group-item {
+                                    cursor: pointer;
+                                    border: none;
+                                    font-size: 12px;
+                                }
+                            }
+
+                            .bootstrap-datetimepicker-widget { 
+                                z-index: 9999 !important; // force date picker to display on top of the dropdown
+                                width: 38em; // maintain date and time side-by-side
+                                @media (max-width: 768px) {
+                                    width: 19em !important; // time below date for 'smaller' screens
+                                }
+                            }
+                        }
+                        
+                        .filter-dropdown-toolbar { //dropdown-menu buttons
                             display: table;
                             width: 100%;
                             border-top: 1px solid #ddd; 
+                            
                             > div {
                                 display: table-cell;
                                 width: 50%;
                                 vertical-align: middle;
                                 cursor: pointer;
                                 text-align: center;
-                                padding: 5px 0px 5px 0px;
+                                height: 40px;
+                                color: #989898;
+                                font-weight: bold;
+                                &.active {
+                                    color: #3a7ebd;
+                                }
+
                                 &:first-child {
                                     border-right: 1px solid #ddd;  
                                 }

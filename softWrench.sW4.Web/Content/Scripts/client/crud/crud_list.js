@@ -44,7 +44,7 @@ app.directive('crudListWrapper', function (contextService, $compile) {
 
 
 
-app.directive('crudList', function (contextService) {
+app.directive('crudList', ["contextService", "$timeout", function (contextService, $timeout) {
     return {
         restrict: 'E',
         replace: true,
@@ -62,12 +62,18 @@ app.directive('crudList', function (contextService) {
             panelid: "@"
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
-            formatService, fixHeaderService,
-            searchService, tabsService,
-            fieldService, commandService, i18NService,
-            validationService, submitService, redirectService,
-            associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
+        controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
+            "formatService", "fixHeaderService",
+            "searchService", "tabsService",
+            "fieldService", "commandService", "i18NService",
+            "validationService", "submitService", "redirectService",
+            "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
+            function ($scope, $http, $rootScope, $filter, $injector, $log,
+                formatService, fixHeaderService,
+                searchService, tabsService,
+                fieldService, commandService, i18NService,
+                validationService, submitService, redirectService,
+                associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
 
 
 
@@ -459,16 +465,21 @@ app.directive('crudList', function (contextService) {
 
                 searchOperator[columnName] = operator;
 
-                if (operator.id == "") {
-                    searchData[columnName] = '';
-                    $scope.selectPage(1);
-                } else if (searchData[columnName] != null && searchData[columnName] != '') {
-                    $scope.selectPage(1);
-                } else if (operator.id == "BLANK") {
-                    searchData[columnName] = '';
-                    $scope.selectPage(1);
+                if (operator.id === "") {
+                    searchData[columnName] = "";
+                    // $scope.selectPage(1);
+                } else if (searchData[columnName] != null && searchData[columnName] !== "") {
+                    // $scope.selectPage(1);
+                } else if (operator.id === "BLANK") {
+                    searchData[columnName] = "";
+                    // $scope.selectPage(1);
                 }
             };
+
+            $scope.clearFilter = function(columnName) {
+                $scope.selectOperator(columnName, {id:""});
+                $scope.selectPage(1);
+            }
 
             $scope.filterSearch = function (columnName, event) {
 
@@ -548,17 +559,23 @@ app.directive('crudList', function (contextService) {
             //by the end of the controller, so that all the scope functions are already declared
             initController();
 
-        },
+        }],
 
         link: function (scope, element, attrs) {
-            scope.isDashboard = function (element, panelid) {
+            scope.isDashboard = function (el, panelid) {
                 if (panelid != null) {
                     return "width: 100%;";
                 } else {
                     return "width: 97.5%; width: -moz-calc(100% - 40px); width: -webkit-calc(100% - 40px); width: calc(100% - 40px);";
                 }
             }
+            // don't let dropdowns close when clicked inside
+            $timeout(function() {
+                var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));
+                dropdowns.click(function(event) {
+                    event.stopPropagation();
+                });
+            });
         }
     };
-});
-
+}]);
