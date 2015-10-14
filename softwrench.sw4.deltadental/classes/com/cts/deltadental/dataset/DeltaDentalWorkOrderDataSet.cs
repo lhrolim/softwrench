@@ -11,11 +11,11 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
-    class DeltaDentalWorkOrderDataSet : BaseWorkorderDataSet
-    {
-        private readonly string[] _sites = {"PA", "ALN", "SF", "RNCHO"};
-        protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass)
-        {
+    class DeltaDentalWorkOrderDataSet : BaseWorkorderDataSet {
+        public DeltaDentalWorkOrderDataSet(SWDBHibernateDAO swdb) : base(swdb) {}
+        
+        private readonly string[] _sites = { "PA", "ALN", "SF", "RNCHO" };
+        protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass) {
             string siteid = parameters.OriginalEntity.GetAttribute("siteid").ToString();
             var query = base.BuildQuery(parameters, ticketclass);
 
@@ -25,7 +25,7 @@ namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
             // Delta has four custom column on their classstructure table, once for each of their four sites.
             // If the sites column value is 1 (true) then the corresponding classification code can be used on said site.
             var customColumnsWhere = siteid != null ? string.Format(" and LOWER(c.{0}) = '1' ", siteid) : "";
-            
+
             return query + customColumnsWhere;
         }
 

@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 HandleArrayOfOptions(commLog, Cc);
                 HandleArrayOfOptions(commLog, Bcc);
             }
-            var ownerid = w.GetRealValue(rootObject, Ticketuid);
+            var ownerid = entity.Id;
 
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate (object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());

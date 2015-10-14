@@ -1,15 +1,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
     public class BaseWorkorderDataSet : BaseTicketDataSet {
+        private readonly SWDBHibernateDAO _swdbDao;
 
+        public BaseWorkorderDataSet(SWDBHibernateDAO swdbDao) {
+            _swdbDao = swdbDao;
+        }
 
         public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
@@ -32,6 +42,32 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return filter;
         }
 
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+            JObject currentData) {
+            var compList = base.GetCompositionData(application, request, currentData);
+            var user = SecurityFacade.CurrentUser();
+
+            if (user == null) {
+                return compList;
+            }
+
+            var commData = _swdbDao.FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application.Name, request.Id, user.DBId);
+
+            if (!compList.ResultObject.ContainsKey("commlog_")) {
+                return compList;
+            }
+
+            var commlogs = compList.ResultObject["commlog_"].ResultList;
+
+            foreach (var commlog in commlogs) {
+                var readFlag = (from c in commData
+                                where c.CommlogId.ToString() == commlog["commloguid"].ToString()
+                                select c.ReadFlag).FirstOrDefault();
+
+                commlog["read"] = readFlag;
+            }
+            return compList;
+        }
 
         public IEnumerable<IAssociationOption> GetWOPriorityType(OptionFieldProviderParameters parameters) {
             var query = @"SELECT description AS LABEL,
