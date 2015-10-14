@@ -10,10 +10,10 @@
             <div class="text">
                 <div class="title">{{getTitleText(message.title, message.type)}}</div>
                 <div class="body" ng-bind-html="message.body"></div>
-                <div ng-click="openModal(message)" class="more">More Info...</div>
+                <div ng-click="openModal(message)" ng-show="displayMoreInfo(message)" class="more">More Info...</div>
             </div>
             <div class="buttons clearfix">
-                <div ng-click="openModal(message)" class="button secondary" ng-show="displayMoreInfo(message)">More Info...</div>
+                <div ng-click="openModal(message)" ng-show="displayMoreInfo(message)" class="button secondary">More Info...</div>
                 <div ng-click="removeMessage(message)" class="button primary">OK, Got It</div>
             </div>
         </div>
