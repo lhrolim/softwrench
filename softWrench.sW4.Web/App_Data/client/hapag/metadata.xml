@@ -1300,7 +1300,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
-          <composition relationship="worklog" label="Work Log">
+          <composition relationship="worklog" label="Work Log" printschema="printschema">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <composition relationship="attachment" label="Attachment" printschema="detailPrint">
@@ -1860,7 +1860,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
 
-          <composition relationship="worklog" label="Work Log" >
+          <composition relationship="worklog" label="Work Log" printschema="printschema" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="detail">
@@ -2252,7 +2252,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
           <field attribute="classstructure_.description" hidden="true"/>
 
-          <composition relationship="worklog" label="Work Log" >
+          <composition relationship="worklog" label="Work Log" printschema="printschema" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="detail" printschema="list">
@@ -2805,7 +2805,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
-          <composition relationship="worklog" label="Work Log">
+          <composition relationship="worklog" label="Work Log" printschema="printschema">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <tab label="Solution" id="solution">

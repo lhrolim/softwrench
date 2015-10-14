@@ -14,6 +14,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['requesttime'] = new Date().getTime();
             config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
+            config.headers['printmode'] = config.printMode;
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
             if (activeRequests == 0 || config.url.indexOf("/Content/")==-1) {
