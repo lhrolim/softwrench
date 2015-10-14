@@ -191,9 +191,14 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     function initController() {
         var configsJSON = $(hddn_configs)[0].value;
-        var config = JSON.parse(configsJSON);
-
         var userJSON = $(hiddn_user)[0].value;
+        if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON)) {
+            //this means user tried to hit back button after logout
+            logoutService.logout();
+            return;
+        }
+
+        var config = JSON.parse(configsJSON);
         var user = JSON.parse(userJSON);
         contextService.loadUserContext(user);
         contextService.loadConfigs(config);

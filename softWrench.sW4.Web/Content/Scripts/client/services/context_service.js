@@ -67,7 +67,11 @@ app.factory('contextService', function ($rootScope) {
                 //caching
                 return $rootScope.user;
             }
-            var user = JSON.parse(this.retrieveFromContext('user'));
+            var userData = this.retrieveFromContext('user');
+            if (userData == null) {
+                return null;
+            }
+            var user = JSON.parse(userData);
             $rootScope.user = user;
             return user;
         },
@@ -154,6 +158,8 @@ app.factory('contextService', function ($rootScope) {
                     delete sessionStorage[key];
                 }
             });
+            $(hiddn_user)[0].value = null;
+            $(hddn_configs)[0].value = null;
         },
 
         deleteFromContext: function (key) {
