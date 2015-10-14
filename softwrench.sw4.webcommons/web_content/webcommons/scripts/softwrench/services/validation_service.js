@@ -126,6 +126,9 @@
                     message.body = validationArray.join(', ');
                     $rootScope.$broadcast('sw_notificationmessage', message);
 
+                    //TODO: add alertService to module
+                    //alertService.notifymessage('error', validationArray.join(', '));
+
                     //TODO: scroll to the first error message
                     $('html, body').animate({ scrollTop: 0 }, 'fast');
                 }

@@ -149,11 +149,7 @@ app.directive('crudBody', function (contextService) {
 
                     //use $timeout to make sure the notification timing works correctly
                     $timeout(function () {
-                        //if we have a message to display upon page load
-                        var message = {};
-                        message.type = 'success';
-                        message.body = onLoadMessage;
-                        $rootScope.$broadcast('sw_notificationmessage', message);
+                        alertService.notifymessage('success', onLoadMessage);
                     }, 0);
                 }
             });
