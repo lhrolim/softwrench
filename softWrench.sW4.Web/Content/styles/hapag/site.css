@@ -711,6 +711,10 @@ textarea .readonly {
         margin-left: -190px !important;
     }
 
+    #listgrid .check {
+        display: none;
+    }
+
     .col-main-content {
         float: none;
     }
