@@ -1863,10 +1863,10 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <composition relationship="worklog" label="Work Log" printschema="printschema" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
-          <composition relationship="woactivity" label="Job Plan" detailschema="detail">
+          <composition relationship="woactivity" label="Job Plan" detailschema="detail" printschema="printschema">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
           </composition>
-          <composition relationship="approvals" label="Approvals" detailschema="">
+          <composition relationship="approvals" label="Approvals" detailschema="" printschema="printschema">
             <collectionproperties allowcreation="false"/>
           </composition>
 
@@ -3452,6 +3452,24 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="default" params="minwidth=80px"/>
           </section>
         </list>
+
+        <schema id="printschema">
+          <commands>
+            <command id="print" remove="true" label=""/>
+          </commands>
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+          </properties>
+          <field attribute="pmchgotherapproversid" hidden="true"/>
+          <field  attribute="approver" label="Approver Person" />
+          <field  attribute="approvergroup" label="Approver Group" />
+          <field  attribute="#changeby" label="Changed By" />
+          <field attribute="#changedate" label="Change Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+          </field>
+          <field attribute="approvallevel" hidden="true"/>
+          <field  attribute="#status" label="Status" />
+        </schema>
       </schemas>
     </application>
 
@@ -3761,6 +3779,26 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         </schema>
 
         <schema id="detail" stereotype="compositiondetail">
+          <field label="Description" attribute="longdescription_.ldtext"/>
+        </schema>
+
+        <schema id="printschema" stereotype="compositiondetail">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wonum" label="WO Number" />
+          <field attribute="wosequence" label="Sequence" />
+          <field attribute="ownergroup" label="Owner Group" >
+            <renderer type="default" params="minwidth=160px;maxwidth=230px"/>
+          </field>
+          <field attribute="status" label="Status"/>
+          <field attribute="schedstart" label="Schedule Start">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+          </field>
+          <field attribute="actfinish" label="Actual Finish">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="minwidth=180px;maxwidth=200px"/>
+          </field>
           <field label="Description" attribute="longdescription_.ldtext"/>
         </schema>
 
