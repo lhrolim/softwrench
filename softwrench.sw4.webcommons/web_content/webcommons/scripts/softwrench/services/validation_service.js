@@ -1,9 +1,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', validationService]);
+    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', validationService]);
 
-    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService) {
+    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService) {
 
       
 
@@ -121,13 +121,7 @@
                 }
                 if (validationArray.length > 0) {
                     //TODO: replace ntification message with in-line error messages
-                    var message = {};
-                    message.type = 'error';
-                    message.body = validationArray.join(', ');
-                    $rootScope.$broadcast('sw_notificationmessage', message);
-
-                    //TODO: add alertService to module
-                    //alertService.notifymessage('error', validationArray.join(', '));
+                    alertService.notifymessage('error', validationArray.join(', '));
 
                     //TODO: scroll to the first error message
                     $('html, body').animate({ scrollTop: 0 }, 'fast');
