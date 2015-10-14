@@ -63,13 +63,11 @@ app.directive('crudList', function (contextService) {
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
-            formatService, fixHeaderService,
+            formatService, fixHeaderService, alertService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
             associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
-
-
 
             $scope.$name = 'crudlist';
 
@@ -143,11 +141,7 @@ app.directive('crudList', function (contextService) {
                 if (onLoadMessage) {
                     //use $timeout to make sure the notification timing works correctly
                     $timeout(function () {
-                        //if we have a message to display upon page load
-                        var message = {};
-                        message.type = 'success';
-                        message.body = onLoadMessage;
-                        $rootScope.$broadcast('sw_notificationmessage', message);
+                        alertService.notifymessage('success', onLoadMessage);
                     }, 0);
                 }
 

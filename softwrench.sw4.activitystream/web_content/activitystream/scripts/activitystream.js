@@ -102,6 +102,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                                 errorStack: data.message
                             }
                             $rootScope.$broadcast("sw_ajaxerror", errordata);
+                            alertService.notifyexception(errordata);
                         }
                     );
                 }, confirmationMessage);
@@ -132,6 +133,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                             errorStack: data.message
                         }
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
+                        alertService.notifyexception(errordata);
                     });
             }
 
@@ -179,6 +181,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                             errorStack: data.message
                         }
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
+                        alertService.notifyexception(errordata);
                     }
                 );
             }
@@ -207,8 +210,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         if (typeof jScrollPaneAPI !== 'undefined') {
                             jScrollPaneAPI.reinitialise();
                         }
-
-                        //restore spinner to orginal value
                         log.debug($scope.activities);
                     }).error(
                     function(data) {
@@ -217,8 +218,8 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                             errorStack: data.message
                         }
                         
-                        //restore spinner to orginal value
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
+                        alertService.notifyexception(errordata);
                     }
                 );
             }

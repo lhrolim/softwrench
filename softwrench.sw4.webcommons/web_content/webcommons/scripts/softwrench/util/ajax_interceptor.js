@@ -2,7 +2,7 @@
     "use strict";
 angular.module('sw_layout')
     .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService) {
+        $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService, alertService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
         var started = function (config) {
@@ -63,10 +63,7 @@ angular.module('sw_layout')
                 if (!willRefresh) {
                     //use $timeout to make sure the notification timing works correctly
                     $timeout(function () {
-                        var message = {};
-                        message.type = 'success';
-                        message.body = data.successMessage;
-                        $rootScope.$broadcast('sw_notificationmessage', message);
+                        alertService.notifymessage('success', data.successMessage);
                     }, 0);
 
                 } else {
@@ -90,6 +87,7 @@ angular.module('sw_layout')
             unLockTabs();
             if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data);
+                alertService.notifyexception(rejection.data);
             }
         };
 

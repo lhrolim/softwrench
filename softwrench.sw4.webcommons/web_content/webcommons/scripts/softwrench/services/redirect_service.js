@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService,applicationService) {
+app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService, applicationService, alertService) {
 
     
 
@@ -51,8 +51,8 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                         errorStack: data.message
                     }
                     $rootScope.$broadcast("sw_ajaxerror", errordata);
+                    alertService.notifyexception(errordata);
                 });
-
         },
 
         getApplicationUrl: function (applicationName, schemaId, mode, title, parameters) {

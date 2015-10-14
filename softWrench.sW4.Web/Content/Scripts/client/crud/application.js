@@ -473,6 +473,7 @@ function ApplicationController($scope, $http, $log, $timeout,
                 //this means, most likely a security issue
                 var error = { errorMessage: 'You don´t have permission to see that register, contact your administrator' }
                 $rootScope.$broadcast('sw_ajaxerror', error);
+                alertService.notifyexception(error);
                 return;
             }
             $scope.renderViewWithData(applicationName, schemaId, mode, title, dataObject);

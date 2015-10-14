@@ -159,7 +159,7 @@ app.directive('notifications', function (contextService, $log) {
                         }, 0);
 
                         //add automatic timeout for success messages
-                        if (message.type == 'success') {
+                        if (message.type == 'success' && !message.exception) {
                             $timeout(function() {
                                 $scope.removeMessage(message);
                             }, contextService.retrieveFromContext('successMessageTimeOut'));
@@ -167,71 +167,6 @@ app.directive('notifications', function (contextService, $log) {
                     } 
                 } else {
                     log.error('Unable to create notification, data is missing.');
-                }
-            });
-
-            $scope.$on('sw_ajaxerror', function (event, data) {
-                /// <summary>
-                /// Receive exception data and crete user notification with the exception data embedded in standard format (see sw_notificationmessage)
-                /// </summary>
-                /// <param name="event" type="object">Angular event data</param>
-                /// <param name="data" type="object">The exception must be formatted as follows:
-                /// data.exceptionMessage: Required, used for the user notification body
-                /// data.innerException: Optional, inner exception will be processed into a regular exception
-                /// data.exceptionType: Optional
-                /// data.outlineInformation: Optional
-                /// data.stackTrace: Optional
-                /// </param>
-                /// <returns></returns>
-                log.debug(event.name, data);
-
-                if (typeof (data) != 'undefined') {
-
-                    //process the innerException, if present
-                    var innerException;
-                    var limit = 3; // to avoid unwanted infinite recursion
-                    var i = 0;
-                    var prependMessage = data.prependMessage;
-
-                    while (data.hasOwnProperty('innerException') && i < limit) {
-                        innerException = data.innerException;
-                        data = data.innerException;
-                        i++;
-                    }
-
-                    if (innerException != null) {
-                        data = {};
-                        data.errorStack = innerException.stackTrace;
-                        data.errorMessage = innerException.message;
-                    }
-
-                    if (prependMessage) {
-                        data.errorMessage = prependMessage + ' --> ' + data.errorMessage;
-                    }
-
-                    //create new message
-                    var message = {};
-                    message.type = 'error';
-                    message.body = data.errorMessage || data.exceptionMessage;
-
-                    //convert error data into a common exception format
-                    var exception = {};
-                    exception.type = data.errorType || data.exceptionType;
-                    exception.outline = data.outlineInformation;
-                    exception.stack = data.errorStack || (data.fullStack || data.stackTrace);
-                    message.exception = exception;
-
-                    //if we have a message
-                    if (message.body) {
-                        $scope.messages.push(message);
-
-                        //update so the notification will slide in
-                        $timeout(function () {
-                            message.display = true;
-                        }, 0);
-                    }
-                } else {
-                    log.error('Unable to create ajax error, data is missing.');
                 }
             });
 
@@ -249,13 +184,6 @@ app.directive('notifications', function (contextService, $log) {
             //exception.stack = 'Some stack trace text...';
             //message.exception = exception;
             //$scope.$emit('sw_notificationmessage', message);
-
-            //message = {};
-            //message.exceptionMessage = "Object reference not set to an instance of an object.";
-            //message.exceptionType = "System.NullReferenceException";
-            //message.outlineInformation = "Some ountline info...";
-            //message.stackTrace = "Some stack trace text...";
-            //$scope.$emit('sw_ajaxerror', message);
         }
     }
 });

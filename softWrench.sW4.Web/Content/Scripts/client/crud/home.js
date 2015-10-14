@@ -44,7 +44,7 @@
             $scope.$emit('sw_indexPageLoaded', redirectUrl);
             $scope.$emit('sw_titlechanged', result.title);
             if (!angular.isUndefined(homeModel.Message)) {
-                alertService.success(homeModel.Message, true);
+                alertService.notifymessage('success', homeModel.Message);
                 homeModel.Message = null;
             }
         });
