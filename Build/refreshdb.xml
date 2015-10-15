@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <project name="drop-database" default="exec">
-  <property name="sqlconnection" value="Provider=SQLOLEDB;Data Source=.;Initial Catalog=swdb;User Id=sw;Password=sw" />
+  <property name="sqlconnection" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
   <property name="droptables" value="../Build/rmtables.sql" />
   
   <target name="exec">
