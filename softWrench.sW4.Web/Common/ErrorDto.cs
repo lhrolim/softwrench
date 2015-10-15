@@ -11,7 +11,7 @@ namespace softWrench.sW4.Web.Common {
         public string FullStack { get; set; }
         [JsonIgnore]
         public Type ErrorNativeType { get; set; }
-        public string ErrorType { get { return ErrorNativeType.Name; } }
+        public string ErrorType { get { return ErrorNativeType == null ? null : ErrorNativeType.Name; } }
         public string OutlineInformation { get; set; }
 
 

@@ -119,8 +119,9 @@ angular.module('sw_layout')
         }
         if (sessionStorage.mockerror || sessionStorage.mockmaximo) {
             var jsonOb = angular.fromJson(data);
-            jsonOb['%%mockerror'] = sessionStorage.mockerror === "true";
-            jsonOb['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
+            var objtoSet = jsonOb.json ? jsonOb.json : jsonOb;
+            objtoSet['%%mockerror'] = sessionStorage.mockerror === "true";
+            objtoSet['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
             return angular.toJson(jsonOb);
         }
         return data;
