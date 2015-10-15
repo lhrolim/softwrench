@@ -103,6 +103,28 @@
                     "eeee <a href='mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> </div>"
             ]
         },
+        iftags: {
+            input: [
+                "<![if !supportLists]>· <![endif]>Bullet 1 " +  
+                    "<![if !supportLists]>· <![endif]>Bullet 2 " + 
+                    "<![if !supportLists]>· <![endif]>Bullet 3 " +
+                    "<![if !supportLists]>1. <![endif]>Number 1 " +
+                    "<![if !supportLists]>2. <![endif]>Number 2 " +
+                    "<![if !supportLists]>3. <![endif]>Number 3 " +
+                    "rest of the text...",
+                "<![if !supportLists]> random text was wrapped 1 2 3 @#$%& <![endif]>rest of random text"
+            ],
+            expected: [
+                "· Bullet 1 " +
+                    "· Bullet 2 " +
+                    "· Bullet 3 " +
+                    "1. Number 1 " +
+                    "2. Number 2 " +
+                    "3. Number 3 " +
+                    "rest of the text...",
+                " random text was wrapped 1 2 3 @#$%& rest of random text"
+            ]
+        },
         alltags: {
             input: [
                 "<div> aaaa <mailto:rodrigo.botti@gmail.com> " +
@@ -112,7 +134,12 @@
                     "eeee <mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
                     "ffff <http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti> " +
                     "gggg <mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp> " +
-                    "hhhh <https://google.comhttp://mail.outlook.com> </div>",
+                    "hhhh <https://google.comhttp://mail.outlook.com> " +
+                    "<![if !supportLists]>· <![endif]>Unordered #1 " +
+                    "<![if !supportLists]>· <![endif]>Unordered #2 " +
+                    "<![if !supportLists]>1. <![endif]>Ordered #1 " +
+                    "<![if !supportLists]>2. <![endif]>Ordered #2 " +
+                    "<br> end of the text </div>",
                 "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ],
             expected: [
@@ -123,7 +150,12 @@
                     "eeee <a href='mailto:!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
                     "ffff <a href='http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti'>http://api.icndb.com/jokes/random?firstName=Boris&lastName=Botti</a> " +
                     "gggg <a href='mailto:unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp'>unackdry@outlook.comrodrigo_rocks@hotmail.comrodrigo_brasil@uol.com.br!#_$%ü&*-´`^~@!#_$%ü&*-´`^~.com.jp</a> " +
-                    "hhhh <a href='https://google.comhttp://mail.outlook.com'>https://google.comhttp://mail.outlook.com</a> </div>",
+                    "hhhh <a href='https://google.comhttp://mail.outlook.com'>https://google.comhttp://mail.outlook.com</a> " +
+                    "· Unordered #1 " +
+                    "· Unordered #2 " +
+                    "1. Ordered #1 " +
+                    "2. Ordered #2 " +
+                    "<br> end of the text </div>",
                 "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ]
         }
@@ -175,6 +207,10 @@
 
     it("multiple email tags replacement", function () {
         runInvalidTagReplacementTest(config.multipleemailtags);
+    });
+
+    it("if tags replacement", function () {
+        runInvalidTagReplacementTest(config.iftags);
     });
 
     it("url and email tags replacement", function () {
