@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
@@ -45,27 +46,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
             var compList = base.GetCompositionData(application, request, currentData);
-            var user = SecurityFacade.CurrentUser();
-
-            if (user == null) {
-                return compList;
-            }
-
-            var commData = _swdbDao.FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application.Name, request.Id, user.DBId);
-
-            if (!compList.ResultObject.ContainsKey("commlog_")) {
-                return compList;
-            }
-
-            var commlogs = compList.ResultObject["commlog_"].ResultList;
-
-            foreach (var commlog in commlogs) {
-                var readFlag = (from c in commData
-                                where c.CommlogId.ToString() == commlog["commloguid"].ToString()
-                                select c.ReadFlag).FirstOrDefault();
-
-                commlog["read"] = readFlag;
-            }
+            compList = CommlogHelper.SetCommlogReadStatus(application, request, compList);
             return compList;
         }
 
@@ -151,7 +132,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             }
 
             //CONTRACTS
-            sb.AppendFormat(@" or(ownertable = 'WARRANTYVIEW' and ownerid in (select wocontractid from wocontract where wonum ='{0}' and orgid ='{1}'))",wonum,orgid);
+            sb.AppendFormat(@" or(ownertable = 'WARRANTYVIEW' and ownerid in (select wocontractid from wocontract where wonum ='{0}' and orgid ='{1}'))", wonum, orgid);
 
             sb.AppendFormat(@" or(ownertable = 'WOSERVICEADDRESS' and ownerid in (select woserviceaddressid from woserviceaddress where wonum ='{0}' and siteid = '{1}'))", wonum, siteId);
 
