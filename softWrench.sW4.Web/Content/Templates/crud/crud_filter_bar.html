@@ -38,7 +38,7 @@
                                                        data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                                        data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
                                                        placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}"
-                                                       ng-enter="filterSearch(column.attribute,$event)"
+                                                       ng-enter="filterSearch(column.attribute)"
                                                        ng-disabled="advancedfiltermode" />
                                                 <span class="input-group-addon "
                                                       data-calendericon="true"
