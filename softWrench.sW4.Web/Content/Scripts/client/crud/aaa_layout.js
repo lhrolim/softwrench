@@ -10,7 +10,8 @@
      "sw_scan",
      'webcommons_services',
      'maximo_applications',
-     'selectize']);
+     'selectize',
+     'ngAnimate']);
 
 //angular 1.3 migration reference
 app.config(['$controllerProvider', function ($controllerProvider) {

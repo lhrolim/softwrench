@@ -5,19 +5,14 @@
 
 <article ng-controller="HomeController">
     <script type="text/javascript">
-
         var homeModel = @Html.Raw(JsonConvert.SerializeObject(this.Model));
         var userLanguage = '@Html.Raw((User as InMemoryUser).Language)';
         var currentModule = '@Request.Params.Get("currentmodule")';
-
     </script>
 
-
     <div style="margin-top: 1px; margin-left: 1px; margin-bottom: 2px; padding-top: 2px;" ng-if="popupmode=='browser'" ng-cloak>
-        <img ng-src="{{mainlogo}}" alt="logo" style="width: 195px; height: 100%" />
+        <img ng-src="{{mainlogo}}" alt="logo" style="width: 195px; height: 100%"/>
     </div>
 
-    <messagesection></messagesection>
     <ng-include src="includeURL" onload="onTemplateLoad()" id="mainbodysection" />
-
 </article>
