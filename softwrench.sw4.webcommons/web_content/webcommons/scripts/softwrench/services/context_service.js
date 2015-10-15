@@ -227,8 +227,10 @@
                         sessionStorage.removeItem(key);
                     }
                 }
-                $(hiddn_user)[0].value = null;
-                $(hddn_configs)[0].value = null;
+                if (!angular.mock && !window.cordova) {
+                    $(hiddn_user)[0].value = null;
+                    $(hddn_configs)[0].value = null;
+                }
             },
 
             insertReportSearchDTO: function (reportSchemaId, searchDTO) {
