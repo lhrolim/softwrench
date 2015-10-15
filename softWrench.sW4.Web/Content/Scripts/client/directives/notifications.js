@@ -64,25 +64,19 @@ app.directive('notifications', function (contextService, $log) {
                 /// <param name="title" type="string">Custom title to be used</param>
                 /// <param name="type" type="string">Notification message type</param>
                 /// <returns></returns>
-                var titleText = '';
 
                 if (title) {
-                    titleText = title;
-                    return titleText;
+                    return title;
                 }
                 
                 switch (type) {
                     case 'error':
-                        titleText += 'Sorry...';
-                        break;
+                        return 'Sorry...';
                     case 'success':
-                        titleText += 'Success...';
-                        break;
+                        return 'Success...';
                     default:
-                        titleText += 'Just to let you know...';
+                        return 'Just to let you know...';
                 }
-                
-                return titleText;
             }
 
             $scope.openModal = function (message) {
@@ -152,7 +146,7 @@ app.directive('notifications', function (contextService, $log) {
                     }, 0);
 
                     //add automatic timeout for success messages
-                    if (message.type == 'success' && !message.exception) {
+                    if (message.type === 'success' && !message.exception) {
                         $timeout(function() {
                             $scope.removeMessage(message);
                         }, contextService.retrieveFromContext('successMessageTimeOut'));
