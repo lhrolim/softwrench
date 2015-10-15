@@ -13,7 +13,6 @@ app.directive('notifications', function (contextService, $log) {
                 /// <param name="message" type="object">Notification message</param>
                 /// <returns></returns>
                 log.debug('removeMessage', message);
-
                 message.display = false;
             }
 
@@ -64,7 +63,6 @@ app.directive('notifications', function (contextService, $log) {
                 /// <param name="title" type="string">Custom title to be used</param>
                 /// <param name="type" type="string">Notification message type</param>
                 /// <returns></returns>
-
                 if (title) {
                     return title;
                 }
@@ -87,19 +85,15 @@ app.directive('notifications', function (contextService, $log) {
                 /// <returns></returns>
                 $scope.moreInfo = message.exception;
                 $scope.moreInfo.title = message.body;
-                //$scope.moreInfo.type = message.exception.exceptionType;
-                //$scope.moreInfo.outline = message.exception.outlineInformation;
-                //$scope.moreInfo.stack = message.exception.fullStack || message.exception.stackTrace;
-
-                $scope.moreInfo.text = ("Error description:\n\n" +
-                        "Type: \n{0}\n\n" +
-                        "Message: \n{1}\n\n" +
-                        "Outline:\n{2}\n\n" +
-                        "StackTrace:\n{3}\n\n")
+                $scope.moreInfo.text = ('Error description:\n\n' +
+                        'Type: \n{0}\n\n' +
+                        'Message: \n{1}\n\n' +
+                        'Outline:\n{2}\n\n' +
+                        'StackTrace:\n{3}\n\n')
                     .format($scope.moreInfo.type, $scope.moreInfo.title, $scope.moreInfo.outline, $scope.moreInfo.stack);
 
                 $('#errorModal').modal('show');
-                $("#errorModal").draggable();
+                $('#errorModal').draggable();
             };
 
             //Event Handlers
