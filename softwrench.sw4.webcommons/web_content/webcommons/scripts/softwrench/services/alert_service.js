@@ -104,7 +104,7 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService, $log) {
         },
 
         /// <summary>
-        /// Use this methid to convert an exception to an error notification with more info
+        /// Use this method to convert an exception to an error notification with more info
         /// </summary>
         /// <param name="data" type="object">The exception infomation</param>
         /// <returns></returns>

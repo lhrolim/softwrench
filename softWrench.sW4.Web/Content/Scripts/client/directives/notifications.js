@@ -23,11 +23,7 @@ app.directive('notifications', function (contextService, $log) {
                 /// </summary>
                 /// <param name="message" type="object">Notification message</param>
                 /// <returns></returns>
-                if (message.exception) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return message.exception;
             }
 
             $scope.getIconClass = function (type) {
@@ -58,15 +54,7 @@ app.directive('notifications', function (contextService, $log) {
                 /// </summary>
                 /// <param name="type" type="string">Notification message type</param>
                 /// <returns></returns>
-                var classText = '';
-
-                if (type != 'undefined') {
-                    classText = type;
-                } else {
-                    classText = '';
-                }
-
-                return classText;
+                return type || '';
             }
 
             $scope.getTitleText = function (title, type) {
@@ -80,19 +68,20 @@ app.directive('notifications', function (contextService, $log) {
 
                 if (title) {
                     titleText = title;
-                } else {
-                    switch (type) {
-                        case 'error':
-                            titleText += 'Sorry...';
-                            break;
-                        case 'success':
-                            titleText += 'Success...';
-                            break;
-                        default:
-                            titleText += 'Just to let you know...';
-                    }
+                    return titleText;
                 }
-
+                
+                switch (type) {
+                    case 'error':
+                        titleText += 'Sorry...';
+                        break;
+                    case 'success':
+                        titleText += 'Success...';
+                        break;
+                    default:
+                        titleText += 'Just to let you know...';
+                }
+                
                 return titleText;
             }
 
@@ -139,35 +128,36 @@ app.directive('notifications', function (contextService, $log) {
                 log.debug(event.name, data);
 
                 //make sure some type of message exists
-                if (typeof (data) != 'undefined') {
-                    var message = {};
-
-                    //convert simple message to object
-                    if (typeof (data) == 'object') {
-                        message = data;
-                    } else {
-                        message.body = data;
-                    }
-
-                    //if we have a message
-                    if (message.body) {
-                        $scope.messages.push(message);
-
-                        //update so the notification will slide in
-                        $timeout(function() {
-                            message.display = true;
-                        }, 0);
-
-                        //add automatic timeout for success messages
-                        if (message.type == 'success' && !message.exception) {
-                            $timeout(function() {
-                                $scope.removeMessage(message);
-                            }, contextService.retrieveFromContext('successMessageTimeOut'));
-                        }
-                    } 
-                } else {
+                if (typeof (data) == 'undefined') {
                     log.error('Unable to create notification, data is missing.');
+                    return;
                 }
+
+                var message = {};
+
+                //convert simple message to object
+                if (typeof (data) == 'object') {
+                    message = data;
+                } else {
+                    message.body = data;
+                }
+
+                //if we have a message
+                if (message.body) {
+                    $scope.messages.push(message);
+
+                    //update so the notification will slide in
+                    $timeout(function() {
+                        message.display = true;
+                    }, 0);
+
+                    //add automatic timeout for success messages
+                    if (message.type == 'success' && !message.exception) {
+                        $timeout(function() {
+                            $scope.removeMessage(message);
+                        }, contextService.retrieveFromContext('successMessageTimeOut'));
+                    }
+                } 
             });
 
             //Init Notifications
@@ -175,8 +165,7 @@ app.directive('notifications', function (contextService, $log) {
 
             //TODO: push test messages
             //var message = {};
-            //message.type = 'success';
-            //message.body = 'Failed to respond 10.50.100.128:9080';
+            //message.type = 'error';
             //message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
             //var exception = {};
             //exception.type = 'System.NullReferenceException';

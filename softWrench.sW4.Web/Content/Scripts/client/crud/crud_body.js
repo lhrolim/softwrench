@@ -146,11 +146,7 @@ app.directive('crudBody', function (contextService) {
 
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
-
-                    //use $timeout to make sure the notification timing works correctly
-                    $timeout(function () {
-                        alertService.notifymessage('success', onLoadMessage);
-                    }, 0);
+                    alertService.notifymessage('success', onLoadMessage);
                 }
             });
 
