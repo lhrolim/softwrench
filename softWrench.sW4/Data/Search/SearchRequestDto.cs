@@ -11,49 +11,87 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
         private ApplicationLookupContext _context;
 
-        public IDictionary<string, string> CustomParameters { get; set; }
-        public string CommandId { get; set; }
+        public IDictionary<string, string> CustomParameters {
+            get; set;
+        }
+        public string CommandId {
+            get; set;
+        }
 
         /// <summary>
         /// Receives the query to apply in the format :a || :b || :c || :d. 
         /// FWK shall locate corresponding SearchValues to replace it
         /// </summary>
-        public String SearchTemplate { get; set; }
+        public String SearchTemplate {
+            get; set;
+        }
 
-        public String SearchParams { get; set; }
+        public String SearchParams {
+            get; set;
+        }
 
-        public String SearchValues { get; set; }
+        public String SearchValues {
+            get; set;
+        }
 
-        public String SearchSort { get; set; }
+        public String SearchSort {
+            get; set;
+        }
 
-        public Boolean ExpressionSort { get; set; }
+        public Boolean ExpressionSort {
+            get; set;
+        }
 
-        public Boolean SearchAscending { get; set; }
+        public Boolean SearchAscending {
+            get; set;
+        }
 
         private readonly ISet<ProjectionField> _projectionFields = new HashSet<ProjectionField>();
 
-        public String WhereClause { get; set; }
+        public String WhereClause {
+            get; set;
+        }
 
-        public Boolean IgnoreWhereClause { get; set; }
+        public Boolean IgnoreWhereClause {
+            get; set;
+        }
 
-        public ApplicationLookupContext Context { get; set; }
+        public ApplicationLookupContext Context {
+            get; set;
+        }
 
-        public Rowstamps Rowstamps { get; set; }
+        public Rowstamps Rowstamps {
+            get; set;
+        }
 
-        public string Id { get; set; }
+        public string Id {
+            get; set;
+        }
 
         private IDictionary<string, SearchParameter> _valuesDictionary;
 
-        public ApplicationMetadataSchemaKey Key { get; set; }
+        public ApplicationMetadataSchemaKey Key {
+            get; set;
+        }
 
-        public String Title { get; set; }
+        public String Title {
+            get; set;
+        }
 
-        public string FilterFixedWhereClause { get; set; }
+        public string FilterFixedWhereClause {
+            get; set;
+        }
+
+        [CanBeNull]
+        public List<string> UnionWhereClauses {
+            get; set;
+        }
 
         //used to indentify the query on the log better
         private string _queryAlias;
@@ -65,7 +103,9 @@ namespace softWrench.sW4.Data.Search {
                 }
                 return _queryAlias;
             }
-            set { _queryAlias = value; }
+            set {
+                _queryAlias = value;
+            }
         }
 
 
@@ -201,12 +241,16 @@ namespace softWrench.sW4.Data.Search {
         }
 
         public ISet<ProjectionField> ProjectionFields {
-            get { return _projectionFields; }
+            get {
+                return _projectionFields;
+            }
         }
 
         [JsonIgnore]
         public IDictionary<string, SearchParameter> ValuesDictionary {
-            get { return _valuesDictionary ?? (_valuesDictionary = GetParameters()); }
+            get {
+                return _valuesDictionary ?? (_valuesDictionary = GetParameters());
+            }
         }
 
         public IDictionary<String, SearchParameter> GetParameters() {
@@ -301,7 +345,9 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public string ExtraLeftJoinSection { get; set; }
+        public string ExtraLeftJoinSection {
+            get; set;
+        }
 
         public virtual SearchRequestDto ShallowCopy() {
             return (SearchRequestDto)MemberwiseClone();
