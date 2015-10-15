@@ -14,19 +14,19 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         //TODO: cache queries
         public BindedEntityQuery ById(EntityMetadata entityMetadata, string id) {
-            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest() { Id = id }, QueryCacheKey.QueryMode.Detail);
+            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { Id = id }, QueryCacheKey.QueryMode.Detail);
         }
 
-        public BindedEntityQuery AllRows(EntityMetadata entityMetadata, SearchRequestDto searchDto, string jobUser = null) {
-            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest() { SearchDTO = searchDto }, QueryCacheKey.QueryMode.List);
+        public BindedEntityQuery AllRows(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { SearchDTO = searchDto }, QueryCacheKey.QueryMode.List);
         }
 
         public BindedEntityQuery AllRowsForSync(EntityMetadata entityMetadata, Rowstamps rowstamp) {
-            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest() { Rowstamps = rowstamp, SearchDTO = new SearchRequestDto() }, QueryCacheKey.QueryMode.Sync);
+            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { Rowstamps = rowstamp, SearchDTO = new SearchRequestDto() }, QueryCacheKey.QueryMode.Sync);
         }
 
         public BindedEntityQuery CountRows(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
-            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest() { SearchDTO = searchDto }, QueryCacheKey.QueryMode.Count);
+            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { SearchDTO = searchDto }, QueryCacheKey.QueryMode.Count);
         }
 
         public BindedEntityQuery CountRowsFromConstraint(EntityMetadata entityMetadata, softwrench.sw4.user.classes.entities.DataConstraint constraint) {
