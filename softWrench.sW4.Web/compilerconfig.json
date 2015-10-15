@@ -18,5 +18,9 @@
     "outputFile": "Content/styles/default/vendor/vendor.css",
     "inputFile": "Content/styles/default/vendor/vendor.scss",
     "sourceMap": true
+  },
+  {
+    "outputFile": "Content/fonts/muller/muller.css",
+    "inputFile": "Content/fonts/muller/muller.scss"
   }
 ]
