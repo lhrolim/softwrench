@@ -63,13 +63,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
         },
 
         controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
-            "formatService", "fixHeaderService", "alertService"
+            "formatService", "fixHeaderService", "alertService",
             "searchService", "tabsService",
             "fieldService", "commandService", "i18NService",
             "validationService", "submitService", "redirectService",
             "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
             function ($scope, $http, $rootScope, $filter, $injector, $log,
-                formatService, fixHeaderService, alertService
+                formatService, fixHeaderService, alertService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
                 validationService, submitService, redirectService,
