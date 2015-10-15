@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('adminMenuService', function (menuService, redirectService, contextService, schemaCacheService) {
+app.factory('adminMenuService', function (menuService, redirectService, contextService, logoutService) {
     return {
         doAction: function (title, controller, action, parameters, target) {
             menuService.setActiveLeaf(target);
@@ -26,14 +26,7 @@ app.factory('adminMenuService', function (menuService, redirectService, contextS
 
         logout: function () {
             console.log('logout');
-
-            contextService.deleteFromContext("swGlobalRedirectURL");
-            if (contextService.isLocal()) {
-                //clear local everytime to make development easier
-                schemaCacheService.wipeSchemaCacheIfNeeded();
-            }
-            contextService.clearContext();
-            sessionStorage['ctx_loggedin'] = false;
+            logoutService.logout();
         }
     };
 });

@@ -11,17 +11,23 @@
 
             regex: {
                 /**
-                 * matches '<mailto:(email pattern)>' or '<(email pattern)>'
+                 * matches '<(mailto:)?(email pattern)+>'
                  * email pattern (accepts unicode characters and '.' before domain name) from: http://stackoverflow.com/questions/46155/validate-email-address-in-javascript#answer-16181
                  * PS: for some reason, compiling the pattern from a String (using new RegExp(pattern, "g")) did not work (didn't match the pattern)
                  * that's why the regex is in it's literal format
                  */
                 emailtags: /\<(mailto\:)?((([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,}))+\>/g,
                 /**
-                 * matches '<(url pattern)>' (url pattern includes query string)
+                 * matches '<(url pattern)+>' (url pattern includes query string)
                  * from: mix of http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149 with http://stackoverflow.com/questions/23959352/validate-url-query-string-with-regex#answer-23959662
                  */
-                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g
+                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
+                /**
+                 * matches '<![if ((!)?any characters)]>(any characters)<![endif]>'
+                 * e.g. "<![if !supportLists]>· <![endif]>"
+                 * Usually introduced by email applications around special rich text constructs (such as lists).
+                 */
+                iftags: /\<\!\[if\s\!?([^\<\>\[\]])+\]\>([^\<\>\[\]])+\<\!\[(endif)\]\>/g
             },
            
             /**
@@ -103,13 +109,24 @@
                     return source.replace(tag, htmlLink);
                 });
             // url
-            registerInvalidTagProcessor([invalidTagsConfig.regex.urltags], function (source, tag) {
-                // extract url from tag: between '<'(first character) and '>'(last character)
-                var url = tag.substring(1, tag.length - 1);
-                // creating valid html link tag and replacing invalid tag by it
-                var htmlLink = buildHtmlLinkTag(url);
-                return source.replace(tag, htmlLink);
-            });
+            registerInvalidTagProcessor([invalidTagsConfig.regex.urltags],
+                function (source, tag) {
+                    // extract url from tag: between '<'(first character) and '>'(last character)
+                    var url = tag.substring(1, tag.length - 1);
+                    // creating valid html link tag and replacing invalid tag by it
+                    var htmlLink = buildHtmlLinkTag(url);
+                    return source.replace(tag, htmlLink);
+                });
+            // if
+            registerInvalidTagProcessor([invalidTagsConfig.regex.iftags],
+                function (source, tag) {
+                    // extract text wrapped by the 'if' tag
+                    var start = tag.indexOf("]>") + 2;
+                    var end = tag.lastIndexOf("<![endif]>");
+                    var wrapped = tag.substring(start, end);
+                    // remove the surrounding if tag
+                    return source.replace(tag, wrapped);
+                });
         }
 
         var service = {

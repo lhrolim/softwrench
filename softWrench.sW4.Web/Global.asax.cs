@@ -166,7 +166,8 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {
-            if (ApplicationConfiguration.IsLocal() || Response.ContentType == "text/html") {
+            if (ApplicationConfiguration.IsLocal()) {
+                //do not cache content locally, to make development faster
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
                 Response.Cache.SetNoStore();
