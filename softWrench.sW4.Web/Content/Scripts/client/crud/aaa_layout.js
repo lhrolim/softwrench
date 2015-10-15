@@ -124,7 +124,7 @@ app.directive("ngEnabled", function () {
     };
 });
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService,schemaCacheService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService,logoutService) {
 
     $scope.$name = 'LayoutController';
     var log = $log.getInstance('sw4.LayoutController');
@@ -240,9 +240,13 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     function initController() {
         var configsJSON = $(hddn_configs)[0].value;
-        var config = JSON.parse(configsJSON);
-
         var userJSON = $(hiddn_user)[0].value;
+        if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON)) {
+            //this means user tried to hit back button after logout
+            logoutService.logout();
+            return;
+        }
+        var config = JSON.parse(configsJSON);
         var user = JSON.parse(userJSON);
         contextService.loadUserContext(user);
         contextService.loadConfigs(config);
@@ -317,4 +321,4 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     initController();
 }
 
-app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", LayoutController]);
+app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService", LayoutController]);
