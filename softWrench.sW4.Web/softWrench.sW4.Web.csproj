@@ -287,6 +287,7 @@
     <Compile Include="Models\Report\ReportModel.cs" />
     <Compile Include="Security\ApplicationAuthorizeAttribute.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
+    <Compile Include="SimpleInjector\SimpleInjectorScanner.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
     <Compile Include="SPF\Filters\ContextFilter.cs" />
     <Compile Include="UserControls\RichTextBox.aspx.cs">
@@ -448,7 +449,6 @@
     <Compile Include="Models\User\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorInterceptor.cs" />
-    <Compile Include="SimpleInjector\SimpleInjectorScanner.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorWebApiDependencyResolver.cs" />
     <Compile Include="SimpleInjector\WebApi\IAPIControllerFactory.cs" />
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />

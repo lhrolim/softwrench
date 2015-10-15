@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         protected const int InitialStringBuilderCapacity = 1024;
 
-        private static ILog _log = LogManager.GetLogger(typeof(BaseQueryBuilder));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BaseQueryBuilder));
 
         protected BindedEntityQuery TemplateQueryBuild(EntityMetadata entityMetadata, InternalQueryRequest queryParameter, QueryCacheKey.QueryMode queryMode) {
             string queryString;
@@ -40,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 return HandleUnion(entityMetadata as SlicedEntityMetadata, queryParameter, queryString, queryMode, compositeWhereBuilder.GetParameters());
             }
 
-            _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "query for {0}:{1} built", entityMetadata.Name, queryMode.ToString()));
+            Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "query for {0}:{1} built", entityMetadata.Name, queryMode.ToString()));
 
             return new BindedEntityQuery(queryString, compositeWhereBuilder.GetParameters());
         }
@@ -69,16 +69,26 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         private static string DoBuildQueryString(EntityMetadata entityMetadata, InternalQueryRequest queryParameter,
             QueryCacheKey.QueryMode queryMode, IWhereBuilder compositeWhereBuilder, QueryCacheKey cacheKey) {
             var buffer = new StringBuilder(InitialStringBuilderCapacity);
-            buffer.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, queryMode, queryParameter.SearchDTO));
-            buffer.Append(QueryFromBuilder.Build(entityMetadata, queryParameter.SearchDTO));
+            var projectionBuilder = new StringBuilder(InitialStringBuilderCapacity);
+
+            projectionBuilder.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, queryMode, queryParameter.SearchDTO));
+            projectionBuilder.Append(QueryFromBuilder.Build(entityMetadata, queryParameter.SearchDTO));
+            buffer.Append(projectionBuilder);
             buffer.Append(compositeWhereBuilder.BuildWhereClause(entityMetadata.Name, queryParameter.SearchDTO));
-            if (queryMode != QueryCacheKey.QueryMode.Count && queryMode != QueryCacheKey.QueryMode.Detail && !entityMetadata.HasUnion() && queryMode != QueryCacheKey.QueryMode.Union) {
+
+            var hasUnionWhereClauses = queryParameter.SearchDTO != null && queryParameter.SearchDTO.UnionWhereClauses != null;
+            var isUnion = entityMetadata.HasUnion() || queryMode == QueryCacheKey.QueryMode.Union || hasUnionWhereClauses;
+            if (queryMode != QueryCacheKey.QueryMode.Count && queryMode != QueryCacheKey.QueryMode.Detail && !isUnion) {
                 buffer.Append(QuerySearchSortBuilder.BuildSearchSort(entityMetadata, queryParameter.SearchDTO));
             }
-            var queryString = buffer.ToString();
-            if (queryParameter.Cacheable()) {
-                //                entityMetadata.QueryStringCache.Add(cacheKey, queryString);
+
+            if (hasUnionWhereClauses) {
+                foreach (var unionWC in queryParameter.SearchDTO.UnionWhereClauses) {
+                    buffer.Append(" union all ").Append(projectionBuilder).Append(" where (").Append(unionWC).Append(")");
+                }
+                buffer.Append(" order by 1 desc");
             }
+            var queryString = buffer.ToString();
             return queryString;
         }
 
@@ -104,8 +114,11 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (queryParameter.Rowstamps != null) {
                 whereBuilders.Add(new RowstampQueryBuilder(queryParameter.Rowstamps));
             }
-
-            whereBuilders.Add(SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(typeof(DataConstraintsWhereBuilder)));
+            if (!ApplicationConfiguration.IsUnitTest) {
+                whereBuilders.Add(
+                    SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(
+                        typeof(DataConstraintsWhereBuilder)));
+            }
             whereBuilders.Add(new MultiTenantCustomerWhereBuilder());
             return new CompositeWhereBuilder(whereBuilders);
         }
@@ -130,9 +143,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             public SearchRequestDto SearchDTO;
 
-            public Rowstamps Rowstamps { get; set; }
+            public Rowstamps Rowstamps {
+                get; set;
+            }
 
-            public string Id { get; set; }
+            public string Id {
+                get; set;
+            }
 
             public bool Cacheable() {
                 return SearchDTO == null;

@@ -42,21 +42,27 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 
         public EntityRepository EntityRepository {
-            get { return EntityRepository; }
+            get {
+                return EntityRepository;
+            }
         }
 
         protected IHlagLocationManager LocationManager {
-            get { return _locationManager; }
+            get {
+                return _locationManager;
+            }
         }
 
 
 
         protected MaximoHibernateDAO MaxDAO {
-            get { return _maxDao; }
+            get {
+                return _maxDao;
+            }
         }
 
-      
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application,CompositionFetchRequest request,JObject currentData) {
+
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var compositionData = base.GetCompositionData(application, request, currentData);
             if (!compositionData.ResultObject.ContainsKey("attachment_")) {
                 return compositionData;
@@ -191,22 +197,19 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var originalClass = dto.ValuesDictionary["class"].Value as string;
             dto.SearchValues = null;
             dto.SearchParams = null;
-            //            var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
-            //            //as of HAP-882
-            //            dto.AppendWhereClauseFormat(@"ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) ) " +
-            //                                        "or (imac.classificationid = '81515700' and imac.description = 'Decommission of {0}')", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
-
-            //            var applicationsToIterate = _applications.Where(a => !a.EqualsIc(originalClass));
             var sb = new StringBuilder();
+
+            var unionWhereClauses = new List<string>();
+
             if (ticketId is ICollection) {
-                ticketId = String.Join("','", ticketId.As<List<String>>());
+                ticketId = string.Join("','", ticketId.As<List<String>>());
                 sb.AppendFormat("((worklog.recordkey in ('{0}') ) AND ( worklog.class = '{1}' )) ", ticketId,
                     originalClass);
                 foreach (var application in _applications) {
-                    sb.AppendFormat(@"
-                or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
-                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')",
-                        ticketId, originalClass, application);
+                    unionWhereClauses.Add(@"
+                (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
+                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')".Fmt(
+                        ticketId, originalClass, application));
                 }
                 dto.ExtraLeftJoinSection =
                     "left join relatedrecord rr on (rr.RECORDKEY = worklog.RECORDKEY and worklog.CLASS = rr.CLASS and rr.RELATEDRECKEY in ('{0}'))".Fmt(ticketId);
@@ -215,13 +218,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 sb.AppendFormat("((worklog.recordkey = '{0}' ) AND ( worklog.class = '{1}' )) ", ticketId,
                     originalClass);
                 foreach (var application in _applications) {
-                    sb.AppendFormat(@"
-                or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
-                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')",
-                        ticketId, originalClass, application);
+                    unionWhereClauses.Add(@"
+                    (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
+                    from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')".Fmt(ticketId, originalClass, application));
                 }
             }
             dto.WhereClause = sb.ToString();
+            dto.UnionWhereClauses = unionWhereClauses;
 
             return dto;
         }

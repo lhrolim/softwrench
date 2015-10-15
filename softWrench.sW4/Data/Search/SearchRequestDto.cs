@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
@@ -56,6 +57,12 @@ namespace softWrench.sW4.Data.Search {
         public String Title { get; set; }
 
         public SearchRequestDto unionDTO;
+
+        /// <summary>
+        /// For every item in this array, the same base projection query (i.e except for its whereclause) will be replicated having the array element as the whereclause of the union query
+        /// </summary>
+        [CanBeNull]
+        public List<string> UnionWhereClauses { get; set; }
 
 
         //used to indentify the query on the log better

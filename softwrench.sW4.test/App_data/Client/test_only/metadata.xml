@@ -20,7 +20,14 @@ xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
   </globalproperties>
   
   <entities>
-    <entity name="workorder" idAttribute="wonum" >
+
+    <entity name="fakeentity" idAttribute="fakeid" >
+      <attributes>
+        <attribute name="fakeid" required="true" type="bigint" />
+      </attributes>
+    </entity>
+
+      <entity name="workorder" idAttribute="wonum" >
       <attributes>
         <attribute name="workorderid" required="true" type="bigint" />
         <attribute name="wonum" required="true" type="varchar"  auto-generated="true"/>
