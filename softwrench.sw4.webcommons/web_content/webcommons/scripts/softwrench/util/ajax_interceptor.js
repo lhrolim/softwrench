@@ -2,7 +2,7 @@
     "use strict";
 angular.module('sw_layout')
     .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService,crudContextHolderService, alertService) {
+    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService, crudContextHolderService, alertService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
         var started = function (config) {

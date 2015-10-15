@@ -213,7 +213,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     currentProfile: $scope.activityProfile
                 };
 
-
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl, { avoidspin: true }).success(
                     function (data) {
