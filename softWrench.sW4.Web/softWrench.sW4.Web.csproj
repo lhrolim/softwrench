@@ -499,6 +499,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
@@ -524,6 +525,7 @@
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
+    <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-clipboard.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
@@ -655,6 +657,8 @@
     <Content Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </Content>
+    <Content Include="Content\styles\default\_notifications.scss" />
+    <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
@@ -741,15 +745,15 @@
     <Content Include="Content\Scripts\client\crud\crud_body.js" />
     <Content Include="Content\Scripts\client\crud\home.js" />
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
-    <Content Include="Content\Scripts\client\crud\messagehandler.js" />
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
     <Content Include="Content\Scripts\vendor\other\spin-min.js" />
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
+    <Content Include="Content\styles\default\_sw-colors.scss" />
     <None Include="Content\styles\default\_tooltips.scss" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <None Include="Content\styles\default\_alert-messages.scss" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
@@ -791,7 +795,6 @@
     <Content Include="Content\Templates\printModal.html" />
     <Content Include="Content\modules\lookup\templates\lookupModal.html" />
     <Content Include="Content\Templates\usefulFaqLinks.html" />
-    <Content Include="Content\Templates\message_section.html" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
     <Content Include="Content\Templates\usersetup\userstatistics.html" />

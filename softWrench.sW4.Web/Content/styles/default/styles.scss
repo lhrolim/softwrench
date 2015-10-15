@@ -1,13 +1,17 @@
-﻿@import "alert-messages";
+﻿/* Standard Variables */
+@import "sw-colors";
+
+/* Standard Styles */
 @import "breadcrumb";
 @import "button";
 @import "context-bar";
 @import "crud-fields";
-@import "_define-password";
+@import "define-password";
 @import "grid";
 @import "header";
 @import "menu";
 @import "modal";
+@import "notifications";
 @import "search";
 @import "site";
 @import "tooltips";

@@ -63,13 +63,11 @@ app.directive('crudList', function (contextService) {
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
-            formatService, fixHeaderService,
+            formatService, fixHeaderService, alertService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
             associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
-
-
 
             $scope.$name = 'crudlist';
 
@@ -141,18 +139,8 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.fixThead($scope.schema, params);
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
-                    //if we have a message to display upon page load
-                    var data = {
-                        successMessage: onLoadMessage
-                    };
-                    $rootScope.$broadcast('sw_successmessage', data);
-                    $timeout(function () {
-                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
-                    }, contextService.retrieveFromContext('successMessageTimeOut'));
+                    alertService.notifymessage('success', onLoadMessage);
                 }
-                //                if ($rootScope.showSuccessMessage) {
-                //                    fixHeaderService.fixSuccessMessageTop(true);
-                //                }
 
                 // fix status column height
                 $('.statuscolumncolor').each(function (key, value) {
@@ -318,16 +306,6 @@ app.directive('crudList', function (contextService) {
 
             $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
                 $scope.refreshGridRequested(searchData, extraparameters);
-            });
-
-            $scope.$on('sw_successmessagetimeout', function (event, data) {
-                if (!$rootScope.showSuccessMessage) {
-                    fixHeaderService.resetTableConfig($scope.schema);
-                }
-            });
-
-            $scope.$on('sw_errormessage', function (event, show) {
-                fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
             $scope.doAdvancedSearch = function (filterdata) {

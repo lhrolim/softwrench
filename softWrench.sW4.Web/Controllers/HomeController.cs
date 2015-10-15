@@ -131,7 +131,7 @@ namespace softWrench.sW4.Web.Controllers {
             int timeout;
             int.TryParse(MetadataProvider.GlobalProperties.GlobalProperty(ApplicationSchemaPropertiesCatalog.SuccessMessageTimeOut), out timeout);
             if (timeout == 0) {
-                timeout = 10000;
+                timeout = 5000;
             }
             return timeout;
         }

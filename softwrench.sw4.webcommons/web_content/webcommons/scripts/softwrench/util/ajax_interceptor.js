@@ -2,7 +2,7 @@
     "use strict";
 angular.module('sw_layout')
     .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService,crudContextHolderService) {
+    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, schemaCacheService, crudContextHolderService, alertService) {
         var activeRequests = 0;
         var activeRequestsArr = [];
         var started = function (config) {
@@ -59,14 +59,14 @@ angular.module('sw_layout')
         };
 
         function successMessageHandler(data) {
-            var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
             if (!!data && !!data.successMessage) {
                 var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
                 if (!willRefresh) {
-                    $rootScope.$broadcast('sw_successmessage', data);
+                    //use $timeout to make sure the notification timing works correctly
                     $timeout(function () {
-                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
-                    }, timeOut);
+                        alertService.notifymessage('success', data.successMessage);
+                    }, 0);
+
                 } else {
                     contextService.insertIntoContext("onloadMessage", data.successMessage);
                     contextService.deleteFromContext("refreshscreen");
@@ -88,6 +88,7 @@ angular.module('sw_layout')
             unLockTabs();
             if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data);
+                alertService.notifyexception(rejection.data);
             }
         };
 
@@ -119,8 +120,9 @@ angular.module('sw_layout')
         }
         if (sessionStorage.mockerror || sessionStorage.mockmaximo) {
             var jsonOb = angular.fromJson(data);
-            jsonOb['%%mockerror'] = sessionStorage.mockerror === "true";
-            jsonOb['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
+            var objtoSet = jsonOb.json ? jsonOb.json : jsonOb;
+            objtoSet['%%mockerror'] = sessionStorage.mockerror === "true";
+            objtoSet['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
             return angular.toJson(jsonOb);
         }
         return data;

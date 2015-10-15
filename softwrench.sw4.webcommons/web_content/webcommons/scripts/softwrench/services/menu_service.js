@@ -157,7 +157,10 @@
             if (!securityService.validateRoleWithErrorMessage(leaf.role)) {
                 return;
             }
-            $rootScope.$broadcast('sw_checksuccessmessage', leaf);
+
+            //TODO: is this needed?
+            //$rootScope.$broadcast('sw_checksuccessmessage', leaf);
+
             if (target != undefined) {
                 this.setActiveLeaf(target);
             }
