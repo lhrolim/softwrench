@@ -30,97 +30,99 @@
     color: black;
 }
 
-.filter-container { // filter detached from grid table
-    .filter-row {
-        .filter-label {
-            padding-left: 15px;
-            padding-right: 15px;
-            &:first-child {
-                padding-left: 0;
-            }
-            &:last-child {
-                padding-right: 0;
-            }
-            .filter-label-wrapper {
-                display: table;
-                > span { //column name
-                    display: table-cell;
-                    padding-right: 5px;
-                    vertical-align: top;
+.filter-row { // filter detached from grid table
+    .filter-label {
+        padding-left: 15px;
+        padding-right: 15px;
 
-                    &.glyphicon { // appended operation icon
-                        font-size: 10px;
-                        font-weight: bold;
-                    }
-                    
+        &:first-child {
+            padding-left: 0;
+        }
+        &:last-child {
+            padding-right: 0;
+        }
+
+        .filter-label-wrapper {
+            display: table;
+
+            > span { //column name
+                display: table-cell;
+                padding-right: 5px;
+                vertical-align: top;
+
+                &.glyphicon { // appended operation icon
+                    font-size: 10px;
+                    font-weight: bold;
                 }
-                .dropdown { // dropdown icon
-                    display: table-cell;
-                    
-                    > i.fa {
-                        color: #767676;
-                    }
+            }
 
-                    .dropdown-menu { // dropdown-menu
+            .dropdown { // dropdown icon
+                display: table-cell;
+
+                > i.fa {
+                    color: #767676;
+                }
+
+                .dropdown-menu { // dropdown-menu
+                    padding-bottom: 0;
+                    width: 250px;
+
+                    .dropdown-content {
+                        padding-top: 10px;
                         padding-bottom: 0;
-                        width: 250px;
+                        width: 100%;
 
-                        .dropdown-content {
-                            padding-top: 10px;
-                            padding-bottom: 0;
-                            width: 100%;
+                        .input-group {
+                            width: 90%;
+                            margin-left: auto;
+                            margin-right: auto;
+                            margin-bottom: 15px;
+                        }
 
-                            .input-group {
-                                width: 90%;
-                                margin-left: auto;
-                                margin-right: auto;
-                                margin-bottom: 15px;
-                            }
+                        .list-group {
+                            max-height: 250px;
+                            overflow-y: scroll;
+                            margin-bottom: 0;
 
-                            .list-group {
-                                max-height: 250px;
-                                overflow-y: scroll;
-                                margin-bottom: 0;
-                                .list-group-item {
-                                    cursor: pointer;
-                                    border: none;
-                                    font-size: 12px;
-                                }
-                            }
-
-                            .bootstrap-datetimepicker-widget { 
-                                z-index: 9999 !important; // force date picker to display on top of the dropdown
-                                width: 38em; // maintain date and time side-by-side
-                                @media (max-width: 768px) {
-                                    width: 19em !important; // time below date for 'smaller' screens
-                                }
+                            .list-group-item {
+                                cursor: pointer;
+                                border: none;
+                                font-size: 12px;
                             }
                         }
-                        
-                        .filter-dropdown-toolbar { //dropdown-menu buttons
-                            display: table;
-                            width: 100%;
-                            border-top: 1px solid #ddd; 
-                            
-                            > div {
-                                display: table-cell;
-                                width: 50%;
-                                vertical-align: middle;
-                                cursor: pointer;
-                                text-align: center;
-                                height: 40px;
-                                color: #989898;
-                                font-weight: bold;
-                                &.active {
-                                    color: #3a7ebd;
-                                }
 
-                                &:first-child {
-                                    border-right: 1px solid #ddd;  
-                                }
-                                &:last-child {
-                                    border-left: 1px solid #ddd;  
-                                }
+                        .bootstrap-datetimepicker-widget {
+                            z-index: 9999 !important; // force date picker to display on top of the dropdown
+                            width: 38em; // maintain date and time side-by-side
+                            @media (max-width: 768px) {
+                                width: 19em !important; // time below date for 'smaller' screens
+                            }
+                        }
+                    }
+
+                    .filter-dropdown-toolbar { //dropdown-menu buttons
+                        display: table;
+                        width: 100%;
+                        border-top: 1px solid #ddd;
+
+                        > div {
+                            display: table-cell;
+                            width: 50%;
+                            vertical-align: middle;
+                            cursor: pointer;
+                            text-align: center;
+                            height: 40px;
+                            color: #989898;
+                            font-weight: bold;
+
+                            &.active {
+                                color: #3a7ebd;
+                            }
+                            &:first-child {
+                                border-right: 1px solid #ddd;
+                            }
+                            &:last-child {
+                                border-left: 1px solid #ddd;
                             }
                         }
                     }
