@@ -177,7 +177,7 @@ app.directive('menuItem', function (contextService) {
                 contextService.insertIntoContext('currentmodule', module);
                 contextService.deleteFromContext('currentmetadata');
                 if (searchText != null && searchText != '') {
-                    searchText = '%' + searchText + '%';
+                    searchText = '%' + searchText.trim() + '%';
                     var params = $.param({ 'application': application, 'searchFields': searchFields, 'searchText': searchText, 'schema': schema });
                     $http.get(url("/api/generic/Data/Search" + "?" + params)).success(
                         function (data) {
