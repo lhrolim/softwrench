@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.simpleinjector;
 using Newtonsoft.Json;
+using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -19,28 +22,35 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
         protected AttachmentHandler _attachmentHandler;
+        protected CommLogHandler _commlogHandler;
         protected MaximoHibernateDAO _maxHibernate;
+
+        private readonly EmailService _emailService;
 
         public BaseWorkOrderCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _commlogHandler = new CommLogHandler();
             _maxHibernate = MaximoHibernateDAO.GetInstance();
+            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
-            if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
+            var wo = maximoTemplateData.IntegrationObject;
+            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            if (crudData.ContainsAttribute("#hasstatuschange")) {
                 //first let´s 'simply change the status
-                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
-                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "CHANGEBY", user.Login.ToUpper());
-                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN")) {
+                WsUtil.SetValue(wo, "STATUSIFACE", true);
+                WsUtil.SetValue(wo, "CHANGEBY", user.Login.ToUpper());
+                if (!WsUtil.GetRealValue(wo, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(wo, "STATUS").Equals("CAN")) {
                     maximoTemplateData.InvokeProxy();
                 }
-                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
+                WsUtil.SetValue(wo, "STATUSIFACE", false);
             }
 
             // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
             // TODO: Caching the status field to prevent multiple SQL update.  
-            if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
+            if (crudData.ContainsAttribute("#hasstatuschange")) {
                 // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
                 var maxStatusValues = _maxHibernate.FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
                 var maxStatusValue = maxStatusValues.First();
@@ -48,28 +58,38 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
                     // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
-                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 } else if (maxStatusValue.Equals("COMP")) {
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
-                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 }
             }
 
             CommonTransaction(maximoTemplateData);
 
             // This will prevent multiple action on these items
-            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
-            MultiAssetLocciHandler.HandleMultiAssetLoccis((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
-            HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
-            LabTransHandler.HandleLabors((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
-            HandleTools((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            WorkLogHandler.HandleWorkLogs(crudData, wo);
+            MultiAssetLocciHandler.HandleMultiAssetLoccis(crudData, wo);
+            HandleMaterials(crudData, wo);
+            LabTransHandler.HandleLabors(crudData, wo);
+            HandleTools(crudData, wo);
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
-
+            // Update or create commlogs
+            _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, wo);
 
             base.BeforeUpdate(maximoTemplateData);
+        }
+
+        public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
+                _emailService.SendEmail((EmailData)maximoTemplateData.Properties["mailObject"]);
+            }
+
+            //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
+            base.AfterUpdate(maximoTemplateData);
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
