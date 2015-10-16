@@ -12,6 +12,10 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             return attributes.FirstWithException(a => a.Name.EqualsIc(idAttributeName), "Id attribute {0} not found on entity {1}", idAttributeName, EntityName);
         }
 
+        private EntityAttribute FindSiteIdAttribute(IEnumerable<EntityAttribute> attributes) {
+            return attributes.FirstOrDefault(a => a.Name.EqualsIc("siteid"));
+        }
+
         private EntityAttribute FindUserIdAttribute(IEnumerable<EntityAttribute> attributes, string userIdAttribute, string idAttribute) {
             var entityAttributes = attributes as EntityAttribute[] ?? attributes.ToArray();
             var userId = entityAttributes.FirstOrDefault(a => a.Name.EqualsIc(userIdAttribute));
@@ -24,21 +28,34 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
 
         private readonly ISet<EntityAttribute> _attributes;
         private readonly Lazy<EntityAttribute> _idAttribute;
+        private readonly Lazy<EntityAttribute> _siteIdAttribute;
         private readonly Lazy<EntityAttribute> _userIdAttribute;
         private readonly EntityAttribute _rowstampAttribute;
 
-        public String ParentEntity { get; set; }
-        public String WhereClause { get; set; }
+        public string ParentEntity {
+            get; set;
+        }
+        public string WhereClause {
+            get; set;
+        }
 
-        public Boolean ExcludeUndeclaredAttributes { get; set; }
-        public Boolean ExcludeUndeclaredAssociations { get; set; }
+        public Boolean ExcludeUndeclaredAttributes {
+            get; set;
+        }
+        public Boolean ExcludeUndeclaredAssociations {
+            get; set;
+        }
 
-        public string EntityName { get; set; }
+        public string EntityName {
+            get; set;
+        }
 
         /// <summary>
         /// A type that holds the map for this entity schema, common for SWDB mappings
         /// </summary>
-        public Type MappingType { get; set; }
+        public Type MappingType {
+            get; set;
+        }
 
         public EntitySchema(string entityName, IEnumerable<EntityAttribute> attributes, [NotNull] string idAttributeName, [NotNull] string userIdAttributeName, Boolean excludeUndeclaredAttributes,
              Boolean excludeUndeclaredAssociations, string whereClause, string parentEntity, Type mappingType, bool includeRowstamp = true) {
@@ -51,6 +68,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             }
             _idAttribute = new Lazy<EntityAttribute>(() => FindIdAttribute(_attributes, idAttributeName));
             _userIdAttribute = new Lazy<EntityAttribute>(() => FindUserIdAttribute(_attributes, userIdAttributeName, idAttributeName));
+            _siteIdAttribute = new Lazy<EntityAttribute>(() => FindSiteIdAttribute(_attributes));
             ExcludeUndeclaredAttributes = excludeUndeclaredAttributes;
             ExcludeUndeclaredAssociations = excludeUndeclaredAssociations;
             ParentEntity = parentEntity;
@@ -63,21 +81,36 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
 
         [NotNull]
         public ISet<EntityAttribute> Attributes {
-            get { return _attributes; }
+            get {
+                return _attributes;
+            }
         }
 
         [NotNull]
         public EntityAttribute IdAttribute {
-            get { return _idAttribute.Value; }
+            get {
+                return _idAttribute.Value;
+            }
         }
 
         public EntityAttribute UserIdAttribute {
-            get { return _userIdAttribute.Value; }
+            get {
+                return _userIdAttribute.Value;
+            }
+        }
+
+
+        public EntityAttribute SiteIdAttribute {
+            get {
+                return _siteIdAttribute.Value;
+            }
         }
 
 
         public EntityAttribute RowstampAttribute {
-            get { return _rowstampAttribute; }
+            get {
+                return _rowstampAttribute;
+            }
         }
     }
 }

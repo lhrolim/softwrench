@@ -24,12 +24,13 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
 
         private ApplicationMetadata _nextApplication;
-        private String _nextController;
-        private String _nextAction;
+        private string _nextController;
+        private string _nextAction;
 
         /// <summary>
         /// The next application we should redirect the user to
         /// </summary>
+        [NotNull]
         public ApplicationMetadata NextApplication {
             get {
                 if (TargetResult != null && TargetResult.NextApplication != null) {
@@ -90,9 +91,11 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             //we could have a custom next action/controller to be executed, although usually it would stay in the crud application context
             FillNextActionAndController(currentApplication, routerDTO);
             NextApplication = RouteParameterManager.FillNextSchema(currentApplication, routerDTO, platform, user,Operation, resolvedNextSchemaKey);
-        }
+            DispatcherComposition = routerDTO.DispatcherComposition;
+            }
 
-       
+        
+
 
         private void FillNextActionAndController(ApplicationMetadata currentApplication, RouterParametersDTO routerDTO) {
             if (routerDTO.NextController != null && routerDTO.NextAction != null) {
@@ -107,6 +110,9 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             }
         }
 
+        public string DispatcherComposition {
+            get; set;
+        }
 
         public InMemoryUser User {
             get; set;
@@ -149,7 +155,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
         public bool NoApplicationRedirectDetected {
             get {
-                return NextApplication == CurrentApplication;
+                return NextApplication.Equals(CurrentApplication);
             }
         }
 

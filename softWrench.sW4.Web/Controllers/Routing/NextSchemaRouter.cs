@@ -51,13 +51,27 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var nextMetadata = routerParameter.NextApplication;
             var targetMocked = routerParameter.TargetMocked;
             string id = null;
+            Tuple<string, string> userIdSiteTuple = null;
             if (routerParameter.TargetResult != null) {
-                id = routerParameter.TargetResult.Id ?? routerParameter.TargetResult.UserId;
+                id = routerParameter.TargetResult.Id;
+                if (id == null) {
+                    userIdSiteTuple = new Tuple<string, string>(routerParameter.TargetResult.UserId, routerParameter.TargetResult.SiteId);
+                }
             }
 
 
             var applicationName = nextMetadata.Name;
+
+            var dataSet = _dataSetProvider.LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
+
             if (routerParameter.NoApplicationRedirectDetected) {
+
+                if (routerParameter.DispatcherComposition != null) {
+                    var detailRequest = new DetailRequest(nextMetadata.Schema.GetSchemaKey(), null) { Id = id,UserIdSitetuple = userIdSiteTuple,CompositionsToFetch = routerParameter.DispatcherComposition };
+                    var response = dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
+                    return response;
+                }
+
                 if (routerParameter.NextAction == null) {
                     Log.DebugFormat("No redirect needed");
                     return new BlankApplicationResponse {
@@ -75,13 +89,13 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
             var nextSchema = nextMetadata.Schema;
 
-            var dataSet = _dataSetProvider.LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
+
             if (nextSchema.Stereotype == SchemaStereotype.Detail || nextSchema.Stereotype == SchemaStereotype.DetailNew) {
                 if (targetMocked) {
                     Log.DebugFormat("retrieving mocked detail results");
                     return MockingUtils.GetMockedDataMap(applicationName, nextSchema, nextMetadata);
                 }
-                var detailRequest = new DetailRequest(nextSchema.GetSchemaKey(), null) { Id = id };
+                var detailRequest = new DetailRequest(nextSchema.GetSchemaKey(), null) { Id = id, UserIdSitetuple = userIdSiteTuple };
                 var response = dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
                 return response;
             }

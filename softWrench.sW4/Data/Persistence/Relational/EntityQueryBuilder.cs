@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -15,6 +16,10 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         //TODO: cache queries
         public BindedEntityQuery ById(EntityMetadata entityMetadata, string id) {
             return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { Id = id }, QueryCacheKey.QueryMode.Detail);
+        }
+
+        public BindedEntityQuery ByUserIdSite(EntityMetadata entityMetadata, Tuple<string,string> userIdSiteTuple) {
+            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { UserIdSiteTuple = userIdSiteTuple }, QueryCacheKey.QueryMode.Detail);
         }
 
         public BindedEntityQuery AllRows(EntityMetadata entityMetadata, SearchRequestDto searchDto) {

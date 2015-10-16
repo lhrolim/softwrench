@@ -102,6 +102,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 //TODO: make some kind of hash to determine if this is needed...
                 whereBuilders.Add(new ByIdWhereBuilder(entityMetadata, queryParameter.Id));
                 return new CompositeWhereBuilder(whereBuilders);
+            } else if (queryParameter.UserIdSiteTuple!=null) {
+                whereBuilders.Add(new ByUserIdSiteWhereBuilder(entityMetadata, queryParameter.UserIdSiteTuple));
+                return new CompositeWhereBuilder(whereBuilders);
             }
             whereBuilders.Add(new EntityWhereClauseBuilder());
             whereBuilders.Add(new FixedSearchWhereClauseBuilder());
@@ -149,6 +152,10 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             }
 
             public string Id {
+                get; set;
+            }
+
+            public Tuple<string, string> UserIdSiteTuple {
                 get; set;
             }
 

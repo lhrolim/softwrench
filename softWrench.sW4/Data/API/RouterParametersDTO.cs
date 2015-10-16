@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.API {
     
@@ -18,6 +19,11 @@ namespace softWrench.sW4.Data.API {
 
         public string NextAction { get; set; }
 
+        /// <summary>
+        /// this indicates the composition that has initiated the process on client side. If present, we need to fetch that composition list on the response to update the screen properly
+        /// </summary>
+        [CanBeNull]
+        public string DispatcherComposition { get; set; }
 
     }
 }

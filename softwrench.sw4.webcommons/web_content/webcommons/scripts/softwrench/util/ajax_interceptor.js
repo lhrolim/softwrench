@@ -87,7 +87,6 @@ angular.module('sw_layout')
             unLockCommandBars();
             unLockTabs();
             if (activeRequests <= 0) {
-                if (sessionStorage.lo)
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data);
                 alertService.notifyexception(rejection.data);
             }

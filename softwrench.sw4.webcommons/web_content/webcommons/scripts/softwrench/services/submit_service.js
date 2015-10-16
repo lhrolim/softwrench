@@ -6,18 +6,7 @@
 
     function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService, attachmentService) {
 
-        var service = {
-            submitForm: submitForm,
-            removeNullInvisibleFields: removeNullInvisibleFields,
-            translateFields: translateFields,
-            getFormToSubmitIfHasAttachement: getFormToSubmitIfHasAttachement,
-            removeExtraFields: removeExtraFields,
-            createSubmissionParameters: createSubmissionParameters,
-            handleDatamapForMIF: handleDatamapForMIF,
-            submitConfirmation: submitConfirmation
-        };
-
-        return service;
+   
 
 
         ///used for ie9 form submission
@@ -134,13 +123,14 @@
         }
 
 
-        function createSubmissionParameters(datamap, schema, nextSchemaObj, id) {
+        function createSubmissionParameters(datamap, schema, nextSchemaObj, id,dispatcherComposition) {
             var parameters = {};
-            if (sessionStorage.mockmaximo == "true") {
+            if (sessionStorage.mockmaximo === "true") {
                 //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
                 parameters.mockmaximo = true;
             }
             parameters.routeParametersDTO = {};
+            parameters.routeParametersDTO.dispatcherComposition = dispatcherComposition;
             parameters = addSchemaDataToParameters(parameters, schema, nextSchemaObj);
             var checkPointArray = checkpointService.fetchCheckpoint();
             if (checkPointArray && checkPointArray.length > 0) {
@@ -185,6 +175,19 @@
                 parameters.continue();
             }, message);
         }
+
+        var service = {
+            submitForm: submitForm,
+            removeNullInvisibleFields: removeNullInvisibleFields,
+            translateFields: translateFields,
+            getFormToSubmitIfHasAttachement: getFormToSubmitIfHasAttachement,
+            removeExtraFields: removeExtraFields,
+            createSubmissionParameters: createSubmissionParameters,
+            handleDatamapForMIF: handleDatamapForMIF,
+            submitConfirmation: submitConfirmation
+        };
+
+        return service;
 
     }
 })(jQuery);

@@ -60,8 +60,25 @@ namespace softwrench.sW4.Shared2.Metadata {
             return string.Format("Name: {0}, Entity: {1}, Schema: {2}", Name, Entity, Schema);
         }
 
+        protected bool Equals(ApplicationMetadataDefinition other)
+        {
+            return string.Equals(Name, other.Name) && Equals(Schema, other.Schema);
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ApplicationMetadataDefinition) obj);
+        }
 
-
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Name != null ? Name.GetHashCode() : 0)*397) ^ (Schema != null ? Schema.GetHashCode() : 0);
+            }
+        }
     }
 }
