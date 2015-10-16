@@ -18,6 +18,4 @@
     <application id="PD" title="Physical Deviation Grid" ref="physicaldeviation" schema="list" tooltip="Click to view your Physical Deviation Grid"/>
     <application id="RM" title="Reserved Materials" ref="reservedMaterials" schema="list" tooltip="Click to view your Reserved Materials"/>-->
   </container>
-
-  <reference id="workorder"/>
 </Menu>
