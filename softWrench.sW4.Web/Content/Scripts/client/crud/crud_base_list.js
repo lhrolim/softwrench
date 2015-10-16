@@ -67,7 +67,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
     };
 
     $scope.getSearchIcon = function (columnName) {
-        var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] != "false";
+        var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] !== "false";
         var operator = $scope.getOperator(columnName);
         return showSearchIcon ? operator.symbol : "";
     };
