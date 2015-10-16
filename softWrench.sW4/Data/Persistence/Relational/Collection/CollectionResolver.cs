@@ -49,9 +49,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
+        public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
             compositionSchemas, IEnumerable<AttributeHolder> attributeHolders) {
-            DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, attributeHolders));
+            return DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, attributeHolders));
         }
 
         public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>

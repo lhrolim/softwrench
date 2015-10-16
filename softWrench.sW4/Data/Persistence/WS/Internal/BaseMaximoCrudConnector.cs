@@ -65,22 +65,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public virtual void DoCreate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
             var idProperty = maximoTemplateData.Metadata.Schema.IdAttribute.Name;
+            var siteIdAttribute = maximoTemplateData.Metadata.Schema.SiteIdAttribute;
             var userIdProperty = maximoTemplateData.Metadata.Schema.UserIdAttribute.Name;
             var resultOb = (Array)resultData;
             var firstOb = resultOb.GetValue(0);
-            var id = WsUtil.GetRealValue(firstOb, idProperty);
+            var id = WsUtil.GetRealValue(firstOb, idProperty) as string;
             var userId = WsUtil.GetRealValue(firstOb, userIdProperty);
+            string siteId = null;
+            if (siteIdAttribute != null) {
+                //not all entities will have a siteid...
+                siteId = WsUtil.GetRealValue(firstOb, siteIdAttribute.Name) as string;
+            }
             if (!idProperty.Equals(userIdProperty) && userId == null) {
                 Log.WarnFormat("User Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData);
+                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
                 return;
             }
             if (id == null && userId == null) {
                 Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData);
+                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
                 return;
             }
-            maximoTemplateData.ResultObject = new TargetResult(userId.ToString(), userId.ToString(), resultData);
+            maximoTemplateData.ResultObject = new TargetResult(id, userId.ToString(), resultData, null, siteId);
+
         }
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.Pagination;
@@ -34,29 +35,14 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             return _entityRepository.Count(entityMetadata, searchDto);
         }
 
-        public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
-            IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-            var mainEntity = _entityRepository.Get(entityMetadata, id);
-            if (mainEntity == null) {
-                return null;
+        public AttributeHolder FindById(SlicedEntityMetadata entityMetadata, string id, Tuple<string, string> userIdSitetuple) {
+            if (id == null && userIdSitetuple == null) {
+                throw new InvalidOperationException("either id or userid needs to be provided");
             }
-            if ("true".EqualsIc(schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions))) {
-                _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
+            if (id != null) {
+                return _entityRepository.Get(entityMetadata, id);
             }
-
-            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
-
-            foreach (var compositionEntry in compositionSchemas) {
-                if (FetchType.Eager.Equals(compositionEntry.Value.FetchType) || compositionEntry.Value.INLINE) {
-                    compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
-                }
-            }
-            if (compostionsToUse.Any()) {
-                _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, mainEntity);
-            }
-
-
-            return mainEntity;
+            return _entityRepository.ByUserIdSite(entityMetadata, userIdSitetuple);
         }
 
         public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
@@ -69,10 +55,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
 
-            // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
-            if (compositionSchemas != null && compositionSchemas.Count > 0) {
-                _collectionResolver.ResolveCollections(slicedEntityMetadata, compositionSchemas, list);
-            }
+
 
             return list;
         }

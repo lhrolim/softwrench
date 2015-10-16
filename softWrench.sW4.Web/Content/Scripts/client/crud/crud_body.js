@@ -322,14 +322,14 @@ app.directive('crudBody', function (contextService) {
 
             $scope.save = function (parameters) {
                 var log = $log.getInstance('crudbody#save');
-                parameters = instantiateIfUndefined(parameters);
+                parameters = parameters || {};
 
                 var schemaToSave = $scope.schema;
                 if (parameters.schema) {
                     schemaToSave = parameters.schema;
                 }
 
-                if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
+                if ($rootScope.showingModal && $scope.$parent.$parent.$name === "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
                     if ($scope.$parent.$parent.originalsavefn) {
@@ -441,7 +441,7 @@ app.directive('crudBody', function (contextService) {
 
 
 
-                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id);
+                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id,parameters.dispatcherComposition);
 
                 var jsonWrapper = {
                     json: transformedFields,

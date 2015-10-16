@@ -24,7 +24,7 @@
   </templates>
 
   <entities>
-    <entity name="workorder" idAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <relationships>
         <relationship to="failurelistonly" qualifier="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>

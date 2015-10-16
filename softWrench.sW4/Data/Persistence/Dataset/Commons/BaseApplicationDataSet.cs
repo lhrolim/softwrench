@@ -34,6 +34,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -160,14 +161,21 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             DataMap dataMap;
-            if (id != null) {
-                dataMap = (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas);
+            if (request.IsEditionRequest) {
+                dataMap = (DataMap)Engine().FindById(entityMetadata, id, request.UserIdSitetuple);
+
+                if (dataMap == null) {
+                    return null;
+                }
+                LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
+
                 if (request.InitialValues != null) {
                     var initValDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application,
                         request.InitialValues, entityMetadata.Schema.MappingType);
                     dataMap = DefaultValuesBuilder.AddMissingInitialValues(dataMap, initValDataMap);
                 }
             } else {
+                //creation of items
                 dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             }
             var associationResults = BuildAssociationOptions(dataMap, application, request);
@@ -175,10 +183,32 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return detailResult;
         }
 
+        private void LoadCompositions(ApplicationMetadata application, DetailRequest request,
+            IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
+            var prefetchCompositions =
+                "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) ||
+                "#all".Equals(request.CompositionsToFetch);
+            var compositionList = request.CompositionsToFetch == null
+                ? new List<string>()
+                : new List<string>(request.CompositionsToFetch.Split(','));
+            var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+            foreach (var compositionEntry in applicationCompositionSchemas) {
+                if (prefetchCompositions || FetchType.Eager.Equals(compositionEntry.Value.FetchType) ||
+                    compositionEntry.Value.INLINE || compositionList.Contains(compositionEntry.Key)) {
+                    compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+                }
+            }
+            if (compostionsToUse.Any()) {
+                GetCompositionData(application, new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap }), null);
+            }
+        }
+
         public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
+            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
+            Dictionary<string, EntityRepository.SearchEntityResult> result;
 
             if (request.CompositionList != null) {
                 foreach (var compositionKey in request.CompositionList.Where(applicationCompositionSchemas.ContainsKey)) {
@@ -190,12 +220,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 compostionsToUse = (Dictionary<string, ApplicationCompositionSchema>)applicationCompositionSchemas;
             }
 
-            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
+            if (request is PreFetchedCompositionFetchRequest) {
+                var listOfEntities = ((PreFetchedCompositionFetchRequest)request).PrefetchEntities;
+                result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, listOfEntities);
+                return new CompositionFetchResult(result, listOfEntities.FirstOrDefault());
+            }
+
 
             var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
                application, currentData, request.Id);
 
-            var result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
+            result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
             return new CompositionFetchResult(result, cruddata);
         }
@@ -208,7 +243,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
-            ContextLookuper.FillGridContext(application.Name,SecurityFacade.CurrentUser());
+            ContextLookuper.FillGridContext(application.Name, SecurityFacade.CurrentUser());
 
             if (searchDto.Context != null && searchDto.Context.MetadataId != null) {
                 searchDto.QueryAlias = searchDto.Context.MetadataId;
@@ -254,6 +289,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
                 Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
                 entities = Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
+
+                // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
+                if (applicationCompositionSchemata.Count > 0) {
+                    var request = new PreFetchedCompositionFetchRequest(entities) {
+                        CompositionList = new List<string>(applicationCompositionSchemata.Keys)
+                    };
+                    GetCompositionData(application, request, null);
+                }
+
+
             }, ctx);
 
             Task.WaitAll(tasks);
