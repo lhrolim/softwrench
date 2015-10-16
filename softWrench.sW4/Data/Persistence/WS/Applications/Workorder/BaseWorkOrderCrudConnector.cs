@@ -51,7 +51,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
             // TODO: Caching the status field to prevent multiple SQL update.  
             if (crudData.ContainsAttribute("#hasstatuschange")) {
-                var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
+                // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
+                var maxStatusValues = _maxHibernate.FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
+                var maxStatusValue = maxStatusValues.First();
                 if (maxStatusValue.Equals("INPRG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
