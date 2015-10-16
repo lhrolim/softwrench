@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
+    <Compile Include="Data\API\Composition\PreFetchedCompositionFetchRequest.cs" />
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
@@ -176,11 +177,13 @@
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\ProgressMultiAssetHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />

@@ -202,6 +202,21 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
               .ToList().FirstOrDefault();
         }
 
+        [CanBeNull]
+        public AttributeHolder ByUserIdSite([NotNull] EntityMetadata entityMetadata, [NotNull]Tuple<string,string>userIdSiteTuple ) {
+            //TODO: we're always handling the entity ID as a string.
+            //Maybe we should leverage the entity attribute type.
+            if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
+            if (userIdSiteTuple == null) throw new ArgumentNullException("userIdSiteTuple");
+            var query = _entityQueryBuilder.ByUserIdSite(entityMetadata, userIdSiteTuple);
+
+
+            var rows = Query(entityMetadata, query, new SearchRequestDto());
+            return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
+              .Select(r => BuildDataMap(entityMetadata, r))
+              .ToList().FirstOrDefault();
+        }
+
         public IList<IEnumerable<KeyValuePair<string, object>>> GetSynchronizationData(SlicedEntityMetadata entityMetadata, Rowstamps rowstamps) {
 
             var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps);

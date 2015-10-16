@@ -110,16 +110,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     $http.post(rawUrl, angular.toJson($scope.activities)).success(function () {
                         log.debug('Mark All Read Complete');
                         $scope.refreshStream();
-                    }).error(
-                        function (data) {
-                            var errordata = {
-                                errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
-                                errorStack: data.message
-                            }
-                            $rootScope.$broadcast("sw_ajaxerror", errordata);
-                            alertService.notifyexception(errordata);
-                        }
-                    );
+                    });
                 }, confirmationMessage);
             }
 
@@ -215,7 +206,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl, { avoidspin: true }).success(
-                    function (data) {
+                    function(data) {
                         $scope.readCount = data.readCount;
                         $scope.activities = data.notifications;
                         $scope.refreshRate = data.refreshRate;
@@ -232,17 +223,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                             jScrollPaneAPI.reinitialise();
                         }
                         log.debug($scope.activities);
-                    }).error(
-                    function (data) {
-                        var errordata = {
-                            errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
-                            errorStack: data.message
-                        }
-
-                        $rootScope.$broadcast("sw_ajaxerror", errordata);
-                        alertService.notifyexception(errordata);
-                    }
-                );
+                    });
             }
 
             $scope.setPaneHeight = function () {

@@ -463,7 +463,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="SR" idAttribute="ticketid">
+    <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="actlabcost" type="decimal" required="true" />
         <attribute name="actlabhrs" type="float" required="true" />
@@ -1481,6 +1481,10 @@
           <relationshipAttribute from="wonum" to="recordkey" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true" />
+        </relationship>
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
         </relationship>
         <relationship to="matusetrans" collection="true">
           <relationshipAttribute from="wonum" to="refwo" primary="true" />

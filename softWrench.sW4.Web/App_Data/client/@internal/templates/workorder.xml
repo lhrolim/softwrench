@@ -4,6 +4,7 @@
   <templates>
     <template path="@worklogs.xml"/>
     <template path="@attachments.xml"/>
+    <template path="@commlogs.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@tooltrans.xml"/>
@@ -23,7 +24,7 @@
   </templates>
 
   <entities>
-    <entity name="workorder" idAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <relationships>
         <relationship to="failurelistonly" qualifier="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
@@ -325,6 +326,10 @@
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />

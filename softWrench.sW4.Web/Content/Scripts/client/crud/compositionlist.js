@@ -774,6 +774,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                         }
                         $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                     },
+                    dispatcherComposition: $scope.relationship,
                     isComposition: true,
                     nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
                     refresh: alwaysrefresh,
