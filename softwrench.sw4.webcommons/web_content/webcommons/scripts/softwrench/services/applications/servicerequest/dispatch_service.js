@@ -10,11 +10,6 @@
                 localDatamap = datamap.fields;
             }
 
-            if (contextService.isClient("deltadental") && !localDatamap.owner && !localDatamap.ownergroup) {
-                alertService.alert("Owner or owner group must be filled before this action can be performed.");
-                return 0;
-            }
-
             var crudData = {
                 crud: localDatamap
             };
