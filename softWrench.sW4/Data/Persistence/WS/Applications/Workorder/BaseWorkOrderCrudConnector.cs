@@ -19,11 +19,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
         protected AttachmentHandler _attachmentHandler;
-        protected MaximoHibernateDAO _maxHibernate; 
+        protected MaximoHibernateDAO _maxHibernate;
 
         public BaseWorkOrderCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
-            _maxHibernate = MaximoHibernateDAO.GetInstance(); 
+            _maxHibernate = MaximoHibernateDAO.GetInstance();
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -41,14 +41,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
             // TODO: Caching the status field to prevent multiple SQL update.  
             if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
-                var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
+                // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
+                var maxStatusValues = _maxHibernate.FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
+                var maxStatusValue = maxStatusValues.First();
                 if (maxStatusValue.Equals("INPRG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
                     // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
                     WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                }
-                else if (maxStatusValue.Equals("COMP")) {
+                } else if (maxStatusValue.Equals("COMP")) {
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
                     WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                     WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
@@ -66,8 +67,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
-            
-            
+
+
             base.BeforeUpdate(maximoTemplateData);
         }
 
@@ -127,7 +128,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
 
 
-     
+
 
         protected virtual void HandleMaterials(CrudOperationData entity, object wo) {
             // Use to obtain security information from current user
@@ -146,9 +147,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             if (crudOperationData.Length > 1) {
                 crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
             }
-            
-            WsUtil.CloneArray(crudOperationData, wo, "MATUSETRANS", delegate(object integrationObject, CrudOperationData crudData) {
-                
+
+            WsUtil.CloneArray(crudOperationData, wo, "MATUSETRANS", delegate (object integrationObject, CrudOperationData crudData) {
+
                 WsUtil.SetValueIfNull(integrationObject, "QTYREQUESTED", 0);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
 
@@ -168,8 +169,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                     WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
                 }
 
-                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);                
-                WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");  
+                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);
+                WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
                 WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1.0);
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
@@ -207,13 +208,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             if (crudOperationData.Length > 1) {
                 crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
             }
-            
 
-            WsUtil.CloneArray(crudOperationData, wo, "TOOLTRANS", delegate(object integrationObject, CrudOperationData crudData) {
+
+            WsUtil.CloneArray(crudOperationData, wo, "TOOLTRANS", delegate (object integrationObject, CrudOperationData crudData) {
                 WsUtil.SetValueIfNull(integrationObject, "TOOLRATE", 0.00);
                 WsUtil.SetValueIfNull(integrationObject, "TOOLQTY", 0);
-                WsUtil.SetValueIfNull(integrationObject, "TOOLHRS", 0); 
-                
+                WsUtil.SetValueIfNull(integrationObject, "TOOLHRS", 0);
+
                 WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
                 WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
@@ -231,13 +232,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         protected virtual void HandleServiceAddress(CrudOperationData entity, object wo) {
             var svcaddressExists = entity.GetAttribute("WOSERVICEADDRESS") != null;
 
-            if(svcaddressExists) {
+            if (svcaddressExists) {
                 // Use to obtain security information from current user
                 var user = SecurityFacade.CurrentUser();
 
                 // Create a new WOSERVICEADDRESS instance created
                 var woserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(wo, "WOSERVICEADDRESS");
-            
+
                 // Extract data from unmapped attribute
                 var json = entity.GetUnMappedAttribute("#woaddress_");
 
@@ -256,8 +257,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                     WsUtil.SetValue(woserviceaddress, "STADDRNUMBER", straddrnumber);
                     WsUtil.SetValue(woserviceaddress, "STADDRSTREET", straddrstreet);
                     WsUtil.SetValue(woserviceaddress, "STADDRSTTYPE", straddrtype);
-                }
-                else {
+                } else {
                     WsUtil.SetValueIfNull(woserviceaddress, "STADDRNUMBER", "");
                     WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTREET", "");
                     WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTTYPE", "");
