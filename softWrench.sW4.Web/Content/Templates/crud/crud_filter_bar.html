@@ -50,15 +50,7 @@
                                                 </span>
                                             </div>
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality. The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
-                                            <ul class="list-group">
-                                                <li class="list-group-item"
-                                                    ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                    ng-show="shouldShowFilter(operation,column)"
-                                                    ng-enter="filterSearch(column.attribute)"
-                                                    ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
-                                                    {{operation.title}}
-                                                </li>
-                                            </ul>
+
                                         </div>
 
                                         <div ng-switch-default>
@@ -66,17 +58,6 @@
                                                 <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                                        ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" ng-disabled="advancedfiltermode" />
                                             </div>
-                                            <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality. The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
-                                            <!--This is the dropdown region, that gets expanded-->
-                                            <ul class="list-group">
-                                                <li class="list-group-item"
-                                                    ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                    ng-show="shouldShowFilter(operation,column)"
-                                                    ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
-                                                    {{operation.title}}
-                                                </li>
-                                            </ul>
-
                                         </div>
 
                                     </ng-switch>
@@ -92,21 +73,24 @@
                                                     ng-disabled="advancedfiltermode"
                                                     ng-options="option.value as i18NOptionField(option,column,schema) for option in GetAssociationOptions(column,true)" />
                                         </div>
-                                        <ul class="list-group">
-                                            <li class="list-group-item"
-                                                ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
-                                                ng-class="{'active' : searchOperator[column.attribute].id === operation.id}">
-                                                {{operation.title}}
-                                            </li>
-                                        </ul>
                                     </div>
                                 </div>
                             </ng-switch>
+
+                            <ul class="list-group">
+                                <li class="list-group-item"
+                                    ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                    ng-show="shouldShowFilter(operation,column)"
+                                    ng-enter="filterSearch(column.attribute)"
+                                    ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                    {{operation.title}}
+                                </li>
+                            </ul>
+
                         </div>
 
                         <div class="filter-dropdown-toolbar" ng-init="filterIsActive=false">
-                            <div ng-click="filterIsActive=true;filterApplied()" ng-class="{ 'active' : !!filterIsActive }">
+                            <div ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
                                 <i class="fa fa-check"></i>
                                 {{i18N('_grid.filter.apply','Apply')}}
                             </div>
