@@ -156,7 +156,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="workorder" idAttribute="wonum">
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum">
       <relationships>
         <relationship to="ALNDOMAIN" qualifier="division">
           <relationshipAttribute from="division" to="value" primary="true"/>
@@ -417,7 +417,7 @@
           <section id="compositions"/>
         </schema>
       
-        <schema parentschema="adetail" id="newdetail" title="New Service Request" stereotype="detailnew" >
+        <schema id="newdetail" parentschema="adetail" title="New Service Request" stereotype="detailnew" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association target="siteid" label="Site:" labelfield="site_.description" default="DPW" requiredexpression="true">
@@ -435,8 +435,9 @@
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Service Request Details">
+        <schema id="editdetail" parentschema="adetail"  title="Service Request Details">
           <section id="siteidsection">
+            <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association target="siteid" label="Site:" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
