@@ -18,7 +18,7 @@
 
         function restore() {
             var urlContext = url("");
-            var schemaCacheJson = sessionStorage[urlContext + ":schemaCache"];
+            var schemaCacheJson = localStorage[urlContext + ":schemaCache"];
             if (schemaCacheJson) {
                 schemaCache = JSON.parse(schemaCacheJson);
             }
@@ -68,7 +68,7 @@
                 schemaCache[schemaKey] = schema;
                 schemaCache.systeminitMillis = systeminitMillis;
                 var urlContext = url("");
-                sessionStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
+                localStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
             }
         }
 
@@ -76,7 +76,7 @@
             var systeminitMillis = contextService.getFromContext("systeminittime");
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
-                delete sessionStorage["schemaCache"];
+                delete localStorage["schemaCache"];
                 schemaCache = {
                     systeminitMillis: systeminitMillis
                 };
