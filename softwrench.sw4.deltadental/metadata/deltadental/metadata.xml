@@ -293,12 +293,40 @@
   </entities>
 
   <applications>
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+      <schemas>
+        <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
+          <customization position="reportedby">
+            <field attribute="reportedbyp_.displayname" label="Reported By">
+              <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            </field>
+          </customization>
+          <customization position="owner">
+            <field attribute="ownerperson_.displayname" label="Owner">
+              <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
+            </field>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
     <!--Request complete custom layout for service request.  Please review before making customization-->
     <application entity="SR" name="servicerequest" title="Service Request">
       <properties>
         <property key="crud.disableautofocus" value="true"/>
       </properties>
       <schemas>
+        <list title="Service Request Grid" redeclaring="false">
+          <customization position="reportedby">
+            <field attribute="reportedbyp_.displayname" label="Reported By">
+              <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            </field>
+          </customization>
+          <customization position="owner">
+            <field attribute="ownerperson_.displayname" label="Owner">
+              <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
+            </field>
+          </customization>
+        </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
@@ -490,7 +518,7 @@
       <schemas>
         <list title="Work Order Grid" platform="web" redeclaring="false">
           <customization position="asset_.description">
-            <field attribute="owner" label="Owner">
+            <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=30%;widthLG=25%" />
             </field>
           </customization>
