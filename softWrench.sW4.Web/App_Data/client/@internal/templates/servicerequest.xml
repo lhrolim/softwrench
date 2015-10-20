@@ -387,10 +387,10 @@
               <renderer type="lookup"/>
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             </association>
-            <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-            </composition>
           </section>
+          <composition relationship="attachment" label="Attachments" printenabled="false">
+              <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
         </schema>
       </schemas>
     </application>

@@ -8,41 +8,6 @@ app.directive('advancedFilterToogle', function (contextService) {
     };
 });
 
-app.directive('crudListWrapper', function (contextService, $compile) {
-    return {
-        restrict: 'E',
-        replace: true,
-        template: "<div></div>",
-        scope: {
-            schema: '=',
-            datamap: '=',
-            previousschema: '=',
-            previousdata: '=',
-            paginationData: '=',
-            searchData: '=',
-            searchOperator: '=',
-            searchSort: '=',
-            ismodal: '@',
-            checked: '=',
-            isList: "=",
-            timestamp: '=',
-        },
-        link: function (scope, element, attrs) {
-            if (scope.isList) {
-                element.append(
-                    "<crud-list datamap='datamap' schema='schema' pagination-data='paginationData' " +
-                    "search-data='searchData' " +
-                    "search-operator='searchOperator' " +
-                    "search-sort='searchSort'" +
-                     "timestamp='{{timestamp}}' />"
-                );
-                $compile(element.contents())(scope);
-            }
-        }
-    }
-});
-
-
 
 app.directive('crudList', function (contextService) {
     return {
