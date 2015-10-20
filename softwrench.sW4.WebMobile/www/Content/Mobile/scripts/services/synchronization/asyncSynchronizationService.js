@@ -39,7 +39,7 @@
             }
             var now = new Date();
             log.info("Polling request started at {0}".format(now));
-            restService.getPromise("Mobile", "BatchStatus", { ids: ids })
+            restService.get("Mobile", "BatchStatus", { ids: ids })
                 .then(function (response) {
                     log.info("Polling response received");
                     return response.data;
@@ -162,6 +162,6 @@
 
     };
 
-    mobileServices.service("asyncSynchronizationService", ["$q", "restService", "$log", "swdbDAO", "$interval", "$rootScope", AsyncSynchronizationService]);
+    mobileServices.service("asyncSynchronizationService", ["$q", "offlineRestService", "$log", "swdbDAO", "$interval", "$rootScope", AsyncSynchronizationService]);
 
 })(mobileServices, angular);

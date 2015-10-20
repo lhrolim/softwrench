@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+﻿var app = angular.module('webcommons_services');
 
 app.factory('alertService', function ($rootScope, $timeout, i18NService, $log) {
     var log = $log.getInstance('sw4.alertService');

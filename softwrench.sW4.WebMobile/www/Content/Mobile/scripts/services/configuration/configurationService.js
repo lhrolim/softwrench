@@ -1,45 +1,28 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    mobileServices.factory("configurationService", ["$http", "$log", "$q", "swdbDAO", "contextService", "offlineEntities",
-    function ($http, $log, $q, swdbDAO, contextService, entities) {
+    mobileServices.factory("configurationService", ["$http", "$log", "$q", "swdbDAO", "contextService", "settingsService",
+    function ($http, $log, $q, swdbDAO, contextService, settingsService) {
 
-
-        /// <summary>
-        ///  Load client based configs
-        /// </summary>
-        /// <returns type=""></returns>
+        /**
+         * Load client based configs
+         */
         function loadClientConfigs() {
-            var log = $log.get("configurationService#loadSettings");
-            return swdbDAO.findAll("Settings").then(function(settings) {
-                if (settings.length <= 0) {
-                    log.info('creating infos for the first time');
-                    var ob = entities.Settings;
-                    swdbDAO.save(new ob()).then(function(savedSetting) {
-                        contextService.insertIntoContext("settings", savedSetting);
-                    });
-                } else {
-                    log.info('loading settings');
-                    contextService.insertIntoContext("settings", settings[0], true);
-                    contextService.insertIntoContext("serverurl", settings[0].serverurl);
-                }
-            });
+            return settingsService.initializeSettings();
         };
 
-        /// <summary>
-        ///  Load server based configs
-        /// </summary>
-        /// <returns type=""></returns>
+        /**
+         * Load server based configs
+         */
         function loadConfigs() {
             return swdbDAO.findAll("Configuration").then(function (items) {
-                for (var i = 0; i < items.length; i++) {
-                    var config = items[i];
+                angular.forEach(items, function(config) {
                     contextService.insertIntoContext(config.key, config.value);
                     if (config.key === "serverconfig") {
                         //adapting so that we can use the same contextService.isDev() here
-                        contextService.insertIntoContext("environment", config.value.environment);
+                        contextService.set("environment", config.value.environment);
                     }
-                }
+                });
             });
         };
 
@@ -51,7 +34,7 @@
                 return swdbDAO.bulkSave(result);
             }).then(function (items) {
                 angular.forEach(items, function (item) {
-                    contextService.insertIntoContext(item.key, item.value);
+                    contextService.set(item.key, item.value);
                 });
                 return items;
             });

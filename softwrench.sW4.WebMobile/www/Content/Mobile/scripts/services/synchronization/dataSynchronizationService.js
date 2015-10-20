@@ -94,7 +94,7 @@
                     //see samplerequest.json
                     rowstampMap.compositionmap = compositionMap;
                     log.debug("invoking service to get new data");
-                    return restService.postPromise("Mobile", "PullNewData", params, rowstampMap);
+                    return restService.post("Mobile", "PullNewData", params, rowstampMap);
                 }).then(resultHandlePromise);
         };
 
@@ -109,7 +109,7 @@
                     returnNewApps: true
                 };
                 //single server call
-                return restService.postPromise("Mobile", "PullNewData", params)
+                return restService.post("Mobile", "PullNewData", params)
                     .then(resultHandlePromise)
                     .catch(errorHandlePromise);
             }
@@ -132,7 +132,7 @@
         return api;
     };
 
-    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "restService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities"];
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities"];
 
     mobileServices.factory('dataSynchronizationService', service);
 
