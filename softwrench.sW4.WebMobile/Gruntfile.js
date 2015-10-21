@@ -526,11 +526,17 @@ module.exports = function (grunt) {
             wp8: [cliEnv]                  // "TypeError" after adding a flag Android doesn"t recognize
         };                                      // when using Cordova < 4.3.0. This is fixed in 4.3.0.
 
-        buildProject(platformsToBuild, buildArgs)
+        return buildProject(platformsToBuild, buildArgs)
             .then(function () {
                 return taco.packageProject(platformsToBuild);
             })
-            .done(done);
+            .then(function() {
+            		return done();
+            })
+            .catch(function(e) {
+            		console.error("Error building project:\n", e);
+            		return done(false);
+            });
     });
 
     grunt.registerTask("vs2015", "intended for CI: prepares workspace, executes karma tests and builds the app for devices", function (env) {
