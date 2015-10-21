@@ -1,36 +1,30 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('notifications', function (contextService, $log) {
+app.directive('notifications', function (contextService, notificationViewModel, $log) {
     var log = $log.getInstance('sw4.notifications');
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/notifications.html'),
         controller: function ($scope, $timeout) {
             $scope.removeMessage = function (message) {
-                /// <summary>
-                /// Hide the user selected message when the close button is clicked
-                /// </summary>
-                /// <param name="message" type="object">Notification message</param>
-                /// <returns></returns>
-                log.debug('removeMessage', message);
-                message.display = false;
+                notificationViewModel.removeNotification(message);
             }
 
+            /// <summary>
+            /// Determine is the more info button/link should be displayed
+            /// </summary>
+            /// <param name="message" type="object">Notification message</param>
+            /// <returns></returns>
             $scope.displayMoreInfo = function (message) {
-                /// <summary>
-                /// Determine is the more info button/link should be displayed
-                /// </summary>
-                /// <param name="message" type="object">Notification message</param>
-                /// <returns></returns>
                 return message.exception;
             }
 
+            /// <summary>
+            /// Determine the correct icon to display
+            /// </summary>
+            /// <param name="type" type="string">Notification message type</param>
+            /// <returns></returns>
             $scope.getIconClass = function (type) {
-                /// <summary>
-                /// Determine the correct icon to display
-                /// </summary>
-                /// <param name="type" type="string">Notification message type</param>
-                /// <returns></returns>
                 var classText = 'fa ';
 
                 switch (type) {
@@ -47,22 +41,26 @@ app.directive('notifications', function (contextService, $log) {
                 return classText;
             }
 
+            $scope.getMessages = function () {
+                return notificationViewModel.messages;
+            }
+
+            /// <summary>
+            /// Add the notification message type as a class to the DOM element
+            /// </summary>
+            /// <param name="type" type="string">Notification message type</param>
+            /// <returns></returns>
             $scope.getMessageClass = function (type) {
-                /// <summary>
-                /// Add the notification message type as a class to the DOM element
-                /// </summary>
-                /// <param name="type" type="string">Notification message type</param>
-                /// <returns></returns>
                 return type || '';
             }
 
+            /// <summary>
+            /// Determine the correct title to display
+            /// </summary>
+            /// <param name="title" type="string">Custom title to be used</param>
+            /// <param name="type" type="string">Notification message type</param>
+            /// <returns></returns>
             $scope.getTitleText = function (title, type) {
-                /// <summary>
-                /// Determine the correct title to display
-                /// </summary>
-                /// <param name="title" type="string">Custom title to be used</param>
-                /// <param name="type" type="string">Notification message type</param>
-                /// <returns></returns>
                 if (title) {
                     return title;
                 }
@@ -78,89 +76,15 @@ app.directive('notifications', function (contextService, $log) {
             }
 
             $scope.openModal = function (message) {
-                /// <summary>
-                /// Display the exception data modal when more info is clicked
-                /// </summary>
-                /// <param name="message" type="object">Notification message</param>
-                /// <returns></returns>
-                $scope.moreInfo = message.exception;
-                $scope.moreInfo.title = message.body;
-                $scope.moreInfo.text = ('Error description:\n\n' +
-                        'Type: \n{0}\n\n' +
-                        'Message: \n{1}\n\n' +
-                        'Outline:\n{2}\n\n' +
-                        'StackTrace:\n{3}\n\n')
-                    .format($scope.moreInfo.type, $scope.moreInfo.title, $scope.moreInfo.outline, $scope.moreInfo.stack);
+                $scope.moreInfo = notificationViewModel.getMoreInfo(message);
 
                 $('#errorModal').modal('show');
                 $('#errorModal').draggable();
             };
 
-            //Event Handlers
-            $scope.$on('sw_notificationmessage', function (event, data) {
-                /// <summary>
-                /// Receive message data and crete user notification
-                /// </summary>
-                /// <param name="event" type="object">Angular event data</param>
-                /// <param name="data" type="string">The string will be used as the message body</param>
-                /// <param name="data" type="object">The object allows more control of the notification, but must be formatted as follows:
-                /// data.type: Optional, [dev, error, info (default), null, success]
-                /// data.title: Optional, if no value the default title will be used based on the data.type. For consistency the default title should be used.
-                /// data.body: Required
-                /// data.exception: Optional, when present will display the more info button, the exception is formatted as follow
-                /// data.exception.type: Optional
-                /// data.exception.outline: Optional
-                /// data.exception.stack: Optional
-                /// </param>
-                /// <returns></returns>
-                log.debug(event.name, data);
-
-                //make sure some type of message exists
-                if (typeof (data) == 'undefined') {
-                    log.error('Unable to create notification, data is missing.');
-                    return;
-                }
-
-                var message = {};
-
-                //convert simple message to object
-                if (typeof (data) == 'object') {
-                    message = data;
-                } else {
-                    message.body = data;
-                }
-
-                //if we have a message
-                if (message.body) {
-                    $scope.messages.push(message);
-
-                    //update so the notification will slide in
-                    $timeout(function() {
-                        message.display = true;
-                    }, 0);
-
-                    //add automatic timeout for success messages
-                    if (message.type === 'success' && !message.exception) {
-                        $timeout(function() {
-                            $scope.removeMessage(message);
-                        }, contextService.retrieveFromContext('successMessageTimeOut'));
-                    }
-                } 
-            });
-
-            //Init Notifications
-            $scope.messages = [];
-
-            //TODO: push test messages
-            //var message = {};
-            //message.type = 'error';
-            //message.body = 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.';
-            //var exception = {};
-            //exception.type = 'System.NullReferenceException';
-            //exception.outline = 'Some ountline info...';
-            //exception.stack = 'Some stack trace text...';
-            //message.exception = exception;
-            //$scope.$emit('sw_notificationmessage', message);
+            //push test messages
+            //notificationViewModel.createNotification('success', null, 'A connection attempt failed because the connected party did not properly respond after a period of time.');
+            //notificationViewModel.createNotification('error', null, 'A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.50.100.128:9080.', 'System.NullReferenceException', 'Some ountline info...', 'Some stack trace text...');
         }
     }
 });
