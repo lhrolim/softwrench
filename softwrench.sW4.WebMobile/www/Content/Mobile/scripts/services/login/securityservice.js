@@ -64,12 +64,13 @@
          */
         var login = function(username, password) {
             //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
-            var loginUrl = routeService.loginURL();
-            return $http({
-                method: "POST",
-                url: loginUrl,
-                data: { username: username, password: password, userTimezoneOffset: new Date().getTimezoneOffset() },
-                timeout: 20 * 1000 // 20 seconds
+            return routeService.loginURL().then(function (url) {
+                return $http({
+                    method: "POST",
+                    url: url,
+                    data: { username: username, password: password, userTimezoneOffset: new Date().getTimezoneOffset() },
+                    timeout: 20 * 1000 // 20 seconds
+                });
             })
             .then(function (response) {
                 //cleaning history so that back button does not return user to login page

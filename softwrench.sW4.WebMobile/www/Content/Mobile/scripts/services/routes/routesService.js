@@ -1,20 +1,14 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-mobileServices.factory('routeService', ["$state", "contextService", function ($state, contextService) {
+    mobileServices.factory('routeService', ["$state", "contextService", "settingsService", "localStorageService", function ($state, contextService, settingsService, localStorageService) {
 
     return {
 
         loginURL: function () {
-            return contextService.getFromContext("serverurl") + "/SignIn/SignInReturningUserData";
-        },
-
-        downloadMetadataURL: function () {
-            return contextService.getFromContext("serverurl") + "/api/mobile/DownloadMetadatas";
-        },
-
-        syncURL: function () {
-            return contextService.getFromContext("serverurl") + "/api/mobile/PullNewData";
+            return settingsService.getServerUrl().then(function(url) {
+                return url + "/SignIn/SignInReturningUserData";
+            });
         },
 
         go: function (stateName, params) {
@@ -25,7 +19,7 @@ mobileServices.factory('routeService', ["$state", "contextService", function ($s
 
         loadInitialState: function(authenticated) {
             if (!authenticated) {
-                return !contextService.get("serverurl") ? this.go("settings") : this.go("login");
+                return !localStorageService.get("settings:serverurl") ? this.go("settings") : this.go("login");
             }
             var currentState = contextService.getFromContext("currentstate");
             if (isRippleEmulator() && currentState) {

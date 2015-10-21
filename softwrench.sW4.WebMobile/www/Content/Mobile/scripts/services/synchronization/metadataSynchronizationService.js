@@ -2,7 +2,7 @@
     "use strict";
 
     mobileServices.factory("metadataSynchronizationService",
-        ["$http", "$q", "restService", "menuModelService", "metadataModelService", "configurationService",
+        ["$http", "$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService",
             function ($http, $q, restService, menuModelService, metadataModelService, configurationService) {
 
     var toConfigurationArray = function (configuration) {
@@ -17,7 +17,7 @@
     return {
         syncData: function (currentServerVersion) {
 
-            return restService.getPromise("Mobile", "DownloadMetadatas", {}).then(function (metadatasResult) {
+            return restService.get("Mobile", "DownloadMetadatas", {}).then(function (metadatasResult) {
                 var serverMenu = JSON.parse(metadatasResult.data.menuJson);
                 var topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
                 var associationMetadatasJson = JSON.parse(metadatasResult.data.associationMetadatasJson);

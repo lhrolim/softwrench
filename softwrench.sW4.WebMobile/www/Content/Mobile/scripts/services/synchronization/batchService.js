@@ -2,7 +2,7 @@
     'use strict';
 
     //#region Service registration
-    mobileServices.factory('batchService', ['$q', 'restService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', service]);
+    mobileServices.factory('batchService', ['$q', 'offlineRestService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', service]);
     //#endregion
 
     function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService, entities) {
@@ -275,7 +275,7 @@
                     var jsonToSend = !!result ? angular.toJson(result) : angular.toJson(objectToSend);
                     // performing the request
                     log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
-                    return restService.postPromise("Mobile", "SubmitBatch", batchParams, jsonToSend);
+                    return restService.post("Mobile", "SubmitBatch", batchParams, jsonToSend);
                 }).then(function (response) {
                     var returnedBatch = response.data;
                     return updateBatch(batch, returnedBatch);;
