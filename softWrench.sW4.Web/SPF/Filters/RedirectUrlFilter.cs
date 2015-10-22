@@ -3,6 +3,7 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
@@ -82,7 +83,12 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 return;
             }
             var cachedSchemas = RequestUtil.GetValue(actionExecutedContext.Request, "cachedschemas");
-            if (cachedSchemas != null && cachedSchemas.Contains(";" + applicationResponse.Schema.GetApplicationKey() + ";")) {
+            if (cachedSchemas == null) {
+                return;
+            }
+            if (applicationResponse is SchemaChoosingDataResponse) {
+                HandleSchemasToChoose(applicationResponse, cachedSchemas);
+            } else if (applicationResponse.Schema != null && cachedSchemas.Contains(";" + applicationResponse.Schema.GetApplicationKey() + ";")) {
                 //to reduce payload SWWEB-1317
                 applicationResponse.CachedSchemaId = applicationResponse.Schema.SchemaId;
                 var applicationName = applicationResponse.ApplicationName;
@@ -94,6 +100,29 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 };
 
             }
+        }
+
+        private static void HandleSchemasToChoose(IApplicationResponse applicationResponse, string cachedSchemas) {
+            var schemaChoosingResponse = (SchemaChoosingDataResponse)applicationResponse;
+            var resultList = new List<ApplicationSchemaDefinition>();
+
+            foreach (var schemaToChoose in schemaChoosingResponse.Schemas) {
+                if (!cachedSchemas.Contains(";" + schemaToChoose.GetApplicationKey() + ";")) {
+                    resultList.Add(schemaToChoose);
+
+                } else {
+                    var applicationName = applicationResponse.ApplicationName;
+                    resultList.Add(new ApplicationSchemaDefinition {
+                        //to play safe since it might be a delegation method to the schema
+                        ApplicationName = applicationName,
+                        SchemaId = schemaToChoose.SchemaId,
+                        Mode = schemaToChoose.Mode,
+                        Cached = true
+                    });
+                }
+            }
+            //reducing payload
+            schemaChoosingResponse.Schemas = resultList;
         }
 
         private static IDataRequest LookupArguments(HttpActionContext actionContext) {

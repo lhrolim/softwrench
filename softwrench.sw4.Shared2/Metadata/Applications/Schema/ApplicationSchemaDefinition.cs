@@ -44,9 +44,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public LazyComponentDisplayableResolver ComponentDisplayableResolver;
 
 
-        private IList<Int32> _tabs;
-        private IList<Int32> _nonInlineCompositions;
-        private IList<Int32> _inlineCompositions;
+        private IList<int> _tabs;
+        private IList<int> _nonInlineCompositions;
+        private IList<int> _inlineCompositions;
 
         public string SchemaId { get; set; }
 
@@ -59,7 +59,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string UnionSchema { get; set; }
 
-        public String ApplicationName { get; set; }
+        public string ApplicationName { get; set; }
         public ClientPlatform? Platform { get; set; }
 
         public bool Abstract { get; set; }
@@ -81,9 +81,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string IdFieldName { get; set; }
 
-        private Boolean lazyFksResolved = false;
+        private bool lazyFksResolved = false;
 
-        private Boolean referencesResolved = false;
+        private bool referencesResolved = false;
+
+        public bool Cached {
+            get; set;
+        }
 
         public IDictionary<string, ApplicationCompositionSchema> CompositionSchemas {
             get; set;
@@ -93,7 +97,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ApplicationSchemaDefinition(
-            String applicationName, string title, string schemaId, SchemaStereotype stereotype,
+            string applicationName, string title, string schemaId, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema, string idFieldName, string unionSchema) {
@@ -208,13 +212,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public IEnumerable<Int32> TabsIdxs {
+        public IEnumerable<int> TabsIdxs {
 
             get {
                 if (_tabs != null) {
                     return _tabs;
                 }
-                var list = new List<Int32>();
+                var list = new List<int>();
                 for (var i = 0; i < Displayables.Count; i++) {
                     var displayable = Displayables[i];
                     if (displayable is ApplicationTabDefinition) {
@@ -235,7 +239,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// We´re returning indexes, in order to keep the json small. The compositions can be then fetched from the Displayables field
         /// 
         /// </summary>
-        public IEnumerable<Int32> NonInlineCompositionIdxs {
+        public IEnumerable<int> NonInlineCompositionIdxs {
             get { return GetCompositionIdx(false, _nonInlineCompositions); }
         }
 
@@ -246,16 +250,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// We´re returning indexes, in order to keep the json small. The compositions can be then fetched from the Displayables field
         /// 
         /// </summary>
-        public IEnumerable<Int32> InlineCompositionIdxs {
+        public IEnumerable<int> InlineCompositionIdxs {
 
             get { return GetCompositionIdx(true, _inlineCompositions); }
         }
 
-        private IEnumerable<int> GetCompositionIdx(Boolean inline, IList<Int32> cacheList) {
+        private IEnumerable<int> GetCompositionIdx(bool inline, IList<int> cacheList) {
             if (cacheList != null) {
                 return cacheList;
             }
-            var list = new List<Int32>();
+            var list = new List<int>();
             for (var i = 0; i < Displayables.Count; i++) {
                 var displayable = Displayables[i];
                 if (displayable is ApplicationCompositionDefinition &&
@@ -274,14 +278,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// Indicates wheter there is any non inline composition in this application, which will indicate to the screen 
         /// to place a navigator component enclosing the detail page.
         /// </summary>
-        public Boolean HasNonInlineComposition {
+        public bool HasNonInlineComposition {
             get { return Compositions.Any(c => c.Schema.INLINE == false && !c.isHidden); }
         }
 
         /// <summary>
         /// Indicates whether there is any inline composition in this application.
         /// </summary>
-        public Boolean HasInlineComposition {
+        public bool HasInlineComposition {
             get { return Compositions.Any(c => c.Schema.INLINE == true && !c.isHidden); }
         }
 
@@ -335,7 +339,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _depandantFields; } 
         }
 
-        public Boolean IsWebPlatform() {
+        public bool IsWebPlatform() {
             //TODO: multi level hierarchy
             return ClientPlatform.Web == Platform || (ParentSchema != null && ParentSchema.IsWebPlatform());
         }
@@ -361,7 +365,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             throw new NotImplementedException();
         }
 
-        public String GetApplicationKey() {
+        public string GetApplicationKey() {
             return ApplicationName + "." + SchemaId;
         }
     }

@@ -339,9 +339,22 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             dataObject.schemas.unshift({ title: dataObject.placeHolder, schemaid: null });
         }
         $scope.selectedSchema.value = dataObject.schemas[0];
-        $scope.schemas = dataObject.schemas;
+
+        var schemas = [];
+
+        $.each(dataObject.schemas, function (key, value) {
+            if (value.cached) {
+                schemas.push(schemaCacheService.getCachedSchema(value.applicationName, value.schemaId));
+            } else {
+                schemas.push(value);
+                schemaCacheService.addSchemaToCache(value);
+            }
+        });
+
+        $scope.schemas = schemas;
+
         $scope.$emit('sw_titlechanged', title);
-        if (GetPopUpMode() == 'browser') {
+        if (GetPopUpMode() === 'browser') {
             window.document.title = title;
         }
         $scope.applicationname = applicationName;
