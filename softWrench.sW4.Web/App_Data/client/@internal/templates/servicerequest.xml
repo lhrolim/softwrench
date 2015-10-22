@@ -258,7 +258,7 @@
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id ="dispatchwo" icon="fa-tachometer" label="Create Work Order"
+                <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatch"/>
               </container>
             </commandgroup>
