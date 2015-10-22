@@ -32,35 +32,26 @@
 
 .filter-row { // filter detached from grid table
     .filter-label {
-        padding-left: 15px;
-        padding-right: 15px;
+        display: inline-block;
+        margin: 0 10px;
 
-        &:first-child {
-            padding-left: 0;
-        }
-        &:last-child {
-            padding-right: 0;
+        &:hover {
+            background: #ddd;
         }
 
         .filter-label-wrapper {
-            display: table;
-
-            > span { //column name
-                display: table-cell;
-                padding-right: 5px;
-                vertical-align: top;
-
-                &.glyphicon { // appended operation icon
-                    font-size: 10px;
-                    font-weight: bold;
-                }
+            .filter-text {
+                font-weight: bold;
             }
 
             .dropdown { // dropdown icon
-                display: table-cell;
+                .wrap {
+                    padding: 5px 15px;
+                    cursor: pointer;
 
-                > i.fa {
-                    color: #767676;
+                    > i.fa {
+                        color: #767676;
+                    }
                 }
 
                 .dropdown-menu { // dropdown-menu
@@ -80,14 +71,19 @@
                         }
 
                         .list-group {
-                            max-height: 250px;
+                            max-height: 276px;
                             overflow-y: scroll;
                             margin-bottom: 0;
 
                             .list-group-item {
                                 cursor: pointer;
                                 border: none;
-                                font-size: 12px;
+
+                                &:not(.active) {
+                                    &:hover {
+                                    background: #ddd;
+                                    }
+                                }
                             }
                         }
 
@@ -105,24 +101,29 @@
                         width: 100%;
                         border-top: 1px solid #ddd;
 
-                        > div {
+                        .button {
                             display: table-cell;
                             width: 50%;
                             vertical-align: middle;
                             cursor: pointer;
                             text-align: center;
                             height: 40px;
-                            color: #989898;
+                            color: #999;
                             font-weight: bold;
+                            font-size: 16px;
 
-                            &.active {
+                            &.apply {
                                 color: #3a7ebd;
-                            }
-                            &:first-child {
                                 border-right: 1px solid #ddd;
                             }
-                            &:last-child {
+
+                            &.clear {
+                                color: #555;
                                 border-left: 1px solid #ddd;
+                            }
+
+                            &:hover {
+                                background: #ddd;
                             }
                         }
                     }

@@ -1,27 +1,19 @@
-﻿<div ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
+<div ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
     <input type="checkbox" ng-change="toggleSelectAll(selectAll)" ng-model="selectAll">
 </div>
-<table class="filter-row" hiddenonprint>
-    <tr>
-        <td class="filter-label"
+<div class="filter-row" hiddenonprint>
+
+        <div class="filter-label"
             ng-repeat="filter in schema.schemaFilters.filters"
             filterrowrendered>
             <div class="filter-label-wrapper js_filter">
 
 
                 <div class="dropdown">
-
-                    <span ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" style="cursor: pointer">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}</span>
-                    <span class="glyphicon"
-                          rel="tooltip"
-                          data-original-title="{{getFilterTooltip(filter.attribute)}}" style="cursor: pointer" ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
-                        {{getFilterText(filter.attribute)}}
-                    </span>
-                    <i class="fa fa-caret-down dropdown-toggle grid-filter-button"
-                       ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
-                       rel="tooltip"
-                       data-original-title="{{getOperator(filter.attribute).tooltip}}"></i>
-
+                   <div class="wrap" ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
+                        {{i18N('_grid.filter.placeholder','{0}',[filter.label])}}: <span class="filter-text">{{getFilterText(filter.attribute)}}</span>
+                    <i class="fa fa-caret-down dropdown-toggle grid-filter-button"></i>
+                    </div>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
                             <ng-switch on="filter.type">
@@ -53,7 +45,7 @@
                                         </div>
 
                                         <div ng-switch-default>
-                                            <div class="input-group input-group-sm">
+                                            <div class="input-group">
                                                 <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}" class="form-control"
                                                        ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode" />
                                             </div>
@@ -89,11 +81,11 @@
                         </div>
 
                         <div class="filter-dropdown-toolbar" ng-init="filterIsActive=false">
-                            <div ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
+                            <div class="button apply" ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
                                 <i class="fa fa-check"></i>
                                 {{i18N('_grid.filter.apply','Apply')}}
                             </div>
-                            <div ng-click="filterIsActive=false;clearFilter(filter.attribute)">
+                            <div class="button clear" ng-click="filterIsActive=false;clearFilter(filter.attribute)">
                                 <i class="fa fa-remove"></i>
                                 {{i18N('_grid.filter.clear','Clear')}}
                             </div>
@@ -103,6 +95,6 @@
                 </div>
 
             </div>
-        </td>
-    </tr>
-</table>
+        </div>
+
+</div>

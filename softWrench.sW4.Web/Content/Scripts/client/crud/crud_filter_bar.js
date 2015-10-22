@@ -47,8 +47,6 @@
                         }
                     };
 
-                    
-
                     /**
                      * Clears the filter associated to columnName 
                      * and invokes the 'filterApplied' callback.
@@ -56,6 +54,7 @@
                      * @param String columnName 
                      */
                     $scope.clearFilter = function (columnName) {
+                        $('.dropdown.open').removeClass('open');
                         $scope.selectOperator(columnName, config.noopoperator);
                         $scope.filterApplied();
                     };
@@ -67,7 +66,6 @@
                         $('.dropdown.open').removeClass('open');
                         $scope.filterApplied();
                     }
-
 
                     /**
                      * Immediately applies the filter associated to columnName.
@@ -87,9 +85,6 @@
                         this.filterBarApplied();
                     };
 
-                    
-
-
                     /**
                      * Marks the $scope.datamap's values's fields as checked ("_#selected" key)
                      * 
@@ -101,24 +96,23 @@
                         });
                     };
 
-                    $scope.getFilterTooltip = function (attribute) {
-                        var operatorTooltip = this.getOperator(attribute).tooltip;
-                        var searchText = $scope.searchData[attribute];
-                        if (!searchText) {
-                            return operatorTooltip;
-                        }
-                        return operatorTooltip + " " + searchText;
-                    }
-
                     $scope.getFilterText = function (attribute) {
-                        var searchText =$scope.searchData[attribute];
-                        if (!searchText) {
-                            return $scope.getSearchIcon(attribute);
+                        var searchText = $scope.searchData[attribute];
+                        var operator = $scope.getOperator(attribute).title;
+
+                        if (operator == 'No Filter') {
+                            operator = '';
                         }
-                        if (searchText.length > 10) {
-                            searchText = searchText.substring(0, 10) + "...";
+
+                        if (!searchText || !operator) {
+                            return '' || 'All';
                         }
-                        return $scope.getSearchIcon(attribute) + " " + searchText;
+
+                        if (searchText.length > 20) {
+                            searchText = searchText.substring(0, 20) + '...';
+                        }
+
+                        return operator + '(' + searchText + ')';
                     }
 
                     $injector.invoke(BaseController, this, {
@@ -128,6 +122,7 @@
                         commandService: commandService,
                         formatService: formatService
                     });
+
                     // 'inherit' from BaseList controller
                     $injector.invoke(BaseList, this, {
                         $scope: $scope,
