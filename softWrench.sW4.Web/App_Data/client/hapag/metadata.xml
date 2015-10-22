@@ -3437,6 +3437,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </commands>
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
           </properties>
           <field attribute="pmchgotherapproversid" hidden="true"/>
           <field  attribute="approver" label="Approver Person" />

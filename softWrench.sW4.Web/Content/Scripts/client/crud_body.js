@@ -139,6 +139,15 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
+            $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
+                for (var ob in compositiondata) {
+                    if (!compositiondata.hasOwnProperty(ob)) {
+                        continue;
+                    }
+                    $scope.datamap.fields[ob] = compositiondata[ob].list;
+                }
+                
+            });
 
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;
