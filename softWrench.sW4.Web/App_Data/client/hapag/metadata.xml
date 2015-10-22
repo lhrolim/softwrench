@@ -1685,7 +1685,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <section id="srId"/>
-          <field attribute="cinum" label="Asset">
+          <field attribute="ci_.ciname" label="Asset">
             <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
@@ -1782,7 +1782,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="description" label="Summary">
             <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=50" />
           </field>
-          <field attribute="cinum" label="Asset">
+          <field attribute="ci_.ciname" label="Asset">
             <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
