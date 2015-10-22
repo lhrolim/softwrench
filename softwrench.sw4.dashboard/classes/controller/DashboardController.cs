@@ -132,8 +132,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult LoadPanels([FromUri]String paneltype) {
             var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(), paneltype);
             var options = availablePanels.Select(f => new GenericAssociationOption(f.Id.ToString(), f.Alias))
-           .Cast<IAssociationOption>()
-           .ToList();
+                .Cast<IAssociationOption>()
+                .ToList();
             return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
         }
 

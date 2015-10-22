@@ -6,6 +6,7 @@ using cts.commons.simpleinjector;
 using log4net;
 using log4net.Core;
 using softwrench.sw4.api.classes.user;
+using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
@@ -67,21 +68,21 @@ namespace softwrench.sw4.dashboard.classes.controller {
             }
         }
 
-
-
-
         public IEnumerable<DashboardBasePanel> LoadUserPanels(ISWUser currentUser, string panelType) {
             var profiles = currentUser.ProfileIds;
             var enumerable = profiles as int?[] ?? profiles.ToArray();
-            string entityName = typeof(DashboardGridPanel).Name;
+            string entityName;
             switch (panelType) {
-                case "dashboardgrid":
+                case DashboardConstants.PanelTypes.Grid:
                     entityName = typeof(DashboardGridPanel).Name;
                     break;
-                case "":
-                    //                    entityName = "dashboardgraphic";
-                    throw new NotSupportedException("graphics are not yet implemented");
+
+                case DashboardConstants.PanelTypes.Graphic:
+                    entityName = typeof (DashBoardGraphicPanel).Name;
                     break;
+
+                default:
+                    throw new NotSupportedException("graphics are not yet implemented");
             }
             IEnumerable<DashboardBasePanel> result;
             if (currentUser.IsSwAdmin()) {
