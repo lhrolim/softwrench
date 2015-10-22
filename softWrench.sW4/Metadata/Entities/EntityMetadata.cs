@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using cts.commons.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -10,6 +11,7 @@ using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Entities {
@@ -78,23 +80,31 @@ namespace softWrench.sW4.Metadata.Entities {
 
         [NotNull]
         public string Name {
-            get { return _name; }
+            get {
+                return _name;
+            }
         }
 
         [NotNull]
         public EntitySchema Schema {
-            get { return _schema; }
+            get {
+                return _schema;
+            }
         }
 
 
         [NotNull]
         public ConnectorParameters ConnectorParameters {
-            get { return _connectorParameters; }
+            get {
+                return _connectorParameters;
+            }
         }
 
         [NotNull]
         public ISet<EntityAssociation> Associations {
-            get { return _associations; }
+            get {
+                return _associations;
+            }
         }
 
         public ISet<EntityAssociation> ReverseAssociations() {
@@ -121,11 +131,17 @@ namespace softWrench.sW4.Metadata.Entities {
             return false;
         }
 
-        public EntityTargetSchema Targetschema { get; set; }
+        public EntityTargetSchema Targetschema {
+            get; set;
+        }
 
         public IDictionary<QueryCacheKey, string> QueryStringCache {
-            get { return _queryStringCache; }
-            set { _queryStringCache = value; }
+            get {
+                return _queryStringCache;
+            }
+            set {
+                _queryStringCache = value;
+            }
         }
 
         public IEnumerable<EntityAttribute> Attributes(AttributesMode includeCollections) {
@@ -136,7 +152,9 @@ namespace softWrench.sW4.Metadata.Entities {
             return new HashSet<EntityAttribute>(entityAttributes);
         }
 
-        public enum AttributesMode { NoCollections, IncludeCollections }
+        public enum AttributesMode {
+            NoCollections, IncludeCollections
+        }
 
         private IEnumerable<EntityAttribute> AddGenericRelationshipAttributes(AttributesMode includeCollections, string prefix = null) {
             var relationshipAttributes = new List<EntityAttribute>();
@@ -182,24 +200,63 @@ namespace softWrench.sW4.Metadata.Entities {
         }
 
         public Boolean HasParent {
-            get { return _schema.ParentEntity != null; }
+            get {
+                return _schema.ParentEntity != null;
+            }
         }
 
         public Boolean HasWhereClause {
-            get { return !string.IsNullOrEmpty(_schema.WhereClause); }
+            get {
+                return !string.IsNullOrEmpty(_schema.WhereClause);
+            }
         }
 
         public string IdFieldName {
-            get { return Schema.IdAttribute.Name; }
+            get {
+                return Schema.IdAttribute.Name;
+            }
         }
 
         public string UserIdFieldName {
-            get { return Schema.UserIdAttribute.Name; }
+            get {
+                return Schema.UserIdAttribute.Name;
+            }
         }
 
         public string WhereClause {
-            get { return _schema.WhereClause; }
-            set { _schema.WhereClause = value; }
+            get {
+                return _schema.WhereClause;
+            }
+            set {
+                _schema.WhereClause = value;
+            }
+        }
+
+        public EntityAssociation LocateAssociationByLabelField(string labelField, bool validate = false) {
+            var indexOf = labelField.IndexOf(".", StringComparison.Ordinal);
+            var firstPart = labelField.Substring(0, indexOf);
+            var lookupString = firstPart.EndsWith("_") ? firstPart : firstPart + "_";
+            if (char.IsNumber(lookupString[0])) {
+                lookupString = lookupString.Substring(1);
+            }
+            var entityAssociations = Associations;
+            var association = entityAssociations.FirstOrDefault(a => a.Qualifier.EqualsIc(lookupString));
+            if (validate) {
+                if (association == null) {
+                    throw new MetadataException("association {0} cannot be located on entity {1}".Fmt(lookupString, Name));
+                }
+                var relatedEntity = MetadataProvider.Entity(association.To);
+                var field = labelField.Substring(indexOf + 1);
+                relatedEntity.Attributes(AttributesMode.NoCollections)
+                    .FirstWithException(a => a.Name.EqualsIc(field), "field {0} not found on entity {1}", field,
+                        relatedEntity.Name);
+            }
+            return association;
+        }
+
+        public EntityAttribute LocateAttribute(string attributeName) {
+            return
+                Attributes(AttributesMode.NoCollections).FirstOrDefault(a => a.Name.EqualsIc(attributeName));
         }
 
         public override string ToString() {
@@ -221,8 +278,7 @@ namespace softWrench.sW4.Metadata.Entities {
             return (_name != null ? _name.GetHashCode() : 0);
         }
 
-        public bool SWEntity()
-        {
+        public bool SWEntity() {
             return this._name.StartsWith("_");
         }
     }

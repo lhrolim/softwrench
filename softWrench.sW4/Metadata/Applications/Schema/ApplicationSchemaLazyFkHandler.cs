@@ -7,6 +7,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
     class ApplicationSchemaLazyFkHandler {
@@ -14,7 +15,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ApplicationSchemaLazyFkHandler));
 
         public static ApplicationSchemaDefinition.LazyFkResolverDelegate SyncSchemaLazyFkResolverDelegate =
-            delegate(ApplicationSchemaDefinition definition) {
+            delegate (ApplicationSchemaDefinition definition) {
                 if (!MetadataProvider.FinishedParsing) {
                     return null;
                 }
@@ -38,7 +39,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             };
 
 
-        public static ApplicationSchemaDefinition.LazyFkResolverDelegate LazyFkResolverDelegate = delegate(ApplicationSchemaDefinition definition) {
+        public static ApplicationSchemaDefinition.LazySchemaFilterResolver LazyFilterResolver = definition =>SchemaFilterBuilder.BuildSchemaFilters(definition);
+
+        public static ApplicationSchemaDefinition.LazyFkResolverDelegate LazyFkResolverDelegate = delegate (ApplicationSchemaDefinition definition) {
             var watch = Stopwatch.StartNew();
             if (!MetadataProvider.FinishedParsing) {
                 return null;

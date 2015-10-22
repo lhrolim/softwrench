@@ -4,7 +4,7 @@ app.factory('adminMenuService', function (menuService, redirectService, contextS
     return {
         doAction: function (title, controller, action, parameters, target) {
             menuService.setActiveLeaf(target);
-            redirectService.redirectToAction(title, controller, action, parameters);
+            return redirectService.redirectToAction(title, controller, action, parameters);
         },
 
         loadApplication: function (applicationName, schemaId, mode, id) {

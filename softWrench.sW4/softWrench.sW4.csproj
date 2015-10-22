@@ -215,10 +215,13 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
+    <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
     <Compile Include="Metadata\Menu\XmlTemplateMenuMetadataParser.cs" />
     <Compile Include="Metadata\OffLineMetadataProvider.cs" />
+    <Compile Include="Metadata\Parsing\XmlFilterMetadataParser.cs" />
+    <Compile Include="Metadata\Parsing\XmlFilterSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />

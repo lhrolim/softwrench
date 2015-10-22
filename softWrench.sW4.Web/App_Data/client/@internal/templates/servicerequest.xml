@@ -62,7 +62,14 @@
         <property key="rolealias" value="sr"/>
       </properties>
       <schemas>
+        
         <list title="Service Request Grid">
+
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" />
+            <optionfilter attribute="owner" provider="ownerperson_.displayname"/>
+          </filters>
+          
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
           </field>

@@ -4,43 +4,42 @@
 <table class="filter-row" hiddenonprint>
     <tr>
         <td class="filter-label"
-            ng-repeat="column in schema.displayables"
-            ng-if="!isFieldHidden(schema,column) && shouldShowHeaderFilter(column)"
+            ng-repeat="filter in schema.schemaFilters.filters"
             filterrowrendered>
             <div class="filter-label-wrapper js_filter">
 
 
                 <div class="dropdown">
 
-                    <span ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" style="cursor: pointer">{{i18N('_grid.filter.placeholder','{0}',[column.label])}}</span>
+                    <span ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" style="cursor: pointer">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}</span>
                     <span class="glyphicon"
                           rel="tooltip"
-                          data-original-title="{{getFilterTooltip(column.attribute)}}" style="cursor: pointer" ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
-                        {{getFilterText(column.attribute)}}
+                          data-original-title="{{getFilterTooltip(filter.attribute)}}" style="cursor: pointer" ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
+                        {{getFilterText(filter.attribute)}}
                     </span>
                     <i class="fa fa-caret-down dropdown-toggle grid-filter-button"
                        ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
                        rel="tooltip"
-                       data-original-title="{{getOperator(column.attribute).tooltip}}"></i>
+                       data-original-title="{{getOperator(filter.attribute).tooltip}}"></i>
 
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <ng-switch on="column.type">
+                            <ng-switch on="filter.type">
                                 <div ng-switch-when="ApplicationFieldDefinition">
-                                    <ng-switch on="column.rendererType">
+                                    <ng-switch on="filter.rendererType">
 
                                         <div ng-switch-when="datetime">
                                             <div data-datepicker="true" class="input-group input-group-sm">
-                                                <input type="text" ng-model="searchData[column.attribute]" class="form-control"
+                                                <input type="text" ng-model="searchData[filter.attribute]" class="form-control"
                                                        data-date-time
                                                        data-attach-datepicker-to-parent="true"
                                                        data-show-time="false"
-                                                       data-show-date="{{column.rendererParameters['showdate']}}"
-                                                       data-date-format="{{column.rendererParameters['format']}}"
+                                                       data-show-date="{{filter.rendererParameters['showdate']}}"
+                                                       data-date-format="{{filter.rendererParameters['format']}}"
                                                        data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                                        data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
-                                                       placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}"
-                                                       ng-enter="filterSearch(column.attribute)"
+                                                       placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}"
+                                                       ng-enter="filterSearch(filter.attribute)"
                                                        ng-disabled="advancedfiltermode" />
                                                 <span class="input-group-addon "
                                                       data-calendericon="true"
@@ -55,8 +54,8 @@
 
                                         <div ng-switch-default>
                                             <div class="input-group input-group-sm">
-                                                <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
-                                                       ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" ng-disabled="advancedfiltermode" />
+                                                <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}" class="form-control"
+                                                       ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode" />
                                             </div>
                                         </div>
 
@@ -64,14 +63,14 @@
                                 </div>
 
                                 <div ng-switch-when="OptionField">
-                                    <div ng-switch on="column.rendererType">
+                                    <div ng-switch on="filter.rendererType">
                                         <div class="input-group" ng-switch-when="combo" class="sw-combobox-container">
                                             <select class="hidden-phone form-control combobox"
-                                                    ng-init="handleDefaultValue(dm.fields,column)"
-                                                    ng-model="searchData[column.target]"
+                                                    ng-init="handleDefaultValue(dm.fields,filter)"
+                                                    ng-model="searchData[filter.attribute]"
                                                     ng-change="refreshGrid()"
                                                     ng-disabled="advancedfiltermode"
-                                                    ng-options="option.value as i18NOptionField(option,column,schema) for option in GetAssociationOptions(column,true)" />
+                                                    ng-options="option.value as i18NOptionField(option,filter,schema) for option in GetAssociationOptions(filter,true)" />
                                         </div>
                                     </div>
                                 </div>
@@ -79,10 +78,10 @@
 
                             <ul class="list-group">
                                 <li class="list-group-item"
-                                    ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                    ng-show="shouldShowFilter(operation,column)"
-                                    ng-enter="filterSearch(column.attribute)"
-                                    ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                    ng-repeat="operation in searchOperations()" ng-click="selectOperator(filter.attribute,operation)"
+                                    ng-show="shouldShowFilter(operation,filter)"
+                                    ng-enter="filterSearch(filter.attribute)"
+                                    ng-class="{'active' : searchOperator[filter.attribute].id == operation.id}">
                                     {{operation.title}}
                                 </li>
                             </ul>
@@ -94,7 +93,7 @@
                                 <i class="fa fa-check"></i>
                                 {{i18N('_grid.filter.apply','Apply')}}
                             </div>
-                            <div ng-click="filterIsActive=false;clearFilter(column.attribute)">
+                            <div ng-click="filterIsActive=false;clearFilter(filter.attribute)">
                                 <i class="fa fa-remove"></i>
                                 {{i18N('_grid.filter.clear','Clear')}}
                             </div>
