@@ -97,8 +97,6 @@
                     };
 
                     $scope.getFilterText = function (attribute) {
-                        console.log($scope.searchData);
-
                         var searchText = $scope.searchData[attribute];
                         var operator = $scope.getOperator(attribute).title;
 

@@ -48,7 +48,7 @@
                                         </div>
 
                                         <div ng-switch-default>
-                                            <div class="input-group input-group-sm">
+                                            <div class="input-group">
                                                 <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                                        ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" ng-disabled="advancedfiltermode" />
                                             </div>
@@ -84,11 +84,11 @@
                         </div>
 
                         <div class="filter-dropdown-toolbar" ng-init="filterIsActive=false">
-                            <div ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
+                            <div class="button apply" ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
                                 <i class="fa fa-check"></i>
                                 {{i18N('_grid.filter.apply','Apply')}}
                             </div>
-                            <div ng-click="filterIsActive=false;clearFilter(column.attribute)">
+                            <div class="button clear" ng-click="filterIsActive=false;clearFilter(column.attribute)">
                                 <i class="fa fa-remove"></i>
                                 {{i18N('_grid.filter.clear','Clear')}}
                             </div>
