@@ -105,6 +105,9 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/client/directives/menu/*.js")
                 .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
                 .IncludeDirectory("~/Content/modules", "*.js", true));
+
+            bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty/graphics").Include(
+                "~/Content/Scripts/vendor/other/tableau/tableau-2.0.0-min.js"));
         }
 
         public static void ClearBundles() {

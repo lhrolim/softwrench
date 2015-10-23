@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using WebGrease.Css.Extensions;
 
 namespace softwrench.sw4.dashboard.classes.model.entities {
     [JoinedSubclass(
-        NameType = typeof(DashBoardGraphicPanel),
+        NameType = typeof(DashboardGraphicPanel),
         Lazy = false,
         ExtendsType = typeof(DashboardBasePanel),
         Table = "DASH_GRAPHICPANEL")]
-    public class DashBoardGraphicPanel : DashboardBasePanel {
+    public class DashboardGraphicPanel : DashboardBasePanel {
 
         private readonly IDictionary<string, string> _config = new Dictionary<string, string>();
 
@@ -28,6 +29,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         /// </para>
         /// </summary>
         [Property]
+        [JsonIgnore]
         public string Configuration {
             get {
                 return _config.Any() ? string.Join(";", _config.Select(entry => entry.Key + "=" + entry.Value).ToList()) : null;

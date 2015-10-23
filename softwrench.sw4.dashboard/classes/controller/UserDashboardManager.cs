@@ -78,7 +78,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     break;
 
                 case DashboardConstants.PanelTypes.Graphic:
-                    entityName = typeof (DashBoardGraphicPanel).Name;
+                    entityName = typeof (DashboardGraphicPanel).Name;
                     break;
 
                 default:
