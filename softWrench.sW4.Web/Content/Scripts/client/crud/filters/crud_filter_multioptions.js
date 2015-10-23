@@ -15,6 +15,8 @@
                 },
 
                 link: function (scope, element, attrs) {
+                    scope.vm = {};
+
                     //let´s avoid some null pointers
                     scope.filter.options = scope.filter.options || [];
 
@@ -59,7 +61,7 @@
 
                     $scope.$on("sw.filter.clear", function (event, filterAttribute) {
                         if (filterAttribute === $scope.filter.attribute) {
-                            $scope.allSelected = 0;
+                            $scope.vm.allSelected = 0;
                             $scope.toggleSelectAll();
                         }
                     });
@@ -75,7 +77,7 @@
                     }
 
                     $scope.toggleSelectAll = function () {
-                        var value = $scope.allSelected ? 1 : 0;
+                        var value = $scope.vm.allSelected ? 1 : 0;
                         for (var i = 0; i < $scope.filteroptions.length; i++) {
                             var el = $scope.filteroptions[i];
                             $scope.selectedOptions[el.value] = value;
