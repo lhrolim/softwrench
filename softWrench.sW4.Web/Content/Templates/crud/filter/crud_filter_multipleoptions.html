@@ -1,0 +1,49 @@
+<div class="input-group" class="sw-combobox-container">
+
+    <div class="input-group">
+        <!--        <input type="search" class="form-control" ng-model="filteredoption" ng-if="!filter.lazy" placeholder="Find {{filter.label}}"/>-->
+        <div ng-if="filter.lazy">
+            <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" placeholder="Find {{filter.label}}" />
+        </div>
+    </div>
+
+
+    <div>
+        <div ng-if="filteroptions.length > 0">
+            <h5 ng-if="filter.lazy" style="font-weight: bold; font-size: 14px; padding-bottom: 5px; padding-top: 5px;">Recently Used</h5>
+            <div class="divider" ng-if="filter.lazy" />
+
+
+            <span style="padding-left: 5px" ng-if="filteroptions.length > 1">
+                <input type="checkbox"
+                       value="{{option.value}}"
+                       ng-model="allSelected"
+                       ng-change="toggleSelectAll()"
+                       ng-true-value="1" ng-false-value="0">
+
+                </input>
+                <span style="font-weight: bold; font-size: 14px; padding-bottom: 5px; padding-top: 5px;">Select All</span>
+                <div class="divider" />
+            </span>
+            
+
+
+
+
+
+
+            <ul style="padding-left: 5px">
+                <li ng-repeat="option in filteroptions" class="filter-row" style="padding-bottom: 10px; list-style: none">
+                    <input type="checkbox"
+                           value="{{option.value}}"
+                           ng-model="selectedOptions[option.value]"
+                           ng-change="modifySearchData()"
+                           ng-true-value="1" ng-false-value="0" />
+                    {{option.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>

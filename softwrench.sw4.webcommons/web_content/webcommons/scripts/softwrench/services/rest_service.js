@@ -13,7 +13,7 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
             if (serverUrl) {
                 return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params, true);
             }
-            return url("/api/generic/" + controller + "/" + action + "?" + $.param(params, true));
+            return url("/api/generic/" + controller + "/" + action + "?" + $.param(params, false));
         },
 
         invokePost: function (controller, action, queryParameters, json, successCbk, failureCbk) {
@@ -38,6 +38,13 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
         },
 
         getPromise: function (controller, action, queryParameters) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="controller" type="type"></param>
+            /// <param name="action" type="type"></param>
+            /// <param name="queryParameters" type="type">key value object to be converted into a query string</param>
+            /// <returns type=""></returns>
             var url = this.getActionUrl(controller, action, queryParameters);
             var log = $log.getInstance("restService#invokeGet");
             log.info("invoking get on url {0}".format(url));

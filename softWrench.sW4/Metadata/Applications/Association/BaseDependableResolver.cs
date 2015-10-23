@@ -6,7 +6,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
-    abstract class BaseDependableResolver {
+    public abstract class BaseDependableResolver {
 
         protected const string MethodNotFound = "filterFunction {0} not found on DataSet {1}";
         protected const string DataSetNotFound = "Application {0} requires a filterFunction {1}, but no DataSet could be located";

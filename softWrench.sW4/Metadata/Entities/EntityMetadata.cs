@@ -232,7 +232,7 @@ namespace softWrench.sW4.Metadata.Entities {
             }
         }
 
-        public EntityAssociation LocateAssociationByLabelField(string labelField, bool validate = false) {
+        public Tuple<EntityAssociation,EntityAttribute> LocateAssociationByLabelField(string labelField) {
             var indexOf = labelField.IndexOf(".", StringComparison.Ordinal);
             var firstPart = labelField.Substring(0, indexOf);
             var lookupString = firstPart.EndsWith("_") ? firstPart : firstPart + "_";
@@ -241,17 +241,18 @@ namespace softWrench.sW4.Metadata.Entities {
             }
             var entityAssociations = Associations;
             var association = entityAssociations.FirstOrDefault(a => a.Qualifier.EqualsIc(lookupString));
-            if (validate) {
-                if (association == null) {
-                    throw new MetadataException("association {0} cannot be located on entity {1}".Fmt(lookupString, Name));
-                }
-                var relatedEntity = MetadataProvider.Entity(association.To);
-                var field = labelField.Substring(indexOf + 1);
-                relatedEntity.Attributes(AttributesMode.NoCollections)
-                    .FirstWithException(a => a.Name.EqualsIc(field), "field {0} not found on entity {1}", field,
-                        relatedEntity.Name);
+
+            if (association == null) {
+                throw new MetadataException("association {0} cannot be located on entity {1}".Fmt(lookupString, Name));
             }
-            return association;
+            var relatedEntity = MetadataProvider.Entity(association.To);
+            var field = labelField.Substring(indexOf + 1);
+
+            var attribute = relatedEntity.Attributes(AttributesMode.NoCollections)
+                .FirstWithException(a => a.Name.EqualsIc(field), "field {0} not found on entity {1}", field,
+                    relatedEntity.Name);
+            return new Tuple<EntityAssociation, EntityAttribute>(association,attribute);
+
         }
 
         public EntityAttribute LocateAttribute(string attributeName) {

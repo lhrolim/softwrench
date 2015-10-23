@@ -24,7 +24,7 @@ app.factory('cmpAutocompleteServer', function ($log, associationService,restServ
         init: function (bodyElement, datamap, schema,scope) {
             $('input.typeahead', bodyElement).each(function (index, element) {
                 var jelement = $(element);
-                if (true == $(jelement.parent()).data('initialized')) {
+                if (true === $(jelement.parent()).data('initialized')) {
                     return;
                 }
                 var associationKey = element.getAttribute('data-association-key');

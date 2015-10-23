@@ -1,5 +1,5 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseList($scope, formatService, expressionService, searchService, fieldService,i18NService,commandService) {
+function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
@@ -39,9 +39,17 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return searchService.searchOperations();
     };
 
-    $scope.shouldShowFilter = function (operation, column) {
-        var filterByDataType = column.dataType == null || operation.datatype== null || operation.datatype.indexOf(column.dataType) > -1;
-        return (column.rendererType == null || operation.renderType.indexOf(column.rendererType) > -1) && (filterByDataType);
+    $scope.shouldShowFilter = function (operation, filter) {
+        //        var filterByDataType = filter.dataType == null || operation.datatype == null || operation.datatype.indexOf(filter.dataType) > -1;
+        //        return (filter.rendererType == null || operation.renderType.indexOf(filter.rendererType) > -1) && (filterByDataType);
+        if (filter.type === "BaseMetadataFilter") {
+            return operation.id.equalsAny("CONTAINS", "EQ", "NCONTAINS", "STARTWITH", "ENDWITH", "BLANK");
+        } else if (filter.type === "MetadataNumberFilter") {
+            return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
+        }else if (filter.type === "MetadataDateTimeFilter") {
+            return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
+        }
+        return operation.id.equalsAny("BLANK");
     };
 
     $scope.getDefaultOperator = function () {

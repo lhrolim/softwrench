@@ -15,8 +15,8 @@
                 advancedFilterMode: "=", // shared boolean flag indicating if advanced filter mode is activated
                 filterApplied: "&" // callback executed when the filters are applied
             },
-            controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService",
-                function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService) {
+            controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService","filterModelService",
+                function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService) {
 
                     var config = {
                         /** 'don't filter' operator: helper to clear current filter */
@@ -53,17 +53,20 @@
                      * 
                      * @param String columnName 
                      */
-                    $scope.clearFilter = function (columnName) {
+                    $scope.clearFilter = function (filterAttribute) {
                         $('.dropdown.open').removeClass('open');
-                        $scope.selectOperator(columnName, config.noopoperator);
+                        $scope.selectOperator(filterAttribute, config.noopoperator);
                         $scope.filterApplied();
+                        $scope.$broadcast("sw.filter.clear",filterAttribute);
                     };
 
                     /**
                      * Intermediary function to perform operations specific to this directive before delegating to the & delegated function
                      */
-                    $scope.filterBarApplied = function () {
-                        $('.dropdown.open').removeClass('open');
+                    $scope.filterBarApplied = function (closeFilter) {
+                        if (closeFilter) {
+                            $('.dropdown.open').removeClass('open');
+                        }
                         $scope.filterApplied();
                     }
 
@@ -96,12 +99,22 @@
                         });
                     };
 
-                    $scope.getFilterText = function (attribute) {
+                    $scope.getFilterText = function (filter) {
+                        var attribute = filter.attribute;
                         var searchText = $scope.searchData[attribute];
                         var operator = $scope.getOperator(attribute).title;
 
-                        if (operator == 'No Filter') {
+
+                        if (operator === 'Blank') {
+                            return "Is Blank";
+                        }
+
+                        if (operator === 'No Filter') {
                             operator = '';
+                        }
+
+                        if (operator === 'Contains' && filter.type === "MetadataOptionFilter") {
+                            operator = 'Any';
                         }
 
                         if (!searchText || !operator) {

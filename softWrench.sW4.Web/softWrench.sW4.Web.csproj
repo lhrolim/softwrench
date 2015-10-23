@@ -268,6 +268,7 @@
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
+    <Compile Include="Controllers\FilterDataController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
     <Compile Include="Controllers\MenuHelper\MenuHelper.cs" />
@@ -499,7 +500,9 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
-    <Content Include="Content\Scripts\client\crud\crud_filter_bar.js" />
+    <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
+    <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
+    <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
@@ -756,6 +759,7 @@
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
     <Content Include="Content\Templates\crud\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />

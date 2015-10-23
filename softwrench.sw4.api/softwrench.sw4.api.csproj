@@ -48,6 +48,7 @@
     <Compile Include="classes\fwk\context\RedirectService.cs" />
     <Compile Include="classes\fwk\context\SwHttpContext.cs" />
     <Compile Include="classes\email\IEmailService.cs" />
+    <Compile Include="classes\fwk\filter\FilterProviderParameters.cs" />
     <Compile Include="classes\IMenuManager.cs" />
     <Compile Include="classes\integration\TargetResult.cs" />
     <Compile Include="classes\user\ISWUser.cs" />

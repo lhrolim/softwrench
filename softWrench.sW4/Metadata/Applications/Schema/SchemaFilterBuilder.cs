@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
+using softwrench.sw4.api.classes.fwk.filter;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Exception;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
@@ -164,12 +169,15 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 if (mi == null) {
                     throw new FilterMetadataException("missing filter provider method {0} on dataset for application {1}".Fmt(provider.Substring(1), schema.ApplicationName));
                 }
-                //TODO check signature also
+                if (mi.GetParameters().Length != 1 || typeof(IEnumerable<IAssociationOption>).IsAssignableFrom(mi.ReturnType) || typeof(FilterProviderParameters).IsAssignableFrom(mi.GetParameters()[0].ParameterType)) {
+                    //checking signature of the method
+                    throw new InvalidOperationException(string.Format("Filter provider {0} at  {1} has wrong signature ", provider.Substring(1), dataSet.GetType().Name));
+                }
                 return;
             }
 
 
-            var association = entity.LocateAssociationByLabelField(provider, true);
+            var association = entity.LocateAssociationByLabelField(provider).Item1;
             if (association == null) {
                 throw new FilterMetadataException("cannot locate a valid filter provider {0} on application {1}. Check the available relationships of the underlying entity {2}".Fmt(provider, schema.ApplicationName, entity.Name));
             }

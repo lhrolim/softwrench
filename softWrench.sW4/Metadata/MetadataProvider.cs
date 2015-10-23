@@ -164,6 +164,10 @@ namespace softWrench.sW4.Metadata {
             LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}", LoggingUtil.MsDelta(watch));
         }
 
+        public static IEnumerable<EntityMetadata> Entities() {
+            return _metadataXmlInitializer.Entities;
+        }
+
 
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");

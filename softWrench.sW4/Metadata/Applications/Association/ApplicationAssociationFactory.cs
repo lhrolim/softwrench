@@ -14,7 +14,13 @@ using softWrench.sW4.Metadata.Stereotypes;
 namespace softWrench.sW4.Metadata.Applications.Association {
     public class ApplicationAssociationFactory {
 
-        public static ApplicationAssociationDefinition GetInstance([NotNull] string @from, ApplicationAssociationDefinition.LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
+        public static ApplicationAssociationDefinition GetFilterInstance(string from, string labelField, string target) {
+            var schema = new ApplicationAssociationSchemaDefinition(new AssociationDataProvider(), new AssociationFieldRenderer(), null);
+            return GetInstance(from, new ApplicationAssociationDefinition.LabelData(null, null, labelField, from), target, null, schema, "true", null, null, null, null, false, null, null);
+        }
+
+
+        public static ApplicationAssociationDefinition GetInstance([NotNull] string @from, [NotNull]ApplicationAssociationDefinition.LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
                                                                    string showExpression, string toolTip, string requiredExpression, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription,
             string orderbyfield, string defaultExpression, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true, string valueField = null, ApplicationSection detailSection = null) {
 
@@ -32,7 +38,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             association.SetLazyResolver(new Lazy<EntityAssociation>(
                 () => {
                     var appMetadata = MetadataProvider.Application(association.From);
-                    return MetadataProvider.Entity(appMetadata.Entity).LocateAssociationByLabelField(labelField);
+                    return MetadataProvider.Entity(appMetadata.Entity).LocateAssociationByLabelField(labelField).Item1;
                 }));
             association.SetLazyRendererParametersResolver(new Lazy<IDictionary<string, object>>(() => {
                 var metadataParameters = association.InnerRendererParameters;
@@ -106,6 +112,9 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private static void MergeWithStereotypeComponent(ApplicationAssociationDefinition association) {
             var stereotypeProvider = ComponentStereotypeFactory.LookupStereotype(association.RendererStereotype);
+            if (stereotypeProvider == null) {
+                return;
+            }
             var stereotypeProperties = stereotypeProvider.StereotypeProperties();
 
             foreach (var stereotypeProperty in stereotypeProperties) {

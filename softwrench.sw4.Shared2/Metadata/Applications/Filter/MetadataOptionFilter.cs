@@ -15,17 +15,20 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
-        public bool Lazy { get; set; }
+        public bool Lazy {
+            get; set;
+        }
 
 
         public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, IEnumerable<MetadataFilterOption> options)
             : base(attribute, label, icon, position, tooltip, whereClause) {
             Provider = provider;
             Options = options;
+            Lazy = true;
         }
 
         public override bool IsValid() {
-            return base.IsValid() && Provider!=null;
+            return base.IsValid() && Provider != null;
         }
     }
 }
