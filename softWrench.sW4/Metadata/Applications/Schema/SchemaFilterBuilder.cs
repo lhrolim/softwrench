@@ -177,7 +177,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             }
 
 
-            var association = entity.LocateAssociationByLabelField(provider).Item1;
+            var association = entity.LocateAssociationByLabelField(provider,true).Item1;
             if (association == null) {
                 throw new FilterMetadataException("cannot locate a valid filter provider {0} on application {1}. Check the available relationships of the underlying entity {2}".Fmt(provider, schema.ApplicationName, entity.Name));
             }
