@@ -4,7 +4,7 @@
     function tableauGraphicPanelService($q, restService) {
         //#region Utils
         var config = {
-            auth: { providerUrl: "http://10.50.100.171" }, //TODO: remove auth mock
+            auth: null,
             authPromise: null,
             defaultProvider: "Tableau",
             render: {
@@ -17,10 +17,14 @@
 
         function doAuthenticate(provider) {
             config.authPromise = restService
-                .postPromise("Dashboard", "Auth", { provider: provider || config.defaultProvider })
+                .postPromise("Dashboard", "Authenticate", { provider: provider || config.defaultProvider })
                 .then(function (response) {
                     config.auth = response.data["resultObject"];
-                    return auth;
+                    return config.auth;
+                })
+                .catch(function(err) {
+                    config.authPromise = null;
+                    return $q.reject(err);
                 });
             return config.authPromise;
         }
@@ -29,7 +33,8 @@
             var workbook = panel.configurationDictionary["workbook"];
             var view = panel.configurationDictionary["view"];
             var ticket = auth.ticket;
-            var url = "{0}{1}/views/{2}/{3}".format(auth.providerUrl, (!!ticket ? "/trusted/" + ticket : ""), workbook, view);
+            var site = auth.siteName; 
+            var url = "{0}{1}{2}/views/{3}/{4}".format(auth.serverUrl, (!!ticket ? "/trusted/" + ticket : ""), (!!site ? "/site/" + site : ""), workbook, view);
             return url;
         }
 
@@ -46,6 +51,10 @@
         //#endregion
 
         //#region Public methods
+
+        function isAuthenticated() {
+            return !!config.auth;
+        }
 
         /**
          * Authenticates the user to the graphic provider server.
@@ -86,12 +95,28 @@
             return deferred.promise;
         }
 
+        /**
+         * Authenticates user (if not already authenticated) then renders graphic.
+         * 
+         * @param DOMNode element 
+         * @param {} panel 
+         * @param {} options 
+         * @returns Promise resolved with tableau Viz instantiated 
+         */
+        function loadGraphic(element, panel, options) {
+            return authenticate().then(function(auth) {
+                return renderGraphic(element, panel, auth, options);
+            });
+        }
+
         //#endregion
 
         //#region Service Instance
         var service = {
             authenticate: authenticate,
-            renderGraphic: renderGraphic
+            renderGraphic: renderGraphic,
+            loadGraphic: loadGraphic,
+            isAuthenticated: isAuthenticated
         };
         return service;
         //#endregion

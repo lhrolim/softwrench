@@ -10,16 +10,31 @@
                 scope: {
                     panel: "="
                 },
+                controller: ["$scope", "graphicPanelServiceProvider", function ($scope, graphicPanelServiceProvider) {
+                    $scope.data = {
+                        hasError: false,
+                        graphic: null
+                    };
+                    var panel = $scope.panel;
+                    var service = graphicPanelServiceProvider.getService(panel.provider);
+
+                    $scope.loadGraphic = function (container) {
+                        return service.loadGraphic(container || $scope.data.container, panel)
+                            .then(function (graphic) {
+                                $scope.data.graphic = graphic;
+                                $scope.data.hasError = false;
+                            })
+                            .catch(function() {
+                                $scope.data.hasError = true;
+                            });
+                    };
+
+                }],
                 link: function (scope, element, attrs) {
-                    var service = graphicPanelServiceProvider.getService(scope.panel.provider);
-                    var graphicContainer = element[0].querySelector(".js_graphic_container");
-                    service.authenticate()
-                        .then(function (auth) {
-                            return service.renderGraphic(graphicContainer, scope.panel, auth);
-                        })
-                        .then(function(graphic) {
-                            scope.graphic = graphic;
-                        });
+                    var container = element[0].querySelector(".js_graphic_container");
+                    scope.data.container = container;
+
+                    scope.loadGraphic(container);
                 }
             };
 

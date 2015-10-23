@@ -98,6 +98,12 @@
     <Compile Include="classes\model\ManageDashBoardsDTO.cs" />
     <Compile Include="classes\model\migration\Migration20150224Swweb792.cs" />
     <Compile Include="classes\model\migration\Migration20151021Swweb1840.cs" />
+    <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />
+    <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
+    <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />
+    <Compile Include="classes\service\graphic\IGraphicStorageSystemFacade.cs" />
+    <Compile Include="classes\service\graphic\tableau\TableauAuthDto.cs" />
+    <Compile Include="classes\service\graphic\tableau\TableauFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

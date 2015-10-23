@@ -60,9 +60,10 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
                 return dashboardAuxService.locatePanelFromMatrix(scope.dashboard, row, column);
             }
 
-            scope.isPanelVisible = function (row, column) {
-                return this.getPanelDataFromMatrix(row,column).panel.visible != false;
+            scope.isPanelVisible = function (panelDataSource) {
+                return !!panelDataSource.panel.visible;
             }
+
         },
     }
 
