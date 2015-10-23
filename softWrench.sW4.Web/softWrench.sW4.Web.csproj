@@ -613,6 +613,7 @@
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\other\angular-file-dnd.js" />
     <Content Include="Content\Scripts\vendor\other\angular-ui-select.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
