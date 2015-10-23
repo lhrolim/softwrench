@@ -31,9 +31,11 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
           <element name="option" type="f:FilterOptionType"></element>
         </sequence>
         <attribute name="provider" type="string"></attribute>
-
-
-
+        <attribute name="allowblank" type="boolean">
+          <annotation>
+            <documentation>If true, will create a special option on the filter to allow for null values. not every filter would desire that behavior</documentation>
+          </annotation>
+        </attribute>
       </extension>
     </complexContent>
   </complexType>

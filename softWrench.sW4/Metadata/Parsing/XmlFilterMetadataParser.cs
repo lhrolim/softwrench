@@ -39,8 +39,9 @@ namespace softWrench.sW4.Metadata.Parsing {
 
                 if (el.IsNamed(XmlFilterSchema.OptionFilterElement)) {
                     var provider = el.AttributeValue(XmlFilterSchema.ProviderAttribute, true);
+                    var allowBlank = el.Attribute(XmlFilterSchema.AllowBlankAttribute).ValueOrDefault(false);
                     var options = ParseDefaultOptions(el);
-                    filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider, options));
+                    filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider, allowBlank, options));
                 } else if (el.IsNamed(XmlFilterSchema.BooleanFilterElement)) {
                     var defaultValue = el.Attribute(XmlFilterSchema.DefaultSelectionAttribute).ValueOrDefault(true);
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));

@@ -40,16 +40,23 @@ function BaseList($scope, formatService, expressionService, searchService, field
     };
 
     $scope.shouldShowFilter = function (operation, filter) {
-        //        var filterByDataType = filter.dataType == null || operation.datatype == null || operation.datatype.indexOf(filter.dataType) > -1;
-        //        return (filter.rendererType == null || operation.renderType.indexOf(filter.rendererType) > -1) && (filterByDataType);
+        if (!filter.type) {
+            //legacy code for lookups
+            var filterByDataType = filter.dataType == null || operation.datatype == null || operation.datatype.indexOf(filter.dataType) > -1;
+            return (filter.rendererType == null || operation.renderType.indexOf(filter.rendererType) > -1) && (filterByDataType);
+        }
         if (filter.type === "BaseMetadataFilter") {
             return operation.id.equalsAny("CONTAINS", "EQ", "NCONTAINS", "STARTWITH", "ENDWITH", "BLANK");
         } else if (filter.type === "MetadataNumberFilter") {
             return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
-        }else if (filter.type === "MetadataDateTimeFilter") {
+        } else if (filter.type === "MetadataDateTimeFilter") {
             return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
         }
-        return operation.id.equalsAny("BLANK");
+        if (operation.id === "BLANK" && filter.allowBlank) {
+            return true;
+        }
+
+        return false;
     };
 
     $scope.getDefaultOperator = function () {
