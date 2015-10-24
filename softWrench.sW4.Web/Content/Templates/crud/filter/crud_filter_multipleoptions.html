@@ -3,7 +3,7 @@
     <div class="input-group">
         <!--        <input type="search" class="form-control" ng-model="filteredoption" ng-if="!filter.lazy" placeholder="Find {{filter.label}}"/>-->
         <div ng-if="filter.lazy">
-            <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" placeholder="Find {{filter.label}}" />
+            <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}" />
         </div>
     </div>
 
@@ -14,7 +14,7 @@
             <div class="divider" ng-if="filter.lazy" />
 
 
-            <span style="padding-left: 5px" ng-if="filteroptions.length > 1">
+            <span style="padding-left: 5px;" ng-if="filteroptions.length > 1">
                 <input type="checkbox"
                        value="{{option.value}}"
                        ng-model="vm.allSelected"
@@ -22,8 +22,8 @@
                        ng-true-value="1" ng-false-value="0">
 
                 </input>
-                <span style="font-weight: bold; font-size: 14px; padding-bottom: 5px; padding-top: 5px;">Select All</span>
-                <div class="divider" />
+                <span style="font-weight: bold; font-size: 14px;  padding-top: 5px;">Select All</span>
+                <div class="divider" ng-if="!filter.lazy"/>
             </span>
             
 
@@ -32,7 +32,7 @@
 
 
 
-            <ul style="padding-left: 5px">
+            <ul style="padding-left: 5px; margin-top:10px">
                 <li ng-repeat="option in filteroptions" class="filter-row" style="padding-bottom: 10px; list-style: none">
                     <input type="checkbox"
                            value="{{option.value}}"

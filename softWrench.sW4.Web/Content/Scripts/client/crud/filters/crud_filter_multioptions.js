@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", function (contextService, restService, filterModelService) {
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", function (contextService, restService, filterModelService, cmpAutocompleteServer, $timeout) {
 
             var directive = {
                 restrict: "E",
@@ -13,6 +13,7 @@
                     schema: '=',
                     applyFilter: "&"
                 },
+
 
                 link: function (scope, element, attrs) {
                     scope.vm = {};
@@ -50,6 +51,9 @@
                         });
                     } else {
                         scope.filteroptions = scope.filteroptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
+                        $timeout(function () {
+                            cmpAutocompleteServer.init(element, null, scope.schema, scope);
+                        }, 0, false);
                     }
                 },
 
@@ -57,6 +61,7 @@
 
 
                     var filter = $scope.filter;
+
 
 
                     $scope.$on("sw.filter.clear", function (event, filterAttribute) {
@@ -86,6 +91,18 @@
 
                     }
 
+                    $scope.$on("sw_autocompleteselected", function (event, item, filterAttribute) {
+                        if (filterAttribute === $scope.filter.attribute) {
+                            if ($scope.filteroptions.some(function (el) {
+                                return el.value === item.value;})) {
+                                return;
+                            }
+
+                            $scope.filteroptions.push(item);
+                            filterModelService.updateRecentlyUsed($scope.schema, filterAttribute, item);
+                            $scope.$digest();
+                        }
+                    });
 
 
                 }]
