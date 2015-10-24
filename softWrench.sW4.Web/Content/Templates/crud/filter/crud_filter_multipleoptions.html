@@ -40,6 +40,7 @@
                            ng-change="modifySearchData()"
                            ng-true-value="1" ng-false-value="0" />
                     {{option.label}}
+                    <span class="fa fa-trash" ng-if="option.removable" style="cursor: pointer" ng-click="removeItem(option)"></span>
                 </li>
             </ul>
         </div>

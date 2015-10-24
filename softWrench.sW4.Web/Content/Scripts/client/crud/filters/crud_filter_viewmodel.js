@@ -21,7 +21,7 @@
             return JSON.parse(stored);
         }
 
-        var updateRecentlyUsed = function (schema, attribute, item) {
+        var updateRecentlyUsed = function (schema, attribute, item, removeItem) {
             var application = schema.applicationName;
             var schemaId = schema.schemaId;
             var key = "filter:" + application + ":" + schemaId + ":" + attribute;
@@ -31,11 +31,26 @@
             } else {
                 stored = JSON.parse(stored);
             }
-            if (stored.length === 10) {
-                //implement a LRU strategy, where it grows until it reaches 10, than least recent gets removed
-                stored.pop();
+            if (!removeItem) {
+                if (stored.length === 10) {
+                    //implement a LRU strategy, where it grows until it reaches 10, than least recent gets removed
+                    stored.pop();
+                }
+                stored.unshift(item);
+            } else {
+                //removing it from lru cache
+                var idx = -1;
+                for (var i = 0; i < stored.length; i++) {
+                    if (stored[i].value === item.value) {
+                        idx = i;
+                        break;
+                    }
+                }
+                if (idx !== -1) {
+                    stored.splice(idx, 1);
+                }
             }
-            stored.unshift(item);
+
             localStorage[key] = JSON.stringify(stored);
         }
 

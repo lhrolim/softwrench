@@ -91,17 +91,39 @@
 
                     }
 
-                    $scope.$on("sw_autocompleteselected", function (event,jqueryEvent, item, filterAttribute) {
-                        if (filterAttribute === $scope.filter.attribute) {
-                            $(jqueryEvent.target).val("");
-                            if ($scope.filteroptions.some(function (el) {
-                                return el.value === item.value;})) {
-                                return;
+                    $scope.removeItem = function(item) {
+                        var arr = $scope.filteroptions;
+                        var idx = -1;
+                        for (var i=0; i < arr.length; i++) {
+                            if (arr[i].value === item.value) {
+                                idx = i;
+                                break;
                             }
-                            $scope.filteroptions.push(item);
-                            filterModelService.updateRecentlyUsed($scope.schema, filterAttribute, item);
-                            $scope.$digest();
                         }
+                        if (idx !== -1) {
+                            arr.splice(idx, 1);
+                            filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, item, true);
+                        }
+                        
+                    }
+
+                    $scope.$on("sw_autocompleteselected", function (event,jqueryEvent, item, filterAttribute) {
+                        if (filterAttribute !== $scope.filter.attribute) {
+                            //not the filter interested in listening the event (i.e this should be handled by another filter but this)
+                            return;
+                        }
+                        //cleaning up jquery element
+                        $(jqueryEvent.target).val("");
+                        if ($scope.filteroptions.some(function (el) {
+                            return el.value === item.value;})) {
+                            //to avoid duplications
+                            return;
+                        }
+                        //this items can be later removed by the user, in opposition from the ones coming from metadata eventually
+                        item.removable = true;
+                        $scope.filteroptions.push(item);
+                        filterModelService.updateRecentlyUsed($scope.schema, filterAttribute, item);
+                        $scope.$digest();
                     });
 
 
