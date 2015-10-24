@@ -90,7 +90,9 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
 
                 $timeout(function () {
                     //timeout to avoid $digest is already in progress exception... using false keyword postergates this to next digest loop
-                    element.datetimepicker({
+                    // element.datetimepicker({
+                    var elementToUse = !attrs.attachDatepickerToParent ? element : element.parent();
+                    elementToUse.datetimepicker({
                         format: dateFormat,
                         locale: attrs.language,
                         maxDate: endDate,

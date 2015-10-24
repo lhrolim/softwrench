@@ -94,11 +94,11 @@ namespace softWrench.sW4.Metadata.Validator {
             var keyAttr = memberInfo.ReadAttribute<KeyAttribute>();
             var qualifier = memberInfo.Name;
             var to = "_" + oneTomany.ClassType.Name.ToLower();
-            //TODO: Add reverse customization
-            string reverse = null;
+            //            //TODO: Add reverse customization
+            //            string reverse = null;
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
             attributes.Add(new EntityAssociationAttribute(keyAttr.Column, "id", null, true));
-            return new EntityAssociation("_" + qualifier, to, attributes, true, reverse, false);
+            return new EntityAssociation("_" + qualifier, to, attributes, true, false, null, false);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {

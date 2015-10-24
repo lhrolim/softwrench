@@ -30,23 +30,104 @@
     color: black;
 }
 
-.filter-row {
-    .grid-filter-button {
-        font-weight: bold;
-    }
+.filter-row { // filter detached from grid table
+    .filter-label {
+        display: inline-block;
+        margin: 0 10px;
 
-    .dropdown {
-        text-align: left;
-    }
+        &:hover {
+            background: #ddd;
+        }
 
-    .input-group {
-        width: 100%;
+        .filter-label-wrapper {
+            .filter-text {
+                font-weight: bold;
+            }
 
-        .dropdown {
-            padding: 0;
+            .dropdown { // dropdown icon
+                .wrap {
+                    padding: 5px 15px;
+                    cursor: pointer;
 
-            .dropdown-toggle {
-                padding: 5px 8px;
+                    > i.fa {
+                        color: #767676;
+                    }
+                }
+
+                .dropdown-menu { // dropdown-menu
+                    padding-bottom: 0;
+                    width: 250px;
+
+                    .dropdown-content {
+                        padding-top: 10px;
+                        padding-bottom: 0;
+                        width: 100%;
+
+                        .input-group {
+                            width: 90%;
+                            margin-left: auto;
+                            margin-right: auto;
+                            margin-bottom: 15px;
+                        }
+
+                        .list-group {
+                            max-height: 276px;
+                            overflow-y: scroll;
+                            margin-bottom: 0;
+
+                            .list-group-item {
+                                cursor: pointer;
+                                border: none;
+
+                                &:not(.active) {
+                                    &:hover {
+                                    background: #ddd;
+                                    }
+                                }
+                            }
+                        }
+
+                        .bootstrap-datetimepicker-widget {
+                            z-index: 9999 !important; // force date picker to display on top of the dropdown
+                            width: 38em; // maintain date and time side-by-side
+                            @media (max-width: 768px) {
+                                width: 19em !important; // time below date for 'smaller' screens
+                            }
+                        }
+                    }
+
+                    .filter-dropdown-toolbar { //dropdown-menu buttons
+                        display: table;
+                        width: 100%;
+                        border-top: 1px solid #ddd;
+
+                        .button {
+                            display: table-cell;
+                            width: 50%;
+                            vertical-align: middle;
+                            cursor: pointer;
+                            text-align: center;
+                            height: 40px;
+                            color: #999;
+                            font-weight: bold;
+                            font-size: 16px;
+
+                            &.apply {
+                                color: #3a7ebd;
+                                border-right: 1px solid #ddd;
+                            }
+
+                            &.clear {
+                                color: #555;
+                                border-left: 1px solid #ddd;
+                            }
+
+                            &:hover {
+                                background: #ddd;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

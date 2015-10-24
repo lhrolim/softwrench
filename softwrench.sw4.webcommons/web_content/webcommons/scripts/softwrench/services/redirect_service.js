@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService, applicationService, alertService) {
+app.factory('redirectService', function ($http, $rootScope, $log, $q,contextService, fixHeaderService, restService, applicationService, alertService) {
 
     
 
@@ -33,13 +33,13 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 redirectUrl = url(controller + "/" + action + "?" + $.param(parameters));
                 var w = window.open(redirectUrl);
                 w.moveTo(0, 0);
-                return;
+                return $q.when();
             }
 
             redirectUrl = restService.getActionUrl(controller, action, parameters);
 
             contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
-            $http.get(redirectUrl).success(
+            return $http.get(redirectUrl).success(
                 function (data) {
                     if (data.type != "BlankApplicationResponse") {
                         $rootScope.$broadcast("sw_redirectactionsuccess", data);

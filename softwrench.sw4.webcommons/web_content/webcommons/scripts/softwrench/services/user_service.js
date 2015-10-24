@@ -34,7 +34,7 @@
                 return user.username;
             }
             else if (propertyExpression.equalsAny("@personid","@username")) {
-                return user.maximoPersonId;
+                return user.maximoPersonId == null ? user.username : user.maximoPersonId;
             }
             //TODO: finish this;
             return propertyExpression;

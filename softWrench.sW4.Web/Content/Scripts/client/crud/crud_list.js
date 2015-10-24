@@ -9,7 +9,7 @@ app.directive('advancedFilterToogle', function (contextService) {
 });
 
 
-app.directive('crudList', function (contextService) {
+app.directive('crudList', ["contextService", "$timeout", function (contextService, $timeout) {
     return {
         restrict: 'E',
         replace: true,
@@ -27,12 +27,18 @@ app.directive('crudList', function (contextService) {
             panelid: "@"
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
-            formatService, fixHeaderService, alertService,
-            searchService, tabsService,
-            fieldService, commandService, i18NService,
-            validationService, submitService, redirectService,
-            associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
+        controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
+            "formatService", "fixHeaderService", "alertService",
+            "searchService", "tabsService",
+            "fieldService", "commandService", "i18NService",
+            "validationService", "submitService", "redirectService",
+            "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
+            function ($scope, $http, $rootScope, $filter, $injector, $log,
+                formatService, fixHeaderService, alertService,
+                searchService, tabsService,
+                fieldService, commandService, i18NService,
+                validationService, submitService, redirectService,
+                associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
 
             $scope.$name = 'crudlist';
 
@@ -390,45 +396,6 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.toggleSelectAll = function (checked) {
-                $.each($scope.datamap, function (key, value) {
-                    value.fields["_#selected"] = checked;
-                });
-            };
-
-            $scope.selectOperator = function (columnName, operator) {
-                var searchOperator = $scope.searchOperator;
-                var searchData = $scope.searchData;
-
-                searchOperator[columnName] = operator;
-
-                if (operator.id == "") {
-                    searchData[columnName] = '';
-                    $scope.selectPage(1);
-                } else if (searchData[columnName] != null && searchData[columnName] != '') {
-                    $scope.selectPage(1);
-                } else if (operator.id == "BLANK") {
-                    searchData[columnName] = '';
-                    $scope.selectPage(1);
-                }
-            };
-
-            $scope.filterSearch = function (columnName, event) {
-
-                if ($scope.searchOperator[columnName] == null || $scope.searchOperator[columnName].symbol == "") {
-                    $scope.searchOperator[columnName] = searchService.defaultSearchOperation();
-                }
-
-                var searchString = $scope.searchData[columnName];
-                if (searchString == "" || searchString == null) {
-                    $scope.searchOperator[columnName] = searchService.getSearchOperationById("BLANK");
-                    $scope.searchData[columnName] = " ";
-                }
-                $scope.selectPage(1);
-
-            };
-
-
 
             $scope.sort = function (column) {
                 if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
@@ -455,6 +422,9 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.fixTableTop($(".fixedtable"));
             };
 
+            $scope.filterApplied = function() {
+                $scope.selectPage(1);
+            };
 
             function initController() {
                 $injector.invoke(BaseController, this, {
@@ -491,10 +461,10 @@ app.directive('crudList', function (contextService) {
             //by the end of the controller, so that all the scope functions are already declared
             initController();
 
-        },
+        }],
 
         link: function (scope, element, attrs) {
-            scope.isDashboard = function (element, panelid) {
+            scope.isDashboard = function (el, panelid) {
                 if (panelid != null) {
                     return "width: 100%;";
                 } else {
@@ -503,5 +473,4 @@ app.directive('crudList', function (contextService) {
             }
         }
     };
-});
-
+}]);

@@ -2,9 +2,14 @@
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.controltechnologysolutions.com/metadata"
 	xmlns:tns="http://www.controltechnologysolutions.com/metadata"
-	elementFormDefault="qualified">
+	elementFormDefault="qualified"
+	xmlns:pref="http://www.controltechnologysolutions.com/menumetadata"
+	xmlns:f="http://www.controltechnologysolutions.com/filters">
 
 
+  <import schemaLocation="filters.xsd"
+		namespace="http://www.controltechnologysolutions.com/filters"></import>
+  
   <element name="metadata">
     <complexType>
       <choice minOccurs="0" maxOccurs="unbounded">
@@ -15,7 +20,8 @@
 					maxOccurs="1" minOccurs="1">
         </element>
         <element name="templates" type="tns:TemplatesType"></element>
-        <element name="commandbars" type="tns:CommandsDeclarationsType"></element>
+        <element name="commandbars" type="tns:CommandsDeclarationsType">
+        </element>
       </choice>
     </complexType>
   </element>
@@ -25,7 +31,8 @@
   <complexType name="Entities">
     <choice minOccurs="0" maxOccurs="unbounded">
       <element name="queries" type="tns:queriesType" minOccurs="0"
-				maxOccurs="1"></element>
+				maxOccurs="1">
+      </element>
       <element name="entity" type="tns:Entity" maxOccurs="unbounded"
 				minOccurs="1">
       </element>
@@ -35,7 +42,8 @@
   <complexType name="CommandsDeclarationsType">
     <choice minOccurs="0" maxOccurs="unbounded">
       <element name="commandgroup" type="tns:commandsComplexType"
-				minOccurs="0" maxOccurs="unbounded"></element>
+				minOccurs="0" maxOccurs="unbounded">
+      </element>
     </choice>
   </complexType>
 
@@ -53,7 +61,8 @@
   <complexType name="Applications">
     <sequence>
       <element name="application" type="tns:Application" maxOccurs="unbounded"
-				minOccurs="1"></element>
+				minOccurs="1">
+      </element>
     </sequence>
   </complexType>
 
@@ -66,7 +75,8 @@
 							minOccurs="1">
             </element>
           </sequence>
-          <attribute name="excludeundeclared" type="boolean"></attribute>
+          <attribute name="excludeundeclared" type="boolean">
+          </attribute>
         </complexType>
       </element>
       <element name="relationships" maxOccurs="1" minOccurs="0">
@@ -76,7 +86,8 @@
 							maxOccurs="unbounded" minOccurs="1">
             </element>
           </sequence>
-          <attribute name="excludeundeclared" type="boolean"></attribute>
+          <attribute name="excludeundeclared" type="boolean">
+          </attribute>
         </complexType>
       </element>
       <element name="connectorParameters" maxOccurs="1" minOccurs="0">
@@ -86,7 +97,8 @@
 							maxOccurs="unbounded" minOccurs="1">
             </element>
           </sequence>
-          <attribute name="excludeundeclared" type="boolean"></attribute>
+          <attribute name="excludeundeclared" type="boolean">
+          </attribute>
         </complexType>
       </element>
     </sequence>
@@ -96,10 +108,10 @@
       <annotation>
         <documentation>
           this id is the one which the user uses to refer to
-          the entity,
-          therefore it would be seen on the screens, as opposite
-          to the
-          idattribute which stands only for the database pk
+          the entity, therefore it would be seen on the
+          screens, as opposite
+          to the idattribute which stands
+          only for the database pk
         </documentation>
       </annotation>
 
@@ -117,21 +129,24 @@
       <annotation>
         <documentation>
           a query will be executed when a declared application
-          asks for this
-          attribute.
+          asks for this attribute.
 
           Remarks:
 
           1) use !@ chars to make framework
-          replace the correct current entity
-          name, considering join contexts
+          replace the
+          correct current entity name, considering join
+          contexts
 
-          2) use ref:xxx to refer to a declared global query named xxx
+          2)
+          use ref:xxx to refer to a declared global query
+          named xxx
 
           3) use
-          @xxx.yyy to refer to a injectable service xxx and method yyy
-          that
-          should return the query at runtime
+          @xxx.yyy to refer to a injectable service xxx
+          and method yyy that
+          should return the query at
+          runtime
         </documentation>
       </annotation>
     </attribute>
@@ -146,17 +161,27 @@
     <attribute name="to" type="string"></attribute>
     <attribute name="collection" type="boolean" default="false"></attribute>
     <attribute name="qualifier" type="string" />
+    <attribute name="cacheable" type="boolean" >
+      <annotation>
+        <documentation>
+            if true, this will instruct the framework to cache the complete list of elements to be later retrieved.
+            
+            This should be used only on maximo config entries, which are not subject to constant change, such as srstatus, wostatus, siteids, etc
+        </documentation>
+      </annotation>
+    </attribute>
     <attribute name="reverselookupattribute" type="string">
       <annotation>
         <documentation>
           if this attribute is filled specifies that this is a
-          reverse
-          relationship, and that this attribute should be used as the
-          association value, instead of the primary attribute.
-          the primary
-          relationship would still be used to set the initial value
-          of the
-          main entity
+          reverse relationship, and that this attribute should
+          be used as the
+          association value, instead of the
+          primary attribute. the primary
+          relationship would
+          still be used to set the initial value of the
+          main
+          entity
         </documentation>
       </annotation>
     </attribute>
@@ -164,10 +189,10 @@
       <annotation>
         <documentation>
           If the association doesn´t contain a primary
-          attribute this should be
-          marked explicitely as true. 95% of the
-          relationships contains
-          primary attributes, so it´s good to have a
+          attribute this should be marked explicitely as true.
+          95% of the
+          relationships contains primary
+          attributes, so it´s good to have a
           validation
         </documentation>
       </annotation>
@@ -184,14 +209,14 @@
     <attribute name="allowsnull" type="boolean">
       <annotation>
         <documentation>
-          If true, then a is null condition will be appended to
-          the query. ex:
-          (xxx.to = yyy)
+          If true, then a is null condition will be appended
+          to
+          the query. ex: (xxx.to = yyy)
 
           would become
 
-          (xxx.to is null or xxx.to =
-          yyy)
+          (xxx.to is null or xxx.to
+          = yyy)
         </documentation>
       </annotation>
     </attribute>
@@ -230,12 +255,14 @@
         </complexType>
       </element>
       <element name="components" type="tns:displayablesType"
-				minOccurs="0" maxOccurs="1"></element>
+				minOccurs="0" maxOccurs="1">
+      </element>
     </choice>
     <attribute name="name" type="string" use="required"></attribute>
     <attribute name="title" type="string" use="required"></attribute>
     <attribute name="audit" type="boolean" use="optional"
-			default="false"></attribute>
+			default="false">
+    </attribute>
     <attribute name="entity" type="string" use="required"></attribute>
     <attribute name="id" type="string"></attribute>
     <attribute name="service" type="string"></attribute>
@@ -296,7 +323,9 @@
 						minOccurs="0" maxOccurs="unbounded">
           </element>
 
-          <element name="filters" type="tns:FiltersDeclarationType" maxOccurs="1" minOccurs="0"></element>
+          <element name="filters" type="tns:FiltersDeclarationType"
+						maxOccurs="1" minOccurs="0">
+          </element>
         </choice>
         <attribute name="platform" type="string" use="optional">
         </attribute>
@@ -320,9 +349,10 @@
 					default="false">
           <annotation>
             <documentation>
-              If true, it means that we should disconsider any
-              schema declared
-              with the same name on the templates file and use
+              If true, it means that we should disconsider
+              any
+              schema declared with the same name on
+              the templates file and use
               only this schema
               declaration.
             </documentation>
@@ -334,67 +364,33 @@
   </complexType>
 
   <complexType name="FiltersDeclarationType">
-    <annotation>
-      <documentation>
-        This should be used only for list schemas, since it would make no sense to filter a detail schema.
-        A runtime exception should be thrown
-      </documentation>
-    </annotation>
-    
-    <sequence>
-      <element name="filter" type="tns:FilterType"
-				maxOccurs="unbounded" minOccurs="1">
-      </element>
-    </sequence>
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="optionfilter" type="f:OptionFilterType" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="booleanfilter" type="f:BoolFilterType" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="datefilter" type="f:DateFilterType" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="numericfilter" type="f:NumberFilterType" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="filter" type="f:BaseFilterType" minOccurs="0" maxOccurs="unbounded"></element>
+    </choice>
     <attribute name="removeundeclared" type="boolean"></attribute>
   </complexType>
 
-  <complexType name="FilterType">
-
-    <attribute name="label" type="string" use="required"></attribute>
-    <attribute name="icon" type="string"></attribute>
-    <attribute name="query" type="string">
-      <annotation>
-        <documentation>
-          A string with '@' or '@user.' values, which would be replaced in turn for the real metadata values, or the user (ex: @siteid = @user.siteid or @status = 'closed' )
-        </documentation>
-      </annotation>
-    </attribute>
-    <attribute name="queryprovider" type="string">
-      <annotation>
-        <documentation>
-          A javascript service on the offline, or a C# service on the online application that will be used to generate the query.
-          That service could return a string with '@' or '@user.' values, which would be replaced in turn for the real metadata values, or the user (ex: @siteid = @user.siteid)
-        </documentation>
-      </annotation>
-      
-    </attribute>
-    <attribute name="position" type="string"></attribute>
-    <attribute name="platform" type="string">
-      <annotation>
-        <documentation>
-          Optional filter to specify on which platform (web/mobile) this filter belongs to. If none provided, will consider the same as the schema. 
-          It can´t have a different platform from the one declared on the schema
-        </documentation>
-      </annotation>
-      
-    </attribute>
-  </complexType>
 
   <complexType name="CustomizationType">
     <annotation>
       <documentation>
         Used for modifying the base template on a given
-        position, adding or
-        removing fields for a customer. Ex: customer xxx
-        wants to use
-        workorder template, modifying just a field of a schema.
-        Then, he would need to redeclare the schema with the same key and a
-        customization on it with the fields (or empty to replace)
+        position, adding or removing fields for a customer. Ex:
+        customer xxx
+        wants to use workorder template, modifying
+        just a field of a schema.
+        Then, he would need to
+        redeclare the schema with the same key and a
+        customization on it with the fields (or empty to
+        replace)
 
         One single
-        redeclared schema could contain several customizations in
-        place.
+        redeclared schema could contain several
+        customizations in place.
       </documentation>
     </annotation>
 
@@ -423,11 +419,14 @@
           Indicates where to insert a this customization.
 
           xxx
-          --> replaces element with id xxx (attribute or target) with the
-          customization. If the customization body is empty, then removes the
-          element
-          +xxx --> inserts the customization after the element xxx.
-          -xxx --> inserts the customization before the element xxx
+          --> replaces element with id xxx (attribute or
+          target) with the
+          customization. If the customization
+          body is empty, then removes the
+          element +xxx -->
+          inserts the customization after the element xxx.
+          -xxx --> inserts the customization before the
+          element xxx
 
           In any
           case, if xxx is not found throw an exception
@@ -471,7 +470,8 @@
         </complexType>
       </element>
       <element name="event" type="tns:inputEvent" minOccurs="0"
-				maxOccurs="unbounded"></element>
+				maxOccurs="unbounded">
+      </element>
     </choice>
 
     <attribute name="attribute" type="string"></attribute>
@@ -523,7 +523,8 @@
   <complexType name="LookupFilters">
     <sequence>
       <element name="lookupFilter" type="tns:LookupFilter"
-				maxOccurs="unbounded" minOccurs="0"></element>
+				maxOccurs="unbounded" minOccurs="0">
+      </element>
     </sequence>
   </complexType>
 
@@ -548,7 +549,8 @@
 				maxOccurs="unbounded">
       </element>
       <element name="details" type="tns:sectionComplexType"
-				maxOccurs="1" minOccurs="0"></element>
+				maxOccurs="1" minOccurs="0">
+      </element>
     </choice>
 
     <attribute name="label" type="string" use="required"></attribute>
@@ -556,8 +558,8 @@
       <annotation>
         <documentation>
           The name of the datamap property to which the
-          selected value will be
-          setted. This will be passed to the server on
+          selected value will be setted. This will be passed
+          to the server on
           the json string
         </documentation>
       </annotation>
@@ -565,23 +567,24 @@
     <attribute name="labelfield" type="string" use="required">
       <annotation>
         <documentation>
-          should be a pattern like x_.y where x_ is the name of
-          the relationship
-          and y is the column to use as the label field.
+          should be a pattern like x_.y where x_ is the name
+          of
+          the relationship and y is the column to use as
+          the label field.
         </documentation>
       </annotation>
     </attribute>
     <attribute name="valuefield" type="string" use="optional">
       <annotation>
         <documentation>
-          The name of the property (column) that should be used
-          for picking up
-          the value of the association entry. That value would
-          then be
-          inserted into the datamap[target] field.
-          If none provided,
-          then the framework would use the primary key of the
-          entity
+          The name of the property (column) that should be
+          used
+          for picking up the value of the association
+          entry. That value would
+          then be inserted into the
+          datamap[target] field. If none provided,
+          then the
+          framework would use the primary key of the entity
           relationship as the value column
         </documentation>
       </annotation>
@@ -602,12 +605,14 @@
           submited back to the server.
           <br />
 
-          If you need to submit such values to server side, use a hidden
-          field
+          If you need to submit such values to server side,
+          use a hidden field
           <br />
 
-          The column is related to the to relationship (so if labelfield =
-          a_.b you could use any value of a_ relationship).
+          The column is related to the to relationship (so if
+          labelfield =
+          a_.b you could use any value of a_
+          relationship).
           <br />
 
         </documentation>
@@ -616,8 +621,10 @@
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="dependantfields" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
-    <attribute name="enableexpression" type="string" use="optional"></attribute>
-    <attribute name="forcedistinctoptions" type="boolean" use="optional"></attribute>
+    <attribute name="enableexpression" type="string" use="optional">
+    </attribute>
+    <attribute name="forcedistinctoptions" type="boolean" use="optional">
+    </attribute>
     <attribute name="requiredexpression" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
     <attribute name="hideDescription" type="boolean"></attribute>
@@ -697,8 +704,8 @@
       <annotation>
         <documentation>
           The schema which will be used for printing the
-          composition. If
-          none is provided, "detail" will be used as a default
+          composition. If none is provided, "detail" will be
+          used as a default
         </documentation>
       </annotation>
     </attribute>
@@ -706,18 +713,16 @@
       <annotation>
         <documentation>
           If absent the composition will be rendered on the
-          same
-          type as the root entity (like input --&gt; input). Use
-          this to
-          fix the composition on input mode even if the
-          root entity is on
+          same type as the root entity (like input --&gt;
+          input). Use this to
+          fix the composition on input
+          mode even if the root entity is on
           output mode
         </documentation>
       </annotation>
     </attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
-    <attribute name="printenabled" type="boolean"></attribute>
   </complexType>
 
   <complexType name="OptionField">
@@ -757,8 +762,10 @@
     <attribute name="extraparameter" type="string" use="optional">
       <annotation>
         <documentation>
-          Use this attribute only if providerattribute is used.
-          This will provide addition input parameter if needed.
+          Use this attribute only if providerattribute is
+          used.
+          This will provide addition input parameter if
+          needed.
         </documentation>
       </annotation>
     </attribute>
@@ -830,7 +837,8 @@
     <attribute name="parameters" type="string" use="optional">
       <annotation>
         <documentation>
-          comma separeted list of parameter names of the $scope
+          comma separeted list of parameter names of the
+          $scope
           variable to pass through the command
         </documentation>
       </annotation>
@@ -839,8 +847,7 @@
       <annotation>
         <documentation>
           extra properties of the command, not related to the
-          invocation per si,
-          like a class for instance
+          invocation per si, like a class for instance
         </documentation>
       </annotation>
     </attribute>
@@ -877,7 +884,8 @@
     <attribute name="position">
       <annotation>
         <documentation>
-          comma separeted list of parameter names of the $scope
+          comma separeted list of parameter names of the
+          $scope
           variable to pass through the command
         </documentation>
       </annotation>
@@ -915,8 +923,8 @@
     <annotation>
       <documentation>
         This element will render a new tab, just like the
-        compositions, but the
-        only difference is that it doesn´t refer to any
+        compositions, but the only difference is that it doesn´t
+        refer to any
         entity.
 
         Inside a tab, any displayable could be inserted.
@@ -936,7 +944,8 @@
 				minOccurs="0">
       </element>
       <element name="section" type="tns:sectionComplexType"
-				minOccurs="0" maxOccurs="unbounded"></element>
+				minOccurs="0" maxOccurs="unbounded">
+      </element>
     </choice>
     <attribute name="id" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
@@ -947,8 +956,7 @@
 
 
   </complexType>
-  <element name="section" type="tns:sectionComplexType">
-  </element>
+  <element name="section" type="tns:sectionComplexType"></element>
   <complexType name="sectionComplexType">
     <sequence>
       <element name="header" type="tns:headerType" minOccurs="0"
@@ -974,7 +982,8 @@
 					minOccurs="0" maxOccurs="unbounded">
         </element>
         <element name="reference" type="tns:referenceComplexType"
-					minOccurs="0" maxOccurs="unbounded"></element>
+					minOccurs="0" maxOccurs="unbounded">
+        </element>
       </choice>
     </sequence>
     <attribute name="id" type="string"></attribute>
@@ -988,8 +997,7 @@
     <attribute name="orientation" default="vertical">
       <annotation>
         <documentation>
-          Indicates whether the section should be
-          rendered
+          Indicates whether the section should be rendered
           horizontally or vertically.
         </documentation>
       </annotation>
@@ -1017,13 +1025,15 @@
 				minOccurs="0" maxOccurs="unbounded">
         <annotation>
           <documentation>
-            This is a command that is complex enough to nned a
+            This is a command that is complex enough to nned
+            a
             custom html to define it
           </documentation>
         </annotation>
       </element>
       <element name="removecommand" type="tns:RemoveCommand"
-				minOccurs="0" maxOccurs="unbounded"></element>
+				minOccurs="0" maxOccurs="unbounded">
+      </element>
     </choice>
     <attribute use="optional" default="false" name="removeundeclared"
 			type="boolean">
@@ -1056,7 +1066,8 @@
       <annotation>
         <documentation>
           The id describes a way to point to a completely
-          different commandbar, other than the one declared in the
+          different commandbar, other than the one declared in
+          the
         </documentation>
       </annotation>
     </attribute>
@@ -1101,14 +1112,12 @@
   <complexType name="baseEvent">
     <annotation>
       <documentation>
-        The base event uses a service and method attribute
-        to
-        define the service.method to call. Extensions of
-        this event type
-        should be used to define type
-        attributes containing enumerations of
-        the applicable
-        event types.
+        The base event uses a service and method attribute to
+        define the service.method to call. Extensions of this
+        event type
+        should be used to define type attributes
+        containing enumerations of
+        the applicable event types.
       </documentation>
     </annotation>
     <attribute name="service" type="string" use="required"></attribute>
@@ -1138,9 +1147,12 @@
             <restriction base="string">
               <enumeration value="onviewdetail"></enumeration>
               <enumeration value="onload"></enumeration>
-              <enumeration value="beforesubmit.onvalidation"></enumeration>
-              <enumeration value="beforesubmit.prevalidation"></enumeration>
-              <enumeration value="beforesubmit.postvalidation"></enumeration>
+              <enumeration value="beforesubmit.onvalidation">
+              </enumeration>
+              <enumeration value="beforesubmit.prevalidation">
+              </enumeration>
+              <enumeration value="beforesubmit.postvalidation">
+              </enumeration>
             </restriction>
           </simpleType>
         </attribute>
@@ -1151,14 +1163,16 @@
   <complexType name="queriesType">
     <sequence>
       <element name="query" type="tns:Parameter" minOccurs="1"
-				maxOccurs="unbounded"></element>
+				maxOccurs="unbounded">
+      </element>
     </sequence>
   </complexType>
 
   <complexType name="displayablesType">
     <sequence>
       <element name="componentdisplayable" type="tns:DisplayableComponentType"
-				minOccurs="1" maxOccurs="unbounded"></element>
+				minOccurs="1" maxOccurs="unbounded">
+      </element>
     </sequence>
   </complexType>
 
@@ -1213,8 +1227,8 @@
           command
           C1 * &gt;C1--&gt; place this command right to the
           command C1
-          * &amp;lt;C1 --&gt; place this command left
-          to the command C1
+          * &amp;lt;C1 --&gt; place this command
+          left to the command C1
 
           If none
           provided, the command will be placed at the
@@ -1223,8 +1237,8 @@
           Note,
           inside a &quot;commands&quot; declaration the
           order should be set
-          declaratively, by the order of the
-          children
+          declaratively, by the order of
+          the children
 
 
 
@@ -1251,18 +1265,18 @@
         particular
         application.
 
-        If the role is not defined, a default
-        role will
-        be generated using the pattern application.notifications.
+        If the role is not defined, a default role
+        will be
+        generated using the pattern application.notifications.
 
         If the
-        label is not defined, the application's
-        title will be used in its
+        label is not defined, the application's title
+        will be used in its
         place.
 
-        The targetsschema defines the schema that the user will be
-        navigated
-        to upon clicking on the notification link.
+        The targetsschema defines the schema that the user will
+        be
+        navigated to upon clicking on the notification link.
       </documentation>
     </annotation>
     <choice minOccurs="0" maxOccurs="1">
@@ -1285,7 +1299,8 @@
               <complexType>
                 <choice minOccurs="0" maxOccurs="1">
                   <element name="extraAttribute" minOccurs="1" maxOccurs="unbounded"
-										type="tns:NotificationAttributeType"></element>
+										type="tns:NotificationAttributeType">
+                  </element>
                 </choice>
               </complexType>
             </element>
@@ -1310,18 +1325,22 @@
   <complexType name="NotificationsDeclarationsType">
     <choice minOccurs="1" maxOccurs="1">
       <element name="notification" type="tns:Notification"
-				minOccurs="0" maxOccurs="unbounded"></element>
+				minOccurs="0" maxOccurs="unbounded">
+      </element>
     </choice>
   </complexType>
 
   <complexType name="NotificationParentApplicationType">
     <all>
       <element name="application" minOccurs="1" maxOccurs="1"
-				type="tns:NotificationAttributeType"></element>
+				type="tns:NotificationAttributeType">
+      </element>
       <element name="parentuid" minOccurs="1" maxOccurs="1"
-				type="tns:NotificationAttributeType"></element>
+				type="tns:NotificationAttributeType">
+      </element>
       <element name="parentid" minOccurs="1" maxOccurs="1"
-				type="tns:NotificationAttributeType"></element>
+				type="tns:NotificationAttributeType">
+      </element>
     </all>
   </complexType>
 

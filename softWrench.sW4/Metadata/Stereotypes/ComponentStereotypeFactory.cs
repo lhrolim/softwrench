@@ -9,6 +9,10 @@ namespace softWrench.sW4.Metadata.Stereotypes {
     class ComponentStereotypeFactory {
 
         private static IStereotype LookupStereotype(string stereotype) {
+            if (stereotype == null) {
+                return new BlankStereotype();
+            }
+
             if (stereotype.ToLower() == "email") {
                 return EmailComponentStereotype.GetInstance();
             }

@@ -2,11 +2,7 @@
 (function () {
     "use strict";
 
-    //#region Service registration
 
-    angular.module("sw_layout").factory("schemaCacheService", ["$log","contextService", schemaCacheService]);
-
-    //#endregion
 
     function schemaCacheService($log,contextService) {
 
@@ -100,6 +96,10 @@
         //#endregion
     }
 
+    //#region Service registration
 
+    angular.module("sw_layout").factory("schemaCacheService", ["$log", "contextService", schemaCacheService]);
+
+    //#endregion
 
 })();

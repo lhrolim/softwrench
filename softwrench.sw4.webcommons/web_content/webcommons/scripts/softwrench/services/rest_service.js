@@ -1,4 +1,4 @@
-﻿(function (modules) {
+(function (modules) {
     "use strict";
 
 modules.webcommons.factory('restService', ["$http", "$log", "contextService", function ($http, $log, contextService) {
@@ -10,9 +10,9 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
             var params = parameters == null ? {} : parameters;
             var serverUrl = contextService.getFromContext("serverurl");
             if (serverUrl) {
-                return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params, true);
+                return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params, false);
             }
-            return url("/api/generic/" + controller + "/" + action + "?" + $.param(params, true));
+            return url("/api/generic/" + controller + "/" + action + "?" + $.param(params, false));
         },
         /**
          * Deprecated: use postPromise instead

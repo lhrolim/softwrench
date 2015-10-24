@@ -26,6 +26,7 @@ using softwrench.sw4.Shared2.Metadata.Modules;
 using softWrench.sW4.Util;
 using cts.commons.Util;
 using System.Net;
+using softWrench.sW4.Data.Entities;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -161,6 +162,10 @@ namespace softWrench.sW4.Metadata {
                 LoggingUtil.DefaultLog.DebugFormat("finished registering metadata {0}", app.ApplicationName);
             }
             LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}", LoggingUtil.MsDelta(watch));
+        }
+
+        public static IEnumerable<EntityMetadata> Entities() {
+            return _metadataXmlInitializer.Entities;
         }
 
 
@@ -442,6 +447,11 @@ namespace softWrench.sW4.Metadata {
             }
             return application.Role;
 
+        }
+
+        public static EntityMetadata EntityByApplication(string applicationName) {
+            var application = Application(applicationName);
+            return Entity(application.Entity);
         }
     }
 }

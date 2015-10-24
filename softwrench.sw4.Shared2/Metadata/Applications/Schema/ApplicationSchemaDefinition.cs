@@ -12,6 +12,9 @@ using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
+using softwrench.sw4.Shared2.Metadata.Applications.Filter;
+using softwrench.sw4.Shared2.Metadata.Exception;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -40,6 +43,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 
+        /// <summary>
+        /// let´s wait to resolve the filters after all customizations, hirarchy merges have been applied
+        /// </summary>
+        /// <returns></returns>
+        public delegate SchemaFilters LazySchemaFilterResolver(ApplicationSchemaDefinition definition);
+
+        [JsonIgnore]
+        public ApplicationSchemaDefinition.LazySchemaFilterResolver SchemaFilterResolver;
+
         [JsonIgnore]
         public ApplicationSchemaDefinition.LazyFkResolverDelegate FkLazyFieldsResolver;
 
@@ -47,9 +59,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public LazyComponentDisplayableResolver ComponentDisplayableResolver;
 
 
-        private IList<Int32> _tabs;
-        private IList<Int32> _nonInlineCompositions;
-        private IList<Int32> _inlineCompositions;
+        private IList<int> _tabs;
+        private IList<int> _nonInlineCompositions;
+        private IList<int> _inlineCompositions;
 
         public string SchemaId {
             get; set;
@@ -120,11 +132,21 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
-        private Boolean _lazyFksResolved;
+        private bool _lazyFksResolved;
 
-        private Boolean _referencesResolved;
+        private bool _filtersResolved;
 
-        private Boolean _redeclaringSchema;
+        private bool _referencesResolved;
+
+        private readonly bool _redeclaringSchema;
+
+        [JsonIgnore]
+        public SchemaFilters DeclaredFilters {
+            get; set;
+        }
+
+        private SchemaFilters _schemaFilters;
+
 
         public bool RedeclaringSchema {
             get {
@@ -143,7 +165,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ApplicationSchemaDefinition(
             String applicationName, string title, string schemaId, Boolean redeclaringSchema, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
-            List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
+            List<IApplicationDisplayable> displayables, SchemaFilters declaredFilters, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
             string idFieldName, string userIdFieldName, string unionSchema, IEnumerable<ApplicationEvent> events = null) {
             CompositionSchemas = new Dictionary<string, ApplicationCompositionSchema>();
@@ -172,6 +194,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
             }
+
+            //to avoid eventual null pointers
+            DeclaredFilters = declaredFilters ?? new SchemaFilters(new LinkedList<BaseMetadataFilter>());
         }
 
 
@@ -199,12 +224,39 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
+        public IEnumerable<ApplicationFieldDefinition> NonHiddenFields {
+            get {
+                return Fields.Where(f => !f.IsHidden);
+            }
+        }
+
         [JsonIgnore]
         public virtual IList<ApplicationCompositionDefinition> Compositions {
             get {
                 return GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition));
             }
         }
+
+
+        public SchemaFilters SchemaFilters {
+            get {
+                if (Stereotype != SchemaStereotype.List){
+                    //only resolve it for list schemas
+                    _filtersResolved = true;
+                    return _schemaFilters;
+                }
+
+                if (SchemaFilterResolver != null && !_filtersResolved) {
+                    _schemaFilters = SchemaFilterResolver(this);
+                    _filtersResolved = true;
+                }
+                return _schemaFilters;
+            }
+            set {
+                _schemaFilters = value;
+            }
+        }
+
 
         public List<IApplicationDisplayable> Displayables {
             get {

@@ -15,7 +15,7 @@ namespace softWrench.sW4.Util {
             if (type == "varchar" || type == "string") {
                 return stValue;
             }
-            if (type == "smallint" || type == "int" || type == "integer") {
+            if (type.EqualsAny("smallint","int","integer")) {
                 if (stValue.EqualsAny("True", "False")) {
                     return Convert.ToBoolean(stValue);
                 }
