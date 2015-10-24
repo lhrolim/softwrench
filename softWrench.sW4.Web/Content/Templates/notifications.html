@@ -1,5 +1,5 @@
 ﻿<div class="messages">
-    <div ng-repeat="message in messages" ng-class="getMessageClass(message.type)" ng-show="message.display" class="message clearfix">
+    <div ng-repeat="message in getMessages()" ng-class="getMessageClass(message.type)" ng-show="message.display" class="message clearfix">
         <div ng-click="removeMessage(message)" class="close">
             <i class="fa fa-times"></i>
         </div>

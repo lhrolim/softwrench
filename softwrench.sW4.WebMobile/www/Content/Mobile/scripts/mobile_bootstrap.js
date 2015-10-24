@@ -36,11 +36,11 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
 //#region App.run
 .run(["$ionicPlatform", "swdbDAO", "$log", "securityService",
-    "contextService", "menuModelService", "metadataModelService", "routeService",
+    "localStorageService", "menuModelService", "metadataModelService", "routeService",
     "crudContextService", "synchronizationNotificationService",
     "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope", "$q",
     "$cordovaSplashscreen", "$timeout",
-    function ($ionicPlatform, swdbDAO, $log, securityService, contextService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
+    function ($ionicPlatform, swdbDAO, $log, securityService, localStorageService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
         entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout) {
 
         function initContext() {
@@ -112,7 +112,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     return;
                 }
                 // has serverurl -> do nothing
-                var serverurl = contextService.get("serverurl");
+                var serverurl = localStorageService.get("settings:serverurl");
                 if (!!serverurl) {
                     return;
                 }

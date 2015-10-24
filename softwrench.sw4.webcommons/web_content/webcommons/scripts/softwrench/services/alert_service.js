@@ -1,35 +1,7 @@
-﻿var app = angular.module('sw_layout');
+﻿var app = angular.module('webcommons_services');
 
-app.factory('alertService', function ($rootScope, $timeout, i18NService, $log) {
+app.factory('alertService', function ($rootScope, $timeout, i18NService, notificationViewModel, $log) {
     var log = $log.getInstance('sw4.alertService');
-
-    /// <summary>
-    /// This internal method will process the input and create the user notification message.
-    /// </summary>
-    function createNotification(type, title, body, exceptionType, exceptionOutline, exceptionStack) {
-
-        //build the message object
-        var message = {};
-        message.type = type;
-        message.title = title;
-        message.body = body;
-
-        //if any exception info is present, create the exception object
-        if (exceptionType || exceptionOutline || exceptionStack) {
-            var exception = {};
-            exception.type = exceptionType;
-            exception.outline = exceptionOutline;
-            exception.stack = exceptionStack;
-            message.exception = exception;
-        }
-
-        //broad the notification event
-        if (message.body) {
-
-            //TODO: is this the best way to call the notifications?
-            $rootScope.$broadcast('sw_notificationmessage', message);
-        }
-    }
 
     return {
         confirmMsg: function(msg, callbackFunction, cancelcallback) {
@@ -91,16 +63,8 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService, $log) {
             });
         },
 
-        /// <summary>
-        /// Use this method to display user notifications.
-        /// </summary>
-        /// <param name="body">The user message</param>
-        /// <param name="title">Optional, Override the default notification title</param>
-        /// <param name="exceptionType">Optional, if present, will display the more info button/link</param>
-        /// <param name="exceptionOutline">Optional, if present, will display the more info button/link</param>
-        /// <param name="exceptionStack">Optional, if present, will display the more info button/link</param>
         notifymessage: function (type, body, title, exceptionType, exceptionOutline, exceptionStack) {
-            createNotification(type, null, body, exceptionType, exceptionOutline, exceptionStack);
+            notificationViewModel.createNotification(type, null, body, exceptionType, exceptionOutline, exceptionStack);
         },
 
         /// <summary>
@@ -140,7 +104,7 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService, $log) {
                 exception.outline = data.outlineInformation;
                 exception.stack = data.errorStack || (data.fullStack || data.stackTrace);
 
-                createNotification('error', null, message, exception.type, exception.outline, exception.stack);
+                notificationViewModel.createNotification('error', null, message, exception.type, exception.outline, exception.stack);
             }
         }
     };

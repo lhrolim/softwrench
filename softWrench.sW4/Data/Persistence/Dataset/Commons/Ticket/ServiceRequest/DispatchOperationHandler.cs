@@ -44,6 +44,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             woCrudData.SetAttribute("classstructureid", srCrudData.GetStringAttribute("classstructureid"));
             woCrudData.SetAttribute("status", "APPR");
             woCrudData.SetAttribute("statusdate", DateTime.Now.FromServerToRightKind());
+            woCrudData.SetAttribute("reportdate", DateTime.Now.FromServerToRightKind());
             woCrudData.SetAttribute("woclass", "WORKORDER");
             woCrudData.SetAttribute("origrecordid", srCrudData.Id);
             woCrudData.SetAttribute("origrecordclass", "SR");
@@ -51,11 +52,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             woCrudData.SetAttribute("orgid", srCrudData.GetStringAttribute("orgid"));
 
             var result = (TargetResult)Maximoengine.Create(woCrudData);
+            var id = result.Id ?? result.UserId;
 
             //customization for deltadental here
             var label = ApplicationConfiguration.ClientName.EqualsIc("deltadental") ? "dispatched" : "created";
 
-            result.SuccessMessage = "Work Order {0} sucessfully {1}".FormatInvariant(result.Id,label);
+            result.SuccessMessage = "Work Order {0} sucessfully {1}.".FormatInvariant(id, label);
 
             return result;
         }

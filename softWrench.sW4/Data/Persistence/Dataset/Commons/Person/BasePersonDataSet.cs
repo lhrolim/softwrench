@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
@@ -49,11 +49,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
             var swusers = UserManager.GetUsersByUsername(usernames);
             foreach (var record in result.ResultObject) {
-                var swuser = swusers.Where(user => user.UserName.ToString().EqualsIc(record.GetAttribute("personid").ToString()));
-                if (!swuser.Any()) {
+                var swuser = swusers.SingleOrDefault(user => user.UserName.EqualsIc(record.GetAttribute("personid").ToString()));
+                if (swuser == null) {
                     continue;
                 }
-                record.Attributes.Add("#isactive", swuser.First().IsActive);
+                record.Attributes.Add("#isactive", swuser.IsActive);
             }
             return result;
         }

@@ -1,7 +1,7 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('associationDataSynchronizationService', ["$http", "$log", "$q", "swdbDAO", "restService", "rowstampService", "offlineEntities", function ($http, $log, $q, swdbDAO, restService, rowstampService, offlineEntities) {
+    mobileServices.factory('associationDataSynchronizationService', ["$http", "$log", "$q", "swdbDAO", "offlineRestService", "rowstampService", "offlineEntities", function ($http, $log, $q, swdbDAO, restService, rowstampService, offlineEntities) {
     return {
 
         /// <summary>
@@ -18,7 +18,7 @@
                 params.applicationToFetch = applicationToFetch;
             }
             return rowstampService.generateAssociationRowstampMap(applicationToFetch).then(function (rowstampMap) {
-                return restService.postPromise("Mobile", methodToUse, params, rowstampMap);
+                return restService.post("Mobile", methodToUse, params, rowstampMap);
             }).then(function (result) {
                 var associationData = result.data.associationData;
                 if (result.data.isEmpty) {
