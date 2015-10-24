@@ -91,13 +91,13 @@
 
                     }
 
-                    $scope.$on("sw_autocompleteselected", function (event, item, filterAttribute) {
+                    $scope.$on("sw_autocompleteselected", function (event,jqueryEvent, item, filterAttribute) {
                         if (filterAttribute === $scope.filter.attribute) {
+                            $(jqueryEvent.target).val("");
                             if ($scope.filteroptions.some(function (el) {
                                 return el.value === item.value;})) {
                                 return;
                             }
-
                             $scope.filteroptions.push(item);
                             filterModelService.updateRecentlyUsed($scope.schema, filterAttribute, item);
                             $scope.$digest();

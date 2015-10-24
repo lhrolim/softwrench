@@ -103,7 +103,8 @@
                             scope.$digest();
                         } else {
                             //going down
-                            scope.$broadcast("sw_autocompleteselected", datum, dataTarget);
+                            scope.$broadcast("sw_autocompleteselected",e, datum, dataTarget);
+                            
                         }
                         
                     });
