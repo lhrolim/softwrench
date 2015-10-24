@@ -17,13 +17,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
         }
 
         private EntityAttribute FindUserIdAttribute(IEnumerable<EntityAttribute> attributes, string userIdAttribute, string idAttribute) {
-            var entityAttributes = attributes as EntityAttribute[] ?? attributes.ToArray();
-            var userId = entityAttributes.FirstOrDefault(a => a.Name.EqualsIc(userIdAttribute));
-            if (userId == null) {
-                //fallback to the same value as the userId
-                return FindIdAttribute(entityAttributes, idAttribute);
-            }
-            return userId;
+            return attributes.FirstWithException(a => a.Name.EqualsIc(userIdAttribute), "User Id attribute {0} not found on entity {1}", userIdAttribute, EntityName);
         }
 
         private readonly ISet<EntityAttribute> _attributes;
