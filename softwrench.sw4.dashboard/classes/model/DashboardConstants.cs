@@ -1,6 +1,5 @@
 ﻿namespace softwrench.sw4.dashboard.classes.model {
-    internal class DashboardConstants
-    {
+    internal class DashboardConstants {
 
         /// <summary>
         /// Allows the creation/removal of other shareable dashboards for the entire organization, plus personal ones
@@ -21,6 +20,11 @@
         /// User generic Property to hold his preferred dashboard
         /// </summary>
         public static string DashBoardsPreferredProperty = "dash_preffereddashboard";
+
+        internal static class PanelTypes {
+            public const string Grid = "dashboardgrid";
+            public const string Graphic = "dashboardgraphic";
+        }
 
     }
 }

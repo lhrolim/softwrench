@@ -629,6 +629,7 @@
     <Content Include="Content\fonts\gstatic-varela-ff.woff" />
     <Content Include="Content\fonts\gstatic-varela-ie9.eot" />
     <Content Include="Content\fonts\gstatic-varela-ie9local.eot" />
+    <Content Include="Content\Scripts\vendor\other\tableau\tableau-2.0.0-min.js" />
     <Content Include="Content\styles\default\application\application.css">
       <DependentUpon>application.scss</DependentUpon>
     </Content>
