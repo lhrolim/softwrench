@@ -1,0 +1,85 @@
+<div ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
+    <input type="checkbox" ng-change="toggleSelectAll(selectAll)" ng-model="selectAll">
+</div>
+<div class="filter-row" hiddenonprint>
+
+    <div class="filter-label"
+         ng-repeat="filter in schema.schemaFilters.filters"
+         filterrowrendered>
+        <div class="filter-label-wrapper js_filter">
+
+
+            <div class="dropdown">
+                <div class="wrap" ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
+                    {{i18N('_grid.filter.placeholder','{0}',[filter.label])}}: <span class="filter-text">{{getFilterText(filter)}}</span>
+                    <i class="fa fa-caret-down dropdown-toggle grid-filter-button"></i>
+                </div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-content">
+                        <ng-switch on="filter.type">
+                            <div ng-switch-when="MetadataDateTimeFilter">
+
+                                <div data-datepicker="true" class="input-group input-group-sm">
+                                    <input type="text" ng-model="searchData[filter.attribute]" class="form-control"
+                                           data-date-time
+                                           data-attach-datepicker-to-parent="true"
+                                           data-show-time="{{!filter.dateOnly}}"
+                                           data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
+                                           data-allow-future="{{filter.allowFuture}}"
+                                           placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}"
+                                           ng-enter="filterSearch(filter.attribute)"
+                                           ng-disabled="advancedfiltermode" />
+                                    <span class="input-group-addon "
+                                          data-calendericon="true"
+                                          rel="tooltip"
+                                          data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+
+
+                            <div ng-switch-when="MetadataOptionFilter">
+                                <filter-multiple-option filter="filter" schema="schema" search-data="searchData" apply-filter="filterBarApplied(true)"/>
+                            </div>
+
+                            <div ng-switch-default>
+                                <div class="input-group">
+                                    <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}" class="form-control"
+                                           ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode" />
+                                </div>
+                            </div>
+
+                        </ng-switch>
+
+                        <ul class="list-group">
+                            <li class="list-group-item"
+                                ng-repeat="operation in searchOperations()" ng-click="selectOperator(filter.attribute,operation)"
+                                ng-show="shouldShowFilter(operation,filter)"
+                                ng-enter="filterSearch(filter.attribute)"
+                                ng-class="{'active' : searchOperator[filter.attribute].id == operation.id}">
+                                {{operation.title}}
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="filter-dropdown-toolbar" ng-init="filterIsActive=false">
+                        <div class="button apply" ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
+                            <i class="fa fa-check"></i>
+                            {{i18N('_grid.filter.apply','Apply')}}
+                        </div>
+                        <div class="button clear" ng-click="filterIsActive=false;clearFilter(filter.attribute)">
+                            <i class="fa fa-remove"></i>
+                            {{i18N('_grid.filter.clear','Clear')}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

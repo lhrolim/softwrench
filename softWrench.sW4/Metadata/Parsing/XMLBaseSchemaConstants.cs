@@ -13,6 +13,7 @@
         public const string BaseDisplayableToolTipAttribute = "tooltip";
         public const string BaseDisplayableHiddenAttribute = "hidden";
         public const string BaseDisplayablePrintEnabledAttribute = "printenabled";
+        public const string BaseDisplayableAttributeAttribute = "attribute";
         public const string BaseDisplayableLabelAttribute = "label";
         public const string BaseDisplayableIdAttribute = "id";
         public const string BaseDisplayableRequiredExpressionAttribute = "requiredexpression";
@@ -22,6 +23,7 @@
 
 
         public const string LabelAttribute = "label";
+        public const string ValueAttribute = "value";
         public const string RoleAttribute = "role";
     }
 }

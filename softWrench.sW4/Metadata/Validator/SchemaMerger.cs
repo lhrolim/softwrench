@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
+using DocumentFormat.OpenXml.Drawing;
 using log4net;
+using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softWrench.sW4.Exceptions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -14,7 +16,7 @@ namespace softWrench.sW4.Metadata.Validator {
     class SchemaMerger {
         private const string NonCustomizableFound = "overriden schemas can only contain customizations, however found {0} wrong displayables ( {1}) for schema {2}";
 
-        private static ILog Log = LogManager.GetLogger(typeof(SchemaMerger));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SchemaMerger));
 
         public static void MergeSchemas(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components) {
 
@@ -37,6 +39,41 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
             DoApplyCustomizations(original, overridenSchema, components, customizations, customizationsActuallyApplied, fieldsThatShouldBeCustomized);
+            ApplyFilterCustomizations(original, overridenSchema);
+        }
+
+        /// <summary>
+        /// For each of the fields, of the overriden schema, if their position is null, add it to the final of the list;
+        /// otherwise, either replace the original field with it´s customized version, or append it, before/after the selected element
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="overridenSchema"></param>
+        private static void ApplyFilterCustomizations(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema) {
+            var overridenFilters = overridenSchema.DeclaredFilters;
+            if (overridenFilters.IsEmpty()) {
+                return;
+            }
+            foreach (var overridenFilter in overridenFilters.Filters) {
+                var position = overridenFilter.Position;
+                var originalFilters = original.SchemaFilters.Filters;
+                if (position == null) {
+                    //just adding a brand new filter redeclared on customized schema
+                    originalFilters.AddLast(overridenFilter);
+                    continue;
+                }
+                var originalNode = originalFilters.Find(overridenFilter);
+                if (originalNode == null) {
+                    continue;
+                }
+                if (position.StartsWith("+")) {
+                    originalFilters.AddAfter(originalNode, overridenFilter);
+                } else if (position.StartsWith("-")) {
+                    originalFilters.AddBefore(originalNode, overridenFilter);
+                } else {
+                    originalFilters.AddBefore(originalNode, overridenFilter);
+                    originalFilters.Remove(originalNode);
+                }
+            }
         }
 
         private static void DoApplyCustomizations(IApplicationDisplayableContainer original,
@@ -132,7 +169,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private static IList<ApplicationSchemaCustomization> GetCustomizations(ApplicationSchemaDefinition overridenSchema) {
             return DisplayableUtil.GetDisplayable<ApplicationSchemaCustomization>(typeof(ApplicationSchemaCustomization), overridenSchema.Displayables);
-        } 
+        }
 
         public static bool IsCustomized(ApplicationSchemaDefinition overridenSchema) {
             return GetCustomizations(overridenSchema).Count > 0;

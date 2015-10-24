@@ -24,7 +24,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationSchemaDefinition(AssociationDataProvider dataProvider, FieldRenderer renderer, FieldFilter filter) {
             DataProvider = dataProvider;
             Renderer = renderer ?? new AssociationFieldRenderer(AssociationFieldRenderer.AssociationRendererType.COMBO.ToString(), null, null, ComponentStereotype.None.ToString());
-            Filter = Filter;
+            Filter = filter;
         }
 
         public Boolean IsLazyLoaded {

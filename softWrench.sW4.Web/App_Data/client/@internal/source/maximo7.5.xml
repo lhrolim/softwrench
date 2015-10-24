@@ -582,7 +582,7 @@
         <relationship to="classstructure">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
         </relationship>

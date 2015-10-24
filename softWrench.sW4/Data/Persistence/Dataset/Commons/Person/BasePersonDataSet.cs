@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;

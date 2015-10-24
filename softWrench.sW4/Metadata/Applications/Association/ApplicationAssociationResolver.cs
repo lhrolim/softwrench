@@ -20,7 +20,7 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
 
-    class ApplicationAssociationResolver : BaseDependableResolver {
+    public class ApplicationAssociationResolver : BaseDependableResolver {
 
 
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
@@ -127,7 +127,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 } else {
                     // Applying 1 will cause the query to order by the first column
                     associationFilter.SearchSort = associationFilter.ProjectionFields.Any()
-                        ? associationFilter.ProjectionFields.FirstOrDefault().Alias
+                        ? associationFilter.ProjectionFields.First().Alias
                         : "1";
                 }
                 associationFilter.SearchAscending = true;
