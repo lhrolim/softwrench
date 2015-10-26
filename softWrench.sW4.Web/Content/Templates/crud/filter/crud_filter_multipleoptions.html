@@ -1,27 +1,24 @@
 <div class="sw-combobox-container">
-    <div class="input-group">
-        <div ng-if="filter.lazy">
-            <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}" />
-            <span class="input-group-addon last" style="cursor: auto">
-                <i class="glyphicon glyphicon-search" style="cursor: auto"></i>
-            </span>
-            <div></div><!--stop addon from moving on hover-->
-        </div>
+    <div ng-if="filter.lazy" class="input-group">
+        <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}" />
+        <span class="input-group-addon last">
+            <i class="fa fa-search"></i>
+        </span>
+        <div></div><!--stop addon from moving on hover-->
     </div>
     <div class="input-group">
         <div ng-if="filteroptions.length > 0">
             <h5 ng-if="filter.lazy">Recently Used</h5>
             <div class="divider" ng-if="filter.lazy" />
-            <span class="select-all" ng-if="filteroptions.length > 1">
+            <div class="select-all" ng-if="filteroptions.length > 1">
                 <input type="checkbox"
                        value="{{option.value}}"
                        ng-model="vm.allSelected"
                        ng-change="toggleSelectAll()"
                        ng-true-value="1" ng-false-value="0">
-                </input>
                 <span class="text">Select All</span>
-                <div class="divider" ng-if="!filter.lazy"/>
-            </span>
+                <div class="divider" ng-if="!filter.lazy"></div>
+            </div>
             <ul>
                 <li ng-repeat="option in filteroptions" class="filter-row">
                     <input type="checkbox"

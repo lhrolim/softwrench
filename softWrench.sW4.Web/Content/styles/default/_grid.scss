@@ -85,6 +85,7 @@
 
                                 .select-all {
                                     padding-left: 5px;
+                                    margin-bottom: 10px;
 
                                     .text {
                                         font-weight: bold;
@@ -100,7 +101,7 @@
                                     li {
                                         padding-bottom: 10px;
 
-                                        .removalbe {
+                                        .removable {
                                             cursor: pointer;
                                         }
                                     }
