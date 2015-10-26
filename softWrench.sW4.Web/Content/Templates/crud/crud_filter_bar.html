@@ -37,9 +37,6 @@
                                     </span>
                                 </div>
                             </div>
-
-
-
                             <div ng-switch-when="MetadataOptionFilter">
                                 <filter-multiple-option filter="filter" schema="schema" search-data="searchData" apply-filter="filterBarApplied(true)"/>
                             </div>
@@ -47,18 +44,16 @@
                             <div ng-switch-default>
                                 <div class="input-group">
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}" class="form-control"
-                                           ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode" />
+                                           ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
                                 </div>
                             </div>
-
                         </ng-switch>
-
                         <ul class="list-group">
                             <li class="list-group-item"
                                 ng-repeat="operation in searchOperations()" ng-click="selectOperator(filter.attribute,operation)"
                                 ng-show="shouldShowFilter(operation,filter)"
                                 ng-enter="filterSearch(filter.attribute)"
-                                ng-class="{'active' : searchOperator[filter.attribute].id == operation.id}">
+                                ng-class="{'active' : searchOperator[filter.attribute].id == operation.id || (searchOperator[filter.attribute].id == null && operation.title == 'Contains')}">
                                 {{operation.title}}
                             </li>
                         </ul>
