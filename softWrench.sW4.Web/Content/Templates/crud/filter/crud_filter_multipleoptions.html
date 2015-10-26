@@ -2,6 +2,10 @@
     <div class="input-group">
         <div ng-if="filter.lazy">
             <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}" />
+            <span class="input-group-addon last" style="cursor: auto">
+                <i class="glyphicon glyphicon-search" style="cursor: auto"></i>
+            </span>
+            <div></div><!--stop addon from moving on hover-->
         </div>
     </div>
     <div class="input-group">

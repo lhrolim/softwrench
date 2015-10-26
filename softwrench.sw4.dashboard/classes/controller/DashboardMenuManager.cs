@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.model;
@@ -19,8 +20,19 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         private readonly UserDashboardManager _userDashboardManager;
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DashboardMenuManager));
+
+        private static readonly ActionMenuItemDefinition ManageDashboardAction = new ActionMenuItemDefinition {
+            Controller = "Dashboard",
+            Action = "Manage",
+            Title = "Dashboard",
+            Tooltip = "Click here to manage your dashboards"
+        };
+
+
         public DashboardMenuManager(UserDashboardManager userDashboardManager) {
             _userDashboardManager = userDashboardManager;
+            Log.Debug("starting log");
         }
 
         public MenuDefinition ModifyMenu(MenuDefinition securedMenu, ISWUser user) {
@@ -31,6 +43,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
             // If the dashboards are not enabled, do not load the dashboards.
             if ("false".Equals(MetadataProvider.GlobalProperty("dashboard.enabled"))) {
+                Log.DebugFormat("dashboard application is turned off returning");
                 return securedMenu;
             }
 
@@ -50,6 +63,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var enumerable = dashboards as Dashboard[] ?? dashboards.ToArray();
             var count = enumerable.Count();
             if (!canCreateDashBoards && (count == 0 || AllPanelsInvisible(enumerable))) {
+                Log.DebugFormat("User {0} cannot create dashboards and there is no visible panel, returning", user.Identity.Name);
                 //either has no dashboard, or has only invisible panels due to roles
                 //this user cannot create any dashboard, and there´s no one shared with him --> do not show the menu.
                 return securedMenu;
@@ -57,6 +71,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
             if (!canCreateDashBoards && count == 1) {
+                Log.DebugFormat("User {0} cannot create dashboards, showing visibile one", user.Identity.Name);
                 // if there´s just one dashboard to display and the user cannot create additionals, 
                 // there´s no need to show a container, since there´s just one available action here.
                 var action = new ActionMenuItemDefinition {
@@ -69,9 +84,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 dashBoardMenu = action;
                 user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
             } else if (canCreateDashBoards && count == 0) {
-                var action = ManageDashboardAction();
+                Log.DebugFormat("User {0} cannot create dashboards and there is no visible panel, returning", user.Identity.Name);
+                var action = ManageDashboardAction;
                 dashBoardMenu = action;
             } else {
+                Log.DebugFormat("Adding user {0} dashboards", user.Identity.Name);
+
                 //TODO: make it selectable
                 user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
                 var container = new MenuContainerDefinition {
@@ -101,6 +119,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                         Title = dashboard.Title,
                         Icon = "fa fa-bar-chart",
                     };
+                    Log.DebugFormat("Adding dashboard {0}", user.Identity.Name);
                     container.AddLeaf(action);
                 }
                 dashBoardMenu = container;
@@ -129,14 +148,6 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return enumerable.All(d => d.Panels.Count == 0 || d.Panels.All(p => !p.Panel.Visible));
         }
 
-        private static ActionMenuItemDefinition ManageDashboardAction() {
-            var action = new ActionMenuItemDefinition {
-                Controller = "Dashboard",
-                Action = "Manage",
-                Title = "Dashboard",
-                Tooltip = "Click here to manage your dashboards"
-            };
-            return action;
-        }
+      
     }
 }
