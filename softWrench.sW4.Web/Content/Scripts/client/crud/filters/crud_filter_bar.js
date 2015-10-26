@@ -43,6 +43,8 @@
                             if (operator.id === "") {
                                 searchData[columnName] = "";
                             } else if (searchData[columnName] != null && searchData[columnName] !== "") {
+                                //if there is a search value, apply on click
+                                this.filterBarApplied();
                                 return;
                             } else if (operator.id === "BLANK") {
                                 searchData[columnName] = "";
