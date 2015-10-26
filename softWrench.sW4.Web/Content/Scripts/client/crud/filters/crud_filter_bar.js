@@ -18,6 +18,8 @@
                 controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService",
                     function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService) {
 
+
+
                         var config = {
                             /** 'don't filter' operator: helper to clear current filter */
                             noopoperator: { id: "", symbol: "", begin: "", end: "", title: "No Filter" }
@@ -149,12 +151,26 @@
                     }],
 
                 link: function (scope, element, attrs) {
+
                     // don't let dropdowns close automatically when clicked inside
-                    $timeout(function () {
+                    //need to register this call for whenever the grid changes
+                    var fn = function () {
                         var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));
                         dropdowns.click(function (event) {
                             event.stopPropagation();
                         });
+                    }
+
+                    $timeout(function () {
+                        fn();
+                    }, 0, false);
+
+
+                    scope.$on('sw_griddatachanged', function () {
+
+                        $timeout(function () {
+                            fn();
+                        }, 0, false);
                     });
                 }
             };
