@@ -30,100 +30,147 @@
     color: black;
 }
 
-.filter-row { // filter detached from grid table
-    .filter-label {
-        display: inline-block;
-        margin: 0 10px;
+.filter-container {
+    .filter-row { // filter detached from grid table
+        .filter-label {
+            display: inline-block;
+            margin: 0 10px;
 
-        &:hover {
-            background: #ddd;
-        }
-
-        .filter-label-wrapper {
-            .filter-text {
-                font-weight: bold;
+            &:hover {
+                background: #ddd;
             }
 
-            .dropdown { // dropdown icon
-                .wrap {
-                    padding: 5px 15px;
-                    cursor: pointer;
-
-                    > i.fa {
-                        color: #767676;
-                    }
+            .filter-label-wrapper {
+                .filter-text {
+                    font-weight: bold;
                 }
 
-                .dropdown-menu { // dropdown-menu
-                    padding-bottom: 0;
-                    width: 250px;
+                .dropdown { // dropdown icon
+                    .wrap {
+                        padding: 5px 15px;
+                        cursor: pointer;
 
-                    .dropdown-content {
-                        padding-top: 10px;
-                        padding-bottom: 0;
-                        width: 100%;
-
-                        .input-group {
-                            width: 90%;
-                            margin-left: auto;
-                            margin-right: auto;
-                            margin-bottom: 15px;
+                        > i.fa {
+                            color: #767676;
                         }
+                    }
 
-                        .list-group {
-                            max-height: 276px;
-                            overflow-y: scroll;
-                            margin-bottom: 0;
+                    .dropdown-menu { // dropdown-menu
+                        padding-bottom: 0;
+                        width: 250px;
 
-                            .list-group-item {
-                                cursor: pointer;
-                                border: none;
+                        .dropdown-content {
+                            padding-top: 10px;
+                            padding-bottom: 0;
+                            width: 100%;
 
-                                &:not(.active) {
-                                    &:hover {
-                                    background: #ddd;
+                            .input-group {
+                                width: 90%;
+                                margin-left: auto;
+                                margin-right: auto;
+                                margin-bottom: 15px;
+                            }
+
+                            .sw-combobox-container {
+                                .input-group {
+                                    margin-bottom: 0;
+                                }
+
+                                h5 {
+                                    font-weight: bold;
+                                    font-size: 14px;
+                                    padding-bottom: 5px;
+                                    padding-top: 5px;
+                                }
+
+                                .select-all {
+                                    padding-left: 5px;
+                                    margin-bottom: 10px;
+
+                                    .text {
+                                        font-weight: bold;
+                                        font-size: 14px;
+                                        padding-top: 5px;
                                     }
+                                }
+
+                                ul {
+                                    padding-left: 5px;
+                                    list-style: none;
+
+                                    li {
+                                        padding-bottom: 10px;
+
+                                        .removable {
+                                            cursor: pointer;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .list-group {
+                                margin-bottom: 0;
+
+                                .list-group-item {
+                                    cursor: pointer;
+                                    border: none;
+
+                                    &:not(.active) {
+                                        &:hover {
+                                            background: #ddd;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .bootstrap-datetimepicker-widget {
+                                z-index: 9999 !important; // force date picker to display on top of the dropdown
+                                width: 38em; // maintain date and time side-by-side
+                                @media (max-width: 768px) {
+                                    width: 19em !important; // time below date for 'smaller' screens
                                 }
                             }
                         }
 
-                        .bootstrap-datetimepicker-widget {
-                            z-index: 9999 !important; // force date picker to display on top of the dropdown
-                            width: 38em; // maintain date and time side-by-side
-                            @media (max-width: 768px) {
-                                width: 19em !important; // time below date for 'smaller' screens
+                        .filter-dropdown-toolbar { //dropdown-menu buttons
+                            display: table;
+                            width: 100%;
+                            border-top: 1px solid #ddd;
+                            margin-top: 1px;
+
+                            .button {
+                                display: table-cell;
+                                width: 50%;
+                                vertical-align: middle;
+                                cursor: pointer;
+                                text-align: center;
+                                height: 40px;
+                                color: #999;
+                                font-weight: bold;
+                                font-size: 16px;
+
+                                &.apply {
+                                    color: #3a7ebd;
+                                    border-right: 1px solid #ddd;
+                                }
+
+                                &.clear {
+                                    color: #555;
+                                }
+
+                                &:hover {
+                                    background: #ddd;
+                                }
                             }
                         }
-                    }
 
-                    .filter-dropdown-toolbar { //dropdown-menu buttons
-                        display: table;
-                        width: 100%;
-                        border-top: 1px solid #ddd;
-
-                        .button {
-                            display: table-cell;
-                            width: 50%;
-                            vertical-align: middle;
-                            cursor: pointer;
-                            text-align: center;
-                            height: 40px;
-                            color: #999;
-                            font-weight: bold;
-                            font-size: 16px;
-
-                            &.apply {
-                                color: #3a7ebd;
-                                border-right: 1px solid #ddd;
-                            }
-
-                            &.clear {
-                                color: #555;
-                                border-left: 1px solid #ddd;
-                            }
-
-                            &:hover {
-                                background: #ddd;
+                        &.MetadataOptionFilter {
+                            .filter-dropdown-toolbar {
+                                .button {
+                                    &.apply {
+                                        display: none;
+                                    }
+                                }
                             }
                         }
                     }
@@ -171,7 +218,6 @@
         }
     }
 }
-
 /*SWWEB-841 ~ fix header width for Firefox*/
 @-moz-document url-prefix() {
     #listgrid thead tr.filter-row .input-group-sm > .form-control {
