@@ -56,7 +56,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
                 } else {
-                    var needsApproval = HandleCustomerApprovers(user, compositionData.OriginalCruddata, approvalGroup, worklogs, approval);
+                    var needsApproval = HandleCustomerApprovers(user, compositionData.OriginalCruddata, approvalGroup, worklogs, approval, wostatus);
                     if (needsApproval) {
                         numberOfActions++;
                     }
@@ -89,14 +89,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return !approval.ContainsKey(c.StatusColumn) || !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus, c.RejectedStatus);
         }
 
-        private Boolean HandleCustomerApprovers(InMemoryUser user, AttributeHolder result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval
-            ) {
+        private bool HandleCustomerApprovers(InMemoryUser user, AttributeHolder result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval,
+            IEnumerable<Dictionary<string, object>> wostatus) {
 
-            var latestAuthStatusDate = result.GetAttribute("statusdate") as DateTime?;
-            if (latestAuthStatusDate != null) {
-                //https://controltechnologysolutions.atlassian.net/browse/HAP-976
-                worklogs = FilterWorkLogsOlderThanLatestAuth(worklogs, latestAuthStatusDate);
-            }
+
+
+            //https://controltechnologysolutions.atlassian.net/browse/HAP-976
+            //https://controltechnologysolutions.atlassian.net/browse/HAP-1113 --> changing the way it filters the status
+            worklogs = FilterWorkLogsOlderThanLatestAuth(worklogs, wostatus);
 
             var wlEnumerable = worklogs as Dictionary<string, object>[] ?? worklogs.ToArray();
 
@@ -142,7 +142,17 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return !approval.ContainsKey(c.StatusColumn) || !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus, c.RejectedStatus);
         }
 
-        private IEnumerable<Dictionary<string, object>> FilterWorkLogsOlderThanLatestAuth(IEnumerable<Dictionary<string, object>> worklogs, DateTime? latestAuthStatusDate) {
+        private IEnumerable<Dictionary<string, object>> FilterWorkLogsOlderThanLatestAuth(IEnumerable<Dictionary<string, object>> worklogs, IEnumerable<Dictionary<string, object>> wostatuse) {
+            DateTime? latestAuthStatusDate = null;
+            foreach (var status in wostatuse) {
+                if (status["status"].EqualsIc("AUTH")) {
+                    latestAuthStatusDate = status["changedate"] as DateTime?;
+                }
+            }
+            if (latestAuthStatusDate == null) {
+                return worklogs;
+            }
+
             //remove any worklogs older than the last date that the change has been marked as AUTH
             var resultList = new List<Dictionary<string, object>>();
             foreach (var worklog in worklogs) {
