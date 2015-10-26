@@ -159,6 +159,13 @@
                         dropdowns.click(function (event) {
                             event.stopPropagation();
                         });
+
+                        //autofocus the search input when the dropdown opens
+                        $('.js_filter .dropdown').on('show.bs.dropdown', function (event) {
+                            $timeout(function () {
+                                $(event.target).find('input[type=search]').focus();
+                            });
+                        });
                     }
 
                     $timeout(function () {
