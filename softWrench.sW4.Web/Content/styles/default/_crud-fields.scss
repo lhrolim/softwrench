@@ -297,9 +297,10 @@ input[type="date"], input[type="time"] {
 
 .select-left-right {
     .left, .right {
-            padding-right: 15px;
-    padding-left: 15px;
+        padding-right: 15px;
+        padding-left: 15px;
     }
+
     .buttons {
         margin: 10px 0 40px;
     }
@@ -308,5 +309,22 @@ input[type="date"], input[type="time"] {
 .alert {
     .cta-button {
         margin-top: 20px;
+    }
+}
+
+.dropzone {
+    border: 3px dashed #ccc;
+    border-radius: 6px;
+    padding: 60px 12px;
+    text-align: center;
+    margin-top: 15px;
+    display: table;
+    color: #888;
+    font-weight: bold;
+
+    &.file-over {
+        background: #ccc;
+        border-style: solid;
+        color: #fff;
     }
 }

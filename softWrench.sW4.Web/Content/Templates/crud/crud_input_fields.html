@@ -229,7 +229,7 @@
                 </div>
                 <div ng-switch-when="dndupload">
                     <input id="uploadFile" ng-model="datamap.newattachment_path" class="form-control" placeholder="No file chosen" disabled="disabled" />
-                    <div file-dropzone class="dropzone form-control" file-name="datamap.newattachment_path" file="datamap[fieldMetadata.attribute]">Drag and drop a file here to upload</div>
+                    <div file-dropzone class="dropzone form-control" data-file-name="datamap.newattachment_path" data-file="datamap[fieldMetadata.attribute]" data-dropzone-hover-class="file-over"><i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload</div>
                 </div>
                 <div ng-switch-when="multipleupload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
