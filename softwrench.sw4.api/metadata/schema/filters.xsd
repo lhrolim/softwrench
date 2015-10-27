@@ -11,6 +11,7 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
     <attribute name="icon" type="string"></attribute>
     <attribute name="position" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="style" type="string"></attribute>
     <attribute name="whereclause" type="string"></attribute>
     <attribute name="remove" type="boolean">
       <annotation>
@@ -36,6 +37,12 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
             <documentation>If true, will create a special option on the filter to allow for null values. not every filter would desire that behavior</documentation>
           </annotation>
         </attribute>
+        <attribute name="displaycode" type="boolean">
+          <annotation>
+            <documentation>if true the value will be displayed on screen --> the result form will be (code) - label </documentation>
+          </annotation>  
+        </attribute>
+        
       </extension>
     </complexContent>
   </complexType>

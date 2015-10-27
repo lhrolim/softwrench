@@ -35,19 +35,21 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var icon = el.AttributeValue(XmlBaseSchemaConstants.IconAttribute);
                 var position = el.AttributeValue(XmlMetadataSchema.CustomizationPositionAttribute);
                 var tooltip = el.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute);
+                var style = el.AttributeValue(XmlFilterSchema.StyleAttribute);
                 var whereclause = el.AttributeValue(XmlFilterSchema.WhereClauseAttribute);
 
                 if (el.IsNamed(XmlFilterSchema.OptionFilterElement)) {
                     var provider = el.AttributeValue(XmlFilterSchema.ProviderAttribute, true);
                     var allowBlank = el.Attribute(XmlFilterSchema.AllowBlankAttribute).ValueOrDefault(false);
+                    var displayCode = el.Attribute(XmlFilterSchema.DisplayCodeAttribute).ValueOrDefault(false);
                     var options = ParseDefaultOptions(el);
-                    filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider, allowBlank, options));
+                    filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider,displayCode, allowBlank, style, options));
                 } else if (el.IsNamed(XmlFilterSchema.BooleanFilterElement)) {
                     var defaultValue = el.Attribute(XmlFilterSchema.DefaultSelectionAttribute).ValueOrDefault(true);
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
                     var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(true);
-                    filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove));
+                    filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove,style));
                 }
             }
             return new SchemaFilters(filters);

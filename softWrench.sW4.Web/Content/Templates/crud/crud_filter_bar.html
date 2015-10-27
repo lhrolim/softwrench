@@ -12,7 +12,7 @@
                     {{i18N('_grid.filter.placeholder','{0}',[filter.label])}}: <span class="filter-text">{{getFilterText(filter)}}</span>
                     <i class="fa fa-caret-down grid-filter-button"></i>
                 </div>
-                <div class="dropdown-menu {{filter.type}}">
+                <div class="dropdown-menu {{filter.type}}" style="{{filter.style}}" data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
                     <div class="dropdown-content">
                         <ng-switch on="filter.type">
                             <div ng-switch-when="MetadataDateTimeFilter">

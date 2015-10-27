@@ -11,6 +11,10 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
+        public bool DisplayCode {
+            get; set;
+        }
+
         public bool AllowBlank {
             get; set;
         }
@@ -24,11 +28,12 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         }
 
 
-        public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool allowBlank, IEnumerable<MetadataFilterOption> options)
-            : base(attribute, label, icon, position, tooltip, whereClause) {
+        public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool displayCode, bool allowBlank, string style, IEnumerable<MetadataFilterOption> options)
+            : base(attribute, label, icon, position, tooltip, whereClause, false, style) {
             Provider = provider;
             Options = options;
             AllowBlank = allowBlank;
+            DisplayCode = displayCode;
             Lazy = true;
         }
 

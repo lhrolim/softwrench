@@ -3,7 +3,7 @@
 namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
     public class BaseMetadataFilter {
-        public BaseMetadataFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, bool remove = false) {
+        public BaseMetadataFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, bool remove = false,string style=null) {
             Attribute = attribute;
             Label = label;
             Icon = icon;
@@ -11,6 +11,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             Tooltip = tooltip;
             WhereClause = whereClause;
             Remove = remove;
+            Style = style;
         }
 
         public virtual string Type {
@@ -29,6 +30,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         public bool Remove {
             get; set;
         }
+
+        public string Style { get; set; }
 
         public string Attribute {
             get; set;

@@ -26,7 +26,7 @@
                            ng-model="selectedOptions[option.value]"
                            ng-change="modifySearchData()"
                            ng-true-value="1" ng-false-value="0" />
-                    {{option.label}}
+                    {{labelValue(option)}}
                     <span class="fa fa-trash removable" ng-if="option.removable" ng-click="removeItem(option)"></span>
                 </li>
             </ul>

@@ -78,6 +78,10 @@
           <relationshipAttribute from="glaccount" to="comptext" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
 
         <relationship to="locationmeter" collection="true" >
           <relationshipAttribute from="location" to="location" primary="true"/>
@@ -109,6 +113,13 @@
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
+
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px"/>
+            <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
+            <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px"/>
+          </filters>
+
           <field attribute="wonum" label="WO#" >
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>

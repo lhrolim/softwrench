@@ -16,9 +16,11 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         public const string OptionElement = "option";
 
+        public const string StyleAttribute = "style";
         public const string WhereClauseAttribute = "whereclause";
         public const string ProviderAttribute = "provider";
         public const string AllowBlankAttribute = "allowblank";
+        public const string DisplayCodeAttribute = "displaycode";
         public const string DefaultSelectionAttribute = "defaultselection";
         public const string RemoveAttribute = "remove";
 

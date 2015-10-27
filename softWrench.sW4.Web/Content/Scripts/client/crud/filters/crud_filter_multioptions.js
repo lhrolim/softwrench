@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", function (contextService, restService, filterModelService, cmpAutocompleteServer, $timeout) {
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "$parse", function (contextService, restService, filterModelService, cmpAutocompleteServer, $timeout, $parse) {
 
             var directive = {
                 restrict: "E",
@@ -28,13 +28,15 @@
 
                     scope.selectedOptions = [];
                     scope.filteroptions = [];
+
+                    //initing any metadata declared option first
                     scope.filter.options.forEach(function (item) {
                         scope.filteroptions.push(item);
                     });
 
                     if (!scope.filter.lazy) {
                         //let´s get the whole list from the server 
-                        //GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
+                        //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
                         var parameters = {
                             application: schema.applicationName,
                             key: {
@@ -50,6 +52,7 @@
                             scope.filteroptions = scope.filteroptions.concat(result.data);
                         });
                     } else {
+                        //for lazy filters we will start the recently used from local storage and init the autocompleteservers
                         scope.filteroptions = scope.filteroptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
                         $timeout(function () {
                             cmpAutocompleteServer.init(element, null, scope.schema, scope);
@@ -62,8 +65,15 @@
 
                     var filter = $scope.filter;
 
+                    $scope.labelValue = function(option) {
+                        if (filter.displayCode === false) {
+                            return option.label;
+                        }
+                        return "(" + option.value + ")" + " - " + option.label;
+                    }
 
 
+                    //clear button of the filter clicked
                     $scope.$on("sw.filter.clear", function (event, filterAttribute) {
                         if (filterAttribute === $scope.filter.attribute) {
                             $scope.vm.allSelected = 0;
@@ -91,10 +101,10 @@
 
                     }
 
-                    $scope.removeItem = function(item) {
+                    $scope.removeItem = function (item) {
                         var arr = $scope.filteroptions;
                         var idx = -1;
-                        for (var i=0; i < arr.length; i++) {
+                        for (var i = 0; i < arr.length; i++) {
                             if (arr[i].value === item.value) {
                                 idx = i;
                                 break;
@@ -104,10 +114,11 @@
                             arr.splice(idx, 1);
                             filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, item, true);
                         }
-                        
+
                     }
 
-                    $scope.$on("sw_autocompleteselected", function (event,jqueryEvent, item, filterAttribute) {
+                    //return call from the autocomplete server invocation
+                    $scope.$on("sw_autocompleteselected", function (event, jqueryEvent, item, filterAttribute) {
                         if (filterAttribute !== $scope.filter.attribute) {
                             //not the filter interested in listening the event (i.e this should be handled by another filter but this)
                             return;
@@ -115,7 +126,7 @@
                         //cleaning up jquery element
                         $(jqueryEvent.target).val("");
                         if ($scope.filteroptions.some(function (el) {
-                            return el.value === item.value;})) {
+                                return el.value === item.value;})) {
                             //to avoid duplications
                             return;
                         }
