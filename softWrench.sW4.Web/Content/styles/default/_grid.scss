@@ -249,14 +249,6 @@
     word-break: break-word;
 }
 
-#listgrid, #compositionlistgrid {
-    td {
-        word-break: break-all;
-        word-break: break-word;
-        padding: 10px 8px 6px;
-    }
-}
-
 #listgrid {
     td {
 
@@ -267,6 +259,24 @@
         &.select-multiple {
             text-align: center;
         }
+    }
+}
+
+#listgrid, #compositionlistgrid {
+    th {
+        padding: 8px 0;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+    }
+
+    td {
+        word-break: break-all;
+        word-break: break-word;
+        padding: 10px 0 6px;
+    }
+
+    .cell-wrapper {
+        padding: 0 8px;
     }
 }
 

@@ -99,7 +99,7 @@
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)"
                         ng-click="sort(column)">
-                        <div ng-if="shouldShowHeaderLabel(column)">
+                        <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
                             <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
                                 {{i18NLabel(column)}}
                             </span>
