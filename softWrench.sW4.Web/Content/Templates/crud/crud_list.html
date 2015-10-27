@@ -117,8 +117,8 @@
             <tbody crudtbody schema="schema" datamap="datamap" panelid="panelid" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />
         </table>
     </div>
-    <p class="text-center" ng-show="datamap.length == 0">
-        {{i18N("_grid.filter.noresult","No results match your search criteria")}}
+    <p class="no-results" ng-show="datamap.length == 0">
+        <i class="fa fa-info-circle"></i>&ensp;{{i18N("_grid.filter.noresult","No records found, try adjusting your search terms.")}}
     </p>
     <!--this is exclusive for IBM Demo to indicate the bottom of the page.-->
     <div ng-if="isNotHapagTest()" ng-hide="hidebars">
