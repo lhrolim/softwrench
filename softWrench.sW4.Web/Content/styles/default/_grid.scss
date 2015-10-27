@@ -1,4 +1,6 @@
-﻿.advanced-filter-toogle {
+﻿$hover_background: #ddd;
+
+.advanced-filter-toogle {
     cursor: pointer;
     text-align: center;
 }
@@ -37,7 +39,7 @@
             margin: 0 10px;
 
             &:hover {
-                background: #ddd;
+                background: $hover_background;
             }
 
             .filter-label-wrapper {
@@ -104,6 +106,10 @@
                                         .removable {
                                             cursor: pointer;
                                         }
+
+                                        /*&:hover {
+                                            background: $hover_background;
+                                        }*/
                                     }
                                 }
                             }
@@ -117,8 +123,22 @@
 
                                     &:not(.active) {
                                         &:hover {
-                                            background: #ddd;
+                                            background: $hover_background;
                                         }
+                                    }
+                                }
+                            }
+
+                            .tt-dropdown-menu {
+                                min-width: 100%;
+
+                                .tt-suggestion {
+                                    padding-top: 6px;
+                                    padding-bottom: 6px;
+                                    cursor: pointer;
+
+                                    &:hover {
+                                        background: $hover_background;
                                     }
                                 }
                             }
@@ -135,7 +155,7 @@
                         .filter-dropdown-toolbar { //dropdown-menu buttons
                             display: table;
                             width: 100%;
-                            border-top: 1px solid #ddd;
+                            border-top: 1px solid $hover_background;
                             margin-top: 1px;
 
                             .button {
@@ -151,7 +171,7 @@
 
                                 &.apply {
                                     color: #3a7ebd;
-                                    border-right: 1px solid #ddd;
+                                    border-right: 1px solid $hover_background;
                                 }
 
                                 &.clear {
@@ -159,7 +179,7 @@
                                 }
 
                                 &:hover {
-                                    background: #ddd;
+                                    background: $hover_background;
                                 }
                             }
                         }
