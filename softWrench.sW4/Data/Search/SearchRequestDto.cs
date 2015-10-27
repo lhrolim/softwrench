@@ -253,23 +253,33 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public IDictionary<String, SearchParameter> GetParameters() {
+        public SearchParameter RemoveSearchParam(string toRemove) {
+            if (!_valuesDictionary.ContainsKey(toRemove)) {
+                return null;
+            }
+            var originalParam = _valuesDictionary[toRemove];
+            originalParam.IgnoreParameter = true;
+            return originalParam;
+        }
+
+        [CanBeNull]
+        public IDictionary<string, SearchParameter> GetParameters() {
             if (_valuesDictionary != null) {
                 //caching for further calls
                 return _valuesDictionary;
             }
 
-            if (String.IsNullOrEmpty(SearchParams)) {
+            if (string.IsNullOrEmpty(SearchParams)) {
                 return null;
             }
             _valuesDictionary = new Dictionary<string, SearchParameter>();
 
-            var parameters = Regex.Split(SearchParams, SearchUtils.SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f)).ToList();
+            var parameters = Regex.Split(SearchParams, SearchUtils.SearchParamSpliter).Where(f => !string.IsNullOrWhiteSpace(f)).ToList();
             SearchUtils.ValidateString(SearchValues);
 
             //wacky separator to avoid false positives
             var values = Regex.Split(SearchValues, SearchUtils.SearchValueSeparator);
-            if (parameters.Count() != values.Count()) {
+            if (parameters.Count > values.Length) {
                 throw new ArgumentException("parameters and values must have the same count for a given search");
             }
 
@@ -277,7 +287,7 @@ namespace softWrench.sW4.Data.Search {
             for (var i = 0; i < parameters.Count(); i++) {
                 var paramName = parameters[i];
 
-                if (String.IsNullOrEmpty(paramName)) {
+                if (string.IsNullOrEmpty(paramName)) {
                     continue;
                 }
                 _valuesDictionary[paramName] = new SearchParameter(values[i]);

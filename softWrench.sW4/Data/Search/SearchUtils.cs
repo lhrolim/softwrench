@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using softWrench.sW4.Data.Pagination;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchUtils : IWhereBuilder {
@@ -106,22 +107,23 @@ namespace softWrench.sW4.Data.Search {
         }
 
         private static string HandleSearchParams(SearchRequestDto listDto, string entityName) {
-            var sb = new StringBuilder();
-            var sbReplacingIdx = 0;
-            var searchTemplate = listDto.SearchTemplate;
-            if (searchTemplate != null) {
-                sb.Append(listDto.SearchTemplate);
-            } else {
-                sb.Append(listDto.SearchParams);
-            }
+
 
             var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
             var searchParameters = listDto.GetParameters();
+
+            var sbReplacingIdx = 0;
+            var sb = new StringBuilder(BuildSearchTemplate(listDto, searchParameters));
 
             foreach (var param in parameters) {
                 var statement = new StringBuilder();
 
                 var searchParameter = searchParameters[param];
+                if (searchParameter.IgnoreParameter) {
+                    //this search parameter needs to be ignored
+                    continue;
+                }
+
                 var parameterData = GetParameterData(entityName, searchParameter, param);
                 searchParameter.IsNumber = parameterData.Item2 == ParameterType.Number;
                 var operatorPrefix = searchParameter.SearchOperator.OperatorPrefix();
@@ -149,9 +151,7 @@ namespace softWrench.sW4.Data.Search {
                 } else if (searchParameter.IsBlankNumber || searchParameter.IsBlankDate) {
                     //https://controltechnologysolutions.atlassian.net/browse/YGSI-15
                     statement.Append("( " + parameterData.Item1 + " IS NULL )");
-                }
-                
-                else {
+                } else {
                     statement.Append("( " + parameterData.Item1);
 
                     if (searchParameter.IsList) {
@@ -176,6 +176,21 @@ namespace softWrench.sW4.Data.Search {
             sb.Replace("||,", " OR ");
             sb.Replace("||", " OR ");
             return sb.ToString();
+        }
+
+        private static string BuildSearchTemplate(SearchRequestDto listDto, IDictionary<string, SearchParameter> searchParameters) {
+            var sb = new StringBuilder();
+            var searchTemplate = listDto.SearchTemplate;
+            if (searchTemplate != null) {
+                sb.Append(listDto.SearchTemplate);
+                return sb.ToString();
+            }
+            foreach (var param in searchParameters) {
+                if (!param.Value.IgnoreParameter) {
+                    sb.Append(param.Key).Append("&&");
+                }
+            }
+            return sb.Length == 0 ? sb.ToString() : sb.ToString(0, sb.Length - 2);
         }
 
         public static IDictionary<string, object> GetParameters(SearchRequestDto listDto) {
@@ -305,5 +320,7 @@ namespace softWrench.sW4.Data.Search {
             return lookupAttribute.Literal;
 
         }
+
+
     }
 }

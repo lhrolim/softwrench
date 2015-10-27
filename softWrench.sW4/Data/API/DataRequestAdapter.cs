@@ -22,6 +22,9 @@ namespace softWrench.sW4.Data.API {
 
         public PaginatedSearchRequestDto SearchDTO { get; set; }
 
+
+
+
         /// <summary>
         /// This parameter is used to open a detail with some initial data, coming from the client side, pre-filled
         /// </summary>

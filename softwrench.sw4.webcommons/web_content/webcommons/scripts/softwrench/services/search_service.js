@@ -298,7 +298,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
 
         getSearchOperationById: function (id) {
             var op = $.grep(this.searchOperations(), function (e) {
-                return e.id.toUpperCase() == id.toUpperCase();
+                return e.id.toUpperCase() === id.toUpperCase();
             });
             if (op.length > 0) {
                 return op[0];

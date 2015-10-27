@@ -2,7 +2,8 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "$parse", function (contextService, restService, filterModelService, cmpAutocompleteServer, $timeout, $parse) {
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout","searchService",  function (contextService, restService, filterModelService, 
+            cmpAutocompleteServer, $timeout, searchService) {
 
             var directive = {
                 restrict: "E",
@@ -10,6 +11,7 @@
                 scope: {
                     filter: '=',
                     searchData: '=',
+                    searchOperator: '=',
                     schema: '=',
                     applyFilter: "&"
                 },
@@ -83,10 +85,13 @@
 
                     $scope.modifySearchData = function () {
                         var searchData = $scope.searchData;
+                        var searchOperator = $scope.searchOperator;
                         searchData[filter.attribute] = null;
+                        searchOperator[filter.attribute] = null;
                         var result = filterModelService.buildSearchValueFromOptions($scope.selectedOptions);
                         if (result) {
                             searchData[filter.attribute] = result;
+                            searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
                         }
                         $scope.applyFilter();
                     }

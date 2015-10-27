@@ -12,6 +12,35 @@
 
         }
 
+        var getFilterText = function (filter,searchData,operator) {
+            var attribute = filter.attribute;
+            var searchText = searchData[attribute];
+            var prefix = operator.title;
+
+            if (operator.id === 'Blank') {
+                return "Is Blank";
+            }
+
+            if (operator.id.equalsAny("",'NF')) {
+                prefix = '';
+            }
+
+            if (operator.id === 'EQ' && filter.type === "MetadataOptionFilter") {
+                prefix = 'Any';
+            }
+
+            if (!searchText || !operator) {
+                return '' || 'All';
+            }
+
+            if (searchText.length > 20) {
+                searchText = searchText.substring(0, 20) + '...';
+            }
+
+            return prefix + '(' + searchText + ')';
+        }
+
+
         function lookupRecentlyUsed(application, schemaId, attribute) {
             var key = "filter:" + application + ":" + schemaId + ":" + attribute;
             var stored = localStorage[key];
@@ -76,7 +105,8 @@
             findMainFilterOperations: findMainFilterOperations,
             lookupRecentlyUsed: lookupRecentlyUsed,
             updateRecentlyUsed: updateRecentlyUsed,
-            buildSearchValueFromOptions: buildSearchValueFromOptions
+            buildSearchValueFromOptions: buildSearchValueFromOptions,
+            getFilterText: getFilterText
         };
 
         return service;
