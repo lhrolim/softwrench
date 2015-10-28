@@ -8,11 +8,7 @@
 
 
 
-        function findMainFilterOperations(filter) {
-
-        }
-
-        var getFilterText = function (filter,searchData,operator) {
+        var getFilterText = function (filter, searchData, operator) {
             var attribute = filter.attribute;
             var searchText = searchData[attribute];
             var prefix = operator.title;
@@ -21,7 +17,7 @@
                 return "Is Blank";
             }
 
-            if (operator.id.equalsAny("",'NF')) {
+            if (operator.id.equalsAny("", 'NF')) {
                 prefix = '';
             }
 
@@ -40,6 +36,12 @@
             return prefix + '(' + searchText + ')';
         }
 
+        function doUpdateStore(application, schemaId, attribute, newValue) {
+            var key = "filter:" + application + ":" + schemaId + ":" + attribute;
+            localStorage[key] = JSON.stringify(newValue);
+            return newValue;
+        }
+
 
         function lookupRecentlyUsed(application, schemaId, attribute) {
             var key = "filter:" + application + ":" + schemaId + ":" + attribute;
@@ -50,63 +52,79 @@
             return JSON.parse(stored);
         }
 
-        var updateRecentlyUsed = function (schema, attribute, item, removeItem) {
+        var deleteFromRecentlyUsed = function (schema, attribute, item) {
             var application = schema.applicationName;
             var schemaId = schema.schemaId;
-            var key = "filter:" + application + ":" + schemaId + ":" + attribute;
-            var stored = localStorage[key];
-            if (stored == null) {
-                stored = [];
-            } else {
-                stored = JSON.parse(stored);
-            }
-            if (!removeItem) {
-                if (stored.length === 10) {
-                    //implement a LRU strategy, where it grows until it reaches 10, than least recent gets removed
-                    stored.pop();
-                }
-                stored.unshift(item);
-            } else {
-                //removing it from lru cache
-                var idx = -1;
-                for (var i = 0; i < stored.length; i++) {
-                    if (stored[i].value === item.value) {
-                        idx = i;
-                        break;
-                    }
-                }
-                if (idx !== -1) {
-                    stored.splice(idx, 1);
+            var stored = this.lookupRecentlyUsed(application, schemaId, attribute);
+            var idx = -1;
+            for (var i = 0; i < stored.length; i++) {
+                if (stored[i].value === item.value) {
+                    idx = i;
+                    break;
                 }
             }
+            if (idx !== -1) {
+                stored.splice(idx, 1);
+            }
+            return doUpdateStore(application, schemaId, attribute, stored);
 
-            localStorage[key] = JSON.stringify(stored);
         }
 
-        var buildSearchValueFromOptions = function (selectedOptions) {
-            var any = false;
+        var updateRecentlyUsed = function (schema, attribute, itemArray) {
+            var application = schema.applicationName;
+            var schemaId = schema.schemaId;
+            var stored = this.lookupRecentlyUsed(application, schemaId, attribute);
+            if (itemArray.length > 10) {
+                stored = itemArray.slice(0, 9);
+            } else {
+                itemArray.forEach(function (item) {
+                    if (stored.some(function (el) {
+                        //avoid duplications
+                       return el.value === item.value;
+                    })) {
+                        return;
+                    }
+
+                    stored.unshift(item);
+                    if (stored.length > 10) {
+                        stored.pop();
+                    }
+                });
+            }
+            return doUpdateStore(application, schemaId, attribute, stored);
+        }
+
+        var buildSelectedItemsArray = function (availableOptions, selectedOptions) {
+            var result = [];
+            for (var i = 0; i < availableOptions.length; i++) {
+                var item = availableOptions[i];
+                if (selectedOptions.hasOwnProperty(item.value) && selectedOptions[item.value] === 1) {
+                    result.push(item);
+                }
+            }
+            return result;
+        }
+
+        var buildSearchValueFromOptions = function (selectedItems) {
+            if (selectedItems.length === 0) {
+                return null;
+            }
             var buffer = "";
-            for (var option in selectedOptions) {
-                if (!selectedOptions.hasOwnProperty(option)) {
-                    continue;
-                }
-                if (selectedOptions[option] === 1) {
-                    any = true;
-                    buffer += (userService.readProperty(option) + ",");
-                }
+            for (var i = 0; i < selectedItems.length; i++) {
+                var item = selectedItems[i];
+                buffer += (userService.readProperty(item.value) + ",");
             }
-            if (any) {
-                return buffer.substring(0, buffer.length - 1);
-            }
-            return null;
+            return buffer.substring(0, buffer.length - 1);
+
         };
 
         var service = {
-            findMainFilterOperations: findMainFilterOperations,
             lookupRecentlyUsed: lookupRecentlyUsed,
             updateRecentlyUsed: updateRecentlyUsed,
+            deleteFromRecentlyUsed: deleteFromRecentlyUsed,
             buildSearchValueFromOptions: buildSearchValueFromOptions,
-            getFilterText: getFilterText
+            getFilterText: getFilterText,
+            buildSelectedItemsArray: buildSelectedItemsArray
         };
 
         return service;

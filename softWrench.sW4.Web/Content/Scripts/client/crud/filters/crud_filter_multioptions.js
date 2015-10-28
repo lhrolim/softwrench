@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout","searchService",  function (contextService, restService, filterModelService, 
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", function (contextService, restService, filterModelService,
             cmpAutocompleteServer, $timeout, searchService) {
 
             var directive = {
@@ -30,10 +30,15 @@
 
                     scope.selectedOptions = [];
                     scope.filteroptions = [];
+                    scope.vm.recentlyOptions = [];
 
                     //initing any metadata declared option first
                     scope.filter.options.forEach(function (item) {
-                        scope.filteroptions.push(item);
+                        if (filter.lazy) {
+                            scope.vm.recentlyOptions.push(item);
+                        } else {
+                            scope.filteroptions.push(item);
+                        }
                     });
 
                     if (!scope.filter.lazy) {
@@ -54,11 +59,50 @@
                             scope.filteroptions = scope.filteroptions.concat(result.data);
                         });
                     } else {
+                        scope.vm.showRecently = true;
+
                         //for lazy filters we will start the recently used from local storage and init the autocompleteservers
-                        scope.filteroptions = scope.filteroptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
+                        scope.vm.recentlyOptions = scope.vm.recentlyOptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
                         $timeout(function () {
                             cmpAutocompleteServer.init(element, null, scope.schema, scope);
+
+                            $('input.typeahead', element).each(function (index, element) {
+                                var jelement = $(element);
+                                jelement.on("keyup", function (e) {
+                                    //if filter is applied, let´s not show recently used filters
+                                    var newShowRecently = $(e.target).val() === "";
+                                    //let´s try to avoid useless digest calls
+                                    var shouldDigest = newShowRecently !== scope.vm.showRecently;
+                                    if (newShowRecently) {
+                                        scope.filteroptions = [];
+                                        shouldDigest = true;
+                                    }
+                                    scope.vm.showRecently = newShowRecently;
+                                    if (shouldDigest) {
+                                        //if to avoid calling digest inadvertdly
+                                        scope.$digest();
+                                    }
+                                });
+                            });
+
+
+                            scope.$on("sw.autocompleteserver.response", function (event, response) {
+                                if (scope.vm.showRecently) {
+                                    //seems like the autocomplete is returning the list when it reaches 0 sometimes
+                                    return;
+                                }
+                                for (var i = response.length - 1; i >= 0; i--) {
+                                    var item = response[i];
+                                    item.removable = true;
+                                }
+
+                                //updating the list of options
+                                scope.filteroptions = response;
+                                scope.$digest();
+                            });
+
                         }, 0, false);
+
                     }
                 },
 
@@ -67,7 +111,7 @@
 
                     var filter = $scope.filter;
 
-                    $scope.labelValue = function(option) {
+                    $scope.labelValue = function (option) {
                         if (filter.displayCode === false) {
                             return option.label;
                         }
@@ -88,7 +132,10 @@
                         var searchOperator = $scope.searchOperator;
                         searchData[filter.attribute] = null;
                         searchOperator[filter.attribute] = null;
-                        var result = filterModelService.buildSearchValueFromOptions($scope.selectedOptions);
+
+                        var selectedItems = filterModelService.buildSelectedItemsArray($scope.filteroptions, $scope.selectedOptions);
+                        var result = filterModelService.buildSearchValueFromOptions(selectedItems);
+                        $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
                         if (result) {
                             searchData[filter.attribute] = result;
                             searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
@@ -117,7 +164,7 @@
                         }
                         if (idx !== -1) {
                             arr.splice(idx, 1);
-                            filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, item, true);
+                            filterModelService.deleteFromRecentlyUsed($scope.schema, $scope.filter.attribute, item);
                         }
 
                     }
@@ -131,7 +178,8 @@
                         //cleaning up jquery element
                         $(jqueryEvent.target).val("");
                         if ($scope.filteroptions.some(function (el) {
-                                return el.value === item.value;})) {
+                                return el.value === item.value;
+                        })) {
                             //to avoid duplications
                             return;
                         }

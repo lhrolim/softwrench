@@ -71,6 +71,12 @@
                             rateLimitFn: 'debounce',
                             rateLimitWait: 500,
                             filter: function (parsedResponse) {
+                                if (filterMode) {
+                                    //if we are on filterMode, we´ll use only the Bloodhound engine, but rather have an external control for the list instead of the typeahead default
+                                    scope.$broadcast("sw.autocompleteserver.response", parsedResponse);
+                                    return [];
+                                }
+
                                 if (Array.isArray(parsedResponse)) {
                                     return parsedResponse;
                                 }
@@ -83,6 +89,7 @@
                             },
                             ajax: {
                                 beforeSend: function (jqXhr, settings) {
+                                    scope.$broadcast("sw.autocompleteserver.beforesend");
                                     beforeSendPostJsonDatamap(jqXhr, settings, datamap);
                                 }
                             }
@@ -96,6 +103,8 @@
                         source: engine.ttAdapter()
                     });
 
+              
+
                     jelement.on("typeahead:selected typeahead:autocompleted", function (e, datum) {
                         if (datamap) {
                             datamap[dataTarget] = datum.value;
@@ -103,7 +112,7 @@
                             scope.$digest();
                         } else {
                             //going down
-                            scope.$broadcast("sw_autocompleteselected",e, datum, dataTarget);
+                            scope.$broadcast("sw.autocompleteserver.selected", e, datum, dataTarget);
                             
                         }
                         
