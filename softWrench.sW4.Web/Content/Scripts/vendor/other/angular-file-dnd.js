@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('omr.angularFileDnD', []).directive('fileDropzone', function() {
+  angular.module('omr.angularFileDnD', []).directive('fileDropzone', ["attachmentService", function(attachmentService) {
     return {
       require: '^?form',
       restrict: 'A',
@@ -38,8 +38,8 @@
             return false;
           }
         };
-        isTypeValid = function(type) {
-          if ((validMimeTypes === (void 0) || validMimeTypes === '') || validMimeTypes.indexOf(type) > -1) {
+        isTypeValid = function (type) {
+          if (attachmentService.isValid(type)) {
             return true;
           } else {
             alert("Invalid file type.  File must be one of following types " + validMimeTypes);
@@ -59,7 +59,7 @@
           element.removeClass(scope.dropzoneHoverClass);
           reader = new FileReader();
           reader.onload = function(evt) {
-            if (checkSize(size) && isTypeValid(type)) {
+            if (checkSize(size) && isTypeValid(name.split('.').pop())) {
               scope.$apply(function () {
                 scope.file = evt.target.result;
                 return scope.fileName = name;
@@ -84,6 +84,6 @@
         });
       }
     };
-  });
+  }]);
 
 }).call(this);
