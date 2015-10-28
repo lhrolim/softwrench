@@ -94,7 +94,7 @@
                                 }
 
                                 .filter-options {
-                                    max-height: 300px;
+                                    max-height: 310px;
                                     overflow-y: scroll;
                                 }
 
@@ -202,11 +202,14 @@
     }
 }
 
+.no-results, .more-results {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .no-results {
     text-align: center;
     margin-top: 50px;
-    font-size: 14px;
-    font-weight: bold;
     color: #888;
 }
 
