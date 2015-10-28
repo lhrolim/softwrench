@@ -95,6 +95,11 @@
                                     var item = response[i];
                                     item.removable = true;
                                 }
+                                if (response.length === 21) {
+                                    //TODO: return rather an object containing the count
+                                    scope.vm.hasMoreItems = true;
+                                    response = response.slice(0, 20);
+                                }
 
                                 //updating the list of options
                                 scope.filteroptions = response;

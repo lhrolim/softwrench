@@ -50,8 +50,11 @@
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
                            ng-change="modifySearchData()"
-                           ng-true-value="1" ng-false-value="0" />
+                           ng-true-value="1" ng-false-value="0"/>
                     {{labelValue(option)}}
+                </li>
+                <li ng-show="vm.hasMoreItems">
+                    There are more options. Continue typing to refine further
                 </li>
             </ul>
         </div>
