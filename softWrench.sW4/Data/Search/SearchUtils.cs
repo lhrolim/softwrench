@@ -185,12 +185,17 @@ namespace softWrench.sW4.Data.Search {
                 sb.Append(listDto.SearchTemplate);
                 return sb.ToString();
             }
+            var logicOperator = "&&";
+            if (listDto.SearchParams.Contains(SearchParamOrSeparator)) {
+                //legacy code, keep hapag funcionality up
+                logicOperator = SearchParamOrSeparator;
+            }
             foreach (var param in searchParameters) {
                 if (!param.Value.IgnoreParameter) {
-                    sb.Append(param.Key).Append("&&");
+                    sb.Append(param.Key).Append(logicOperator);
                 }
             }
-            return sb.Length == 0 ? sb.ToString() : sb.ToString(0, sb.Length - 2);
+            return sb.Length == 0 ? sb.ToString() : sb.ToString(0, sb.Length - logicOperator.Length);
         }
 
         public static IDictionary<string, object> GetParameters(SearchRequestDto listDto) {

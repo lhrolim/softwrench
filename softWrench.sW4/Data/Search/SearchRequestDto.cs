@@ -28,37 +28,37 @@ namespace softWrench.sW4.Data.Search {
         /// Receives the query to apply in the format :a || :b || :c || :d. 
         /// FWK shall locate corresponding SearchValues to replace it
         /// </summary>
-        public String SearchTemplate {
+        public string SearchTemplate {
             get; set;
         }
 
-        public String SearchParams {
+        public string SearchParams {
             get; set;
         }
 
-        public String SearchValues {
+        public string SearchValues {
             get; set;
         }
 
-        public String SearchSort {
+        public string SearchSort {
             get; set;
         }
 
-        public Boolean ExpressionSort {
+        public bool ExpressionSort {
             get; set;
         }
 
-        public Boolean SearchAscending {
+        public bool SearchAscending {
             get; set;
         }
 
         private readonly ISet<ProjectionField> _projectionFields = new HashSet<ProjectionField>();
 
-        public String WhereClause {
+        public string WhereClause {
             get; set;
         }
 
-        public Boolean IgnoreWhereClause {
+        public bool IgnoreWhereClause {
             get; set;
         }
 
@@ -80,7 +80,7 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
-        public String Title {
+        public string Title {
             get; set;
         }
 
@@ -96,7 +96,7 @@ namespace softWrench.sW4.Data.Search {
         //used to indentify the query on the log better
         private string _queryAlias;
 
-        public String QueryAlias {
+        public string QueryAlias {
             get {
                 if (Context != null && Context.MetadataId != null) {
                     return Context.MetadataId;
@@ -137,7 +137,7 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public static SearchRequestDto GetFromDictionary(IDictionary<String, string> searchDictionary) {
+        public static SearchRequestDto GetFromDictionary(IDictionary<string, string> searchDictionary) {
             var searchRequestDto = new SearchRequestDto();
 
             foreach (var key in searchDictionary.Keys) {
@@ -150,7 +150,7 @@ namespace softWrench.sW4.Data.Search {
         public static SearchRequestDto GetUnionSearchRequestDto(SearchRequestDto originalSearchRequestDto, SlicedEntityMetadata unionSchema) {
             var unionSearchRequestDto = new SearchRequestDto();
 
-            if (!String.IsNullOrWhiteSpace(originalSearchRequestDto.SearchParams)) {
+            if (!string.IsNullOrWhiteSpace(originalSearchRequestDto.SearchParams)) {
 
                 var sb = new StringBuilder(originalSearchRequestDto.SearchParams);
                 var sbReplacingIdx = 0;
@@ -161,7 +161,7 @@ namespace softWrench.sW4.Data.Search {
                     var key = parameter.Key.Split('.').Last();
                     var unionParameter = unionSchema.Schema.Attributes.Where(f => f.Name.EndsWith(key)).FirstOrDefault();
 
-                    var newSearchParam = String.Empty;
+                    var newSearchParam = string.Empty;
                     if (unionParameter != null) {
                         newSearchParam = unionParameter.Name + "_union";
                     } else {
@@ -202,14 +202,14 @@ namespace softWrench.sW4.Data.Search {
         }
 
         public void AppendSearchParam(string searchParam) {
-            if (!String.IsNullOrWhiteSpace(SearchParams)) {
+            if (!string.IsNullOrWhiteSpace(SearchParams)) {
                 SearchParams += SearchUtils.SearchParamAndSeparator;
             }
             SearchParams += searchParam;
         }
 
         public void AppendSearchValue(string searchValue, bool allownulls = false) {
-            if (!String.IsNullOrWhiteSpace(SearchValues)) {
+            if (!string.IsNullOrWhiteSpace(SearchValues)) {
                 SearchValues += SearchUtils.SearchValueSeparator;
             }
             if (!allownulls) {
@@ -231,7 +231,7 @@ namespace softWrench.sW4.Data.Search {
         }
 
         public void AppendWhereClauseFormat(string whereclause, params object[] parameters) {
-            whereclause = String.Format(whereclause, parameters);
+            whereclause = string.Format(whereclause, parameters);
             AppendWhereClause(whereclause);
         }
 
@@ -295,7 +295,7 @@ namespace softWrench.sW4.Data.Search {
             return _valuesDictionary;
         }
 
-        public void SetFromSearchString(ApplicationSchemaDefinition appSchema, IList<String> searchFields, String searchText) {
+        public void SetFromSearchString(ApplicationSchemaDefinition appSchema, IList<string> searchFields, string searchText) {
 
             var sbParams = new StringBuilder();
             var sbValues = new StringBuilder();
