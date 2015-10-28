@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -30,12 +31,18 @@ namespace softWrench.sW4.Data.Filter {
 
             foreach (var whereClauseFilter in whereClauseFilters) {
                 SearchParameter paramValue = searchDto.RemoveSearchParam(whereClauseFilter.Attribute);
-                if (paramValue == null) { 
+                if (paramValue == null) {
                     //this has not came from the client side as a client filter
                     continue;
                 }
 
                 var whereClause = whereClauseFilter.WhereClause;
+
+                if (whereClauseFilter is MetadataOptionFilter && paramValue.SearchOperator.Equals(SearchOperator.CONTAINS) && !whereClauseFilter.IsTransient()) {
+                    paramValue.IgnoreParameter = false;
+                    //this means that we´re using a contains operation inside of an option filter, which should lead to default attribute lookup
+                    continue;
+                }
 
                 if (!whereClause.StartsWith("@")) {
                     var values = paramValue.Value as IEnumerable<string>;

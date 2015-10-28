@@ -23,6 +23,9 @@
                     //let´s avoid some null pointers
                     scope.filter.options = scope.filter.options || [];
 
+
+
+
                     //this is also static
                     var schema = scope.schema;
                     var filter = scope.filter;
@@ -68,6 +71,15 @@
 
                             $('input.typeahead', element).each(function (index, element) {
                                 var jelement = $(element);
+                                //caching element to later access it on controlle fns
+                                scope.jelement = jelement;
+                                jelement.on("keydown", function (e) {
+                                    if (e.keyCode === 13) {
+                                        //enter and magnify click have the same effect
+                                        scope.executeAsFreeText();
+                                    }
+                                });
+
                                 jelement.on("keyup", function (e) {
                                     //if filter is applied, let´s not show recently used filters
                                     var newShowRecently = $(e.target).val() === "";
@@ -124,6 +136,20 @@
                     }
 
 
+                    $scope.executeAsFreeText = function () {
+                        var searchData = $scope.searchData;
+                        var searchOperator = $scope.searchOperator;
+                        var val = $scope.jelement.val();
+                        if (val === "") {
+                            $('.dropdown.open').removeClass('open');
+                            //not calling the filter if nothing was selected
+                            return;
+                        }
+                        searchData[filter.attribute] = $scope.jelement.val();
+                        searchOperator[filter.attribute] = searchService.getSearchOperationById("CONTAINS");
+                        $scope.applyFilter({ keepitOpen: false });
+                    }
+
                     //clear button of the filter clicked
                     $scope.$on("sw.filter.clear", function (event, filterAttribute) {
                         if (filterAttribute === $scope.filter.attribute) {
@@ -145,7 +171,7 @@
                             searchData[filter.attribute] = result;
                             searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
                         }
-                        $scope.applyFilter();
+                        $scope.applyFilter({ keepitOpen: true });
                     }
 
                     $scope.toggleSelectAll = function () {
