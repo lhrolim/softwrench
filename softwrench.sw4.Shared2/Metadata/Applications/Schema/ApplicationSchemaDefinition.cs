@@ -27,7 +27,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
-        private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
+        private IDictionary<string, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
         /// <summary>
         /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
@@ -84,9 +84,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
-        public String ApplicationName {
+        public string ApplicationName {
             get; set;
         }
+
+        public string EntityName {
+            get; set;
+        }
+
         public ClientPlatform? Platform {
             get; set;
         }
@@ -162,15 +167,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             CompositionSchemas = new Dictionary<string, ApplicationCompositionSchema>();
         }
 
-        public ApplicationSchemaDefinition(
-            String applicationName, string title, string schemaId, Boolean redeclaringSchema, SchemaStereotype stereotype,
+        public ApplicationSchemaDefinition(string entityName,
+            string applicationName, string title, string schemaId, bool redeclaringSchema, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, SchemaFilters declaredFilters, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
             string idFieldName, string userIdFieldName, string unionSchema, IEnumerable<ApplicationEvent> events = null) {
             CompositionSchemas = new Dictionary<string, ApplicationCompositionSchema>();
             if (displayables == null) throw new ArgumentNullException("displayables");
-
+            EntityName = entityName;
             ApplicationName = applicationName;
             Platform = platform;
             _displayables = displayables;
@@ -348,13 +353,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public IEnumerable<Int32> TabsIdxs {
+        public IEnumerable<int> TabsIdxs {
 
             get {
                 if (_tabs != null) {
                     return _tabs;
                 }
-                var list = new List<Int32>();
+                var list = new List<int>();
                 for (var i = 0; i < Displayables.Count; i++) {
                     var displayable = Displayables[i];
                     if (displayable is ApplicationTabDefinition) {
@@ -375,7 +380,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// We´re returning indexes, in order to keep the json small. The compositions can be then fetched from the Displayables field
         /// 
         /// </summary>
-        public IEnumerable<Int32> NonInlineCompositionIdxs {
+        public IEnumerable<int> NonInlineCompositionIdxs {
             get {
                 return GetCompositionIdx(false, _nonInlineCompositions);
             }
@@ -388,18 +393,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// We´re returning indexes, in order to keep the json small. The compositions can be then fetched from the Displayables field
         /// 
         /// </summary>
-        public IEnumerable<Int32> InlineCompositionIdxs {
+        public IEnumerable<int> InlineCompositionIdxs {
 
             get {
                 return GetCompositionIdx(true, _inlineCompositions);
             }
         }
 
-        private IEnumerable<int> GetCompositionIdx(Boolean inline, IList<Int32> cacheList) {
+        private IEnumerable<int> GetCompositionIdx(bool inline, IList<int> cacheList) {
             if (cacheList != null) {
                 return cacheList;
             }
-            var list = new List<Int32>();
+            var list = new List<int>();
             for (var i = 0; i < Displayables.Count; i++) {
                 var displayable = Displayables[i];
                 if (displayable is ApplicationCompositionDefinition &&
@@ -418,7 +423,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// Indicates wheter there is any non inline composition in this application, which will indicate to the screen 
         /// to place a navigator component enclosing the detail page.
         /// </summary>
-        public Boolean HasNonInlineComposition {
+        public bool HasNonInlineComposition {
             get {
                 return Compositions.Any(c => c.Schema.INLINE == false && !c.isHidden);
             }
@@ -427,7 +432,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// <summary>
         /// Indicates whether there is any inline composition in this application.
         /// </summary>
-        public Boolean HasInlineComposition {
+        public bool HasInlineComposition {
             get {
                 return Compositions.Any(c => c.Schema.INLINE == true && !c.isHidden);
             }
@@ -483,7 +488,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return new ApplicationMetadataSchemaKey(SchemaId, Mode, Platform);
         }
 
-        public String GetApplicationKey() {
+        public string GetApplicationKey() {
             return ApplicationName + "." + SchemaId;
         }
 
@@ -503,12 +508,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return _depandantFields;
         }
 
-        public Boolean IsWebPlatform() {
+        public bool IsWebPlatform() {
             //TODO: multi level hierarchy
             return ClientPlatform.Web == Platform || (ParentSchema != null && ParentSchema.IsWebPlatform());
         }
 
-        public Boolean IsMobilePlatform() {
+        public bool IsMobilePlatform() {
             return SchemaId != ApplicationMetadataConstants.SyncSchema &&
                 (ClientPlatform.Mobile == Platform || null == Platform) || (ParentSchema != null && ParentSchema.IsMobilePlatform());
         }

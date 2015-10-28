@@ -24,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             //linked list since we won´t ever need to locate a filter by it´s index
             var schemaFilters = new LinkedList<BaseMetadataFilter>();
 
-            var entity = MetadataProvider.EntityByApplication(schema.ApplicationName);
+            var entity = MetadataProvider.Entity(schema.EntityName);
 
             var positionBuffer = AddColumnFilters(schema, schemaFilters, entity);
 
@@ -49,13 +49,19 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             IDictionary<string, LinkedListNode<BaseMetadataFilter>> positionBuffer = new Dictionary<string, LinkedListNode<BaseMetadataFilter>>();
             foreach (var field in applicationFieldDefinitions) {
-                //first pass, all of non hidden columns become a filter (unless marked to remove)
-                if (field.IsHidden || field.IsTransient()) {
-                    //hidden field won´t become a filter by default                
+                
+                if (field.IsTransient()) {
+                    //transient fields won´t become a filter by default                
                     continue;
                 }
                 var overridenFilter = declaredFilters.Filters.FirstOrDefault(f => f.Attribute.EqualsIc(field.Attribute));
                 if (overridenFilter == null) {
+                    if (field.IsHidden) {
+                        //first pass, all of non hidden columns become a filter (unless marked to remove)
+                        //customized filters can be applied even to hidden fields
+                        continue;
+                    }
+
                     //no declared filter let´s just generate a default filter for the column
                     var attr = entity.LocateAttribute(field.Attribute);
                     if (attr == null) {
@@ -104,9 +110,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
                 if (!filter.IsTransient()) {
                     //non transient filters need to map to an existing attribute
-                    throw new MetadataException(
-                        "Attribute {0} not found for filter in application {1}. check your metadata".Fmt(filter.Attribute,
+                    Log.WarnFormat("Attribute {0} not found for filter in application {1}. check your metadata".Fmt(filter.Attribute,
                             applicationName));
+                    continue;
                 }
 
                 if (!filter.IsValid()) {
@@ -177,7 +183,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             }
 
 
-            var association = entity.LocateAssociationByLabelField(provider,true).Item1;
+            var association = entity.LocateAssociationByLabelField(provider, true).Item1;
             if (association == null) {
                 throw new FilterMetadataException("cannot locate a valid filter provider {0} on application {1}. Check the available relationships of the underlying entity {2}".Fmt(provider, schema.ApplicationName, entity.Name));
             }

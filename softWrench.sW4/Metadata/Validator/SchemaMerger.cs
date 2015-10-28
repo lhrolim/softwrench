@@ -56,10 +56,15 @@ namespace softWrench.sW4.Metadata.Validator {
             foreach (var overridenFilter in overridenFilters.Filters) {
                 var position = overridenFilter.Position;
                 var originalFilters = original.SchemaFilters.Filters;
+                var attributeOverridingFilter = originalFilters.FirstOrDefault(f => f.Attribute.EqualsIc(overridenFilter.Attribute));
+
                 if (position == null) {
-                    //just adding a brand new filter redeclared on customized schema
-                    originalFilters.AddLast(overridenFilter);
-                    continue;
+                    if (attributeOverridingFilter == null) {
+                        //just adding a brand new filter redeclared on customized schema
+                        originalFilters.AddLast(overridenFilter);
+                        continue;
+                    }
+                    position = overridenFilter.Attribute;
                 }
                 var originalNode = originalFilters.Find(overridenFilter);
                 if (originalNode == null) {

@@ -144,7 +144,7 @@ namespace softWrench.sW4.Metadata {
                 var entityMetadata = Entity(entityName);
                 if (isMobileEnabled() && app.IsMobileSupported()) {
                     app.Schemas().Add(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
+                        ApplicationSchemaFactory.GetSyncInstance(entityName,app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;
@@ -230,6 +230,7 @@ namespace softWrench.sW4.Metadata {
             if (name == null) throw new ArgumentNullException("name");
             Validate.NotNull(name, "name");
             var apps = name.StartsWith("_") ? _swdbapplicationMetadata : _applicationMetadata;
+
             if (!throwException) {
                 return
                     apps.FirstOrDefault(

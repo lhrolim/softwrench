@@ -296,12 +296,18 @@
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
       <schemas>
         <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
+
+          <filters>
+            <filter attribute="ownerperson_.displayname" remove="true"/>
+          </filters>
+          
           <customization position="reportedby">
             <field attribute="reportedbyp_.displayname" label="Reported By">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
             </field>
           </customization>
           <customization position="owner">
+            <field attribute="owner" hidden="true" label="Owner"/>
             <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
             </field>
@@ -316,12 +322,17 @@
       </properties>
       <schemas>
         <list title="Service Request Grid" redeclaring="false">
+          <filters>
+            <filter attribute="ownerperson_.displayname" remove="true"/>
+          </filters>
+          
           <customization position="reportedby">
             <field attribute="reportedbyp_.displayname" label="Reported By">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
             </field>
           </customization>
           <customization position="owner">
+            <field attribute="owner" hidden="true" label="Owner"/>
             <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
             </field>
