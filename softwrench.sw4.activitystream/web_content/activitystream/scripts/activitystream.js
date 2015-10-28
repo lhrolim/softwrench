@@ -21,7 +21,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             scope.$name = 'crudbody';
         },
 
-        controller: function ($scope, $http, $log, $interval, $timeout, redirectService,
+        controller: function($scope, $http, $log, $interval, $timeout, redirectService,
             contextService, $rootScope, alertService) {
 
             var log = $log.getInstance('sw4.activityStream');
@@ -32,7 +32,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             $scope.availableProfiles = [];
 
 
-            $scope.activityStreamEnabled = function () {
+            $scope.activityStreamEnabled = function() {
                 return contextService.fetchFromContext('activityStreamFlag', false, true);
             };
 
@@ -41,26 +41,26 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             }
 
 
-            $scope.hasmultipleprofiles = function () {
+            $scope.hasmultipleprofiles = function() {
                 return this.getMultiplesProfiles().length > 1;
             }
 
-            $scope.getMultiplesProfiles = function () {
+            $scope.getMultiplesProfiles = function() {
                 return $scope.availableProfiles;
             }
 
-            $scope.changeCurrentProfile = function () {
+            $scope.changeCurrentProfile = function() {
                 this.refreshStream();
             }
 
-            $scope.clearFilter = function () {
+            $scope.clearFilter = function() {
                 log.debug('clearFilter');
 
                 $scope.filterText = '';
                 $(window).trigger('resize');
             }
 
-            $scope.displayHidden = function (activity) {
+            $scope.displayHidden = function(activity) {
                 //always show unhidden
                 if (!activity.isRead) {
                     return true;
@@ -69,11 +69,11 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 return $scope.hiddenToggle;
             }
 
-            $scope.deciveType = function () {
+            $scope.deciveType = function() {
                 return DeviceDetect.catagory.toLowerCase();
             }
 
-            $scope.formatDate = function (notificationDate) {
+            $scope.formatDate = function(notificationDate) {
                 var currentDate = new Date();
                 var nowMils = currentDate.getTime();
 
@@ -84,7 +84,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 return 'About ' + dateMessage + ' ago'; // + ' (' + notificationMils + ')';
             };
 
-            $scope.getAllHidden = function () {
+            $scope.getAllHidden = function() {
                 log.debug('getAllHidden');
 
                 if ($scope.activities != null && $scope.activities.length > 0) {
@@ -96,25 +96,25 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 }
             }
 
-            $scope.markAllRead = function () {
+            $scope.markAllRead = function() {
                 log.debug('markAllRead');
 
                 var confirmationMessage = "Mark all notifications as read?";
-                return alertService.confirm(null, null, function () {
+                return alertService.confirm(null, null, function() {
                     var controllerToUse = "Notification";
                     var actionToUse = "UpdateNotificationReadFlag";
                     var parameters = {};
                     parameters.securityGroup = $scope.activityProfile;
 
                     var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
-                    $http.post(rawUrl, angular.toJson($scope.activities)).success(function () {
+                    $http.post(rawUrl, angular.toJson($scope.activities)).success(function() {
                         log.debug('Mark All Read Complete');
                         $scope.refreshStream();
                     });
                 }, confirmationMessage);
             }
 
-            $scope.markRead = function (activity) {
+            $scope.markRead = function(activity) {
                 log.debug('markRead', activity);
 
                 var controllerToUse = "Notification";
@@ -129,11 +129,11 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
-                    function (data) {
+                    function(data) {
                         log.debug('Mark Read Complete');
                         $scope.refreshStream();
                     }).error(
-                    function (data) {
+                    function(data) {
                         var errordata = {
                             errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                             errorStack: data.message
@@ -143,7 +143,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     });
             }
 
-            $scope.openLink = function (activity, parent) {
+            $scope.openLink = function(activity, parent) {
                 log.debug('openLink');
 
                 var controllerToUse = "Notification";
@@ -158,7 +158,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
-                    function (data) {
+                    function(data) {
 
                         //if the header is not fixed (mobile), hide the actity pane
                         if ($('.site-header').css('position') != 'fixed') {
@@ -178,12 +178,12 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                             if (parent != null && parent.equalIc('true')) {
                                 redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null);
                             } else
-                                redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function () { contextService.setActiveTab(activity.application + '_'); });
+                                redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function() { contextService.setActiveTab(activity.application + '_'); });
                         }
 
                         $scope.refreshStream();
                     }).error(
-                    function (data) {
+                    function(data) {
                         var errordata = {
                             errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                             errorStack: data.message
@@ -194,7 +194,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 );
             }
 
-            $scope.refreshStream = function (silent) {
+            $scope.refreshStream = function(silent) {
                 log.debug('refreshStream');
 
                 var controllerToUse = "Notification";
@@ -226,7 +226,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     });
             }
 
-            $scope.setPaneHeight = function () {
+            $scope.setPaneHeight = function() {
                 log.debug('setPaneHeight');
 
                 var headerHeight = $('#activitystream header').height();
@@ -236,27 +236,27 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
             }
 
-            $scope.toggleFilter = function () {
+            $scope.toggleFilter = function() {
                 log.debug('toggleFilter');
 
                 $scope.enableFilter = !$scope.enableFilter;
                 $scope.clearFilter();
             }
 
-            $scope.toggleHidden = function () {
+            $scope.toggleHidden = function() {
                 log.debug('toggleHidden');
 
                 $scope.hiddenToggle = !$scope.hiddenToggle;
 
                 //resize the scroll pane if needed
                 if (typeof jScrollPaneAPI !== 'undefined') {
-                    $timeout(function () {
+                    $timeout(function() {
                         jScrollPaneAPI.reinitialise();
                     }, 0);
                 }
             }
 
-            $scope.toggleActivityStream = function () {
+            $scope.toggleActivityStream = function() {
                 //open and close activity pane
                 $('#activitystream').toggleClass('open');
 
@@ -269,13 +269,13 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             };
 
             //set window height and reinitialize scroll pane if windows is resized
-            $(window).bind('resize', function () {
+            $(window).bind('resize', function() {
                 // IE fires multiple resize events while you are dragging the browser window which
                 // causes it to crash if you try to update the scrollpane on every one. So we need
                 // to throttle it to fire a maximum of once every 50 milliseconds...
                 if (typeof jScrollPaneAPI !== 'undefined') {
                     if (!throttleTimeout) {
-                        throttleTimeout = setTimeout(function () {
+                        throttleTimeout = setTimeout(function() {
                             $scope.setPaneHeight();
 
                             jScrollPaneAPI.reinitialise();
@@ -286,18 +286,18 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             });
 
             //prevent window scrolling after reaching end of navigation pane 
-            $(document).on('mousewheel', '#activitystream .scroll', function (e) {
+            $(document).on('mousewheel', '#activitystream .scroll', function(e) {
                 var delta = e.originalEvent.wheelDelta;
                 this.scrollTop += (delta < 0 ? 1 : -1) * 30;
                 e.preventDefault();
             });
 
-            $scope.$watch('filterText', function () {
+            $scope.$watch('filterText', function() {
                 $(window).trigger('resize');
             });
 
             //get the current notifications, then automatically refresh
-            var refreshLoop = function () {
+            var refreshLoop = function() {
                 log.debug('refreshLoop', $scope.refreshRate);
 
                 var refreshTimeout;
@@ -317,9 +317,9 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             refreshLoop();
 
             //open notification pane by default, TODO: remove for production
-            //$timeout(function () {
+            //$timeout(function() {
             //    $('#activitystream .handle').trigger('click');
-            //}, 0);
+            //}, false);
 
             //var demoNotifications = [];
 
@@ -341,25 +341,10 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             //newNotification.targetSchema = null;
             //newNotification.uId = 23162490;
             //demoNotifications.push(newNotification);
-
-            //newNotification = {};
-            //newNotification.application = "servicerequest";
-            //newNotification.createBy = "RKLIBERT";
-            //newNotification.flag = "changed";
-            //newNotification.icon = "fa-ticket";
-            //newNotification.id = "79788";
-            //newNotification.isRead = false;
-            //newNotification.label = "service request";
-            //newNotification.notificationDate = "2015-09-11T09:38:34";
-            //newNotification.parentApplication = null;
-            //newNotification.parentId = null;
-            //newNotification.parentLabel = null;
-            //newNotification.parentUId = -1;
-            //newNotification.rowstamp = 185625112;
-            //newNotification.summary = "DWLRR7 User on Rowan Rentless rig";
-            //newNotification.targetSchema = "editdetail";
-            //newNotification.uId = 62671;
-            //demoNotifications.push(newNotification);
+            //for (var i = 0; i < 21; i++) {
+            //    var newObject = $.extend({}, newNotification);
+            //    demoNotifications.push(newObject);
+            //}
         }
     }
 });

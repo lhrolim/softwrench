@@ -9,8 +9,6 @@
             <div class="pull-left">
                 <h2>Recent Activity</h2>
             </div>
-
-
             <div class="buttons controls pull-right">
                 <div ng-show="hasmultipleprofiles()" class="button">
                     <i class="fa fa-users fa-fw" rel="tooltip" data-original-title="Security group which would filter the data" />
@@ -18,13 +16,17 @@
                             ng-options="profile.id as profile.name for profile in getMultiplesProfiles()" ng-change="changeCurrentProfile()">
                     </select>
                 </div>
-                <div class="button" ng-click="refreshStream()" rel="tooltip" data-original-title="Refresh" data-placement="bottom"><i class="fa fa-refresh"></i>
+                <div class="button" ng-click="refreshStream()" rel="tooltip" data-original-title="Refresh" data-placement="bottom">
+                    <i class="fa fa-refresh"></i>
                 </div>
-                <div class="button off" ng-click="toggleHidden()" ng-class="hiddenToggle ? 'on' : 'off'" rel="tooltip" data-original-title="Toggle Hidden" data-placement="bottom"><i class="fa fa-eye"></i>
+                <div class="button off" ng-click="toggleHidden()" ng-class="hiddenToggle ? 'on' : 'off'" rel="tooltip" data-original-title="Toggle Hidden" data-placement="bottom">
+                    <i class="fa fa-eye"></i>
                 </div>
-                <div class="button off" ng-click="toggleFilter()" ng-class="enableFilter ? 'on' : 'off'" rel="tooltip" data-original-title="Toggle Filter" data-placement="bottom"><i class="fa fa-filter"></i>
+                <div class="button off" ng-click="toggleFilter()" ng-class="enableFilter ? 'on' : 'off'" rel="tooltip" data-original-title="Toggle Filter" data-placement="bottom">
+                    <i class="fa fa-filter"></i>
                 </div>
-                <div class="button" ng-click="markAllRead()" rel="tooltip" data-original-title="Mark All as Read" data-placement="bottom"><i class="fa fa-check-square"></i>
+                <div class="button" ng-click="markAllRead()" rel="tooltip" data-original-title="Mark All as Read" data-placement="bottom">
+                    <i class="fa fa-check-square"></i>
                 </div>
             </div>
             <div class="filter" ng-show="enableFilter">
@@ -39,8 +41,15 @@
                      ng-class="activity.isRead ? 'is-read' : 'not-read'"
                      ng-class-odd="'odd'" ng-class-even="'even'"
                      ng-show="displayHidden(activity)">
-                    <div class="read pull-left"><i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i></div>
-                    <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
+                    <div class="hide-toggle pull-right">
+                        <div class="button" ng-click="markRead(activity)"><i class="fa" ng-class="activity.isRead ? 'fa-eye' : 'fa-times'"></i></div>
+                    </div>
+                    <div class="read pull-left">
+                        <i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i>
+                    </div>
+                    <div class="icon pull-left">
+                        <i class="fa" ng-class="activity.icon"></i>
+                    </div>
                     <div class="text pull-left">
                         <div class="info">
                             <span class="by" ng-if="activity.createBy">{{activity.createBy}}</span><span class="by" ng-if="!activity.createBy">SOMEBODY</span> {{activity.flag | lowercase}}
@@ -53,9 +62,6 @@
                             </span>
                         </div>
                         <div class="date">{{formatDate(activity.notificationDate)}}</div>
-                    </div>
-                    <div class="hide-toggle">
-                        <div class="button" ng-click="markRead(activity)"><i class="fa" ng-class="activity.isRead ? 'fa-eye' : 'fa-times'"></i></div>
                     </div>
                 </div>
                 <div class="nomessages" ng-if="!activities.length"><i class="fa fa-info-circle"></i>&ensp;No recent activity to display.</div>
