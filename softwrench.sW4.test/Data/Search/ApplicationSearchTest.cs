@@ -12,13 +12,15 @@ namespace softwrench.sW4.test.Data.Search {
     [TestClass]
     public class ApplicationSearchTest {
 
-        private static ApplicationSchemaDefinition _schema;
-        private static ApplicationSchemaDefinition _assetSchema;
+        private ApplicationSchemaDefinition _schema;
+        private ApplicationSchemaDefinition _assetSchema;
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "hapag";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "hapag") {
+                ApplicationConfiguration.TestclientName = "hapag";
+                MetadataProvider.StubReset();
+            }
             var schemas = MetadataProvider.Application("servicerequest").Schemas();
             _schema = schemas[new ApplicationMetadataSchemaKey("list", "input", "web")];
             var asset = MetadataProvider.Application("asset").Schemas();

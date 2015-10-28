@@ -14,10 +14,12 @@ namespace softwrench.sW4.test.SPF {
     [TestClass]
     public class RouteParameterManagerTest {
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "otb";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "otb") {
+                ApplicationConfiguration.TestclientName = "otb";
+                MetadataProvider.StubReset();
+            }
         }
 
         [TestMethod]

@@ -20,10 +20,12 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
     public class ImacDescriptionHandlerTest {
 
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "hapag";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "hapag") {
+                ApplicationConfiguration.TestclientName = "hapag";
+                MetadataProvider.StubReset();
+            }
         }
 
         [TestMethod]
