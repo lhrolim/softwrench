@@ -154,7 +154,7 @@
                     }
 
                     $scope.removeItem = function (item) {
-                        var arr = $scope.filteroptions;
+                        var arr = $scope.vm.recentlyOptions;
                         var idx = -1;
                         for (var i = 0; i < arr.length; i++) {
                             if (arr[i].value === item.value) {
