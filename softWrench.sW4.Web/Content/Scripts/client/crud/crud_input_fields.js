@@ -142,7 +142,6 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 }
                 return "text";
             }
-
         },
 
         controller: function ($scope, $http, $element, $injector, $timeout, $log,
@@ -152,7 +151,6 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             layoutservice, attachmentService, richTextService) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
-
 
             //dictionary containing which details are or not expanded
             $scope.expandeddetails = {};
@@ -258,6 +256,11 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                         return;
                     }
                     $('#uploadFile').attr("value", fileName);
+                });
+
+                $("#uploadInputLink").on('click', function (e) {
+                    e.preventDefault();
+                    $("#uploadInput").trigger('click');
                 });
             });
 
