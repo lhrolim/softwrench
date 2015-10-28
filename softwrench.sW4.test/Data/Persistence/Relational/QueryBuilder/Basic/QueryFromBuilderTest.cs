@@ -16,10 +16,12 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
     [TestClass]
     public class QueryFromBuilderTest {
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "hapag";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "hapag") {
+                ApplicationConfiguration.TestclientName = "hapag";
+                MetadataProvider.StubReset();
+            }
         }
 
         [TestMethod]
@@ -64,13 +66,13 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
         //Literals standing on the from side
         [TestMethod]
         public void TestInverseRelationship() {
-//            var dto = new SearchRequestDto();
-//            var completeOne = MetadataProvider.Application("change");
-//            var metadata = completeOne.ApplyPolicies(new ApplicationMetadataSchemaKey("list"), InMemoryUser.TestInstance(),
-//                ClientPlatform.Web);
-//            ApplicationSchemaDefinition schema;
-//            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("change"), metadata.Schema);
-//            var result = QueryFromBuilder.Build(MetadataProvider.Entity("wochange"), dto);
+            //            var dto = new SearchRequestDto();
+            //            var completeOne = MetadataProvider.Application("change");
+            //            var metadata = completeOne.ApplyPolicies(new ApplicationMetadataSchemaKey("list"), InMemoryUser.TestInstance(),
+            //                ClientPlatform.Web);
+            //            ApplicationSchemaDefinition schema;
+            //            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("change"), metadata.Schema);
+            //            var result = QueryFromBuilder.Build(MetadataProvider.Entity("wochange"), dto);
 
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(ProjectionField.Default("sr_.description"));

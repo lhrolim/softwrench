@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web.Http;
-using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
-using softWrench.sW4.Data.API;
+using softwrench.sw4.dashboard.classes.service.graphic;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
@@ -16,7 +14,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
@@ -29,14 +26,15 @@ namespace softwrench.sw4.dashboard.classes.controller {
     public class DashBoardController : ApiController {
 
         private readonly SWDBHibernateDAO _dao;
-
         private readonly UserDashboardManager _userDashboardManager;
-        private IEventDispatcher _dispatcher;
+        private readonly IEventDispatcher _dispatcher;
+        private readonly GraphicStorageSystemFacadeProvider _graphicServiceProvider;
 
-        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager, IEventDispatcher dispatcher) {
+        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager, IEventDispatcher dispatcher, GraphicStorageSystemFacadeProvider graphicServiceProvider) {
             _dao = dao;
             _userDashboardManager = userDashboardManager;
             _dispatcher = dispatcher;
+            _graphicServiceProvider = graphicServiceProvider;
         }
 
         [HttpPost]
@@ -132,8 +130,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult LoadPanels([FromUri]String paneltype) {
             var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(), paneltype);
             var options = availablePanels.Select(f => new GenericAssociationOption(f.Id.ToString(), f.Alias))
-           .Cast<IAssociationOption>()
-           .ToList();
+                .Cast<IAssociationOption>()
+                .ToList();
             return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
         }
 
@@ -158,6 +156,18 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var manageDTO = Manage();
             manageDTO.ResultObject.PreferredId = dashBoardId;
             return manageDTO;
+        }
+
+        /// <summary>
+        /// Authenticates the user the selected graphic storage system provider.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IGenericResponseResult Authenticate([FromUri]string provider) {
+            var service = _graphicServiceProvider.GetService(provider);
+            var auth = service.Authenticate(SecurityFacade.CurrentUser());
+            return new GenericResponseResult<IGraphicStorageSystemAuthDto>(auth);
         }
 
         private Dashboard DoLoadDashBoard(int? dashBoardId, InMemoryUser user) {

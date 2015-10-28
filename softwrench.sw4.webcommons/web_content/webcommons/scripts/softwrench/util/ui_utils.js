@@ -25,7 +25,7 @@
                     adjustment = 135;
                 }
 
-                $('.listgrid-thead').css('top', headerHeight + paginationHeight - adjustment);
+                $('.listgrid-thead').css('top', headerHeight + paginationHeight - adjustment - 1);
                 $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
             }
         }

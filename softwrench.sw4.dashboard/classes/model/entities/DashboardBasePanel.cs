@@ -53,5 +53,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             get { return _visible; }
             set { _visible = value; }
         }
+
+        public string Type { get { return GetType().Name; } }
     }
 }

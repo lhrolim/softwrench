@@ -36,11 +36,11 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         var searchOperations = [
         { id: "", symbol: "", title: filtertype.nofilter, tooltip: filtertype.filter, begin: "", end: "", renderType: ["combo", "default", "datetime"], },
         { id: "CONTAINS", symbol: "C", title: filtertype.contains, tooltip: filtertype.contains, begin: "%", end: "%", renderType: ["combo", "default"], datatype: ['varchar'] },
+        { id: "EQ", symbol: "=", title: filtertype.eq, tooltip: filtertype.eq, begin: "=", end: "", renderType: ["default", "datetime"] },
         { id: "NCONTAINS", symbol: "!C", title: filtertype.ncontains, tooltip: filtertype.ncontains, begin: "!%", end: "%", renderType: ["combo", "default"], datatype: ['varchar'] },
         { id: "STARTWITH", symbol: "ST", title: filtertype.startwith, tooltip: filtertype.startwith, begin: "", end: "%", renderType: ["default"], datatype: ['varchar'] },
         { id: "ENDWITH", symbol: "END", title: filtertype.endwith, tooltip: filtertype.endwith, begin: "%", end: "", renderType: ["default"], datatype: ['varchar'] },
-        { id: "EQ", symbol: "=", title: filtertype.eq, tooltip: filtertype.eq, begin: "=", end: "", renderType: ["default", "datetime"] },
-        { id: "BTW", symbol: "-", title: filtertype.btw, tooltip: filtertype.btw, begin: ">=", end: "<=", renderType: [] },
+//        { id: "BTW", symbol: "-", title: filtertype.btw, tooltip: filtertype.btw, begin: ">=", end: "<=", renderType: [] },
         { id: "NOTEQ", symbol: "!=", title: filtertype.noteq, tooltip: filtertype.noteq, begin: "!=", end: "", renderType: ["default", "datetime"] },
         { id: "BLANK", symbol: "BLANK", title: filtertype.blank, tooltip: filtertype.blank, begin: "", end: "", renderType: ["default", "datetime","combo"] },
         { id: "GT", symbol: ">", title: filtertype.gt, tooltip: filtertype.gt, begin: ">", end: "", renderType: ["default", "datetime"] },
@@ -298,7 +298,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
 
         getSearchOperationById: function (id) {
             var op = $.grep(this.searchOperations(), function (e) {
-                return e.id.toUpperCase() == id.toUpperCase();
+                return e.id.toUpperCase() === id.toUpperCase();
             });
             if (op.length > 0) {
                 return op[0];

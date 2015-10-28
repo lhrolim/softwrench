@@ -4,9 +4,12 @@ using NHibernate.Mapping.Attributes;
 namespace softwrench.sw4.dashboard.classes.model.entities {
 
 
-    [JoinedSubclass(NameType = typeof(DashboardGridPanel), Lazy = false, ExtendsType = typeof(DashboardBasePanel)
-        , Table = "DASH_GRIDPANEL")]
-    //    [Class(Table = "DASH_GRIDPANEL", Lazy = false)]
+    [JoinedSubclass(
+        NameType = typeof(DashboardGridPanel), 
+        Lazy = false, 
+        ExtendsType = typeof(DashboardBasePanel), 
+        Table = "DASH_GRIDPANEL")]
+    //[Class(Table = "DASH_GRIDPANEL", Lazy = false)]
     public class DashboardGridPanel : DashboardBasePanel {
       
 

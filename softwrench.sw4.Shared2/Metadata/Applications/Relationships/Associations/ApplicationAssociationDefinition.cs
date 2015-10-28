@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -17,22 +18,40 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private string _label;
         // protected string LabelField;
-        public string DefaultValue { get; set; }
-        public string Target { get; set; }
-        public string LabelPattern { get; set; }
-        public string EnableExpression { get; set; }
-        public bool HideDescription { get; set; }
-        public string OrderByField { get; set; }
-        public string DefaultExpression { get; set; }
+        public string DefaultValue {
+            get; set;
+        }
+        public string Target {
+            get; set;
+        }
+        public string LabelPattern {
+            get; set;
+        }
+        public string EnableExpression {
+            get; set;
+        }
+        public bool HideDescription {
+            get; set;
+        }
+        public string OrderByField {
+            get; set;
+        }
+        public string DefaultExpression {
+            get; set;
+        }
 
         private string _applicationTo;
         private ISet<string> _extraProjectionFields = new HashSet<string>();
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public string RequiredExpression { get; set; }
+        public string RequiredExpression {
+            get; set;
+        }
 
-        public string Qualifier { get; set; }
+        public string Qualifier {
+            get; set;
+        }
 
         private ApplicationAssociationSchemaDefinition _applicationAssociationSchema;
 
@@ -50,13 +69,21 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         /// a section that will contain pertinent information regarding the association. Usually read-only fields.
         /// By default, it will only be visible when an item is selected, but still hidden under a collapsible panel.
         /// </summary>
-        public ApplicationSection DetailSection { get; set; }
+        public ApplicationSection DetailSection {
+            get; set;
+        }
 
         public class LabelData {
 
-            public string Label { get; set; }
-            public string LabelPattern { get; set; }
-            public string LabelField { get; set; }
+            public string Label {
+                get; set;
+            }
+            public string LabelPattern {
+                get; set;
+            }
+            public string LabelField {
+                get; set;
+            }
 
             public LabelData(string label, string labelPattern, string labelField, string applicationName) {
                 Label = label;
@@ -75,7 +102,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         }
 
-        public ApplicationAssociationDefinition() { }
+        public ApplicationAssociationDefinition() {
+        }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
             string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression,
@@ -139,36 +167,63 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public ApplicationAssociationSchemaDefinition Schema {
-            get { return _applicationAssociationSchema; }
-            set { _applicationAssociationSchema = value; }
+            get {
+                return _applicationAssociationSchema;
+            }
+            set {
+                _applicationAssociationSchema = value;
+            }
         }
 
 
 
 
-        public override string Attribute { get { return Target; } set { Target = value; } }
+        public override string Attribute {
+            get {
+                return Target;
+            }
+            set {
+                Target = value;
+            }
+        }
 
         public IList<string> LabelFields {
-            get { return _labelFields; }
-            set { _labelFields = value; }
+            get {
+                return _labelFields;
+            }
+            set {
+                _labelFields = value;
+            }
         }
 
         public string ApplicationTo {
-            get { return _applicationTo; }
-            set { _applicationTo = value; }
+            get {
+                return _applicationTo;
+            }
+            set {
+                _applicationTo = value;
+            }
         }
 
         public IDictionary<string, ApplicationEvent> Events {
-            get { return _events; }
-            set { _events = value; }
+            get {
+                return _events;
+            }
+            set {
+                _events = value;
+            }
         }
 
         public Boolean Reverse {
-            get { return EntityAssociation.Reverse; }
+            get {
+                return EntityAssociation.Reverse;
+            }
         }
 
         public bool ForceDistinctOptions {
-            get { return _forceDistinctOptions; }
+            get {
+                return _forceDistinctOptions;
+            }
         }
 
         public string ValueField {
@@ -183,15 +238,21 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                 }
                 return _valueField;
             }
-            set { _valueField = value; }
+            set {
+                _valueField = value;
+            }
         }
 
         public string ApplicationPath {
-            get { return From + "." + _applicationTo; }
+            get {
+                return From + "." + _applicationTo;
+            }
         }
 
         public Boolean MultiValued {
-            get { return ExtraProjectionFields.Count > 0; }
+            get {
+                return ExtraProjectionFields.Count > 0;
+            }
         }
 
         public override string ToString() {
@@ -199,13 +260,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public override string RendererType {
-            get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }
+            get {
+                return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower();
+            }
         }
 
         public ComponentStereotype RendererStereotype {
-            get
-            {
-                ComponentStereotype rendererStereotype = ComponentStereotype.None;
+            get {
+                if (_applicationAssociationSchema == null || _applicationAssociationSchema.Renderer == null) {
+                    return ComponentStereotype.None;
+                }
+
+                ComponentStereotype rendererStereotype;
                 Enum.TryParse(_applicationAssociationSchema.Renderer.Stereotype, true, out rendererStereotype);
                 return rendererStereotype;
             }
@@ -226,12 +292,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         [JsonIgnore]
         public IDictionary<string, object> InnerRendererParameters {
-            get { return _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary(); }
+            get {
+                return _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary();
+            }
         }
 
         public ISet<string> ExtraProjectionFields {
-            get { return _extraProjectionFields; }
-            set { _extraProjectionFields = value; }
+            get {
+                return _extraProjectionFields;
+            }
+            set {
+                _extraProjectionFields = value;
+            }
         }
 
         /// <summary>
@@ -248,12 +320,22 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public ISet<string> DependantFields {
-            get { return _applicationAssociationSchema.DependantFields; }
+            get {
+                return _applicationAssociationSchema.DependantFields;
+            }
         }
 
-        public string AssociationKey { get { return _applicationTo; } }
+        public string AssociationKey {
+            get {
+                return _applicationTo;
+            }
+        }
 
-        public override string Role { get { return From + "." + Target; } }
+        public override string Role {
+            get {
+                return From + "." + Target;
+            }
+        }
 
         public void SetLazyRendererParametersResolver(Lazy<IDictionary<string, object>> resolver) {
             LazyRendererParametersResolver = resolver;
@@ -261,11 +343,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField,DetailSection) {
-                    ExtraProjectionFields = ExtraProjectionFields,
-                    LabelFields = LabelFields,
-                    ApplicationTo = ApplicationTo,
-                };
+                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField, DetailSection) {
+                ExtraProjectionFields = ExtraProjectionFields,
+                LabelFields = LabelFields,
+                ApplicationTo = ApplicationTo,
+            };
             cloned.SetLazyResolver(LazyEntityAssociation);
             cloned.SetLazyRendererParametersResolver(LazyRendererParametersResolver);
             return cloned;

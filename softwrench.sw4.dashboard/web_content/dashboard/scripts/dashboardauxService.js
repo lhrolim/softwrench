@@ -1,17 +1,21 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('dashboardAuxService', function ($rootScope, $log, contextService, restService, alertService, modalService) {
+var app = angular.module('sw_layout');
+
+app.factory('dashboardAuxService', ["$rootScope", "$log", "contextService", "restService", function ($rootScope, $log, contextService, restService) {
 
     return {
-        lookupFields: function (event) {
+        lookupFields: function(event) {
             var application = event.fields.application;
             if (application == null) {
                 return;
             }
-            restService.invokeGet('Dashboard', 'LoadFields', { applicationName: application }, function (data) {
+            restService.getPromise('Dashboard', 'LoadFields', { applicationName: application }).then(function(response) {
+                var data = response.data;
                 event.scope.associationOptions['appfields'] = data.resultObject;
                 event.scope.datamap['appfields'] = "";
-                $.each(data.resultObject, function (key, value) {
+                $.each(data.resultObject, function(key, value) {
                     event.scope.datamap['appfields'] += value.value + ",";
                 });
                 var selectedFields = event.scope.datamap['appfields'];
@@ -19,13 +23,12 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
                     event.scope.datamap['appfields'] = selectedFields.substring(0, selectedFields.length - 1);
                 }
 
-                //                data.resultObject.unshift({value:"#allfields",label:"All Fields"});
-                //                event.scope.datamap['appfields'] = "#allfields";
-
+                //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
+                //event.scope.datamap['appfields'] = "#allfields";
             });
         },
 
-        locatePanelFromMatrix: function (dashboard, row, column) {
+        locatePanelFromMatrix: function(dashboard, row, column) {
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
 
@@ -38,9 +41,9 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             return dashboard.panels[newPosition];
         },
 
-        createAndAssociatePanel: function (datamap) {
-
-            restService.invokePost('Dashboard', 'CreatePanel', datamap, null, function (data) {
+        createAndAssociatePanel: function(datamap) {
+            restService.postPromise('Dashboard', 'CreatePanel', datamap, null).then(function(response) {
+                var data = response.data;
                 if (datamap.row && datamap.column) {
                     $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
                 } else {
@@ -49,52 +52,47 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             });
         },
 
-        saveDashboard: function (datamap, policy) {
+        saveDashboard: function(datamap, policy) {
             datamap.creationDateSt = datamap.creationDate;
             if (datamap.panels == null) {
                 //this will avoid wrong serialization
                 delete datamap.panels;
             }
 
-            restService.invokePost('Dashboard', 'SaveDashboard', null, datamap, function (data) {
+            restService.postPromise('Dashboard', 'SaveDashboard', null, datamap).then(function(response) {
+                var data = response.data;
                 $rootScope.$broadcast('dash_dashsaved', data.resultObject);
             });
         },
 
-        selectPanel: function (datamap) {
-            restService.invokeGet("Dashboard", "LoadPanel", { panel: datamap.panel }, function (data) {
-
+        selectPanel: function(datamap) {
+            restService.getPromise("Dashboard", "LoadPanel", { panel: datamap.panel }).then(function(response) {
+                var data = response.data;
                 $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
             });
         },
 
-        validatePanels: function (event) {
+        validatePanels: function(event) {
             var paneltype = event.fields.paneltype;
-            if (paneltype == null) {
-                return;
-            }
-            if (paneltype == "dashboardgraphic") {
-                alertService.alert("Graphic panels are not yet supported");
-                event.fields.paneltype = "";
-                return;
-            }
+            if (!paneltype) return;
+            //if (paneltype === "dashboardgraphic") {
+            //    alertService.alert("Graphic panels are not yet supported");
+            //    event.fields.paneltype = "";
+            //    return;
+            //}
         },
 
-
-
-        loadPanels: function (event) {
+        loadPanels: function(event) {
             var paneltype = event.fields.paneltype;
-            if (paneltype == null) {
-                return;
-            }
+            if (!paneltype) return;
 
-            restService.invokeGet('Dashboard', 'LoadPanels', { paneltype: paneltype }, function (data) {
+            restService.getPromise('Dashboard', 'LoadPanels', { paneltype: paneltype }).then(function(response) {
+                var data = response.data;
                 event.scope.associationOptions['availablepanels'] = data.resultObject;
-
             });
         },
 
-        readjustLayout: function (dashboard, row, column) {
+        readjustLayout: function(dashboard, row, column) {
             var log = $log.getInstance("dashboardauxService#adjustLayout");
             if (!dashboard.layout) {
                 //first will be whole line
@@ -106,7 +104,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             if (row > rows.length) {
                 dashboard.layout += ',' + column;
                 log.debug("adding new line at column 1");
-                if (column != 1) {
+                if (column !== 1) {
                     log.error("trying to add a new line on a column different than 1");
                     throw new Error("unexpected behaviour");
                 }
@@ -118,7 +116,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             return dashboard.layout;
         },
 
-        readjustPositions: function (dashboard, panel, row, column) {
+        readjustPositions: function(dashboard, panel, row, column) {
 
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
@@ -127,8 +125,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             }
             newPosition += column - 1;
 
-
-            //            var newPosition = (row * column) - 1;
+            //var newPosition = (row * column) - 1;
 
             var panelAssociation = {
                 position: newPosition,
@@ -139,14 +136,13 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
 
             dashboard.panels.splice(newPosition, 0, panelAssociation);
 
-            var panelRel = dashboard.panels;
-            for (i = 0; i < panelRel.length; i++) {
-                panelRel[i].position = i;
-            }
+            angular.forEach(dashboard.panels, function(p, index) {
+                p.position = index;
+            });
             return dashboard;
         }
+    };
 
+}]);
 
-    }
-
-});
+})(angular);

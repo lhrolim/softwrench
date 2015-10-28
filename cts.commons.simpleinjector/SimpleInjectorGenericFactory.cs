@@ -49,6 +49,12 @@ namespace cts.commons.simpleinjector {
             }
         }
 
+        public bool ContainsService(string serviceName, string methodName) {
+            if (!StringTypeDictionary.ContainsKey(serviceName)) {
+                return false;
+            }
+            return true;
+        }
 
 
         public static void RegisterNameAndType(Type type) {
@@ -61,5 +67,7 @@ namespace cts.commons.simpleinjector {
                 StringTypeDictionary[name] = type;
             }
         }
+
+
     }
 }

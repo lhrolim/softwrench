@@ -36,10 +36,10 @@
           <relationshipAttribute from="wonum" to="parent" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        <relationship to="pmchgotherapprovers" qualifier="approvalsdashboard">
-          <relationshipAttribute from="wonum" to="wonum" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
+<!--        <relationship to="pmchgotherapprovers" qualifier="approvalsdashboard">-->
+<!--          <relationshipAttribute from="wonum" to="wonum" primary="true" />-->
+<!--          <relationshipAttribute from="siteid" to="siteid" />-->
+<!--        </relationship>-->
         <relationship to="woactivity" qualifier="woactivitydashboard">
           <relationshipAttribute from="wonum" to="parent" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
@@ -72,9 +72,9 @@
           <field attribute="status" label="Status" >
             <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=20%" />
           </field>
-          <field attribute="pmchgtype" label="Type" >
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
+<!--          <field attribute="pmchgtype" label="Type" >-->
+<!--            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />-->
+<!--          </field>-->
           <field attribute="priority" label="Priority" >
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>

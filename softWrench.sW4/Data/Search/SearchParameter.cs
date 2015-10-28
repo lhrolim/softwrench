@@ -11,7 +11,6 @@ namespace softWrench.sW4.Data.Search {
             SearchOperator = ParseSearchOperator(rawValue, out value, out searchFilter);
             Value = value;
             FilterSearch = searchFilter;
-
         }
 
         private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
@@ -51,19 +50,38 @@ namespace softWrench.sW4.Data.Search {
             return searchOperator;
         }
 
-        public SearchOperator SearchOperator { get; private set; }
+        public SearchOperator SearchOperator {
+            get; private set;
+        }
+
+
+        public bool IgnoreParameter {
+            get; set;
+        }
 
         /// <summary>
         /// if true this indicates a FilterSearch, that would need to be case-insensitive handled
         /// </summary>
-        public bool FilterSearch { get; set; }
+        public bool FilterSearch {
+            get; set;
+        }
 
-        public bool NullOr { get; set; }
+        public bool NullOr {
+            get; set;
+        }
 
-        public object Value { get; private set; }
-        public bool IsList { get { return SearchOperator == SearchOperator.OR; } }
+        public object Value {
+            get; private set;
+        }
+        public bool IsList {
+            get {
+                return SearchOperator == SearchOperator.OR;
+            }
+        }
 
-        public bool IsNumber { get; set; }
+        public bool IsNumber {
+            get; set;
+        }
 
         public bool IsDate {
             get {
@@ -89,10 +107,16 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public bool IsBlankNumber { get { return IsNumber && SearchOperator.BLANK == SearchOperator; } }
+        public bool IsBlankNumber {
+            get {
+                return IsNumber && SearchOperator.BLANK == SearchOperator;
+            }
+        }
 
         public bool IsBlankDate {
-            get { return IsDate && SearchOperator.BLANK == SearchOperator; }
+            get {
+                return IsDate && SearchOperator.BLANK == SearchOperator;
+            }
         }
 
         public bool IsEqualOrNotEqual() {
@@ -114,5 +138,5 @@ namespace softWrench.sW4.Data.Search {
         }
     }
 
-
+    
 }

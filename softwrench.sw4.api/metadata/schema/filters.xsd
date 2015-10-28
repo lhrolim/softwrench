@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.controltechnologysolutions.com/filters"
+        xmlns:f="http://www.controltechnologysolutions.com/filters"
+	 elementFormDefault="qualified">
+
+
+  <complexType name="BaseFilterType">
+    <attribute name="attribute" type="string"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="icon" type="string"></attribute>
+    <attribute name="position" type="string"></attribute>
+    <attribute name="tooltip" type="string"></attribute>
+    <attribute name="style" type="string"></attribute>
+    <attribute name="whereclause" type="string"></attribute>
+    <attribute name="remove" type="boolean">
+      <annotation>
+        <documentation>
+          If true, indicates that we´re interested in excluding this filter from screen (i.e: a grid column that we don´t want to be part of the filter list)
+        </documentation>
+        
+      </annotation>
+      
+    </attribute>
+  </complexType>
+
+  <complexType name="OptionFilterType">
+    <complexContent>
+      <extension base="f:BaseFilterType">
+
+        <sequence minOccurs="0" maxOccurs="unbounded">
+          <element name="option" type="f:FilterOptionType"></element>
+        </sequence>
+        <attribute name="provider" type="string"></attribute>
+        <attribute name="allowblank" type="boolean">
+          <annotation>
+            <documentation>If true, will create a special option on the filter to allow for null values. not every filter would desire that behavior</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="displaycode" type="boolean">
+          <annotation>
+            <documentation>if true the value will be displayed on screen --> the result form will be (code) - label </documentation>
+          </annotation>  
+        </attribute>
+        
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+  <complexType name="BoolFilterType">
+    <complexContent>
+      <extension base="f:BaseFilterType">
+        <attribute name="defaultselection" type="boolean"></attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="DateFilterType">
+    <complexContent>
+      <extension base="f:BaseFilterType">
+        <attribute name="allowfuture" type="boolean"></attribute>
+        <attribute name="dateonly" type="boolean"></attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="NumberFilterType">
+    <complexContent>
+      <extension base="f:BaseFilterType">
+        
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+
+
+
+  <complexType name="FilterOptionType">
+    <attribute name="label" type="string"></attribute>
+    <attribute name="value" type="string"></attribute>
+  </complexType>
+
+</schema>

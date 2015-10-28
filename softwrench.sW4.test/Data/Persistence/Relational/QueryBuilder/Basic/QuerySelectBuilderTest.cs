@@ -8,8 +8,8 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
     [TestClass]
     public class QuerySelectBuilderTest {
-        [ClassInitialize]
-        public static void Before(TestContext testContext) {
+        [TestInitialize]
+        public void Before() {
             if (!"hapag".Equals(ApplicationConfiguration.TestclientName)) {
                 ApplicationConfiguration.TestclientName = "hapag";
                 MetadataProvider.StubReset();

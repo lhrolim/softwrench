@@ -189,9 +189,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var qualifier = association.Attribute(XmlMetadataSchema.RelationshipAttributeQualifier).ValueOrDefault((string)null);
                 var to = association.Attribute(XmlMetadataSchema.RelationshipAttributeTo).Value;
                 var collection = association.Attribute(XmlMetadataSchema.RelationshipAttributeCollection).ValueOrDefault(false);
+                var cacheable = association.Attribute(XmlMetadataSchema.RelationshipCacheableAttribute).ValueOrDefault(false);
                 var reverseLookupAttribute = association.Attribute(XmlMetadataSchema.RelationshipAttributeReverse).ValueOrDefault((string)null);
                 var ignorePrimaryAttribute = association.Attribute(XmlMetadataSchema.IgnorePrimaryAttribute).ValueOrDefault(false);
-                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, reverseLookupAttribute, ignorePrimaryAttribute);
+                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, cacheable, reverseLookupAttribute, ignorePrimaryAttribute);
             }
 
             /// <summary>

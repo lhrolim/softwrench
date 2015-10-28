@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Notification;
 using softwrench.sW4.Shared2.Metadata.Applications.Notification;
 using softWrench.sW4.Metadata.Applications.Notification;
@@ -448,181 +449,81 @@ namespace softWrench.sW4.Metadata.Parsing {
             var xElements = schemasElement.Elements();
             var resultDictionary = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             foreach (var xElement in xElements) {
-                var localName = xElement.Name.LocalName;
-                var id = xElement.Attribute(XmlMetadataSchema.SchemaIdAttribute).ValueOrDefault((string)null);
-                //TODO: switch default redeclaring behaviour to false and fix all metadatas
-                var redeclaring = xElement.Attribute(XmlMetadataSchema.SchemaRedeclaringSchemaAttribute).ValueOrDefault(true);
-                var modeAttr = xElement.Attribute(XmlMetadataSchema.SchemaModeAttribute).ValueOrDefault((string)null);
-                var platformAttr = xElement.Attribute(XmlMetadataSchema.SchemaPlatformAttribute).ValueOrDefault((string)null);
-                var title = xElement.Attribute(XmlMetadataSchema.SchemaTitleAttribute).ValueOrDefault((string)null);
-                var stereotypeAttr = xElement.Attribute(XmlMetadataSchema.SchemaStereotypeAttribute).ValueOrDefault((string)null);
-                var isAbstract = xElement.Attribute(XmlMetadataSchema.SchemaAbstractAttribute).ValueOrDefault(false);
-                var parentSchemaValue = xElement.Attribute(XmlMetadataSchema.SchemaParentSchemaAttribute).ValueOrDefault((string)null);
-                var unionSchema = xElement.Attribute(XmlMetadataSchema.SchemaUnionSchemaAttribute).ValueOrDefault((string)null);
-                var stereotype = SchemaStereotype.None;
-
-                ClientPlatform? platform = null;
-                if (stereotypeAttr != null) {
-                    Enum.TryParse(stereotypeAttr, true, out stereotype);
-                }
-                var mode = SchemaMode.None;
-                if (modeAttr != null) {
-                    Enum.TryParse(modeAttr, out mode);
-                }
-                if (platformAttr != null) {
-                    if (platformAttr == "web") {
-                        platform = ClientPlatform.Web;
-                    } else if (platformAttr == "mobile") {
-                        platform = ClientPlatform.Mobile;
-                    }
-                }
-                if (localName == XmlMetadataSchema.DetailElement) {
-                    id = ApplicationMetadataConstants.Detail;
-                    if (stereotype == SchemaStereotype.None) {
-                        stereotype = SchemaStereotype.Detail;
-                    }
-
-                } else if (localName == XmlMetadataSchema.ListElement) {
-                    id = ApplicationMetadataConstants.List;
-                    if (stereotype == SchemaStereotype.None) {
-                        stereotype = SchemaStereotype.List;
-                    }
-                }
-                var displayables = ParseDisplayables(applicationName, xElement, entityName);
-                var schemaProperties = ParseProperties(xElement, id);
-                ApplicationSchemaDefinition parentSchema = null;
-                if (parentSchemaValue != null) {
-                    parentSchema = LookupParentSchema(id, applicationName, parentSchemaValue, platform, resultDictionary, displayables);
-                }
-
-                ApplicationSchemaDefinition printSchema = null;
-                string printSchemaValue = null;
-                if (schemaProperties.TryGetValue("list.print.schema", out printSchemaValue) && printSchemaValue != null) {
-                    printSchema = LookupSchema(id, applicationName, printSchemaValue, platform, resultDictionary);
-                }
-                ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
-                resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
-                    ApplicationSchemaFactory.GetInstance(applicationName, title, id, redeclaring, stereotype, mode, platform,
-                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, userIdFieldName, unionSchema, ParseEvents(xElement)));
+                DoParseSchema(applicationName, entityName, idFieldName, userIdFieldName, xElement, resultDictionary);
             }
             return resultDictionary;
         }
 
-        private IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> ParseNotifications(string applicationName, string applicationTitle, string entityName,
-        XElement application) {
-            var notificationsElement = application.Elements().FirstOrDefault(f => f.Name.LocalName == XmlNotificationMetadataSchema.NotificationsElement);
-            var resultDictionary = new Dictionary<ApplicationNotificationKey, ApplicationNotificationDefinition>();
-            if (notificationsElement != null) {
-                var xElements = notificationsElement.Elements();
-                foreach (var xElement in xElements) {
-                    var notificationId =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeId)
-                            .ValueOrDefault((string)null);
-                    var label =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeLabel)
-                            .ValueOrDefault((string)null);
-                    var type =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeType)
-                            .ValueOrDefault((string)null);
-                    var role =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeRole)
-                            .ValueOrDefault((string)null);
-                    var icon =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeIcon)
-                            .ValueOrDefault((string)null);
-                    var targetSchema =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeTargetSchema)
-                            .ValueOrDefault((string)null);
-                    var targetApplication =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeTargetApplication)
-                            .ValueOrDefault((string)null);
-                    var whereClause =
-                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeWhereClause)
-                            .ValueOrDefault((string)null);
+        private void DoParseSchema(string applicationName, string entityName, string idFieldName, string userIdFieldName,
+            XElement xElement, Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultDictionary) {
+            var localName = xElement.Name.LocalName;
+            var id = xElement.Attribute(XmlMetadataSchema.SchemaIdAttribute).ValueOrDefault((string)null);
+            //TODO: switch default redeclaring behaviour to false and fix all metadatas
+            var redeclaring = xElement.Attribute(XmlMetadataSchema.SchemaRedeclaringSchemaAttribute).ValueOrDefault(true);
+            var modeAttr = xElement.Attribute(XmlMetadataSchema.SchemaModeAttribute).ValueOrDefault((string)null);
+            var platformAttr = xElement.Attribute(XmlMetadataSchema.SchemaPlatformAttribute).ValueOrDefault((string)null);
+            var title = xElement.Attribute(XmlMetadataSchema.SchemaTitleAttribute).ValueOrDefault((string)null);
+            var stereotypeAttr = xElement.Attribute(XmlMetadataSchema.SchemaStereotypeAttribute).ValueOrDefault((string)null);
+            var isAbstract = xElement.Attribute(XmlMetadataSchema.SchemaAbstractAttribute).ValueOrDefault(false);
+            var parentSchemaValue =
+                xElement.Attribute(XmlMetadataSchema.SchemaParentSchemaAttribute).ValueOrDefault((string)null);
+            var unionSchema = xElement.Attribute(XmlMetadataSchema.SchemaUnionSchemaAttribute).ValueOrDefault((string)null);
 
-                    var stereotype = SchemaStereotype.Notification;
-                    var notificationType = type == "ActivityStream"
-                        ? NotificationType.ActivityStream
-                        : NotificationType.None;
-                    var displayables = ParseNotificationDisplayables(applicationName, xElement, entityName);
+            var stereotype = SchemaStereotype.None;
 
-                    resultDictionary.Add(new ApplicationNotificationKey(notificationId, notificationType, role),
-                        ApplicationNotificationFactory.GetInstance(applicationName, applicationTitle, notificationId,
-                            stereotype, notificationType,
-                            role, label, icon, targetSchema, targetApplication, whereClause, displayables));
+            ClientPlatform? platform = null;
+            if (stereotypeAttr != null) {
+                Enum.TryParse(stereotypeAttr, true, out stereotype);
+            }
+            var mode = SchemaMode.None;
+            if (modeAttr != null) {
+                Enum.TryParse(modeAttr, out mode);
+            }
+            if (platformAttr != null) {
+                if (platformAttr == "web") {
+                    platform = ClientPlatform.Web;
+                } else if (platformAttr == "mobile") {
+                    platform = ClientPlatform.Mobile;
                 }
             }
-            return resultDictionary;
-        }
-
-        private static List<IApplicationDisplayable> ParseNotificationDisplayables(string applicationName, XContainer notification, string entityName) {
-            var displayables = new List<IApplicationDisplayable>();
-            var entityMetadata = MetadataProvider.Entity(entityName);
-
-            var attributesElement = notification.Elements().First();
-
-            if (attributesElement.Name.LocalName == XmlNotificationMetadataSchema.NotificationAttributesElement) {
-                foreach (var xElement in attributesElement.Elements()) {
-                    var xName = xElement.Name.LocalName;
-
-                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement ||
-                        xName == XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement ||
-                        xName == XmlNotificationMetadataSchema.NotificationAttributeUIdElement ||
-                        xName == XmlNotificationMetadataSchema.NotificationAttributeChangeByElement) {
-                        displayables.Add(new ApplicationFieldDefinition(applicationName, xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
-                                .Value,
-                                xName
-                            ));
-                    }
-
-                    if (xName == XmlNotificationMetadataSchema.NotificationParentAttributesElement) {
-                        foreach (var parentXElement in xElement.Elements()) {
-                            displayables.Add(new ApplicationFieldDefinition(applicationName,
-                                parentXElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
-                                    .Value, parentXElement.Name.LocalName));
-                        }
-                    }
-
-                    if (xName == XmlNotificationMetadataSchema.NotificationExtraAttributesElement) {
-                        foreach (var extraXElement in xElement.Elements()) {
-                            var attribute =
-                                extraXElement.Attribute(
-                                    XmlNotificationMetadataSchema.NotificationAttributeElementAttribute).Value;
-                            displayables.Add(new ApplicationFieldDefinition(applicationName, attribute, attribute));
-                        }
-                    }
-
+            if (localName == XmlMetadataSchema.DetailElement) {
+                id = ApplicationMetadataConstants.Detail;
+                if (stereotype == SchemaStereotype.None) {
+                    stereotype = SchemaStereotype.Detail;
+                }
+            } else if (localName == XmlMetadataSchema.ListElement) {
+                id = ApplicationMetadataConstants.List;
+                if (stereotype == SchemaStereotype.None) {
+                    stereotype = SchemaStereotype.List;
                 }
             }
+            var displayables = ParseDisplayables(applicationName, xElement, entityName);
+            var schemaProperties = ParseProperties(xElement, id);
+            var filters = XmlFilterMetadataParser.ParseSchemaFilters(xElement, stereotype);
+            ApplicationSchemaDefinition parentSchema = null;
+            if (parentSchemaValue != null) {
+                parentSchema = LookupParentSchema(id, applicationName, parentSchemaValue, platform, resultDictionary,
+                    displayables);
+            }
 
-            return displayables;
+            ApplicationSchemaDefinition printSchema = null;
+            string printSchemaValue = null;
+            if (schemaProperties.TryGetValue("list.print.schema", out printSchemaValue) && printSchemaValue != null) {
+                printSchema = LookupSchema(id, applicationName, printSchemaValue, platform, resultDictionary);
+            }
+            ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
+
+            resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
+                ApplicationSchemaFactory.GetInstance(applicationName, title, id, redeclaring, stereotype, mode, platform,
+                    isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
+                    userIdFieldName, unionSchema, ParseEvents(xElement)));
         }
 
-        //private static IApplicationDisplayable FindNotificationDisplayable(string applicationName, string entityName, XElement xElement, EntityMetadata entityMetadata) {
-        //    var xName = xElement.Name.LocalName;
+     
 
-        //    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement) {
-        //        return ParseNotificationAttribute(applicationName, xElement, entityMetadata);
-        //    }
-        //    if (xName == XmlMetadataSchema.ApplicationSectionElement) {
-        //        return ParseSection(applicationName, xElement, entityMetadata);
-        //    }
-        //    if (xName == XmlMetadataSchema.ApplicationTabElement) {
-        //        return ParseTab(applicationName, xElement, entityName);
-        //    }
-        //    if (xName == XmlMetadataSchema.ApplicationCompositionElement) {
-        //        return ParseComposition(xElement, applicationName, entityName);
-        //    }
-        //    if (xName == XmlMetadataSchema.ApplicationAssociationElement) {
-        //        return ParseAssociation(xElement, applicationName);
-        //    }
-        //    if (xName == XmlMetadataSchema.OptionFieldElement) {
-        //        return ParseOptions(xElement, applicationName);
-        //    } if (xName == XmlMetadataSchema.ReferenceElement) {
-        //        return ParseReference(xElement);
-        //    }
-        //    return null;
-        //}
+
+
+
 
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,
             Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultDictionary, IList<IApplicationDisplayable> displayables) {

@@ -14,7 +14,9 @@
         link: function (scope, element, attr) {
             scope.doAction = function (title, controller, action, parameters, $event) {
                 var target = $event ? $event.target : null;
-                adminMenuService.doAction(title, controller, action, parameters, target);
+                adminMenuService.doAction(title, controller, action, parameters, target).then(function() {
+                    window.location.href = window.location.href;
+                });
             };
 
             scope.refreshMetadata = function() {

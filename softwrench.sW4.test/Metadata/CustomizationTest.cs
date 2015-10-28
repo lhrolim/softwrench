@@ -10,14 +10,17 @@ namespace softwrench.sW4.test.Metadata {
     [TestClass]
     public class CustomizationTest {
 
-        private static IList<ApplicationFieldDefinition> _baseWorklogDisplayables;
+        private IList<ApplicationFieldDefinition> _baseWorklogDisplayables;
 
-        private static List<IApplicationDisplayable> _baseIssueDisplayables;
+        private List<IApplicationDisplayable> _baseIssueDisplayables;
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "otb";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "otb") {
+                ApplicationConfiguration.TestclientName = "otb";
+                MetadataProvider.StubReset();
+            }
+
 
             /* Temporarily used in TestAfterAndBefore1() Method */
             var app = MetadataProvider.Application("worklog");
@@ -29,7 +32,7 @@ namespace softwrench.sW4.test.Metadata {
             var newInvSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
             _baseIssueDisplayables = newInvSchema.Displayables;
 
-            
+
             //TODO: Add the ability to access the base schema so that we can count the base displayables directly from a test method
 
             ApplicationConfiguration.TestclientName = "test_only";
@@ -52,12 +55,12 @@ namespace softwrench.sW4.test.Metadata {
             var description = displayables.FirstOrDefault(f => f.Attribute.Equals("description"));
             var descIndex = displayables.IndexOf(description);
 
-            Assert.AreEqual("xxx", displayables[descIndex+1].Attribute);
+            Assert.AreEqual("xxx", displayables[descIndex + 1].Attribute);
 
             var createdate = displayables.FirstOrDefault(f => f.Attribute.Equals("createdate"));
             var createdateIndex = displayables.IndexOf(createdate);
 
-            Assert.AreEqual("yyy", displayables[createdateIndex-1].Attribute);
+            Assert.AreEqual("yyy", displayables[createdateIndex - 1].Attribute);
         }
 
         [TestMethod]
@@ -73,11 +76,11 @@ namespace softwrench.sW4.test.Metadata {
 
             Assert.IsNull(displayables.FirstOrDefault(f => f.Attribute.Equals("longdescription_.ldtext")));
 
-            var zzzfield= displayables.FirstOrDefault(f => f.Attribute.Equals("zzz"));
+            var zzzfield = displayables.FirstOrDefault(f => f.Attribute.Equals("zzz"));
             Assert.IsNotNull(zzzfield);
 
             var idx = displayables.IndexOf(zzzfield);
-            Assert.AreEqual("www",displayables[idx+1].Attribute);
+            Assert.AreEqual("www", displayables[idx + 1].Attribute);
 
         }
 
@@ -95,9 +98,9 @@ namespace softwrench.sW4.test.Metadata {
             //This was not replaced
             Assert.IsNotNull(associations.FirstOrDefault(c => c.Attribute == "ownergroup"));
 
-            Assert.AreEqual(1,associations.Count(c => c.Attribute == "owner"));
+            Assert.AreEqual(1, associations.Count(c => c.Attribute == "owner"));
 
-            var optionFields =detailSchema.OptionFields;
+            var optionFields = detailSchema.OptionFields;
             Assert.IsNull(optionFields.FirstOrDefault(c => c.Attribute == "classstructureid"));
         }
 
@@ -108,13 +111,13 @@ namespace softwrench.sW4.test.Metadata {
 
             var app = MetadataProvider.Application("invissue");
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
-            
+
             var associations = detailSchema.Associations;
             var issueTo = associations.FirstOrDefault(c => c.Attribute == "issueto");
             Assert.IsNotNull(issueTo);
-            Assert.AreNotEqual("lookup",issueTo.RendererType);
-            Assert.AreEqual(_baseIssueDisplayables.Count,detailSchema.Displayables.Count);
-            
+            Assert.AreNotEqual("lookup", issueTo.RendererType);
+            Assert.AreEqual(_baseIssueDisplayables.Count, detailSchema.Displayables.Count);
+
         }
 
         [TestMethod]
@@ -126,8 +129,8 @@ namespace softwrench.sW4.test.Metadata {
 
             var associations = detailSchema.Associations;
             var count = associations.Count(c => c.Attribute == "failurecode");
-            Assert.AreEqual(1,count);
-           
+            Assert.AreEqual(1, count);
+
 
         }
 

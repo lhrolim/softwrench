@@ -1,0 +1,16 @@
+﻿<div class="panel">
+    <div class="header">{{panel.title}}</div>
+    
+    <div class="body">
+        <div class="js_graphic_container">
+            <div ng-if="data.hasError" style="padding-top: 30px; text-align: center;">
+                <p>An error happened while loading the graphic</p>
+                <button type="button"
+                        class="btn btn-danger"
+                        ng-click="loadGraphic()">
+                    Reload Graphic
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
