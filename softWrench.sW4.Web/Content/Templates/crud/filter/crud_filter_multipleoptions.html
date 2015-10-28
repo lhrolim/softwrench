@@ -1,5 +1,5 @@
 <div class="sw-combobox-container">
-    <div ng-if="filter.lazy" class="input-group">
+    <div ng-if="filter.lazy" class="input-group lazy-search">
         <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}" />
         <span class="input-group-addon last">
             <i class="fa fa-search"></i>
@@ -7,7 +7,6 @@
         <div></div><!--stop addon from moving on hover-->
     </div>
     <div class="input-group">
-        
         <div ng-show="vm.showRecently && vm.recentlyOptions.length >0">
             <h5>Recently Used</h5>
             <div class="divider"></div>
@@ -30,10 +29,7 @@
                     <span class="fa fa-trash removable" ng-if="option.removable" ng-click="removeItem(option)"></span>
                 </li>
             </ul>
-            
         </div>
-
-
         <div ng-if="filteroptions.length > 0">
             <div class="select-all" ng-if="filteroptions.length > 1">
                 <input type="checkbox"
@@ -44,8 +40,8 @@
                 <span class="text">Select All</span>
                 <div class="divider" ng-if="!filter.lazy"></div>
             </div>
-            <ul>
-                <li ng-repeat="option in filteroptions" class="filter-row">
+            <ul class="filter-options">
+                <li ng-repeat="option in filteroptions" class="">
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
@@ -53,8 +49,8 @@
                            ng-true-value="1" ng-false-value="0"/>
                     {{labelValue(option)}}
                 </li>
-                <li ng-show="vm.hasMoreItems">
-                    There are more options. Continue typing to refine further
+                <li ng-show="vm.hasMoreItems" class="more-results">
+                    <i class="fa fa-info-circle"></i>&ensp;There are more options. Continue typing to refine further
                 </li>
             </ul>
         </div>
