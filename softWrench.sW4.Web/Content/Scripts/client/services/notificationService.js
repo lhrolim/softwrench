@@ -53,7 +53,7 @@
 
                     $timeout(function() {
                         vm.messages.push(message);
-                    }, 0);
+                    });
 
                     //add automatic timeout for success messages
                     if (message.type === 'success' && !message.exception) {

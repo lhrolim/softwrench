@@ -64,7 +64,7 @@
           <!--Description is not a required field - please fix for expand all / collapse all-->
           <field label="Description" attribute="docinfo_.description" />
           <field label="Attachment:" attribute="newattachment" requiredexpression="true">
-            <renderer type="upload"/>
+            <renderer type="dndupload"/>
           </field>
           <!--          <field hidden="true" attribute="ownerid"/>-->
           <!--          <field hidden="true" attribute="ownertable"/>-->

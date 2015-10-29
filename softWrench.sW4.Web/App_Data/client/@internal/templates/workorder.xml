@@ -94,6 +94,10 @@
           <relationshipAttribute from="siteid" to="siteid" primary="true"/>
           <relationshipAttribute to="active" literal="1"/>
         </relationship>
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
 
       </relationships>
       <connectorParameters>
@@ -117,7 +121,7 @@
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px"/>
             <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
-            <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px"/>
+            <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" whereclause="!@assetnum in (!@#value)" displaycode="true"/>
           </filters>
 
           <field attribute="wonum" label="WO#" >
@@ -338,10 +342,7 @@
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
-              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
-            </composition>
+         
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
             </composition>
@@ -353,6 +354,10 @@
             </composition>
             <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>

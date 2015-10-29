@@ -3,7 +3,7 @@
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://10.50.100.146:9080/meaweb/wsdl/" />
+  <property key="basewsURL" value="http://10.50.100.145:9081/meaweb/wsdl/" />
   <!-- <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=BS7116;User Id=MAXIMO;password=MAXIMO;" /> /-->
   <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=Max7115Tst;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
@@ -25,7 +25,9 @@
   </environment>
 
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_BS7116;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.145:9081/meaweb/wsdl/" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_BS76DEV;User Id=sw;password=softwrench;" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=BS76DEV;User Id=MAXIMO;password=MAXIMO;" />
   </environment>
 
 </Properties>

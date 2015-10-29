@@ -25,6 +25,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.Association;
@@ -46,10 +47,6 @@ namespace softWrench.sW4.Web.Controllers {
             _associationResolver = associationResolver;
         }
 
-        public IEnumerable<IAssociationOption> GetFilterOption()
-        {
-            return null;
-        }
 
         /// <summary>
         /// 
@@ -77,12 +74,16 @@ namespace softWrench.sW4.Web.Controllers {
             var entityAssociation = MetadataProvider.Entity(app.Entity).LocateAssociationByLabelField(filterProvider);
             var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
 
-            var filter = new SearchRequestDto();
+            var filter = new PaginatedSearchRequestDto();
             if (!string.IsNullOrEmpty(labelSearchString)) {
                 filter.AppendWhereClauseFormat("({0} like '%{1}%' or {2} like '%{1}%')", primaryAttribute.To, labelSearchString, entityAssociation.Item2.Name);
             }
+            //let´s limit the filter adding an extra value so that we know there´re more to be brought
+            //TODO: add a count call
+            filter.PageSize = 21;
             //adopting to use an association to keep same existing service
-            return _associationResolver.ResolveOptions(app, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
+            var result = _associationResolver.ResolveOptions(app, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
+            return result;
 
         }
 

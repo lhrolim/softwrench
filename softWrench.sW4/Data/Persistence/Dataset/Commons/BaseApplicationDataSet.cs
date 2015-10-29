@@ -34,6 +34,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -74,6 +75,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private IWhereClauseFacade _whereClauseFacade;
 
+        private FilterWhereClauseHandler _filterWhereClauseHandler;
+
         internal BaseApplicationDataSet() {
         }
 
@@ -85,6 +88,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 _contextLookuper =
                     SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
                 return _contextLookuper;
+            }
+        }
+
+        protected FilterWhereClauseHandler FilterWhereClauseHandler {
+            get {
+                if (_filterWhereClauseHandler != null) {
+                    return _filterWhereClauseHandler;
+                }
+                _filterWhereClauseHandler =
+                    SimpleInjectorGenericFactory.Instance.GetObject<FilterWhereClauseHandler>(typeof(FilterWhereClauseHandler));
+                return _filterWhereClauseHandler;
             }
         }
 
@@ -256,6 +270,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 //if the schema has a default sort defined, and we didn´t especifally asked for any sort column, apply the default schema
                 searchDto.SearchSort = propertyValue;
             }
+
+            searchDto = this.FilterWhereClauseHandler.HandleDTO(application.Schema,searchDto);
 
             var tasks = new Task[2];
             var ctx = ContextLookuper.LookupContext();

@@ -15,8 +15,8 @@ namespace softwrench.sW4.test.Metadata.Entities {
         
         private static ApplicationSchemaDefinition _schema;
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
+        [TestInitialize]
+        public void Init() {
             ApplicationConfiguration.TestclientName = "otb";
             MetadataProvider.StubReset();
             var schemas = MetadataProvider.Application("incident").Schemas();

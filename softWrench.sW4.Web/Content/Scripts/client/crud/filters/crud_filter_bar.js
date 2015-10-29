@@ -22,8 +22,14 @@
 
                         var config = {
                             /** 'don't filter' operator: helper to clear current filter */
-                            noopoperator: { id: "", symbol: "", begin: "", end: "", title: "No Filter" }
+                            noopoperator: { id: "NF", symbol: "", begin: "", end: "", title: "No Filter" }
                         };
+
+                        $scope.markDefaultOperator = function(filter) {
+                            if ($scope.searchOperator[filter.attribute] == null) {
+                                $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
+                            }
+                        }
 
                         /**
                          * Sets the operator in $scope.searchOperator[columnName]
@@ -40,7 +46,7 @@
                             $scope.searchOperator[columnName] = operator;
                             var searchData = $scope.searchData;
 
-                            if (operator.id === "") {
+                            if (operator.id.equalsAny("","NF")) {
                                 searchData[columnName] = "";
                             } else if (searchData[columnName] != null && searchData[columnName] !== "") {
                                 //if there is a search value, apply on click
@@ -105,32 +111,7 @@
                         };
 
                         $scope.getFilterText = function (filter) {
-                            var attribute = filter.attribute;
-                            var searchText = $scope.searchData[attribute];
-                            var operator = $scope.getOperator(attribute).title;
-
-
-                            if (operator === 'Blank') {
-                                return "Is Blank";
-                            }
-
-                            if (operator === 'No Filter') {
-                                operator = '';
-                            }
-
-                            if (operator === 'Contains' && filter.type === "MetadataOptionFilter") {
-                                operator = 'Any';
-                            }
-
-                            if (!searchText || !operator) {
-                                return '' || 'All';
-                            }
-
-                            if (searchText.length > 20) {
-                                searchText = searchText.substring(0, 20) + '...';
-                            }
-
-                            return operator + '(' + searchText + ')';
+                            return filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
                         }
 
                         $injector.invoke(BaseController, this, {
@@ -164,6 +145,7 @@
 
                         //autofocus the search input when the dropdown opens
                         $('.js_filter .dropdown').on('show.bs.dropdown', function (event) {
+                         
                             $timeout(function () {
                                 $(event.target).find('input[type=search]').focus();
                             });

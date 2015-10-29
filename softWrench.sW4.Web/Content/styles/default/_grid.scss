@@ -1,4 +1,6 @@
-﻿.advanced-filter-toogle {
+﻿$hover_background: #ddd;
+
+.advanced-filter-toogle {
     cursor: pointer;
     text-align: center;
 }
@@ -37,7 +39,7 @@
             margin: 0 10px;
 
             &:hover {
-                background: #ddd;
+                background: $hover_background;
             }
 
             .filter-label-wrapper {
@@ -72,15 +74,12 @@
                             }
 
                             .sw-combobox-container {
-                                .input-group {
-                                    margin-bottom: 0;
-                                }
-
                                 h5 {
                                     font-weight: bold;
                                     font-size: 14px;
                                     padding-bottom: 5px;
                                     padding-top: 5px;
+                                    margin-top: 0;
                                 }
 
                                 .select-all {
@@ -94,6 +93,11 @@
                                     }
                                 }
 
+                                .filter-options {
+                                    max-height: 310px;
+                                    overflow-y: scroll;
+                                }
+
                                 ul {
                                     padding-left: 5px;
                                     list-style: none;
@@ -104,21 +108,39 @@
                                         .removable {
                                             cursor: pointer;
                                         }
+                                        /*&:hover {
+                                            background: $hover_background;
+                                        }*/
                                     }
                                 }
                             }
 
                             .list-group {
                                 margin-bottom: 0;
-
+                                /*max-height: 250px;
+                                overflow-y: scroll;*/
                                 .list-group-item {
                                     cursor: pointer;
                                     border: none;
 
                                     &:not(.active) {
                                         &:hover {
-                                            background: #ddd;
+                                            background: $hover_background;
                                         }
+                                    }
+                                }
+                            }
+
+                            .tt-dropdown-menu {
+                                min-width: 100%;
+
+                                .tt-suggestion {
+                                    padding-top: 6px;
+                                    padding-bottom: 6px;
+                                    cursor: pointer;
+
+                                    &:hover {
+                                        background: $hover_background;
                                     }
                                 }
                             }
@@ -135,7 +157,7 @@
                         .filter-dropdown-toolbar { //dropdown-menu buttons
                             display: table;
                             width: 100%;
-                            border-top: 1px solid #ddd;
+                            border-top: 1px solid $hover_background;
                             margin-top: 1px;
 
                             .button {
@@ -151,7 +173,7 @@
 
                                 &.apply {
                                     color: #3a7ebd;
-                                    border-right: 1px solid #ddd;
+                                    border-right: 1px solid $hover_background;
                                 }
 
                                 &.clear {
@@ -159,7 +181,7 @@
                                 }
 
                                 &:hover {
-                                    background: #ddd;
+                                    background: $hover_background;
                                 }
                             }
                         }
@@ -178,6 +200,17 @@
             }
         }
     }
+}
+
+.no-results, .more-results {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.no-results {
+    text-align: center;
+    margin-top: 50px;
+    color: #888;
 }
 
 #listgrid {

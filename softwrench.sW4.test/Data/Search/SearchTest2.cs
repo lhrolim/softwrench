@@ -9,12 +9,14 @@ namespace softwrench.sW4.test.Data.Search {
     [TestClass]
     public class SearchTest2 {
 
-        private static ApplicationSchemaDefinition _schema;
+        private ApplicationSchemaDefinition _schema;
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "otb";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "otb") {
+                ApplicationConfiguration.TestclientName = "otb";
+                MetadataProvider.StubReset();
+            }
             var schemas = MetadataProvider.Application("invbalances").Schemas();
             _schema = schemas[new ApplicationMetadataSchemaKey("invbalancesList", "input", "web")];
         }
@@ -35,13 +37,13 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "curbal".Split(','), "!@BLANK");
             Assert.AreEqual("( invbalances.curbal IS NULL )", SearchUtils.GetWhere(searchRequestDto, "invbalances"));
             var parametersMap = SearchUtils.GetParameters(searchRequestDto);
-            Assert.AreEqual(0,parametersMap.Count);
+            Assert.AreEqual(0, parametersMap.Count);
         }
 
         [TestMethod]
         public void AllowNullTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
-            searchRequestDto.AppendSearchEntry("curbal","20",true);
+            searchRequestDto.AppendSearchEntry("curbal", "20", true);
             Assert.AreEqual("( invbalances.curbal = :curbal OR invbalances.curbal IS NULL  )", SearchUtils.GetWhere(searchRequestDto, "invbalances"));
             var parametersMap = SearchUtils.GetParameters(searchRequestDto);
             Assert.IsTrue(parametersMap.Count == 1);

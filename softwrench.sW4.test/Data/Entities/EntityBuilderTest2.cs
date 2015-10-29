@@ -13,10 +13,12 @@ namespace softwrench.sW4.test.Data.Entities {
     public class EntityBuilderTest2 {
 
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "entegra";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "entegra") {
+                ApplicationConfiguration.TestclientName = "entegra";
+                MetadataProvider.StubReset();
+            }
         }
 
 
@@ -31,7 +33,7 @@ namespace softwrench.sW4.test.Data.Entities {
             Assert.IsNotNull(worktype);
             Assert.AreEqual("R0 Blade", worktype.GetAttribute("wtypedesc"));
             Assert.IsNull(worktype.GetAttribute("statusdate"));
-//            Assert.AreEqual("A very long description.", entity.GetAttribute("DESCRIPTION_LONGDESCRIPTION"));
+            //            Assert.AreEqual("A very long description.", entity.GetAttribute("DESCRIPTION_LONGDESCRIPTION"));
 
             Assert.AreEqual(100, worktype.GetAttribute("worktypeid"));
 
@@ -62,20 +64,20 @@ namespace softwrench.sW4.test.Data.Entities {
             Assert.AreEqual(worklogs.Count, 2);
 
             Assert.AreEqual("UPP", worklogs[0].GetAttribute("siteid"));
-            
+
         }
 
 
-     
+
 
 
         [TestMethod]
         public void TestUpdate() {
             var metadata = MetadataProvider.Entity("workorder");
             var wo = JObject.Parse(new StreamReader("jsons\\workorder\\test2.json").ReadToEnd());
-            var entity = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), metadata, null,wo, "100");
-            Assert.AreEqual("10",entity.GetAttribute("wonum"));
-            Assert.AreEqual("10",entity.UserId);
+            var entity = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), metadata, null, wo, "100");
+            Assert.AreEqual("10", entity.GetAttribute("wonum"));
+            Assert.AreEqual("10", entity.UserId);
             var worktype = entity.GetRelationship("worktype") as Entity;
             Assert.IsNotNull(worktype);
             Assert.IsNotNull(worktype as CrudOperationData);
@@ -93,7 +95,7 @@ namespace softwrench.sW4.test.Data.Entities {
             Assert.AreEqual(Convert.ToInt64(200), worklogs[1].GetAttribute("worklogid"));
         }
 
-       
+
 
 
 

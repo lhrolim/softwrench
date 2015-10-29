@@ -7,10 +7,12 @@ namespace softwrench.sW4.test.Metadata {
     [TestClass]
     public class MetadataPropertiesTest {
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "test_only";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "test_only") {
+                ApplicationConfiguration.TestclientName = "test_only";
+                MetadataProvider.StubReset();
+            }
         }
 
         [TestMethod]

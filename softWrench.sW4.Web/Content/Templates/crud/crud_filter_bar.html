@@ -5,6 +5,7 @@
 
     <div class="filter-label"
          ng-repeat="filter in schema.schemaFilters.filters"
+         ng-init="markDefaultOperator(filter)"
          filterrowrendered>
         <div class="filter-label-wrapper js_filter">
             <div class="dropdown">
@@ -36,7 +37,7 @@
                                 </div>
                             </div>
                             <div ng-switch-when="MetadataOptionFilter">
-                                <filter-multiple-option filter="filter" schema="schema" search-data="searchData" apply-filter="filterBarApplied(true)"/>
+                                <filter-multiple-option filter="filter" schema="schema" search-data="searchData" search-operator="searchOperator" apply-filter="filterBarApplied(keepitOpen)"/>
                             </div>
 
                             <div ng-switch-default>
