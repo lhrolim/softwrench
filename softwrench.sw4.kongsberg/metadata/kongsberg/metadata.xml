@@ -1453,7 +1453,7 @@
           <!--SSWEB 173-->
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
-              <renderer type="upload"/>
+              <renderer type="dndupload"/>
             </field>
           </section>
         </schema>
@@ -1829,7 +1829,7 @@
           </section>
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment">
-              <renderer type="upload" />
+              <renderer type="dndupload" />
             </field>
           </section>
         </schema>
@@ -2351,7 +2351,7 @@
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field label="Title:" attribute="document" />
           <field label="Attachment:" attribute="newattachment" requiredexpression="true">
-            <renderer type="upload"/>
+            <renderer type="dndupload"/>
           </field>
           <!--          <field hidden="true" attribute="ownerid"/>-->
           <!--          <field hidden="true" attribute="ownertable"/>-->
