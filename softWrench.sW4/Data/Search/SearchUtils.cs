@@ -116,8 +116,7 @@ namespace softWrench.sW4.Data.Search {
             var j = 0;
 
             foreach (var parameter in parameters) {
-                if (parameter.StartsWith("null"))
-                {
+                if (parameter.StartsWith("null")) {
                     sb.Replace(parameter, "1=1");
                     //ignore null parameters, as of union grids
                     continue;
@@ -293,9 +292,11 @@ namespace softWrench.sW4.Data.Search {
             var attributeDefinition = entity.Attributes(EntityMetadata.AttributesMode.NoCollections).FirstOrDefault(f => f.Name == paramName);
             var resultType = ParameterType.Default;
 
+            var ignoreCoalesce = false;
+
             if (attributeDefinition != null) {
                 if (attributeDefinition.Query != null) {
-                    baseResult = attributeDefinition.GetQueryReplacingMarkers(entityName);
+                    baseResult=  attributeDefinition.GetQueryReplacingMarkers(entityName);
                 } else if (attributeDefinition.IsDate) {
                     resultType = ParameterType.Date;
                 } else if (attributeDefinition.IsNumber) {
@@ -306,6 +307,11 @@ namespace softWrench.sW4.Data.Search {
                 return new Tuple<string, ParameterType>(baseResult, resultType);
             }
             if (searchParameter.FilterSearch) {
+                if (attributeDefinition != null && attributeDefinition.IgnoreCoalesce) {
+                    //avoid coalesce workaround
+                    return new Tuple<string, ParameterType>(baseResult, resultType);
+                }
+
                 //if this is a filter search input lets make it case insensitive
                 return new Tuple<string, ParameterType>("UPPER(COALESCE(" + baseResult + ",''))", resultType);
             }
@@ -313,7 +319,7 @@ namespace softWrench.sW4.Data.Search {
         }
 
         enum ParameterType {
-            Default, Date, Number
+            Default, Date, Number, AvoidUpperCoalesce
         }
 
         private static string GetDefaultParam(string operatorPrefix, string param) {

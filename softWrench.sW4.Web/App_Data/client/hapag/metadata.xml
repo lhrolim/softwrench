@@ -6,7 +6,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <queries>
       <query key="pluspcustomer" value="CASE WHEN !@PLUSPCUSTOMER IS NOT NULL AND !@PLUSPCUSTOMER = 'HLC-00' then 'HLAG'  WHEN !@PLUSPCUSTOMER IS NOT NULL AND LENGTH(!@PLUSPCUSTOMER) >= 3 THEN SUBSTR(!@PLUSPCUSTOMER, LENGTH(!@PLUSPCUSTOMER) - 2, 3) ELSE '' END"/>
-      <query key="numberofdaysopen" value="(DAYS(current date) - DAYS(incident.affecteddate))"/>
+      <query key="numberofdaysopen" value="#ic(DAYS(current date) - DAYS(incident.affecteddate))"/>
       <query key="affectedpersoncustom" value="CASE WHEN LOCATE('@',!@AFFECTEDPERSON) > 0 THEN SUBSTR(!@AFFECTEDPERSON,1,LOCATE('@',!@AFFECTEDPERSON)-1) ELSE !@AFFECTEDPERSON END"/>
       <query key="createbycustom" value="CASE WHEN LOCATE('@',!@CREATEBY) > 0 THEN SUBSTR(!@CREATEBY,1,LOCATE('@',!@CREATEBY)-1) ELSE !@CREATEBY END"/>
       <query key="reportedbycustom" value="CASE WHEN LOCATE('@',!@REPORTEDBY) > 0 THEN SUBSTR(!@REPORTEDBY,1,LOCATE('@',!@REPORTEDBY)-1) ELSE !@REPORTEDBY END"/>
