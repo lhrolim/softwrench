@@ -1,5 +1,4 @@
-﻿
-(function (angular) {
+﻿(function (angular, Spinner) {
     'use strict';
 
     var defaultOptions = {
@@ -47,15 +46,35 @@
     function spinService($rootScope) {
 
         var ajaxspin;
-
         var compositionspin;
 
         var service = {
             start: start,
             stop: stop,
+            startSpinner: startSpinner
         };
 
         return service;
+
+        function mergeOptions(options) {
+            var merged = angular.copy(!!options.small ? smallOpts : defaultOptions);
+            angular.forEach(merged, function(val, key) {
+                if (!!options[key]) merged[key] = options[key];
+            });
+            return merged;
+        }
+
+        /**
+         * Starts a spinner animation within the given target element.
+         * 
+         * @param DOMNode target 
+         * @param boolean small 
+         * @returns Spinner the spinner that was intantiated 
+         */
+        function startSpinner(target, options) {
+            var merged = mergeOptions(options);
+            return new Spinner(merged).spin(target);
+        }
 
         function start(parameters) {
             if ($rootScope.showingspin) {
@@ -71,9 +90,9 @@
             var spinner = document.getElementById(spinDivId);
             $rootScope.showingspin = true;
             if (isComposition) {
-                compositionspin = new Spinner(optsToUse).spin(spinner);;
+                compositionspin = new Spinner(optsToUse).spin(spinner);
             } else {
-                ajaxspin = new Spinner(optsToUse).spin(spinner);;
+                ajaxspin = new Spinner(optsToUse).spin(spinner);
             }
         };
 
@@ -91,4 +110,4 @@
         }
 
     }
-})(angular);
+})(angular, Spinner);

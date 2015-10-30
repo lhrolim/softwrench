@@ -3,37 +3,70 @@
 
     angular
         .module("sw_layout")
-        .directive("dashboardGraphicPanel", ["contextService", "graphicPanelServiceProvider", function (contextService, graphicPanelServiceProvider) {
+        .directive("dashboardGraphicPanel", ["$window", "contextService", function ($window, contextService) {
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl("/Content/Shared/dashboard/templates/dashboardgraphicpanel.html"),
                 scope: {
                     panel: "="
                 },
-                controller: ["$scope", "graphicPanelServiceProvider", function ($scope, graphicPanelServiceProvider) {
+                controller: ["$scope", "graphicPanelServiceProvider", "spinService", function ($scope, graphicPanelServiceProvider, spinService) {
+                    var service = graphicPanelServiceProvider.getService($scope.panel.provider);
+
                     $scope.data = {
                         hasError: false,
                         graphic: null
                     };
-                    var panel = $scope.panel;
-                    var service = graphicPanelServiceProvider.getService(panel.provider);
+
+                    function spinOptions(element) {
+                        var width = element.offsetWidth;
+                        var height = element.offsetHeight;
+                        if (width === 0) width = element.parentElement.offsetWidth;
+                        if (height === 0) height = element.parentElement.offsetHeight;
+                        return {
+                            small: true,
+                            top: String(Math.round(height / 2)) + "px",
+                            left: String(Math.round(width / 2)) + "px"
+                        }
+                    }
 
                     $scope.loadGraphic = function (container) {
-                        return service.loadGraphic(container || $scope.data.container, panel)
+                        var element = container || $scope.data.container;
+                        var options = spinOptions(element);
+                        var spinner = spinService.startSpinner(element, options);
+                        return service.loadGraphic(element, $scope.panel)
                             .then(function (graphic) {
                                 $scope.data.graphic = graphic;
                                 $scope.data.hasError = false;
                             })
-                            .catch(function() {
+                            .catch(function () {
                                 $scope.data.hasError = true;
+                            })
+                            .finally(function () {
+                                spinner.stop();
                             });
                     };
 
+                    $scope.handleResize = function(container) {
+                        if (!$scope.data.graphic) return;
+                        var element = container || $scope.data.container;
+                        service.resizeGraphic($scope.data.graphic, element.offsetWidth, element.offsetHeight);
+                    }; 
+
                 }],
+
                 link: function (scope, element, attrs) {
                     var container = element[0].querySelector(".js_graphic_container");
                     scope.data.container = container;
-
+                    // handling resize
+                    var onWindowResize = $window.debounce(function(e) {
+                        scope.handleResize(container);
+                    }, 500); // debouncing: webkit does not naturally debounce the resize event
+                    angular.element($window).on("resize", onWindowResize);
+                    scope.$on("$destroy", function() {
+                        angular.element($window).off("resize", onWindowResize);
+                    });
+                    // loading the graphic
                     scope.loadGraphic(container);
                 }
             };

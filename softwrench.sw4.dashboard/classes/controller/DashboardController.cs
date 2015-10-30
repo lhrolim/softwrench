@@ -73,8 +73,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var panelSelectionSchema = MetadataProvider.Application("_basedashboard").Schema(new ApplicationMetadataSchemaKey("panelselection"));
             var saveDashboardSchema = MetadataProvider.Application("_dashboard").Schema(new ApplicationMetadataSchemaKey("saveDashboardConfirmation"));
 
-            var panelSchemas = new Dictionary<string, ApplicationSchemaDefinition>();
-            panelSchemas.Add("dashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("detail")));
+            var panelSchemas = new Dictionary<string, ApplicationSchemaDefinition> {
+                { "dashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("detail")) },
+                { "dashboardgraphic", MetadataProvider.Application("_dashboardgraphic").Schema(new ApplicationMetadataSchemaKey("detail")) }
+            };
 
             var profiles = SecurityFacade.GetInstance()
                 .FetchAllProfiles(false)
@@ -137,11 +139,17 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpPost]
-        public IGenericResponseResult CreatePanel([FromUri]DashboardGridPanel panel) {
-            panel.Filter = new DashboardFilter();
+        public IGenericResponseResult CreateGridPanel(DashboardGridPanel panel) {
             var app = MetadataProvider.Application(panel.Application);
             ApplicationSchemaDefinition schema = app.GetListSchema();
             panel.SchemaRef = schema.SchemaId;
+            panel.Filter = new DashboardFilter();
+            return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
+        }
+
+        [HttpPost]
+        public IGenericResponseResult CreateGraphicPanel(DashboardGraphicPanel panel) {
+            panel.Filter = new DashboardFilter();
             return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
         }
 

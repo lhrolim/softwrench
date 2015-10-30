@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
@@ -13,13 +12,17 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         Table = "DASH_GRAPHICPANEL")]
     public class DashboardGraphicPanel : DashboardBasePanel {
 
-        private readonly IDictionary<string, string> _config = new Dictionary<string, string>();
-
         [Key(-1, Column = "GPID")]
         public virtual int? GpId { get; set; }
 
         [Property]
         public string Provider { get; set; }
+
+        public IDictionary<string, string> ConfigurationDictionary { get; set; }
+
+        public DashboardGraphicPanel() : base() {
+            ConfigurationDictionary = new Dictionary<string, string>();
+        }
 
         /// <summary>
         /// Configuration Dictionary as single string in the form "key_1=value_1;key_2=value_2;...;key_N=value_N".
@@ -32,7 +35,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [JsonIgnore]
         public string Configuration {
             get {
-                return _config.Any() ? string.Join(";", _config.Select(entry => entry.Key + "=" + entry.Value).ToList()) : null;
+                return ConfigurationDictionary.Any() ? string.Join(";", ConfigurationDictionary.Select(entry => entry.Key + "=" + entry.Value).ToList()) : null;
             }
             set {
                 if (string.IsNullOrEmpty(value)) return;
@@ -41,24 +44,17 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
                         var entry = config.Split('=');
                         return new KeyValuePair<string, string>(entry[0], entry[1]);
                     })
-                    .ForEach(entry => _config[entry.Key] = entry.Value);
+                    .ForEach(entry => ConfigurationDictionary[entry.Key] = entry.Value);
             }
         }
 
         public void PutConfiguration(string key, string value) {
-            _config[key] = value;
+            ConfigurationDictionary[key] = value;
         }
 
         public string ConfigurationValue(string key) {
             string value;
-            return _config.TryGetValue(key, out value) ? value : null;
-        }
-
-        /// <summary>
-        /// READONLY dictionary representation of this entity's <see cref="Configuration"/>
-        /// </summary>
-        public IDictionary<string, string> ConfigurationDictionary {
-            get { return new ReadOnlyDictionary<string, string>(_config); }
+            return ConfigurationDictionary.TryGetValue(key, out value) ? value : null;
         }
 
     }
