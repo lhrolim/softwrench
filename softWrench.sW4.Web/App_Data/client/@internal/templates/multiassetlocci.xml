@@ -14,8 +14,6 @@
             <property key="list.click.service" value="meterReadingService.openReadingModal"/>
           </properties>
 
-          <event type="onload" service="scannerdetectionService" method="initSouthernOperatorRounds"/>
-
           <field attribute="siteid" hidden="true"></field>
           <field attribute="assetnum" label="Asset"></field>
           <field attribute="location" label="Location"></field>
@@ -34,6 +32,17 @@
           </commandbars>
         </list>
 
+        <schema id="detail" stereotype="compositiondetail" platform="web">
+          <field attribute="siteid" hidden="true"></field>
+          <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.location" label="Location">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="sequence" label="Sequence"></field>
+          <field attribute="targetdesc" label="Target Description"></field>
+        </schema>
 
       </schemas>
     </application>

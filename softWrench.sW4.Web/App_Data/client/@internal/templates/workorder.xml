@@ -21,6 +21,7 @@
     <template path="@synstatus.xml"/>
     <template path="@route.xml"/>
     <template path="@relatedrecords.xml"/>
+    <template path="@multiassetlocci.xml"/>
   </templates>
 
   <entities>
@@ -304,6 +305,12 @@
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
               <renderer type="lookup" />
             </association>
+          </section>
+          
+          <section id="compositions">
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Location"><!-- detailschema="" >-->
+              <collectionproperties allowupdate="false" allowcreation="true" />
+            </composition>
           </section>
 
           <!--<section id="statussection">
