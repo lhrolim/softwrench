@@ -21,6 +21,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sw4.Shared2.Metadata.Modules;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata {
@@ -93,7 +94,10 @@ namespace softWrench.sW4.Metadata {
                         ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName));
                 }
                 foreach (var webSchema in app.Schemas()) {
-                    var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, webSchema.Value, app.FetchLimit);
+                    var schema = webSchema.Value;
+                    schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
+                    schema._fieldWhichHaveDeps = schema.DependantFields.Keys;
+                    var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);
                     SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName)] = instance;
                 }
 

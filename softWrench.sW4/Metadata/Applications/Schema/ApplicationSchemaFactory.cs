@@ -55,10 +55,10 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             MergeWithStereotypeSchema(schema);
 
-            schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
-            schema._fieldWhichHaveDeps = schema.DependantFields.Keys;
+            
             schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
             schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
+            
             return schema;
         }
 
@@ -182,10 +182,14 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
 
 
-        private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
+        private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables)
+        {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
-            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform, schema.Abstract, displayables,
+            var resultSchema = GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform, schema.Abstract, displayables,
                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema);
+            resultSchema.FieldWhichHaveDeps = schema.FieldWhichHaveDeps;
+            resultSchema.DependantFields = schema.DependantFields;
+            return resultSchema;
         }
 
         //        protected abstract ApplicationSchema OnApplyPlatformPolicy(ClientPlatform platform, IList<IApplicationDisplayable> fields);

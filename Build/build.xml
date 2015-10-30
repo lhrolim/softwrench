@@ -177,7 +177,7 @@
   <target name="releaseprepare" >
 
     <xmlpoke file="../softWrench.sW4.Web/Web.config"
-               xpath="/configuration/appSettings/add[@key = 'version']/@value"
+               xpath="/configuration/appSettings/add[@key = 'internalversion']/@value"
                value="${version}" failonerror="true"/>
 
   </target>

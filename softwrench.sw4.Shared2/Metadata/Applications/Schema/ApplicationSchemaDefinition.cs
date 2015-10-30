@@ -19,7 +19,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public class ApplicationSchemaDefinition : BaseDefinition, IApplicationIdentifier, IApplicationDisplayableContainer {
 
 
-        public Dictionary<string, ApplicationCompositionSchema> CachedCompositions { get; set; }
+        public Dictionary<string, ApplicationCompositionSchema> CachedCompositions {
+            get; set;
+        }
 
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
@@ -37,6 +39,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema);
 
+
         [JsonIgnore]
         public LazyFkResolverDelegate FkLazyFieldsResolver;
 
@@ -48,27 +51,49 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private IList<int> _nonInlineCompositions;
         private IList<int> _inlineCompositions;
 
-        public string SchemaId { get; set; }
+        public string SchemaId {
+            get; set;
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public virtual SchemaStereotype Stereotype { get; set; }
+        public virtual SchemaStereotype Stereotype {
+            get; set;
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public virtual SchemaMode? Mode { get; set; }
-        public string Title { get; set; }
+        public virtual SchemaMode? Mode {
+            get; set;
+        }
+        public string Title {
+            get; set;
+        }
 
-        public string UnionSchema { get; set; }
+        public string UnionSchema {
+            get; set;
+        }
 
-        public string ApplicationName { get; set; }
-        public ClientPlatform? Platform { get; set; }
+        public string ApplicationName {
+            get; set;
+        }
+        public ClientPlatform? Platform {
+            get; set;
+        }
 
-        public bool Abstract { get; set; }
+        public bool Abstract {
+            get; set;
+        }
         [JsonIgnore]
-        public ApplicationSchemaDefinition ParentSchema { get; set; }
+        public ApplicationSchemaDefinition ParentSchema {
+            get; set;
+        }
 
-        public ApplicationSchemaDefinition PrintSchema { get; set; }
+        public ApplicationSchemaDefinition PrintSchema {
+            get; set;
+        }
 
-        public ApplicationCommandSchema CommandSchema { get; set; }
+        public ApplicationCommandSchema CommandSchema {
+            get; set;
+        }
 
         private IDictionary<string, ISet<string>> _depandantFields = new Dictionary<string, ISet<string>>();
 
@@ -77,9 +102,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ICollection<string> _fieldWhichHaveDeps = new HashSet<string>();
 
-        public string Name { get { return ApplicationName; } }
+        public string Name {
+            get {
+                return ApplicationName;
+            }
+        }
 
-        public string IdFieldName { get; set; }
+        public string IdFieldName {
+            get; set;
+        }
 
         private bool lazyFksResolved = false;
 
@@ -124,18 +155,24 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         [JsonIgnore]
         public virtual IEnumerable<ApplicationFieldDefinition> RelationshipFields {
-            get { return Fields.Where(f => f.Attribute.Contains(".")); }
+            get {
+                return Fields.Where(f => f.Attribute.Contains("."));
+            }
         }
 
         [JsonIgnore]
         public IEnumerable<ApplicationFieldDefinition> TransientFields {
-            get { return Fields.Where(f => f.Attribute.Contains("#")); }
+            get {
+                return Fields.Where(f => f.Attribute.Contains("#"));
+            }
         }
 
         //TODO: test the JsonIgnore field on Ipad
         [JsonIgnore]
         public virtual IList<ApplicationFieldDefinition> Fields {
-            get { return GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition)); }
+            get {
+                return GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition));
+            }
         }
 
         [JsonIgnore]
@@ -169,35 +206,48 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                         referencesResolved = true;
                     }
                 }
+
                 return _displayables;
             }
-            set { _displayables = value; }
+            set {
+                _displayables = value;
+            }
         }
 
 
         [JsonIgnore]
         public virtual IList<ApplicationAssociationDefinition> Associations {
-            get { return GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition)); }
+            get {
+                return GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition));
+            }
         }
 
         [JsonIgnore]
         public virtual IList<OptionField> OptionFields {
-            get { return GetDisplayable<OptionField>(typeof(OptionField)); }
+            get {
+                return GetDisplayable<OptionField>(typeof(OptionField));
+            }
         }
 
         [JsonIgnore]
         public virtual IList<IDependableField> DependableFields {
-            get { return GetDisplayable<IDependableField>(typeof(IDependableField)); }
+            get {
+                return GetDisplayable<IDependableField>(typeof(IDependableField));
+            }
         }
 
         [JsonIgnore]
         public virtual IList<IDataProviderContainer> DataProviderContainers {
-            get { return GetDisplayable<IDataProviderContainer>(typeof(IDataProviderContainer)); }
+            get {
+                return GetDisplayable<IDataProviderContainer>(typeof(IDataProviderContainer));
+            }
         }
 
         [JsonIgnore]
         public virtual IEnumerable<ApplicationFieldDefinition> NonRelationshipFields {
-            get { return Fields.Where(f => !f.Attribute.Contains(".") && (!f.Attribute.Contains("#") || f.Attribute.StartsWith("#null"))); }
+            get {
+                return Fields.Where(f => !f.Attribute.Contains(".") && (!f.Attribute.Contains("#") || f.Attribute.StartsWith("#null")));
+            }
         }
 
         public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true) {
@@ -240,7 +290,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// 
         /// </summary>
         public IEnumerable<int> NonInlineCompositionIdxs {
-            get { return GetCompositionIdx(false, _nonInlineCompositions); }
+            get {
+                return GetCompositionIdx(false, _nonInlineCompositions);
+            }
         }
 
         /// <summary>
@@ -252,7 +304,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// </summary>
         public IEnumerable<int> InlineCompositionIdxs {
 
-            get { return GetCompositionIdx(true, _inlineCompositions); }
+            get {
+                return GetCompositionIdx(true, _inlineCompositions);
+            }
         }
 
         private IEnumerable<int> GetCompositionIdx(bool inline, IList<int> cacheList) {
@@ -279,19 +333,25 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// to place a navigator component enclosing the detail page.
         /// </summary>
         public bool HasNonInlineComposition {
-            get { return Compositions.Any(c => c.Schema.INLINE == false && !c.isHidden); }
+            get {
+                return Compositions.Any(c => c.Schema.INLINE == false && !c.isHidden);
+            }
         }
 
         /// <summary>
         /// Indicates whether there is any inline composition in this application.
         /// </summary>
         public bool HasInlineComposition {
-            get { return Compositions.Any(c => c.Schema.INLINE == true && !c.isHidden); }
+            get {
+                return Compositions.Any(c => c.Schema.INLINE == true && !c.isHidden);
+            }
         }
 
 
         public IDictionary<string, string> Properties {
-            get { return _properties; }
+            get {
+                return _properties;
+            }
         }
 
 
@@ -326,7 +386,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ICollection<string> FieldWhichHaveDeps {
-            get { return _fieldWhichHaveDeps; }
+            get {
+                return _fieldWhichHaveDeps;
+            }
+            set {
+                _fieldWhichHaveDeps = value;
+            }
         }
 
         /// <summary>
@@ -336,7 +401,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// </summary>
         /// <returns></returns>
         public IDictionary<string, ISet<string>> DependantFields {
-            get { return _depandantFields; } 
+            get {
+                return _depandantFields;
+            }
+            set { _depandantFields = value; }
         }
 
         public bool IsWebPlatform() {
@@ -360,8 +428,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return Properties[propertyKey];
         }
 
-        public ApplicationSchemaDefinition PaginationSize()
-        {
+        public ApplicationSchemaDefinition PaginationSize() {
             throw new NotImplementedException();
         }
 
