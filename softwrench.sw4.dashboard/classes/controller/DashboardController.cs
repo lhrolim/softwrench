@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
+using Newtonsoft.Json.Linq;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.service.graphic;
@@ -151,6 +152,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult CreateGraphicPanel(DashboardGraphicPanel panel) {
             panel.Filter = new DashboardFilter();
             return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
+        }
+
+        [HttpPost]
+        public string LoadGraphicResource([FromUri] string provider, [FromUri] string resource, [FromBody] JObject dto ) {
+            return _graphicServiceProvider.GetService(provider).LoadExternalResource(resource, dto);
         }
 
         [HttpGet]

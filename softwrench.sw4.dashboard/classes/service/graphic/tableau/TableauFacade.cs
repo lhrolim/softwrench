@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -6,11 +8,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using cts.commons.portable.Util;
+using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.service.graphic.exception;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
+using WebGrease.Css.Extensions;
 
 namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
     /// <summary>
@@ -61,22 +64,31 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             return SYSTEM_NAME;
         }
 
-        private void AuthToRestApi(TableauAuthDto auth) {
-            // url and payload
-            var url = string.Format(REST_API_URL_PATTERN, _server, REST_API_AUTH_METHOD);
-            var payload = string.Format(REST_API_AUTH_PAYLOAD, _username, _password, _site);
-            var body = Encoding.UTF8.GetBytes(payload);
-            // configure httprequest
+        private HttpWebResponse CallRestApi(string resourceUrl, string method, Dictionary<string, string> headers = null, string payload = null) {
+            var url = string.Format(REST_API_URL_PATTERN, _server, resourceUrl);
             var request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = method;
+            // headers
+            if (headers != null) {
+                headers.ForEach((e) => request.Headers[e.Key] = e.Value);
+            }
             request.ContentType = REST_API_CONTENT_TYPE;
-            request.ContentLength = body.Length;
-            request.Method = "POST";
             // write payload to requests stream
-            using (var requestStream = request.GetRequestStream()) {
-                requestStream.Write(body, 0, body.Length);
+            if (!string.IsNullOrEmpty(payload)) {
+                var body = Encoding.UTF8.GetBytes(payload);
+                request.ContentLength = body.Length;
+                using (var requestStream = request.GetRequestStream()) {
+                    requestStream.Write(body, 0, body.Length);
+                }
             }
             // fetch response
             var response = (HttpWebResponse)request.GetResponse();
+            return response;
+        }
+
+        private void AuthToRestApi(TableauAuthDto auth) {
+            var payload = string.Format(REST_API_AUTH_PAYLOAD, _username, _password, _site);
+            var response = CallRestApi(REST_API_AUTH_METHOD, "POST", null, payload);
             if (response.StatusCode != HttpStatusCode.OK) {
                 throw GraphicStorageSystemException.AuthenticationFailed(SYSTEM_NAME, _server);
             }
@@ -138,6 +150,29 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 throw GraphicStorageSystemException.AuthenticationFailed(SYSTEM_NAME, _server, e);
             }
 
+        }
+
+        public string LoadExternalResource(string resource, JObject request) {
+            var auth = (TableauAuthDto)request.GetValue("auth").ToObject(typeof(TableauAuthDto));
+            string url;
+            if (resource == "workbook") {
+                url = string.Format("sites/{0}/users/{1}/workbooks", auth.SiteId, auth.UserId);
+            } else if (resource == "view") {
+                var workbook = (string)request.GetValue("workbook").ToObject(typeof(string));
+                url = string.Format("sites/{0}/workbooks/{1}/views", auth.SiteId, workbook);
+            } else {
+                throw GraphicStorageSystemException.ExternalResourceLoadFailed(SYSTEM_NAME, resource);
+            }
+            var response = CallRestApi(url, "GET", new Dictionary<string, string>() { { "X-Tableau-Auth", auth.Token } });
+            if (response.StatusCode != HttpStatusCode.OK) {
+                throw GraphicStorageSystemException.ExternalResourceLoadFailed(SYSTEM_NAME, resource);
+            }
+            using (var responseStream = response.GetResponseStream()) {
+                using (var responseReader = new StreamReader(responseStream)) {
+                    //TODO: smart caching
+                    return responseReader.ReadToEnd();
+                }
+            }
         }
     }
 }

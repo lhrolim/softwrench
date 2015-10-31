@@ -16,6 +16,12 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.exception {
             return Instance(message, cause);
         }
 
+        public static GraphicStorageSystemException ExternalResourceLoadFailed(string systemName, string resouceName, Exception cause = null) {
+            var message = string.Format("Failed to load resource '{0}' of graphic storage system '{1}'", resouceName,
+                systemName);
+            return Instance(message, cause);
+        }
+
         private static GraphicStorageSystemException Instance(string message, Exception cause = null) {
             return cause != null ? new GraphicStorageSystemException(message, cause) : new GraphicStorageSystemException(message);
         }
