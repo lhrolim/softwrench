@@ -27,6 +27,7 @@ using softWrench.sW4.Util;
 using cts.commons.Util;
 using System.Net;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Metadata.Applications.Association;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -148,8 +149,14 @@ namespace softWrench.sW4.Metadata {
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;
+
+                    schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
+                    schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
+
+
                     var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);
                     SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName)] = instance;
+
                     if (schema.CommandSchema != null && schema.CommandSchema.HasDeclaration) {
                         //mobile schemas, dont have command schema for now...
                         foreach (var overridenBarKey in schema.CommandSchema.ApplicationCommands.Keys) {
