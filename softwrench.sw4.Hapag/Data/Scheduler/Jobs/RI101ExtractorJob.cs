@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using softwrench.sw4.Hapag.Data.Scheduler.Jobs.Helper;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Relational;
-using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Scheduler.Jobs.helper;
+using softWrench.sW4.Scheduler;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Util;
 
-namespace softWrench.sW4.Scheduler.Jobs {
+namespace softwrench.sw4.Hapag.Data.Scheduler.Jobs {
     // ReSharper disable once InconsistentNaming
     public class RI101ExtractorJob : ASwJob {
 

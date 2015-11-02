@@ -2835,6 +2835,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         <property key="mobile.fetchlimit" value="30"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
+
       <schemas>
         <list platform="mobile">
           <field attribute="assetnum" label="Asset" qualifier="title"/>
@@ -3016,19 +3017,19 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <schema id="RI101Export" stereotype="list">
           <field label="Computer Name" attribute="computername">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=80px;excelwidth=50"/>
           </field>
           <field label="ITC_Name" attribute="primaryuser_.hlagdisplayname">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
-          <field label="PersonId" attribute="aucisowner_.hlagdisplayname">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          <field label="Person Id" attribute="aucisowner_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
           <field label="Sub Category" attribute="classstructure_.description">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
           <field label="Usage" attribute="usage">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
 
         </schema>

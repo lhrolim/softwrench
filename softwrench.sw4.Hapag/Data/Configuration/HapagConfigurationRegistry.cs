@@ -268,13 +268,13 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             };
             _wcFacade.Register("persongroupview", qc.DefaultITCReportRegionAndAreaQuery, ITCReportComplementCondition);
 
-            var RI101Condition = new WhereClauseRegisterCondition {
-                Alias = "RI101",
-                AppContext = new ApplicationLookupContext { Schema = "RI101Export" },
-                Module = Conditions.AnyCondition
-            };
-
-            _wcFacade.Register("asset", "ASSET.STATUS = '120 ACTIVE'", RI101Condition);
+//            var RI101Condition = new WhereClauseRegisterCondition {
+//                Alias = "RI101",
+//                AppContext = new ApplicationLookupContext { Schema = "RI101Export" },
+//                Module = Conditions.AnyCondition
+//            };
+//
+//            _wcFacade.Register("asset", "ASSET.STATUS = '120 ACTIVE'", RI101Condition);
         }
 
 

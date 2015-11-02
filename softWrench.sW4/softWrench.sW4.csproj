@@ -257,8 +257,6 @@
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
-    <Compile Include="Scheduler\Jobs\helper\R101ExtractorHelper.cs" />
-    <Compile Include="Scheduler\Jobs\RI101ExtractorJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
     <Compile Include="Configuration\Util\ConfigCacheKey.cs" />

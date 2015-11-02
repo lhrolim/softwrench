@@ -28,9 +28,9 @@
   <property key="querytimeout" value="300"/>
   <!-- in ms -->
 
-  <property key="faqusefullinksPath" value="C:\ServiceIT\config\CLIENT_LIST.txt"/>
-  
-  <property key="RI101Path" value="C:\ServiceIT\config\RI101.txt"/>
+
+  <property key="faqusefullinksPath" value="C:\ServiceIT\config\SR_FAQ.txt"/>
+  <property key="RI101Path" value="C:\ServiceIT\config\CLIENT_LIST.txt"/>
   
   <property key="serviceItLoginPath" value="C:\ServiceIT\config\ServiceITLogin.properties"/>
   <property key="businessmatrixPath" value="C:\ServiceIT\config\businessmatrix"/>
