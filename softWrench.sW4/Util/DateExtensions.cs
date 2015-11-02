@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
-using softWrench.sW4.Metadata;
+﻿using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
 

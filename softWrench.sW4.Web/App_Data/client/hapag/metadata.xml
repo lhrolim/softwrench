@@ -74,8 +74,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="hlagreportedby" type="varchar" required="false" query="ref:reportedbycustom"/>
         <attribute name="inouttime" type="varchar" required="false" query="CASE WHEN !@internalpriority=1 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=2 THEN 'INTIME' WHEN !@internalpriority=1 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >2 THEN 'OUTTIME' WHEN !@internalpriority=2 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=4  THEN 'INTIME' WHEN !@internalpriority=2 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >4 THEN 'OUTTIME' WHEN !@internalpriority=3 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=6  THEN 'INTIME' WHEN !@internalpriority=3 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >6 THEN 'OUTTIME' WHEN !@internalpriority=4 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=8  THEN 'INTIME' WHEN !@internalpriority=4 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >8 THEN 'OUTTIME' END" />
         <attribute name="closeddate" type="varchar" required="false" query="CASE WHEN !@status = 'CLOSED' then !@statusdate ELSE null END" />
-        
-        
+
+
       </attributes>
       <relationships>
         <relationship to="worklog" qualifier="lastworklog">
@@ -1031,7 +1031,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </optionfield>
 
             <section id="diskdata"></section>
-            
+
             <field label="Host Name" attribute="hostname" required="true" tooltip="Tragen Sie hier den gewünschten Names für den Server KFDC**** ein (ohne KFDC). Hierfür stehen Ihnen 4 Zeichen zur Verfügung.  Die ersten beiden sollte Buchstaben sein welche den Zweck des Servers beschreiben (Beispielsweise LY für Lync, BI für Business Intelligence etc.) darauf sollten 2 Zahlen folgen.">
               <renderer type="default" params="prepend=KFDC;maxlength=4"/>
             </field>
@@ -1057,7 +1057,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <section resourcepath="/Content/templates/hapag/embeddedofferingpdf.html" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null" required="true"/>
-         
+
             <field attribute="comments" label="Weitere Anmerkungen:" tooltip="Platz für zusätzliche Angaben / Wünsche.Bitte beachten Sie: Sonderwünsche sind nicht Teil des Factory-Ansatzen und können möglicherweise nicht im vereinarten Zeitraum umgesetzt werden." showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>
@@ -1106,7 +1106,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" required="true" tooltip="Bitte definieren Sie wie viel Disk Size Sie zusätzlich zur Grundinstallation benötigen.">
               <renderer type="default" params="append=GB"/>
             </field>
-           
+
           </section>
           <section id="specificdata">
             <optionfield label="OS" attribute="os" tooltip="Wählen Sie hier das gewünschte Betriebssystem.">
@@ -1198,8 +1198,8 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </field>
 
         </componentdisplayable>
-        
-        
+
+
       </components>
 
       <schemas>
@@ -3014,6 +3014,25 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         </detail>
 
+        <schema id="RI101Export" stereotype="list">
+          <field label="Computer Name" attribute="computername">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="ITC_Name" attribute="primaryuser_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="PersonId" attribute="aucisowner_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Sub Category" attribute="classstructure_.description">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Usage" attribute="usage">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+        </schema>
+
         <schema id="assetlistreport" stereotype="list">
           <field label="Region" attribute="aucisnotownerexternal_person_.department">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
@@ -3063,7 +3082,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Product" attribute="hlagdescription">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
-          <field label="Modell" attribute="item_.itdmodel">
+          <field label="Model" attribute="item_.itdmodel">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="Type" attribute="itdmachtype">
@@ -3503,7 +3522,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="textarea" params="formatter=descriptionDataHandler;format=dd/MM/yyyy HH:mm"/>
           </field>
           <properties>
-<!--            <property key="compositions.alwaysrefresh" value="true"/>-->
+            <!--            <property key="compositions.alwaysrefresh" value="true"/>-->
           </properties>
         </detail>
 
@@ -3534,7 +3553,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
-<!--            <property key="compositions.alwaysrefresh" value="true"/>-->
+            <!--            <property key="compositions.alwaysrefresh" value="true"/>-->
           </properties>
           <commands>
             <command id="print" remove="true" label=""/>
@@ -3586,7 +3605,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <detail>
           <properties>
-<!--            <property key="compositions.alwaysrefresh" value="true"/>-->
+            <!--            <property key="compositions.alwaysrefresh" value="true"/>-->
             <property key="oncrudsaveevent.validationservice" value="attachmentservice.validateNewForm"/>
           </properties>
 

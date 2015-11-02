@@ -78,8 +78,8 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\softWrench.sW4.Web\Dependencies\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
@@ -257,6 +257,8 @@
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
+    <Compile Include="Scheduler\Jobs\helper\R101ExtractorHelper.cs" />
+    <Compile Include="Scheduler\Jobs\RI101ExtractorJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
     <Compile Include="Configuration\Util\ConfigCacheKey.cs" />
@@ -525,6 +527,7 @@
     <Compile Include="Util\ConversionUtil.cs" />
     <Compile Include="Util\DateExtensions.cs" />
     <Compile Include="Util\DBConnectionResult.cs" />
+    <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\JsonDateTimeConverter.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Util\EntityUtil.cs" />

@@ -297,7 +297,6 @@
     <Compile Include="UserControls\RichTextBox.aspx.designer.cs">
       <DependentUpon>RichTextBox.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\I18NUtil.cs" />
     <Compile Include="Util\MigrationUtil.cs" />
     <Compile Include="Util\RequestUtil.cs" />

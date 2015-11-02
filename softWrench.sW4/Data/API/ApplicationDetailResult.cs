@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using softWrench.sW4.Data.API.Association;
-using softWrench.sW4.Data.Relationship.Composition;
-using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
