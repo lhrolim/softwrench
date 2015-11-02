@@ -78,12 +78,18 @@
                 stored = itemArray.slice(0, 9);
             } else {
                 itemArray.forEach(function (item) {
+                    if (item.nonstoreable) {
+                        //avoid pushing nonstoreable items
+                        return;
+                    }
+
                     if (stored.some(function (el) {
-                        //avoid duplications, or to push nonstoreable items
-                       return el.value === item.value || item.nonstoreable;
+                        //avoid duplications, 
+                       return el.value === item.value;
                     })) {
                         return;
                     }
+                    
 
                     stored.unshift(item);
                     if (stored.length > 10) {

@@ -142,7 +142,7 @@
                     var filter = $scope.filter;
 
                     $scope.labelValue = function (option) {
-                        if (filter.displayCode === false) {
+                        if (filter.displayCode === false || option.value === "nullor:") {
                             return option.label;
                         }
                         return "(" + option.value + ")" + " - " + option.label;
@@ -187,9 +187,6 @@
                         if (result) {
                             searchData[filter.attribute] = result;
                             searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
-                            if (result === "!@#BLANK") {
-                                searchOperator[filter.attribute] = searchService.getSearchOperationById("BLANK");
-                            }
                         }
                         $scope.applyFilter({ keepitOpen: true });
                     }
