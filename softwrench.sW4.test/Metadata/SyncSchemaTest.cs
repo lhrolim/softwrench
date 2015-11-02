@@ -13,10 +13,12 @@ namespace softwrench.sW4.test.Metadata {
     public class SyncSchemaTest {
 
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
-            ApplicationConfiguration.TestclientName = "test_only";
-            MetadataProvider.StubReset();
+        [TestInitialize]
+        public void Init() {
+            if (ApplicationConfiguration.TestclientName != "test_only") {
+                ApplicationConfiguration.TestclientName = "test_only";
+                MetadataProvider.StubReset();
+            }
         }
 
         [TestMethod]

@@ -64,8 +64,6 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             MergeWithStereotypeSchema(schema);
 
-            schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
-            schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
             schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
             schema.SchemaFilterResolver = ApplicationSchemaLazyFkHandler.LazyFilterResolver;
             schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
@@ -247,12 +245,18 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
 
 
-        private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
+        private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables)
+        {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
-            return GetInstance(schema.EntityName,schema.ApplicationName, schema.Title, schema.SchemaId, schema.RedeclaringSchema, schema.Stereotype, schema.Mode, platform,
-                 schema.Abstract, displayables, schema.SchemaFilters,
-                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UserIdFieldName, schema.UnionSchema,
-                 schema.EventSet);
+            var newSchema = GetInstance(schema.EntityName, schema.ApplicationName, schema.Title, schema.SchemaId,
+                schema.RedeclaringSchema, schema.Stereotype, schema.Mode, platform,
+                schema.Abstract, displayables, schema.SchemaFilters,
+                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName,
+                schema.UserIdFieldName, schema.UnionSchema,
+                schema.EventSet);
+            newSchema.DepandantFields(schema.DependantFields());
+            newSchema.FieldWhichHaveDeps = schema.FieldWhichHaveDeps;
+            return newSchema;
         }
 
         public static ApplicationSchemaDefinition Clone(ApplicationSchemaDefinition schema) {

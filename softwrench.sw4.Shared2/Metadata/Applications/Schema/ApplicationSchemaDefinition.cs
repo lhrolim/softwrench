@@ -245,7 +245,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public SchemaFilters SchemaFilters {
             get {
-                if (Stereotype != SchemaStereotype.List){
+                if (Stereotype != SchemaStereotype.List) {
                     //only resolve it for list schemas
                     _filtersResolved = true;
                     return _schemaFilters;
@@ -495,6 +495,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ICollection<string> FieldWhichHaveDeps {
             get {
                 return _fieldWhichHaveDeps;
+            }
+            set {
+                _fieldWhichHaveDeps = value;
             }
         }
 
