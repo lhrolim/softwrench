@@ -36,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             woCrudData.SetAttribute("commodity", srCrudData.GetStringAttribute("commodity"));
             woCrudData.SetAttribute("commoditygroup", srCrudData.GetStringAttribute("commoditygroup"));
             woCrudData.SetAttribute("description", srCrudData.GetStringAttribute("description"));
-            woCrudData.SetAttribute("description_longdescription", srCrudData.GetStringAttribute("description_longdescription"));
+            woCrudData.SetAttribute("ld_.ldtext", srCrudData.GetStringAttribute("ld_.ldtext"));
             woCrudData.SetAttribute("glaccount", srCrudData.GetStringAttribute("glaccount"));
             woCrudData.SetAttribute("location", srCrudData.GetStringAttribute("location"));
             woCrudData.SetAttribute("reportedby", srCrudData.GetStringAttribute("reportedby"));
