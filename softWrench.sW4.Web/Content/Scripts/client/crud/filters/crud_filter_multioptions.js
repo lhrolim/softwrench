@@ -33,16 +33,29 @@
 
                     scope.selectedOptions = [];
                     scope.filteroptions = [];
+                    scope.suggestedoptions = [];
                     scope.vm.recentlyOptions = [];
+
+
+                    if (filter.allowBlank) {
+                        var item = {
+                            label: "No " + filter.label,
+                            //SearchUtils.cs#NullOrPrefix
+                            value: "nullor:",
+                            nonstoreable: true
+                        }
+                        scope.suggestedoptions.push(item);
+                    }
 
                     //initing any metadata declared option first
                     scope.filter.options.forEach(function (item) {
-                        if (filter.lazy) {
-                            scope.vm.recentlyOptions.push(item);
-                        } else {
-                            scope.filteroptions.push(item);
-                        }
+                        //these won´t go to currently used
+                        item.nonstoreable = true;
+                        scope.suggestedoptions.push(item);
                     });
+
+                  
+
 
                     if (!scope.filter.lazy) {
                         //let´s get the whole list from the server 
@@ -62,7 +75,7 @@
                             scope.filteroptions = scope.filteroptions.concat(result.data);
                         });
                     } else {
-                        scope.vm.showRecently = true;
+                        scope.vm.notSearching = true;
 
                         //for lazy filters we will start the recently used from local storage and init the autocompleteservers
                         scope.vm.recentlyOptions = scope.vm.recentlyOptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
@@ -89,7 +102,7 @@
                                         scope.filteroptions = [];
                                         shouldDigest = true;
                                     }
-                                    scope.vm.showRecently = newShowRecently;
+                                    scope.vm.notSearching = newShowRecently;
                                     if (shouldDigest) {
                                         //if to avoid calling digest inadvertdly
                                         scope.$digest();
@@ -99,7 +112,7 @@
 
 
                             scope.$on("sw.autocompleteserver.response", function (event, response) {
-                                if (scope.vm.showRecently) {
+                                if (scope.vm.notSearching) {
                                     //seems like the autocomplete is returning the list when it reaches 0 sometimes
                                     return;
                                 }
@@ -158,26 +171,34 @@
                         }
                     });
 
+                    $scope.getAllAvailableOptions = function() {
+                        return $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                    }
+
                     $scope.modifySearchData = function () {
                         var searchData = $scope.searchData;
                         var searchOperator = $scope.searchOperator;
                         searchData[filter.attribute] = null;
                         searchOperator[filter.attribute] = null;
 
-                        var selectedItems = filterModelService.buildSelectedItemsArray($scope.filteroptions, $scope.selectedOptions);
+                        var selectedItems = filterModelService.buildSelectedItemsArray($scope.getAllAvailableOptions(), $scope.selectedOptions);
                         var result = filterModelService.buildSearchValueFromOptions(selectedItems);
                         $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
                         if (result) {
                             searchData[filter.attribute] = result;
                             searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
+                            if (result === "!@#BLANK") {
+                                searchOperator[filter.attribute] = searchService.getSearchOperationById("BLANK");
+                            }
                         }
                         $scope.applyFilter({ keepitOpen: true });
                     }
 
                     $scope.toggleSelectAll = function () {
                         var value = $scope.vm.allSelected ? 1 : 0;
-                        for (var i = 0; i < $scope.filteroptions.length; i++) {
-                            var el = $scope.filteroptions[i];
+                        var availableOptions = $scope.getAllAvailableOptions();
+                        for (var i = 0; i < availableOptions.length; i++) {
+                            var el = availableOptions[i];
                             $scope.selectedOptions[el.value] = value;
                         }
                         $scope.modifySearchData();

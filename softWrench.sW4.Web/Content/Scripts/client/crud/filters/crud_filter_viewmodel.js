@@ -79,8 +79,8 @@
             } else {
                 itemArray.forEach(function (item) {
                     if (stored.some(function (el) {
-                        //avoid duplications
-                       return el.value === item.value;
+                        //avoid duplications, or to push nonstoreable items
+                       return el.value === item.value || item.nonstoreable;
                     })) {
                         return;
                     }
@@ -110,11 +110,22 @@
                 return null;
             }
             var buffer = "";
+            var hasBlank = false;
+            var hasAnyNonBlank = false;
             for (var i = 0; i < selectedItems.length; i++) {
                 var item = selectedItems[i];
+                if (item.value === "nullor:") {
+                    hasBlank = true;
+                    continue;
+                }
+                hasAnyNonBlank = true;
                 buffer += (userService.readProperty(item.value) + ",");
             }
-            return buffer.substring(0, buffer.length - 1);
+            if (hasBlank) {
+                //this will get evaluated on server side
+                buffer = "nullor:" + buffer;
+            }
+            return hasAnyNonBlank ? buffer.substring(0, buffer.length - 1) : buffer;
 
         };
 

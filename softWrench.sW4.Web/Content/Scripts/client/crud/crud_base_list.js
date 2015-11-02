@@ -52,9 +52,6 @@ function BaseList($scope, formatService, expressionService, searchService, field
         } else if (filter.type === "MetadataDateTimeFilter") {
             return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
         }
-        if (operation.id === "BLANK" && filter.allowBlank) {
-            return true;
-        }
 
         return false;
     };

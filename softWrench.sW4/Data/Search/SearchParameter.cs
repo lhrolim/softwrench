@@ -16,10 +16,7 @@ namespace softWrench.sW4.Data.Search {
         private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
             searchFilter = false;
             var searchOperator = SearchOperator.EQ;
-            if (rawValue.StartsWith(SearchUtils.NullOrPrefix)) {
-                NullOr = true;
-                rawValue = rawValue.Substring(SearchUtils.NullOrPrefix.Length);
-            }
+            rawValue = HandleNullScenario(rawValue);
             if (rawValue.Contains(">=") && rawValue.Contains("<=")) {
                 searchOperator = SearchOperator.BETWEEN;
             } else if (rawValue.StartsWith(">=")) {
@@ -48,6 +45,17 @@ namespace softWrench.sW4.Data.Search {
                 searchFilter = true;
             }
             return searchOperator;
+        }
+
+        private string HandleNullScenario(string rawValue) {
+            if (rawValue.StartsWith(SearchUtils.NullOrPrefix)) {
+                NullOr = true;
+                rawValue = rawValue.Substring(SearchUtils.NullOrPrefix.Length);
+            } else if (rawValue.StartsWith("=" + SearchUtils.NullOrPrefix)) {
+                NullOr = true;
+                rawValue = rawValue.Substring(SearchUtils.NullOrPrefix.Length + 1);
+            }
+            return rawValue;
         }
 
         public SearchOperator SearchOperator {
@@ -138,5 +146,5 @@ namespace softWrench.sW4.Data.Search {
         }
     }
 
-    
+
 }

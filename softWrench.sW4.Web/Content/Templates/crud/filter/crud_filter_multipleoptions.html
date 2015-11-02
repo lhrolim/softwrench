@@ -7,7 +7,33 @@
         <div></div><!--stop addon from moving on hover-->
     </div>
     <div class="input-group">
-        <div ng-show="vm.showRecently && vm.recentlyOptions.length >0">
+
+        <div class="select-all" ng-if="getAllAvailableOptions().length > 1">
+            <input type="checkbox"
+                   value="{{option.value}}"
+                   ng-model="vm.allSelected"
+                   ng-change="toggleSelectAll()"
+                   ng-true-value="1" ng-false-value="0">
+            <span class="text">Select All</span>
+            <div class="divider"></div>
+        </div>
+
+        <div ng-show="vm.notSearching && suggestedoptions.length > 0">
+            <h5>Suggested Filters</h5>
+            <div class="divider"></div>
+            <ul class="filter-options">
+                <li ng-repeat="option in suggestedoptions" class="">
+                    <input type="checkbox"
+                           value="{{option.value}}"
+                           ng-model="selectedOptions[option.value]"
+                           ng-change="modifySearchData()"
+                           ng-true-value="1" ng-false-value="0" />
+                    {{labelValue(option)}}
+                </li>
+            </ul>
+        </div>
+
+        <div ng-show="vm.notSearching && vm.recentlyOptions.length >0">
             <h5>Recently Used</h5>
             <div class="divider"></div>
             <div class="select-all" ng-if="recentlyOptions.length > 1">
@@ -30,16 +56,9 @@
                 </li>
             </ul>
         </div>
+
+
         <div ng-if="filteroptions.length > 0">
-            <div class="select-all" ng-if="filteroptions.length > 1">
-                <input type="checkbox"
-                       value="{{option.value}}"
-                       ng-model="vm.allSelected"
-                       ng-change="toggleSelectAll()"
-                       ng-true-value="1" ng-false-value="0">
-                <span class="text">Select All</span>
-                <div class="divider" ng-if="!filter.lazy"></div>
-            </div>
             <ul class="filter-options">
                 <li ng-repeat="option in filteroptions" class="">
                     <input type="checkbox"
