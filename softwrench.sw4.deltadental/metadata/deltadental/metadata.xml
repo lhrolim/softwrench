@@ -295,9 +295,11 @@
 
           <filters>
             <filter attribute="ownerperson_.displayname" remove="true"/>
+            <filter attribute="reportedbyp_.displayname" remove="true"/>
           </filters>
           
           <customization position="reportedby">
+            <field attribute="reportedby" hidden="true" label="Reported By"/>
             <field attribute="reportedbyp_.displayname" label="Reported By">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
             </field>
@@ -320,9 +322,11 @@
         <list title="Service Request Grid" redeclaring="false">
           <filters>
             <filter attribute="ownerperson_.displayname" remove="true"/>
+            <filter attribute="reportedbyp_.displayname" remove="true"/>
           </filters>
           
           <customization position="reportedby">
+            <field attribute="reportedby" hidden="true" label="Reported By"/>
             <field attribute="reportedbyp_.displayname" label="Reported By">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
             </field>
