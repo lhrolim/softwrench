@@ -19,3 +19,9 @@ obj
 # 3rd-party stuff copied during build
 /packages
 GitTfs/git2.*
+
+# VS2015 files
+/.vs
+.vs/config/applicationhost.config
+Backup/
+UpgradeLog.htm
