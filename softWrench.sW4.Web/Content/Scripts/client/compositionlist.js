@@ -408,6 +408,16 @@ app.directive('compositionList', function (contextService, spinService) {
                         $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                         $scope.selecteditem = {};
                         $scope.collapseAll();
+
+                        var relName = $scope.relationship;
+                        var eventData = {};
+
+                        eventData[relName] = {
+                            list: data.resultObject.fields[relName],
+                            relationship: relName
+                        };
+
+                        $scope.$emit("sw_compositiondataresolved", eventData);
                     },
                     failureCbk: function (data) {
                         var idx = $scope.compositiondata.indexOf(selecteditem);
