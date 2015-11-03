@@ -135,7 +135,7 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "!=teste");
             searchRequestDto.BuildFixedWhereClause("SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != 'TESTE' OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", filterFixedWhereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != 'TESTE' OR SR.ticketid IS NULL  )", filterFixedWhereClause);
         }
 
 
@@ -150,7 +150,7 @@ namespace softwrench.sW4.test.Data.Search {
 
             var whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != :ticketid OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", whereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != :ticketid OR SR.ticketid IS NULL  )", whereClause);
         }
 
         [TestMethod]
@@ -164,7 +164,7 @@ namespace softwrench.sW4.test.Data.Search {
 
             var whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != :ticketid OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", whereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != :ticketid OR SR.ticketid IS NULL  )", whereClause);
         }
     }
 }
