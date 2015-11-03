@@ -337,6 +337,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             }
         }
 
+        //exacttly as it comes from metadata parsing
+        public string OriginalLabelField { get; set; }
+
         public void SetLazyRendererParametersResolver(Lazy<IDictionary<string, object>> resolver) {
             LazyRendererParametersResolver = resolver;
         }
@@ -348,6 +351,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                 LabelFields = LabelFields,
                 ApplicationTo = ApplicationTo,
             };
+            cloned.OriginalLabelField = OriginalLabelField;
             cloned.SetLazyResolver(LazyEntityAssociation);
             cloned.SetLazyRendererParametersResolver(LazyRendererParametersResolver);
             return cloned;

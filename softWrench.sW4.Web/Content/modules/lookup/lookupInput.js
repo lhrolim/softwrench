@@ -53,7 +53,7 @@
 
                 scope.lookupCodeChange = function (fieldMetadata) {
                     var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-                    if (allowFreeText == "true") {
+                    if (allowFreeText === "true") {
                         var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
                         scope.datamap[fieldMetadata.target] = code;
                     }

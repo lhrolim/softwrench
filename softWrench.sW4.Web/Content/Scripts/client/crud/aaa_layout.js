@@ -7,6 +7,7 @@
      'angular-clipboard',
      "xeditable",
      'sw_lookup',
+     'sw_typeahead',
      "sw_scan",
      'webcommons_services',
      'maximo_applications',

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using cts.commons.portable.Util;
@@ -69,9 +70,9 @@ namespace softWrench.sW4.Web.Controllers {
             }
             //this is the main application, such as sr
             var app = MetadataProvider.Application(application).ApplyPoliciesWeb(key);
-            var association = ApplicationAssociationFactory.GetFilterInstance(application, filterProvider, filterAttribute);
+            var association = BuildAssociation(app, filterProvider, filterAttribute);
 
-            var entityAssociation = MetadataProvider.Entity(app.Entity).LocateAssociationByLabelField(filterProvider);
+            var entityAssociation = MetadataProvider.Entity(app.Entity).LocateAssociationByLabelField(association.OriginalLabelField);
             var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
 
             var filter = new PaginatedSearchRequestDto();
@@ -87,6 +88,14 @@ namespace softWrench.sW4.Web.Controllers {
 
         }
 
-
+        private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string filterProvider,
+            string filterAttribute) {
+            var registeredAssociation =
+                application.Schema.Associations.FirstOrDefault(a => a.Target.Equals(filterAttribute));
+            if (registeredAssociation != null) {
+                return registeredAssociation;
+            }
+            return ApplicationAssociationFactory.GetFilterInstance(application.Name, filterProvider, filterAttribute);
+        }
     }
 }
