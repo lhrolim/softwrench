@@ -46,16 +46,5 @@
     <application id="PC" icon="fa fa-table" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
     <application id="PD" icon="fa fa-table" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
     <application id="RM" icon="fa fa-table" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
-  </container>
-
-  <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory_old" role="inventory">
-    <application id="IN" title="Inventory Grid" ref="invbalances" schema="invbalancesList" tooltip="Click to view your Inventory Grid" icon="fa fa-table"/>
-    <application id="IR" title="Issues and Returns" ref="invissue" schema="invIssueList" tooltip="Click to view your Issues and Returns" icon="fa fa-table" />
-    <application id="IT" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="matrectransTransfersList" tooltip="Click to view your Inventory Transfers Grid" icon="fa fa-table"/>
-    <application id="PC" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid" icon="fa fa-table"/>
-    <application id="PD" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid" icon="fa fa-table"/>
-    <application id="RM" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials" icon="fa fa-table"/>
-  </container>
-  
-  
+  </container>  
 </TemplateCatalog>
