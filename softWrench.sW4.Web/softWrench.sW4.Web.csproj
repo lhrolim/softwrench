@@ -473,6 +473,17 @@
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\font.css" />
+    <Content Include="Content\fonts\muller\Muller-Bold Italic-webfont.svg" />
+    <Content Include="Content\fonts\muller\Muller-Bold-webfont.svg" />
+    <Content Include="Content\fonts\muller\Muller-ExtraBold-webfont.svg" />
+    <Content Include="Content\fonts\muller\Muller-Regular Italic-webfont.svg" />
+    <Content Include="Content\fonts\muller\Muller-Regular-webfont.svg" />
+    <Content Include="Content\fonts\muller\muller.css">
+      <DependentUpon>muller.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\fonts\muller\muller.min.css">
+      <DependentUpon>muller.css</DependentUpon>
+    </Content>
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
@@ -667,6 +678,27 @@
     </Content>
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
+    <Content Include="Content\fonts\muller\Muller-Bold Italic-webfont.eot" />
+    <Content Include="Content\fonts\muller\Muller-Bold Italic-webfont.ttf" />
+    <Content Include="Content\fonts\muller\Muller-Bold Italic-webfont.woff" />
+    <Content Include="Content\fonts\muller\Muller-Bold Italic-webfont.woff2" />
+    <Content Include="Content\fonts\muller\Muller-Bold-webfont.eot" />
+    <Content Include="Content\fonts\muller\Muller-Bold-webfont.ttf" />
+    <Content Include="Content\fonts\muller\Muller-Bold-webfont.woff" />
+    <Content Include="Content\fonts\muller\Muller-Bold-webfont.woff2" />
+    <Content Include="Content\fonts\muller\Muller-ExtraBold-webfont.eot" />
+    <Content Include="Content\fonts\muller\Muller-ExtraBold-webfont.ttf" />
+    <Content Include="Content\fonts\muller\Muller-ExtraBold-webfont.woff" />
+    <Content Include="Content\fonts\muller\Muller-ExtraBold-webfont.woff2" />
+    <Content Include="Content\fonts\muller\Muller-Regular Italic-webfont.eot" />
+    <Content Include="Content\fonts\muller\Muller-Regular Italic-webfont.ttf" />
+    <Content Include="Content\fonts\muller\Muller-Regular Italic-webfont.woff" />
+    <Content Include="Content\fonts\muller\Muller-Regular Italic-webfont.woff2" />
+    <Content Include="Content\fonts\muller\Muller-Regular-webfont.eot" />
+    <Content Include="Content\fonts\muller\Muller-Regular-webfont.ttf" />
+    <Content Include="Content\fonts\muller\Muller-Regular-webfont.woff" />
+    <Content Include="Content\fonts\muller\Muller-Regular-webfont.woff2" />
+    <Content Include="Content\fonts\muller\muller.scss" />
     <None Include="Content\styles\default\_button.scss" />
     <Content Include="Content\styles\default\media\media.css">
       <DependentUpon>media.scss</DependentUpon>
