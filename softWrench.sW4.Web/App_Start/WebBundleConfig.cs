@@ -25,8 +25,7 @@ namespace softWrench.sW4.Web {
                 ));
 
             bundles.Add(new StyleBundle("~/Content/fonts").Include(
-                "~/Content/fonts/font.css",
-                "~/Content/fonts/muller/muller.css"
+                "~/Content/fonts/font.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Content/ie9").Include(
