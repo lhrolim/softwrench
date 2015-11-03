@@ -7,7 +7,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using softWrench.sW4.Web.Util;
 
 namespace softwrench.sw4.Hapag.Data.Scheduler.Jobs {
     // ReSharper disable once InconsistentNaming
@@ -48,12 +47,12 @@ namespace softwrench.sw4.Hapag.Data.Scheduler.Jobs {
             var dto = R101ExtractorHelper.BuildDTO();
             var rows = _entityRepository.Get(sliced, dto);
 
-            var excelBytes = _excelUtil.ConvertGridToExcel(user, app.Schema, rows);
+            var csvBytes = _excelUtil.ConvertGridToCsv(user, app.Schema, rows);
             var outputPath = FileBaseDirectoryPath + FileName;
             if (ApplicationConfiguration.IsLocal()) {
                 outputPath = "c:\\softwrench\\hapag\\ClientList.csv";
             }
-            File.WriteAllBytes(outputPath, excelBytes);
+            File.WriteAllBytes(outputPath, csvBytes);
 
         }
 
