@@ -75,24 +75,22 @@
                     }
 
 
-                    if (newValue != null) {
+                    if (newValue != null && angular.isString(newValue)) {
                         //this is a hacky thing when we want to change a value of a field without triggering the watch
-                        if (angular.isFunction(newValue.indexOf)) {
-                            var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
-                            if (ignoreWatchIdx != -1) {
-                                shouldDoWatch = false;
-                                $parse(datamappropertiesName)($scope)[association.attribute] = newValue.substring(0, ignoreWatchIdx);
-                                try {
-                                    $scope.$digest();
+                        var ignoreWatchIdx = newValue.indexOf("$ignorewatch");
+                        if (ignoreWatchIdx >= 0) {
+                            shouldDoWatch = false;
+                            $parse(datamappropertiesName)($scope)[association.attribute] = newValue.substring(0, ignoreWatchIdx);
+                            try {
+                                $scope.$digest();
+                                shouldDoWatch = true;
+                            } catch (e) {
+                                //nothing to do, just checking if digest was already in place or not
+                                $timeout(function() {
                                     shouldDoWatch = true;
-                                } catch (e) {
-                                    //nothing to do, just checking if digest was already in place or not
-                                    $timeout(function() {
-                                        shouldDoWatch = true;
-                                    }, 0, false);
-                                }
-                                return;
+                                }, 0, false);
                             }
+                            return;
                         }
                     }
                     var eventToDispatch = {

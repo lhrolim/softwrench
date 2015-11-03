@@ -1,7 +1,7 @@
 ﻿(function (angular, tableau, $) {
     "use strict";
 
-    function tableauGraphicPanelService($q, restService, contextService) {
+    function tableauGraphicPanelService($q, restService) {
         //#region Utils
         var config = {
             auth: null,
@@ -16,14 +16,15 @@
         }
 
         function doAuthenticate(provider) {
-            contextService.set("avoidspin", true, true);
+            var params = { provider: provider || config.defaultProvider };
+            var requestconfig = { avoidspin: true };
             config.authPromise = restService
-                .postPromise("Dashboard", "Authenticate", { provider: provider || config.defaultProvider })
-                .then(function(response) {
+                .postPromise("Dashboard", "Authenticate", params, null, requestconfig)
+                .then(function (response) {
                     config.auth = response.data["resultObject"];
                     return config.auth;
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     config.authPromise = null;
                     return $q.reject(err);
                 });
@@ -139,9 +140,12 @@
             if (!event.scope.associationOptions) event.scope.associationOptions = {};
             authenticate(event.fields.provider)
                 .then(function (auth) {
-                    return restService.postPromise("Dashboard", "LoadGraphicResource", { provider: event.fields.provider, resource: "workbook" }, { auth: auth });
+                    var params = { provider: event.fields.provider, resource: "workbook" };
+                    var payload = { auth: auth };
+                    var requestconfig = { avoidspin: true };
+                    return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
-                .then(function(response) {
+                .then(function (response) {
                     return toObjectList(response.data, "workbook");
                 })
                 .then(function (workbooks) {
@@ -164,9 +168,12 @@
             if (!event.fields.workbook) return;
             authenticate(event.fields.provider)
                 .then(function (auth) {
-                    return restService.postPromise("Dashboard", "LoadGraphicResource", { provider: event.fields.provider, resource: "view" }, { workbook: event.fields.workbook.id, auth: auth });
+                    var params = { provider: event.fields.provider, resource: "view" };
+                    var payload = { workbook: event.fields.workbook.id, auth: auth };
+                    var requestconfig = { avoidspin: true };
+                    return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
-                .then(function(response) {
+                .then(function (response) {
                     return toObjectList(response.data, "view");
                 })
                 .then(function (views) {
@@ -210,7 +217,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("tableauGraphicPanelService", ["$q", "restService", "contextService", tableauGraphicPanelService]);
+    angular.module("sw_layout").factory("tableauGraphicPanelService", ["$q", "restService", tableauGraphicPanelService]);
     //#endregion
 
 })(angular, tableau, jQuery);

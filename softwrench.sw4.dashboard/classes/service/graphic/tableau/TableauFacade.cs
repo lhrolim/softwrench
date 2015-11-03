@@ -20,18 +20,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
     /// Tableau's implementation of <see cref="IGraphicStorageSystemFacade"></see>
     /// </summary>
     public class TableauFacade : IGraphicStorageSystemFacade {
-
-        public const string SYSTEM_NAME = "Tableau";
-
-        private const string REST_API_CONTENT_TYPE = "application/xml;charset=utf-8";
-        private const string REST_API_URL_PATTERN = "{0}api/2.0/{1}";
-        private const string REST_API_DOCUMENT_NAMESPACE = "http://tableausoftware.com/api";
-        private const string REST_API_AUTH_METHOD = "auth/signin";
-        private const string REST_API_AUTH_PAYLOAD = "<tsRequest>" +
-                                                        "<credentials name=\"{0}\" password=\"{1}\">" +
-                                                        "<site contentUrl=\"{2}\"/>" +
-                                                        "</credentials>" +
-                                                        "</tsRequest>";
+        
         /* CONFIGURATION */
         private readonly string _server; // tableau's server url
         private readonly string _site; // tableau's server's site url
@@ -51,28 +40,36 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
         private readonly bool _requireTicket;
 
         public TableauFacade() {
-            var site = MetadataProvider.GlobalProperty("tableau_site");
-            _site = site == null || site == "default" ? "" : site;
-            var server = MetadataProvider.GlobalProperty("tableau_server", true);
+            var site = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_SITE);
+            // if 'tableau_site' is configured use it
+            // otherwise use the clientname as the site name
+            if (site != null) {
+                _site = site == "" || site == "default" ? "" : site;
+            } else {
+                _site = ApplicationConfiguration.ClientName;
+            }
+            // 'sanitize' to add last '/'
+            var server = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_SERVER, true);
             _server = server + (server.EndsWith("/") ? "" : "/");
-            _username = MetadataProvider.GlobalProperty("tableau_username", true);
-            _password = MetadataProvider.GlobalProperty("tableau_password", true);
+
+            _username = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_USERNAME, true);
+            _password = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_PASSWORD, true);
             _requireTicket = !ApplicationConfiguration.IsLocal() || !ApplicationConfiguration.IsDev();
         }
 
         public string SystemName() {
-            return SYSTEM_NAME;
+            return TableauConstants.SYSTEM_NAME;
         }
 
         private HttpWebResponse CallRestApi(string resourceUrl, string method, Dictionary<string, string> headers = null, string payload = null) {
-            var url = string.Format(REST_API_URL_PATTERN, _server, resourceUrl);
+            var url = string.Format(TableauConstants.RestApi.URL_PATTERN, _server, resourceUrl);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             // headers
             if (headers != null) {
                 headers.ForEach((e) => request.Headers[e.Key] = e.Value);
             }
-            request.ContentType = REST_API_CONTENT_TYPE;
+            request.ContentType = TableauConstants.RestApi.CONTENT_TYPE;
             // write payload to requests stream
             if (!string.IsNullOrEmpty(payload)) {
                 var body = Encoding.UTF8.GetBytes(payload);
@@ -87,10 +84,10 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
         }
 
         private void AuthToRestApi(TableauAuthDto auth) {
-            var payload = string.Format(REST_API_AUTH_PAYLOAD, _username, _password, _site);
-            var response = CallRestApi(REST_API_AUTH_METHOD, "POST", null, payload);
+            var payload = string.Format(TableauConstants.RestApi.AUTH_PAYLOAD, _username, _password, _site);
+            var response = CallRestApi(TableauConstants.RestApi.AUTH_METHOD, "POST", null, payload);
             if (response.StatusCode != HttpStatusCode.OK) {
-                throw GraphicStorageSystemException.AuthenticationFailed(SYSTEM_NAME, _server);
+                throw GraphicStorageSystemException.AuthenticationFailed(TableauConstants.SYSTEM_NAME, _server);
             }
             // read response's payload
             using (var responseStream = response.GetResponseStream()) {
@@ -98,7 +95,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                     // parse xml response
                     var text = responseReader.ReadToEnd();
                     var xml = XDocument.Parse(text);
-                    XNamespace xmlns = REST_API_DOCUMENT_NAMESPACE; // implicit convertion doesn't work with constants
+                    XNamespace xmlns = TableauConstants.RestApi.DOCUMENT_NAMESPACE; // implicit convertion doesn't work with constants
                     var credentials = xml.Root.Descendants(xmlns + "credentials").First();
                     var token = credentials.Attribute("token").Value;
                     var userid = credentials.Descendants(xmlns + "user").First().Attribute("id").Value;
@@ -120,9 +117,10 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 var ticket = Encoding.Default.GetString(response);
                 // -1 gets returned if user being used does not have enough permissions
                 // or the domain in which SW is deployed is not trusted by the Tableau server
-                if ((string.IsNullOrWhiteSpace(ticket) || ticket == "-1")) {
+                if (ticket == "-1" /* permission check */ || string.IsNullOrWhiteSpace(ticket) /* safety check (should never happen) */ ) {
                     if (_requireTicket) {
-                        throw GraphicStorageSystemException.AuthenticationFailed(SYSTEM_NAME, _server);
+                        throw new GraphicStorageSystemException(string.Format("Tableau server returned an invalid trusted ticket '{0}'. " +
+                                                                              "Make sure this domain is configured as trusted in tableau server.", ticket));
                     }
                     // fail silently: require manual authentication
                     ticket = null;
@@ -147,9 +145,8 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 return auth;
             } catch (Exception e) {
                 if (e is GraphicStorageSystemException) throw;
-                throw GraphicStorageSystemException.AuthenticationFailed(SYSTEM_NAME, _server, e);
+                throw GraphicStorageSystemException.AuthenticationFailed(TableauConstants.SYSTEM_NAME, _server, e);
             }
-
         }
 
         public string LoadExternalResource(string resource, JObject request) {
@@ -161,11 +158,12 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 var workbook = (string)request.GetValue("workbook").ToObject(typeof(string));
                 url = string.Format("sites/{0}/workbooks/{1}/views", auth.SiteId, workbook);
             } else {
-                throw GraphicStorageSystemException.ExternalResourceLoadFailed(SYSTEM_NAME, resource);
+                throw GraphicStorageSystemException.ExternalResourceLoadFailed(TableauConstants.SYSTEM_NAME, resource);
             }
-            var response = CallRestApi(url, "GET", new Dictionary<string, string>() { { "X-Tableau-Auth", auth.Token } });
+            var headers = new Dictionary<string, string>() { { TableauConstants.RestApi.AUTH_HEADER_NAME, auth.Token } };
+            var response = CallRestApi(url, "GET", headers);
             if (response.StatusCode != HttpStatusCode.OK) {
-                throw GraphicStorageSystemException.ExternalResourceLoadFailed(SYSTEM_NAME, resource);
+                throw GraphicStorageSystemException.ExternalResourceLoadFailed(TableauConstants.SYSTEM_NAME, resource);
             }
             using (var responseStream = response.GetResponseStream()) {
                 using (var responseReader = new StreamReader(responseStream)) {
