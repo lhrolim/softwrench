@@ -102,6 +102,7 @@
     <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemFacade.cs" />
+    <Compile Include="classes\service\graphic\tableau\DomainNotTrustedByTableauException.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauAuthDto.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauConstants.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauFacade.cs" />
