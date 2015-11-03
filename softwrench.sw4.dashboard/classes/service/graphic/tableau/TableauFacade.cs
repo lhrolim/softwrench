@@ -20,7 +20,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
     /// Tableau's implementation of <see cref="IGraphicStorageSystemFacade"></see>
     /// </summary>
     public class TableauFacade : IGraphicStorageSystemFacade {
-        
+
         /* CONFIGURATION */
         private readonly string _server; // tableau's server url
         private readonly string _site; // tableau's server's site url
@@ -119,8 +119,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 // or the domain in which SW is deployed is not trusted by the Tableau server
                 if (ticket == "-1" /* permission check */ || string.IsNullOrWhiteSpace(ticket) /* safety check (should never happen) */ ) {
                     if (_requireTicket) {
-                        throw new GraphicStorageSystemException(string.Format("Tableau server returned an invalid trusted ticket '{0}'. " +
-                                                                              "Make sure this domain is configured as trusted in tableau server.", ticket));
+                        throw DomainNotTrustedByTableauException.InvalidTicket(ticket);
                     }
                     // fail silently: require manual authentication
                     ticket = null;
