@@ -9,9 +9,8 @@
         <list stereotype="compositionlist" platform="web">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
-            <property key="expansible" value="false"/>
+            <property key="expansible" value="true"/>
             <property key="list.selectionstyle" value="single"/>
-            <property key="list.click.service" value="meterReadingService.openReadingModal"/>
           </properties>
 
           <field attribute="siteid" hidden="true"></field>
@@ -20,14 +19,8 @@
           <field attribute="cinum" label="Configuration Item"></field>
           <field attribute="sequence" label="Sequence"></field>
           <field attribute="targetdesc" label="Target Description"></field>
-          <!--needed to rename progress to progress 2 since there was a conflicting bootstrap class-->
-          <field attribute="progress2" label="Complete" attributeToServer="progress">
-            <renderer type="checkbox" params="editable=true;clickservice=meterReadingService.markComplete"/>
-          </field>
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
-              <removecommand id="additem"/>
-              <removecommand id="save"/>
             </commandgroup>
           </commandbars>
         </list>

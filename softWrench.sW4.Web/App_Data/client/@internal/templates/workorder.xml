@@ -308,8 +308,9 @@
           </section>
           
           <section id="compositions">
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Location"><!-- detailschema="" >-->
-              <collectionproperties allowupdate="false" allowcreation="true" />
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Location" detailschema="detail" >
+              <collectionproperties allowupdate="false" allowcreation="true" autocommit="false" />
+              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>
             </composition>
           </section>
 
