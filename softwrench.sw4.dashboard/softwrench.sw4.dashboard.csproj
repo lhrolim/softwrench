@@ -103,6 +103,7 @@
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemFacade.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauAuthDto.cs" />
+    <Compile Include="classes\service\graphic\tableau\TableauConstants.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -30,7 +30,8 @@
 
   <!-- tableau -->
   <property key="tableau_server" value="http://10.50.100.171" />
-  <property key="tableau_username" value="rbotti" />
+  <property key="tableau_username" value="swadmin" />
+  <property key="tableau_password" value="sw@dm1n" />
   <property key="tableau_site" value="default" />
   
   <!-- end tableau -->
