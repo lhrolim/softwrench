@@ -49,7 +49,11 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 _site = ApplicationConfiguration.ClientName;
             }
             // 'sanitize' to add last '/'
-            var server = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_SERVER, true);
+            var server = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_SERVER);
+            if (server == null) {
+                return;
+            }
+
             _server = server + (server.EndsWith("/") ? "" : "/");
 
             _username = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_USERNAME, true);
