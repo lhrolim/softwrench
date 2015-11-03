@@ -1,110 +1,110 @@
-﻿@mixin webfont($font) {
+﻿@mixin webfont($font, $family) {
    src: url('#{$font}.eot');
    src: url('#{$font}.eot?#iefix') format('embedded-opentype'),
         url('#{$font}.woff2') format('woff2'),
         url('#{$font}.woff') format('woff'),
         url('#{$font}.ttf') format('truetype'),
-        url('#{$font}.svg#mullerblack') format('svg');
+        url('#{$font}.svg##{$family}') format('svg');
    font-weight: normal;
    font-style: normal;
 }
 
 /*@font-face {
     font-family: 'mullerhairline';
-    @include webfont('Muller-Hairline-webfont');
+    @include webfont('Muller-Hairline-webfont', 'mullerhairline');
 }*/
 
 /*@font-face {
     font-family: 'mullerhairline_italic';
-    @include webfont('Muller-Hairline Italic-webfont');
+    @include webfont('Muller-Hairline Italic-webfont', 'mullerhairline_italic');
+}*/
+
+/*@font-face {
+    font-family: 'mullerthin';
+    @include webfont('Muller-Thin-webfont', 'mullerthin');
+}*/
+
+/*@font-face {
+    font-family: 'mullerthin_italic';
+    @include webfont('Muller-Thin Italic-webfont', 'mullerthin_italic');
+}*/
+
+/*@font-face {
+    font-family: 'mullerultralight';
+    @include webfont('Muller-UltraLight-webfont', 'mullerultralight');
+}*/
+
+/*@font-face {
+    font-family: 'mullerultralight_italic';
+    @include webfont('Muller-UltraLight Italic-webfont', 'mullerultralight_italic');
+}*/
+
+/*@font-face {
+    font-family: 'mullerlight';
+    @include webfont('Muller-Light-webfont', 'mullerlight');
+}*/
+
+/*@font-face {
+    font-family: 'mullerlight_italic';
+    @include webfont('Muller-Light Italic-webfont', 'mullerlight_italic');
 }*/
 
 @font-face {
-    font-family: 'mullerthin';
-    @include webfont('Muller-Thin-webfont');
-}
-
-@font-face {
-    font-family: 'mullerthin_italic';
-    @include webfont('Muller-Thin Italic-webfont');
-}
-
-@font-face {
-    font-family: 'mullerultralight';
-    @include webfont('Muller-UltraLight-webfont');
-}
-
-@font-face {
-    font-family: 'mullerultralight_italic';
-    @include webfont('Muller-UltraLight Italic-webfont');
-}
-
-@font-face {
-    font-family: 'mullerlight';
-    @include webfont('Muller-Light-webfont');
-}
-
-@font-face {
-    font-family: 'mullerlight_italic';
-    @include webfont('Muller-Light Italic-webfont');
-}
-
-@font-face {
     font-family: 'muller_regularregular';
-    @include webfont('Muller-Regular-webfont');
+    @include webfont('Muller-Regular-webfont', 'muller_regularregular');
 }
 
 @font-face {
     font-family: 'mullerregular_italic';
-    @include webfont('Muller-Regular Italic-webfont');
+    @include webfont('Muller-Regular Italic-webfont', 'mullerregular_italic');
 }
 
-@font-face {
+/*@font-face {
     font-family: 'mullermedium';
-    @include webfont('Muller-Medium-webfont');
-}
+    @include webfont('Muller-Medium-webfont', 'mullermedium');
+}*/
 
-@font-face {
+/*@font-face {
     font-family: 'mullermedium_italic';
-    @include webfont('Muller-Medium Italic-webfont');
-}
+    @include webfont('Muller-Medium Italic-webfont', 'mullermedium_italic');
+}*/
 
 @font-face {
     font-family: 'mullerbold';
-    @include webfont('Muller-Bold-webfont');
+    @include webfont('Muller-Bold-webfont', 'mullerbold');
 }
 
 @font-face {
     font-family: 'mullerbold_italic';
-    @include webfont('Muller-Bold Italic-webfont');
+    @include webfont('Muller-Bold Italic-webfont', 'mullerbold_italic');
 }
 
-@font-face {
+/*@font-face {
     font-family: 'mullerextrabold';
-    @include webfont('Muller-ExtraBold-webfont');
-}
+    @include webfont('Muller-ExtraBold-webfont', 'mullerextrabold');
+}*/
 
-@font-face {
+/*@font-face {
     font-family: 'mullerextrabold_italic';
-    @include webfont('Muller-ExtraBold Italic-webfont');
-}
+    @include webfont('Muller-ExtraBold Italic-webfont', 'mullerextrabold_italic');
+}*/
 
-@font-face {
+/*@font-face {
     font-family: 'mullerheavy';
-    @include webfont('Muller-Heavy-webfont');
-}
+    @include webfont('Muller-Heavy-webfont', 'mullerheavy');
+}*/
 
-@font-face {
+/*@font-face {
     font-family: 'mullerheavy_italic';
-    @include webfont('Muller-Heavy Italic-webfont');
-}
+    @include webfont('Muller-Heavy Italic-webfont', 'mullerheavy_italic');
+}*/
 
-@font-face {
+/*@font-face {
     font-family: 'mullerblack';
-    @include webfont('Muller-Black-webfont');
-}
+    @include webfont('Muller-Black-webfont', 'mullerblack');
+}*/
 
-@font-face {
+/*@font-face {
     font-family: 'mullerblack_italic';
-    @include webfont('Muller-Black Italic-webfont');
-}
+    @include webfont('Muller-Black Italic-webfont', 'mullerblack_italic');
+}*/
