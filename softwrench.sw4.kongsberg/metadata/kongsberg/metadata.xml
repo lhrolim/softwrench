@@ -190,7 +190,7 @@
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
-        <relationship to="numericdomain" qualifier="internalpriority">
+        <relationship to="numericdomain" qualifier="internalpriority" cacheable="true">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
@@ -227,7 +227,7 @@
           <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
         </relationship>
@@ -754,7 +754,7 @@
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
         </relationship>
@@ -785,11 +785,11 @@
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
-        <relationship to="numericdomain" qualifier="internalpriority">
+        <relationship to="numericdomain" qualifier="internalpriority" cacheable="true">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
-        <relationship to="numericdomain" qualifier="reportedpriority">
+        <relationship to="numericdomain" qualifier="reportedpriority" cacheable="true">
           <relationshipAttribute from="reportedpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
@@ -1161,7 +1161,28 @@
       </properties>
 
       <schemas>
+
+
         <list title="Service Request Grid">
+
+
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+            <!--            <optionfilter attribute="classificationid" provider="@FilterClassifications" displaycode="true"/>-->
+
+            <optionfilter attribute="problemtype" provider="problemtype_.description" displaycode="true" allowblank="true"/>
+            <optionfilter attribute="area" provider="area_.description" displaycode="true" allowblank="true"/>
+            <optionfilter attribute="internalpriority" provider="internalpriority_.description" displaycode="true" allowblank="true"/>
+
+
+            <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+            <optionfilter attribute="reportedby" provider="reportedbyperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+          </filters>
+
           <field attribute="ticketid" label="SR#">
             <renderer type="default"  params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=10%" />
           </field>
@@ -1444,7 +1465,7 @@
           <section id="attachmentsection" />
           <section id="compositions"/>
         </schema>
-        
+
         <schema parentschema="adetail" title="New Service Request" id="newdetail" stereotype="detailnew">
           <section id="srsection">
             <field attribute="ticketid" label="SR#" hidden="true" />
@@ -1642,6 +1663,26 @@
     <application name="incident" title="Incident" entity="incident">
       <schemas>
         <list title="Incident Grid">
+
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+            <!--            <optionfilter attribute="classificationid" provider="@FilterClassifications" displaycode="true"/>-->
+            <optionfilter attribute="internalpriority" provider="internalpriority_.description" displaycode="true" allowblank="true"/>
+            <optionfilter attribute="reportedpriority" provider="reportedpriority_.description" displaycode="true" allowblank="true"/>
+
+
+            <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+
+            <optionfilter attribute="ownergroup" provider="persongroup_.description" allowblank="true" displaycode="true"/>
+
+            <optionfilter attribute="reportedby" provider="reportedbyperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+          </filters>
+
+
           <field attribute="ticketid" label="Incident#">
             <renderer type="default" params="widthXS=25%;widthSM=20%;widthMD=12%;widthLG=8%"/>
           </field>
@@ -1773,7 +1814,7 @@
               </field>
             </section>
           </section>
-          
+
           <section>
             <header displacement="ontop" label="Key Dates" params="fieldset=true" />
             <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
@@ -2789,7 +2830,7 @@
               <renderer type="default" />
             </field>
           </section>
-          
+
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext" />
           </field>

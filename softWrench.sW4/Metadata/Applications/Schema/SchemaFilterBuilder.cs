@@ -175,7 +175,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 if (mi == null) {
                     throw new FilterMetadataException("missing filter provider method {0} on dataset for application {1}".Fmt(provider.Substring(1), schema.ApplicationName));
                 }
-                if (mi.GetParameters().Length != 1 || typeof(IEnumerable<IAssociationOption>).IsAssignableFrom(mi.ReturnType) || typeof(FilterProviderParameters).IsAssignableFrom(mi.GetParameters()[0].ParameterType)) {
+                if (mi.GetParameters().Length != 1 || !typeof(IEnumerable<IAssociationOption>).IsAssignableFrom(mi.ReturnType) || !typeof(FilterProviderParameters).IsAssignableFrom(mi.GetParameters()[0].ParameterType)) {
                     //checking signature of the method
                     throw new InvalidOperationException(string.Format("Filter provider {0} at  {1} has wrong signature ", provider.Substring(1), dataSet.GetType().Name));
                 }

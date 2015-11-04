@@ -44,7 +44,12 @@
                             value: "nullor:",
                             nonstoreable: true
                         }
-                        scope.suggestedoptions.push(item);
+                        if (scope.filter.lazy) {
+                            scope.suggestedoptions.push(item);
+                        } else {
+                            scope.filteroptions.push(item);
+                        }
+                        
                     }
 
                     //initing any metadata declared option first
