@@ -25,6 +25,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
@@ -41,10 +42,12 @@ namespace softWrench.sW4.Web.Controllers {
 
         private readonly DataSetProvider _dataSetProvider;
         private readonly ApplicationAssociationResolver _associationResolver;
+        private readonly FilterWhereClauseHandler _filterWhereClauseHandler;
 
-        public FilterDataController(DataSetProvider dataSetProvider, ApplicationAssociationResolver associationResolver) {
+        public FilterDataController(DataSetProvider dataSetProvider, ApplicationAssociationResolver associationResolver, FilterWhereClauseHandler filterWhereClauseHandler) {
             _dataSetProvider = dataSetProvider;
             _associationResolver = associationResolver;
+            _filterWhereClauseHandler = filterWhereClauseHandler;
         }
 
 
@@ -71,13 +74,9 @@ namespace softWrench.sW4.Web.Controllers {
             var app = MetadataProvider.Application(application).ApplyPoliciesWeb(key);
             var association = ApplicationAssociationFactory.GetFilterInstance(application, filterProvider, filterAttribute);
 
-            var entityAssociation = MetadataProvider.Entity(app.Entity).LocateAssociationByLabelField(filterProvider);
-            var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
-
             var filter = new PaginatedSearchRequestDto();
-            if (!string.IsNullOrEmpty(labelSearchString)) {
-                filter.AppendWhereClauseFormat("({0} like '%{1}%' or {2} like '%{1}%')", primaryAttribute.To, labelSearchString, entityAssociation.Item2.Name);
-            }
+
+            filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(filterProvider, labelSearchString, app.Schema));
             //let´s limit the filter adding an extra value so that we know there´re more to be brought
             //TODO: add a count call
             filter.PageSize = 21;

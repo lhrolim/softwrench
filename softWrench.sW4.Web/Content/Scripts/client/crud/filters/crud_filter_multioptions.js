@@ -173,6 +173,10 @@
                         if (filterAttribute === $scope.filter.attribute) {
                             $scope.vm.allSelected = 0;
                             $scope.toggleSelectAll();
+                            $timeout(function() {
+                                $scope.jelement.typeahead('val', '');
+                            },0,false)
+                            
                         }
                     });
 
@@ -230,7 +234,7 @@
                             return;
                         }
                         //cleaning up jquery element
-                        $(jqueryEvent.target).val("");
+                        $scope.jelement.typeahead('val', '');
                         if ($scope.filteroptions.some(function (el) {
                                 return el.value === item.value;
                         })) {
