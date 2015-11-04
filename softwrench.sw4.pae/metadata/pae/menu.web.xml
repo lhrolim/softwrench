@@ -18,10 +18,4 @@
     <application id="ASS" icon="fa fa-table" title="Asset Grid" ref="asset" schema="list" tooltip="Click to view your Service Request Grid"/>
   </container>
 
-  <!---Missing leaf customization impl -->
-  <!--  <reference id="inventory_OLD">-->
-  <!--    <removal id="IT"/>-->
-  <!--    <application id="ASS" title="Asset Grid" ref="asset" schema="list" tooltip="Click to view your Service Request Grid" customizationposition="+RM"/>-->
-  <!--  </reference>-->
-
 </Menu>
