@@ -9,16 +9,17 @@
         <list stereotype="compositionlist" platform="web">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
-            <property key="expansible" value="true"/>
-            <property key="list.selectionstyle" value="single"/>
+            <property key="expansible" value="false"/>
           </properties>
 
           <field attribute="siteid" hidden="true"></field>
-          <field attribute="assetnum" label="Asset"></field>
-          <field attribute="location" label="Location"></field>
-          <field attribute="cinum" label="Configuration Item"></field>
-          <field attribute="sequence" label="Sequence"></field>
-          <field attribute="targetdesc" label="Target Description"></field>
+          <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.location" label="Location">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="asset_.description" label="Target Description" attributeToServer="targetdesc"></field>
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
             </commandgroup>
