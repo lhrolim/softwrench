@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(function (angular) {
     'use strict';
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
@@ -62,7 +62,7 @@
                 var shouldDoWatch = true;
                 var isMultiValued = association.multiValued;
                 $scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
-                    if (oldValue == newValue || !shouldDoWatch) {
+                    if (oldValue === newValue || !shouldDoWatch) {
                         return;
                     }
 
@@ -75,10 +75,10 @@
                     }
 
 
-                    if (newValue != null) {
+                    if (newValue != null && angular.isString(newValue)) {
                         //this is a hacky thing when we want to change a value of a field without triggering the watch
-                        var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
-                        if (ignoreWatchIdx != -1) {
+                        var ignoreWatchIdx = newValue.indexOf("$ignorewatch");
+                        if (ignoreWatchIdx >= 0) {
                             shouldDoWatch = false;
                             $parse(datamappropertiesName)($scope)[association.attribute] = newValue.substring(0, ignoreWatchIdx);
                             try {
@@ -86,7 +86,7 @@
                                 shouldDoWatch = true;
                             } catch (e) {
                                 //nothing to do, just checking if digest was already in place or not
-                                $timeout(function () {
+                                $timeout(function() {
                                     shouldDoWatch = true;
                                 }, 0, false);
                             }
@@ -156,4 +156,4 @@
 
         }
     }
-})();
+})(angular);

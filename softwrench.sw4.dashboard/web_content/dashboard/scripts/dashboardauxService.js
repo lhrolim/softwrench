@@ -1,21 +1,31 @@
 ﻿(function (angular) {
     "use strict";
 
-var app = angular.module('sw_layout');
+    function dashboardAuxService($rootScope, $log, contextService, restService, graphicPanelServiceProvider) {
+        //#region Utils
+        function panelCreated(datamap) {
+            return function(response) {
+                var data = response.data;
+                if (datamap.row && datamap.column) {
+                    $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
+                } else {
+                    $rootScope.$broadcast('dash_panelcreated', data.resultObject);
+                }
+            };
+        }
+        //#endregion
 
-app.factory('dashboardAuxService', ["$rootScope", "$log", "contextService", "restService", function ($rootScope, $log, contextService, restService) {
-
-    return {
-        lookupFields: function(event) {
+        //#region Public methods
+        function lookupFields(event) {
             var application = event.fields.application;
             if (application == null) {
                 return;
             }
-            restService.getPromise('Dashboard', 'LoadFields', { applicationName: application }).then(function(response) {
+            restService.getPromise('Dashboard', 'LoadFields', { applicationName: application }).then(function (response) {
                 var data = response.data;
                 event.scope.associationOptions['appfields'] = data.resultObject;
                 event.scope.datamap['appfields'] = "";
-                $.each(data.resultObject, function(key, value) {
+                $.each(data.resultObject, function (key, value) {
                     event.scope.datamap['appfields'] += value.value + ",";
                 });
                 var selectedFields = event.scope.datamap['appfields'];
@@ -26,9 +36,9 @@ app.factory('dashboardAuxService', ["$rootScope", "$log", "contextService", "res
                 //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
                 //event.scope.datamap['appfields'] = "#allfields";
             });
-        },
+        }
 
-        locatePanelFromMatrix: function(dashboard, row, column) {
+        function locatePanelFromMatrix(dashboard, row, column) {
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
 
@@ -39,60 +49,43 @@ app.factory('dashboardAuxService', ["$rootScope", "$log", "contextService", "res
             newPosition += column;
 
             return dashboard.panels[newPosition];
-        },
+        }
 
-        createAndAssociatePanel: function(datamap) {
-            restService.postPromise('Dashboard', 'CreatePanel', datamap, null).then(function(response) {
-                var data = response.data;
-                if (datamap.row && datamap.column) {
-                    $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
-                } else {
-                    $rootScope.$broadcast('dash_panelcreated', data.resultObject);
-                }
-            });
-        },
+        function createAndAssociateGridPanel(datamap) {
+            restService.postPromise('Dashboard', 'CreateGridPanel', null, datamap).then(panelCreated(datamap));
+        }
 
-        saveDashboard: function(datamap, policy) {
+        function saveDashboard(datamap, policy) {
             datamap.creationDateSt = datamap.creationDate;
             if (datamap.panels == null) {
                 //this will avoid wrong serialization
                 delete datamap.panels;
             }
 
-            restService.postPromise('Dashboard', 'SaveDashboard', null, datamap).then(function(response) {
+            restService.postPromise('Dashboard', 'SaveDashboard', null, datamap).then(function (response) {
                 var data = response.data;
                 $rootScope.$broadcast('dash_dashsaved', data.resultObject);
             });
-        },
+        }
 
-        selectPanel: function(datamap) {
-            restService.getPromise("Dashboard", "LoadPanel", { panel: datamap.panel }).then(function(response) {
+        function selectPanel(datamap) {
+            restService.getPromise("Dashboard", "LoadPanel", { panel: datamap.panel }).then(function (response) {
                 var data = response.data;
                 $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
             });
-        },
+        }
 
-        validatePanels: function(event) {
-            var paneltype = event.fields.paneltype;
-            if (!paneltype) return;
-            //if (paneltype === "dashboardgraphic") {
-            //    alertService.alert("Graphic panels are not yet supported");
-            //    event.fields.paneltype = "";
-            //    return;
-            //}
-        },
-
-        loadPanels: function(event) {
+        function loadPanels(event) {
             var paneltype = event.fields.paneltype;
             if (!paneltype) return;
 
-            restService.getPromise('Dashboard', 'LoadPanels', { paneltype: paneltype }).then(function(response) {
+            restService.getPromise('Dashboard', 'LoadPanels', { paneltype: paneltype }).then(function (response) {
                 var data = response.data;
                 event.scope.associationOptions['availablepanels'] = data.resultObject;
             });
-        },
+        }
 
-        readjustLayout: function(dashboard, row, column) {
+        function readjustLayout(dashboard, row, column) {
             var log = $log.getInstance("dashboardauxService#adjustLayout");
             if (!dashboard.layout) {
                 //first will be whole line
@@ -114,10 +107,9 @@ app.factory('dashboardAuxService', ["$rootScope", "$log", "contextService", "res
             rows[row - 1] = "" + ++rowLayout;
             dashboard.layout = rows.join(',');
             return dashboard.layout;
-        },
+        }
 
-        readjustPositions: function(dashboard, panel, row, column) {
-
+        function readjustPositions(dashboard, panel, row, column) {
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
             for (var i = 0; i < row - 1; i++) {
@@ -136,13 +128,44 @@ app.factory('dashboardAuxService', ["$rootScope", "$log", "contextService", "res
 
             dashboard.panels.splice(newPosition, 0, panelAssociation);
 
-            angular.forEach(dashboard.panels, function(p, index) {
+            angular.forEach(dashboard.panels, function (p, index) {
                 p.position = index;
             });
             return dashboard;
         }
-    };
 
-}]);
+        function setGraphicProvider(event) {
+            // delegate call to provider api
+            var instance = graphicPanelServiceProvider.getService(event.fields.provider);
+            return instance.onProviderSelected(event);
+        }
+
+        function createAndAssociateGraphicPanel(datamap) {
+            var instance = graphicPanelServiceProvider.getService(datamap.provider);
+            instance.onBeforeAssociatePanel(datamap);
+            restService.postPromise("Dashboard", "CreateGraphicPanel", null, datamap).then(panelCreated(datamap));
+        }
+        //#endregion
+
+        //#region Service Instance
+        var service = {
+            lookupFields: lookupFields,
+            locatePanelFromMatrix: locatePanelFromMatrix,
+            createAndAssociateGridPanel: createAndAssociateGridPanel,
+            saveDashboard: saveDashboard,
+            selectPanel: selectPanel,
+            loadPanels: loadPanels,
+            readjustLayout: readjustLayout,
+            readjustPositions: readjustPositions,
+            setGraphicProvider: setGraphicProvider,
+            createAndAssociateGraphicPanel: createAndAssociateGraphicPanel
+        };
+        return service;
+        //#endregion
+    }
+
+    //#region Service registration
+    angular.module("sw_layout").factory("dashboardAuxService", ["$rootScope", "$log", "contextService", "restService", "graphicPanelServiceProvider", dashboardAuxService]);
+    //#endregion
 
 })(angular);

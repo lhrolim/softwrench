@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Search;
@@ -17,7 +19,18 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
 
             return filter;
         }
-      
+
+        public IEnumerable<IAssociationOption> FilterClassifications(FilterProviderParameters parameters) {
+            var adapterParameters = new OptionFieldProviderParameters();
+            var fields = new Dictionary<string, object>();
+            fields["class"] = "SR";
+            fields["orgid"] = "";
+            fields["siteid"] = "";
+            fields["ticketid"] = "";
+            adapterParameters.OriginalEntity = new DataMap("incident", fields, "ticketid");
+            return GetIncidentClassStructureType(adapterParameters);
+        }
+
         public override string ApplicationName() {
             return "incident";
         }

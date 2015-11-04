@@ -66,8 +66,11 @@
         <list title="Service Request Grid">
 
           <filters>
-            <optionfilter attribute="status" provider="synstatus_.description" />
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
             <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+            <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
             </optionfilter>
           </filters>
@@ -288,8 +291,11 @@
         <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list">
 
           <filters>
-            <optionfilter attribute="status" provider="synstatus_.description" />
+            <optionfilter attribute="status" provider="synstatus_.description"  displaycode="true"/>
             <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+            <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
             </optionfilter>
           </filters>

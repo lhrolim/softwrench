@@ -140,6 +140,10 @@ app.directive('menuItem', function (contextService) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
 
+            $scope.isMenuContainer = function (level, leaf) {
+                return leaf.type == 'MenuContainerDefinition';
+            }
+
             $scope.isButtonStyleContainer = function (level, leaf) {
                 if (leaf.module != null) {
                     return false;

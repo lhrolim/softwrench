@@ -66,7 +66,11 @@ namespace softWrench.sW4.Metadata.Validator {
                     }
                     position = overridenFilter.Attribute;
                 }
-                var originalNode = originalFilters.Find(overridenFilter);
+                var originalFilter = originalFilters.FirstOrDefault(f => f.Attribute.EqualsIc(position));
+                if (originalFilter == null) {
+                    continue;
+                }
+                var originalNode = originalFilters.Find(originalFilter);
                 if (originalNode == null) {
                     continue;
                 }

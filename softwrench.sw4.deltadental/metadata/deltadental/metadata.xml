@@ -205,10 +205,6 @@
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
-          <relationshipAttribute from="status" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
-        </relationship>
         <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
@@ -299,9 +295,11 @@
 
           <filters>
             <filter attribute="ownerperson_.displayname" remove="true"/>
+            <filter attribute="reportedbyp_.displayname" remove="true"/>
           </filters>
           
           <customization position="reportedby">
+            <field attribute="reportedby" hidden="true" label="Reported By"/>
             <field attribute="reportedbyp_.displayname" label="Reported By">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
             </field>
@@ -324,9 +322,11 @@
         <list title="Service Request Grid" redeclaring="false">
           <filters>
             <filter attribute="ownerperson_.displayname" remove="true"/>
+            <filter attribute="reportedbyp_.displayname" remove="true"/>
           </filters>
           
           <customization position="reportedby">
+            <field attribute="reportedby" hidden="true" label="Reported By"/>
             <field attribute="reportedbyp_.displayname" label="Reported By">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
             </field>
@@ -529,6 +529,13 @@
       
       <schemas>
         <list title="Work Order Grid" platform="web" redeclaring="false">
+          <filters>
+            <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+          </filters>
+          
+          
           <customization position="asset_.description">
             <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=30%;widthLG=25%" />

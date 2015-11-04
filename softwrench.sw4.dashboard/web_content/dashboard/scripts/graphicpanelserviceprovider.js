@@ -2,9 +2,20 @@
     "use strict";
 
     function graphicPanelServiceProvider($injector) {
+        //#region Utils
+        var servicesCache = {};
+        //#endregion
+
         //#region Public methods
         function getService(provider) {
-            return $injector.get(provider.toLowerCase() + "GraphicPanelService");
+            if (!provider) return null;
+            var providerName = provider.toLowerCase();
+            var instance = servicesCache[providerName];
+            if (!instance) {
+                instance = $injector.get(providerName + "GraphicPanelService");
+                servicesCache[providerName] = instance;
+            }
+            return instance;
         }
         //#endregion
 

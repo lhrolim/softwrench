@@ -1,4 +1,4 @@
-﻿(function (angular, tableau) {
+﻿(function (angular, tableau, $) {
     "use strict";
 
     function tableauGraphicPanelService($q, restService) {
@@ -16,13 +16,15 @@
         }
 
         function doAuthenticate(provider) {
+            var params = { provider: provider || config.defaultProvider };
+            var requestconfig = { avoidspin: true };
             config.authPromise = restService
-                .postPromise("Dashboard", "Authenticate", { provider: provider || config.defaultProvider })
+                .postPromise("Dashboard", "Authenticate", params, null, requestconfig)
                 .then(function (response) {
                     config.auth = response.data["resultObject"];
                     return config.auth;
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     config.authPromise = null;
                     return $q.reject(err);
                 });
@@ -30,11 +32,12 @@
         }
 
         function viewUrl(panel, auth) {
-            var workbook = panel.configurationDictionary["workbook"];
-            var view = panel.configurationDictionary["view"];
+            var workbook = window.replaceAll(panel.configurationDictionary["workbook"], " ", "");
+            var view = window.replaceAll(panel.configurationDictionary["view"], " ", "");
             var ticket = auth.ticket;
-            var site = auth.siteName; 
-            var url = "{0}{1}{2}/views/{3}/{4}".format(auth.serverUrl, (!!ticket ? "/trusted/" + ticket : ""), (!!site ? "/site/" + site : ""), workbook, view);
+            var site = auth.siteName;
+            var serverUrl = auth.serverUrl.endsWith("/") ? auth.serverUrl.substring(0, auth.serverUrl.length - 1) : auth.serverUrl;
+            var url = "{0}{1}{2}/views/{3}/{4}".format(serverUrl, (!!ticket ? "/trusted/" + ticket : ""), (!!site ? "/site/" + site : ""), workbook, view);
             return url;
         }
 
@@ -43,11 +46,25 @@
             built.height = element.parentElement.offsetHeight;
             built.width = element.parentElement.offsetWidth;
             if (!options) return built;
-            angular.forEach(options, function(value, key) {
+            angular.forEach(options, function (value, key) {
                 built[key] = value;
             });
             return built;
         }
+
+        function toObjectList(xml, tagName) {
+            var parsed = $.parseXML(xml);
+            var elements = parsed.getElementsByTagName(tagName);
+            return Array.prototype.slice.call(elements).map(function (element) {
+                var attrs = element.attributes;
+                var object = {};
+                angular.forEach(attrs, function (attr) {
+                    object[attr.name] = attr.value;
+                });
+                return object;
+            });
+        }
+
         //#endregion
 
         //#region Public methods
@@ -84,7 +101,7 @@
             var url = viewUrl(panel, auth);
             var renderOptions = buildRenderOptions(element, options);
             var deferred = $q.defer();
-            renderOptions.onFirstInteractive = function(event) {
+            renderOptions.onFirstInteractive = function (event) {
                 deferred.resolve(event.getViz());
             };
             try {
@@ -104,9 +121,82 @@
          * @returns Promise resolved with tableau Viz instantiated 
          */
         function loadGraphic(element, panel, options) {
-            return authenticate().then(function(auth) {
+            return authenticate().then(function (auth) {
                 return renderGraphic(element, panel, auth, options);
             });
+        }
+
+        function resizeGraphic(graphic, width, height) {
+            return graphic.setFrameSize(width, height);
+        }
+
+        /**
+         * Authenticates to tableau server (if not already authenticated) 
+         * and populates the associationOptions with the user's workbooks.
+         * 
+         * @param {} event 
+         */
+        function onProviderSelected(event) {
+            if (!event.scope.associationOptions) event.scope.associationOptions = {};
+            authenticate(event.fields.provider)
+                .then(function (auth) {
+                    var params = { provider: event.fields.provider, resource: "workbook" };
+                    var payload = { auth: auth };
+                    var requestconfig = { avoidspin: true };
+                    return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
+                })
+                .then(function (response) {
+                    return toObjectList(response.data, "workbook");
+                })
+                .then(function (workbooks) {
+                    if (!event.scope.associationOptions) event.scope.associationOptions = {};
+                    event.scope.associationOptions.workbooks = workbooks.map(function (workbook) {
+                        workbook.value = { id: workbook.id, name: workbook.name }
+                        workbook.label = workbook.name;
+                        return workbook;
+                    });
+                });
+        }
+
+        /**
+         * Authenticates to tableau server (if not already authenticated) 
+         * and populates the associationOptions with the selected workbook's views.
+         * 
+         * @param {} event 
+         */
+        function onWorkbookSelected(event) {
+            if (!event.fields.workbook) return;
+            authenticate(event.fields.provider)
+                .then(function (auth) {
+                    var params = { provider: event.fields.provider, resource: "view" };
+                    var payload = { workbook: event.fields.workbook.id, auth: auth };
+                    var requestconfig = { avoidspin: true };
+                    return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
+                })
+                .then(function (response) {
+                    return toObjectList(response.data, "view");
+                })
+                .then(function (views) {
+                    if (!event.scope.associationOptions) event.scope.associationOptions = {};
+                    event.scope.associationOptions.views = views.map(function (view) {
+                        view.value = { name: view.name }
+                        view.label = view.name;
+                        return view;
+                    });
+                });
+        }
+
+        /**
+         * Fills the datamps's 'configurationDictionary' property correctly 
+         * from it's view properties.
+         * 
+         * @param {} datamap 
+         */
+        function onBeforeAssociatePanel(datamap) {
+            datamap.configurationDictionary = {
+                'workbook': datamap.workbook.name,
+                'view': datamap.view.name
+            };
         }
 
         //#endregion
@@ -116,7 +206,11 @@
             authenticate: authenticate,
             renderGraphic: renderGraphic,
             loadGraphic: loadGraphic,
-            isAuthenticated: isAuthenticated
+            isAuthenticated: isAuthenticated,
+            resizeGraphic: resizeGraphic,
+            onProviderSelected: onProviderSelected,
+            onWorkbookSelected: onWorkbookSelected,
+            onBeforeAssociatePanel: onBeforeAssociatePanel
         };
         return service;
         //#endregion
@@ -126,4 +220,4 @@
     angular.module("sw_layout").factory("tableauGraphicPanelService", ["$q", "restService", tableauGraphicPanelService]);
     //#endregion
 
-})(angular, tableau);
+})(angular, tableau, jQuery);
