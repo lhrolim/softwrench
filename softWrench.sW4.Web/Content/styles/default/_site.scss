@@ -3,6 +3,7 @@ body {
     font-size: 13px;
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
+    -ms-overflow-style: scrollbar;
 }
 
 .btn {
