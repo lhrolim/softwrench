@@ -51,6 +51,7 @@ namespace softWrench.sW4.Data.Filter {
                 }
 
                 if (whereClause == null) {
+                    paramValue.IgnoreParameter = false;
                     //this should lead to default filter implementation
                     continue;
                 }
