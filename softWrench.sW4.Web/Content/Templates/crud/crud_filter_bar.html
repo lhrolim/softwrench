@@ -4,7 +4,7 @@
 <div class="filter-row" hiddenonprint>
 
     <div class="filter-label"
-         ng-repeat="filter in schema.schemaFilters.filters"
+         ng-repeat="filter in ::schema.schemaFilters.filters"
          ng-init="markDefaultOperator(filter)"
          filterrowrendered>
         <div class="filter-label-wrapper js_filter">
@@ -47,15 +47,23 @@
                                 </div>
                             </div>
                         </ng-switch>
-                        <ul class="list-group">
-                            <li class="list-group-item"
-                                ng-repeat="operation in searchOperations()" ng-click="selectOperator(filter.attribute,operation)"
-                                ng-show="shouldShowFilter(operation,filter)"
-                                ng-enter="filterSearch(filter.attribute)"
-                                ng-class="{'active' : searchOperator[filter.attribute].id == operation.id || (searchOperator[filter.attribute].id == null && operation.title == 'Contains')}">
-                                {{operation.title}}
-                            </li>
-                        </ul>
+                        
+                        <div ng-init="operations = displayableSearchOperations(filter)" ng-show="::operations.length > 0">
+                            <div ng-init="collapsed=true" ng-click="collapsed=!collapsed;toggleCollapseOperatorList($event)">
+                                <button type="button" class="btn btn-block" style="border-radius: 0">
+                                    <i class="fa" ng-class="{'fa-plus': collapsed, 'fa-minus': !collapsed}"></i>
+                                    {{ collapsed ? "Show " : "Hide " }} filter options
+                                </button>
+                            </div>
+                            <ul class="js_operator_list list-group collapse">
+                                <li class="list-group-item"
+                                    ng-repeat="operation in ::operations track by operation.id" ng-click="selectOperator(filter.attribute,operation)"
+                                    ng-enter="filterSearch(filter.attribute)"
+                                    ng-class="{'active' : searchOperator[filter.attribute].id == operation.id || (searchOperator[filter.attribute].id == null && operation.title == 'Contains')}">
+                                    {{::operation.title}}
+                                </li>
+                            </ul>
+                        </div>
 
                     </div>
 

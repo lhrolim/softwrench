@@ -1,4 +1,4 @@
-﻿(function (angular, BaseController, BaseList) {
+﻿(function (angular, BaseController, BaseList, $) {
     "use strict";
 
     angular.module("sw_layout")
@@ -114,6 +114,24 @@
                             return filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
                         }
 
+                        $scope.toggleCollapseOperatorList = function($event) {
+                            $($event.delegateTarget).siblings("ul.js_operator_list").collapse("toggle");
+                        }
+
+                        /**
+                         * Filters the operations that should be displayed.
+                         * 
+                         * @param {} filter
+                         * @returns Array<Operation> 
+                         */
+                        $scope.displayableSearchOperations = function (filter) {
+                            var operations = $scope.searchOperations();
+                            if (!operations) return operations;
+                            return operations.filter(function (operation) {
+                                return $scope.shouldShowFilter(operation, filter);
+                            });
+                        }
+
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,
                             i18NService: i18NService,
@@ -170,5 +188,4 @@
 
         }]);
 
-})(angular, BaseController, BaseList);
-
+})(angular, BaseController, BaseList, jQuery);
