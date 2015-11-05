@@ -4,7 +4,7 @@
 app.directive('pagination', ["contextService", function (contextService) {
     return {
         restrict: 'E',
-        replace: true,
+        replace: false,
         templateUrl: contextService.getResourceUrl('/Content/Templates/pagination.html'),
         scope: {
             renderfn: "&",

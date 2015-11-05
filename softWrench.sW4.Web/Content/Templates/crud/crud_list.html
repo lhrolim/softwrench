@@ -14,7 +14,23 @@
                              search-sort="searchSort"
                              search-operator="searchOperator"
                              search-template="searchTemplate"
-                             class="gridtop" />
+                             class="gridtop"/>
+                
+                <div style="float:left;width:70%;padding-top:4px;padding-left:10px;">
+                    <div class="input-group">
+                        <input type="text"
+                               placeholder="Search"
+                               class="form-control ng-pristine ng-valid ng-touched"
+                               ng-model="advancedsearchdata"
+                               ng-enter="doAdvancedSearch(advancedsearchdata)" style="">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default advancedSearch" type="button" ng-enabled="advancedsearchdata &amp;&amp; advancedsearchdata != ''" ng-click="doAdvancedSearch(advancedsearchdata)" disabled="disabled">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+
                 <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
