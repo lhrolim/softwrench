@@ -3,5 +3,9 @@
     "outputFile": "web_content/firstsolar/styles/branding.css",
     "inputFile": "web_content/firstsolar/styles/branding.scss",
     "sourceMap": true
+  },
+  {
+    "outputFile": "web_content/amex/styles/branding.css",
+    "inputFile": "web_content/amex/styles/branding.scss"
   }
 ]
