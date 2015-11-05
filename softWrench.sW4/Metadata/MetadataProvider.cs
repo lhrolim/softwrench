@@ -145,13 +145,16 @@ namespace softWrench.sW4.Metadata {
                 var entityMetadata = Entity(entityName);
                 if (isMobileEnabled() && app.IsMobileSupported()) {
                     app.Schemas().Add(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        ApplicationSchemaFactory.GetSyncInstance(entityName,app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
+                        ApplicationSchemaFactory.GetSyncInstance(entityName, app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;
 
                     schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
                     schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
+                    if (schema.Stereotype.Equals(SchemaStereotype.List)) {
+                        schema.DeclaredFilters.Merge(app.AppFilters);
+                    }
 
 
                     var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);

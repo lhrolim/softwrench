@@ -18,7 +18,54 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Applications.Schema {
     public class SchemaFilterBuilder {
 
-        private static ILog Log = LogManager.GetLogger(typeof(SchemaFilterBuilder));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SchemaFilterBuilder));
+
+
+
+        /// <summary>
+        /// For each of the fields, of the overriden schema, if their position is null, add it to the final of the list;
+        /// otherwise, either replace the original field with it´s customized version, or append it, before/after the selected element
+        /// </summary>
+        /// <param name="originalSchemaFilters"></param>
+        /// <param name="overridenSchemaFilters"></param>
+        public static SchemaFilters ApplyFilterCustomizations(SchemaFilters originalSchemaFilters, SchemaFilters overridenSchemaFilters) {
+            var overridenFilters = overridenSchemaFilters;
+            if (overridenFilters.IsEmpty()) {
+                return originalSchemaFilters; 
+            }
+            foreach (var overridenFilter in overridenFilters.Filters) {
+                var position = overridenFilter.Position;
+                var originalFilters = originalSchemaFilters.Filters;
+                var attributeOverridingFilter = originalFilters.FirstOrDefault(f => f.Attribute.EqualsIc(overridenFilter.Attribute));
+
+                if (position == null) {
+                    if (attributeOverridingFilter == null) {
+                        //just adding a brand new filter redeclared on customized schema
+                        originalFilters.AddLast(overridenFilter);
+                        continue;
+                    }
+                    position = overridenFilter.Attribute;
+                }
+                var originalFilter = originalFilters.FirstOrDefault(f => f.Attribute.EqualsIc(position));
+                if (originalFilter == null) {
+                    continue;
+                }
+                var originalNode = originalFilters.Find(originalFilter);
+                if (originalNode == null) {
+                    continue;
+                }
+                if (position.StartsWith("+")) {
+                    originalFilters.AddAfter(originalNode, overridenFilter);
+                } else if (position.StartsWith("-")) {
+                    originalFilters.AddBefore(originalNode, overridenFilter);
+                } else {
+                    originalFilters.AddBefore(originalNode, overridenFilter);
+                    originalFilters.Remove(originalNode);
+                }
+            }
+            return originalSchemaFilters;
+        }
+
 
         public static SchemaFilters BuildSchemaFilters(ApplicationSchemaDefinition schema) {
             //linked list since we won´t ever need to locate a filter by it´s index
@@ -44,7 +91,6 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             var declaredFilters = schema.DeclaredFilters;
             var applicationFieldDefinitions = schema.Fields;
-
 
 
             IDictionary<string, LinkedListNode<BaseMetadataFilter>> positionBuffer = new Dictionary<string, LinkedListNode<BaseMetadataFilter>>();
