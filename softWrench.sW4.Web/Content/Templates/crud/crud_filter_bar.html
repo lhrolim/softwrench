@@ -13,8 +13,8 @@
                     {{i18N('_grid.filter.placeholder','{0}',[filter.label])}}: <span class="filter-text">{{getFilterText(filter)}}</span>
                     <i class="fa fa-caret-down grid-filter-button"></i>
                 </div>
-                <div class="dropdown-menu {{filter.type}}" style="{{filter.style}}" data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
-                    <div class="dropdown-content js_filter_content">
+                <div class="dropdown-menu js_filter_content {{filter.type}}" style="{{filter.style}}" data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
+                    <div class="dropdown-content">
                         <ng-switch on="filter.type">
                             <div ng-switch-when="MetadataDateTimeFilter">
                                 
@@ -67,7 +67,8 @@
                         <div ng-init="operations = displayableSearchOperations(filter)" ng-show="::operations.length > 0">
                             <ul class="js_operator_list list-group collapse">
                                 <li class="list-group-item"
-                                    ng-repeat="operation in ::operations track by operation.id" ng-click="selectOperator(filter.attribute,operation)"
+                                    ng-repeat="operation in ::operations track by operation.id" 
+                                    ng-click="selectOperator(filter.attribute,operation);closeCollapseOperatorList($event)"
                                     ng-enter="filterSearch(filter.attribute)"
                                     ng-class="{'active' : searchOperator[filter.attribute].id === operation.id || (!searchOperator[filter.attribute].id && operation.id === 'CONTAINS')}">
                                     {{::operation.title}}
@@ -78,7 +79,9 @@
                     </div>
 
                     <div class="filter-dropdown-toolbar" ng-init="filterIsActive=false">
-                        <div class="button apply" ng-click="filterIsActive=true;filterBarApplied()" ng-class="{ 'active' : !!filterIsActive }">
+                        <div class="button apply" 
+                             ng-class="{ 'active' : !!filterIsActive }"
+                             ng-click="filterIsActive=true;filterBarApplied();closeCollapseOperatorList($event)">
                             <i class="fa fa-check"></i>
                             {{i18N('_grid.filter.apply','Apply')}}
                         </div>

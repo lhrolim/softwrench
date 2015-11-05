@@ -114,7 +114,7 @@
                             return filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
                         }
 
-                        $scope.toggleCollapseOperatorList = function ($event) {
+                        function collapseOperatorList($event, mode) {
                             // required to 'stop' the event in input groups
                             // some inputs (like datepicker) trigger focus
                             $event.preventDefault();
@@ -124,7 +124,15 @@
                             $($event.delegateTarget)
                                 .parents(".js_filter_content")
                                 .find("ul.js_operator_list")
-                                .collapse("toggle");
+                                .collapse(mode);
+                        }
+
+                        $scope.toggleCollapseOperatorList = function ($event) {
+                            collapseOperatorList($event, "toggle");
+                        }
+
+                        $scope.closeCollapseOperatorList = function($event) {
+                            collapseOperatorList($event, "hide");
                         }
 
                         /**
