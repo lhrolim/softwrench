@@ -46,7 +46,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
             return (filter.rendererType == null || operation.renderType.indexOf(filter.rendererType) > -1) && (filterByDataType);
         }
         if (filter.type === "BaseMetadataFilter") {
-            return operation.id.equalsAny("CONTAINS", "EQ", "NCONTAINS", "STARTWITH", "ENDWITH", "BLANK");
+            return operation.id.equalsAny("CONTAINS", "EQ", "NCONTAINS", "STARTWITH","GT", "LT", "ENDWITH", "BLANK");
         } else if (filter.type === "MetadataNumberFilter") {
             return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
         } else if (filter.type === "MetadataDateTimeFilter") {
@@ -78,10 +78,18 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return searchService.getSearchOperation(0);
     };
 
-    $scope.getSearchIcon = function (columnName) {
+    function getIconForOperator(operatorLocator, columnName) {
         var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] !== "false";
-        var operator = $scope.getOperator(columnName);
+        var operator = operatorLocator.bind($scope)(columnName);
         return showSearchIcon ? operator.symbol : "";
+    }
+
+    $scope.getDefaultSearchIcon = function () {
+        return getIconForOperator($scope.getDefaultOperator);
+    }
+
+    $scope.getSearchIcon = function (columnName) {
+        return getIconForOperator($scope.getOperator, columnName);
     };
 
     $scope.GetAssociationOptions = function (fieldMetadata, forfilter) {

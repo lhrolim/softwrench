@@ -290,13 +290,16 @@
 
   <applications>
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+
+
+      <filters>
+        <filter attribute="ownerperson_.displayname" remove="true"/>
+        <filter attribute="reportedbyp_.displayname" remove="true"/>
+      </filters>
+      
       <schemas>
         <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
 
-          <filters>
-            <filter attribute="ownerperson_.displayname" remove="true"/>
-            <filter attribute="reportedbyp_.displayname" remove="true"/>
-          </filters>
           
           <customization position="reportedby">
             <field attribute="reportedby" hidden="true" label="Reported By"/>
@@ -318,12 +321,13 @@
       <properties>
         <property key="crud.disableautofocus" value="true"/>
       </properties>
+      <filters>
+        <filter attribute="ownerperson_.displayname" remove="true"/>
+        <filter attribute="reportedbyp_.displayname" remove="true"/>
+      </filters>
       <schemas>
         <list title="Service Request Grid" redeclaring="false">
-          <filters>
-            <filter attribute="ownerperson_.displayname" remove="true"/>
-            <filter attribute="reportedbyp_.displayname" remove="true"/>
-          </filters>
+      
           
           <customization position="reportedby">
             <field attribute="reportedby" hidden="true" label="Reported By"/>
@@ -526,16 +530,16 @@
       <properties>
         <property key="crud.disableautofocus" value="true"/>
       </properties>
-      
+      <filters>
+        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+        </optionfilter>
+      </filters>
       <schemas>
         <list title="Work Order Grid" platform="web" redeclaring="false">
-          <filters>
-            <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
-            </optionfilter>
-          </filters>
-          
-          
+
+
+
           <customization position="asset_.description">
             <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=30%;widthLG=25%" />

@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata.Applications {
                 originalMetadata.Entity,
                 originalMetadata.IdFieldName,
                 originalMetadata.UserIdFieldName,
-                originalMetadata.Parameters, securedSchemas, originalMetadata.DisplayableComponents,
+                originalMetadata.Parameters, securedSchemas, originalMetadata.DisplayableComponents, originalMetadata.AppFilters,
                 originalMetadata.Service,originalMetadata.Role,originalMetadata.AuditFlag);
         }
 

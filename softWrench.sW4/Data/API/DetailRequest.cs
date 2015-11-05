@@ -101,6 +101,9 @@ namespace softWrench.sW4.Data.API {
             var request = new DetailRequest(adapter.Id, adapter.Faqid, adapter.Lang, adapter.Key) {
                 CustomParameters = adapter.CustomParameters
             };
+            if (adapter.SiteId != null && adapter.UserId != null){
+                request.UserIdSitetuple = new Tuple<string, string>(adapter.UserId,adapter.SiteId);
+            }
 
             var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
             if (adapter.InitialData != null) {

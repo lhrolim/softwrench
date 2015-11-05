@@ -654,9 +654,6 @@
       <DependentUpon>vendor.css</DependentUpon>
     </Content>
     <Content Include="Content\styles\default\vendor\vendor.scss" />
-    <Content Include="Content\styles\default\vendor\vendor.css.map">
-      <DependentUpon>vendor.css</DependentUpon>
-    </Content>
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff" />
@@ -730,12 +727,6 @@
     <None Include="Content\styles\default\_grid.scss" />
     <None Include="Content\styles\default\vendor\_jscrollpane.scss" />
     <Content Include="Content\styles\default\media\media.scss" />
-    <Content Include="Content\styles\default\media\media.css.map">
-      <DependentUpon>media.css</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\application\application.css.map">
-      <DependentUpon>application.css</DependentUpon>
-    </Content>
     <None Include="Content\styles\default\media\_screen.scss" />
     <None Include="Content\styles\default\_modal.scss" />
     <None Include="Content\styles\default\_page-admin.scss" />

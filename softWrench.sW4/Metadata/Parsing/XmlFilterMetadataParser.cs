@@ -15,14 +15,14 @@ namespace softWrench.sW4.Metadata.Parsing {
     internal sealed class XmlFilterMetadataParser {
 
         [CanBeNull]
-        public static SchemaFilters ParseSchemaFilters(XElement schemaElement, SchemaStereotype stereotype) {
-            var declaredFilters = schemaElement.Elements().FirstOrDefault(f => f.IsNamed(XmlFilterSchema.FiltersElement));
+        public static SchemaFilters ParseSchemaFilters(XElement schemaOrApplicationElement, [CanBeNull]SchemaStereotype? stereotype=null) {
+            var declaredFilters = schemaOrApplicationElement.Elements().FirstOrDefault(f => f.IsNamed(XmlFilterSchema.FiltersElement));
             if (declaredFilters == null) {
                 return null;
             }
             var els = declaredFilters.Elements();
             var xElements = els as XElement[] ?? els.ToArray();
-            if (xElements.Any() && stereotype != SchemaStereotype.List) {
+            if (stereotype !=null && xElements.Any() && stereotype != SchemaStereotype.List ) {
                 throw new MetadataException("filters can only be declared in list schemas");
             }
 
