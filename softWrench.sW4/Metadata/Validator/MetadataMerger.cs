@@ -2,11 +2,13 @@
 using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Exceptions;
+using softWrench.sW4.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Metadata.Validator {
     class MetadataMerger {
@@ -49,6 +51,7 @@ namespace softWrench.sW4.Metadata.Validator {
         private static CompleteApplicationMetadataDefinition DoMergeApplication([NotNull]CompleteApplicationMetadataDefinition souceAplication, [NotNull]CompleteApplicationMetadataDefinition overridenApplication) {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             var resultComponents = MergeComponents(souceAplication, overridenApplication);
+            SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters,overridenApplication.AppFilters);
 
             foreach (var schema in souceAplication.Schemas()) {
                 ApplicationSchemaDefinition overridenSchema;
@@ -88,10 +91,11 @@ namespace softWrench.sW4.Metadata.Validator {
             var service = overridenApplication.Service ?? souceAplication.Service;
             var role = overridenApplication.Role ?? souceAplication.Role;
             var auditEnabled = overridenApplication.AuditFlag ?? souceAplication.AuditFlag;
+            var mergedFilters = SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters, overridenApplication.AppFilters);
 
             return new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
                 title, entity, idFieldName, userIdFieldName,
-                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), service,role, auditEnabled);
+                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters, service,role, auditEnabled);
 
         }
 
