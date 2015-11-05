@@ -3,15 +3,13 @@
 
   <applications>
     <application name="multiassetlocci" title="Multi Asset Locci" entity="multiassetlocci">
-
       <schemas>
-
-        <list stereotype="compositionlist" platform="web">
+        <schema id="newlist" stereotype="compositionlist" platform="web">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
           </properties>
-
+          <field attribute="multiid" hidden="true"></field>
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
             <renderer type="lookup"/>
@@ -19,12 +17,39 @@
           <association target="location" labelfield="location_.location" label="Location">
             <renderer type="lookup"/>
           </association>
-          <field attribute="asset_.description" label="Target Description" attributeToServer="targetdesc"></field>
+          <field attribute="sequence" label="Sequence" >
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
+          <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
             </commandgroup>
           </commandbars>
-        </list>
+        </schema>
+
+        <schema id="list" stereotype="compositionlist" platform="web">
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
+          </properties>
+          <field attribute="siteid" hidden="true"></field>
+          <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.location" label="Location">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="sequence" label="Sequence" >
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
+          <field attribute="progress" label="Progress" >
+            <renderer type="checkbox"/>
+          </field>
+          <commandbars>
+            <commandgroup position="compositionbottom" removeundeclared="true">
+            </commandgroup>
+          </commandbars>
+        </schema>
 
         <schema id="detail" stereotype="compositiondetail" platform="web">
           <field attribute="siteid" hidden="true"></field>
@@ -35,15 +60,8 @@
             <renderer type="lookup"/>
           </association>
           <field attribute="sequence" label="Sequence"></field>
-          <field attribute="targetdesc" label="Target Description"></field>
         </schema>
-
       </schemas>
     </application>
-
   </applications>
-
-
-
-
 </metadata>

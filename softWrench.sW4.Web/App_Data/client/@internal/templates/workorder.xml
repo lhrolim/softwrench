@@ -308,8 +308,8 @@
           </section>
           
           <section id="compositions">
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations" detailschema="detail" showexpression="true">
-              <collectionproperties listschema="list" autocommit="false"/>
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+              <collectionproperties listschema="newlist" autocommit="false"/>
               <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
             </composition>
           </section>
@@ -378,6 +378,10 @@
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
+            </composition>
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true" rendermode="output" fetchtype="eager">
+              <collectionproperties listschema="newlist" autocommit="false" allowcreation="false" allowupdate="false" allowremoval="false"/>
+              <!--<renderer type="TABLE" params="mode=batch;startwithentry=true"/>-->
             </composition>
           </section>
 <!--          <commandbars>-->
