@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <project name="drop-database" default="exec">
-  <property name="pr1" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
-  <property name="pr2" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr2;User Id=sw;password=softwrench;" />
+  <property name="dev_pr1" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
+  <property name="dev_pr2" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr2;User Id=sw;password=softwrench;" />
   <property name="droptables" value="../Build/rmtables.sql" />
 
   <if test="${environment::variable-exists('image')}">
