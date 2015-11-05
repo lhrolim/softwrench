@@ -9,10 +9,11 @@
     <property name="image" value="${environment::get-variable('image')}" />
   </if>
 
+
   <target name="exec">
     <loadtasks assembly="../Build/NAntContribTask/NAnt.Contrib.Tasks.dll" />
-    <echo message="* Connecting to ${image}"/>
-    <sql  connstring="${image}"
+    <echo message="* Connecting to ${property::get-value(property::get-value('image'))}"/>
+    <sql  connstring="${property::get-value(property::get-value('image'))}"
           delimiter="go"
           delimstyle="Line"
           batch="false"
