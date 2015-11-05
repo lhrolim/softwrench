@@ -17,16 +17,14 @@ app.factory('relatedrecordService', function (redirectService, searchService) {
 
         open: function (datamap, columnmetadata) {
             var app = datamap['relatedrecclass'];
-            var id = datamap['relatedreckey'];
-            
-            if (app == 'WORKORDER') {
-                getWorkOrderId(app, id, datamap['siteid']);
-            }
-            else if (app == 'SR') {
-                redirectService.goToApplicationView("servicerequest", "editdetail", "input", null, { id: id });
+            var userid = datamap['relatedreckey'];
+            var siteid = datamap['siteid'];
+
+            if (app.equalsAny('SR','WORKORDER')) {
+                redirectService.goToApplicationView("servicerequest", "editdetail", "input", null, { userid: userid, siteid: siteid });
             }
             else {
-                redirectService.goToApplicationView(app, "detail", "input", null, { id: id });
+                redirectService.goToApplicationView(app, "detail", "input", null, { userid: userid, siteid: siteid });
             }
         },
 
