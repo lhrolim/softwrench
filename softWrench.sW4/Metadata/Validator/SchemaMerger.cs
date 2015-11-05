@@ -11,6 +11,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Metadata.Validator {
     class SchemaMerger {
@@ -39,51 +40,9 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
             DoApplyCustomizations(original, overridenSchema, components, customizations, customizationsActuallyApplied, fieldsThatShouldBeCustomized);
-            ApplyFilterCustomizations(original, overridenSchema);
+            SchemaFilterBuilder.ApplyFilterCustomizations(original.SchemaFilters, overridenSchema.DeclaredFilters);
         }
 
-        /// <summary>
-        /// For each of the fields, of the overriden schema, if their position is null, add it to the final of the list;
-        /// otherwise, either replace the original field with it´s customized version, or append it, before/after the selected element
-        /// </summary>
-        /// <param name="original"></param>
-        /// <param name="overridenSchema"></param>
-        private static void ApplyFilterCustomizations(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema) {
-            var overridenFilters = overridenSchema.DeclaredFilters;
-            if (overridenFilters.IsEmpty()) {
-                return;
-            }
-            foreach (var overridenFilter in overridenFilters.Filters) {
-                var position = overridenFilter.Position;
-                var originalFilters = original.SchemaFilters.Filters;
-                var attributeOverridingFilter = originalFilters.FirstOrDefault(f => f.Attribute.EqualsIc(overridenFilter.Attribute));
-
-                if (position == null) {
-                    if (attributeOverridingFilter == null) {
-                        //just adding a brand new filter redeclared on customized schema
-                        originalFilters.AddLast(overridenFilter);
-                        continue;
-                    }
-                    position = overridenFilter.Attribute;
-                }
-                var originalFilter = originalFilters.FirstOrDefault(f => f.Attribute.EqualsIc(position));
-                if (originalFilter == null) {
-                    continue;
-                }
-                var originalNode = originalFilters.Find(originalFilter);
-                if (originalNode == null) {
-                    continue;
-                }
-                if (position.StartsWith("+")) {
-                    originalFilters.AddAfter(originalNode, overridenFilter);
-                } else if (position.StartsWith("-")) {
-                    originalFilters.AddBefore(originalNode, overridenFilter);
-                } else {
-                    originalFilters.AddBefore(originalNode, overridenFilter);
-                    originalFilters.Remove(originalNode);
-                }
-            }
-        }
 
         private static void DoApplyCustomizations(IApplicationDisplayableContainer original,
             ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components,

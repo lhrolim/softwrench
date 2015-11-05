@@ -201,8 +201,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
 
             //to avoid eventual null pointers
-            DeclaredFilters = declaredFilters ?? new SchemaFilters(new LinkedList<BaseMetadataFilter>());
-        }
+            DeclaredFilters = declaredFilters ?? SchemaFilters.BlankInstance();
+            }
 
 
 
