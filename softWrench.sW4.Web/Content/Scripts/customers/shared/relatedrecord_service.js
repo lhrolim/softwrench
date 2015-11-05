@@ -20,7 +20,7 @@ app.factory('relatedrecordService', function (redirectService, searchService) {
             var userid = datamap['relatedreckey'];
             var siteid = datamap['siteid'];
 
-            var swApp = app === "sr" ? "servicerequest" : app;
+            var swApp = app.equalsIc("sr") ? "servicerequest" : app;
             
             if (app.equalsAny('SR','WORKORDER')) {
                 redirectService.goToApplicationView(swApp, "editdetail", "input", null, { userid: userid, siteid: siteid });
