@@ -599,8 +599,9 @@ namespace softWrench.sW4.Metadata.Parsing {
              .UserIdAttribute
              .Name;
 
+            var appFilters = XmlFilterMetadataParser.ParseSchemaFilters(application);
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service, role, auditFlag);
+            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), appFilters, service, role, auditFlag);
         }
 
 
