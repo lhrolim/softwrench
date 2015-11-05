@@ -174,6 +174,10 @@
                             });
                         }
 
+                        $scope.closeFilterDropdown = function($event) {
+                            $($event.delegateTarget).parents(".dropdown.open").removeClass("open");
+                        }
+
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,
                             i18NService: i18NService,
