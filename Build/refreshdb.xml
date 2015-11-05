@@ -1,14 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <project name="drop-database" default="exec">
-  <property name="sqlconnection" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
-  <property name="sqlconnection2" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr3;User Id=sw;password=softwrench;" />
+  <property name="pr1" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
+  <property name="pr2" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr2;User Id=sw;password=softwrench;" />
   <property name="droptables" value="../Build/rmtables.sql" />
-  
+
+  <if test="${environment::variable-exists('image')}">
+    <property name="image" value="${environment::get-variable('image')}" />
+  </if>
+
   <target name="exec">
     <loadtasks assembly="../Build/NAntContribTask/NAnt.Contrib.Tasks.dll" />
-    <echo message="* Connecting to ${sqlconnection}"/>
-    <sql  connstring="${sqlconnection}"
+    <echo message="* Connecting to ${image}"/>
+    <sql  connstring="${image}"
           delimiter="go"
           delimstyle="Line"
           batch="false"
@@ -17,16 +21,6 @@
     </sql>
   </target>
 
-  <target name="exec2">
-    <loadtasks assembly="../Build/NAntContribTask/NAnt.Contrib.Tasks.dll" />
-    <echo message="* Connecting to ${sqlconnection2}"/>
-    <sql  connstring="${sqlconnection2}"
-          delimiter="go"
-          delimstyle="Line"
-          batch="false"
-          source="${droptables}"
-         >
-    </sql>
-  </target>
+ 
 
 </project>
