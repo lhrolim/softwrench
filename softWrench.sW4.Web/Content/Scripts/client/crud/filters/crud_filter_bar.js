@@ -114,9 +114,43 @@
                             return filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
                         }
 
-                        $scope.toggleCollapseOperatorList = function($event) {
-                            $($event.delegateTarget).siblings("ul.js_operator_list").collapse("toggle");
+                        $scope.toggleCollapseOperatorList = function ($event) {
+                            // required to 'stop' the event in input groups
+                            // some inputs (like datepicker) trigger focus
+                            $event.preventDefault();
+                            $event.stopPropagation();
+                            $event.stopImmediatePropagation();
+                            // toggling list collapse
+                            $($event.delegateTarget)
+                                .parents(".js_filter_content")
+                                .find("ul.js_operator_list")
+                                .collapse("toggle");
                         }
+
+                        /**
+                         * Retrieves the tooltip of the current search operator applied to the attribute.
+                         * If no operator is selected for the attribute it uses the default search operator.
+                         * 
+                         * @param String attribute 
+                         * @returns String 
+                         */
+                        $scope.getOperatorTooltip = function(attribute) {
+                            var operator = $scope.getOperator(attribute);
+                            return !!operator ? operator.tooltip : getDefaultOperator().tooltip;
+                        };
+
+                        /**
+                         * Retrieves the icon of the current search operator applied to the attribute.
+                         * If no operator is selected for the attribute it uses the default search icon
+                         * (icon for the default operator).
+                         * 
+                         * @param String attribute 
+                         * @returns String 
+                         */
+                        $scope.getOperatorIcon = function(attribute) {
+                            var icon = $scope.getSearchIcon(attribute);
+                            return !!icon ? icon : $scope.getDefaultSearchIcon();
+                        };
 
                         /**
                          * Filters the operations that should be displayed.

@@ -4,7 +4,7 @@
 <div class="filter-row" hiddenonprint>
 
     <div class="filter-label"
-         ng-repeat="filter in ::schema.schemaFilters.filters"
+         ng-repeat="filter in schema.schemaFilters.filters"
          ng-init="markDefaultOperator(filter)"
          filterrowrendered>
         <div class="filter-label-wrapper js_filter">
@@ -14,15 +14,21 @@
                     <i class="fa fa-caret-down grid-filter-button"></i>
                 </div>
                 <div class="dropdown-menu {{filter.type}}" style="{{filter.style}}" data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
-                    <div class="dropdown-content">
+                    <div class="dropdown-content js_filter_content">
                         <ng-switch on="filter.type">
                             <div ng-switch-when="MetadataDateTimeFilter">
-
+                                
                                 <div data-datepicker="true" class="input-group input-group-sm">
+                                    <span ng-click="toggleCollapseOperatorList($event)"
+                                          class="input-group-addon"
+                                          rel="tooltip"
+                                          data-original-title="{{ getOperatorTooltip(filter.attribute) }}">
+                                        {{ getOperatorIcon(filter.attribute) }}
+                                    </span>
                                     <input type="text" ng-model="searchData[filter.attribute]" class="form-control"
                                            data-date-time
                                            data-attach-datepicker-to-parent="true"
-                                           data-show-time="{{!filter.dateOnly}}"
+                                           data-show-time="{{ !filter.dateOnly }}"
                                            data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                            data-allow-future="{{filter.allowFuture}}"
                                            placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}"
@@ -42,24 +48,28 @@
 
                             <div ng-switch-default>
                                 <div class="input-group">
+                                    <span ng-click="toggleCollapseOperatorList($event)"
+                                          class="input-group-addon"
+                                          rel="tooltip"
+                                          data-original-title="{{ getOperatorTooltip(filter.attribute) }}">
+                                        {{ getOperatorIcon(filter.attribute) }}
+                                    </span>
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
                                            ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
+                                    <span ng-click="filterBarApplied()"
+                                          class="input-group-addon">
+                                        <i class="fa fa-search"></i>
+                                    </span>
                                 </div>
                             </div>
                         </ng-switch>
                         
                         <div ng-init="operations = displayableSearchOperations(filter)" ng-show="::operations.length > 0">
-                            <div ng-init="collapsed=true" ng-click="collapsed=!collapsed;toggleCollapseOperatorList($event)">
-                                <button type="button" class="btn btn-block" style="border-radius: 0">
-                                    <i class="fa" ng-class="{'fa-plus': collapsed, 'fa-minus': !collapsed}"></i>
-                                    {{ collapsed ? "Show " : "Hide " }} filter options
-                                </button>
-                            </div>
                             <ul class="js_operator_list list-group collapse">
                                 <li class="list-group-item"
                                     ng-repeat="operation in ::operations track by operation.id" ng-click="selectOperator(filter.attribute,operation)"
                                     ng-enter="filterSearch(filter.attribute)"
-                                    ng-class="{'active' : searchOperator[filter.attribute].id == operation.id || (searchOperator[filter.attribute].id == null && operation.title == 'Contains')}">
+                                    ng-class="{'active' : searchOperator[filter.attribute].id === operation.id || (!searchOperator[filter.attribute].id && operation.id === 'CONTAINS')}">
                                     {{::operation.title}}
                                 </li>
                             </ul>
