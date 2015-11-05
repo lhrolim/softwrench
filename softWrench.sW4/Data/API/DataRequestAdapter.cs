@@ -33,6 +33,8 @@ namespace softWrench.sW4.Data.API {
         public string Id { get; set; }
         public string UserId { get; set; }
 
+        public string SiteId {get; set;}
+
         //TODO: this is wrong, pick it from custom parameter
         public string Faqid { get; set; }
 
