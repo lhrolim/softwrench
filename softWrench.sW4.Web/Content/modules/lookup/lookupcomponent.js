@@ -45,6 +45,8 @@
         function refreshFromAttribute(fieldMetadata, scope) {
             var log = $log.getInstance('cmplookup#refreshFromAttribute');
             var target = fieldMetadata.attribute;
+
+
             if (scope.associationOptions == null) {
 
                 if (scope.lookupAssociationsDescription) {
@@ -58,8 +60,18 @@
             }
 
             var options = scope.associationOptions[fieldMetadata.associationKey];
+            if (options && options.length === 1) {
+                var label = associationService.getLabelText(options[0], fieldMetadata.hideDescription);
+                $("input[data-association-key=" + fieldMetadata.associationKey + "]").typeahead('val', label);
+                return;
+            }
+
+
             var optionValue = scope.datamap[fieldMetadata.target];
             scope.lookupAssociationsCode[target] = optionValue;
+
+            
+
             log.debug('setting lookupassociationCode {0} to {1}'.format(target, optionValue));
             if (optionValue == null) {
                 scope.lookupAssociationsDescription[target] = null;

@@ -384,6 +384,10 @@ label.form-control {
 input[type=search] {
   -webkit-appearance: none; }
 
+.twitter-typeahead {
+    display: initial !important;
+}
+
 .crud_output .field label {
   text-align: left;
   word-break: break-all;

@@ -90,6 +90,13 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
     return {
 
+        getLabelText:function(item, hideDescription) {
+            if (hideDescription) {
+                return item.value;
+            }
+            return "(" + item.value + ")" + " - " + item.label;
+        },
+
         getFullObject: function (associationFieldMetadata, datamap, associationOptions) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
