@@ -144,7 +144,7 @@
                          */
                         $scope.getOperatorTooltip = function(attribute) {
                             var operator = $scope.getOperator(attribute);
-                            return !!operator ? operator.tooltip : getDefaultOperator().tooltip;
+                            return !!operator && !!operator.id ? operator.tooltip : $scope.getDefaultOperator().tooltip;
                         };
 
                         /**
