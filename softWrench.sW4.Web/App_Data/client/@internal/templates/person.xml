@@ -36,6 +36,9 @@
           <field attribute="#isactive" label="Active" enableexpression="false">
             <renderer type="checkbox"/>
           </field>
+          <field attribute="maxuser_.status" label="Status (MAXIMO)" readonly="true" enableexpression="false">
+          </field>
+          
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
 
           <commandbars>
