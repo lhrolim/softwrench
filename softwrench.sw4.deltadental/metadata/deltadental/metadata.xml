@@ -398,28 +398,27 @@
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeowner"/>
             </association>
+            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="phone_.phonenum,email_.emailaddress">
+              <renderer type="lookup" params="columnlabel=Name"/>
+            </association>
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
+             <field attribute="person_.phone_.phonenum" label="Affected Person Phone:" readonly="true" attributeToServer="affectedphone"/>
             <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="email_.emailaddress,phone_.phonenum,altdisplayname,altphone,altemail,displayname" enableexpression="true" showexpression="true">
               <renderer type="lookup" params="columnlabel=Name;"/>
             </association>
+             <field attribute="person_.email_.emailaddress" label="Affected Person Email:" readonly="true" attributeToServer="affectedemail"/>
             <field attribute="reportedbyp_.phone_.phonenum" label="Reported By Phone:" readonly="true" attributeToServer="reportedphone"/>
+             <field attribute="reportedbyp_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
             <field attribute="reportedbyp_.email_.emailaddress" label="Reported By Email:" readonly="true" attributeToServer="reportedemail" />
-            <field attribute="reportedbyp_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
-            <field attribute="reportedbyp_.altphone" label="Alt Contact Phone:" readonly="true"/>
-            <field attribute="reportedbyp_.altemail" label="Alt Contact Email:" readonly="true"/>
+             <field attribute="reportedbyp_.altphone" label="Alt Contact Phone:" readonly="true"/>
             <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-            </field>
-            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="phone_.phonenum,email_.emailaddress">
-              <renderer type="lookup" params="columnlabel=Name"/>
-            </association>
-            <field attribute="person_.phone_.phonenum" label="Affected Person Phone:" readonly="true" attributeToServer="affectedphone"/>
-            <field attribute="person_.email_.emailaddress" label="Affected Person Email:" readonly="true" attributeToServer="affectedemail"/>
+            </field>                
+            <field attribute="reportedbyp_.altemail" label="Alt Contact Email:" readonly="true"/>
           </section>
-
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
