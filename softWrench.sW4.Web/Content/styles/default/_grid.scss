@@ -62,9 +62,14 @@
                         width: 250px;
 
                         .dropdown-content {
-                            padding-top: 10px;
                             padding-bottom: 0;
                             width: 100%;
+
+                            .dropdown-close {
+                                text-align: right;
+                                padding: 0 10px 10px 0;
+                                cursor: pointer;
+                            }
 
                             .input-group {
                                 width: 90%;

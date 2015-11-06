@@ -144,7 +144,7 @@
                          */
                         $scope.getOperatorTooltip = function(attribute) {
                             var operator = $scope.getOperator(attribute);
-                            return !!operator ? operator.tooltip : getDefaultOperator().tooltip;
+                            return !!operator && !!operator.id ? operator.tooltip : $scope.getDefaultOperator().tooltip;
                         };
 
                         /**
@@ -172,6 +172,10 @@
                             return operations.filter(function (operation) {
                                 return $scope.shouldShowFilter(operation, filter);
                             });
+                        }
+
+                        $scope.closeFilterDropdown = function($event) {
+                            $($event.delegateTarget).parents(".dropdown.open").removeClass("open");
                         }
 
                         $injector.invoke(BaseController, this, {

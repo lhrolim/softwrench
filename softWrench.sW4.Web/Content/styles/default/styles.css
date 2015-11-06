@@ -522,9 +522,12 @@ input[type="date"], input[type="time"] {
     padding-bottom: 0;
     width: 250px; }
     .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content {
-      padding-top: 10px;
       padding-bottom: 0;
       width: 100%; }
+    .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .dropdown-close {
+        text-align: right;
+        padding: 0 10px 10px 0;
+        cursor: pointer; }
       .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .input-group {
         width: 90%;
         margin-left: auto;
