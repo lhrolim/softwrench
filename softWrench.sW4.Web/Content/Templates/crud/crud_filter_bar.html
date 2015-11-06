@@ -15,9 +15,15 @@
                 </div>
                 <div class="dropdown-menu js_filter_content {{filter.type}}" style="{{filter.style}}" data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
                     <div class="dropdown-content">
+
+                        <div class="dropdown-close"
+                             ng-click="closeFilterDropdown($event)">
+                            <i class="fa fa-close"></i>
+                        </div>
+
                         <ng-switch on="filter.type">
                             <div ng-switch-when="MetadataDateTimeFilter">
-                                
+
                                 <div data-datepicker="true" class="input-group input-group-sm">
                                     <span ng-click="toggleCollapseOperatorList($event)"
                                           class="input-group-addon"
@@ -63,11 +69,11 @@
                                 </div>
                             </div>
                         </ng-switch>
-                        
+
                         <div ng-init="operations = displayableSearchOperations(filter)" ng-show="::operations.length > 0">
                             <ul class="js_operator_list list-group collapse">
                                 <li class="list-group-item"
-                                    ng-repeat="operation in ::operations track by operation.id" 
+                                    ng-repeat="operation in ::operations track by operation.id"
                                     ng-click="selectOperator(filter.attribute,operation);closeCollapseOperatorList($event)"
                                     ng-enter="filterSearch(filter.attribute)"
                                     ng-class="{'active' : searchOperator[filter.attribute].id === operation.id || (!searchOperator[filter.attribute].id && operation.id === 'CONTAINS')}">
@@ -86,7 +92,7 @@
                             {{i18N('_grid.filter.apply','Apply')}}
                         </div>
                         <div class="button clear" ng-click="filterIsActive=false;clearFilter(filter.attribute)">
-                            <i class="fa fa-remove"></i>
+                            <i class="fa fa-eraser"></i>
                             {{i18N('_grid.filter.clear','Clear')}}
                         </div>
                     </div>

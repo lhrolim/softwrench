@@ -28,13 +28,13 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         }
 
 
-        public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool displayCode, bool allowBlank, string style, IEnumerable<MetadataFilterOption> options)
+        public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool displayCode, bool allowBlank, string style, bool lazy, IEnumerable<MetadataFilterOption> options)
             : base(attribute, label, icon, position, tooltip, whereClause, false, style) {
             Provider = provider;
             Options = options;
             AllowBlank = allowBlank;
             DisplayCode = displayCode;
-            Lazy = true;
+            Lazy = lazy;
         }
 
         public override bool IsValid() {
