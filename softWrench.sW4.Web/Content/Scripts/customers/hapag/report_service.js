@@ -190,8 +190,8 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
             }
         },
 
-        printSelected: function (schema, datamap) {
-            printService.printDetailedList(schema, datamap);
+        printSelected: function (schema, datamap,searchSort) {
+            printService.printDetailedList(schema, datamap,searchSort);
         }
     };
 });
