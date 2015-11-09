@@ -33,7 +33,7 @@
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>
           <field attribute="lastname" label="Last Name"/>
-          <field attribute="#isactive" label="Active" enableexpression="false">
+          <field attribute="#isactive" label="Active" enableexpression="false" readonly="true">
             <renderer type="checkbox"/>
           </field>
           <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
