@@ -247,7 +247,11 @@ namespace softWrench.sW4.Data.Search {
                     resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
                     resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
                 } else {
-                    resultDictionary.Add(searchParameter.Key, dt);
+                    //EQ 16:46 should become BETWEEN 16:46:00 and 16:46:59.999
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, dt);
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, dt.AddSeconds(59).AddMilliseconds(999));
+
+                    //resultDictionary.Add(searchParameter.Key, dt);
                 }
             } else if (parameter.IsGtOrGte()) {
                 if (!parameter.HasHour) {
@@ -257,6 +261,11 @@ namespace softWrench.sW4.Data.Search {
                     }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
                 } else {
+                    if (parameter.SearchOperator == SearchOperator.GT) {
+                        //if GT let's add one minute since screen doesn't show seconds --> so GT > 16:36 becomes actually GT > 16:36:59.999
+                        dt = dt.AddSeconds(59).AddMilliseconds(999);
+                    }
+
                     resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
                 }
             } else if (parameter.IsLtOrLte()) {
@@ -267,6 +276,10 @@ namespace softWrench.sW4.Data.Search {
                     }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
                 } else {
+                    if (parameter.SearchOperator == SearchOperator.LT) {
+                        //if GT let's subtract one minute since screen doesn't show seconds
+                        dt = dt.AddMinutes(-1);
+                    }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
                 }
             }
@@ -296,7 +309,7 @@ namespace softWrench.sW4.Data.Search {
 
             if (attributeDefinition != null) {
                 if (attributeDefinition.Query != null) {
-                    baseResult=  attributeDefinition.GetQueryReplacingMarkers(entityName);
+                    baseResult = attributeDefinition.GetQueryReplacingMarkers(entityName);
                 } else if (attributeDefinition.IsDate) {
                     resultType = ParameterType.Date;
                 } else if (attributeDefinition.IsNumber) {
@@ -332,7 +345,7 @@ namespace softWrench.sW4.Data.Search {
             var formatedParam = String.Format(HibernateUtil.ParameterPrefixPattern, param);
             if (searchParameter.SearchOperator == SearchOperator.BLANK) {
                 return " IS NULL";
-            } else if (searchParameter.HasHour || !searchParameter.IsEqualOrNotEqual()) {
+            } else if (!searchParameter.IsEqualOrNotEqual()) {
                 var parameterName = param;
                 if (searchParameter.SearchOperator == SearchOperator.GTE || searchParameter.SearchOperator == SearchOperator.GT) {
                     parameterName += DateSearchParamBegin;
