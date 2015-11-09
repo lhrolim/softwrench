@@ -37,6 +37,11 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
             <documentation>If true, will create a special option on the filter to allow for null values. not every filter would desire that behavior</documentation>
           </annotation>
         </attribute>
+        <attribute name="eager" type="boolean" default="true">
+          <annotation>
+            <documentation>If true, all the values would be prefetch upfront, allowing the renderer to be a list of checkbox without searchinput</documentation>
+          </annotation>
+        </attribute>
         <attribute name="displaycode" type="boolean">
           <annotation>
             <documentation>if true the value will be displayed on screen --> the result form will be (code) - label </documentation>

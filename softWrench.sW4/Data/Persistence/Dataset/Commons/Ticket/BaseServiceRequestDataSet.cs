@@ -43,7 +43,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
 
             var siteId = originalEntity.GetAttribute("siteid");
-            var assetsiteid = originalEntity.GetAttribute("assetsiteid");
 
             var assetnum = originalEntity.GetAttribute("assetnum");
             var location = originalEntity.GetAttribute("location");
