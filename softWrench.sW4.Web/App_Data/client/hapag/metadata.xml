@@ -2255,6 +2255,9 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <composition relationship="worklog" label="Work Log" printschema="printschema" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
+          <composition relationship="attachment" label="Attachment" printschema="detailPrint">
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+          </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="detail" printschema="list">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
           </composition>
