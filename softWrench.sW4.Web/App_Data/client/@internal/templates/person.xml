@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata" 
+          xmlns:f="http://www.controltechnologysolutions.com/filters">
   <templates>
     <!--Email-->
     <template path="@email.xml"/>
@@ -29,6 +30,14 @@
 
 
         <schema id="list" stereotype="list" title="Users">
+
+          <filters>
+            <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px">
+              <f:option label="Active" value="1" />
+              <f:option label="Inactive" value="0" />
+            </optionfilter>
+          </filters>
+          
           <field attribute="personuid" hidden="true"/>
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>
