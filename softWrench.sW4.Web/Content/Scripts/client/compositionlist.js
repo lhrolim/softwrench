@@ -183,9 +183,9 @@ app.directive('compositionList', function (contextService, spinService) {
         },
 
         controller: ["$scope", "$log", "$filter", "$injector", "$http", "$element", "$rootScope", "i18NService", "tabsService",
-            "formatService", "fieldService", "commandService", "compositionService", "validationService", "expressionService",
+            "formatService", "fieldService", "commandService", "compositionService", "validationService", "expressionService", "$timeout",
             function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
-                formatService, fieldService, commandService, compositionService, validationService, expressionService) {
+                formatService, fieldService, commandService, compositionService, validationService, expressionService, $timeout) {
 
             function init() {
                 //Extra variables
@@ -256,10 +256,16 @@ app.directive('compositionList', function (contextService, spinService) {
             };
 
 
-            $scope.newDetailFn = function () {
+            $scope.newDetailFn = function ($event) {
                 $scope.newDetail = true;
                 $scope.selecteditem = {};
                 $scope.collapseAll();
+                // scroll to detail form (500ms for smoothness)
+                $timeout(function () {
+                    var scrollTarget = $(".js_compositionnewitem");
+                    if (!scrollTarget[0]) scrollTarget = $($event.delegateTarget);
+                    $(document.body).animate({ scrollTop: scrollTarget.offset().top });
+                }, 500, false);
             };
 
             var doToggle = function (id, item, forcedState) {
