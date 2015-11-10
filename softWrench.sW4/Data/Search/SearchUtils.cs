@@ -116,14 +116,20 @@ namespace softWrench.sW4.Data.Search {
             var j = 0;
 
             foreach (var parameter in parameters) {
+                var searchParameter = searchParameters[parameter];
                 if (parameter.StartsWith("null")) {
-                    sb.Replace(parameter, "1=1");
+                    if (searchParameter.SearchOperator == SearchOperator.BLANK) {
+                        //HAP-1106-- > if blank operator, then all null union fields are acceptable, otherwise none
+                        sb.Replace(parameter, "1=1");
+                    } else {
+                        sb.Replace(parameter, "1!=1");
+                    }
                     //ignore null parameters, as of union grids
                     continue;
                 }
 
                 //need to fetch from here to keep order correct
-                var searchParameter = searchParameters[parameter];
+
 
                 var param = parameter;
                 var statement = new StringBuilder();
