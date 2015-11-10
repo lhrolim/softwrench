@@ -67,7 +67,11 @@
                     }
 
                     var datamap = $parse(datamappropertiesName)($scope);
-
+                    // If the datamap is undefined then we do not need to run any events for the items that are now gone
+                    // Ex: ng-repeat over an array, an item is removed from the array, do not need to run events for the line that is now gone.
+                    if (datamap == undefined) {
+                        return;
+                    }
                     if (!expressionService.evaluate(association.showExpression,datamap)) {
                         //if the association is hidden, there´s no sense in executing any hook methods of it
                         $log.get("crud_inputcommons#configureAssociationChangeEvents").debug("ignoring hidden association {0}".format(association.associationKey));

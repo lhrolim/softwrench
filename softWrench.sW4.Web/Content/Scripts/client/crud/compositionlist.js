@@ -290,6 +290,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     $scope.paginationData = contextService.get("compositionpagination_{0}".format($scope.relationship), true, true);
                 }
 
+                $scope.fillLookupAssociationsData();
 
                 if (!$scope.isBatch()) {
                     if ($scope.hasDetailSchema()) {
@@ -308,13 +309,29 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 $scope.isNoRecords = $scope.compositiondata.length <= 0;
-                
+
+                $scope.compositionData().forEach(function(value, index, array) {
+                    crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables);
+                });
+
                 $scope.showPagination = !$scope.isNoRecords && // has items to show
                                         !!$scope.paginationData && // has paginationdata
                                         $scope.paginationData.paginationOptions.some(function (option) { // totalCount is bigger than at least one option
                                             return $scope.paginationData.totalCount > option;
                                         });
             };
+
+            $scope.fillLookupAssociationsData = function () {
+                for (var compositiondata = 0; compositiondata < $scope.compositiondata.length; ++compositiondata) {
+                    var lookupAssociationsData = [];
+                    for (var displayable = 0; displayable < $scope.compositionlistschema.displayables.length; ++displayable) {
+                        var attribute = $scope.compositionlistschema.displayables[displayable].attribute;
+                        var value = $scope.compositiondata[compositiondata][attribute];
+                        lookupAssociationsData[attribute] = value;
+                    }
+                    $scope.lookupAssociationsCode.push(lookupAssociationsData);
+                }
+            }
 
             $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
                 if (!compositiondata[$scope.relationship]) {
@@ -625,7 +642,16 @@ app.directive('compositionList', function (contextService, formatService, schema
                 };
                 fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
                 $scope.compositionData().push(newItem);
+                $scope.addLookupAssociationsCode(newItem);
                 crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables);
+            }
+
+            $scope.addLookupAssociationsCode = function(newItem) {
+                var lookupAssociationCode = [];
+                $.map(newItem, function (value, index) {
+                    lookupAssociationCode[index] = value;
+                });
+                $scope.lookupAssociationsCode.push(lookupAssociationCode);
             }
 
             $scope.isItemExpanded = function (item) {
@@ -638,8 +664,9 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return $scope.compositionData().indexOf(item) == 0;
             }
 
-            $scope.removeBatchItem = function () {
-                $scope.compositionData().pop();
+            $scope.removeBatchItem = function (rowindex) {
+                $scope.compositionData().splice(rowindex, 1);
+                $scope.lookupAssociationsCode.splice(rowindex, 1);
             }
 
             /***************END Batch functions **************************************/

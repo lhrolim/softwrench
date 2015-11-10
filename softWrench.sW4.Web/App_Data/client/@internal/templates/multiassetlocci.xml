@@ -5,20 +5,22 @@
     <application name="multiassetlocci" title="Multi Asset Locci" entity="multiassetlocci">
       <schemas>
         <schema id="newlist" stereotype="compositionlist" platform="web">
-          <properties>
-            <property key="detail.cancel.lbl" value="Close"/>
+          <!--<properties>
             <property key="expansible" value="false"/>
-          </properties>
+          </properties>-->
           <field attribute="multiid" hidden="true"></field>
           <field attribute="siteid" hidden="true"></field>
-          <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
+          <association target="assetnum" labelfield="asset_.assetnum" label="Asset" extraprojectionvalues="location">
             <renderer type="lookup"/>
+            <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location">
             <renderer type="lookup"/>
+            <event type="afterchange" service="multiassetlocciService" method="afterChangeLocation"/>
           </association>
           <field attribute="sequence" label="Sequence" >
             <renderer type="numericinput" params="min=1;"/>
+            <event type="afterchange" service="multiassetlocciService" method="afterChangeSequence"/>
           </field>
           <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
           <commandbars>
@@ -59,7 +61,9 @@
           <association target="location" labelfield="location_.location" label="Location">
             <renderer type="lookup"/>
           </association>
-          <field attribute="sequence" label="Sequence"></field>
+          <field attribute="sequence" label="Sequence">
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
         </schema>
       </schemas>
     </application>
