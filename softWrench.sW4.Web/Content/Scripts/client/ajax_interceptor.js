@@ -1,8 +1,7 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular, $) {
+    "use strict";
 
-app.config(['$httpProvider', function ($httpProvider) {
-
-    var logName = "sw4.ajaxint";
+angular.module('sw_layout').config(['$httpProvider', function ($httpProvider) {
 
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, logoutService, schemaCacheService) {
         var activeRequests = 0;
@@ -17,7 +16,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['printmode'] = config.printMode;
             var log = $log.getInstance('sw4.ajaxint#started');
             var spinAvoided = false;
-            if (activeRequests == 0 || config.url.indexOf("/Content/")==-1) {
+            if (activeRequests <= 0 || config.url.indexOf("/Content/") < 0) {
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
                 }
@@ -74,7 +73,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             $('[rel=tooltip]').tooltip('hide');
             
 
-            if (rejection.status == 401) {
+            if (rejection.status === 401) {
                 window.location = url('');
                 return;
             }
@@ -83,7 +82,6 @@ app.config(['$httpProvider', function ($httpProvider) {
             unLockTabs();
             if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data,rejection.status);
-              
             }
         };
 
@@ -115,12 +113,8 @@ app.config(['$httpProvider', function ($httpProvider) {
         }
         if (sessionStorage.mockerror || sessionStorage.mockmaximo) {
             var jsonOb = JSON.parse(data);
-            if (sessionStorage.mockerror == "true") {
-                jsonOb['%%mockerror'] = true;
-            }
-            if (sessionStorage.mockmaximo == "true") {
-                jsonOb['%%mockmaximo'] = true;
-            }
+            jsonOb['%%mockerror'] = sessionStorage.mockerror === "true";
+            jsonOb['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
             return JSON.stringify(jsonOb);
         }
         return data;
@@ -134,3 +128,5 @@ window.onpopstate = function (e) {
         document.title = e.state.pageTitle;
     }
 };
+
+})(angular, jQuery);

@@ -1,4 +1,9 @@
-﻿app.directive('expandedItemOutput', function ($compile) {
+﻿(function (app, angular, $) {
+    "use strict";
+
+
+
+app.directive('expandedItemOutput', function ($compile) {
     return {
         restrict: "E",
         replace: true,
@@ -228,6 +233,11 @@ app.directive('compositionList', function (contextService, spinService) {
                                         $scope.paginationData.paginationOptions.some(function (option) { // totalCount is bigger than at least one option
                                             return $scope.paginationData.totalCount > option;
                                         });
+
+                // scroll to top on ajax errors
+                $scope.$on("sw_ajaxerror", function() {
+                    $(document.body).animate({ scrollTop: 0 });
+                });
 
             };
 
@@ -540,3 +550,5 @@ app.directive('compositionList', function (contextService, spinService) {
         }]
     };
 });
+
+})(app, angular, jQuery);
