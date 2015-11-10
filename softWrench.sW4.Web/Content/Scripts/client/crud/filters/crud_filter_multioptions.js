@@ -62,7 +62,7 @@
                   
 
 
-                    if (!scope.filter.lazy) {
+                    if (!scope.filter.lazy && !!filter.provider) {
                         //let´s get the whole list from the server 
                         //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
                         var parameters = {

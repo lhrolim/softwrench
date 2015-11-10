@@ -241,10 +241,6 @@
 
         </complexType>
       </element>
-      <element name="notifications" maxOccurs="1" minOccurs="0"
-				type="tns:NotificationsDeclarationsType">
-
-      </element>
       <element name="properties" maxOccurs="1" minOccurs="0">
         <complexType>
           <sequence>
@@ -256,6 +252,9 @@
       </element>
       <element name="components" type="tns:displayablesType"
 				minOccurs="0" maxOccurs="1">
+      </element>
+      <element name="filters" type="tns:FiltersDeclarationType"
+           maxOccurs="1" minOccurs="0">
       </element>
     </choice>
     <attribute name="name" type="string" use="required"></attribute>

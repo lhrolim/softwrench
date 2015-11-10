@@ -84,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     statistics = _userStatisticsService.LocateStatistics(swUser);
                     activationLink = _userLinkManager.GetLinkByUser(swUser);
                 }
-                var isActive = swUser.IsActive ? "1" : "0";
+                var isActive = swUser.IsActive ? "true" : "false";
                 dataMap.SetAttribute("#isactive", isActive);
             } else {
                 dataMap.SetAttribute("email_", new JArray());
