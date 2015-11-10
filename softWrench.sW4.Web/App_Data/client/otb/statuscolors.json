@@ -7,7 +7,7 @@
     inprog: #4488f2,
     resolved: #4488f2,
     histedit: #39b54a,
-    wmatl: red
+    wmatl: #f65752
 }, workorder: {
     new: #e59323,
     wappr: #e59323,
