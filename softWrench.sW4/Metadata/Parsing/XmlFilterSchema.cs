@@ -25,5 +25,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string DefaultSelectionAttribute = "defaultselection";
         public const string RemoveAttribute = "remove";
 
+        public const string FilterNamespace = "http://www.controltechnologysolutions.com/filters";
     }
 }

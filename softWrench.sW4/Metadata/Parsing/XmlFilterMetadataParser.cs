@@ -1,3 +1,4 @@
+using System;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,11 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var whereclause = el.AttributeValue(XmlFilterSchema.WhereClauseAttribute);
 
                 if (el.IsNamed(XmlFilterSchema.OptionFilterElement)) {
-                    var provider = el.AttributeValue(XmlFilterSchema.ProviderAttribute, true);
+                    var provider = el.AttributeValue(XmlFilterSchema.ProviderAttribute);
+                    XNamespace xmlns = XmlFilterSchema.FilterNamespace;
+                    if (string.IsNullOrEmpty(provider) && !el.Descendants(xmlns + XmlFilterSchema.OptionElement).Any()) {
+                        throw new InvalidOperationException("filter requires either a provider or a list of options");
+                    }
                     var allowBlank = el.Attribute(XmlFilterSchema.AllowBlankAttribute).ValueOrDefault(false);
                     var displayCode = el.Attribute(XmlFilterSchema.DisplayCodeAttribute).ValueOrDefault(false);
                     var eager = el.Attribute(XmlFilterSchema.EagerAttribute).ValueOrDefault(false);
