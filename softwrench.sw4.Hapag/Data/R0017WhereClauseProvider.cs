@@ -51,6 +51,11 @@ namespace softwrench.sw4.Hapag.Data {
 
         public string AssetWhereClauseFromLocations(HlagGroupedLocation[] locations) {
             var sb = new StringBuilder();
+            var isWWUser = SecurityFacade.CurrentUser().IsWWUser();
+            if (isWWUser) {
+                return "1=1";
+            }
+
             if (CollectionExtensions.IsNullOrEmpty(locations)) {
                 //if u dont have any location you should not be able to see anything
                 sb.Append("0=1");
@@ -58,7 +63,7 @@ namespace softwrench.sw4.Hapag.Data {
             }
             var i = 0;
             var ctx = _contextLookuper.LookupContext();
-            if (!(ctx.IsInModule(FunctionalRole.XItc) && SecurityFacade.CurrentUser().IsWWUser())) {
+            if (!(ctx.IsInModule(FunctionalRole.XItc) && isWWUser)) {
                 //HAP-838 item 6, only XITC ww users should see it, or tom itom (who actually see asset)
                 sb.AppendFormat("asset.status != '{0}' and ", AssetConstants.Decommissioned);
             }
@@ -80,6 +85,10 @@ namespace softwrench.sw4.Hapag.Data {
 
 
         private string InnerTicketWhereClause(string ticketQualifier = "SR") {
+            var isWWUser = SecurityFacade.CurrentUser().IsWWUser();
+            if (isWWUser) {
+                return "1=1";
+            }
             var sb = new StringBuilder();
             sb.AppendFormat("{0}.pluspcustomer = 'HLC-00' or", ticketQualifier);
             var locations = _locationManager.GetLocationsOfLoggedUser();
@@ -158,7 +167,7 @@ namespace softwrench.sw4.Hapag.Data {
             return conditionToCheck;
         }
 
-      
+
 
     }
 }
