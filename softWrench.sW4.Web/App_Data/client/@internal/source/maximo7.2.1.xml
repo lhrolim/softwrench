@@ -601,6 +601,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				</relationship>
 				<relationship to="pluspcustomer">
 					<relationshipAttribute from="pluspcustomer" to="customer" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
 				</relationship>
 
 			</relationships>
