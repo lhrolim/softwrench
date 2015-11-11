@@ -96,10 +96,16 @@ app.directive('messagesection', function (contextService,$timeout,logoutService)
             });
 
             $scope.removeAlert = function () {
+                // error
                 $rootScope.hasErrorDetail = false;
                 $rootScope.hasErrorList = false;
                 $scope.errorMsg = null;
                 $scope.errorStack = null;
+                // success
+                $scope.hasSuccessDetail = false;
+                $scope.hasSuccessList = false;
+                $scope.successMsg = null;
+
                 $scope.$broadcast('sw_errormessage', false);
             };
 
