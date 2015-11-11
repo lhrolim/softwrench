@@ -82,40 +82,58 @@ app.directive("dateTime", function ($timeout, formatService, expressionService) 
                     });
                 }
 
+                /**
+                 * Checks if a given date is before the startDate.
+                 * 
+                 * @param Date date 
+                 * @returns Boolean 
+                 */
                 function isInvalidValidDate(date) {
                     return angular.isDate(startDate) && date.getTime() < startDate.getTime();
                 }
 
+                /**
+                 * Sets the ngModelController's $viewValue and $render's it.
+                 *
+                 * @param {} value 
+                 */
                 function renderValue(value) {
-                    $timeout(function() {
+                    $timeout(function () {
                         ngModel.$setViewValue(value);
                         ngModel.$render();
                     });
                 }
 
-                function changeDateHandler(e) {
-                    console.log(e);
-                    var date = e.date;
+                /**
+                 * Intercepts the date the user set and checks if it's an invalid date. 
+                 * In this case renders formattted starDate.
+                 * 
+                 * @param Bootstrap.DateTimePicker.Event<changeDate> event 
+                 */
+                function changeDateHandler(event) {
+                    var date = event.date;
                     if (!date) return;
-                    if (isInvalidValidDate(date)) {
-                        renderValue(formatService.formatDate(startDate, originalDateFormat));
-                    }
+                    if (isInvalidValidDate(date)) renderValue(formatService.formatDate(startDate, originalDateFormat));
                 };
 
-                function blurHandler() {
+                /**
+                 * Handles the blur event on a datepicker field.
+                 * It's useful for when the user manually writes the date (doesn't trigger DateTimePicker events nor JQuery.Event<change>).
+                 * Validates the date (both the time and format):
+                 * - if format is wrong and has stardate render formatted startdate
+                 * - if format is wrong and has no startdate render empty string
+                 * - if format is right but date is invalid render formatted start date
+                 * 
+                 * @param JQuery.Event<Blur> event 
+                 */
+                function blurHandler(event) {
                     var inputValue = $(this).val();
                     if (!inputValue) return;
                     try {
                         var dateFromUser = $.fn.datetimepicker.DPGlobal.parseDate(inputValue, $.fn.datepicker.DPGlobal.parseFormat(dateFormat), attrs.language);
-                        if (isInvalidValidDate(dateFromUser)) {
-                            renderValue(formatService.formatDate(startDate, originalDateFormat));
-                        }
+                        if (isInvalidValidDate(dateFromUser)) renderValue(formatService.formatDate(startDate, originalDateFormat));
                     } catch (e) {
-                        if (angular.isDate(startDate)) {
-                            renderValue(formatService.formatDate(startDate, originalDateFormat));
-                        } else {
-                            renderValue("");
-                        }
+                        angular.isDate(startDate) ? renderValue(formatService.formatDate(startDate, originalDateFormat)) : renderValue("");
                     }
                 }
 
@@ -161,7 +179,6 @@ app.directive("dateTime", function ($timeout, formatService, expressionService) 
                     }).on("blur", blurHandler).on("changeDate", changeDateHandler);
                 }
             }
-
         }
     };
 });
