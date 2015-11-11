@@ -70,19 +70,20 @@
 
                     // watch on variables that need to cause a change in the picker's 'startDate' property
                     function watchForStartDate(picker) {
-                        startDate = expressionService.evaluate(minStartDateExpression, datamap);
-                        startDate = formatService.formatDate(startDate, originalDateFormat);
+                        var localStartDate = expressionService.evaluate(minStartDateExpression, datamap);
+                        localStartDate = formatService.formatDate(localStartDate, originalDateFormat);
                         var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
                         scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
                             if (newVal !== oldVal) {
-                                startDate = expressionService.evaluate(minStartDateExpression, datamap);
-                                startDate = formatService.formatDate(startDate, originalDateFormat);
+                                localStartDate = expressionService.evaluate(minStartDateExpression, datamap);
+                                localStartDate = formatService.formatDate(localStartDate, originalDateFormat);
                                 var datePicker = element.data(picker);
-                                datePicker.startDate = Date.parse(startDate);
+                                startDate = Date.parse(localStartDate);
+                                datePicker.startDate = startDate;
                                 datePicker.initialDate = datePicker.startDate;
                             }
                         });
-
+                        return Date.parse(localStartDate);
                     }
 
                     /**
@@ -151,8 +152,8 @@
                             showMeridian = dateFormat.startsWith("MM");
                         }
 
-                        if (!!attrs.minDateexpression) watchForStartDate("datetimepicker");
-                        initialDate = startDate ? startDate : null;
+                        if (!!attrs.minDateexpression) startDate = watchForStartDate("datetimepicker");
+                        initialDate = startDate === defaultStartDate ? null : startDate;
 
                         element.datetimepicker({
                             format: dateFormat,
@@ -172,8 +173,9 @@
 
                     } else {
 
-                        if (!!attrs.minDateexpression) watchForStartDate("datepicker");
-                        initialDate = startDate ? startDate : null;
+                        if (!!attrs.minDateexpression) startDate = watchForStartDate("datepicker");
+                        initialDate = startDate === defaultStartDate ? null : startDate;
+
                         element.datepicker({
                             initialDate: initialDate,
                             startDate: startDate,
