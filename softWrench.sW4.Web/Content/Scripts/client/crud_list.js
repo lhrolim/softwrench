@@ -344,25 +344,26 @@ app.directive('crudList', function (contextService) {
             };
 
             $scope.filterSearch = function (columnName, event) {
-
-                if ($scope.searchOperator[columnName] == null) {
+                var currentOperator = $scope.searchOperator[columnName];
+                // has no operator selected or has a noop operator selected
+                if (!currentOperator || !currentOperator.id) {
                     $scope.searchOperator[columnName] = searchService.defaultSearchOperation();
                 }
 
                 var searchString = $scope.searchData[columnName];
-                if (searchString != null && searchString != '') {
+                if (!!searchString) {
                     $scope.selectPage(1);
                 }
 
                 // workaround to remove the focus from the filter textbox
                 // on ie9, if we dont took the focus out of the textbox, the page breaks something on the rendering 
                 // that prevents the click on the grid to show the details
-                $('#listgrid').focus();
+                $("#listgrid").focus();
                 window.scrollTo(0, 0);
             };
 
             $scope.shouldShowFilter = function (column) {
-                return column.type == "ApplicationFieldDefinition" && column.rendererType != "color";
+                return column.type === "ApplicationFieldDefinition" && column.rendererType !== "color";
             }
 
 

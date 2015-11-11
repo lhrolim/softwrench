@@ -1,4 +1,9 @@
-﻿app.directive('expandedItemOutput', function ($compile) {
+﻿(function (app, angular, $) {
+    "use strict";
+
+
+
+app.directive('expandedItemOutput', function ($compile) {
     return {
         restrict: "E",
         replace: true,
@@ -182,9 +187,10 @@ app.directive('compositionList', function (contextService, spinService) {
             parentschema: '='
         },
 
-        controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
-            formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout) {
+        controller: ["$scope", "$log", "$filter", "$injector", "$http", "$element", "$rootScope", "i18NService", "tabsService",
+            "formatService", "fieldService", "commandService", "compositionService", "validationService", "expressionService", "$timeout",
+            function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
+                formatService, fieldService, commandService, compositionService, validationService, expressionService, $timeout) {
 
             function init() {
                 //Extra variables
@@ -228,6 +234,11 @@ app.directive('compositionList', function (contextService, spinService) {
                                             return $scope.paginationData.totalCount > option;
                                         });
 
+                // scroll to top on ajax errors
+                $scope.$on("sw_ajaxerror", function() {
+                    $(document.body).animate({ scrollTop: 0 });
+                });
+
             };
 
             init();
@@ -255,10 +266,16 @@ app.directive('compositionList', function (contextService, spinService) {
             };
 
 
-            $scope.newDetailFn = function () {
+            $scope.newDetailFn = function ($event) {
                 $scope.newDetail = true;
                 $scope.selecteditem = {};
                 $scope.collapseAll();
+                // scroll to detail form (500ms for smoothness)
+                $timeout(function () {
+                    var scrollTarget = $(".js_compositionnewitem");
+                    if (!scrollTarget[0]) scrollTarget = $($event.delegateTarget);
+                    $(document.body).animate({ scrollTop: scrollTarget.offset().top });
+                }, 500, false);
             };
 
             var doToggle = function (id, item, forcedState) {
@@ -272,7 +289,8 @@ app.directive('compositionList', function (contextService, spinService) {
             };
 
             $scope.toggleDetails = function (item, updating) {
-
+                contextService.insertIntoContext("sw:crudbody:scrolltop", false);
+                
                 var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
                 if (fullServiceName != null) {
                     commandService.executeClickCustomCommand(fullServiceName, item, $scope.compositionlistschema.displayables);
@@ -284,7 +302,7 @@ app.directive('compositionList', function (contextService, spinService) {
                 if (!$scope.fetchfromserver) {
                     doToggle(compositionId, item);
                     return;
-                }else if ($scope.detailData[compositionId] != undefined) {
+                } else if ($scope.detailData[compositionId] != undefined) {
                     doToggle(compositionId, $scope.detailData[compositionId].data);
                     return;
                 }
@@ -301,10 +319,13 @@ app.directive('compositionList', function (contextService, spinService) {
                 key.mode = compositiondetailschema.mode;
                 key.platform = "web";
                 var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
-                $http.get(urlToCall).success(
-                    function (result) {
+                $http.get(urlToCall)
+                    .then( function (response) {
+                        var result = response.data;
                         doToggle(compositionId, result.resultObject.fields);
                         $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
+                    })
+                    .then(function () {
                     });
             };
 
@@ -315,7 +336,7 @@ app.directive('compositionList', function (contextService, spinService) {
                     return property;
                 }
 
-                if (propertyName == 'maxwidth') {
+                if (propertyName === 'maxwidth') {
                     var high = $(window).width() > 1199;
                     if (high) {
                         return '135px';
@@ -526,8 +547,8 @@ app.directive('compositionList', function (contextService, spinService) {
                         init();
                     });
             };
-
-
-        }
+        }]
     };
 });
+
+})(app, angular, jQuery);
