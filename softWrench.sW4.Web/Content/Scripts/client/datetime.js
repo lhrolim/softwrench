@@ -26,9 +26,13 @@
             restrict: "A",
             require: "?ngModel",
             link: function (scope, element, attrs, ngModel) {
-
+                // no model, not required to do anything fancy
                 if (!ngModel) {
                     return;
+                }
+                // block usage of ng-enter: use date-enter instead
+                if (!!attrs.ngEnter) {
+                    throw new Error("ng-enter directive is not supported. Use date-enter instead.");
                 }
 
                 var showTime = parseBooleanValue(attrs.showTime);
