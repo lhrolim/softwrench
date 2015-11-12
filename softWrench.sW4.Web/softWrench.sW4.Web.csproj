@@ -1382,6 +1382,10 @@
       <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
       <Name>softwrench.sw4.activitystream</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.amex\softwrench.sw4.amex.csproj">
+      <Project>{93e0b0e8-f6ca-4e06-8a82-616e2dfc905a}</Project>
+      <Name>softwrench.sw4.amex</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
       <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
       <Name>softwrench.sw4.apachegold</Name>
@@ -1434,9 +1438,17 @@
       <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
       <Name>softwrench.sw4.manchester</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.nasco\softwrench.sw4.nasco.csproj">
+      <Project>{eca0c543-9a9a-48b8-bf22-4140656fff2c}</Project>
+      <Name>softwrench.sw4.nasco</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
       <Name>softwrench.sw4.offlineserver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.panasonic\softwrench.sw4.panasonic.csproj">
+      <Project>{3ecf0937-dd18-4b53-98ab-c75cc46a5ab4}</Project>
+      <Name>softwrench.sw4.panasonic</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
@@ -1461,6 +1473,10 @@
     <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
       <Name>softwrench.sw4.swgas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.tva\softwrench.sw4.tva.csproj">
+      <Project>{c987e2c2-a2d3-4d7b-b2ff-a5f1667b159a}</Project>
+      <Name>softwrench.sw4.tva</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
