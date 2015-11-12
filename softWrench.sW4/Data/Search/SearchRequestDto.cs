@@ -194,8 +194,8 @@ namespace softWrench.sW4.Data.Search {
         }
 
 
-        public SearchRequestDto AppendSearchEntry(string searchParam, string searchValue) {
-            AppendSearchParam(searchParam);
+        public SearchRequestDto AppendSearchEntry(string searchParam, string searchValue, bool orMode=false) {
+            AppendSearchParam(searchParam, orMode);
             AppendSearchValue(searchValue);
             return this;
         }
@@ -212,9 +212,14 @@ namespace softWrench.sW4.Data.Search {
             return AppendSearchEntry(searchParam, searchValue.ToArray());
         }
 
-        public void AppendSearchParam(string searchParam) {
+        public void AppendSearchParam(string searchParam, bool orMode = false) {
             if (!String.IsNullOrWhiteSpace(SearchParams)) {
-                SearchParams += SearchUtils.SearchParamAndSeparator;
+                if (orMode) {
+                    SearchParams += SearchUtils.SearchParamOrSeparator;
+                } else {
+                    SearchParams += SearchUtils.SearchParamAndSeparator;
+                }
+
             }
             SearchParams += searchParam;
         }
