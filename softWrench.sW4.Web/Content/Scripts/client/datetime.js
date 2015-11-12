@@ -3,7 +3,7 @@
 
     var app = angular.module("sw_layout");
 
-    app.directive("dateTime", function ($timeout, formatService, expressionService) {
+    app.directive("dateTime", ["$timeout", "formatService", "expressionService", "$q", function ($timeout, formatService, expressionService, $q) {
 
         function parseBooleanValue(attrValue) {
             return !attrValue ? true : attrValue.toLowerCase() === "true";
@@ -99,13 +99,17 @@
                     /**
                      * Sets the ngModelController's $viewValue and $render's it.
                      *
-                     * @param {} value 
+                     * @param {} value
+                     * @returns Promise
                      */
                     function renderValue(value) {
-                        $timeout(function () {
+                        var deferred = $q.defer();
+                        scope.$apply(function () {
                             ngModel.$setViewValue(value);
                             ngModel.$render();
+                            deferred.resolve(value);
                         });
+                        return deferred.promise;
                     }
 
                     /**
@@ -121,25 +125,62 @@
                     };
 
                     /**
-                     * Handles the blur event on a datepicker field.
-                     * It's useful for when the user manually writes the date (doesn't trigger DateTimePicker events nor JQuery.Event<change>).
-                     * Validates the date (both the time and format):
+                     * Validates the date (both the time and format) and returns a value that can be rendered:
                      * - if format is wrong and has stardate render formatted startdate
                      * - if format is wrong and has no startdate render empty string
                      * - if format is right but date is invalid render formatted start date
+                     * 
+                     * @param String value 
+                     * @returns String 
+                     */
+                    function getRenderableDateValue(value) {
+                        try {
+                            var dateFromUser = $.fn.datetimepicker.DPGlobal.parseDate(value, $.fn.datepicker.DPGlobal.parseFormat(dateFormat), attrs.language);
+                            var dateToUse = isInvalidValidDate(dateFromUser) ? startDate : dateFromUser;
+                            return formatService.formatDate(dateToUse, originalDateFormat);
+                        } catch (e) {
+                            return angular.isDate(startDate) ? formatService.formatDate(startDate, originalDateFormat) : "";
+                        }
+                    }
+
+                    /**
+                     * Handles the blur event on a datepicker field.
+                     * It's useful for when the user manually writes the date (doesn't trigger DateTimePicker events nor JQuery.Event<change>).
+                     * Renders the value obtained from getRenderableDateValue(<input_value>).
                      * 
                      * @param JQuery.Event<Blur> event 
                      */
                     function blurHandler(event) {
                         var inputValue = $(this).val();
                         if (!inputValue) return;
-                        try {
-                            var dateFromUser = $.fn.datetimepicker.DPGlobal.parseDate(inputValue, $.fn.datepicker.DPGlobal.parseFormat(dateFormat), attrs.language);
-                            var dateToUse = isInvalidValidDate(dateFromUser) ? startDate : dateFromUser;
-                            renderValue(formatService.formatDate(dateToUse, originalDateFormat));
-                        } catch (e) {
-                            angular.isDate(startDate) ? renderValue(formatService.formatDate(startDate, originalDateFormat)) : renderValue("");
+                        var dateToRender = getRenderableDateValue(inputValue);
+                        renderValue(dateToRender);
+                    }
+
+                    /**
+                     * Handles the pressing of the 'enter' key on datepicker input.
+                     * Renders the value obtained from getRenderableDateValue(<input_value>) then executes any ng-enter expression.
+                     * Cancels the event.
+                     * 
+                     * @param JQuery.Event<keypress> event 
+                     */
+                    function enterHandler(event) {
+                        if (event.which !== 13) return;
+                        var value = $(this).val();
+                        if (!value) return;
+                        // render value
+                        var date = getRenderableDateValue(value);
+                        var promise = renderValue(date);
+                        // schedule to execute date-enter callback after rendering the value and cancelling the 'enter' event 
+                        if (!!attrs.dateEnter) {
+                            promise.then(function () {
+                                scope.$eval(attrs.dateEnter);
+                            });
                         }
+                        // cancelling event
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.stopImmediatePropagation();
                     }
 
                     var initialDate;
@@ -169,7 +210,7 @@
                             readonly: isReadOnly,
                             ignoretimeBtn: showIgnoreTime,
                             forceParse: !showIgnoreTime
-                        }).on("blur", blurHandler).on("changeDate", changeDateHandler);
+                        }).on("blur", blurHandler).on("changeDate", changeDateHandler).keypress(enterHandler);
 
                     } else {
 
@@ -186,11 +227,11 @@
                             maxView: 3,
                             showMeridian: false,
                             readonly: isReadOnly
-                        }).on("blur", blurHandler).on("changeDate", changeDateHandler);
+                        }).on("blur", blurHandler).on("changeDate", changeDateHandler).keypress(enterHandler);
                     }
                 }
             }
         };
-    });
+    }]);
 
 })(angular, jQuery);
