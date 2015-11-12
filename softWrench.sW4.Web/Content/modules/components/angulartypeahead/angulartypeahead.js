@@ -5,26 +5,17 @@
 
 
 
-    function angularTypeahead(restService, contextService, associationService) {
+    function angularTypeahead(restService, $timeout, $log, contextService, associationService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
         /// <returns type=""></returns>
 
-        function link(scope, el, attrs) {
 
-            //createing defaults
-            var minLength = scope.minLength || 2;
-            var rateLimit = scope.rateLimit || 500;
-
-            var element = $($('input.typeahead', el)[0]);
-            var parElement = element.parent();
-
-            var attribute = scope.attribute;
-            var provider = scope.provider;
-            var schema = scope.schema;
+        var configureSearchEngine = function (attrs,schema, provider, attribute, rateLimit) {
 
             var applicationName = schema.applicationName;
+
             var parameters = {
                 key: {
                     schemaId: schema.schemaId,
@@ -61,39 +52,10 @@
             });
 
             engine.initialize();
+            return engine;
+        }
 
-            element.typeahead({ minLength: minLength }, {
-                displayKey: function (item) {
-                    return associationService.getLabelText(item, scope.hideDescription);
-                },
-                source: engine.ttAdapter()
-            });
-
-
-            element.on("typeahead:selected typeahead:autocompleted", function (e, datum) {
-                scope.itemSelected({ item: datum });
-                //                if (datamap) {
-                //                    datamap[dataTarget] = datum.value;
-                //                    scope.associationOptions[associationKey] = [{ value: datum.value, label: datum.label, extrafields: datum.extrafields }];
-                //                    scope.$digest();
-                //                } else {
-                //                    //going down
-                //                    scope.$broadcast("sw.autocompleteserver.selected", e, datum, dataTarget);
-                //
-                //                }
-            });
-
-            element.on("keyup", function (e) {
-                scope.searchText = $(e.target).val();
-                scope.$digest();
-                //if filter is applied, let´s not show recently used filters
-
-            });
-
-
-            //            $(jelement.parent()).data('initialized', true);
-
-
+        var configureStyles = function (element, parElement) {
             // Configure autocompletes layout
             var typeAhead = $('span.twitter-typeahead', parElement);
             typeAhead.css('width', '100%');
@@ -105,6 +67,58 @@
             var dropDownMenu = $('span.tt-dropdown-menu', parElement);
             var width = element.outerWidth();
             dropDownMenu.width(width);
+        }
+
+        function link(scope, el, attrs) {
+            var log = $log.getInstance('angulartypeahed');
+
+            //setting defaults
+            var minLength = scope.minLength || 2;
+            var rateLimit = scope.rateLimit || 500;
+
+            var element = $($('input.typeahead', el)[0]);
+            var parElement = element.parent();
+
+            var attribute = scope.attribute;
+            var provider = scope.provider;
+            var schema = scope.schema;
+
+            log.debug("initing angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
+
+            var engine = configureSearchEngine(attrs,schema, provider, attribute, rateLimit);
+
+
+            //initing typeahead itself
+            element.typeahead({ minLength: minLength }, {
+                displayKey: function (item) {
+                    return associationService.getLabelText(item, scope.hideDescription);
+                },
+                source: engine.ttAdapter()
+            });
+
+
+            element.on("typeahead:selected typeahead:autocompleted", function (e, datum) {
+                scope.itemSelected({ item: datum });
+            });
+
+            element.on("focus", function (e) {
+                $timeout(function () {
+                    element.typeahead("moveToBegin");
+                }, 0, false);
+
+            });
+
+            element.on("keyup", function (e) {
+                scope.searchText = $(e.target).val();
+                scope.$digest();
+                //if filter is applied, let´s not show recently used filters
+
+            });
+
+            configureStyles(element,parElement);
+
+
+         
 
 
         };
@@ -155,7 +169,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', 'contextService', 'associationService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', angularTypeahead]);
 
 })(angular, Bloodhound);
 

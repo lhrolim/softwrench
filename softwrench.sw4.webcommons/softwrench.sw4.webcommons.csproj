@@ -152,6 +152,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\menu.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\jquery_utils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\ui_utils.js" />
     <Content Include="web_content\webcommons\templates\swlabel.html" />
   </ItemGroup>

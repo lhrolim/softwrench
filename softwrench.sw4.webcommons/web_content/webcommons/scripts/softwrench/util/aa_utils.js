@@ -49,6 +49,9 @@ var BrowserDetect =
 };
 BrowserDetect.init();
 
+
+
+
 var DeviceDetect =
 {
     init: function () {

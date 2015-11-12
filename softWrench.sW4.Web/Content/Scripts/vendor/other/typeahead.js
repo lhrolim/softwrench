@@ -1668,14 +1668,14 @@
                 !$input.attr("dir") && $input.attr("dir", "auto");
             } catch (e) { }
             /* SW CUSTOMIZATION - BEGIN */
-             return $input.wrap($wrapper).parent().prepend($hint).append($dropdown);
+            return $input.wrap($wrapper).parent().prepend($hint).append($dropdown);
 
-//            var $addon = $('<span class="add-on btn dropdown-toggle" data-dropdown="dropdown" style="padding:6px 5px; width:24px"><span class="caret"/></span>');
-//
-//            var $addonWrapper = $('<div class="combobox-container"></div>');
-//            $input.wrap($addonWrapper).parent().append($addon);
-//
-//            return $input.parent().wrap($wrapper).parent().prepend($hint).append($dropdown);
+            //            var $addon = $('<span class="add-on btn dropdown-toggle" data-dropdown="dropdown" style="padding:6px 5px; width:24px"><span class="caret"/></span>');
+            //
+            //            var $addonWrapper = $('<div class="combobox-container"></div>');
+            //            $input.wrap($addonWrapper).parent().append($addon);
+            //
+            //            return $input.parent().wrap($wrapper).parent().prepend($hint).append($dropdown);
             /* SW CUSTOMIZATION - END */
         }
         function getBackgroundStyles($el) {
@@ -1770,7 +1770,18 @@
                         $input.removeData(typeaheadKey);
                     }
                 }
+            },
+
+            moveToBegin: function () {
+                return this.each(begin);
+                function begin() {
+                    var $input = $(this), typeahead;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        $input.setCursorPosition(0);
+                    }
+                }
             }
+
         };
         $.fn.typeahead = function (method) {
             var tts;
