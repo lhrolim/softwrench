@@ -17,7 +17,7 @@ namespace softwrench.sW4.test.Scheduler.Jobs {
 
         [TestMethod]
         public void R101DefaultClause() {
-            var result = R101ExtractorHelper.DoBuildQuery(new[]
+            var result = ClassStructureConfigFileReader.DoBuildQuery(new[]
             {
                 @"43211503",
                 @"43211507",
@@ -30,7 +30,7 @@ namespace softwrench.sW4.test.Scheduler.Jobs {
 
         [TestMethod]
         public void R101WithParentsAndChildren() {
-            var result = R101ExtractorHelper.DoBuildQuery(new[]
+            var result = ClassStructureConfigFileReader.DoBuildQuery(new[]
             {
                 @"43211503",
                 @"43211507",
@@ -46,7 +46,7 @@ namespace softwrench.sW4.test.Scheduler.Jobs {
 
         [TestMethod]
         public void R101WithParentOnly() {
-            var result = R101ExtractorHelper.DoBuildQuery(new[]
+            var result = ClassStructureConfigFileReader.DoBuildQuery(new[]
             {
                 @"43211500\"
             });

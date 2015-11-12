@@ -80,7 +80,8 @@ namespace softWrench.sW4.Util {
              };
         }
 
-        public byte[] ConvertGridToCsv(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
+
+        public byte[] ConvertGridToCsv(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows, Func<AttributeHolder, ApplicationFieldDefinition,string, string> ColumnValueDelegate = null) {
             var csv = new StringBuilder();
             var enumerableFields = schema.Fields.Where(ShouldShowField());
             var fields = enumerableFields as IList<ApplicationFieldDefinition> ?? enumerableFields.ToList();
@@ -92,6 +93,9 @@ namespace softWrench.sW4.Util {
                 var row = new StringBuilder();
                 var values = fields.Select(field => {
                     var data = GetValueAsString(item, field);
+                    if (ColumnValueDelegate != null) {
+                        data = ColumnValueDelegate(item, field,data);
+                    }
                     var displayableData = AsDisplayableData(data, field, user);
                     return AsCsvCompliantData(displayableData);
                 });
@@ -174,7 +178,7 @@ namespace softWrench.sW4.Util {
 
             // create sheetdata element
             writer.WriteStartElement(new SheetData());
-          
+
             var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
             stylesPart.Stylesheet = new Stylesheet();
 
@@ -195,7 +199,7 @@ namespace softWrench.sW4.Util {
 
             // cell format list
             CreateCellFormats(stylesPart);
-            
+
             rowIdx = 1;
             return worksheetpart;
         }
@@ -243,7 +247,7 @@ namespace softWrench.sW4.Util {
         /// <param name="field"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        private string AsDisplayableData(string data, IApplicationDisplayable field,  InMemoryUser user) {
+        private string AsDisplayableData(string data, IApplicationDisplayable field, InMemoryUser user) {
             DateTime dtTimeAux;
             var formatToUse = "dd/MM/yyyy HH:mm";
             if (field.RendererParameters.ContainsKey("format")) {
