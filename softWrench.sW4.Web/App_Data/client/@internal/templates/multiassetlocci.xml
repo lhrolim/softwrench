@@ -8,7 +8,7 @@
           <!--<properties>
             <property key="expansible" value="false"/>
           </properties>-->
-          <field attribute="multiid" hidden="true"></field>
+          <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset" extraprojectionvalues="location">
             <renderer type="lookup"/>
