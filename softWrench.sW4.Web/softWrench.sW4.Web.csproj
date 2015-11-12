@@ -1446,9 +1446,9 @@
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
       <Name>softwrench.sw4.offlineserver</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.panasonic\softwrench.sw4.panasonic.csproj">
+    <ProjectReference Include="..\softwrench.sw4.pesco\softwrench.sw4.pesco.csproj">
       <Project>{3ecf0937-dd18-4b53-98ab-c75cc46a5ab4}</Project>
-      <Name>softwrench.sw4.panasonic</Name>
+      <Name>softwrench.sw4.pesco</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
