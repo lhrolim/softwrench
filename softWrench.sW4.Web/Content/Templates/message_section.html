@@ -2,7 +2,7 @@
     <div id="divsuccessmessagedetail" class="alert alert-success" ng-show="hasSuccessDetail">
         <div>
             <ul>
-                <li>{{successMsg}} <a class="close" ng-click="removeAlert()">x</a></li>
+                <li>{{successMsg}} <a class="close" ng-click="closeSuccessMessage()">x</a> </li>
             </ul>
         </div>
     </div>
@@ -10,7 +10,7 @@
     <div id="divsuccessmessagelist" class="alert alert-success topMessageAux affix-thead" ng-show="hasSuccessList">
         <div>
             <ul>
-                <li>{{successMsg}}</li>
+                <li>{{successMsg}} <a class="close" ng-click="closeSuccessMessage()">x</a> </li>
             </ul>
         </div>
     </div>
