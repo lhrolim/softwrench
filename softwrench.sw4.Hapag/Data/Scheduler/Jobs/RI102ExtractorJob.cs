@@ -46,7 +46,7 @@ namespace softwrench.sw4.Hapag.Data.Scheduler.Jobs {
             if (!field.Attribute.EqualsIc("#rI102newlocation")) {
                 return originalData;
             }
-            var country = holder.GetAttribute("country");
+            var country = holder.GetAttribute("location_pluspservaddr_.country");
             var loccode = holder.GetAttribute("hlagpluspcustomer");
             var streetaddress = holder.GetAttribute("location_pluspservaddr_.streetaddress");
             var floor = holder.GetAttribute("location_.floor") as string;
