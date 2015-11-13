@@ -10,8 +10,9 @@
           </properties>-->
           <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
-          <association target="assetnum" labelfield="asset_.assetnum" label="Asset" extraprojectionvalues="location">
+          <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location">
             <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location">

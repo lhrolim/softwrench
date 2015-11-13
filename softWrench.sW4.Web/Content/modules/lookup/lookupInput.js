@@ -6,7 +6,7 @@
         var directive = {
             restrict: "E",
             templateUrl: contextService.getResourceUrl("/Content/modules/lookup/templates/lookupinput.html"),
-            $scope: {
+            scope: {
                 datamap: "=",
                 parentdata:"=",
                 schema: "=",

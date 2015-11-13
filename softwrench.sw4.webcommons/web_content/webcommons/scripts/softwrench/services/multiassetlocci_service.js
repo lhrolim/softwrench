@@ -16,11 +16,16 @@
 
         function afterChangeAsset(parameters) {
             parameters.fields['#isDirty'] = true;
-            parameters.fields['location'] = parameters.fields['asset_.location'];
+            if (parameters.fields.fields['assetnum'] != null) {
+                parameters.fields['location'] = parameters.fields['asset_.location'];
+            }
         };
 
         function afterChangeLocation(parameters) {
             parameters.fields['#isDirty'] = true;
+            if (parameters.fields['location'] != parameters.fields['asset_.location']) {
+                parameters.fields['assetnum'] = null;
+            }
         };
 
         function afterChangeSequence(parameters) {
