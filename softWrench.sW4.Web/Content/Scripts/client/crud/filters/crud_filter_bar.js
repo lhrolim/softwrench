@@ -2,7 +2,8 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("crudFilterBar", ["contextService", "$timeout", function (contextService, $timeout) {
+        // filter bar
+        .directive("crudFilterBar", ["contextService", function (contextService) {
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl("/Content/Templates/crud/filter/crud_filter_bar.html"),
@@ -18,17 +19,15 @@
             };
 
             return directive;
-        }]);
-
-
-    angular.module("sw_layout")
+        }])
+        // filter dropdown
         .directive("crudFilterDropdown", ["contextService", "$timeout", function (contextService, $timeout) {
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl("/Content/Templates/crud/filter/crud_filter_dropdown.html"),
                 scope: {
                     filter: "=", // filter to show
-                    schema: "=",
+                    schema: "=", // model's current schema
                     datamap: "=", // model's current datamap
                     searchData: "=", // shared dictionary [column : current filter search value]
                     searchOperator: "=", // shared dictionary [column : current filter operator object]
@@ -39,6 +38,10 @@
                 controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService",
                     function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService) {
 
+                        $scope.layout = {
+                            standalone: false
+                        }
+
                         var config = {
                             /** 'don't filter' operator: helper to clear current filter */
                             noopoperator: { id: "NF", symbol: "", begin: "", end: "", title: "No Filter" }
@@ -48,6 +51,15 @@
                             if (!$scope.searchOperator[filter.attribute]) {
                                 $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
                             }
+                        }
+
+                        $scope.hasFilter = function(filter) {
+                            var operator = $scope.searchOperator[filter.attribute];
+                            if (!operator) return false;
+                            var search = $scope.searchData[filter.attribute];
+                            if (operator.id === "BLANK") return true;
+                            return !!search && !operator.id.equalsAny("", "NF");
+                            
                         }
 
                         /**
@@ -197,6 +209,10 @@
                             $($event.delegateTarget).parents(".dropdown.open").removeClass("open");
                         }
 
+                        $scope.setStandaloneMode = function (value) {
+                            $scope.layout.standalone = value;
+                        };
+
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,
                             i18NService: i18NService,
@@ -217,6 +233,8 @@
                     }],
 
                 link: function (scope, element, attrs) {
+                    scope.setStandaloneMode(attrs.hasOwnProperty("filterStandalone"));
+
                     var prepareUi = function () {
                         // don't let dropdowns close automatically when clicked inside
                         var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));

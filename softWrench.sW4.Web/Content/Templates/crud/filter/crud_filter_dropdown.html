@@ -1,8 +1,17 @@
-﻿<div class="filter-label-wrapper js_filter">
+﻿<div class="filter-label-wrapper js_filter" ng-if="!!filter">
     <div class="dropdown" ng-init="markDefaultOperator(filter)">
-        <div class="wrap" ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
-            {{i18N('_grid.filter.placeholder','{0}',[filter.label])}}: <span class="filter-text">{{getFilterText(filter)}}</span>
-            <i class="fa fa-caret-down grid-filter-button"></i>
+        <div class="wrap" ng-class="{'slim': layout.standalone}"
+             rel="tooltip" data-original-title="{{getFilterText(filter)}}" 
+             ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
+            <span ng-hide="layout.standalone">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}:</span> 
+            <span ng-hide="layout.standalone" class="filter-text">{{getFilterText(filter)}}</span>
+            <i class="fa grid-filter-button"
+               ng-class="{
+               'fa-caret-down': !layout.standalone,
+               'fa-filter': layout.standalone && !hasFilter(filter),
+               'fa-bolt': layout.standalone && hasFilter(filter)
+               }">
+            </i>
         </div>
         <div class="dropdown-menu js_filter_content {{filter.type}}"
              style="{{filter.style}}"

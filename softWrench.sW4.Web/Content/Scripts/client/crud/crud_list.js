@@ -426,6 +426,12 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 $scope.selectPage(1);
             };
 
+            $scope.filterForColumn = function(column) {
+                return $scope.schema.schemaFilters.filters.find(function(filter) {
+                    return filter.attribute === column.attribute;
+                });
+            }
+
             function initController() {
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
