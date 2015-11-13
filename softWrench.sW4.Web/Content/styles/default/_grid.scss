@@ -62,9 +62,14 @@
                         width: 250px;
 
                         .dropdown-content {
-                            padding-top: 10px;
                             padding-bottom: 0;
                             width: 100%;
+
+                            .dropdown-close {
+                                text-align: right;
+                                padding: 0 10px 10px 0;
+                                cursor: pointer;
+                            }
 
                             .input-group {
                                 width: 90%;
@@ -94,8 +99,8 @@
                                 }
 
                                 .filter-options {
-                                    max-height: 310px;
-                                    overflow-y: scroll;
+                                    max-height: 306px;
+                                    overflow-y: auto;
                                 }
 
                                 ul {
@@ -169,7 +174,6 @@
                                 height: 40px;
                                 color: #999;
                                 font-weight: bold;
-                                font-size: 16px;
 
                                 &.apply {
                                     color: #3a7ebd;

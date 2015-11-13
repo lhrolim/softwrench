@@ -11,10 +11,13 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Filter {
 
     public class FilterWhereClauseHandler : ISingletonComponent {
+
+
         public PaginatedSearchRequestDto HandleDTO(ApplicationSchemaDefinition schema, PaginatedSearchRequestDto searchDto) {
             //force cache here
             var parameters = searchDto.GetParameters();
@@ -26,21 +29,30 @@ namespace softWrench.sW4.Data.Filter {
 
             var entity = MetadataProvider.EntityByApplication(schema.ApplicationName);
 
-            var whereClauseFilters = schemaFilters.Filters.Where(f => f.WhereClause != null);
+            var allFilters = schemaFilters.Filters;
 
 
-            foreach (var whereClauseFilter in whereClauseFilters) {
-                SearchParameter paramValue = searchDto.RemoveSearchParam(whereClauseFilter.Attribute);
+            foreach (var filter in allFilters) {
+                SearchParameter paramValue = searchDto.RemoveSearchParam(filter.Attribute);
                 if (paramValue == null) {
                     //this has not came from the client side as a client filter
                     continue;
                 }
 
-                var whereClause = whereClauseFilter.WhereClause;
+                var whereClause = filter.WhereClause;
 
-                if (whereClauseFilter is MetadataOptionFilter && paramValue.SearchOperator.Equals(SearchOperator.CONTAINS) && !whereClauseFilter.IsTransient()) {
-                    paramValue.IgnoreParameter = false;
+                if (filter is MetadataOptionFilter && paramValue.SearchOperator.Equals(SearchOperator.CONTAINS) && !filter.IsTransient()) {
+                    var optionFilter = (MetadataOptionFilter)filter;
+                    searchDto.AppendWhereClause(GenerateFilterFreeTextWhereClause(optionFilter, paramValue.Value as string, schema));
+
+                    //                    paramValue.IgnoreParameter = false;
                     //this means that we´re using a contains operation inside of an option filter, which should lead to default attribute lookup
+                    continue;
+                }
+
+                if (whereClause == null) {
+                    paramValue.IgnoreParameter = false;
+                    //this should lead to default filter implementation
                     continue;
                 }
 
@@ -60,6 +72,34 @@ namespace softWrench.sW4.Data.Filter {
             }
 
             return searchDto;
+        }
+
+        public string GenerateFilterFreeTextWhereClause(MetadataOptionFilter filterProvider, string labelSearchString, ApplicationSchemaDefinition schema) {
+            var attributeToUse = filterProvider.Attribute;
+            if (attributeToUse.Equals(filterProvider.Provider) && filterProvider.Position != null) {
+                //this means we´re applying a customization and the original attribute should rather be position. Check KOGT or DD metadata for servicerequest
+                attributeToUse = filterProvider.Position;
+            }
+
+            var canUseProvider = schema.Fields.Any(f => f.Attribute.EqualsIc(filterProvider.Provider));
+
+            if (canUseProvider) {
+                //provider has to be declared as a field or a hidden field
+                return "({0} like '{1}' or {2} like '{1}')".Fmt(filterProvider.Provider, labelSearchString,
+                    attributeToUse);
+            }
+            return "({0} like '{1}')".Fmt(attributeToUse, labelSearchString);
+
+        }
+
+        public string GenerateFilterLookupWhereClause(string filterProvider, string labelSearchString, ApplicationSchemaDefinition schema) {
+            var entityAssociation = MetadataProvider.Entity(schema.EntityName).LocateAssociationByLabelField(filterProvider);
+            var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
+
+            if (!string.IsNullOrEmpty(labelSearchString)) {
+                return "({0} like '%{1}%' or {2} like '%{1}%')".Fmt(primaryAttribute.To, labelSearchString, entityAssociation.Item2.Name);
+            }
+            return "1=1";
         }
     }
 }

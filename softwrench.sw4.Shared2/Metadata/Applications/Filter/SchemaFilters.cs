@@ -7,7 +7,9 @@ using JetBrains.Annotations;
 namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
     public class SchemaFilters {
 
-        public bool HasOverridenFilter { get; set; }
+        public bool HasOverridenFilter {
+            get; set;
+        }
 
         public LinkedList<BaseMetadataFilter> Filters {
             get; private set;
@@ -20,6 +22,19 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
         public bool IsEmpty() {
             return Filters.Count == 0;
+        }
+
+        public static SchemaFilters BlankInstance() {
+            return new SchemaFilters(new LinkedList<BaseMetadataFilter>());
+        }
+
+        public void Merge(SchemaFilters appFilters) {
+            foreach (var filter in appFilters.Filters) {
+                if (!Filters.Any(f => f.Attribute.Equals(filter.Attribute))) {
+                    //adding filters declared on the application to the schemas, unless they are explicitely declared on the schema in which case they would override the application ones
+                    Filters.AddLast(filter);
+                }
+            }
         }
     }
 }

@@ -163,7 +163,7 @@ namespace softWrench.sW4.Data.Search {
                     }
 
                     if (searchParameter.NullOr || (searchParameter.SearchOperator == SearchOperator.NOTEQ) || (searchParameter.SearchOperator == SearchOperator.NCONTAINS) || (searchParameter.SearchOperator == SearchOperator.BLANK)) {
-                        statement.Append(" OR " + parameterData.Item1 + " IS NULL " + " )");
+                        statement.Append(" OR " + parameterData.Item3 + " IS NULL " + " )");
                     } else {
                         statement.Append(" )");
                     }
@@ -246,12 +246,13 @@ namespace softWrench.sW4.Data.Search {
             return resultDictionary;
         }
 
-        private static Tuple<string, ParameterType> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
+        private static Tuple<string, ParameterType,string> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
 
             // UNION statements cases
             if (paramName.StartsWith("null")) {
-                return new Tuple<string, ParameterType>("null", ParameterType.Default);
-            } else if (paramName.EndsWith("_union")) {
+                return new Tuple<string, ParameterType,string>("null", ParameterType.Default,paramName);
+            }
+            if (paramName.EndsWith("_union")) {
                 paramName = paramName.Substring(0, paramName.Length - "_union".Length);
             }
 
@@ -271,13 +272,13 @@ namespace softWrench.sW4.Data.Search {
                 }
             }
             if (resultType == ParameterType.Date || resultType == ParameterType.Number) {
-                return new Tuple<string, ParameterType>(baseResult, resultType);
+                return new Tuple<string, ParameterType,string>(baseResult, resultType, baseResult);
             }
             if (searchParameter.FilterSearch) {
                 //if this is a filter search input lets make it case insensitive
-                return new Tuple<string, ParameterType>("UPPER(COALESCE(" + baseResult + ",''))", resultType);
+                return new Tuple<string, ParameterType,string>("UPPER(COALESCE(" + baseResult + ",''))", resultType,baseResult);
             }
-            return new Tuple<string, ParameterType>(baseResult, resultType);
+            return new Tuple<string, ParameterType,string>(baseResult, resultType, baseResult);
         }
 
         enum ParameterType {

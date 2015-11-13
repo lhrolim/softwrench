@@ -33,18 +33,36 @@
 
                     scope.selectedOptions = [];
                     scope.filteroptions = [];
+                    scope.suggestedoptions = [];
                     scope.vm.recentlyOptions = [];
 
-                    //initing any metadata declared option first
-                    scope.filter.options.forEach(function (item) {
-                        if (filter.lazy) {
-                            scope.vm.recentlyOptions.push(item);
+
+                    if (filter.allowBlank) {
+                        var item = {
+                            label: "No " + filter.label,
+                            //SearchUtils.cs#NullOrPrefix
+                            value: "nullor:",
+                            nonstoreable: true
+                        }
+                        if (scope.filter.lazy) {
+                            scope.suggestedoptions.push(item);
                         } else {
                             scope.filteroptions.push(item);
                         }
+                        
+                    }
+
+                    //initing any metadata declared option first
+                    scope.filter.options.forEach(function (item) {
+                        //these won´t go to currently used
+                        item.nonstoreable = true;
+                        scope.suggestedoptions.push(item);
                     });
 
-                    if (!scope.filter.lazy) {
+                  
+
+
+                    if (!scope.filter.lazy && !!filter.provider) {
                         //let´s get the whole list from the server 
                         //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
                         var parameters = {
@@ -62,7 +80,7 @@
                             scope.filteroptions = scope.filteroptions.concat(result.data);
                         });
                     } else {
-                        scope.vm.showRecently = true;
+                        scope.vm.notSearching = true;
 
                         //for lazy filters we will start the recently used from local storage and init the autocompleteservers
                         scope.vm.recentlyOptions = scope.vm.recentlyOptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
@@ -89,7 +107,7 @@
                                         scope.filteroptions = [];
                                         shouldDigest = true;
                                     }
-                                    scope.vm.showRecently = newShowRecently;
+                                    scope.vm.notSearching = newShowRecently;
                                     if (shouldDigest) {
                                         //if to avoid calling digest inadvertdly
                                         scope.$digest();
@@ -99,7 +117,7 @@
 
 
                             scope.$on("sw.autocompleteserver.response", function (event, response) {
-                                if (scope.vm.showRecently) {
+                                if (scope.vm.notSearching) {
                                     //seems like the autocomplete is returning the list when it reaches 0 sometimes
                                     return;
                                 }
@@ -129,7 +147,7 @@
                     var filter = $scope.filter;
 
                     $scope.labelValue = function (option) {
-                        if (filter.displayCode === false) {
+                        if (filter.displayCode === false || option.value === "nullor:") {
                             return option.label;
                         }
                         return "(" + option.value + ")" + " - " + option.label;
@@ -155,8 +173,16 @@
                         if (filterAttribute === $scope.filter.attribute) {
                             $scope.vm.allSelected = 0;
                             $scope.toggleSelectAll();
+                            $timeout(function() {
+                                $scope.jelement.typeahead('val', '');
+                            },0,false)
+                            
                         }
                     });
+
+                    $scope.getAllAvailableOptions = function() {
+                        return $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                    }
 
                     $scope.modifySearchData = function () {
                         var searchData = $scope.searchData;
@@ -164,7 +190,7 @@
                         searchData[filter.attribute] = null;
                         searchOperator[filter.attribute] = null;
 
-                        var selectedItems = filterModelService.buildSelectedItemsArray($scope.filteroptions, $scope.selectedOptions);
+                        var selectedItems = filterModelService.buildSelectedItemsArray($scope.getAllAvailableOptions(), $scope.selectedOptions);
                         var result = filterModelService.buildSearchValueFromOptions(selectedItems);
                         $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
                         if (result) {
@@ -176,8 +202,9 @@
 
                     $scope.toggleSelectAll = function () {
                         var value = $scope.vm.allSelected ? 1 : 0;
-                        for (var i = 0; i < $scope.filteroptions.length; i++) {
-                            var el = $scope.filteroptions[i];
+                        var availableOptions = $scope.getAllAvailableOptions();
+                        for (var i = 0; i < availableOptions.length; i++) {
+                            var el = availableOptions[i];
                             $scope.selectedOptions[el.value] = value;
                         }
                         $scope.modifySearchData();
@@ -207,7 +234,7 @@
                             return;
                         }
                         //cleaning up jquery element
-                        $(jqueryEvent.target).val("");
+                        $scope.jelement.typeahead('val', '');
                         if ($scope.filteroptions.some(function (el) {
                                 return el.value === item.value;
                         })) {

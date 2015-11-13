@@ -23,6 +23,11 @@
       <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
 
+    <environment key="dev_pr2">
+      <property key="iispath" value="softwrench-dev/otbpr2" />
+      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
+    </environment>
+
   </globalproperties>
 
 </metadata>

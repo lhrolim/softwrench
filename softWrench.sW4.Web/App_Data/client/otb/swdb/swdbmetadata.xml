@@ -86,11 +86,9 @@
       <schemas>
         <schema id="panelselection">
           <optionfield attribute="paneltype" label="Widget Type" tooltip="The type of widget to add" default="">
-            <option label="" value=""/>
             <option label="Grid" value="dashboardgrid"/>
             <option label="Graphic" value="dashboardgraphic"/>
             <event type="afterchange" service="dashboardAuxService" method="loadPanels"/>
-            <event type="beforechange" service="dashboardAuxService" method="validatePanels"/>
           </optionfield>
           <section showexpression="@numberofpanels>0">
             <header label="Position" displacement="ontop"/>
@@ -102,11 +100,18 @@
             </field>
           </section>
 
-          <section orientation="horizontal" showexpression="@paneltype!=''">
+          <section orientation="horizontal" showexpression="@paneltype==='dashboardgrid'">
             <header label="Select Widget" displacement="sameline"/>
             <optionfield attribute="panel" providerattribute="availablepanels" />
             <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
           </section>
+          
+          <section orientation="horizontal" showexpression="@paneltype==='dashboardgraphic'">
+            <header label="Select Graphic" displacement="sameline"/>
+            <optionfield attribute="panel" providerattribute="availablepanels" />
+            <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
+          </section>
+          
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
@@ -149,12 +154,58 @@
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-check" service="dashboardAuxService" method="createAndAssociatePanel"
+              <command id="save" icon="fa-check" service="dashboardAuxService" method="createAndAssociateGridPanel"
                        parameters="datamap"
                        label="Add Panel" tooltip="Add Widget" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </detail>
+
+
+
+      </schemas>
+    </application>
+    
+    <application entity="DashboardGraphicPanel" name="dashboardgraphic" title="DashBoardGraphic">
+      <schemas>
+        <detail>
+          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
+          <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
+          <optionfield label="Provider" attribute="provider"
+                       tooltip="Name of the graphic storage service in which the graphic is located"
+                       requiredexpression="true" default="">
+            <option label="Tableau" value="Tableau" />
+            <event type="afterchange" method="setGraphicProvider" service="dashboardAuxService"/>
+          </optionfield>
+          
+          <section showexpression="@provider==='Tableau'">
+            <optionfield label="Workbook"
+                         attribute="workbook" providerattribute="workbooks"
+                         requiredexpression="true"
+                         default="" >
+              <event type="afterchange" service="tableauGraphicPanelService" method="onWorkbookSelected" />
+            </optionfield>
+            <optionfield showexpression="@workbook!==null &amp;&amp; @workbook!==''" 
+                         label="View"
+                         attribute="view" providerattribute="views"
+                         requiredexpression="true" 
+                         default=""/>
+          </section>
+          
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="save" icon="fa-check" label="Add Panel" tooltip="Add Widget" position="&lt;cancel"
+                       service="dashboardAuxService" method="createAndAssociateGraphicPanel"
+                       parameters="datamap" />
+            </commandgroup>
+          </commandbars>
+          
+            <properties>
             <property key="associationstoprefetch" value="#none"/>
           </properties>
         </detail>

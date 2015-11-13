@@ -61,7 +61,7 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
             }
 
             scope.isPanelVisible = function (panelDataSource) {
-                return panelDataSource.panel && !!panelDataSource.panel.visible;
+                return !!panelDataSource && !!panelDataSource.panel && !!panelDataSource.panel.visible;
             }
 
         },

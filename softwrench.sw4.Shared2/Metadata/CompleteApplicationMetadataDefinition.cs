@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
+using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Notification;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -67,11 +68,14 @@ namespace softwrench.sW4.Shared2.Metadata {
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
 
+        public SchemaFilters AppFilters;
+
+
         public CompleteApplicationMetadataDefinition(Guid? id, string applicationName, string title, string entity,
              string idFieldName, string userIdFieldName,
             IDictionary<string, string> paramters,
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
-            IEnumerable<DisplayableComponent> components,
+            IEnumerable<DisplayableComponent> components,SchemaFilters appFilters,
             string service,
             string role,
             bool? auditFlag = false
@@ -89,6 +93,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             UserIdFieldName = userIdFieldName;
             Service = service;
             Parameters = paramters;
+            AppFilters = appFilters ?? SchemaFilters.BlankInstance();
             foreach (ApplicationSchemaDefinition schema in schemas.Values) {
                 schema.IdFieldName = IdFieldName;
                 MergeSchemaPropertiesWithApplicationProperties(schema, Parameters);

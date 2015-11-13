@@ -36,6 +36,11 @@
   <if test="${environment::variable-exists('environmentsw4')}">
     <property name="profile" value="${environment::get-variable('environmentsw4')}" />
   </if>
+
+  <if test="${environment::variable-exists('image')}">
+    <property name="profile" value="${environment::get-variable('image')}" />
+  </if>
+  
   <if test="${environment::variable-exists('tag')}">
     <property name="version" value="${environment::get-variable('tag')}" />
   </if>

@@ -1,0 +1,65 @@
+﻿$signin_color: #16509e;
+$asset_path: "../images";
+
+.page-signin {
+    background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
+
+    .form-signin {
+        background-color: rgba(0, 88, 155, 0.64);
+        padding: 0 0 40px 0;
+
+        .logo.main {
+            background: #fff;
+            padding: 50px 0;
+        }
+    }
+}
+
+.container header {
+    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
+    border-bottom: 1px solid #999;
+
+    .admin-area {
+        background-color: rgba(22, 80, 158, 0.77);
+    }
+
+    .branding {
+        background: url(#{$asset_path}/branding.png) no-repeat top left;
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+    }
+}
+
+/* Extra Small Devices, Phones */
+@media all and (min-width: 1px) and (max-width: 479px) {
+    .page-signin {
+        background: $signin_color url(#{$asset_path}/signin-xxs.jpg) no-repeat center center fixed;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .page-signin {
+        background: $signin_color url(#{$asset_path}/signin-xs.jpg) no-repeat center center fixed;
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .page-signin {
+        background: $signin_color url(#{$asset_path}/signin-sm.jpg) no-repeat center center fixed;
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .page-signin {
+        background: $signin_color url(#{$asset_path}/signin-md.jpg) no-repeat center center fixed;
+    }
+}
+
+.page-signin, .container header {
+    background-size: cover;
+}

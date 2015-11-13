@@ -57,6 +57,17 @@
 
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
+
+      <filters>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+        <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+        </optionfilter>
+        <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+        </optionfilter>
+      </filters>
+
       <properties>
         <property key="mobile.disabled" value="true"/>
         <property key="rolealias" value="sr"/>
@@ -64,14 +75,6 @@
       <schemas>
         
         <list title="Service Request Grid">
-
-          <filters>
-            <optionfilter attribute="status" provider="synstatus_.description" />
-            <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
-            </optionfilter>
-          </filters>
-          
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
           </field>
@@ -288,8 +291,11 @@
         <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list">
 
           <filters>
-            <optionfilter attribute="status" provider="synstatus_.description" />
+            <optionfilter attribute="status" provider="synstatus_.description"  displaycode="true"/>
             <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+            </optionfilter>
+            <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
             </optionfilter>
           </filters>

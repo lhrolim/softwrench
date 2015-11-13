@@ -1,4 +1,5 @@
 ﻿using cts.commons.simpleinjector;
+using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.user;
 
 namespace softwrench.sw4.dashboard.classes.service.graphic {
@@ -17,5 +18,14 @@ namespace softwrench.sw4.dashboard.classes.service.graphic {
         /// <param name="user"></param>
         /// <returns></returns>
         IGraphicStorageSystemAuthDto Authenticate(ISWUser user);
+        /// <summary>
+        /// Loads some resource from the graphic storage system (maybe through an api).
+        /// Returns the resource as a string so it can be serialization/format agnostic, 
+        /// it's up to the client to handle the interpretation of the response.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        string LoadExternalResource(string resource, JObject request);
     }
 }

@@ -169,16 +169,23 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         html += "<td {2} onclick='griditemclick({0},{1},this)' class=\"{3}\" ".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute));
                         html += ">";
-                        if (column.rendererType == 'color') {
+                        if (column.rendererType === 'color') {
                             var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
                             html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
-                        } else if (column.rendererType == 'checkbox') {
+                        } else if (column.rendererType === 'checkbox') {
                             var name = attribute;
                             html += "<div>";
-                            html += "<input type='checkbox' class='check' name='{0}' ".format(name);
-                            html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst,name);
+                            if (column.rendererParameters["editable"] === "true") {
+                                html += "<input type='checkbox' class='check' name='{0}' ".format(name);
+                                html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst, name);
+                            } else {
+                                var field = dm.fields[attribute];
+                                var icon = field === true || field === "true" || field === 1 ? "fa-check-square-o" : "fa-square-o";
+                                html += "<i class=\"fa {0}\" />".format(icon);
+                            }
+                            
                             needsWatchers = true;
-                        } else if (column.rendererType == "datetime") {
+                        } else if (column.rendererType === "datetime") {
                             if (editable) {
                                 needsWatchers = true;
                                 html += "<div class=\"input-group\" data-datepicker=\"true\">";
@@ -186,14 +193,14 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                             } else {
                                 html += defaultAppending(formattedText, updatable, rowst, column);
                             }
-                        } else if (column.rendererType == "icon") {
+                        } else if (column.rendererType === "icon") {
                             var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
                             html += "<div>";
                             html += " <i class=\"{0}\"".format(classtoLoad);
                             html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
                         }
 
-                        else if (column.type == 'ApplicationFieldDefinition') {
+                        else if (column.type === 'ApplicationFieldDefinition') {
                             if (!editable) {
                                 html += defaultAppending(formattedText, updatable, rowst, column);
                             } else {
