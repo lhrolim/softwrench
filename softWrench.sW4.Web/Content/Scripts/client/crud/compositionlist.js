@@ -290,7 +290,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                     $scope.paginationData = contextService.get("compositionpagination_{0}".format($scope.relationship), true, true);
                 }
 
-
                 if (!$scope.isBatch()) {
                     if ($scope.hasDetailSchema()) {
                         //we shall just clone the composition array if we're dealing with a non batch operation, 
@@ -308,7 +307,11 @@ app.directive('compositionList', function (contextService, formatService, schema
                 }
 
                 $scope.isNoRecords = $scope.compositiondata.length <= 0;
-                
+
+                $scope.compositionData().forEach(function(value, index, array) {
+                    crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables);
+                });
+
                 $scope.showPagination = !$scope.isNoRecords && // has items to show
                                         !!$scope.paginationData && // has paginationdata
                                         $scope.paginationData.paginationOptions.some(function (option) { // totalCount is bigger than at least one option
@@ -638,8 +641,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                 return $scope.compositionData().indexOf(item) == 0;
             }
 
-            $scope.removeBatchItem = function () {
-                $scope.compositionData().pop();
+            $scope.removeBatchItem = function (rowindex) {
+                $scope.compositionData().splice(rowindex, 1);
             }
 
             /***************END Batch functions **************************************/

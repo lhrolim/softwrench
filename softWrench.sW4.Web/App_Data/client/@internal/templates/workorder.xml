@@ -21,6 +21,7 @@
     <template path="@synstatus.xml"/>
     <template path="@route.xml"/>
     <template path="@relatedrecords.xml"/>
+    <template path="@multiassetlocci.xml"/>
   </templates>
 
   <entities>
@@ -305,6 +306,13 @@
               <renderer type="lookup" />
             </association>
           </section>
+          
+          <section id="compositions">
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+              <collectionproperties listschema="newlist" autocommit="false"/>
+              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+            </composition>
+          </section>
 
           <!--<section id="statussection">
             <field attribute="wonum" label="WO#" readonly="true">
@@ -370,6 +378,10 @@
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
+            </composition>
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">
+              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>
+              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>
             </composition>
           </section>
 <!--          <commandbars>-->
