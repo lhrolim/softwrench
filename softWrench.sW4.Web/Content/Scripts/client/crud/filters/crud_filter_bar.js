@@ -18,15 +18,13 @@
                 controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService",
                     function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService) {
 
-
-
                         var config = {
                             /** 'don't filter' operator: helper to clear current filter */
                             noopoperator: { id: "NF", symbol: "", begin: "", end: "", title: "No Filter" }
                         };
 
                         $scope.markDefaultOperator = function(filter) {
-                            if ($scope.searchOperator[filter.attribute] == null) {
+                            if (!$scope.searchOperator[filter.attribute]) {
                                 $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
                             }
                         }
@@ -65,7 +63,7 @@
                          * @param String columnName 
                          */
                         $scope.clearFilter = function (filterAttribute) {
-                            $('.dropdown.open').removeClass('open');
+                            $(".dropdown.open").removeClass("open");
                             $scope.selectOperator(filterAttribute, config.noopoperator);
                             $scope.filterApplied();
                             $scope.$broadcast("sw.filter.clear", filterAttribute);
@@ -76,7 +74,7 @@
                          */
                         $scope.filterBarApplied = function (keepitOpen) {
                             if (true !== keepitOpen) {
-                                $('.dropdown.open').removeClass('open');
+                                $(".dropdown.open").removeClass("open");
                             }
                             $scope.filterApplied();
                         }
@@ -95,7 +93,7 @@
                                 $scope.searchOperator[columnName] = searchService.getSearchOperationById("BLANK");
                                 $scope.searchData[columnName] = " ";
                             }
-                            $('.dropdown.open').removeClass('open');
+                            $(".dropdown.open").removeClass("open");
                             this.filterBarApplied();
                         };
 
@@ -198,34 +196,26 @@
                     }],
 
                 link: function (scope, element, attrs) {
-
                     // don't let dropdowns close automatically when clicked inside
                     //need to register this call for whenever the grid changes
-                    var fn = function () {
+                    var disableAutomaticDropdownClosing = function () {
                         var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));
                         dropdowns.click(function (event) {
                             event.stopPropagation();
                         });
 
                         //autofocus the search input when the dropdown opens
-                        $('.js_filter .dropdown').on('show.bs.dropdown', function (event) {
-                         
+                        $(".js_filter .dropdown").on("show.bs.dropdown", function (event) {
                             $timeout(function () {
-                                $(event.target).find('input[type=search]').focus();
+                                $(event.target).find("input[type=search]").focus();
                             });
                         });
                     }
 
-                    $timeout(function () {
-                        fn();
-                    }, 0, false);
-
+                    $timeout(disableAutomaticDropdownClosing, 0, false);
 
                     scope.$on('sw_griddatachanged', function () {
-
-                        $timeout(function () {
-                            fn();
-                        }, 0, false);
+                        $timeout(disableAutomaticDropdownClosing, 0, false);
                     });
                 }
             };

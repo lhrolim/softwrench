@@ -14,12 +14,12 @@
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li>
+            <!--<li>
                 <a href="#" ng-click="toggleFilterMode()">
                     <span ng-if="basicMode"><i class="fa fa-rocket"></i>&ensp;{{i18N('_grid.filter.advanced','Quick Search')}}</span>
                     <span ng-if="!basicMode"><i class="fa fa-minus"></i>&ensp;{{i18N('_grid.filter.basic','Hide Search')}}</span>
                 </a>
-            </li>
+            </li>-->
             <li ng-if="selectedfilter">
                 <a href="#" ng-click="clearFilter()">
                     {{i18N('_grid.filter.clear','Clear Filter')}}
