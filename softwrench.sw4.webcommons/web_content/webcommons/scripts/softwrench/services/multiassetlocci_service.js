@@ -16,6 +16,7 @@
 
         function afterChangeAsset(parameters) {
             parameters.fields['#isDirty'] = true;
+            parameters.fields['location'] = parameters.fields['asset_.location'];
         };
 
         function afterChangeLocation(parameters) {
