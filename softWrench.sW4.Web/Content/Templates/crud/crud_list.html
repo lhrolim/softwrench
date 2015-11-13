@@ -45,8 +45,7 @@
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
                                  advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
-                                 search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()">
-                </crud-filter-bar>
+                                 search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()" />
             </div>
         </div>
     </div>
@@ -80,10 +79,10 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
                         <!--Multiselect-->
                     </th>
-                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
                     </th>
                     <th class="{{safeCSSselector(column.attribute)}}"

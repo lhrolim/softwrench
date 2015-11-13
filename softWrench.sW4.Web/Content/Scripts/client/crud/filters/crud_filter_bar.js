@@ -5,9 +5,30 @@
         .directive("crudFilterBar", ["contextService", "$timeout", function (contextService, $timeout) {
             var directive = {
                 restrict: "E",
-                templateUrl: contextService.getResourceUrl("/Content/Templates/crud/crud_filter_bar.html"),
+                templateUrl: contextService.getResourceUrl("/Content/Templates/crud/filter/crud_filter_bar.html"),
                 scope: {
                     schema: "=", // model's current schema
+                    datamap: "=", // model's current datamap
+                    searchData: "=", // shared dictionary [column : current filter search value]
+                    searchOperator: "=", // shared dictionary [column : current filter operator object]
+                    selectAll: "=", // shared boolean flag indicating if multiple select in filters is selected
+                    advancedFilterMode: "=", // shared boolean flag indicating if advanced filter mode is activated
+                    filterApplied: "&" // callback executed when the filters are applied
+                }
+            };
+
+            return directive;
+        }]);
+
+
+    angular.module("sw_layout")
+        .directive("crudFilterDropdown", ["contextService", "$timeout", function (contextService, $timeout) {
+            var directive = {
+                restrict: "E",
+                templateUrl: contextService.getResourceUrl("/Content/Templates/crud/filter/crud_filter_dropdown.html"),
+                scope: {
+                    filter: "=", // filter to show
+                    schema: "=",
                     datamap: "=", // model's current datamap
                     searchData: "=", // shared dictionary [column : current filter search value]
                     searchOperator: "=", // shared dictionary [column : current filter operator object]
@@ -23,7 +44,7 @@
                             noopoperator: { id: "NF", symbol: "", begin: "", end: "", title: "No Filter" }
                         };
 
-                        $scope.markDefaultOperator = function(filter) {
+                        $scope.markDefaultOperator = function (filter) {
                             if (!$scope.searchOperator[filter.attribute]) {
                                 $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
                             }
@@ -44,7 +65,7 @@
                             $scope.searchOperator[columnName] = operator;
                             var searchData = $scope.searchData;
 
-                            if (operator.id.equalsAny("","NF")) {
+                            if (operator.id.equalsAny("", "NF")) {
                                 searchData[columnName] = "";
                             } else if (searchData[columnName] != null && searchData[columnName] !== "") {
                                 //if there is a search value, apply on click
@@ -129,7 +150,7 @@
                             collapseOperatorList($event, "toggle");
                         }
 
-                        $scope.closeCollapseOperatorList = function($event) {
+                        $scope.closeCollapseOperatorList = function ($event) {
                             collapseOperatorList($event, "hide");
                         }
 
@@ -140,7 +161,7 @@
                          * @param String attribute 
                          * @returns String 
                          */
-                        $scope.getOperatorTooltip = function(attribute) {
+                        $scope.getOperatorTooltip = function (attribute) {
                             var operator = $scope.getOperator(attribute);
                             return !!operator && !!operator.id ? operator.tooltip : $scope.getDefaultOperator().tooltip;
                         };
@@ -153,7 +174,7 @@
                          * @param String attribute 
                          * @returns String 
                          */
-                        $scope.getOperatorIcon = function(attribute) {
+                        $scope.getOperatorIcon = function (attribute) {
                             var icon = $scope.getSearchIcon(attribute);
                             return !!icon ? icon : $scope.getDefaultSearchIcon();
                         };
@@ -172,7 +193,7 @@
                             });
                         }
 
-                        $scope.closeFilterDropdown = function($event) {
+                        $scope.closeFilterDropdown = function ($event) {
                             $($event.delegateTarget).parents(".dropdown.open").removeClass("open");
                         }
 
@@ -196,15 +217,13 @@
                     }],
 
                 link: function (scope, element, attrs) {
-                    // don't let dropdowns close automatically when clicked inside
-                    //need to register this call for whenever the grid changes
-                    var disableAutomaticDropdownClosing = function () {
+                    var prepareUi = function () {
+                        // don't let dropdowns close automatically when clicked inside
                         var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));
                         dropdowns.click(function (event) {
                             event.stopPropagation();
                         });
-
-                        //autofocus the search input when the dropdown opens
+                        // autofocus the search input when the dropdown opens
                         $(".js_filter .dropdown").on("show.bs.dropdown", function (event) {
                             $timeout(function () {
                                 $(event.target).find("input[type=search]").focus();
@@ -212,10 +231,11 @@
                         });
                     }
 
-                    $timeout(disableAutomaticDropdownClosing, 0, false);
+                    $timeout(prepareUi, 0, false);
 
-                    scope.$on('sw_griddatachanged', function () {
-                        $timeout(disableAutomaticDropdownClosing, 0, false);
+                    scope.$on("sw_griddatachanged", function () {
+                        // need to register this call for whenever the grid changes
+                        $timeout(prepareUi, 0, false);
                     });
                 }
             };

@@ -752,7 +752,8 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
-    <Content Include="Content\Templates\crud\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
