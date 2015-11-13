@@ -385,3 +385,17 @@ table .detaildata {
 .advancedSearch {
     height: 34px;
 }
+
+.grid-header {
+    .quick-search {
+        float:left;
+        padding-top:4px;
+        padding-left:10px;
+        @media(min-width: 750px){
+            width: calc(100% - 370px);
+        }
+        @media(max-width: 749px){
+            width: calc(100% - 200px);
+        }
+    }
+}

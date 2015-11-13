@@ -1,24 +1,25 @@
 <span ng-controller="GridFilterController">
     <div class="btn-group">
         <button type="button"
-            ng-click="refreshGrid()"
-            class="btn btn-sm"
-            ng-class="{'btn-default':command.parameters['allowsave']=='false','btn-default':command.parameters['allowsave']==null}">
-            <i class="fa fa-refresh"></i><span ng-show="!selectedfilter.alias"
-                ng-if="command.parameters['allowsave']!='false'">&ensp;Filters
-            </span><span ng-show="selectedfilter.alias">&ensp;{{selectedfilter.alias}}</span>
+                ng-click="refreshGrid()"
+                class="btn btn-sm"
+                ng-class="{'btn-default':command.parameters['allowsave']=='false','btn-default':command.parameters['allowsave']==null}"
+                data-original-title="{{ !selectedfilter.alias ? 'Filter' : selectedfilter.alias }}" rel="tooltip" data-container="body">
+            <i class="fa fa-refresh"></i>
+            <!--<span ng-show="!selectedfilter.alias" ng-if="command.parameters['allowsave']!='false'">&ensp;Filters</span>
+            <span ng-show="selectedfilter.alias">{{selectedfilter.alias}}</span>-->
         </button>
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" ng-if="command.parameters['allowsave']!='false'">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li>
+            <!--<li>
                 <a href="#" ng-click="toggleFilterMode()">
                     <span ng-if="basicMode"><i class="fa fa-rocket"></i>&ensp;{{i18N('_grid.filter.advanced','Quick Search')}}</span>
                     <span ng-if="!basicMode"><i class="fa fa-minus"></i>&ensp;{{i18N('_grid.filter.basic','Hide Search')}}</span>
                 </a>
-            </li>
+            </li>-->
             <li ng-if="selectedfilter">
                 <a href="#" ng-click="clearFilter()">
                     {{i18N('_grid.filter.clear','Clear Filter')}}
