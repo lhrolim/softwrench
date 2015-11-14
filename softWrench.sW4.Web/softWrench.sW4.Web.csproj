@@ -1406,6 +1406,10 @@
       <Project>{a267fe4b-887c-47a5-b09d-f29e5c55a868}</Project>
       <Name>softwrench.sw4.bering</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.classic\softwrench.sw4.classic.csproj">
+      <Project>{a8d521d4-5a04-4764-8fcb-204bdd4a29d9}</Project>
+      <Name>softwrench.sw4.classic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
       <Name>softwrench.sw4.dashboard</Name>
