@@ -3,44 +3,70 @@
 
   <applications>
     <application name="multiassetlocci" title="Multi Asset Locci" entity="multiassetlocci">
-
       <schemas>
+        <schema id="newlist" stereotype="compositionlist" platform="web">
+          <!--<properties>
+            <property key="expansible" value="false"/>
+          </properties>-->
+          <field attribute="multiid" hidden="true" defaultexpression="null"></field>
+          <field attribute="siteid" hidden="true"></field>
+          <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location">
+            <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
+          </association>
+          <association target="location" labelfield="location_.location" label="Location">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="multiassetlocciService" method="afterChangeLocation"/>
+          </association>
+          <field attribute="sequence" label="Sequence" >
+            <renderer type="numericinput" params="min=1;"/>
+            <event type="afterchange" service="multiassetlocciService" method="afterChangeSequence"/>
+          </field>
+          <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
+          <commandbars>
+            <commandgroup position="compositionbottom" removeundeclared="true">
+            </commandgroup>
+          </commandbars>
+        </schema>
 
-        <list stereotype="compositionlist" platform="web">
+        <schema id="list" stereotype="compositionlist" platform="web">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
-            <property key="list.selectionstyle" value="single"/>
-            <property key="list.click.service" value="meterReadingService.openReadingModal"/>
           </properties>
-
-          <event type="onload" service="scannerdetectionService" method="initSouthernOperatorRounds"/>
-
           <field attribute="siteid" hidden="true"></field>
-          <field attribute="assetnum" label="Asset"></field>
-          <field attribute="location" label="Location"></field>
-          <field attribute="cinum" label="Configuration Item"></field>
-          <field attribute="sequence" label="Sequence"></field>
-          <field attribute="targetdesc" label="Target Description"></field>
-          <!--needed to rename progress to progress 2 since there was a conflicting bootstrap class-->
-          <field attribute="progress2" label="Complete" attributeToServer="progress">
-            <renderer type="checkbox" params="editable=true;clickservice=meterReadingService.markComplete"/>
+          <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.location" label="Location">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="sequence" label="Sequence" >
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
+          <field attribute="progress" label="Progress" >
+            <renderer type="checkbox"/>
           </field>
           <commandbars>
             <commandgroup position="compositionbottom" removeundeclared="true">
-              <removecommand id="additem"/>
-              <removecommand id="save"/>
             </commandgroup>
           </commandbars>
-        </list>
+        </schema>
 
-
+        <schema id="detail" stereotype="compositiondetail" platform="web">
+          <field attribute="siteid" hidden="true"></field>
+          <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
+            <renderer type="lookup"/>
+          </association>
+          <association target="location" labelfield="location_.location" label="Location">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="sequence" label="Sequence">
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
+        </schema>
       </schemas>
     </application>
-
   </applications>
-
-
-
-
 </metadata>

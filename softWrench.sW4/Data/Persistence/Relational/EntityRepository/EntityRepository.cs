@@ -13,6 +13,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;
 using cts.commons.simpleinjector;
+using Quartz.Util;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Util;
 
@@ -249,6 +250,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             return _maximoHibernateDao;
         }
 
+        public static int GetNextEntityId([NotNull] EntityMetadata entityMetadata) {
+            if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
+            var query = "Select MAX({0}) from {1}".FormatInvariant(entityMetadata.IdFieldName, entityMetadata.GetTableName());
+            var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>(query, null);
+            var rnd = new Random();
+            // To avoid concurrency issues with maximo we will use a range of 5-15 higher than the max.
+            // Using the range also lowers the chance of two users in SW submitting new records at the same time and causing a similar issue.
+            var newId = Convert.ToInt32(id) + rnd.Next(5, 15);
+            return newId;
+        }
 
     }
 }

@@ -65,6 +65,15 @@
         <relationship to="assetmeter">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
         </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
       </relationships>
 
       <connectorParameters>

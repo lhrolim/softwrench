@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.mif_sr;
 using softWrench.sW4.Security.Services;
@@ -18,15 +19,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             // Workorder id used for data association
             var recordKey = entity.UserId;
 
-            var dirtyEntries = ((IEnumerable<CrudOperationData>)entity.GetRelationship("multiassetlocci_")).Where(w => "true".EqualsIc(w.GetStringAttribute("#isDirty"))).ToArray();
+            var dirtyEntries = ((IEnumerable<CrudOperationData>)entity.GetRelationship("multiassetlocci_")).Where(w => "true".EqualsIc(w.GetUnMappedAttribute("#isDirty"))).ToArray();
 
-            WsUtil.CloneArray(dirtyEntries, rootObject, "MULTIASSETLOCCI", delegate(object integrationObject, CrudOperationData crudData) {
-
+            WsUtil.CloneArray(dirtyEntries, rootObject, "MULTIASSETLOCCI", delegate (object integrationObject, CrudOperationData crudData) {
+                var multiid = EntityRepository.GetNextEntityId(entity.EntityMetadata);
+                WsUtil.SetValueIfNull(integrationObject, "multiid", multiid);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
-                
+                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
+
             });
         }
 

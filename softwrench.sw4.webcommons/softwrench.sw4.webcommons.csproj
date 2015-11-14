@@ -79,6 +79,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\multiassetlocci_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\scannerCommons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\person\person_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\spin_service.js" />
