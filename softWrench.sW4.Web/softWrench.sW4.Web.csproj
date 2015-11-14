@@ -1478,6 +1478,10 @@
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
       <Name>softwrench.sw4.swgas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj">
+      <Project>{83d9b360-0879-487f-b03c-62044846192c}</Project>
+      <Name>softwrench.sw4.tgcs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.tva\softwrench.sw4.tva.csproj">
       <Project>{c987e2c2-a2d3-4d7b-b2ff-a5f1667b159a}</Project>
       <Name>softwrench.sw4.tva</Name>
