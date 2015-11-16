@@ -338,7 +338,7 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             };
             $scope.initCheckbox = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
-                if (content == "1" || content == "true") {
+                if (content == "1" || content == "true" || content == true) {
                     content = "true";
                 } else {
                     content = "false";
