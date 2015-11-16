@@ -276,7 +276,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
 
             var params = searchParams.split("&&");
             var values = searchValues.split(",,,");
-            if (values.length != params.length) {
+            if (values.length !== params.length) {
                 //this was a global search, so it uses || and not && 
                 params = searchParams.split("||,");
             }
@@ -334,26 +334,18 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             return this.searchOperations()[1];
         },
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="searchData">a key value pair for modifying the grid query that is present on the screen (ex: 
-            ///     var searchData = {
-            ///         param1:'value',
-            ///         param2:'value2'
-            ///     }
-            /// </param>
-            /// <param name="extraparameters">accepts:
-            ///  pageNumber --> the page to go
-            ///  pageSize --> a different page size than the scope one
-            ///  printMode --> if we need to refresh the grid for printmode
-            ///  avoidspin --> if true, we wont show the busy indicator on the screen
-            ///  keepfilterparams --> if true, we should keep the filter parameters on the grid
-            ///  searchTemplate --> the search template string to apply on the seach
-        ///  panelid: the panel id to refresh, used to allow multiple data on screen
-        ///  fieldstodisplay: if present, the schema will be sliced for showing only these fields
-        ///  
-            /// </param>
+        /**
+         * @param {} searchData dictionary for modifying the grid query that is present on the screen e.g. { 'param1' : 'value1', 'param2' : 'value2' }
+         * @param {} extraparameters accepts:
+         *              pageNumber: the page to go
+         *              pageSize: a different page size than the scope one
+         *              printMode: if we need to refresh the grid for printmode
+         *              avoidspin: if true, we wont show the busy indicator on the screen
+         *              keepfilterparams: if true, we should keep the filter parameters on the grid
+         *              searchTemplate: the search template string to apply on the seach
+         *              panelid: the panel id to refresh, used to allow multiple data on screen
+         *              fieldstodisplay: if present, the schema will be sliced for showing only these fields
+         */
         refreshGrid: function (searchData, extraparameters) {
             extraparameters = extraparameters || {};
 
@@ -371,22 +363,23 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         },
 
         advancedSearch: function (datamap, schema, advancedsearchdata) {
-            if (advancedsearchdata == null || advancedsearchdata == '') {
-                return;
-            }
+            if (!advancedsearchdata) return;
             var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
             var searchData = {};
 
-            var searchTemplate = "";
-            for (var i = 0; i < visibleDisplayables.length; i++) {
-                var v = visibleDisplayables[i];
-                if (v.rendererType != "color") {
-                    searchData[v.attribute] = '%' + advancedsearchdata + '%';
-                    searchTemplate += v.attribute + "||";
-                }
-            }
+            var searchTemplate = visibleDisplayables
+                .filter(function (visible) {
+                    return visible.rendererType !== "color";
+                })
+                .map(function (visible) {
+                    searchData[visible.attribute] = "%" + advancedsearchdata + "%";
+                    return visible.attribute + "||";
+                })
+                .join("");
+            // remove extra '||' at the end
             searchTemplate = searchTemplate.substring(0, searchTemplate.length - 2);
-            this.refreshGrid(searchData,{searchTemplate:searchTemplate,keepfilterparameters:true});
+
+            this.refreshGrid(searchData, { searchTemplate: searchTemplate, keepfilterparameters: true });
         },
 
         /// <summary>

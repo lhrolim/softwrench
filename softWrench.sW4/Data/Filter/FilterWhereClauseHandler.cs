@@ -22,8 +22,14 @@ namespace softWrench.sW4.Data.Filter {
             //force cache here
             var parameters = searchDto.GetParameters();
             var schemaFilters = schema.SchemaFilters;
+            
+            // if all filters are the column filters no need to take any action
             if (!schemaFilters.HasOverridenFilter || parameters == null) {
-                //if all filters are the column filters no need to take any action
+                return searchDto;
+            }
+
+            // has SearchTemplate string: use parameter in filter regardless of WhereClause
+            if (!string.IsNullOrEmpty(searchDto.SearchTemplate)) {
                 return searchDto;
             }
 
@@ -31,11 +37,11 @@ namespace softWrench.sW4.Data.Filter {
 
             var allFilters = schemaFilters.Filters;
 
-
             foreach (var filter in allFilters) {
-                SearchParameter paramValue = searchDto.RemoveSearchParam(filter.Attribute);
+                // mark as ignored until we check whether or not it has a WhereClause
+                var paramValue = searchDto.RemoveSearchParam(filter.Attribute);
+                // this has not come from the client side as a client filter
                 if (paramValue == null) {
-                    //this has not came from the client side as a client filter
                     continue;
                 }
 
@@ -44,12 +50,11 @@ namespace softWrench.sW4.Data.Filter {
                 if (filter is MetadataOptionFilter && paramValue.SearchOperator.Equals(SearchOperator.CONTAINS) && !filter.IsTransient()) {
                     var optionFilter = (MetadataOptionFilter)filter;
                     searchDto.AppendWhereClause(GenerateFilterFreeTextWhereClause(optionFilter, paramValue.Value as string, schema));
-
-                    //                    paramValue.IgnoreParameter = false;
-                    //this means that we´re using a contains operation inside of an option filter, which should lead to default attribute lookup
+                    // paramValue.IgnoreParameter = false;
+                    // this means that we´re using a contains operation inside of an option filter, which should lead to default attribute lookup
                     continue;
                 }
-
+                // has SearchTemplate string: param has to be filtered regardless of whereclause
                 if (whereClause == null) {
                     paramValue.IgnoreParameter = false;
                     //this should lead to default filter implementation
@@ -67,8 +72,9 @@ namespace softWrench.sW4.Data.Filter {
                     whereClause = whereClause.Replace("!@", entity.Name + ".");
                     //vanilla string case
                     searchDto.AppendWhereClause(whereClause);
-
                 }
+                // TODO: starts with @: call service that builds whereclause
+
             }
 
             return searchDto;

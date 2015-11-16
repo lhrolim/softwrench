@@ -109,7 +109,7 @@ namespace softWrench.sW4.Data.Search {
         private static string HandleSearchParams(SearchRequestDto listDto, string entityName) {
 
 
-            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
+            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !string.IsNullOrWhiteSpace(f));
             var searchParameters = listDto.GetParameters();
 
             var sbReplacingIdx = 0;
@@ -130,18 +130,19 @@ namespace softWrench.sW4.Data.Search {
 
                 if (searchParameter.SearchOperator == SearchOperator.BETWEEN) {
                     statement.Append("( " + parameterData.Item1 + " >= :" + param + "_start" + "&&" + parameterData.Item1 + " <= :" + param + "_end" + ")");
+
                 } else if (searchParameter.SearchOperator == SearchOperator.ORCONTAINS) {
 
                     var values = (searchParameter.Value as IEnumerable).Cast<string>().ToList();
                     if (values != null) {
                         statement.Append("( ");
 
-                        for (var i = 0; i < values.Count; i++) {
+                        foreach (string value in values) {
                             statement.Append(parameterData.Item1);
                             // this next line would be the ideal, but it will be complicade passing this parameters to BaseHibernateDAO. 
                             //statement.Append(GetDefaultParam(operatorPrefix, param + i)); 
                             // TODO: refactor later
-                            statement.Append(operatorPrefix + "'%" + values[i] + "%'");
+                            statement.Append(operatorPrefix + "'%" + value + "%'");
                             statement.Append(" OR ");
                         }
                         statement.Remove(statement.Length - 4, 4); // remove the last " OR "

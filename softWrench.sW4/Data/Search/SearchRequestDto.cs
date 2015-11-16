@@ -253,6 +253,10 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
+        public SearchParameter GetSearchParameter(string param) {
+            return !_valuesDictionary.ContainsKey(param) ? null : _valuesDictionary[param];
+        }
+
         public SearchParameter RemoveSearchParam(string toRemove) {
             if (!_valuesDictionary.ContainsKey(toRemove)) {
                 return null;
