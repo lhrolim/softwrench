@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
+
+  <property key="baseWSPrefix" value="SW"/>
+  <property key="externalSystemName" value="SW" />
+  <property key="wsprovider" value="mif" />
+  <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
+  <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
+  <property key="maximo_DB_provider" value="System.Data.SQL"/>
+  <property key="swdb_provider" value="System.Data.SQL"/>
+  <property key="maxAttachmentSize" value="10"/> <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
+  <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
+  <property key="defaultOrgId" value="EAGLENA"/>
+  <property key="defaultSiteId" value="BEDFORD"/>
+  <property key="defaultStoreloc" value="CENTRAL"/>
+  <property key="sourcemapping" value="maximo7.5"/>
+  <!--
+      maximoutc property set to the full name of the timezone the maximo 
+      server is set to, refer to the maximoutc.txt in the doc folder for 
+      a list of accepted values
+  -->
+  <property key="maximoutc" value="US Mountain Standard Time"/>
+  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  <!--property key="email.smtp.port" value="587"/-->
+  <property key="email.stmp.enableSSL" value="false"/>
+  <property key="notifications.activityStream.enabled" value="true"/>
+  <property key="dashboard.enabled" value="true"/>
+  <property key="ui.adminmenu.showclassic" value="true"/>
+
+  <!-- tableau -->
+  <property key="tableau_server" value="http://10.50.100.171" />
+  <property key="tableau_username" value="swadmin" />
+  <property key="tableau_password" value="sw@dm1n" />
+  <property key="tableau_site" value="default" />
+  
+  <!-- end tableau -->
+  
+  <environment key="dev">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
+  </environment>
+  
+   <environment key="dev_pr">
+     <!--environment for pull requests-->
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
+  </environment>
+
+  <environment key="dev_pr2">
+    <!--environment for pull requests-->
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_pr2;User Id=sw;password=softwrench;" />
+  </environment>
+
+  <environment key="qa">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
+  </environment>
+
+  <environment key="qa-wk">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Wk;User Id=sw;password=softwrench;" />
+  </environment>
+
+  <environment key="dev-activity">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_ActStr;User Id=sw;password=softwrench;" />
+  </environment>
+
+  <environment key="dev-sm">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_sm;User Id=sw;password=softwrench;" />
+  </environment>
+
+  <environment key="dev-76">
+    <property key="basewsURL" value="http://10.50.100.147:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
+  </environment>
+  
+</Properties>

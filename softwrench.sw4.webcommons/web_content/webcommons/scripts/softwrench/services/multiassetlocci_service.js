@@ -9,14 +9,15 @@
         var service = {
             afterChangeAsset: afterChangeAsset,
             afterChangeLocation: afterChangeLocation,
-            afterChangeSequence: afterChangeSequence
+            afterChangeSequence: afterChangeSequence,
+            afterChangeProgress: afterChangeProgress
         };
 
         return service;
 
         function afterChangeAsset(parameters) {
             parameters.fields['#isDirty'] = true;
-            if (parameters.fields.fields['assetnum'] != null) {
+            if (parameters.fields['assetnum'] != null) {
                 parameters.fields['location'] = parameters.fields['asset_.location'];
             }
         };
@@ -31,5 +32,9 @@
         function afterChangeSequence(parameters) {
             parameters.fields['#isDirty'] = true;
         };
+
+        function afterChangeProgress(fieldMetadata, parentdata, datamap) {
+            datamap['#isDirty'] = true;
+        }
     }
 })();
