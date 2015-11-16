@@ -35,7 +35,7 @@
 
 .filter-label {
     display: inline-block;
-    margin: 0 10px;
+    /*margin: 0 10px;*/
 
     &:hover {
         background: $hover_background;
@@ -52,7 +52,7 @@
                 cursor: pointer;
 
                 &.slim {
-                    padding: 5px;
+                    padding: 0;
                 }
 
                 > i.fa {
