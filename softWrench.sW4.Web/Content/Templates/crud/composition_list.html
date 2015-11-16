@@ -96,7 +96,7 @@
                                            ng-checked="compositionitem[column.attribute] == 1"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="1" ng-false-value="0" />
+                                           ng-true-value="'true'" ng-false-value="'false'" />
                                 </div>
 
                                 <div ng-switch-when="numericinput">
