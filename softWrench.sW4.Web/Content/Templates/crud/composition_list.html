@@ -90,7 +90,7 @@
                         </div>
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
-                                <div ng-switch-when="checkbox">
+                                <div ng-switch-when="checkbox" style="text-align: center;">
                                     <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
