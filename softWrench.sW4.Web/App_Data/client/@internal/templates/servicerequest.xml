@@ -100,6 +100,10 @@
         </list>
         
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <section id ="ticketidsection"/>
+          </section>
           <section>
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
@@ -231,7 +235,7 @@
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details">
           <section id="ticketidsection">
-            <field attribute="ticketid" label="SR#" readonly="true"/>
+            <field attribute="ticketid" label="SR#" hidden="true"/>
           </section>
           
           <section id="siteidsection">
