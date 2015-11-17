@@ -1820,7 +1820,7 @@ input:focus, select:focus, textarea:focus {
     .page-signin .form-signin .logo img {
       max-width: 100%;
       height: auto;
-      width: auto; }
+      width: 500px; }
   .page-signin .form-signin .divider {
     height: 60px;
     width: 600px;
@@ -1845,7 +1845,9 @@ input:focus, select:focus, textarea:focus {
     margin-left: 20px; }
   .page-signin .form-signin .user-links {
     color: #fff;
+    margin-top: -4px;
     margin-bottom: 30px;
+    padding-left: 30px;
     font-size: 14px;
     line-height: 1.5; }
   .page-signin .form-signin .buttons {

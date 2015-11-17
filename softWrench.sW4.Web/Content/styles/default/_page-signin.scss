@@ -19,7 +19,7 @@
             img {
                 max-width: 100%;
                 height: auto;
-                width: auto;
+                width: 500px;
             }
         }
 
@@ -63,7 +63,9 @@
 
         .user-links {
             color: #fff;
+            margin-top: -4px;
             margin-bottom: 30px;
+            padding-left: 30px;
             font-size: 14px;
             line-height: 1.5;
         }
