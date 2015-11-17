@@ -1,9 +1,4 @@
-﻿#crudbodyform {
-    padding-right: 0;
-    padding-left: 0;
-}
-
-fieldset.hasheader {
+﻿fieldset.hasheader {
     clear: both;
 }
 
@@ -12,10 +7,7 @@ fieldset.hasheader {
     margin-left: 0;
     padding-right: 15px;
     padding-left: 15px;
-    /*.form-group {
-        padding-right: 0;
-        padding-left: 0;
-    }*/
+
     &.haschildren {
         padding-right: 0;
         padding-left: 0;
@@ -30,8 +22,6 @@ fieldset.hasheader {
 .row {
     margin-right: 0;
     margin-left: 0;
-    /*padding-right: 15px;*/
-    /*padding-left: 15px;*/
 }
 
 .control-label {
@@ -306,18 +296,6 @@ input[type="date"], input[type="time"] {
         width: auto !important;
     }
 }
-
-/*@media only screen and (min-width: 768px) and (max-width: 992px) {
-    .childinputsize.medium fieldset:nth-child(2n+1), .childinputsize.small fieldset:nth-child(2n+1), .childinputsize.xsmall fieldset:nth-child(2n+1) {
-        clear: both;
-    }
-}
-
-@media only screen and (min-width: 992px) {
-    .childinputsize.medium fieldset:nth-child(2n+1), .childinputsize.small fieldset:nth-child(3n+1), .childinputsize.xsmall fieldset:nth-child(4n+1) {
-        clear: both;
-    }
-}*/
 
 .select-left-right {
     .left, .right {
