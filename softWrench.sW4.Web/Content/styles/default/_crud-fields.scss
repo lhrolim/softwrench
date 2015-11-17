@@ -307,7 +307,7 @@ input[type="date"], input[type="time"] {
     }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 992px) {
+/*@media only screen and (min-width: 768px) and (max-width: 992px) {
     .childinputsize.medium fieldset:nth-child(2n+1), .childinputsize.small fieldset:nth-child(2n+1), .childinputsize.xsmall fieldset:nth-child(2n+1) {
         clear: both;
     }
@@ -317,7 +317,7 @@ input[type="date"], input[type="time"] {
     .childinputsize.medium fieldset:nth-child(2n+1), .childinputsize.small fieldset:nth-child(3n+1), .childinputsize.xsmall fieldset:nth-child(4n+1) {
         clear: both;
     }
-}
+}*/
 
 .select-left-right {
     .left, .right {
