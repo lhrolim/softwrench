@@ -103,7 +103,8 @@ namespace softWrench.sW4.Util {
                 csv.AppendLine(row.ToString());
             });
             // dump to byte array
-            return csv.ToString().GetBytes();
+            return Encoding.UTF8.GetBytes(csv.ToString());
+//            return csv.ToString().GetBytes();
         }
 
         public byte[] ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
