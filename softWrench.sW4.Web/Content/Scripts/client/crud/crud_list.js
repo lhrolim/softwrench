@@ -40,7 +40,11 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 validationService, submitService, redirectService,
                 associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
 
-            $scope.$name = 'crudlist';
+            $scope.$name = "crudlist";
+
+            $scope.vm = {
+                quickSearchData: null
+            }
 
             fixHeaderService.activateResizeHandler();
 
@@ -52,10 +56,10 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 return tabsService.hasTabs(schema);
             };
             $scope.isCommand = function (schema) {
-                return $scope.schema && $scope.schema.properties['command.select'] == "true";
+                return $scope.schema && $scope.schema.properties["command.select"] === "true";
             };
             $scope.isNotHapagTest = function () {
-                return $rootScope.clientName != 'hapag';
+                return $rootScope.clientName !== "hapag";
             };
 
             $scope.tabsDisplayables = function (schema) {
@@ -69,40 +73,40 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     return property;
                 }
 
-                if (propertyName == 'maxwidth') {
+                if (propertyName === "maxwidth") {
                     var high = $(window).width() > 1199;
                     if (high) {
-                        return '135px';
+                        return "135px";
                     }
-                    return '100px';
+                    return "100px";
                 }
                 return null;
             }
 
             $scope.shouldShowSort = function (column, orientation) {
-                return column.attribute != null && ($scope.searchSort.field == column.attribute || $scope.searchSort.field == column.rendererParameters['sortattribute']) && $scope.searchSort.order == orientation;
+                return !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
             };
 
 
-            $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
-                if ($scope.datamap && $scope.datamap.length == 0) {
+            $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
+                if ($scope.datamap && $scope.datamap.length <= 0) {
                     // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
                     fixHeaderService.updateFilterZeroOrOneEntries();
                     // update table heigth (for ie9)
                 }
             });
 
-            $scope.$on('listTableRenderedEvent', function (listTableRenderedEvent) {
-                var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
-                log.debug('init table rendered listener');
+            $scope.$on("listTableRenderedEvent", function (listTableRenderedEvent) {
+                var log = $log.getInstance("sw4.crud_list_dir#on#listTableRenderedEvent");
+                log.debug("init table rendered listener");
 
                 var parameters = {
-                    fullKey: $scope.schema.properties['config.fullKey'],
+                    fullKey: $scope.schema.properties["config.fullKey"],
                     searchData: $scope.searchData
                 };
                 eventService.onload($scope, $scope.schema, $scope.datamap, parameters);
 
-                if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
+                if ($scope.ismodal === "true" && !(true === $scope.$parent.showingModal)) {
                     return;
                 }
 
@@ -110,18 +114,18 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 fixHeaderService.fixThead($scope.schema, params);
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
-                    alertService.notifymessage('success', onLoadMessage);
+                    alertService.notifymessage("success", onLoadMessage);
                 }
 
                 // fix status column height
-                $('.statuscolumncolor').each(function (key, value) {
-                    if (contextService.isClient('hapag')) {
+                $(".statuscolumncolor").each(function (key, value) {
+                    if (contextService.isClient("hapag")) {
                         $(value).height($(value).parent().parent().parent().parent().parent().height());
                     }
                 });
 
                 //restore the last scroll position, else scroll to the top of the page
-                var scrollObject = contextService.fetchFromContext('scrollto', true);
+                var scrollObject = contextService.fetchFromContext("scrollto", true);
 
                 if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
                     scrollPosition = scrollObject.scrollTop;
@@ -132,48 +136,42 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 $timeout(
                     function () {
                         window.scrollTo(0, scrollPosition);
-                        log.info('Scroll To', scrollPosition, scrollObject);
+                        log.info("Scroll To", scrollPosition, scrollObject);
                     }, 100, false);
 
-                $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
-                log.debug('finish table rendered listener');
+                $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
+                log.debug("finish table rendered listener");
             });
 
 
-            $scope.$on('sw_togglefiltermode', function (event, setToBasicMode) {
-                $scope.advancedsearchdata = "";
+            $scope.$on("sw_togglefiltermode", function (event, setToBasicMode) {
+                $scope.vm.quickSearchData = "";
                 $scope.searchData = {};
                 $scope.$broadcast("sw_clearAdvancedFilter");
                 $scope.advancedfiltermode = !setToBasicMode;
                 fixHeaderService.callWindowResize();
 
-                var first = true;
-                for (var data in $scope.searchData) {
-                    if ($scope.searchTemplate && first) {
-                        //TODO: right now if a template is present, the only possibility is that the advanced filter is present.
-                        //Refactor this in the future
-                        $scope.advancedsearchdata = replaceAll($scope.searchData[data], '%', '');
-                    }
-                    $scope.searchData[data] = "";
-                    first = false;
-                }
+                angular.forEach($scope.searchData, function(data, key) {
+                    $scope.searchData[key] = "";
+                });
+
                 var operator = searchService.getSearchOperationBySymbol("");
-                for (var key in $scope.searchOperator) {
+                angular.forEach($scope.searchOperator, function(op, key) {
                     $scope.searchOperator[key] = operator;
-                }
+                });
             });
 
-            $scope.$on('sw_gridrefreshed', function (event, data, panelId) {
+            $scope.$on("sw_gridrefreshed", function (event, data, panelId) {
                 $scope.gridRefreshed(data, panelId);
             });
 
             // When changing grids the search sort should be cleared
-            $scope.$on('sw_gridchanged', function(event) {
+            $scope.$on("sw_gridchanged", function(event) {
                 $scope.searchSort = {};
             });
 
             $scope.gridRefreshed = function (data, panelId) {
-                if ($scope.panelid != panelId) {
+                if (!!$scope.panelid && $scope.panelid !== panelId) {
                     //none of my business --> another dashboard event
                     return;
                 }
@@ -204,18 +202,26 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     $scope.searchOperator = {};
                     $scope.searchSort = $scope.searchSort || {};
 
-                    if (data.pageResultDto && data.pageResultDto.searchParams) {
-                        //TODO: make sure searchSort follows the same logic of building from the server response, then clear the sw_gridchanged event
-                        var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
-                        $scope.searchData = result.searchData;
-                        $scope.searchOperator = result.searchOperator;
+                    if (data.pageResultDto) {
+                        if (data.pageResultDto.quickSearchData) {
+                            $scope.vm.quickSearchData = data.pageResultDto.quickSearchData;
+                            $scope.searchSort = {};
+
+                        } else if (data.pageResultDto.searchParams) {
+                            //TODO: make sure searchSort follows the same logic of building from the server response, then clear the sw_gridchanged event
+                            var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
+                            $scope.searchData = result.searchData;
+                            $scope.searchOperator = result.searchOperator;
+                        }
                     }
+
                 }
-                contextService.deleteFromContext('grid_refreshdata');
+
+                contextService.deleteFromContext("grid_refreshdata");
                 fixHeaderService.FixHeader();
                 //usually this next call won´t do anything, but for lists with optionfields, this is needed
                 associationService.updateAssociationOptionsRetrievedFromServer($scope, data.associationOptions, null);
-                $scope.$broadcast('sw_griddatachanged', $scope.datamap, $scope.schema, $scope.panelid);
+                $scope.$broadcast("sw_griddatachanged", $scope.datamap, $scope.schema, $scope.panelid);
 
                 var elements = [];
                 for (var i = 0; i < $scope.datamap.length; i++) {
@@ -233,41 +239,37 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
 
             $scope.refreshGridRequested = function (searchData, extraparameters) {
-
-
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
                 /// </summary>
                 extraparameters = extraparameters || {};
-                if (extraparameters.panelid && extraparameters.panelid != $scope.panelid) {
+                if (extraparameters.panelid && extraparameters.panelid !== $scope.panelid) {
                     //this is none of my business --> another dashboard will handle it
                     return;
                 }
-
                 contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""));
+
                 $scope.paginationData = $scope.paginationData || {};
                 $scope.searchData = $scope.searchData || {};
                 $scope.metadataid = extraparameters.metadataid;
+                $scope.vm.quickSearchData = extraparameters.quickSearchData;
 
                 var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                 var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
                 var printmode = extraparameters.printMode;
                 var keepfilterparameters = extraparameters.keepfilterparameters;
-                $scope.searchTemplate = extraparameters.searchTemplate;
+                // $scope.searchTemplate = extraparameters.searchTemplate;
+
                 // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
                 if (searchData) {
-                    if (keepfilterparameters) {
-                        for (var key in searchData) {
-                            $scope.searchData[key] = searchData[key];
-                        }
-                    } else {
-                        $scope.searchData = searchData;
-                        $scope.advancedsearchdata = null;
-                    }
+                    //if (keepfilterparameters) {
+                    //    angular.forEach(searchData, function(data, key) {
+                    //        $scope.searchData[key] = data;
+                    //    });
+                    //} else {
+                    $scope.searchData = searchData;
+                    //}
                     pagetogo = 1;
-                } else {
-                    //let´s clean the advanced filter just in case
-                    $scope.advancedsearchdata = null;
                 }
                 if (extraparameters.avoidspin) {
                     contextService.set("avoidspin", true, true);
@@ -275,17 +277,19 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 $scope.selectPage(pagetogo, pageSize, printmode);
             };
 
-            $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
+            $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
                 $scope.refreshGridRequested(searchData, extraparameters);
             });
 
-            $scope.doAdvancedSearch = function (filterdata) {
-                searchService.advancedSearch($scope.datamap, $scope.schema, filterdata);
+            $scope.quickSearch = function (filterdata) {
+                $scope.searchData = {};
+                $scope.searchSort = {};
+                searchService.quickSearch(filterdata);
             };
 
             $scope.cursortype = function () {
-                var editDisabled = $scope.schema.properties['list.disabledetails'];
-                return "true" != editDisabled ? "pointer" : "default";
+                var editDisabled = $scope.schema.properties["list.disabledetails"];
+                return "true" !== editDisabled ? "pointer" : "default";
             };
 
             $scope.isEditing = function (schema) {
@@ -296,17 +300,17 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
 
             $scope.shouldShowField = function (expression) {
-                if (expression == "true") {
+                if (expression === "true") {
                     return true;
                 }
-                var stringExpression = '$scope.datamap.' + expression;
+                var stringExpression = "$scope.datamap." + expression;
                 var ret = eval(stringExpression);
                 return ret;
             };
 
 
             $scope.isHapag = function () {
-                return $rootScope.clientName == "hapag";
+                return $rootScope.clientName === "hapag";
             };
 
             $scope.safeCSSselector = function (name) {
@@ -316,8 +320,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             $scope.renderListView = function (parameters) {
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
-                var listSchema = 'list';
-                if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
+                var listSchema = "list";
+                if ($scope.schema != null && $scope.schema.stereotype.isEqual("list", true)) {
                     //if we have a list schema already declared, keep it
                     listSchema = $scope.schema.schemaId;
                 }
@@ -350,20 +354,18 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     pageSize = 100;
                 }
 
-                var searchDTO;
 
                 //TODO Improve this solution
                 var reportDto = contextService.retrieveReportSearchDTO($scope.schema.schemaId);
-                if (reportDto != null) {
-                    searchDTO = searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);
-                } else {
-                    searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate);
-                }
-
+                var searchDTO = !!reportDto 
+                    ? searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause)
+                    : searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate);
+                
                 searchDTO.pageNumber = pageNumber;
                 searchDTO.totalCount = totalCount;
                 searchDTO.pageSize = pageSize;
                 searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
+                searchDTO.quickSearchData = $scope.vm.quickSearchData;
 
                 //avoids table flickering
                 fixHeaderService.unfix();
@@ -372,8 +374,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
-                var listSchema = 'list';
-                if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
+                var listSchema = "list";
+                if ($scope.schema != null && $scope.schema.stereotype.isEqual("list", true)) {
                     //if we have a list schema already declared, keep it
                     listSchema = $scope.schema.schemaId;
                 }
@@ -390,7 +392,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
                 searchPromise.success(function (data) {
                     // Set the scroll position to the top of the new page
-                    contextService.insertIntoContext('scrollto', { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
+                    contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                     $scope.gridRefreshed(data, $scope.panelid);
                 });
 
@@ -398,23 +400,23 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
 
             $scope.sort = function (column) {
-                if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
+                if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"]) {
                     return;
                 }
                 var columnName = column.attribute;
 
                 var sorting = $scope.searchSort;
-                if (sorting.field != null && sorting.field == columnName) {
-                    sorting.order = sorting.order == 'desc' ? 'asc' : 'desc';
+                if (sorting.field != null && sorting.field === columnName) {
+                    sorting.order = sorting.order === "desc" ? "asc" : "desc";
                 } else {
                     sorting.field = columnName;
-                    sorting.order = 'asc';
+                    sorting.order = "asc";
                 }
                 $scope.selectPage(1);
             };
 
             $scope.collapse = function (selector) {
-                if ($(selector).is(':visible')) {
+                if ($(selector).is(":visible")) {
                     $(selector).hide();
                 } else {
                     $(selector).show();
@@ -422,7 +424,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 fixHeaderService.fixTableTop($(".fixedtable"));
             };
 
-            $scope.filterApplied = function() {
+            $scope.filterApplied = function () {
+                $scope.vm.quickSearchData = null;
                 $scope.selectPage(1);
             };
 
@@ -449,7 +452,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     commandService: commandService
                 });
 
-                var dataRefreshed = contextService.fetchFromContext('grid_refreshdata', true, true, true);
+                var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
 
 
 
@@ -457,7 +460,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
                 }
 
-                var dataToRefresh = contextService.fetchFromContext('poll_refreshgridaction' + ($scope.panelid ? $scope.panelid : ""), true, true, true);
+                var dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
                 if (dataToRefresh) {
                     $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.extraparameters);
                 }

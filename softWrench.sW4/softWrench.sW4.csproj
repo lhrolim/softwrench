@@ -198,6 +198,7 @@
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheManager.cs" />
+    <Compile Include="Data\Search\QuickSearchWhereClauseHandler.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
     <Compile Include="Exceptions\MenuMetadataException.cs" />

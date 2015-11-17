@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
@@ -11,7 +8,6 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Filter {
 
@@ -28,8 +24,8 @@ namespace softWrench.sW4.Data.Filter {
                 return searchDto;
             }
 
-            // has SearchTemplate string: use parameter in filter regardless of WhereClause
-            if (!string.IsNullOrEmpty(searchDto.SearchTemplate)) {
+            // has QuickSearch string: use parameter in filter regardless of WhereClause
+            if (!string.IsNullOrEmpty(searchDto.QuickSearchData)) {
                 return searchDto;
             }
 

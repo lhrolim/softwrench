@@ -4,7 +4,7 @@
         <div ng-hide="hidebars" ng-if="!panelid">
             <div class="context clearfix header-menu">
                 <!-- commands -->
-                <gridtoolbar advancedsearchdata="advancedsearchdata"
+                <gridtoolbar advancedsearchdata="vm.quickSearchData"
                              position="gridtop"
                              datamap="datamap"
                              schema="schema"
@@ -21,10 +21,10 @@
                         <input type="text"
                                placeholder="Search"
                                class="form-control ng-pristine ng-valid ng-touched"
-                               ng-model="advancedsearchdata"
-                               ng-enter="doAdvancedSearch(advancedsearchdata)" style="">
+                               ng-model="vm.quickSearchData"
+                               ng-enter="quickSearch(vm.quickSearchData)">
                         <span class="input-group-btn">
-                        <button class="btn btn-default advancedSearch" type="button" ng-enabled="advancedsearchdata &amp;&amp; advancedsearchdata != ''" ng-click="doAdvancedSearch(advancedsearchdata)" disabled="disabled">
+                        <button class="btn btn-default advancedSearch" type="button" ng-enabled="!!vm.quickSearchData" ng-click="quickSearch(vm.quickSearchData)" disabled="disabled">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>

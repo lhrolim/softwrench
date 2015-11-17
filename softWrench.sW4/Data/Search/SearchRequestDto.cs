@@ -74,6 +74,8 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public string QuickSearchData { get; set; }
+
         private IDictionary<string, SearchParameter> _valuesDictionary;
 
         public ApplicationMetadataSchemaKey Key {

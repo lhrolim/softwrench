@@ -115,6 +115,9 @@ namespace softWrench.sW4.Data.Search {
             var sbReplacingIdx = 0;
             var sb = new StringBuilder(BuildSearchTemplate(listDto, searchParameters));
 
+            var quickSearchData = listDto.QuickSearchData;
+            var isQuickSearch = !string.IsNullOrEmpty(quickSearchData);
+
             foreach (var param in parameters) {
                 var statement = new StringBuilder();
 
@@ -123,6 +126,7 @@ namespace softWrench.sW4.Data.Search {
                     //this search parameter needs to be ignored
                     continue;
                 }
+                //if (isQuickSearch) searchParameter.Value = quickSearchData;
 
                 var parameterData = GetParameterData(entityName, searchParameter, param);
                 searchParameter.IsNumber = parameterData.Item2 == ParameterType.Number;

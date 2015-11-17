@@ -345,6 +345,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
          *              searchTemplate: the search template string to apply on the seach
          *              panelid: the panel id to refresh, used to allow multiple data on screen
          *              fieldstodisplay: if present, the schema will be sliced for showing only these fields
+         *              quickSearchData: 
          */
         refreshGrid: function (searchData, extraparameters) {
             extraparameters = extraparameters || {};
@@ -362,24 +363,9 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
-        advancedSearch: function (datamap, schema, advancedsearchdata) {
-            if (!advancedsearchdata) return;
-            var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
-            var searchData = {};
-
-            var searchTemplate = visibleDisplayables
-                .filter(function (visible) {
-                    return visible.rendererType !== "color";
-                })
-                .map(function (visible) {
-                    searchData[visible.attribute] = "%" + advancedsearchdata + "%";
-                    return visible.attribute + "||";
-                })
-                .join("");
-            // remove extra '||' at the end
-            searchTemplate = searchTemplate.substring(0, searchTemplate.length - 2);
-
-            this.refreshGrid(searchData, { searchTemplate: searchTemplate, keepfilterparameters: true });
+        quickSearch: function (quickSearchData) {
+            if (!quickSearchData) return;
+            this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false });
         },
 
         /// <summary>

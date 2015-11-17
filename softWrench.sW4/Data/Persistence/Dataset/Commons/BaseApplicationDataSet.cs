@@ -70,12 +70,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 
         private IContextLookuper _contextLookuper;
-
         private IBatchSubmissionService _batchSubmissionService;
-
         private IWhereClauseFacade _whereClauseFacade;
-
         private FilterWhereClauseHandler _filterWhereClauseHandler;
+        private QuickSearchWhereClauseHandler _quickSearchWhereClauseHandler;
 
         internal BaseApplicationDataSet() {
         }
@@ -85,8 +83,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 if (_contextLookuper != null) {
                     return _contextLookuper;
                 }
-                _contextLookuper =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
+                _contextLookuper = SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
                 return _contextLookuper;
             }
         }
@@ -121,6 +118,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 _whereClauseFacade =
                     SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
                 return _whereClauseFacade;
+            }
+        }
+
+        protected QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler {
+            get {
+                if (_quickSearchWhereClauseHandler != null) {
+                    return _quickSearchWhereClauseHandler;
+                }
+                _quickSearchWhereClauseHandler =
+                    SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchWhereClauseHandler>(typeof(QuickSearchWhereClauseHandler));
+                return _quickSearchWhereClauseHandler;
             }
         }
 
@@ -271,7 +279,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchDto.SearchSort = propertyValue;
             }
 
-            searchDto = this.FilterWhereClauseHandler.HandleDTO(application.Schema,searchDto);
+            searchDto = string.IsNullOrEmpty(searchDto.QuickSearchData)
+                ? FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto)
+                : QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 
             var tasks = new Task[2];
             var ctx = ContextLookuper.LookupContext();
