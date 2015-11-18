@@ -137,14 +137,19 @@
 
             log.debug("initing angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
 
-            var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit);
-            configureJqueryHooks(scope, element, engine);
+            $timeout(function () {
+                //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
+                //it has enough to time to render itself on screen
+                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit);
+                configureJqueryHooks(scope, element, engine);
 
-            if (crudContextHolderService.associationsResolved()) {
-                setInitialText(element, scope);
-            }
+                if (crudContextHolderService.associationsResolved()) {
+                    setInitialText(element, scope);
+                }
 
-            configureStyles(element, parElement);
+                configureStyles(element, parElement);
+            }, 0, false);
+
 
             scope.executeMagnetSearch = function () {
                 scope.magnetClicked({ text: scope.getText() });
@@ -154,7 +159,7 @@
                 return scope.jelement.typeahead("val");
             }
 
-            scope.$on("sw_associationsresolved", function(event) {
+            scope.$on("sw_associationsresolved", function (event) {
                 setInitialText(element, scope);
             });
 

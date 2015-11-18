@@ -150,9 +150,9 @@
               <event type="afterchange" service="srService" method="afterChangeAsset"/>
             </association>
             <section id="statussection"/>
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
-              <renderer type="autocompleteclient" />
-            </optionfield>
+<!--            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">-->
+<!--              <renderer type="autocompleteclient" />-->
+<!--            </optionfield>-->
           </section>
 
           <section orientation="horizontal">
@@ -391,9 +391,9 @@
             </field>
           </section>
           
-          <field label="Details:" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
+<!--          <field label="Details:" attribute="ld_.ldtext">-->
+<!--            <renderer type="richtext"/>-->
+<!--          </field>-->
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />

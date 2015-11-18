@@ -88,7 +88,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 NotificationStreams[groupKey] = new InMemoryNotificationStream();
             }
             //TODO: why always servicerequest here?
-            var formattedQuery = query.Fmt(ActivityStreamConstants.HoursToPurge, currentTime, _responseBuilder.MaxServiceRequestId(groupKey));
+            var formattedQuery = query.Fmt(ActivityStreamConstants.HoursToPurge, _responseBuilder.MaxServiceRequestId(groupKey));
             var queryResult = _maxDAO.FindByNativeQuery(formattedQuery);
             if (!queryResult.Any()) {
                 return;

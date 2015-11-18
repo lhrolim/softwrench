@@ -1,10 +1,13 @@
-var app = angular.module('sw_layout');
 
-app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService) {
+(function (angular) {
+    'use strict';
 
-    return {
 
-        unblock: function (displayable, scope) {
+
+    function cmpfacade($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, contextHolderService) {
+
+
+        function unblock(displayable, scope) {
             var log = $log.getInstance('cmpfacade#unblock');
             var rendererType = displayable.rendererType;
             var attribute = displayable.attribute;
@@ -19,9 +22,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             //                cmpAutocompleteServer.unblock(displayable, scope);
 
             this.digestAndrefresh(displayable, scope);
-        },
+        };
 
-        block: function (displayable, scope) {
+        function block(displayable, scope) {
             var log = $log.getInstance('cmpfacade#block');
             var rendererType = displayable.rendererType;
             var attribute = displayable.attribute;
@@ -35,10 +38,10 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 cmpComboDropdown.block(displayable.associationKey);
             }
             this.digestAndrefresh(displayable, scope);
-        },
+        };
 
 
-        digestAndrefresh: function (displayable, scope,newValue) {
+        function digestAndrefresh(displayable, scope, newValue) {
             var rendererType = displayable.rendererType;
             if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup' && rendererType != 'modal') {
                 return;
@@ -61,9 +64,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                         }
                     }, 0, false);
             }
-        },
+        };
 
-        focus: function (displayable) {
+        function focus(displayable) {
             var log = $log.getInstance('cmpfacade#focus');
 
             var attribute = displayable.attribute;
@@ -85,9 +88,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             }
 
             log.debug('change focus to {0}'.format(attribute));
-        },
+        };
 
-        refresh: function (displayable, scope, fromDigestAndRefresh,newValue) {
+        function refresh(displayable, scope, fromDigestAndRefresh, newValue) {
             var attribute = displayable.attribute;
 
             var log = $log.getInstance('cmpfacade#refresh');
@@ -98,7 +101,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, scope.associationOptions[displayable.associationKey]);
+                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, contextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
             } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType === 'combodropdown') {
@@ -106,18 +109,18 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             } else if (rendererType === 'lookup' || rendererType === 'modal') {
                 cmplookup.refreshFromAttribute(displayable, newValue);
             }
-        },
+        };
 
-        init: function (bodyElement, scope) {
+        function init(bodyElement, scope) {
             var datamap = scope.datamap;
             var schema = scope.schema;
             cmpComboDropdown.init(bodyElement);
             cmpAutocompleteClient.init(bodyElement, datamap, schema, scope);
             cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
             screenshotService.init(bodyElement, datamap);
-        },
+        };
 
-        blockOrUnblockAssociations: function (scope, newValue, oldValue, association) {
+        function blockOrUnblockAssociations(scope, newValue, oldValue, association) {
             if (oldValue == newValue) {
                 return;
             }
@@ -138,6 +141,34 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 });
             }
         }
+
+        return {
+            unblock: unblock,
+            block: block,
+            digestAndrefresh: digestAndrefresh,
+            focus: focus,
+            refresh: refresh,
+            init: init,
+            blockOrUnblockAssociations: blockOrUnblockAssociations
+        };;
+    }
+
+    angular
+      .module('sw_layout')
+      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'contextHolderService', cmpfacade]);
+
+})
+
+
+
+(angular);
+
+
+angular.module('sw_layout').factory('cmpfacade', function () {
+
+    return {
+
+
 
 
     }

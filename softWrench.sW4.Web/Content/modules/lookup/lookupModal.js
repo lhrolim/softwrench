@@ -7,7 +7,6 @@ app.directive('lookupModalWrapper', function ($compile) {
         scope: {
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
-            associationOptions: '=',
             lookupObj: '=',
             schema: '=',
             datamap: '='

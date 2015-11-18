@@ -18,7 +18,6 @@
                     disabledassociations: '=',
                     blockedassociations: '=',
                     lookupAssociationsCode: '=',
-                    associationOptions: '=',
                     lookupAssociationsDescription: '=',
                     mode: '@'
                 },
