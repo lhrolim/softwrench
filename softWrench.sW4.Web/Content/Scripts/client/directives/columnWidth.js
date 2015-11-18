@@ -50,23 +50,23 @@ app.directive('columnWidths', function ($log, $timeout) {
                                 //if width is set override responsive widths, else add responsive widths
                                 if (width) {
                                     row.width = width;
-                                    row.widthXS = width;
-                                    row.widthSM = width;
-                                    row.widthMD = width;
-                                    row.widthLG = width;
+                                //    //row.widthXS = width;
+                                //    //row.widthSM = width;
+                                //    row.widthMD = width;
+                                //    //row.widthLG = width;
                                 } else {
-                                    row.width = width;
-                                    row.widthXS = removePercent(json[id].rendererParameters.widthXS);
-                                    row.widthSM = removePercent(json[id].rendererParameters.widthSM);
-                                    row.widthMD = removePercent(json[id].rendererParameters.widthMD);
-                                    row.widthLG = removePercent(json[id].rendererParameters.widthLG);
+                                    row.width = 0;
+                                //    //row.widthXS = removePercent(json[id].rendererParameters.widthXS);
+                                //    //row.widthSM = removePercent(json[id].rendererParameters.widthSM);
+                                //    row.widthMD = removePercent(json[id].rendererParameters.widthMD);
+                                //    //row.widthLG = removePercent(json[id].rendererParameters.widthLG);
                                 }
                             } else {
                                 row.width = 0;
-                                row.widthXS = 0;
-                                row.widthSM = 0;
-                                row.widthMD = 0;
-                                row.widthLG = 0;
+                                //row.widthXS = 0;
+                                //row.widthSM = 0;
+                                //row.widthMD = 0;
+                                //row.widthLG = 0;
                             }
 
                             if (json[id].attribute) {
@@ -83,21 +83,21 @@ app.directive('columnWidths', function ($log, $timeout) {
 
                     //balance remaining width between missing column widths
                     balanceColumns(widths, 'width');
-                    balanceColumns(widths, 'widthXS');
-                    balanceColumns(widths, 'widthSM');
-                    balanceColumns(widths, 'widthMD');
-                    balanceColumns(widths, 'widthLG');
+                    //balanceColumns(widths, 'widthXS');
+                    //balanceColumns(widths, 'widthSM');
+                    //balanceColumns(widths, 'widthMD');
+                    //balanceColumns(widths, 'widthLG');
 
                     log.debug('Widths Found', widths);
 
                     //build css rules
                     var css = '';
-                    css += getViewRules(widths, 'width', null, 'screen', scope.schema);
-                    css += getViewRules(widths, 'widthXS', '1px', 'screen', scope.schema);
-                    css += getViewRules(widths, 'widthSM', '480px', 'screen', scope.schema);
-                    css += getViewRules(widths, 'widthMD', '768px', 'screen', scope.schema);
-                    css += getViewRules(widths, 'widthLG', '992px', 'screen', scope.schema);
-                    css += getViewRules(widths, 'widthLG', '1px', 'print', scope.schema);
+                    //css += getViewRules(widths, 'width', null, 'screen', scope.schema);
+                    //css += getViewRules(widths, 'widthXS', '1px', 'screen', scope.schema);
+                    //css += getViewRules(widths, 'widthSM', '480px', 'screen', scope.schema);
+                    css += getViewRules(widths, 'width', '768px', 'screen', scope.schema);
+                    //css += getViewRules(widths, 'width', '992px', 'screen', scope.schema);
+                    css += getViewRules(widths, 'width', '1px', 'print', scope.schema);
 
                     if (css) {
                         //log.debug(css);
