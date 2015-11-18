@@ -1,11 +1,14 @@
-﻿var sharedController = function ($scope, contextService,expressionService, commandService, $log, i18NService, securityService) {
+﻿(function (app, angular) {
+    "use strict";
 
-    $scope.invokeOuterScopeFn = function (expr,throwExceptionIfNotFound) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService) {
+
+    $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
         var fn = $scope.ctrlfns[methodname];
-        if (fn != null) {
+        if (angular.isFunction(fn)) {
             return fn();
-        } else if (throwExceptionIfNotFound){
+        } else if (throwExceptionIfNotFound) {
             throw new Error("parameterless method {0} not found on outer scope".format(methodname));
         }
         return null;
@@ -65,7 +68,7 @@
         $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
         $('.no-touch [rel=tooltip]').tooltip('hide');
 
-        if (command.service == "$scope") {
+        if (command.service === "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {
                 fn();
@@ -108,10 +111,9 @@
         return "btn btn-default btn-sm";
     }
 
+}];
 
-};
-
-app.directive('gridtoolbar', function (contextService) {
+app.directive('gridtoolbar', ["contextService", function (contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -132,18 +134,18 @@ app.directive('gridtoolbar', function (contextService) {
 
         link: function (scope, element, attrs, ctrl) {
             scope.ctrlfns = {};
-            for (var fn in ctrl) {
-                scope.ctrlfns[fn] = ctrl[fn];
-            }
+            angular.forEach(ctrl, function (fn, name) {
+                if(angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
         },
 
         controller: sharedController
 
     };
-});
+}]);
 
 
-app.directive('compositiontoolbar', function (contextService) {
+app.directive('compositiontoolbar', ["contextService", function (contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -168,18 +170,18 @@ app.directive('compositiontoolbar', function (contextService) {
 
         link: function (scope, element, attrs, ctrl) {
             scope.ctrlfns = {};
-            for (var fn in ctrl) {
-                scope.ctrlfns[fn] = ctrl[fn];
-            }
+            angular.forEach(ctrl, function (fn, name) {
+                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
         },
 
         controller: sharedController
 
     };
-});
+}]);
 
 
-app.directive('inputdetailtoolbar', function (contextService) {
+app.directive('inputdetailtoolbar', ["contextService", function (contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -195,17 +197,17 @@ app.directive('inputdetailtoolbar', function (contextService) {
 
         link: function (scope, element, attrs, ctrl) {
             scope.ctrlfns = {};
-            for (var fn in ctrl) {
-                scope.ctrlfns[fn] = ctrl[fn];
-            }
+            angular.forEach(ctrl, function (fn, name) {
+                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
         },
 
         controller: sharedController
 
     };
-});
+}]);
 
-app.directive('crudbodydetailtoolbar', function (contextService) {
+app.directive('crudbodydetailtoolbar', ["contextService", function (contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -221,17 +223,17 @@ app.directive('crudbodydetailtoolbar', function (contextService) {
 
         link: function (scope, element, attrs, ctrl) {
             scope.ctrlfns = {};
-            for (var fn in ctrl) {
-                scope.ctrlfns[fn] = ctrl[fn];
-            }
+            angular.forEach(ctrl, function (fn, name) {
+                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
         },
 
         controller: sharedController
 
     };
-});
+}]);
 
-app.directive('outputdetailtoolbar', function (contextService) {
+app.directive('outputdetailtoolbar', ["contextService", function (contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -247,13 +249,14 @@ app.directive('outputdetailtoolbar', function (contextService) {
 
         link: function (scope, element, attrs, ctrl) {
             scope.ctrlfns = {};
-            for (var fn in ctrl) {
-                scope.ctrlfns[fn] = ctrl[fn];
-            }
+            angular.forEach(ctrl, function(fn, name) {
+                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
         },
 
         controller: sharedController
 
     };
-});
+}]);
 
+})(app, angular);

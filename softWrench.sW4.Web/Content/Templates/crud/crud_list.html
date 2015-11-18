@@ -1,11 +1,10 @@
-
-
 <form>
-    <div id="affixpagination" class="affix-pagination hiddenonprint">
+    <div id="affixpagination" class="affix-pagination hiddenonprint grid-header">
 
         <div ng-hide="hidebars" ng-if="!panelid">
             <div class="context clearfix header-menu">
-                <gridtoolbar advancedsearchdata="advancedsearchdata"
+                <!-- commands -->
+                <gridtoolbar advancedsearchdata="vm.quickSearchData"
                              position="gridtop"
                              datamap="datamap"
                              schema="schema"
@@ -14,40 +13,41 @@
                              search-sort="searchSort"
                              search-operator="searchOperator"
                              search-template="searchTemplate"
-                             class="gridtop" />
+                             class="gridtop"/>
+                
+                <!-- quick search input -->
+                <div class="quick-search">
+                    <div class="input-group">
+                        <input type="text"
+                               placeholder="Search"
+                               class="form-control ng-pristine ng-valid ng-touched"
+                               ng-model="vm.quickSearchData"
+                               ng-enter="quickSearch(vm.quickSearchData)">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default advancedSearch" type="button" ng-enabled="!!vm.quickSearchData" ng-click="quickSearch(vm.quickSearchData)" disabled="disabled">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+
+                <!-- simple pagination -->
                 <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
-                            search-operator="searchOperator" />
+                            search-operator="searchOperator"
+                            pagination-simple-layout />
             </div>
-            <!--TODO: make this encapsulated inside gridfilter.html... is that possible?-->
-            <div class="context clearfix header-menu" ng-show="advancedfiltermode">
-                <div class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="advancedSearch" class="col-xs-12 col-sm-2 col-md-1 control-label">Search</label>
-                        <div class="col-xs-12 col-sm-10 col-md-11">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="advancedSearch" ng-model="advancedsearchdata" ng-enter="doAdvancedSearch(advancedsearchdata)">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default advancedSearch" type="button" ng-enabled="advancedsearchdata && advancedsearchdata != ''"
-                                            ng-click="doAdvancedSearch(advancedsearchdata)">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
         </div>
-        <div class="filter-container">
+        
+        <!--<div class="filter-container">
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
                                  advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
-                                 search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()">
-                </crud-filter-bar>
+                                 search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()" />
             </div>
-        </div>
+        </div>-->
     </div>
 
     <div class="affix-pagination-panel hiddenonprint" ng-hide="'false' !== hidebars" ng-if="panelid">
@@ -57,35 +57,16 @@
                         search-data="searchData"
                         search-operator="searchOperator"/>
         </div>
-     
-        <!--TODO: make this encapsulated inside gridfilter.html... is that possible?-->
-        <div class="context clearfix header-menu" ng-show="advancedfiltermode">
-            <div class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label for="advancedSearch" class="col-xs-12 col-sm-2 col-md-1 control-label">Search</label>
-                    <div class="col-xs-12 col-sm-10 col-md-11">
-                        <div class="input-group">
-                            <input class="form-control" id="advancedSearch" ng-model="advancedsearchdata" ng-enter="doAdvancedSearch(advancedsearchdata)">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-enabled="advancedsearchdata && advancedsearchdata != ''"
-                                        ng-click="doAdvancedSearch(advancedsearchdata)">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="filter-container">
+        
+        <!--<div class="filter-container">
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
                                  advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
                                  search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()">
                 </crud-filter-bar>
             </div>
-        </div>
+        </div>-->
+    
     </div>
 
     <!-- search filters: dettached from the entity table -->
@@ -99,25 +80,33 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
                         <!--Multiselect-->
                     </th>
-                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
                     </th>
                     <th class="{{safeCSSselector(column.attribute)}}"
                         ng-repeat="column in schema.displayables"
-                        ng-show="!isFieldHidden(schema,column)"
-                        ng-click="sort(column)">
+                        ng-show="!isFieldHidden(schema,column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
+                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
                                 {{i18NLabel(column)}}
                             </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
                                   ng-show="shouldShowSort(column,'asc')"
-                                  rel="tooltip" data-original-title="Sorted ascendant"></span>
+                                  rel="tooltip" data-original-title="Sorted ascendant">
+                            </span>
                             <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
-                                  rel="tooltip" data-original-title="Sorted descendant"></span>
+                                  rel="tooltip" data-original-title="Sorted descendant">
+                            </span>
+                            <div class="filter-label" filterrowrendered>
+                                <crud-filter-dropdown filter="filterForColumn(column)"
+                                                      schema="schema" datamap="datamap"
+                                                      advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
+                                                      search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
+                                                      filter-standalone />
+                            </div>
                         </div>
                     </th>
                     <th class="clear"><!--SWWEB-841--></th>

@@ -1,0 +1,16 @@
+<div ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
+    <input type="checkbox" ng-change="toggleSelectAll(selectAll)" ng-model="selectAll">
+</div>
+<div class="filter-row" hiddenonprint>
+
+    <div class="filter-label"
+         ng-repeat="filter in schema.schemaFilters.filters"
+         filterrowrendered>
+        
+        <crud-filter-dropdown filter="filter"
+                              schema="schema" datamap="datamap"
+                              advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
+                              search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"/>
+    </div>
+
+</div>

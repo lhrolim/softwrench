@@ -16,6 +16,7 @@ softwrench.sw4.jstest/test-results.testxml
 softWrench.sW4.Web/Content/Customers/
 softWrench.sW4.Web/Content/Shared/
 softWrench.sW4.Web/Content/Scripts/softwrench/shared
+*.min.css
 
 softWrench.sW4.WebMobile/www/Content/Customers/**/
 softWrench.sW4.WebMobile/www/Content/Shared/**/
