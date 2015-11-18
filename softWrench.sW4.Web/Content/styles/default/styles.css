@@ -529,88 +529,90 @@ input[type="date"], input[type="time"] {
   cursor: pointer;
   color: black; }
 
-.filter-container .filter-row .filter-label {
+.filter-label {
   display: inline-block;
-  margin: 0 10px; }
-  .filter-container .filter-row .filter-label:hover {
+  /*margin: 0 10px;*/ }
+  .filter-label:hover {
     background: #ddd; }
-  .filter-container .filter-row .filter-label .filter-label-wrapper .filter-text {
+  .filter-label .filter-label-wrapper .filter-text {
     font-weight: bold; }
-  .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .wrap {
+  .filter-label .filter-label-wrapper .dropdown .wrap {
     padding: 5px 15px;
     cursor: pointer; }
-    .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .wrap > i.fa {
+    .filter-label .filter-label-wrapper .dropdown .wrap.slim {
+      padding: 0; }
+    .filter-label .filter-label-wrapper .dropdown .wrap > i.fa {
       color: #767676; }
-  .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu {
+  .filter-label .filter-label-wrapper .dropdown .dropdown-menu {
     padding-bottom: 0;
     width: 250px; }
-    .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content {
+    .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content {
       padding-bottom: 0;
       width: 100%; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .dropdown-close {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .dropdown-close {
         text-align: right;
         padding: 0 10px 10px 0;
         cursor: pointer; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .input-group {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .input-group {
         width: 90%;
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 15px; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container h5 {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container h5 {
         font-weight: bold;
         font-size: 14px;
         padding-bottom: 5px;
         padding-top: 5px;
         margin-top: 0; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container .select-all {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container .select-all {
         padding-left: 5px;
         margin-bottom: 10px; }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container .select-all .text {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container .select-all .text {
           font-weight: bold;
           font-size: 14px;
           padding-top: 5px; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container .filter-options {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container .filter-options {
         max-height: 306px;
         overflow-y: auto; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container ul {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container ul {
         padding-left: 5px;
         list-style: none; }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container ul li {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container ul li {
           padding-bottom: 10px;
           /*&:hover {
                                             background: $hover_background;
                                         }*/ }
-          .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container ul li .removable {
+          .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .sw-combobox-container ul li .removable {
             cursor: pointer; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group {
         margin-bottom: 0;
         /*max-height: 250px;
                                 overflow-y: scroll;*/ }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group .list-group-item {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group .list-group-item {
           cursor: pointer;
           border: none; }
-          .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group .list-group-item:not(.active):hover {
+          .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .list-group .list-group-item:not(.active):hover {
             background: #ddd; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .tt-dropdown-menu {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .tt-dropdown-menu {
         min-width: 100%; }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .tt-dropdown-menu .tt-suggestion {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .tt-dropdown-menu .tt-suggestion {
           padding-top: 6px;
           padding-bottom: 6px;
           cursor: pointer; }
-          .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .tt-dropdown-menu .tt-suggestion:hover {
+          .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .tt-dropdown-menu .tt-suggestion:hover {
             background: #ddd; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .bootstrap-datetimepicker-widget {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .bootstrap-datetimepicker-widget {
         z-index: 9999 !important;
         width: 38em; }
         @media (max-width: 768px) {
-          .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .bootstrap-datetimepicker-widget {
+          .filter-label .filter-label-wrapper .dropdown .dropdown-menu .dropdown-content .bootstrap-datetimepicker-widget {
             width: 19em !important; } }
-    .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar {
+    .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar {
       display: table;
       width: 100%;
       border-top: 1px solid #ddd;
       margin-top: 1px; }
-      .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button {
+      .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button {
         display: table-cell;
         width: 50%;
         vertical-align: middle;
@@ -619,14 +621,14 @@ input[type="date"], input[type="time"] {
         height: 40px;
         color: #999;
         font-weight: bold; }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button.apply {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button.apply {
           color: #3a7ebd;
           border-right: 1px solid #ddd; }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button.clear {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button.clear {
           color: #555; }
-        .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button:hover {
+        .filter-label .filter-label-wrapper .dropdown .dropdown-menu .filter-dropdown-toolbar .button:hover {
           background: #ddd; }
-    .filter-container .filter-row .filter-label .filter-label-wrapper .dropdown .dropdown-menu.MetadataOptionFilter .filter-dropdown-toolbar .button.apply {
+    .filter-label .filter-label-wrapper .dropdown .dropdown-menu.MetadataOptionFilter .filter-dropdown-toolbar .button.apply {
       display: none; }
 
 .no-results, .more-results {
@@ -745,6 +747,17 @@ table .detaildata {
 
 .advancedSearch {
   height: 34px; }
+
+.grid-header .quick-search {
+  float: left;
+  padding-top: 4px;
+  padding-left: 10px; }
+  @media (min-width: 750px) {
+    .grid-header .quick-search {
+      width: calc(100% - 370px); } }
+  @media (max-width: 749px) {
+    .grid-header .quick-search {
+      width: calc(100% - 200px); } }
 
 .container header {
   width: 100%; }

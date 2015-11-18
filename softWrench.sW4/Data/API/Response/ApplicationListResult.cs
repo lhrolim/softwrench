@@ -15,9 +15,12 @@ namespace softWrench.sW4.Data.API.Response {
             IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, IDictionary<string, BaseAssociationUpdateResult> associationOptions)
             : base(dataMap, null) {
             Schema = schema;
-            PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
-            PageResultDto.SearchParams = searchDTO.SearchParams;
-            PageResultDto.FilterFixedWhereClause = searchDTO.FilterFixedWhereClause;
+            PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions) {
+                SearchParams = searchDTO.SearchParams,
+                FilterFixedWhereClause = searchDTO.FilterFixedWhereClause,
+                QuickSearchData = searchDTO.QuickSearchData,
+                SearchTemplate = searchDTO.SearchTemplate
+            };
             AssociationOptions = associationOptions;
         }
 

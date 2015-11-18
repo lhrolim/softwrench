@@ -8,23 +8,24 @@
 
     <div class="group pagination">
         <a ng-click="selectPage(1)" href="#">
-            <img ng-src="{{contextPath('/Content/Images/pagination-first.png')}}" alt="first" />
+            <img ng-src="{{contextPath('/Content/Images/pagination-first.png')}}" alt="first" ng-if="!layout.simple" />
         </a>
         <a ng-click="previousPage()" href="#">
-            <img ng-src="{{contextPath('/Content/Images/pagination-previous.png')}}" alt="previous" />
+            <img ng-src="{{contextPath('/Content/Images/pagination-previous.png')}}" alt="previous"/>
         </a>
-        <label>{{i18N('_grid.pagination.page','Page')}}: </label>
-        <input type="text" ng-model="paginationData.pageNumber" ng-change="selectPage(paginationData.pageNumber)" style="width: 25px !important; text-align: center" />
-        <label>{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>
+        <label>{{i18N('_grid.pagination.page','Page')}}{{ !layout.simple ? ':' : ''}} </label>
+        <input ng-if="!layout.simple" type="text" ng-model="paginationData.pageNumber" ng-change="selectPage(paginationData.pageNumber)" style="width: 25px !important; text-align: center" />
+        <span ng-show="layout.simple">{{paginationData.pageNumber}}</span>
+        <label ng-show="!layout.simple">{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>
         <a ng-click="nextPage()" href="#">
             <img ng-src="{{contextPath('/Content/Images/pagination-next.png')}}" alt="next" />
         </a>
-        <a ng-click="selectPage(paginationData.pageCount)" href="#">
+        <a ng-click="selectPage(paginationData.pageCount)" href="#" ng-if="!layout.simple">
             <img ng-src="{{contextPath('/Content/Images/pagination-last.png')}}" alt="last" />
         </a>
     </div>
 
-    <div class="group pagesize">
+    <div class="group pagesize" ng-if="!layout.simple">
         <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
         <select id="pagesize"
             ng-model="paginationData.pageSize"

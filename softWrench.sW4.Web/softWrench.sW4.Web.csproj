@@ -500,6 +500,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
@@ -752,7 +753,8 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
-    <Content Include="Content\Templates\crud\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
