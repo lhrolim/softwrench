@@ -1,7 +1,10 @@
-﻿app.directive('pagination', function (contextService) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('pagination', ["contextService", function (contextService) {
     return {
         restrict: 'E',
-        replace: true,
+        replace: false,
         templateUrl: contextService.getResourceUrl('/Content/Templates/pagination.html'),
         scope: {
             renderfn: "&",
@@ -15,19 +18,25 @@
             disableExport: '@'
         },
 
-        controller: function ($scope, $http, $rootScope, $timeout, printService,
-            searchService, i18NService, redirectService, fileService, alertService) {
+        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService) {
+            $scope.layout = {
+                simple: false
+            };
 
-            $scope.isPaginationEnabled=function() {
-                return $scope.schema == null || "true" != $scope.schema.properties['list.disablepagination'];
-            }
+            $scope.setSimpleLayout = function(value) {
+                $scope.layout.simple = value;
+            };
+
+            $scope.isPaginationEnabled = function() {
+                return $scope.schema == null || "true" !== $scope.schema.properties['list.disablepagination'];
+            };
 
             $scope.contextPath = function (path) {
                 return url(path);
             };
 
             $scope.isHapag = function () {
-                return $rootScope.clientName == "hapag";
+                return $rootScope.clientName === "hapag";
             };
 
             $scope.i18N = function (key, defaultValue, paramArray) {
@@ -66,18 +75,32 @@
                     return;
                 }
                 var marginLeft = '30px';
-                if (language.toLowerCase() == 'en') {
+                if (language.toLowerCase() === 'en') {
                     marginLeft = '60px';
                 }
                 $('.pagination-pager').css({ 'margin-left': marginLeft });
             }
 
+            //$scope.$on("sw_redirectapplicationsuccess", function (event) {
+            //    // $scope.searchData = {};
+            //});
 
-            $scope.$on("sw_redirectapplicationsuccess", function (event) {
-//                $scope.searchData = {};
-            });
+            function init() {
+                // 'booleanizing' the values (compensates for undefined-like/null-like values)
+                $scope.disablePrint = !!$scope.disablePrint;
+                $scope.disableExport = !!$scope.disableExport; 
 
-            $scope.adjustMargin(i18NService.getCurrentLanguage());
+                $scope.adjustMargin(i18NService.getCurrentLanguage());
+            }
+
+            init();
+
+        }],
+
+        link: function(scope, element, attrs) {
+            scope.setSimpleLayout(attrs.hasOwnProperty("paginationSimpleLayout"));
         }
     };
-});
+}]);
+
+})(app);

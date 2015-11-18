@@ -32,171 +32,172 @@
     color: black;
 }
 
-.filter-container {
-    .filter-row { // filter detached from grid table
-        .filter-label {
-            display: inline-block;
-            margin: 0 10px;
 
-            &:hover {
-                background: $hover_background;
-            }
+.filter-label {
+    display: inline-block;
+    /*margin: 0 10px;*/
 
-            .filter-label-wrapper {
-                .filter-text {
-                    font-weight: bold;
+    &:hover {
+        background: $hover_background;
+    }
+
+    .filter-label-wrapper {
+        .filter-text {
+            font-weight: bold;
+        }
+
+        .dropdown { // dropdown icon
+            .wrap {
+                padding: 5px 15px;
+                cursor: pointer;
+
+                &.slim {
+                    padding: 0;
                 }
 
-                .dropdown { // dropdown icon
-                    .wrap {
-                        padding: 5px 15px;
-                        cursor: pointer;
+                > i.fa {
+                    color: #767676;
+                }
+            }
 
-                        > i.fa {
-                            color: #767676;
+            .dropdown-menu { // dropdown-menu
+                padding-bottom: 0;
+                width: 250px;
+
+                .dropdown-content {
+                    padding-bottom: 0;
+                    width: 100%;
+
+                    .dropdown-close {
+                        text-align: right;
+                        padding: 0 10px 10px 0;
+                        cursor: pointer;
+                    }
+
+                    .input-group {
+                        width: 90%;
+                        margin-left: auto;
+                        margin-right: auto;
+                        margin-bottom: 15px;
+                    }
+
+                    .sw-combobox-container {
+                        h5 {
+                            font-weight: bold;
+                            font-size: 14px;
+                            padding-bottom: 5px;
+                            padding-top: 5px;
+                            margin-top: 0;
+                        }
+
+                        .select-all {
+                            padding-left: 5px;
+                            margin-bottom: 10px;
+
+                            .text {
+                                font-weight: bold;
+                                font-size: 14px;
+                                padding-top: 5px;
+                            }
+                        }
+
+                        .filter-options {
+                            max-height: 306px;
+                            overflow-y: auto;
+                        }
+
+                        ul {
+                            padding-left: 5px;
+                            list-style: none;
+
+                            li {
+                                padding-bottom: 10px;
+
+                                .removable {
+                                    cursor: pointer;
+                                }
+                                /*&:hover {
+                                            background: $hover_background;
+                                        }*/
+                            }
                         }
                     }
 
-                    .dropdown-menu { // dropdown-menu
-                        padding-bottom: 0;
-                        width: 250px;
-
-                        .dropdown-content {
-                            padding-bottom: 0;
-                            width: 100%;
-
-                            .dropdown-close {
-                                text-align: right;
-                                padding: 0 10px 10px 0;
-                                cursor: pointer;
-                            }
-
-                            .input-group {
-                                width: 90%;
-                                margin-left: auto;
-                                margin-right: auto;
-                                margin-bottom: 15px;
-                            }
-
-                            .sw-combobox-container {
-                                h5 {
-                                    font-weight: bold;
-                                    font-size: 14px;
-                                    padding-bottom: 5px;
-                                    padding-top: 5px;
-                                    margin-top: 0;
-                                }
-
-                                .select-all {
-                                    padding-left: 5px;
-                                    margin-bottom: 10px;
-
-                                    .text {
-                                        font-weight: bold;
-                                        font-size: 14px;
-                                        padding-top: 5px;
-                                    }
-                                }
-
-                                .filter-options {
-                                    max-height: 306px;
-                                    overflow-y: auto;
-                                }
-
-                                ul {
-                                    padding-left: 5px;
-                                    list-style: none;
-
-                                    li {
-                                        padding-bottom: 10px;
-
-                                        .removable {
-                                            cursor: pointer;
-                                        }
-                                        /*&:hover {
-                                            background: $hover_background;
-                                        }*/
-                                    }
-                                }
-                            }
-
-                            .list-group {
-                                margin-bottom: 0;
-                                /*max-height: 250px;
+                    .list-group {
+                        margin-bottom: 0;
+                        /*max-height: 250px;
                                 overflow-y: scroll;*/
-                                .list-group-item {
-                                    cursor: pointer;
-                                    border: none;
+                        .list-group-item {
+                            cursor: pointer;
+                            border: none;
 
-                                    &:not(.active) {
-                                        &:hover {
-                                            background: $hover_background;
-                                        }
-                                    }
-                                }
-                            }
-
-                            .tt-dropdown-menu {
-                                min-width: 100%;
-
-                                .tt-suggestion {
-                                    padding-top: 6px;
-                                    padding-bottom: 6px;
-                                    cursor: pointer;
-
-                                    &:hover {
-                                        background: $hover_background;
-                                    }
-                                }
-                            }
-
-                            .bootstrap-datetimepicker-widget {
-                                z-index: 9999 !important; // force date picker to display on top of the dropdown
-                                width: 38em; // maintain date and time side-by-side
-                                @media (max-width: 768px) {
-                                    width: 19em !important; // time below date for 'smaller' screens
-                                }
-                            }
-                        }
-
-                        .filter-dropdown-toolbar { //dropdown-menu buttons
-                            display: table;
-                            width: 100%;
-                            border-top: 1px solid $hover_background;
-                            margin-top: 1px;
-
-                            .button {
-                                display: table-cell;
-                                width: 50%;
-                                vertical-align: middle;
-                                cursor: pointer;
-                                text-align: center;
-                                height: 40px;
-                                color: #999;
-                                font-weight: bold;
-
-                                &.apply {
-                                    color: #3a7ebd;
-                                    border-right: 1px solid $hover_background;
-                                }
-
-                                &.clear {
-                                    color: #555;
-                                }
-
+                            &:not(.active) {
                                 &:hover {
                                     background: $hover_background;
                                 }
                             }
                         }
+                    }
 
-                        &.MetadataOptionFilter {
-                            .filter-dropdown-toolbar {
-                                .button {
-                                    &.apply {
-                                        display: none;
-                                    }
-                                }
+                    .tt-dropdown-menu {
+                        min-width: 100%;
+
+                        .tt-suggestion {
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            cursor: pointer;
+
+                            &:hover {
+                                background: $hover_background;
+                            }
+                        }
+                    }
+
+                    .bootstrap-datetimepicker-widget {
+                        z-index: 9999 !important; // force date picker to display on top of the dropdown
+                        width: 38em; // maintain date and time side-by-side
+                        @media (max-width: 768px) {
+                            width: 19em !important; // time below date for 'smaller' screens
+                        }
+                    }
+                }
+
+                .filter-dropdown-toolbar { //dropdown-menu buttons
+                    display: table;
+                    width: 100%;
+                    border-top: 1px solid $hover_background;
+                    margin-top: 1px;
+
+                    .button {
+                        display: table-cell;
+                        width: 50%;
+                        vertical-align: middle;
+                        cursor: pointer;
+                        text-align: center;
+                        height: 40px;
+                        color: #999;
+                        font-weight: bold;
+
+                        &.apply {
+                            color: #3a7ebd;
+                            border-right: 1px solid $hover_background;
+                        }
+
+                        &.clear {
+                            color: #555;
+                        }
+
+                        &:hover {
+                            background: $hover_background;
+                        }
+                    }
+                }
+
+                &.MetadataOptionFilter {
+                    .filter-dropdown-toolbar {
+                        .button {
+                            &.apply {
+                                display: none;
                             }
                         }
                     }
@@ -384,4 +385,18 @@ table .detaildata {
 
 .advancedSearch {
     height: 34px;
+}
+
+.grid-header {
+    .quick-search {
+        float:left;
+        padding-top:4px;
+        padding-left:10px;
+        @media(min-width: 750px){
+            width: calc(100% - 370px);
+        }
+        @media(max-width: 749px){
+            width: calc(100% - 200px);
+        }
+    }
 }

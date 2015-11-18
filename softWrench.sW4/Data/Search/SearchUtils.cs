@@ -109,11 +109,14 @@ namespace softWrench.sW4.Data.Search {
         private static string HandleSearchParams(SearchRequestDto listDto, string entityName) {
 
 
-            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
+            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !string.IsNullOrWhiteSpace(f));
             var searchParameters = listDto.GetParameters();
 
             var sbReplacingIdx = 0;
             var sb = new StringBuilder(BuildSearchTemplate(listDto, searchParameters));
+
+            var quickSearchData = listDto.QuickSearchData;
+            var isQuickSearch = !string.IsNullOrEmpty(quickSearchData);
 
             foreach (var param in parameters) {
                 var statement = new StringBuilder();
@@ -123,6 +126,7 @@ namespace softWrench.sW4.Data.Search {
                     //this search parameter needs to be ignored
                     continue;
                 }
+                //if (isQuickSearch) searchParameter.Value = quickSearchData;
 
                 var parameterData = GetParameterData(entityName, searchParameter, param);
                 searchParameter.IsNumber = parameterData.Item2 == ParameterType.Number;
@@ -130,18 +134,19 @@ namespace softWrench.sW4.Data.Search {
 
                 if (searchParameter.SearchOperator == SearchOperator.BETWEEN) {
                     statement.Append("( " + parameterData.Item1 + " >= :" + param + "_start" + "&&" + parameterData.Item1 + " <= :" + param + "_end" + ")");
+
                 } else if (searchParameter.SearchOperator == SearchOperator.ORCONTAINS) {
 
                     var values = (searchParameter.Value as IEnumerable).Cast<string>().ToList();
                     if (values != null) {
                         statement.Append("( ");
 
-                        for (var i = 0; i < values.Count; i++) {
+                        foreach (string value in values) {
                             statement.Append(parameterData.Item1);
                             // this next line would be the ideal, but it will be complicade passing this parameters to BaseHibernateDAO. 
                             //statement.Append(GetDefaultParam(operatorPrefix, param + i)); 
                             // TODO: refactor later
-                            statement.Append(operatorPrefix + "'%" + values[i] + "%'");
+                            statement.Append(operatorPrefix + "'%" + value + "%'");
                             statement.Append(" OR ");
                         }
                         statement.Remove(statement.Length - 4, 4); // remove the last " OR "
@@ -200,47 +205,51 @@ namespace softWrench.sW4.Data.Search {
 
         public static IDictionary<string, object> GetParameters(SearchRequestDto listDto) {
             IDictionary<string, object> resultDictionary = new Dictionary<string, object>();
+            // quicksearch statement parameter 
+            if (QuickSearchHelper.HasQuickSearchData(listDto)) {
+                resultDictionary[QuickSearchHelper.QuickSearchParamName] = QuickSearchHelper.QuickSearchDataValue(listDto.QuickSearchData);
+            }
+            // filter parameters
             var searchParameters = listDto.GetParameters();
-            if (searchParameters != null) {
-                foreach (var searchParameter in searchParameters) {
-                    var parameter = searchParameter.Value;
-                    if (parameter.IsBlankNumber || parameter.IsBlankDate) {
-                        //this will reflect in only a ISNULL comparison
-                        continue;
-                    }
+            if (searchParameters == null) return resultDictionary;
+            foreach (var searchParameter in searchParameters) {
+                var parameter = searchParameter.Value;
+                if (parameter.IsBlankNumber || parameter.IsBlankDate) {
+                    //this will reflect in only a ISNULL comparison
+                    continue;
+                }
 
-                    if (parameter.IsDate && !parameter.HasHour) {
-                        var dt = parameter.GetAsDate;
-                        if (parameter.IsEqualOrNotEqual()) {
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
-                        } else if (parameter.IsGtOrGte()) {
-                            //Adding one day in case of Greater Than
-                            if (parameter.SearchOperator == SearchOperator.GT) {
-                                dt = dt.AddDays(1);
-                            }
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
-                        } else if (parameter.IsLtOrLte()) {
-                            //Removing one day in case of Less than
-                            if (parameter.SearchOperator == SearchOperator.LT) {
-                                dt = dt.AddDays(-1);
-                            }
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
+                if (parameter.IsDate && !parameter.HasHour) {
+                    var dt = parameter.GetAsDate;
+                    if (parameter.IsEqualOrNotEqual()) {
+                        resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
+                        resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
+                    } else if (parameter.IsGtOrGte()) {
+                        //Adding one day in case of Greater Than
+                        if (parameter.SearchOperator == SearchOperator.GT) {
+                            dt = dt.AddDays(1);
                         }
-                    } else if (parameter.IsNumber && (parameter.Value is string)) {
-                        try {
-                            var int32 = Convert.ToInt32(parameter.Value);
-                            resultDictionary.Add(searchParameter.Key, int32);
-                        } catch {
-                            //its declared as a number, but the client passed a string like %10%, for contains, or even SR123 
-                            resultDictionary.Add(searchParameter.Key, parameter.Value);
+                        resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
+                    } else if (parameter.IsLtOrLte()) {
+                        //Removing one day in case of Less than
+                        if (parameter.SearchOperator == SearchOperator.LT) {
+                            dt = dt.AddDays(-1);
                         }
-                    } else if (parameter.Value != null && parameter.Value.ToString().StartsWith("@")) {
-                        resultDictionary.Add(searchParameter.Key,
-                            DefaultValuesBuilder.GetDefaultValue(parameter.Value.ToString(), null, DefaultValuesBuilder.DBDateTimeFormat));
-                    } else {
+                        resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
+                    }
+                } else if (parameter.IsNumber && (parameter.Value is string)) {
+                    try {
+                        var int32 = Convert.ToInt32(parameter.Value);
+                        resultDictionary.Add(searchParameter.Key, int32);
+                    } catch {
+                        //its declared as a number, but the client passed a string like %10%, for contains, or even SR123 
                         resultDictionary.Add(searchParameter.Key, parameter.Value);
                     }
+                } else if (parameter.Value != null && parameter.Value.ToString().StartsWith("@")) {
+                    resultDictionary.Add(searchParameter.Key,
+                        DefaultValuesBuilder.GetDefaultValue(parameter.Value.ToString(), null, DefaultValuesBuilder.DBDateTimeFormat));
+                } else {
+                    resultDictionary.Add(searchParameter.Key, parameter.Value);
                 }
             }
             return resultDictionary;
