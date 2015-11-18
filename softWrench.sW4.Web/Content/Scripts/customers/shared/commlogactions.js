@@ -52,7 +52,9 @@
         }
 
         function buildMessage(originalItem) {
-            return commlog_messagheader.format(contextService.getUserData().userPreferences.signature, originalItem.sendfrom, originalItem.sendto, emptyIfNull(originalItem.cc), originalItem.subject, originalItem.message);
+            var preferences = contextService.getUserData().userPreferences;
+            var signature = preferences == null ? "" : preferences.signature;
+            return commlog_messagheader.format(signature, originalItem.sendfrom, originalItem.sendto, emptyIfNull(originalItem.cc), originalItem.subject, originalItem.message);
         }
 
 
