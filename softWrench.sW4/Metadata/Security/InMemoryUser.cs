@@ -33,6 +33,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
         private int? _timezoneOffset;
+        private readonly GridPreferences _gridPreferences;
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
@@ -58,7 +59,7 @@ namespace softWrench.sW4.Metadata.Security {
             _dataConstraints = new List<DataConstraint>();
         }
 
-        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, UserPreferences userPreferences, int? timezoneOffset) {
+        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset) {
             DBUser = dbUser;
             _login = dbUser.UserName;
             SiteId = dbUser.Person.SiteId?? dbUser.SiteId;
@@ -108,6 +109,7 @@ namespace softWrench.sW4.Metadata.Security {
             _roles = roles;
             _dataConstraints = dataConstraints;
             Identity = new GenericIdentity(_login);
+            _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
         }
 
@@ -176,8 +178,14 @@ namespace softWrench.sW4.Metadata.Security {
             get { return _maximoPersonId; }
         }
 
+        public GridPreferences GridPreferences {
+            get { return _gridPreferences; }
+        }
+
         public UserPreferences UserPreferences {
-            get { return _userPreferences; }
+            get {
+                return _userPreferences;
+            }
         }
 
         /// <summary>

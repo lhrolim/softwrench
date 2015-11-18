@@ -81,6 +81,7 @@
     <Compile Include="classes\entities\Role.cs" />
     <Compile Include="classes\entities\RoleGroup.cs" />
     <Compile Include="classes\entities\RoleWithErrorMessage.cs" />
+    <Compile Include="classes\entities\UserPreferences.cs" />
     <Compile Include="classes\entities\User.cs" />
     <Compile Include="classes\entities\UserStatistics.cs" />
     <Compile Include="classes\entities\UserActivationLink.cs" />

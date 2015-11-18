@@ -16,7 +16,7 @@
         },
 
         controller: function ($scope, $http, $rootScope, $timeout, printService,
-            searchService, i18NService, redirectService, fileService, userPreferenceService, alertService) {
+            searchService, i18NService, redirectService, fileService, alertService) {
 
             $scope.isPaginationEnabled=function() {
                 return $scope.schema == null || "true" != $scope.schema.properties['list.disablepagination'];
