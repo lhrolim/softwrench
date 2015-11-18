@@ -119,14 +119,7 @@ namespace softwrench.sw4.user.classes.entities {
         public ISet<UserCustomConstraint> CustomConstraints {
             get; set;
         }
-
-        //[Set(0, Table = "PREF_GENERAL",
-        //  Lazy = CollectionLazy.False, Cascade = "none")]
-        //[Key(1, Column = "UserId")]
-        //[OneToMany(2, ClassType = typeof(UserPreferences))]
         
-            
-        //[Key(0, Column = "UserId")]
         [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "all")]
         public UserPreferences UserPreferences {
             get; set;
