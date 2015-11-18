@@ -109,7 +109,7 @@ namespace softWrench.sW4.Configuration.Services {
                     defaultId = profile.Id;
                 }
             }
-            if (!result.Any()) {
+            if (result.Any() && defaultId != null) {
                 result.Insert(0, new UserProfile {
                     Id = defaultId,
                     Name = sb.ToString(0, sb.Length - 3)
