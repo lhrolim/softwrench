@@ -8,13 +8,16 @@
             </div>
         </span>
 
-        <angulartypeahead schema="schema" attribute="fieldMetadata.attribute" provider="fieldMetadata.associationKey" placeholder="fieldMetadata.label" search-text="vm.searchText" hide-description="fieldMetadata.hideDescription"/>
+        <angulartypeahead schema="schema" datamap="datamap"
+                          attribute="fieldMetadata.attribute"
+                          provider="fieldMetadata.associationKey"
+                          placeholder="fieldMetadata.label"
+                          search-text="vm.searchText"
+                          hide-description="{{fieldMetadata.hideDescription}}"
+                          magnet-clicked="showLookupModal(text)"
+                          />
 
     </div>
-    <!--    <div ng-if="shouldShowDescription(fieldMetadata)" class="col-md-6 col-lg-8">-->
-    <!--        <input type="text" placeholder="{{getLookUpDescriptionLabel(fieldMetadata)}}" class="form-control" disabled-->
-    <!--               ng-model="lookupAssociationsDescription[fieldMetadata.attribute]" />-->
-    <!--    </div>-->
     <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
 
     <div>

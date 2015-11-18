@@ -1,103 +1,109 @@
-﻿var app = angular.module('sw_layout');
+﻿
+(function (angular) {
+    'use strict';
 
-app.factory('associationService', function (dispatcherService, $http, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService) {
+ 
 
-    var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
-        var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
-        var key = associationFieldMetadata.associationKey;
-        if (datamap.fields != undefined) {
-            datamap = datamap.fields;
-        }
 
-        datamap[key] = {};
-        datamap.extrafields = datamap.extrafields || {};
-        if (associationFieldMetadata.extraProjectionFields == null) {
-            return;
-        }
-        for (var i = 0; i < associationFieldMetadata.extraProjectionFields.length; i++) {
-            var extrafield = associationFieldMetadata.extraProjectionFields[i];
-            var valueToSet = underlyingValue == null ? null : underlyingValue.extrafields[extrafield];
-            log.debug('updating extra field {0}.{1} | value={2}'.format(key, extrafield, valueToSet));
-            if (extrafield.startsWith(key)) {
-                //if the extrafield has the association we dont need to append anything (i.e: solution_x_y and relationship = solution_)
-                //but we have to take care of a_resolution_.ldtext and reslationship=solution_ that could lead to false positive, thats why startsWith
-                datamap[extrafield] = valueToSet;
-            } else {
-                var appendDot = extrafield.indexOf('.') === -1;
-                var fullKey = key;
-                if (appendDot) {
-                    fullKey += ".";
+    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService) {
+
+
+        var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
+            var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
+            var key = associationFieldMetadata.associationKey;
+            if (datamap.fields != undefined) {
+                datamap = datamap.fields;
+            }
+
+            datamap[key] = {};
+            datamap.extrafields = datamap.extrafields || {};
+            if (associationFieldMetadata.extraProjectionFields == null) {
+                return;
+            }
+            for (var i = 0; i < associationFieldMetadata.extraProjectionFields.length; i++) {
+                var extrafield = associationFieldMetadata.extraProjectionFields[i];
+                var valueToSet = underlyingValue == null ? null : underlyingValue.extrafields[extrafield];
+                log.debug('updating extra field {0}.{1} | value={2}'.format(key, extrafield, valueToSet));
+                if (extrafield.startsWith(key)) {
+                    //if the extrafield has the association we dont need to append anything (i.e: solution_x_y and relationship = solution_)
+                    //but we have to take care of a_resolution_.ldtext and reslationship=solution_ that could lead to false positive, thats why startsWith
+                    datamap[extrafield] = valueToSet;
+                } else {
+                    var appendDot = extrafield.indexOf('.') === -1;
+                    var fullKey = key;
+                    if (appendDot) {
+                        fullKey += ".";
+                    }
+                    fullKey += extrafield;
+                    FillRelationship(datamap, fullKey, valueToSet);
+                    datamap[GetRelationshipName(fullKey)] = valueToSet;
+                    datamap[key][extrafield] = valueToSet;
+
+                    FillRelationship(datamap.extrafields, fullKey, valueToSet);
+                    datamap.extrafields[GetRelationshipName(fullKey)] = valueToSet;
+                    datamap.extrafields[key][extrafield] = valueToSet;
+
                 }
-                fullKey += extrafield;
-                FillRelationship(datamap, fullKey, valueToSet);
-                datamap[GetRelationshipName(fullKey)] = valueToSet;
-                datamap[key][extrafield] = valueToSet;
+            };
+        }
 
-                FillRelationship(datamap.extrafields, fullKey, valueToSet);
-                datamap.extrafields[GetRelationshipName(fullKey)] = valueToSet;
-                datamap.extrafields[key][extrafield] = valueToSet;
+        var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
+            if (selectedValue == null) {
+                return null;
+            } else if (Array.isArray(selectedValue)) {
+                var ObjectArray = [];
 
+                // Extract each item into an array object
+                for (var i = 0; i < selectedValue.length; i++) {
+                    var Object = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue[i]);
+                    ObjectArray = ObjectArray.concat(Object);
+                }
+
+                // Return results for multi-value selection
+                return ObjectArray;
             }
+
+            // we need to locate the value from the list of association options
+            // we only have the "value" on the datamap 
+            var key = associationFieldMetadata.associationKey;
+
+            var listToSearch = associationOptions[key];
+
+            if (listToSearch == null) {
+                //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
+                if (associationFieldMetadata.options != undefined) {
+                    //this means this is an option field with static options
+                    var resultArr = $.grep(associationFieldMetadata.options, function (option) {
+                        return selectedValue.equalIc(option.value);
+                    });
+                    return resultArr == null ? null : resultArr[0];
+                }
+
+                return null;
+            }
+            for (var i = 0; i < listToSearch.length; i++) {
+                var objectWithProjectionFields = listToSearch[i];
+                if ((typeof selectedValue === 'string') && selectedValue.equalIc(objectWithProjectionFields.value)) {
+                    //recovers the whole object in which the value field is equal to the datamap
+                    return objectWithProjectionFields;
+                }
+            }
+            return null;
         };
-    }
 
 
-
-
-    var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
-        if (selectedValue == null) {
-            return null;
-        } else if (Array.isArray(selectedValue)) {
-            var ObjectArray = [];
-
-            // Extract each item into an array object
-            for (var i = 0; i < selectedValue.length; i++) {
-                var Object = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue[i]);
-                ObjectArray = ObjectArray.concat(Object);
+        function getLabelText(item, hideDescription) {
+            if (item == null) {
+                return null;
             }
 
-            // Return results for multi-value selection
-            return ObjectArray;
-        }
-
-        // we need to locate the value from the list of association options
-        // we only have the "value" on the datamap 
-        var key = associationFieldMetadata.associationKey;
-
-        var listToSearch = associationOptions[key];
-
-        if (listToSearch == null) {
-            //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
-            if (associationFieldMetadata.options != undefined) {
-                //this means this is an option field with static options
-                var resultArr = $.grep(associationFieldMetadata.options, function (option) {
-                    return selectedValue.equalIc(option.value);
-                });
-                return resultArr == null ? null : resultArr[0];
-            }
-
-            return null;
-        }
-        for (var i = 0; i < listToSearch.length; i++) {
-            var objectWithProjectionFields = listToSearch[i];
-            if ((typeof selectedValue === 'string') && selectedValue.equalIc(objectWithProjectionFields.value)) {
-                //recovers the whole object in which the value field is equal to the datamap
-                return objectWithProjectionFields;
-            }
-        }
-        return null;
-    };
-
-    return {
-
-        getLabelText:function(item, hideDescription) {
-            if (hideDescription) {
+            if ("true"===hideDescription || true === hideDescription) {
                 return item.value;
             }
             return "(" + item.value + ")" + " - " + item.label;
-        },
+        };
 
-        getFullObject: function (associationFieldMetadata, datamap, associationOptions) {
+        function getFullObject(associationFieldMetadata, datamap, associationOptions) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -111,18 +117,22 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
             return resultValue;
-        },
+        };
 
         ///this method is used to update associations which depends upon the projection result of a first association.
         ///it only makes sense for associations which have extraprojections
-        updateUnderlyingAssociationObject: function (associationFieldMetadata, underlyingValue, scope) {
+        function updateUnderlyingAssociationObject(associationFieldMetadata, underlyingValue, scope) {
 
             //if association options have no fields, we need to define it as an empty array. 
             scope.associationOptions = scope.associationOptions || [];
-                
+
 
             var key = associationFieldMetadata.associationKey;
             var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
+         
+
+            crudContextHolderService.updateLazyAssociationOption(key, underlyingValue,true);
+
             if (underlyingValue == null) {
                 //we need to locate the value from the list of association options
                 // we only have the "value" on the datamap
@@ -145,12 +155,11 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             if (associationFieldMetadata.extraProjectionFields.length > 0) {
                 doUpdateExtraFields(associationFieldMetadata, underlyingValue, scope.datamap);
             }
-        },
+        };
 
-        ///
-        ///
+
         ///dispatchedbyuser: the method could be called after a user action (changing a field), or internally after a value has been set programatically 
-        postAssociationHook: function (associationMetadata, scope, triggerparams) {
+        function postAssociationHook(associationMetadata, scope, triggerparams) {
             if (associationMetadata.events == undefined) {
                 return;
             }
@@ -171,19 +180,17 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             var afterchangeEvent = {
                 fields: fields,
                 scope: scope,
-                parentdata:scope.parentdata,
+                parentdata: scope.parentdata,
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
-                .format(afterChangeEvent.service, afterChangeEvent.method, associationMetadata.target,associationMetadata.associationKey));
+                .format(afterChangeEvent.service, afterChangeEvent.method, associationMetadata.target, associationMetadata.associationKey));
             fn(afterchangeEvent);
-        },
+        };
 
-        markAssociationProcessComplete: function () {
-            $rootScope.$broadcast("sw_optionsretrievedFromServerEnded");
-        },
 
-        updateAssociationOptionsRetrievedFromServer: function (scope, serverOptions, datamap) {
+
+        function updateAssociationOptionsRetrievedFromServer(scope, serverOptions, datamap) {
             /// <summary>
             ///  Callback of the updateAssociations call, in which the values returned from the server would update the scope variables, 
             /// to be shown on screen
@@ -193,10 +200,11 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             /// <param name="serverOptions"></param>
             /// <param name="datamap">could be null for list schemas.</param>
             var log = $log.getInstance('sw4.associationservice#updateAssociationOptionsRetrievedFromServer');
-            scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
-            scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
-            scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
-            scope.disabledassociations = instantiateIfUndefined(scope.disabledassociations);
+            scope.associationOptions = scope.associationOptions || {};
+            scope.blockedassociations = scope.blockedassociations || {};
+            scope.associationSchemas = scope.associationSchemas || {};
+            scope.disabledassociations = scope.disabledassociations || {};
+
             for (var dependantFieldName in serverOptions) {
 
                 //this iterates for list of fields which were dependant of a first one. 
@@ -240,14 +248,14 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         datamap[value.target] = null;
                     }
 
-                    
+
 
                     if (array.associationData == null) {
                         //if no options returned from the server, nothing else to do
                         return;
                     }
 
-                    if (oneEntryFound && fieldService.isFieldRequired(value,datamap)) {
+                    if (oneEntryFound && fieldService.isFieldRequired(value, datamap)) {
                         //if there´s just one option available, and the field is required, let´s select it.
                         var entryReturned = array.associationData[0].value;
                         if (datamapTargetValue !== entryReturned) {
@@ -306,26 +314,96 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                     //digest already in progress
                 }
             }
-        },
+        };
 
-        getEagerAssociations: function (scope, options) {
+        function markAssociationProcessComplete() {
+            $rootScope.$broadcast("sw_optionsretrievedFromServerEnded");
+        };
+
+        function getEagerAssociations(scope, options) {
             var associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
-            if (associations == undefined || associations.length == 0) {
+            if (associations == undefined || associations.length === 0) {
                 //no need to hit server in that case
+                return $q.when();
+            }
+
+            scope.associationOptions = scope.associationOptions || {};
+            scope.blockedassociations = scope.blockedassociations || {};
+            scope.associationSchemas = scope.associationSchemas || {};
+            return this.updateAssociations({ attribute: "#eagerassociations" }, scope, options);
+        };
+
+        function updateLazyOptions(lazyOptions) {
+            angular.forEach(lazyOptions, function (value, key) {
+                crudContextHolderService.updateLazyAssociationOption(key, value);
+            });
+        }
+
+        function updateEagerOptions(eagerOptions) {
+            angular.forEach(eagerOptions, function (value, key) {
+                crudContextHolderService.updateEagerAssociationOptions(key, value);
+            });
+        }
+
+        function updateEagerCompositionOptions(compositionData) {
+        }
+
+        function updateFromServerSchemaLoadResult(schemaLoadResult) {
+            if (schemaLoadResult==null) {
                 return;
             }
 
-            scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
-            scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
-            scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
-            return this.updateAssociations({ attribute: "#eagerassociations" }, scope, options);
-        },
+            updateLazyOptions(schemaLoadResult.preFetchLazyOptions);
+            updateEagerOptions(schemaLoadResult.eagerOptions);
+            updateEagerCompositionOptions(schemaLoadResult.eagerCompositionAssociations);
+            $timeout(function () {
+                //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
+                //and so the listeners
+                crudContextHolderService.markAssociationsResolved();
+                contextService.insertIntoContext("associationsresolved", true, true);
+            }, 100, false);
+        }
+
+        function loadSchemaAssociations(datamap, schema, options) {
+            var log = $log.get("associationService#loadSchemaAssociations");
+            var associations = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
+            if (associations == undefined || associations.length === 0) {
+                //no need to hit server in that case
+                return $q.when();
+            }
+
+            options = options || {};
+            var config = { avoidspin: options.avoidspin };
+
+            var key = schemaService.buildApplicationMetadataSchemaKey(schema);
+            var parameters = {
+                key: key
+            };
+            var fields = datamap.fields ? datamap.fields : datamap;
+            var fieldsTosubmit = submitService.removeExtraFields(fields, true, schema);
+
+            var urlToUse = url("/api/generic/Association/GetSchemaOptions?" + $.param(parameters));
+            var jsonString = angular.toJson(fieldsTosubmit);
+            log.info('going to server for loading schema {0} associations '.format(schema.schemaId));
+            if (log.isLevelEnabled("debug")) {
+                log.debug('Content: \n {0}'.format(jsonString));
+            }
+
+            return $http.post(urlToUse, jsonString, config)
+                .then(function (serverResponse) {
+                    return updateFromServerSchemaLoadResult(serverResponse.data.resultObject);
+                });
+
+        }
+
+
+
 
         // This method is called whenever an association value changes, in order to update all the dependant associations 
         // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
-        updateAssociations: function (association, scope, options) {
+        function updateAssociations(association, scope, options) {
             options = options || {};
 
             var log = $log.getInstance('sw4.associationservice#updateAssociations');
@@ -348,8 +426,8 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
                     }, 300, false);
                 }
-                
-                
+
+
                 return false;
             }
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
@@ -386,16 +464,17 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             if (options.avoidspin) {
                 config.avoidspin = true;
             }
-            return $http.post(urlToUse, jsonString,config).success(function (data) {
+            return $http.post(urlToUse, jsonString, config).success(function (data) {
                 var options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields);
-                if (association.attribute != "#eagerassociations") {
-                    //this means we´re getting the eager associations, see method above
+                if (association.attribute !== "#eagerassociations") {
+                    //this means we´re not getting the eager associations, see method above
                     postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
                 } else {
                     $timeout(function () {
-                        //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, and so the listeners
+                        //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
+                        //and so the listeners
                         contextService.insertIntoContext("associationsresolved", true, true);
                     }, 100, false);
                     scope.$broadcast("sw_associationsupdated", scope.associationOptions);
@@ -411,15 +490,13 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         scope.$emit("sw_setFocusToInitial", scope.schema, fields);
                     }
                 }
-            }).error(
-            function data() {
             });
-        },
+        };
 
         //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
         //to its value that will filter the lookup), build a searchDTO, and return the post call to the
         //UpdateAssociations function in the ExtendedData controller.
-        getAssociationOptions: function (schema,datamap, lookupObj, pageNumber, searchObj) {
+        function getAssociationOptions(schema, datamap, lookupObj, pageNumber, searchObj) {
             var fields = datamap;
             if (lookupObj.searchDatamap) {
                 fields = lookupObj.searchDatamap;
@@ -483,15 +560,15 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             var jsonString = angular.toJson(fields);
             return $http.post(urlToUse, jsonString);
-        },
+        };
 
         //Updates dependent association values for all association rendererTypes.
         //This includes the associationOptions, associationDescriptions, etc.
-        updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook, searchObj) {
+        function updateDependentAssociationValues(scope, datamap, lookupObj, postFetchHook, searchObj) {
             var getAssociationOptions = this.getAssociationOptions;
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
             lookupObj.searchDatamap = datamap;
-            getAssociationOptions(scope.schema,scope.datamap, lookupObj, null, searchObj).success(function (data) {
+            getAssociationOptions(scope.schema, scope.datamap, lookupObj, null, searchObj).success(function (data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {
@@ -517,9 +594,10 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
             }).error(function (data) {
             });
-        },
+        };
 
-        onAssociationChange: function (fieldMetadata, updateUnderlying, event) {
+
+        function onAssociationChange(fieldMetadata, updateUnderlying, event) {
 
             if (fieldMetadata.events == undefined) {
                 event.continue();
@@ -542,9 +620,9 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 }
                 event.continue();
             }
-        },
+        };
 
-        insertAssocationLabelsIfNeeded: function (schema, datamap, associationoptions) {
+        function insertAssocationLabelsIfNeeded(schema, datamap, associationoptions) {
             if (schema.properties['addassociationlabels'] != "true") {
                 return;
             }
@@ -565,10 +643,10 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                     datamap[labelName] = realValue.label;
                 }
             });
-        },
+        };
 
 
-        lookupAssociation: function (displayables, associationTarget) {
+        function lookupAssociation(displayables, associationTarget) {
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
                 if (displayable.target != undefined && displayable.target == associationTarget) {
@@ -577,8 +655,34 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             }
             return null;
         }
-    };
 
-});
+        var service = {
+            getLabelText: getLabelText,
+            getFullObject: getFullObject,
+            getAssociationOptions: getAssociationOptions,
+            getEagerAssociations: getEagerAssociations,
+            insertAssocationLabelsIfNeeded: insertAssocationLabelsIfNeeded,
+            lookupAssociation: lookupAssociation,
+            markAssociationProcessComplete: markAssociationProcessComplete,
+            onAssociationChange: onAssociationChange,
+            postAssociationHook: postAssociationHook,
+            updateAssociationOptionsRetrievedFromServer: updateAssociationOptionsRetrievedFromServer,
+            updateAssociations: updateAssociations,
+            loadSchemaAssociations: loadSchemaAssociations,
+            updateDependentAssociationValues: updateDependentAssociationValues,
+            updateFromServerSchemaLoadResult:updateFromServerSchemaLoadResult,
+            updateUnderlyingAssociationObject: updateUnderlyingAssociationObject
+        };
+
+        return service;
+    }
+
+    angular
+    .module('sw_layout')
+    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService',
+        associationService]);
+
+})(angular);
+
 
 

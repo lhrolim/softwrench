@@ -52,28 +52,29 @@ app.directive('lookupModal', function (contextService) {
             $scope.lookupModalSearch = function (pageNumber) {
                 focusService.resetFocusToCurrent($scope.schema, $scope.lookupObj.fieldMetadata.attribute);
 
-                associationService.getAssociationOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).success(function (data) {
+                associationService.getAssociationOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
                     var result = data.resultObject;
                     $scope.populateModal(result);
-                }).error(function (data) {
                 });
             };
 
             $scope.populateModal = function (resultData) {
                 for (var association in resultData) {
-                    if ($scope.lookupObj.fieldMetadata.associationKey == association) {
-                        var associationResult = resultData[association];
-                        $scope.lookupObj.options = associationResult.associationData;
-                        $scope.lookupObj.schema = associationResult.associationSchemaDefinition;
-                        var modalPaginationData = $scope.lookupObj.modalPaginationData;
+                    if (resultData.hasOwnProperty(association)) {
+                        if ($scope.lookupObj.fieldMetadata.associationKey == association) {
+                            var associationResult = resultData[association];
+                            $scope.lookupObj.options = associationResult.associationData;
+                            $scope.lookupObj.schema = associationResult.associationSchemaDefinition;
+                            var modalPaginationData = $scope.lookupObj.modalPaginationData;
 
-                        modalPaginationData.pageCount = associationResult.pageCount;
-                        modalPaginationData.pageNumber = associationResult.pageNumber;
-                        modalPaginationData.pageSize = associationResult.pageSize;
-                        modalPaginationData.totalCount = associationResult.totalCount;
-                        modalPaginationData.selectedPage = associationResult.pageNumber;
-                        //TODO: this should come from the server side
-                        modalPaginationData.paginationOptions = [10, 30, 100];
+                            modalPaginationData.pageCount = associationResult.pageCount;
+                            modalPaginationData.pageNumber = associationResult.pageNumber;
+                            modalPaginationData.pageSize = associationResult.pageSize;
+                            modalPaginationData.totalCount = associationResult.totalCount;
+                            modalPaginationData.selectedPage = associationResult.pageNumber;
+                            //TODO: this should come from the server side
+                            modalPaginationData.paginationOptions = [10, 30, 100];
+                        }
                     }
                 }
             };

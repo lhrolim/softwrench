@@ -4,6 +4,7 @@ using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.API.Association.SchemaLoading;
 
 namespace softWrench.sW4.Data.API.Response {
     public class ApplicationListResult : GenericResponseResult<IEnumerable<AttributeHolder>>, IApplicationResponse {
@@ -12,7 +13,7 @@ namespace softWrench.sW4.Data.API.Response {
         //this is for grids that have optionfields inside of it
 
         public ApplicationListResult(int totalCount, PaginatedSearchRequestDto searchDTO,
-            IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, IDictionary<string, BaseAssociationUpdateResult> associationOptions)
+            IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, AssociationMainSchemaLoadResult associationOptions)
             : base(dataMap, null) {
             Schema = schema;
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
@@ -28,7 +29,7 @@ namespace softWrench.sW4.Data.API.Response {
 
         public int? CurrentSelectedProfile {get; set;}
 
-        public IDictionary<string, BaseAssociationUpdateResult> AssociationOptions { get; set; }
+        public AssociationMainSchemaLoadResult AssociationOptions { get; set; }
 
         public string Mode {
             get { return Schema.Mode.ToString().ToLower(); }

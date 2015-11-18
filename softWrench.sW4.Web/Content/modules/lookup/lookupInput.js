@@ -109,10 +109,12 @@
 
 
 
-                    scope.showLookupModal = function (fieldMetadata) {
+                    scope.showLookupModal = function (text) {
+                        var fieldMetadata = scope.fieldMetadata;
+
                         scope.lookupAssociationsDescription = scope.lookupAssociationsDescription || {};
 
-                        if (fieldMetadata.rendererType == "modal") {
+                        if (fieldMetadata.rendererType === "modal") {
                             this.showCustomModal(fieldMetadata, $scope.schema, $scope.datamap);
                             return;
                         }

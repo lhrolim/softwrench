@@ -71,5 +71,13 @@
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
   </environment>
-  
+
+  <environment key="demo">
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="basewsURL" value="http://10.50.100.101:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.101;Initial Catalog=CTS75MAX;User Id=MAXIMO;password=maximo1;" />
+    <property key="swdb_url" value="Data Source=10.50.100.101;Initial Catalog=SWDB_CTS75MAX;User Id=sw;password=softwrench;" />
+  </environment>
+
+
 </Properties>

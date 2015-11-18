@@ -311,9 +311,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         ///  This decision will be delegated to the renderer type; a combo is a good example of a eager association, whileas a modal and autocomplete are lazy fetched components. 
         /// Those components data will only be fetched when the user makes some kind of interaction with it.
         /// </summary>
-        public Boolean IsLazyLoaded() {
+        public bool IsLazyLoaded() {
             return _applicationAssociationSchema.IsLazyLoaded;
         }
+
+        public bool IsEagerLoaded() {
+            return !IsLazyLoaded();
+        }
+
 
         public Boolean IsPaginated() {
             return _applicationAssociationSchema.IsPaginated;

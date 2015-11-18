@@ -108,8 +108,9 @@ app.directive('crudInput', function (contextService, associationService) {
                 return id != null;
             };
 
-            if ($scope.composition == "true") {
-                associationService.getEagerAssociations($scope);
+            if ($scope.composition === "true") {
+                //really makes sense?
+                associationService.loadSchemaAssociations($scope.datamap, $scope.schema, { avoidspin: true });
             }
 
 

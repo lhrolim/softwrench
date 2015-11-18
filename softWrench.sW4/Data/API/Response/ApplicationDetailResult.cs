@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using softWrench.sW4.Data.API.Association;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.API.Association.SchemaLoading;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
     public class ApplicationDetailResult : GenericResponseResult<DataMap>, IApplicationResponse {
         private readonly string _id;
 
-       
-
-        private readonly IDictionary<string, BaseAssociationUpdateResult> _associationOptions
-                    = new Dictionary<string, BaseAssociationUpdateResult>();
 
 
+        private readonly AssociationMainSchemaLoadResult _associationOptions;
+                    
 
-        public ApplicationDetailResult(DataMap dataMap, IDictionary<string, BaseAssociationUpdateResult> associationOptions,
+
+
+        public ApplicationDetailResult(DataMap dataMap, AssociationMainSchemaLoadResult associationOptions,
             ApplicationSchemaDefinition main, IDictionary<string, ApplicationCompositionSchema> compositions, string id)
             : base(dataMap, null) {
             
@@ -25,7 +25,7 @@ namespace softWrench.sW4.Data.API.Response {
             _id = id;
         }
 
-        public IDictionary<string, BaseAssociationUpdateResult> AssociationOptions {
+        public AssociationMainSchemaLoadResult AssociationOptions {
             get { return _associationOptions; }
         }
 

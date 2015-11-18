@@ -264,6 +264,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />

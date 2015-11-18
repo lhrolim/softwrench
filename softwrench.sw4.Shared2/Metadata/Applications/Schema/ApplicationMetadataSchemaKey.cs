@@ -10,10 +10,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public const string NotFoundPattern = "schema {0} not found";
 
 
-        private string _schemaId;
-        private SchemaMode? _mode;
-        private ClientPlatform? _platform;
-
         public ApplicationMetadataSchemaKey(string schemaId)
             : this(schemaId, (string)null, null) {
         }
@@ -25,45 +21,41 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ApplicationMetadataSchemaKey() { }
 
         public ApplicationMetadataSchemaKey(string schemaId, SchemaMode? mode, ClientPlatform? platform) {
-            _schemaId = schemaId;
-            _mode = mode;
-            _platform = platform;
+            SchemaId = schemaId;
+            Mode = mode;
+            Platform = platform;
         }
 
         public ApplicationMetadataSchemaKey(string schemaId, string mode, string platform) {
-            _schemaId = schemaId;
+            SchemaId = schemaId;
             if (mode != null) {
                 SchemaMode value;
                 Enum.TryParse(mode, true, out value);
-                _mode = value;
+                Mode = value;
             }
             if (platform != null) {
                 ClientPlatform value;
                 Enum.TryParse(platform, true, out value);
-                _platform = value;
+                Platform = value;
             }
         }
 
-        public string SchemaId {
-            get { return _schemaId; }
-            set { _schemaId = value; }
-        }
+        /// <summary>
+        /// This was introduced on a later point, so, the api is not fully refactored across all places to use it
+        /// </summary>
+        public string ApplicationName { get; set; }
 
-        public SchemaMode? Mode {
-            get { return _mode; }
-            set { _mode = value; }
-        }
+        public string SchemaId { get; set; }
 
-        public ClientPlatform? Platform {
-            get { return _platform; }
-            set { _platform = value; }
-        }
+        public SchemaMode? Mode { get; set; }
+
+        public ClientPlatform? Platform { get; set; }
 
 
         protected bool Equals(ApplicationMetadataSchemaKey other) {
-            var blankMode = _mode == null || other._mode == null || Mode == SchemaMode.None || other._mode == SchemaMode.None;
-            return string.Equals(_schemaId, other._schemaId) && (blankMode || string.Equals(_mode, other._mode)) &&
-                (_platform == null || other.Platform == null || _platform == other._platform);
+            var blankMode = Mode == null || other.Mode == null || Mode == SchemaMode.None || other.Mode == SchemaMode.None;
+            return string.Equals(SchemaId, other.SchemaId) && (blankMode || string.Equals(Mode, other.Mode)) &&
+                (Platform == null || other.Platform == null || Platform == other.Platform);
         }
 
         public override bool Equals(object obj) {
@@ -75,13 +67,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public override int GetHashCode() {
             unchecked {
-                int hashCode = (_schemaId != null ? _schemaId.GetHashCode() : 0);
+                int hashCode = (SchemaId != null ? SchemaId.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
         public override string ToString() {
-            return string.Format("SchemaId: {0}, Mode: {1}, Platform: {2}", _schemaId, _mode, _platform);
+            return string.Format("SchemaId: {0}, Mode: {1}, Platform: {2}", SchemaId, Mode, Platform);
         }
 
         public static ApplicationMetadataSchemaKey GetSyncInstance() {

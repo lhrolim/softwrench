@@ -486,15 +486,14 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
                 if (fieldMetadata.type == "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
-                $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
-                return $scope.associationOptions[fieldMetadata.associationKey];
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey);
             }
             $scope.GetOptionFieldOptions = function (optionField) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
                 }
                 $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
-                return $scope.associationOptions[optionField.providerAttribute];
+                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute);
             }
             $scope.contextPath = function (path) {
                 return url(path);

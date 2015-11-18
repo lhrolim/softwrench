@@ -7,6 +7,7 @@ using softwrench.sw4.api.classes.application;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
+using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -23,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request);
         CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
         ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
-        IDictionary<string, BaseAssociationUpdateResult> BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
+        AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
 //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
         TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,Boolean isBatch);
 

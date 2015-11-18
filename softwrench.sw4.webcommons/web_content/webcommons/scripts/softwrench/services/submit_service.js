@@ -1,12 +1,12 @@
 ﻿
-(function (jQuery) {
+(function (angular, jQuery) {
     'use strict';
 
-    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', 'attachmentService', submitService]);
+
 
     function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService, attachmentService) {
 
-   
+
 
 
         ///used for ie9 form submission
@@ -15,7 +15,9 @@
             contextService.deleteFromContext("swGlobalRedirectURL");
 
             for (var i in parameters) {
-                formToSubmit.append("<input type='hidden' name='" + i + "' value='" + parameters[i] + "' />");
+                if (parameters.hasOwnProperty(i)) {
+                    formToSubmit.append("<input type='hidden' name='" + i + "' value='" + parameters[i] + "' />");
+                }
             }
             if (sessionStorage.mockmaximo == "true") {
                 formToSubmit.append("<input type='hidden' name='%%mockmaximo' value='true'/>");
@@ -123,7 +125,7 @@
         }
 
 
-        function createSubmissionParameters(datamap, schema, nextSchemaObj, id,dispatcherComposition) {
+        function createSubmissionParameters(datamap, schema, nextSchemaObj, id, dispatcherComposition) {
             var parameters = {};
             if (sessionStorage.mockmaximo === "true") {
                 //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
@@ -190,5 +192,7 @@
         return service;
 
     }
-})(jQuery);
+
+    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', 'attachmentService', submitService]);
+})(angular, jQuery);
 

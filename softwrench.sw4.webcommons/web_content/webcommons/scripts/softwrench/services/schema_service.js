@@ -3,29 +3,31 @@
 
     modules.webcommons.factory('schemaService', ["fieldService", "expressionService", function (fieldService, expressionService) {
 
-    /// <summary>
-    /// builds a cache of the grid qualified displayables to show on small grids
-    /// </summary>
-    /// <param name="schema"></param>
-    function buildQualifierCache(schema) {
-        schema.jscache = schema.jscache || {};
-        if (schema.jscache.griddisplayables) {
-            //already cached
-            return;
-        }
-        schema.jscache.qualifiercache = {};
-        var displayables = schema.displayables;
-        for (var i = 0; i < displayables.length; i++) {
-            var displayable = displayables[i];
-            if (displayable.qualifier) {
-                schema.jscache.qualifiercache[displayable.qualifier] = displayable;
+        //#region private methods
+
+        /// <summary>
+        /// builds a cache of the grid qualified displayables to show on small grids
+        /// </summary>
+        /// <param name="schema"></param>
+        function buildQualifierCache(schema) {
+            schema.jscache = schema.jscache || {};
+            if (schema.jscache.griddisplayables) {
+                //already cached
+                return;
             }
-        }
-    };
+            schema.jscache.qualifiercache = {};
+            var displayables = schema.displayables;
+            for (var i = 0; i < displayables.length; i++) {
+                var displayable = displayables[i];
+                if (displayable.qualifier) {
+                    schema.jscache.qualifiercache[displayable.qualifier] = displayable;
+                }
+            }
+        };
+
+        //#endregion
 
 
-
-    return {
         /// <summary>
         /// 
         /// </summary>
@@ -36,7 +38,7 @@
         /// mode: the mode of the schema(or null)
         /// 
         /// </returns>
-        parseAppAndSchema: function (schemaKey) {
+        function parseAppAndSchema(schemaKey) {
             if (schemaKey == null) {
                 return null;
             }
@@ -53,20 +55,20 @@
                 mode = keys[2];
             }
             return { app: application, schemaId: schemaId, mode: mode };
-        },
+        };
 
-        getId: function (datamap, schema) {
+        function getId(datamap, schema) {
             if (datamap.fields) {
                 return datamap.fields[schema.idFieldName];
             }
             return datamap[schema.idFieldName];
-        },
+        };
 
-        nonTabFields: function (schema) {
+        function nonTabFields(schema) {
             return fieldService.nonTabFields(schema.displayables, true);
-        },
+        };
 
-        hasAnyFieldOnMainTab: function (schema) {
+        function hasAnyFieldOnMainTab(schema) {
             if (!schema) {
                 return false;
             }
@@ -79,32 +81,41 @@
             var result = fields.length > 0;
             schema.jscache.hasAnyFieldOnMainTab = result;
             return result;
-        },
+        };
 
-        isPropertyTrue: function (schema, propertyName) {
+        function isPropertyTrue(schema, propertyName) {
             if (!schema) {
                 return false;
             }
             return schema.properties && "true" == schema.properties[propertyName];
-        },
+        };
 
-        getProperty: function (schema, propertyName) {
+        function getProperty(schema, propertyName) {
             if (!schema) {
                 return false;
             }
             schema.properties = schema.properties || {};
             return schema.properties[propertyName];
-        },
+        };
 
-        buildApplicationKey: function (schema) {
+        function buildApplicationKey(schema) {
             var basekey = schema.applicationName + "." + schema.schemaId;
-            if (schema.mode && schema.mode != "none") {
+            if (schema.mode && schema.mode !== "none") {
                 basekey += "." + schema.mode;
             }
             return basekey;
-        },
+        };
 
-        getTitle: function (schema, datamap, smallDevices) {
+        function buildApplicationMetadataSchemaKey(schema) {
+            return {
+                applicationName: schema.applicationName,
+                schemaId: schema.schemaId,
+                mode: schema.mode,
+                platform: platform()
+            }
+        };
+
+        function getTitle(schema, datamap, smallDevices) {
             if (!schema) {
                 return null;
             }
@@ -125,7 +136,7 @@
             var idValue = fields[schema.userIdFieldName];
             if (!idValue) {
 
-                idValue= "New " + schema.title;
+                idValue = "New " + schema.title;
             }
             if (smallDevices) {
                 result = idValue;
@@ -141,9 +152,9 @@
 
             }
             return result;
-        },
+        };
 
-        locateDisplayableByQualifier: function (schema, qualifier) {
+        function locateDisplayableByQualifier(schema, qualifier) {
             schema.jscache = schema.jscache || {};
             if (schema.jscache.qualifiercache) {
                 //already cached
@@ -151,9 +162,9 @@
             }
             buildQualifierCache(schema);
             return schema.jscache.qualifiercache[qualifier];
-        },
+        };
 
-        hasEditableProperty: function (schema) {
+        function hasEditableProperty(schema) {
             if (schema.mode === "input") {
                 return true;
             }
@@ -174,8 +185,21 @@
             return false;
         }
 
-    };
 
-}]);
+        return {
+            buildApplicationKey: buildApplicationKey,
+            buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
+            getId: getId,
+            getProperty: getProperty,
+            getTitle: getTitle,
+            hasAnyFieldOnMainTab: hasAnyFieldOnMainTab,
+            hasEditableProperty: hasEditableProperty,
+            isPropertyTrue: isPropertyTrue,
+            locateDisplayableByQualifier: locateDisplayableByQualifier,
+            nonTabFields: nonTabFields,
+            parseAppAndSchema: parseAppAndSchema
+        };
+
+    }]);
 
 })(modules);

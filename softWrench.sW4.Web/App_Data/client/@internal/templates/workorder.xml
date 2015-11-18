@@ -212,7 +212,7 @@
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <section id ="siteidsection"/>
-            <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
+            <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <renderer type="lookup" />
             </association>

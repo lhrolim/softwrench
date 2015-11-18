@@ -97,14 +97,14 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
 
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
-            if (rendererType == 'autocompleteclient') {
+            if (rendererType === 'autocompleteclient') {
                 cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, scope.associationOptions[displayable.associationKey]);
-            } else if (rendererType == 'autocompleteserver') {
+            } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
-            } else if (rendererType == 'combodropdown') {
+            } else if (rendererType === 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
-            } else if (rendererType == 'lookup' || rendererType == 'modal') {
-                cmplookup.refreshFromAttribute(displayable, scope);
+            } else if (rendererType === 'lookup' || rendererType === 'modal') {
+                cmplookup.refreshFromAttribute(displayable, newValue);
             }
         },
 

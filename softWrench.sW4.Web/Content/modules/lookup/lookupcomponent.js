@@ -2,26 +2,12 @@
     'use strict';
 
 
-    service.$inject = ['$rootScope', '$timeout', '$log', 'associationService'];
-
-    angular.module("sw_lookup").factory('cmplookup', service);
 
 
 
-    function service($rootScope, $timeout, $log, associationService) {
+    function service($rootScope, $timeout, $log, associationService, crudContextHolderService) {
 
 
-        var api = {
-            unblock: unblock,
-            block: block,
-            refreshFromAttribute: refreshFromAttribute,
-            init: init,
-            updateLookupObject: updateLookupObject,
-            handleMultipleLookupOptionsFn: handleMultipleLookupOptionsFn,
-            displayLookupModal: displayLookupModal
-        };
-
-        return api;
 
 
         function showModal(target, element) {
@@ -42,53 +28,21 @@
 
         };
 
-        function refreshFromAttribute(fieldMetadata, scope) {
+        function refreshFromAttribute(fieldMetadata, newValue) {
+
+
             var log = $log.getInstance('cmplookup#refreshFromAttribute');
-            var target = fieldMetadata.attribute;
-
-
-            if (scope.associationOptions == null) {
-
-                if (scope.lookupAssociationsDescription) {
-                    //this scenario happens when a composition has lookup-associations on its details,
-                    //but the option list has not been fetched yet
-                    scope.lookupAssociationsDescription[target] = null;
-                    scope.lookupAssociationsCode[target] = null;
-                    log.debug('cleaning up association code/description');
-                }
-                return;
+            var associationKey = fieldMetadata.associationKey;
+            var label = null;
+            if (newValue != null) {
+                var option = crudContextHolderService.fetchLazyAssociationOption(associationKey, newValue);
+                label = associationService.getLabelText(option, fieldMetadata.hideDescription);
             }
+            log.debug('setting lookup {0} to {1}'.format(associationKey, label));
+            $("input[data-association-key=" + fieldMetadata.associationKey + "]").typeahead('val', label);
+            return;
 
-            var options = scope.associationOptions[fieldMetadata.associationKey];
-            if (options && options.length === 1) {
-                var label = associationService.getLabelText(options[0], fieldMetadata.hideDescription);
-                $("input[data-association-key=" + fieldMetadata.associationKey + "]").typeahead('val', label);
-                return;
-            }
-
-
-            var optionValue = scope.datamap[fieldMetadata.target];
-            scope.lookupAssociationsCode[target] = optionValue;
-
-            
-
-            log.debug('setting lookupassociationCode {0} to {1}'.format(target, optionValue));
-            if (optionValue == null) {
-                scope.lookupAssociationsDescription[target] = null;
-            }
-
-            if (options == null || options.length <= 0) {
-                //it should always be lazy loaded... why is this code even needed?
-                return;
-            }
-
-            var optionSearch = $.grep(options, function (e) {
-                return e.value == optionValue;
-            });
-
-            var valueToSet = optionSearch != null && optionSearch.length > 0 ? optionSearch[0].label : null;
-            scope.lookupAssociationsDescription[target] = valueToSet;
-            log.debug('setting lookupassociationdescription {0} to {1} '.format(target, valueToSet));
+       
         }
 
         function updateLookupObject(scope, fieldMetadata, searchValue, searchDatamap) {
@@ -155,7 +109,25 @@
         function displayLookupModal(element) {
             showModal(element);
         };
+
+        var api = {
+            unblock: unblock,
+            block: block,
+            refreshFromAttribute: refreshFromAttribute,
+            init: init,
+            updateLookupObject: updateLookupObject,
+            handleMultipleLookupOptionsFn: handleMultipleLookupOptionsFn,
+            displayLookupModal: displayLookupModal
+        };
+
+        return api;
+
     }
+
+    service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService'];
+
+    angular.module("sw_lookup").factory('cmplookup', service);
+
 })(angular);
 
 

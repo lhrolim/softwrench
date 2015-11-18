@@ -5,23 +5,19 @@
 
 
 
-    function angularTypeahead(restService, $timeout, $log, contextService, associationService) {
+    function angularTypeahead(restService, $timeout, $log, contextService, associationService, crudContextHolderService, schemaService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
         /// <returns type=""></returns>
 
 
-        var configureSearchEngine = function (attrs,schema, provider, attribute, rateLimit) {
+        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit) {
 
             var applicationName = schema.applicationName;
 
             var parameters = {
-                key: {
-                    schemaId: schema.schemaId,
-                    mode: schema.mode,
-                    platform: "web"
-                },
+                key: schemaService.buildApplicationMetadataSchemaKey(schema),
                 labelSearchString: "%QUERY",
                 application: applicationName
             };
@@ -69,24 +65,20 @@
             dropDownMenu.width(width);
         }
 
-        function link(scope, el, attrs) {
-            var log = $log.getInstance('angulartypeahed');
+        var setInitialText = function (element, scope) {
+            var attributeValue = scope.datamap[scope.attribute];
+            if (attributeValue == null) {
+                //no initial value present
+                return;
+            }
+            var associationOption = crudContextHolderService.fetchLazyAssociationOption(scope.provider, scope.datamap[scope.attribute]);
+            var label = associationService.getLabelText(associationOption, scope.hideDescription);
+            element.typeahead('val', label);
+        }
 
-            //setting defaults
+        var configureJqueryHooks = function (scope, element, engine) {
+
             var minLength = scope.minLength || 2;
-            var rateLimit = scope.rateLimit || 500;
-
-            var element = $($('input.typeahead', el)[0]);
-            var parElement = element.parent();
-
-            var attribute = scope.attribute;
-            var provider = scope.provider;
-            var schema = scope.schema;
-
-            log.debug("initing angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
-
-            var engine = configureSearchEngine(attrs,schema, provider, attribute, rateLimit);
-
 
             //initing typeahead itself
             element.typeahead({ minLength: minLength }, {
@@ -98,6 +90,11 @@
 
 
             element.on("typeahead:selected typeahead:autocompleted", function (e, datum) {
+                var datamap = scope.datamap;
+                if (datamap) {
+                    datamap[scope.attribute] = datum.value;
+                    scope.$digest();
+                }
                 scope.itemSelected({ item: datum });
             });
 
@@ -109,19 +106,61 @@
             });
 
             element.on("keyup", function (e) {
-                scope.searchText = $(e.target).val();
+                scope.searchText = scope.jelement.val();
+                if (scope.searchText === "") {
+                    var datamap = scope.datamap;
+                    if (datamap) {
+                        $log.getInstance("angulartypeahead#keyup").debug("cleaning datamap");
+                        datamap[scope.attribute] = null;
+                    }
+                }
                 scope.$digest();
                 //if filter is applied, let´s not show recently used filters
 
             });
+        }
 
-            configureStyles(element,parElement);
+        function link(scope, el, attrs) {
+            scope.name = "angulartypeahead";
+            var log = $log.getInstance('angulartypeahed');
+            //setting defaults
+            var rateLimit = scope.rateLimit || 500;
 
+            var element = $($('input.typeahead', el)[0]);
+            var parElement = element.parent();
 
-         
+            scope.jelement = element;
 
+            var attribute = scope.attribute;
+            var provider = scope.provider;
+            var schema = scope.schema;
+
+            log.debug("initing angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
+
+            var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit);
+            configureJqueryHooks(scope, element, engine);
+
+            if (crudContextHolderService.associationsResolved()) {
+                setInitialText(element, scope);
+            }
+
+            configureStyles(element, parElement);
+
+            scope.executeMagnetSearch = function () {
+                scope.magnetClicked({ text: scope.getText() });
+            }
+
+            scope.getText = function () {
+                return scope.jelement.typeahead("val");
+            }
+
+            scope.$on("sw_associationsresolved", function(event) {
+                setInitialText(element, scope);
+            });
 
         };
+
+
 
         var directive = {
             link: link,
@@ -130,6 +169,7 @@
             templateUrl: contextService.getResourceUrl("/Content/modules/components/angulartypeahead/templates/angulartypeahead.html"),
             scope: {
                 schema: '=',
+                datamap: '=',
                 //the 
                 attribute: '=',
                 provider: '=',
@@ -152,6 +192,9 @@
                 //function to be called when an item gets selected
                 itemSelected: '&',
 
+                //function to be called when an item gets selected
+                magnetClicked: '&',
+
                 isEnabled: '&',
 
                 //function to handle corresponding jquery event
@@ -169,7 +212,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', angularTypeahead]);
 
 })(angular, Bloodhound);
 
