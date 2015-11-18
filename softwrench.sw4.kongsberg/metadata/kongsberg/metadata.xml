@@ -1181,50 +1181,46 @@
       </filters>
 
       <schemas>
-
-
         <list title="Service Request Grid">
-
           <field attribute="ticketid" label="SR#">
-            <renderer type="default"  params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=10%" />
+            <renderer type="default" params="width=6%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=10%;excelwidth=50"/>
+            <renderer type="default" params="width=10%;excelwidth=50" />
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=13%;excelwidth=50"/>
+            <renderer type="default" params="width=13%;excelwidth=50" />
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=8%;excelwidth=50"/>
+            <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+            <renderer type="default" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" />
           </field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="width=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="width=6%" />
           </field>
           <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
-
         </list>
 
         <schema id="supportlist" stereotype="list">

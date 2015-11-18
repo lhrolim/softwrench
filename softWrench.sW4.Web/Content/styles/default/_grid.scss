@@ -225,6 +225,9 @@
     margin-right: 0;
     margin-bottom: 0;
 
+    .ticketid {
+        margin-top: 0;
+    }
 
     thead {
         background-color: #fff;
@@ -255,6 +258,103 @@
         }
     }
 }
+
+.filter-container {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    #listgrid {
+        display: block;
+
+        thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        thead {
+            background-color: #fff;
+
+            tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+        }
+
+        tbody {
+            tr {
+                /*&:first-child {
+                    margin-top: 10px;
+                }*/
+
+                /*&:last-child {
+                    margin-bottom: 10px;
+                }*/
+                padding: 10px 0;
+                /*}*/
+                td {
+                    /* Behave  like a "row" */
+                    /*border: none;*/
+                    /*border-bottom: 1px solid #eee;*/
+                    position: relative;
+                    padding: 4px 4px 4px 50%;
+                    white-space: normal;
+                    text-align: left;
+
+                                             /*&:first-child {
+                    margin-top: 10px;
+                }*/
+
+                    &.no-data {
+                        display: none;
+                    }
+
+                    &:before {
+                        /* Now like a table header */
+                        position: absolute;
+                        /* Top/left values mimic padding */
+                        /*top: 6px;*/
+                        left: 15px;
+                        width: 45%;
+                        padding-right: 10px;
+                        white-space: nowrap;
+                        text-align: left;
+                        font-weight: bold;
+                        content: attr(data-title);
+                    }
+
+                    &._color {
+                        /* Behave  like a "row" */
+                        /*border: none;*/
+                        /*border-bottom: 1px solid #eee;*/
+                        position: relative;
+                        padding-left: 50%;
+                        white-space: normal;
+                        text-align: left;
+
+                        &:before {
+                            /* Now like a table header */
+                            position: absolute;
+                            /* Top/left values mimic padding */
+                            top: 6px;
+                            left: 6px;
+                            width: 45%;
+                            padding-right: 10px;
+                            white-space: nowrap;
+                            text-align: left;
+                            font-weight: bold;
+                            content: attr(data-title);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
 /*SWWEB-841 ~ fix header width for Firefox*/
 @-moz-document url-prefix() {
     #listgrid thead tr.filter-row .input-group-sm > .form-control {
