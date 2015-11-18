@@ -209,6 +209,11 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         /// <param name="entity"></param>
         private static void ValidateOptionFilter(ApplicationSchemaDefinition schema, MetadataOptionFilter overridenFilter, EntityMetadata entity) {
             var provider = overridenFilter.Provider;
+            // option list provided as static values
+            if (string.IsNullOrEmpty(provider)) {
+                return;
+            }
+
             if (provider.StartsWith("@")) {
 
                 if (!ClientPlatform.Web.Equals(schema.Platform)) {

@@ -1,137 +1,137 @@
-(function() {
+(function (angular) {
     "use strict";
+    // https://www.npmjs.com/package/angular-clipboard
+    // adapted to use clipboard.js
+    angular.module("angular-clipboard", [])
+    .directive("clipboard", ["$q", function ($q) {
+        // https://github.com/lgarron/clipboard.js
+        var clipboard = {};
 
-    // https://github.com/lgarron/clipboard.js
-    var clipboard = {};
+        clipboard.copy = (function () {
+            var _intercept = false;
+            var _data; // Map from data type (e.g. "text/html") to value.
 
-    clipboard.copy = (function () {
-        var _intercept = false;
-        var _data; // Map from data type (e.g. "text/html") to value.
-
-        document.addEventListener("copy", function (e) {
-            if (_intercept) {
-                _intercept = false;
-                for (var key in _data) {
-                    e.clipboardData.setData(key, _data[key]);
+            document.addEventListener("copy", function (e) {
+                if (_intercept) {
+                    _intercept = false;
+                    angular.forEach(_data, function(value, key) {
+                        e.clipboardData.setData(key, value);
+                    });
+                    e.preventDefault();
                 }
-                e.preventDefault();
-            }
-        });
+            });
 
-        return function (data) {
-            return new Promise(function (resolve, reject) {
+            return function (data) {
+                var deferred = $q.defer();
                 _intercept = true; // Race condition?
                 _data = (typeof data === "string" ? { "text/plain": data } : data);
                 try {
                     if (document.execCommand("copy")) {
                         // document.execCommand is synchronous: http://www.w3.org/TR/2015/WD-clipboard-apis-20150421/#integration-with-rich-text-editing-apis
                         // So we can call resolve() back here.
-                        resolve();
+                        deferred.resolve();
                     }
                     else {
                         _intercept = false;
-                        reject(new Error("Unable to copy. Perhaps it's not available in your browser?"));
+                        deferred.reject(new Error("Unable to copy. Perhaps it's not available in your browser?"));
                     }
-                }
-                catch (e) {
+                } catch (e) {
                     _intercept = false;
-                    reject(e);
+                    deferred.reject(e);
+                }
+                return deferred.promise;
+            };
+        }());
+
+        clipboard.paste = (function () {
+            var _intercept = false;
+            var _resolve;
+            var _dataType;
+
+            document.addEventListener("paste", function (e) {
+                if (_intercept) {
+                    _intercept = false;
+                    e.preventDefault();
+                    _resolve(e.clipboardData.getData(_dataType));
                 }
             });
-        };
-    }());
 
-    clipboard.paste = (function () {
-        var _intercept = false;
-        var _resolve;
-        var _dataType;
-
-        document.addEventListener("paste", function (e) {
-            if (_intercept) {
-                _intercept = false;
-                e.preventDefault();
-                _resolve(e.clipboardData.getData(_dataType));
-            }
-        });
-
-        return function (dataType) {
-            return new Promise(function (resolve, reject) {
+            return function (dataType) {
+                var deferred = $q.defer();
                 _intercept = true; // Race condition?
-                _resolve = resolve;
+                _resolve = deferred.resolve.bind(deferred);
                 _dataType = dataType || "text/plain";
                 try {
                     if (!document.execCommand("paste")) {
                         _intercept = false;
-                        reject(new Error("Unable to paste. Perhaps it's not available in your browser?"));
+                        deferred.reject(new Error("Unable to paste. Perhaps it's not available in your browser?"));
                     }
                 } catch (e) {
                     _intercept = false;
-                    reject(new Error(e));
+                    deferred.reject(new Error(e));
                 }
-            });
-        };
-    }());
+                return deferred.promise;
+            };
+        }());
 
-    // Handle IE behaviour.
-    if (typeof ClipboardEvent === "undefined" &&
-        typeof window.clipboardData !== "undefined" &&
-        typeof window.clipboardData.setData !== "undefined") {
+        // Handle IE behaviour.
+        if (typeof ClipboardEvent === "undefined" &&
+            typeof window.clipboardData !== "undefined" &&
+            typeof window.clipboardData.setData !== "undefined") {
 
-        /*! promise-polyfill 2.0.1 */
-        !function (a) { function b(a, b) { return function () { a.apply(b, arguments) } } function c(a) { if ("object" != typeof this) throw new TypeError("Promises must be constructed via new"); if ("function" != typeof a) throw new TypeError("not a function"); this._state = null, this._value = null, this._deferreds = [], i(a, b(e, this), b(f, this)) } function d(a) { var b = this; return null === this._state ? void this._deferreds.push(a) : void j(function () { var c = b._state ? a.onFulfilled : a.onRejected; if (null === c) return void (b._state ? a.resolve : a.reject)(b._value); var d; try { d = c(b._value) } catch (e) { return void a.reject(e) } a.resolve(d) }) } function e(a) { try { if (a === this) throw new TypeError("A promise cannot be resolved with itself."); if (a && ("object" == typeof a || "function" == typeof a)) { var c = a.then; if ("function" == typeof c) return void i(b(c, a), b(e, this), b(f, this)) } this._state = !0, this._value = a, g.call(this) } catch (d) { f.call(this, d) } } function f(a) { this._state = !1, this._value = a, g.call(this) } function g() { for (var a = 0, b = this._deferreds.length; b > a; a++) d.call(this, this._deferreds[a]); this._deferreds = null } function h(a, b, c, d) { this.onFulfilled = "function" == typeof a ? a : null, this.onRejected = "function" == typeof b ? b : null, this.resolve = c, this.reject = d } function i(a, b, c) { var d = !1; try { a(function (a) { d || (d = !0, b(a)) }, function (a) { d || (d = !0, c(a)) }) } catch (e) { if (d) return; d = !0, c(e) } } var j = c.immediateFn || "function" == typeof setImmediate && setImmediate || function (a) { setTimeout(a, 1) }, k = Array.isArray || function (a) { return "[object Array]" === Object.prototype.toString.call(a) }; c.prototype["catch"] = function (a) { return this.then(null, a) }, c.prototype.then = function (a, b) { var e = this; return new c(function (c, f) { d.call(e, new h(a, b, c, f)) }) }, c.all = function () { var a = Array.prototype.slice.call(1 === arguments.length && k(arguments[0]) ? arguments[0] : arguments); return new c(function (b, c) { function d(f, g) { try { if (g && ("object" == typeof g || "function" == typeof g)) { var h = g.then; if ("function" == typeof h) return void h.call(g, function (a) { d(f, a) }, c) } a[f] = g, 0 === --e && b(a) } catch (i) { c(i) } } if (0 === a.length) return b([]); for (var e = a.length, f = 0; f < a.length; f++) d(f, a[f]) }) }, c.resolve = function (a) { return a && "object" == typeof a && a.constructor === c ? a : new c(function (b) { b(a) }) }, c.reject = function (a) { return new c(function (b, c) { c(a) }) }, c.race = function (a) { return new c(function (b, c) { for (var d = 0, e = a.length; e > d; d++) a[d].then(b, c) }) }, "undefined" != typeof module && module.exports ? module.exports = c : a.Promise || (a.Promise = c) }(this);
-
-        clipboard.copy = function (data) {
-            return new Promise(function (resolve, reject) {
+            clipboard.copy = function (data) {
+                var deferred = $q.defer();
                 // IE supports string and URL types: https://msdn.microsoft.com/en-us/library/ms536744(v=vs.85).aspx
                 // We only support the string type for now.
                 if (typeof data !== "string" && !("text/plain" in data)) {
-                    throw new Error("You must provide a text/plain type.")
+                    deferred.reject(new Error("You must provide a text/plain type."));
                 }
 
                 var strData = (typeof data === "string" ? data : data["text/plain"]);
                 var copySucceeded = window.clipboardData.setData("Text", strData);
-                copySucceeded ? resolve() : reject(new Error("Copying was rejected."));
-            });
-        }
+                copySucceeded ? deferred.resolve() : deferred.reject(new Error("Copying was rejected."));
+                return deferred.promise;
+            }
 
-        clipboard.paste = function (data) {
-            return new Promise(function (resolve, reject) {
+            clipboard.paste = function (data) {
+                var deferred = $q.defer();
                 var strData = window.clipboardData.getData("Text");
                 if (strData) {
-                    resolve(strData);
+                    deferred.resolve(strData);
                 } else {
                     // The user rejected the paste request.
-                    reject(new Error("Pasting was rejected."));
+                    deferred.reject(new Error("Pasting was rejected."));
                 }
-            });
+                return deferred.promise;
+            }
         }
-    }
-    window.clipboard = clipboard;
+        window.clipboard = clipboard;
 
-    // https://www.npmjs.com/package/angular-clipboard
-    // adapted to use clipboard.js
-    angular.module('angular-clipboard', [])
-    .directive('clipboard', [function () {
         return {
-            restrict: 'A',
+            restrict: "A",
             scope: {
-                onCopied: '&',
-                onError: '&',
-                text: '='
+                onCopied: "&",
+                onError: "&",
+                text: "="
             },
             link: function (scope, element) {
-                element.on('click', function (event) {
-                    clipboard.copy(scope.text)
-                        .then(function() {
-                            if (scope.onCopied) scope.onCopied();
-                        }, function() {
-                            if (scope.onError) scope.onError({ err: err });
-                        });
+                // copies the text to clipboard
+                var copy = function (event) {
+                    clipboard.copy(scope.text).then(function () {
+                        if (scope.onCopied) scope.onCopied();
+                    }).catch(function (err) {
+                        if (scope.onError) scope.onError({ err: err });
+                    });
+                };
+                // bind click event to copy callback
+                element.on("click", copy);
+                // unbind when $scope gets destroyed
+                scope.$on("$destroy", function() {
+                    element.off("click", copy);
                 });
             }
         };
     }]);
 
 
-})();
-
+})(angular);

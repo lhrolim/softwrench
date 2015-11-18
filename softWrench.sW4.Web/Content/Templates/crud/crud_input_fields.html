@@ -51,6 +51,34 @@
                           data-id="{{fieldMetadata.attribute}}"
                           ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
 
+                <div ng-switch-when="checkbox">
+                    <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
+                        <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
+                            <td ng-if="isPositionLeft(fieldMetadata)">
+                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                            </td>
+                            <td>
+                                <input type="checkbox"
+                                       name="datamap[fieldMetadata.attribute]"
+                                       value="{{option.value}}"
+                                       ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
+                                       ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                            </td>
+                            <td ng-if="!isPositionLeft(fieldMetadata)">
+                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                            </td>
+                        </tr>
+                    </table>
+                    <div ng-if="fieldMetadata.type !== 'OptionField'" style="min-width: 200px;">
+                        <input type="checkbox"
+                               id="checkbox"
+                               ng-model="datamap[fieldMetadata.attribute]"
+                               ng-init="initCheckbox(fieldMetadata)"
+                               ng-enabled="isModifiableEnabled(fieldMetadata)"
+                               ng-true-value="'true'" ng-false-value="'false'" />
+                    </div>
+                </div>
+
                 <input type="text"
                        class="form-control"
                        ng-readonly="true"
@@ -84,7 +112,7 @@
 
                 </div>
                 <div ng-switch-when="checkbox">
-                    <table ng-if="fieldMetadata.type == 'OptionField'" style="min-width: 200px;">
+                    <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
                         <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
                             <td ng-if="isPositionLeft(fieldMetadata)">
                                 {{i18NOptionField(option,fieldMetadata,schema)}}
@@ -101,13 +129,13 @@
                             </td>
                         </tr>
                     </table>
-                    <div ng-if="fieldMetadata.type != 'OptionField'" style="min-width: 200px;">
+                    <div ng-if="fieldMetadata.type !== 'OptionField'" style="min-width: 200px;">
                         <input type="checkbox"
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
-                               ng-true-value="1" ng-false-value="0" />
+                               ng-true-value="'true'" ng-false-value="'false'" />
                     </div>
                 </div>
                 <div ng-switch-when="autocompleteclient">
