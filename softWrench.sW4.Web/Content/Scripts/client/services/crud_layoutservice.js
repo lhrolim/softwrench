@@ -5,6 +5,8 @@ app.factory('layoutservice', function (fieldService) {
     function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
         var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
+        //console.log(params);
+
         //use full-width fields on xsmall screen
         var classes = ' col-xs-12';
 
@@ -24,61 +26,6 @@ app.factory('layoutservice', function (fieldService) {
         return classes;
     };
 
-    function getDefaultColumnClassesForLabel(datamap, schema, displayables, params) {
-        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
-
-        var childColumns = 1;
-        if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
-
-            //TODO: allow for large, medium or small inputsizes
-            childColumns = 2;
-        }
-
-        //use full-width fields on xsmall screen, label above the input
-        var classes = ' col-xs-12';
-
-        //calculate the small screen columns
-        if (maxColumns == 1) {
-            //classes += ' col-sm-3';
-            classes += ' col-sm-' + 3 * childColumns;
-        } else {
-            //classes += ' col-sm-6';
-            classes += ' col-sm-' + 6 * childColumns;
-        }
-
-        //calculate the medium screen columns
-        classes += ' col-md-' + 2 * maxColumns * childColumns;
-
-        return classes;
-    };
-
-    function getDefaultColumnClassesForInput(datamap, schema, displayables, params) {
-        var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
-
-        var childColumns = 1;
-        if (params.sectionparameters != null && params.sectionparameters.inputsize != null) {
-            //TODO: allow for large, medium or small inputsizes
-            childColumns = 2;
-        }
-
-        //use full-width fields on xsmall screen, input below the label
-        var classes = ' col-xs-12';
-
-        //calculate the small screen columns
-        if (maxColumns == 1) {
-            //classes += ' col-sm-9';
-            classes += ' col-sm-' + 9 * childColumns;
-        } else {
-            //classes += ' col-sm-6';
-            classes += ' col-sm-' + 6 * childColumns;
-        }
-
-        //calculate the medium screen columns
-        classes += ' col-md-' + (12 - (2 * maxColumns * childColumns));
-
-        return classes;
-    };
-
     function getDefaultMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation) {
         if (verticalOrientation) {
             return 1;
@@ -87,8 +34,8 @@ app.factory('layoutservice', function (fieldService) {
         var countColumns = fieldService.countVisibleDisplayables(datamap, schema, displayables);
 
         //ensure that no more than 4 inputs are placed on one row
-        if (countColumns > 4) {
-            countColumns = 4;
+        if (countColumns > 6) {
+            countColumns = 6;
         }
 
         return countColumns
@@ -132,6 +79,9 @@ app.factory('layoutservice', function (fieldService) {
         var columnCount = null;
 
         switch (inputSize) {
+            case 'xxsmall':
+                columnCount = 6;
+                break;
             case 'xsmall':
                 columnCount = 4;
                 break;
@@ -217,13 +167,7 @@ app.factory('layoutservice', function (fieldService) {
                 return cssclass;
             }
 
-            params.columnCount = getFieldColumnCount(fieldMetadata);
-
-            if (this.hasSameLineLabel(fieldMetadata)) {
-                cssclass += getDefaultColumnClassesForInput(datamap, schema, displayables, params);
-            } else {
-                cssclass += ' col-xs-12';
-            }
+            cssclass += ' col-xs-12';
 
             return cssclass;
         },
@@ -248,11 +192,7 @@ app.factory('layoutservice', function (fieldService) {
             var returnClass = '';
             params.columnCount = getFieldColumnCount(fieldMetadata);
 
-            if (this.hasSameLineLabel(fieldMetadata)) {
-                returnClass += getDefaultColumnClassesForLabel(datamap, schema, displayables, params);
-            } else {
-                returnClass += 'col-xs-12';
-            }
+            returnClass += 'col-xs-12';
 
             //fix SWWEB-732, blank lable adding extra space
             if (returnClass == 'col-xs-12' && fieldMetadata.label === null) {
@@ -263,8 +203,6 @@ app.factory('layoutservice', function (fieldService) {
         },
 
         hasSameLineLabel: function (fieldMetadata) {
-
-
             return (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
             (fieldMetadata.header == null);
 
