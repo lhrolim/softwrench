@@ -503,6 +503,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
@@ -755,7 +756,8 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
-    <Content Include="Content\Templates\crud\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
+    <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
@@ -1409,6 +1411,10 @@
       <Project>{a267fe4b-887c-47a5-b09d-f29e5c55a868}</Project>
       <Name>softwrench.sw4.bering</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.classic\softwrench.sw4.classic.csproj">
+      <Project>{a8d521d4-5a04-4764-8fcb-204bdd4a29d9}</Project>
+      <Name>softwrench.sw4.classic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
       <Name>softwrench.sw4.dashboard</Name>
@@ -1476,6 +1482,10 @@
     <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
       <Name>softwrench.sw4.swgas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj">
+      <Project>{83d9b360-0879-487f-b03c-62044846192c}</Project>
+      <Name>softwrench.sw4.tgcs</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.tva\softwrench.sw4.tva.csproj">
       <Project>{c987e2c2-a2d3-4d7b-b2ff-a5f1667b159a}</Project>

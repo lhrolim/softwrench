@@ -181,6 +181,7 @@
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseMultiassetlocciDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
@@ -201,6 +202,8 @@
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
+    <Compile Include="Data\Search\QuickSearchHelper.cs" />
+    <Compile Include="Data\Search\QuickSearchWhereClauseHandler.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
     <Compile Include="Exceptions\MenuMetadataException.cs" />

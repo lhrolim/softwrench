@@ -108,8 +108,8 @@ textarea .readonly {
 }
 
 .richtextbox, .image-holder {
-    min-height: 214px;
-    height: 100%;
+    /*min-height: 21px;*/
+    /*height: 100%;*/
     overflow: hidden;
 }
 
@@ -122,14 +122,50 @@ textarea .readonly {
     }
 }
 
+.ta-scroll-window > .ta-bind {
+    min-height: 100px;
+    outline: none;
+    transition: min-height 0.2s ease-in-out;
+}
+
+.focussed {
+    .ta-scroll-window > .ta-bind {
+        min-height: 300px;
+    }
+}
+
 .richtext {
     .btn-toolbar > .btn + .btn, .btn-toolbar > .btn-group + .btn, .btn-toolbar > .btn + .btn-group, .btn-toolbar > .btn-group + .btn-group {
         margin-left: 0;
     }
 
-    .ta-editor p {
-        word-break: break-all;
-        word-break: break-word;
+    .ta-toolbar {
+        display: none;
+        margin-bottom: 5px;
+
+        .btn-group {
+            margin-right: 5px;
+        }
+    }
+
+    .ta-editor {
+        min-height: 100px;
+        transition: min-height 0.2s ease-in-out;
+
+        p {
+            word-break: break-all;
+            word-break: break-word;
+        }
+    }
+
+    &.focussed {
+        .ta-toolbar {
+            display: block;
+        }
+
+        .ta-editor {
+            min-height: 300px;
+        }
     }
 }
 

@@ -104,9 +104,7 @@
             <renderer type="default" params="childinputsize=medium" />
             <section id ="ticketidsection"/>
           </section>
-
           <section>
-            <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
@@ -115,32 +113,30 @@
             </field>
           </section>
 
+          <field attribute="ticketuid" label="SR#" hidden="true"/>
+
+          <field attribute="actlabcost" hidden="true" />
+          <field attribute="actlabhrs" hidden="true"/>
+          <field attribute="siteid" hidden="true" />
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="createby" hidden="true"/>
+          <!-- hiddens for communication template -->
+          <field attribute="changedate" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="reportedemail" hidden="true"/>
+          <field attribute="affectedemail" hidden="true"/>
+
+          <field attribute="class" label="" hidden="true"/>
+          <field attribute="solution" hidden="true"/>
+          <field attribute="assetsiteid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="cinum" hidden="true"/>
+          
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <section id ="siteidsection"/>
-
-            <field attribute="ticketuid" label="SR#" hidden="true"/>
-            
-            <field attribute="actlabcost" hidden="true" />
-            <field attribute="actlabhrs" hidden="true"/>
-            <field attribute="siteid" hidden="true" />
-            <field attribute="orgid" hidden="true"/>
-            <field attribute="createby" hidden="true"/>
-            <!-- hiddens for communication template -->
-            <field attribute="changedate" hidden="true"/>
-            <field attribute="classificationid" hidden="true"/>
-            <field attribute="reportedemail" hidden="true"/>
-            <field attribute="affectedemail" hidden="true"/>
-
-            <field attribute="class" label="" hidden="true"/>
-            <field attribute="solution" hidden="true"/>
-            <field attribute="assetsiteid" hidden="true"/>
-            <field attribute="location" hidden="true"/>
-            <field attribute="assetnum" hidden="true"/>
-            <field attribute="failurecode" hidden="true"/>
-            <field attribute="cinum" hidden="true"/>
-            
-
             <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             </association>
@@ -155,18 +151,23 @@
 <!--            </optionfield>-->
           </section>
 
+          <field attribute="changeby" default="@username" hidden="true"/>
+          
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="changeby" default="@username" hidden="true"/>
+
+            
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeowner"/>
             </association>
+            
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
+            
             <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
               <renderer type="lookup" params="columnlabel=Name;"/>
             </association>
@@ -196,9 +197,7 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
-            <!--<renderer type="default" params="childinputsize=medium" />-->
             <section id="attachmentsection" />
-          <!--</section>-->
           
             <!--COMSW 24 required field for population purposes-->
             <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
@@ -236,7 +235,7 @@
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details">
           <section id="ticketidsection">
-            <field attribute="ticketid" label="SR#" readonly="true"/>
+            <field attribute="ticketid" label="SR#" hidden="true"/>
           </section>
           
           <section id="siteidsection">
@@ -382,13 +381,14 @@
           <field attribute="class" label="" hidden="true"/>
           <field attribute="ticketuid" hidden="true"/>
 
+          <field attribute="ticketid" label="SR#" readonly="true" hidden="true"/>
+          
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="ticketid" label="SR#" readonly="true"/>
-            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100" />
             </field>
+            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
           </section>
           
 <!--          <field label="Details:" attribute="ld_.ldtext">-->

@@ -43,11 +43,9 @@
 
         </thead>
         <tbody ng-show="compositionData().length > 0">
-            <tr ng-repeat-start="compositionitem in compositionData()"
+            <tr ng-repeat-start="(rowindex, compositionitem) in compositionData() track by rowindex"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
-                
-                ng-class="$odd ? 'odd' : 'even'"
-                ng-init="rowindex = $index;lookupAssociationsCode[rowindex]={}">
+                ng-class="$odd ? 'odd' : 'even'">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
@@ -81,10 +79,9 @@
                                     <lookup-input parentdata="parentdata"
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                                  lookup-associations-code="lookupAssociationsCode[rowindex]"
+                                                  lookup-associations-code="compositionitem"
                                                   lookup-associations-description="lookupAssociationsDescription[rowindex]"
-                                                  mode="composition"
-                                                  />
+                                                  mode="composition"/>
                                 </div>
                             </ng-switch>
                         </div>
@@ -93,13 +90,13 @@
                         </div>
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
-                                <div ng-switch-when="checkbox">
+                                <div ng-switch-when="checkbox" style="text-align: center;">
                                     <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="1" ng-false-value="0" />
+                                           ng-true-value="'true'" ng-false-value="'false'" />
                                 </div>
 
                                 <div ng-switch-when="numericinput">
@@ -163,8 +160,8 @@
 
                     </ng-switch>
                 </td>
-                <td ng-if="isBatch()" ng-hide="firstItem(compositionitem)">
-                    <button class="fa fa-trash btn" ng-click="removeBatchItem()"></button>
+                <td ng-if="isBatch()" ng-hide="compositionitem[compositionlistschema.idFieldName] != null">
+                    <button class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
