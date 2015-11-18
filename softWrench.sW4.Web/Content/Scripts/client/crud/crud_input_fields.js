@@ -1,3 +1,7 @@
+(function (app, angular) {
+    "use strict";
+
+
 app.directive('configAssociationListInputDatamap', function ($timeout) {
     return {
         restrict: 'A',
@@ -14,8 +18,8 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             scope.datamap[scope.fieldMetadata.attribute].push(item);
         }
     };
-});
-app.directive('configUpdateSectionDatamap', function ($timeout) {
+})
+.directive('configUpdateSectionDatamap', function ($timeout) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -35,8 +39,8 @@ app.directive('configUpdateSectionDatamap', function ($timeout) {
             scope.datamap[scope.fieldMetadata.id].push(item);
         }
     };
-});
-app.directive('sectionElementInput', function ($compile) {
+})
+.directive('sectionElementInput', function ($compile) {
     return {
         restrict: "E",
         replace: true,
@@ -78,8 +82,8 @@ app.directive('sectionElementInput', function ($compile) {
             }
         }
     }
-});
-app.directive('crudInputFields', function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
+})
+.directive('crudInputFields', function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
     return {
         restrict: 'E',
         replace: true,
@@ -358,19 +362,17 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
 
 
             $scope.configureNumericInput = function () {
-                var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);
-                for (i in displayables) {
-                    var fieldMetadata = displayables[i];
-                    if ($scope.datamap != null) {
-                        var currentValue = $scope.datamap[fieldMetadata.attribute];
-                        if (currentValue == null) {
-                            /* without default value */
-                            $scope.datamap[fieldMetadata.attribute] = 1;
-                        } else if (typeof currentValue == "string") {
-                            $scope.datamap[fieldMetadata.attribute] = parseInt(currentValue);
-                        }
+                if (!$scope.datamap) return;
+                var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ["numericinput"]);
+                angular.forEach(displayables, function (fieldMetadata) {
+                    var currentValue = $scope.datamap[fieldMetadata.attribute];
+                    if (currentValue == null) {
+                        /* without default value */
+                        $scope.datamap[fieldMetadata.attribute] = 1;
+                    } else if (typeof currentValue === "string") {
+                        $scope.datamap[fieldMetadata.attribute] = parseInt(currentValue);
                     }
-                }
+                });
             };
 
             $scope.configureFieldChangeEvents = function () {
@@ -659,9 +661,8 @@ app.directive('crudInputFields', function (contextService, eventService, crud_in
             };
         }
     }
-});
-
-app.directive('numberSpinner', function () {
+})
+.directive('numberSpinner', function () {
     return {
         restrict: 'A',
         scope: {
@@ -693,8 +694,8 @@ app.directive('numberSpinner', function () {
             });
         }
     }
-});
-app.directive('selectCombo', function () {
+})
+.directive('selectCombo', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -709,3 +710,4 @@ app.directive('selectCombo', function () {
     };
 });
 
+})(app, angular);

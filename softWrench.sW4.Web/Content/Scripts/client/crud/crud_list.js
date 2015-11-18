@@ -284,6 +284,10 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             $scope.quickSearch = function (filterdata) {
                 $scope.searchData = {};
                 $scope.searchSort = {};
+                if (!filterdata) {
+                    searchService.refreshGrid({});
+                    return;
+                }
                 searchService.quickSearch(filterdata);
             };
 
