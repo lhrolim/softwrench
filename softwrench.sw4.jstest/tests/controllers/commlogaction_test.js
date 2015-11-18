@@ -8,6 +8,7 @@
 
     var clientdefaultemail = "default@default.com";
     var useremail = "useremail@a.com";
+    var defaultSignature = "thank you";
     
 
 
@@ -19,7 +20,7 @@
     beforeEach(function () {
         module(function ($provide) {
             //mocking a simpler constant
-            $provide.constant('commlog_messagheader', "From:{0} To:{1} CC:{2} Subject:{3} Message:{4}");
+            $provide.constant('commlog_messagheader', "{0}From:{1} To:{2} CC:{3} Subject:{4} Message:{5}");
         });
     });
 
@@ -46,10 +47,10 @@
         });
     }));
 
-    function testSetup(inputData, outputData, actionfn,hasSystemDefault) {
+    function testSetup(inputData, outputData, actionfn, hasSystemDefault, inputsignature) {
         spyOn(mockScope, "$emit");
 
-        spyOn(_contextService, "getUserData").and.returnValue({ email: useremail });
+        spyOn(_contextService, "getUserData").and.returnValue({ email: useremail, userPreferences: { signature: inputsignature } });
 
         spyOn(_applicationService, "getApplicationDataPromise").and.callFake(function (application, schema, parameters) {
             return $q.when(inputData);
@@ -94,12 +95,12 @@
             "sendto": ['origfrom@a.com', 'origto@a.com', 'origto2@a.com'],
             "cc": ['cc1@a.com', 'cc2@a.com'],
             "subject": 'Re: test subject',
-            "message": "From:origfrom@a.com To:origto@a.com,origto2@a.com CC:cc1@a.com,cc2@a.com Subject:test subject Message:original message",
+            "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com CC:cc1@a.com,cc2@a.com Subject:test subject Message:original message",
             "commloguid": null,
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "replyAll",true);
+        testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature);
 
     });
 
@@ -125,12 +126,12 @@
             "sendto": ['origfrom@a.com', 'origto@a.com', 'origto2@a.com'],
             "cc": ['cc1@a.com', 'cc2@a.com'],
             "subject": 'Re: test subject',
-            "message": "From:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC:cc1@a.com,cc2@a.com Subject:test subject Message:original message",
+            "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC:cc1@a.com,cc2@a.com Subject:test subject Message:original message",
             "commloguid": null,
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "replyAll",true);
+        testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature);
 
     });
 
@@ -157,15 +158,77 @@
             "sendto": ['origfrom@a.com', 'origto@a.com', 'origto2@a.com', 'default@default.com'],
             "cc": null,
             "subject": 'Re: test subject',
-            "message": "From:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC: Subject:test subject Message:original message",
+            "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC: Subject:test subject Message:original message",
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "replyAll");
+        testSetup(mockedResult1, resultCompositionData, "replyAll", false, defaultSignature);
 
     });
 
     it("Reply with default email not present, with no system default", function () {
+
+        var mockedResult1 = {
+            data: {
+                resultObject: {
+                    fields: {
+                        "sendfrom": 'origfrom@a.com',
+                        "sendto": 'origto@a.com,origto2@a.com,default@default.com',
+                        "cc": null,
+                        "subject": 'test subject',
+                        "message": 'original message',
+                        "commloguid": 10
+                    }
+                }
+            }
+        }
+
+        var resultCompositionData = {
+            "sendfrom": useremail,
+            "sendto": ['origfrom@a.com'],
+            "cc": null,
+            "subject": 'Re: test subject',
+            "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC: Subject:test subject Message:original message",
+            "commloguid": null,
+            "createdate": "mockeddate!"
+        }
+
+        testSetup(mockedResult1, resultCompositionData, "reply", false, defaultSignature);
+
+    });
+
+    it("Forward with system default", function () {
+
+        var mockedResult1 = {
+            data: {
+                resultObject: {
+                    fields: {
+                        "sendfrom": 'origfrom@a.com',
+                        "sendto": 'origto@a.com,origto2@a.com,default@default.com',
+                        "cc": 'a@b.com',
+                        "subject": 'test subject',
+                        "message": 'original message',
+                        "commloguid": 10
+                    }
+                }
+            }
+        }
+
+        var resultCompositionData = {
+            "sendfrom": useremail,
+            "sendto": null,
+            "cc": null,
+            "subject": 'Fw: test subject',
+            "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC:a@b.com Subject:test subject Message:original message",
+            "commloguid": null,
+            "createdate": "mockeddate!"
+        }
+
+        testSetup(mockedResult1, resultCompositionData, "forward", false, defaultSignature);
+
+    });
+
+    it("Reply with default email not present, with no system default, with no signature", function () {
 
         var mockedResult1 = {
             data: {
@@ -192,38 +255,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "reply");
-
-    });
-
-    it("Forward with system default", function () {
-
-        var mockedResult1 = {
-            data: {
-                resultObject: {
-                    fields: {
-                        "sendfrom": 'origfrom@a.com',
-                        "sendto": 'origto@a.com,origto2@a.com,default@default.com',
-                        "cc": 'a@b.com',
-                        "subject": 'test subject',
-                        "message": 'original message',
-                        "commloguid": 10
-                    }
-                }
-            }
-        }
-
-        var resultCompositionData = {
-            "sendfrom": useremail,
-            "sendto": null,
-            "cc": null,
-            "subject": 'Fw: test subject',
-            "message": "From:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC:a@b.com Subject:test subject Message:original message",
-            "commloguid": null,
-            "createdate": "mockeddate!"
-        }
-
-        testSetup(mockedResult1, resultCompositionData, "forward");
+        testSetup(mockedResult1, resultCompositionData, "reply", false, "");
 
     });
 
