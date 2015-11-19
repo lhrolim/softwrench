@@ -181,7 +181,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         var isHidden = hiddencolumnArray[j];
 
                         html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText));
-                        //console.log(column);
                         html += "data-title='{0}'".format(column.label);
                         html += ">";
                         if (column.rendererType === 'color') {
