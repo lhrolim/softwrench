@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;

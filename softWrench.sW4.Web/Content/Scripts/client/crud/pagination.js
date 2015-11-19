@@ -63,6 +63,13 @@ app.directive('pagination', ["contextService", function (contextService) {
                 $scope.renderfn({ pageNumber: page });
             };
 
+            if ($scope.disablePrint === undefined) {
+                $scope.disablePrint = false;
+            }
+            if ($scope.disableExport === undefined) {
+                $scope.disableExport = false;
+            }
+
             $scope.adjustMargin = function (language) {
                 if (!$scope.isHapag()) {
                     return;

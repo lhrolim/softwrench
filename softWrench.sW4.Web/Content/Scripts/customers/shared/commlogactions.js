@@ -6,12 +6,13 @@
 
     module.constant("commlog_messagheader",
         //above this limit framework shall no longer produce the full rowstamp map, but rather just pass the maxrowstamp to the server
-        "<br/><br/>________________________________________________________________________________________________________" +
-            "<br/><b>From:</b> {0}" +
-            "<br/><b>To:</b> {1}" +
-            "<br/><b>Cc:</b> {2}" +
-            "<br/><b>Subject: </b> {3}" +
-            "<br/><br/>{4}"
+        "<br/><br/>{0}" +
+        "________________________________________________________________________________________________________" +
+        "<br/><b>From:</b> {1}" +
+        "<br/><b>To:</b> {2}" +
+        "<br/><b>Cc:</b> {3}" +
+        "<br/><b>Subject: </b> {4}" +
+        "<br/><br/>{5}"
     );
 
     function commLogActionsController($rootScope, $scope, contextService, fieldService, applicationService, commlog_messagheader) {
@@ -51,7 +52,9 @@
         }
 
         function buildMessage(originalItem) {
-            return commlog_messagheader.format(originalItem.sendfrom, originalItem.sendto, emptyIfNull(originalItem.cc), originalItem.subject, originalItem.message);
+            var preferences = contextService.getUserData().userPreferences;
+            var signature = preferences == null ? "" : preferences.signature;
+            return commlog_messagheader.format(signature, originalItem.sendfrom, originalItem.sendto, emptyIfNull(originalItem.cc), originalItem.subject, originalItem.message);
         }
 
 

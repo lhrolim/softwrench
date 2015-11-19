@@ -1,13 +1,13 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('userPreferenceService', function (contextService, restService, $log, $rootScope) {
+app.factory('gridPreferenceService', function (contextService, restService, $log, $rootScope) {
 
     function doLoadFilter(shared, application, schema) {
         var user = contextService.getUserData();
-        var preferences = user.userPreferences;
-        var filters = preferences.gridFilters;
+        var gridpreferences = user.gridPreferences;
+        var filters = gridpreferences.gridFilters;
         var result = [];
-        var log = $log.getInstance("#userpreferenceservice#doLoadFilter");
+        var log = $log.getInstance("#gridpreferenceservice#doLoadFilter");
         $.each(filters, function (key, association) {
             if (association.filter.application.equalIc(application)
                 && association.filter.schema.equalIc(schema)
@@ -31,7 +31,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
 
         hasFilter: function (application, schema) {
             var user = contextService.getUserData();
-            var preferences = user.userPreferences;
+            var preferences = user.gridPreferences;
             var associations = preferences.gridFilters;
             var filters = $.grep(associations, function (e) {
                 return e.filter.application == application && e.filter.schema == schema;
@@ -44,7 +44,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
             var operators = "";
             var values = "";
             var user = contextService.getUserData();
-            var log = $log.getInstance("#userpreferenceservice#savefilter");
+            var log = $log.getInstance("#gridpreferenceservice#savefilter");
             for (var data in searchData) {
                 if (data == "lastSearchedValues") {
                     continue;
@@ -72,7 +72,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
                 log.debug("creating new filter {0}".format(JSON.stringify(parameters)));
                 restService.invokePost("GridFilter", "CreateNewFilter", parameters, null, function (resultdata) {
                     var filterassociation = resultdata.resultObject;
-                    var preferences = user.userPreferences;
+                    var preferences = user.gridPreferences;
                     var filters = preferences.gridFilters;
                     filters.push(filterassociation);
                     successCbk(filterassociation.filter);
@@ -80,7 +80,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
             } else {
                 log.debug("updating filter {0}".format(JSON.stringify(parameters)));
                 restService.invokePost("GridFilter", "UpdateFilter", parameters, null, function (resultdata) {
-                    var preferences = user.userPreferences;
+                    var preferences = user.gridPreferences;
                     var associations = preferences.gridFilters;
                     var filter = resultdata.resultObject;
                     for (var i = 0; i < associations.length; i++) {
@@ -98,13 +98,13 @@ app.factory('userPreferenceService', function (contextService, restService, $log
                 filterId: filterId,
                 creatorId: creatorId,
             };
-            var log = $log.getInstance("#userpreferenceservice#deletefilter");
+            var log = $log.getInstance("#gridpreferenceservice#deletefilter");
             var user = contextService.getUserData();
             restService.invokePost("GridFilter", "DeleteFilter", parameters, null, function (resultdata) {
-                var preferences = user.userPreferences;
+                var gridpreferences = user.gridPreferences;
                 var association = resultdata.resultObject;
                 log.debug("removing filter {0}".format(association.filter.alias));
-                preferences.gridFilters = $.grep(preferences.gridFilters, function (value) {
+                gridpreferences.gridFilters = $.grep(gridpreferences.gridFilters, function (value) {
                     return value.id != association.id;
                 });
                 cbk();

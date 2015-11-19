@@ -298,6 +298,7 @@
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.0\20150205_SWWEB_889.cs" />
     <Compile Include="DB_Migration\4.0\20150417_PAE_001.cs" />
+    <Compile Include="DB_Migration\4.10\20151116_SWWEB_1857.cs" />
     <Compile Include="DB_Migration\4.2.0\20150529_DDCA_14.cs" />
     <Compile Include="DB_Migration\4.2.0\20150422_SWWEB_1163.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />

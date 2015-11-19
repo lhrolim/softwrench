@@ -93,8 +93,6 @@
             <renderer type="checkbox" />
           </field>
 
-
-
           <composition relationship="phone" label="Phone Numbers" inline="false" >
             <collectionproperties allowcreation="true" allowupdate="false"/>
           </composition>
@@ -106,6 +104,12 @@
             <section attribute="#profiles" resourcepath="/Content/Templates/otb/profiles.html" >
               <header displacement="ontop" label="Profiles" showexpression="true"/>
             </section>
+          </tab>
+
+          <tab label ="Preferences" icon="fa-cogs" id="preferences" >
+            <field attribute="#signature" label="Email Signature">
+              <renderer type="richtext"/>
+            </field>
           </tab>
 
         </schema>
