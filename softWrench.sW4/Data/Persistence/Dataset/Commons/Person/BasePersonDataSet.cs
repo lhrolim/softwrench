@@ -86,13 +86,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 }
                 var isActive = swUser.IsActive ? "true" : "false";
                 dataMap.SetAttribute("#isactive", isActive);
+                var preferences = swUser.UserPreferences;
+                var signature = preferences != null ? preferences.Signature : "";
+                dataMap.SetAttribute("#signature", signature);
             } else {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
                 swUser.Profiles = new HashedSet<UserProfile>();
                 //for new users lets make them active by default
                 dataMap.SetAttribute("#isactive", "1");
-
+                dataMap.SetAttribute("#signature", "");
             }
 
             dataMap.SetAttribute("#profiles", swUser.Profiles);
@@ -120,6 +123,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var firstName = json.GetValue("firstname").ToString();
             var lastName = json.GetValue("lastname").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
+            var signature = json.GetValue("#signature").ToString();
 
             var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive) {
                 FirstName = firstName,
@@ -134,6 +138,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             var passwordString = HandlePassword(json, user);
             user.IsActive = isactive;
+            if (user.UserPreferences == null) {
+                user.UserPreferences = new UserPreferences() {
+                    UserId = user.Id
+                };
+            }
+            user.UserPreferences.Signature = signature;
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
             var targetResult = Engine().Execute(operationWrapper);

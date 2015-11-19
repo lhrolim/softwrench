@@ -4,7 +4,7 @@ using cts.commons.portable.Util;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Preferences {
-    public class UserPreferences {
+    public class GridPreferences {
 
         public ISet<GridFilterAssociation> GridFilters { get; set; }
 

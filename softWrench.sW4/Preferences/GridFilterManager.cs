@@ -28,7 +28,7 @@ namespace softWrench.sW4.Preferences {
                 Template = template
             };
 
-            if (user.UserPreferences.ContainsFilter(filter, user)) {
+            if (user.GridPreferences.ContainsFilter(filter, user)) {
                 throw GridFilterException.FilterWithSameAliasAlreadyExists(alias, application);
             }
 
@@ -38,7 +38,7 @@ namespace softWrench.sW4.Preferences {
                 JoiningDate = DateTime.Now
             };
             association = _dao.Save(association);
-            user.UserPreferences.GridFilters.Add(association);
+            user.GridPreferences.GridFilters.Add(association);
             return association;
         }
 
@@ -58,7 +58,7 @@ namespace softWrench.sW4.Preferences {
             filter.Template = template;
             filter.UpdateDate = DateTime.Now;
             var updateFilter = _dao.Save(filter);
-            var memoryAssociation = user.UserPreferences.GridFilters.FirstOrDefault(a => a.Filter.Id == id);
+            var memoryAssociation = user.GridPreferences.GridFilters.FirstOrDefault(a => a.Filter.Id == id);
             if (memoryAssociation != null) {
                 //update the filter of the user, no logout required
                 memoryAssociation.Filter = updateFilter;
@@ -79,7 +79,7 @@ namespace softWrench.sW4.Preferences {
 
             }
             //remove it from memory as well
-            currentUser.UserPreferences.GridFilters.Remove(association);
+            currentUser.GridPreferences.GridFilters.Remove(association);
             return association;
 
         }

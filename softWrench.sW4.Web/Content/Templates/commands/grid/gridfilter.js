@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
-app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceService', 'searchService', 'i18NService', 'alertService', 'contextService',
-        function($scope, $http, userPreferenceService, searchService, i18NService, alertService, contextService) {
+app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceService', 'searchService', 'i18NService', 'alertService', 'contextService',
+        function($scope, $http, gridPreferenceService, searchService, i18NService, alertService, contextService) {
 
             function init() {
                 //since this is inside a ng-include this controller is getting reevaluated every time we refresh the page
@@ -17,11 +17,11 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
 
 
             $scope.nonSharedFilters = function() {
-                return userPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
+                return gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
             }
 
             $scope.sharedFilters = function() {
-                return userPreferenceService.loadUserSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
+                return gridPreferenceService.loadUserSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
             }
 
             $scope.hasSharedFilter = function() {
@@ -29,7 +29,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
             }
 
             $scope.hasFilter = function() {
-                return userPreferenceService.hasFilter($scope.schema.applicationName, $scope.schema.schemaId);
+                return gridPreferenceService.hasFilter($scope.schema.applicationName, $scope.schema.schemaId);
             }
 
             $scope.toggleFilterMode = function (modeToSet) {
@@ -108,7 +108,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
             $scope.deleteFilter = function() {
                 var filter = $scope.selectedfilter;
                 alertService.confirm(null, null, function() {
-                    userPreferenceService.deleteFilter(filter.id, filter.creatorId, function() {
+                    gridPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
                         $scope.selectedfilter = null;
                     });
                 }, "Are you sure that you want to remove filter {0}?".format(filter.alias), null);
@@ -117,7 +117,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
             $scope.createFilter = function(alias) {
                 var id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
                 var owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
-                userPreferenceService.saveFilter($scope.schema, $scope.searchData,$scope.searchTemplate, $scope.searchOperator, alias, id, owner,
+                gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, alias, id, owner,
                     function(filter) {
                         $scope.selectedfilter = filter;
                     });

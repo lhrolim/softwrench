@@ -144,7 +144,7 @@
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>
-          <field attribute="message" label="Message:" >
+          <field attribute="message" label="Message:" default="@user.signature">
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="attachment" >
