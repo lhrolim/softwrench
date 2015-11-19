@@ -716,7 +716,7 @@ input[type="date"], input[type="time"] {
   text-align: center; }
 
 #listgrid th, #compositionlistgrid th {
-  padding: 8px 0;
+  padding: 13px 0 9px;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent; }
 
@@ -1867,8 +1867,7 @@ input:focus, select:focus, textarea:focus {
     text-align: center; }
     .page-signin .form-signin .logo img {
       max-width: 100%;
-      height: auto;
-      width: 500px; }
+      height: auto; }
   .page-signin .form-signin .divider {
     height: 60px;
     width: 600px;

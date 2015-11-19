@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{83D9B360-0879-487F-B03C-62044846192C}</ProjectGuid>
+    <ProjectGuid>{08B929A1-6E1C-4EB7-9357-57DF9BE07381}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.tgcs</RootNamespace>
-    <AssemblyName>softwrench.sw4.tgcs</AssemblyName>
+    <RootNamespace>softwrench.sw4.ninewest</RootNamespace>
+    <AssemblyName>softwrench.sw4.ninewest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,22 +42,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="metadata\tgcs\readme.txt" />
-    <Content Include="web_content\tgcs\images\header-email.jpg" />
-    <Content Include="web_content\tgcs\styles\branding.css">
+    <Content Include="metadata\ninewest\readme.txt" />
+    <Content Include="web_content\ninewest\images\branding.png" />
+    <Content Include="web_content\ninewest\images\header-email.jpg" />
+    <Content Include="web_content\ninewest\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>
-    <Content Include="web_content\tgcs\styles\branding.min.css">
+    <Content Include="web_content\ninewest\styles\branding.min.css">
       <DependentUpon>branding.css</DependentUpon>
     </Content>
-    <Content Include="web_content\tgcs\images\header.jpg" />
-    <Content Include="web_content\tgcs\images\logo-byline.png" />
-    <Content Include="web_content\tgcs\images\logo-main.png" />
-    <Content Include="web_content\tgcs\images\signin-lg.jpg" />
-    <Content Include="web_content\tgcs\images\signin-md.jpg" />
-    <Content Include="web_content\tgcs\images\signin-sm.jpg" />
-    <Content Include="web_content\tgcs\images\signin-xs.jpg" />
-    <Content Include="web_content\tgcs\images\signin-xxs.jpg" />
+    <Content Include="web_content\ninewest\images\header.jpg" />
+    <Content Include="web_content\ninewest\images\logo-byline.png" />
+    <Content Include="web_content\ninewest\images\logo-main.png" />
+    <Content Include="web_content\ninewest\images\signin-lg.jpg" />
+    <Content Include="web_content\ninewest\images\signin-md.jpg" />
+    <Content Include="web_content\ninewest\images\signin-sm.jpg" />
+    <Content Include="web_content\ninewest\images\signin-xs.jpg" />
+    <Content Include="web_content\ninewest\images\signin-xxs.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -67,15 +68,15 @@
     </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
-    <None Include="web_content\tgcs\styles\branding.scss" />
+    <None Include="web_content\ninewest\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\tgcs\configuration\" />
-    <Folder Include="classes\com\cts\tgcs\connector\" />
-    <Folder Include="classes\com\cts\tgcs\dataset\" />
-    <Folder Include="classes\com\cts\tgcs\migration\" />
-    <Folder Include="web_content\tgcs\htmls\" />
-    <Folder Include="web_content\tgcs\scripts\" />
+    <Folder Include="classes\com\cts\ninewest\configuration\" />
+    <Folder Include="classes\com\cts\ninewest\connector\" />
+    <Folder Include="classes\com\cts\ninewest\dataset\" />
+    <Folder Include="classes\com\cts\ninewest\migration\" />
+    <Folder Include="web_content\ninewest\htmls\" />
+    <Folder Include="web_content\ninewest\scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
