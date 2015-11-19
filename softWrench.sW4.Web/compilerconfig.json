@@ -18,5 +18,9 @@
     "outputFile": "Content/styles/default/vendor/vendor.css",
     "inputFile": "Content/styles/default/vendor/vendor.scss",
     "sourceMap": true
+  },
+  {
+    "outputFile": "Content/styles/default/_grid.css",
+    "inputFile": "Content/styles/default/_grid.scss"
   }
 ]

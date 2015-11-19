@@ -121,28 +121,28 @@
       <schemas>
         <list title="Purchase Order Grid">
           <field attribute ="ponum" label="PO#">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="description" label="Description">
             <renderer type="default" params="excelwidth=50"/>
           </field>
           <field attribute ="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="potype" label="Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="priority" label="Priority">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=10%;widthLG=10%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="requireddate" label="Required Date">
-            <renderer type="datetime" params="widthXS=-1%;widthSM=20%;widthMD=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute ="totalcost" label="Total Cost">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="receipts" hidden="true"/>
           <properties>
@@ -212,22 +212,22 @@
           <!--</properties>-->
 
           <field attribute="ponum" label="PO#" readonly="true">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=12%" />
+            <renderer type="default"/>
           </field>
           <field attribute="polinenum" label="Line#">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=12%"/>
+            <renderer type="default"/>
           </field>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=12%"/>
+            <renderer type="default"/>
           </field>
           <field attribute="description" label="Description">
             <renderer type="default" />
           </field>
           <field attribute="orderqty" label="Quantity">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=12%"/>
+            <renderer type="default"/>
           </field>
           <field attribute="unitcost" label="Unit Cost">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=12%"/>
+            <renderer type="default"/>
           </field>
           <field attribute="gldebitacct" hidden="true"/>
           <field attribute="siteid" hidden="true" />
@@ -281,25 +281,25 @@
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Request Grid">
           <field attribute="prnum" label="PR#">
-            <renderer type="default" params="widthXS=35%;widthSM=25%;widthMD=20%;widthLG=10%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="widthXS=-1%;widthSM=30%;widthMD=20%;format=MM/dd/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;" />
+            <renderer type="default" params="width=15%;" />
           </field>
           <field attribute="totalcost" label="Total Cost">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="siteid" label="Site ID">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=pr;column=status"/>

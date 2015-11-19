@@ -51,16 +51,16 @@
             <renderer type="default" params="excelwidth=50"/>
           </field>
           <field attribute ="status" label="Status">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute ="receipts" label="Receipts">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute ="vendor" label="Company">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute ="siteid" label="Site">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>

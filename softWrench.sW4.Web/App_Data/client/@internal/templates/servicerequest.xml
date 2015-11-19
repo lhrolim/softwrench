@@ -82,13 +82,13 @@
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=12%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=12%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=12%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -298,21 +298,21 @@
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
             </optionfilter>
           </filters>
-          
+
           <field attribute="ticketid" label="SR#">
-            <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>

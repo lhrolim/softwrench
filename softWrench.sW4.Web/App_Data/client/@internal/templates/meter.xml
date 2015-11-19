@@ -42,15 +42,15 @@
             <dataprovider whereClause="metername = !@metername"/>
           </association>
           <field label="New Reading Date" attribute="newreadingdate" requiredexpression="true" default="@now">
-            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm:ss;widthXS=30%;widthSM=20%;widthMD=15%;widthLG=20%"/>
+            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm:ss;width=20%"/>
           </field>
           <field label="Rollover" attribute="disabledrollover" enableexpression="false" hidden="true">
-            <renderer type="checkbox" params="editable=true;widthXS=5%;widthSM=5%;widthMD=5%;widthLG=5%"/>
+            <renderer type="checkbox" params="editable=true;width=5%"/>
           </field>
           <field attribute="rollover" hidden="true"/>
           <field attribute="inspector" default="@username" hidden="true"></field>
 <!--          <association labelfield="inspector_.displayname" valuefield="personid" target="inspector" label="Inspector" requiredexpression="true" default="@username">-->
-<!--            <renderer type="lookup" params="editable=true;widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%"/>-->
+<!--            <renderer type="lookup" params="editable=true;width=10%"/>-->
 <!--          </association>-->
           <commandbars>
             <commandgroup position="compositionbottom">

@@ -388,7 +388,9 @@
     <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
     <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
     <Content Include="App_Data\Client\%40internal\templates\route.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
@@ -663,6 +665,12 @@
     <Content Include="Content\styles\default\_define-password.scss" />
     <Content Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
+    </Content>
+    <Content Include="Content\styles\default\_grid.css">
+      <DependentUpon>_grid.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\styles\default\_grid.min.css">
+      <DependentUpon>_grid.css</DependentUpon>
     </Content>
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
@@ -1547,7 +1555,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>8080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
