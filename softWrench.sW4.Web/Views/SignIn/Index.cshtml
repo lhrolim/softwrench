@@ -22,6 +22,7 @@
 
 </head>
 <body class="page-signin">
+    <div class="overlay"></div>
     @RowStampScriptHelper.Render("~/Content/Scripts/modernizr")
     @RowStampScriptHelper.Render("~/Content/Scripts/jquery/jquery")
     @RowStampScriptHelper.Render("~/Content/Scripts/twitter-bootstrap")
@@ -100,35 +101,71 @@
                                 </script>
                             }
                             <div class="row login">
-                                <div class="col-sm-6">
-                                    <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                        Username is required<br/>
 
+                                @if (@Model.ClientName != "demo")
+                                {
+                                    @*<div class="col-sm-6">
+                                        <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
+                                        <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                            Username is required<br />
+                                        </div>
                                     </div>
-                                    <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                        Password is required<br/>
-
+                                    <div class="col-sm-6">
+                                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                                        <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                            Password is required<br />
+                                        </div>
+                                        <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
+                                    </div>*@
+                                    <div class="col-sm-offset-3 col-sm-6">
+                                        <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
+                                        <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                            Username is required<br />
+                                        </div>
+                                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                                        <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                            Password is required<br />
+                                        </div>
+                                        <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                                     </div>
-                                    <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset"/>
-                                </div>
-                                <div class="user-links col-sm-6">
-                                    @if (@Model.ClientName == "demo")
-                                    {
+                                }
+                                @if (@Model.ClientName == "demo")
+                                {
+                                    <div class="col-sm-6">
+                                        <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
+                                        <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                            Username is required<br />
+                                        </div>
+                                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                                        <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                            Password is required<br />
+                                        </div>
+                                        <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
+                                    </div>
+                                    <div class="user-links col-sm-6">
                                         <div>
                                             Use the following credentials to login:<br>
                                             <i class="fa fa-user"></i>&ensp;End User: <b>enduser</b> \\ <b>password</b><br>
                                             <i class="fa fa-user"></i>&ensp;Supervisor: <b>supervisor</b> \\ <b>password</b><br>
                                             <i class="fa fa-user"></i>&ensp;Administrator: <b>administrator</b> \\ <b>password</b>
                                         </div>
-                                    }
+                                    </div>
+                                }
+                            </div>
+                            @if (@Model.ClientName != "demo")
+                            {
+                                <div class="buttons submit-button col-sm-offset-3 col-sm-6">
+                                    <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
+                                    <a class="btn forgot-password col-xs-4 col-sm-5" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
                                 </div>
-                            </div>
-                            <div class="row buttons submit-button">
-                                <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
-                                <a class="btn forgot-password col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                            </div>
+                            }
+                            @if (@Model.ClientName == "demo")
+                            {
+                                <div class="row buttons submit-button">
+                                    <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
+                                    <a class="btn forgot-password col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                </div>
+                            }
                         </form>
 
                         <form class="forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm">
