@@ -137,7 +137,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
-                element.append("<composition-list title='{{tabLabel}}' ismodal='{{ismodal}}'" +
+                element.append("<composition-list data-original-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
                     "compositionschemadefinition='compositionschemadefinition' " +
                     "relationship='{{relationship}}' " +
                     "compositiondata='compositiondata' " +
