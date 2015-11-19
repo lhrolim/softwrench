@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities {
-    [Class(Table = "PREF_GENERAL", Lazy = false)]
+    [Class(Table = "PREF_GENERALUSER", Lazy = false)]
     public sealed class UserPreferences : IBaseEntity {
 
         public const string PreferenesByUserId = "from UserPreferences where UserId = ?";
@@ -15,17 +15,12 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
-        [Property]
+        [Property(Column = "user_id")]
         public int? UserId {
             get; set;
         }
 
-        [Property]
-        public int? ProfileId {
-            get; set;
-        }
-
-        [Property]
+        [Property(Column = "signature")]
         public string Signature{
             get; set;
         }
@@ -34,7 +29,6 @@ namespace softwrench.sw4.user.classes.entities {
             var preferences = new UserPreferences();
             preferences.Id = (int?)jObject["id"];
             preferences.UserId = (int?)jObject["userid"];
-            preferences.ProfileId = (int?)jObject["profileid"];
             preferences.Signature = (string)jObject["signature"];
             return preferences;
         }

@@ -32,6 +32,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
+        private readonly string _signature;
         private int? _timezoneOffset;
         private readonly GridPreferences _gridPreferences;
         private readonly UserPreferences _userPreferences;
@@ -111,6 +112,7 @@ namespace softWrench.sW4.Metadata.Security {
             Identity = new GenericIdentity(_login);
             _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
+            _signature = userPreferences != null ? userPreferences.Signature : "";
         }
 
         private InMemoryUser(string mock) : this() {
@@ -176,6 +178,10 @@ namespace softWrench.sW4.Metadata.Security {
 
         public string MaximoPersonId {
             get { return _maximoPersonId; }
+        }
+
+        public string Signature {
+            get { return _signature; }
         }
 
         public GridPreferences GridPreferences {
