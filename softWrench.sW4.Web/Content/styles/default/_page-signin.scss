@@ -2,17 +2,23 @@
     outline: none;
 }
 
-.page-signin .shadow {
-    max-width: 800px;
-    margin: 0 auto;
-    box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
-}
-
 .page-signin {
+    /*.overlay {
+        background-color: rgba(1, 62, 91, 0.5);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+    }*/
+
+    .shadow {
+        max-width: 800px;
+        margin: 0 auto;
+        /*box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);*/
+    }
+
     .form-signin {
         padding: 40px 15px;
-        background-color: rgba(1, 62, 91, 0.5);
-
+        /*background-color: rgba(1, 62, 91, 0.5);*/
         .logo {
             text-align: center;
 
@@ -123,22 +129,74 @@
     }
 }
 
-@media all and (min-width: 768px) {
-    .page-signin {
-        padding-top: 40px;
+@media all and (min-width: 1px) and (max-width: 849px) {
 
+.page-signin {
+    .overlay {
+        background-color: rgba(1, 62, 91, 0.5);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+    }
+
+    /*.shadow {*/
+        /*max-width: 800px;*/
+        /*margin: 0 auto;*/
+        /*box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);*/
+    /*}*/
+
+    /*.form-signin {*/
+        /*padding: 40px 15px;*/
+        /*background-color: rgba(1, 62, 91, 0.5);*/
+        /*.logo {*/
+
+            /*}*/
+        /*}*/
+    }
+}
+
+@media all and (min-width: 850px) {
+    .container {
+        padding-top: 40px;
+    }
+
+    .page-signin {
+            .shadow {
+        /*max-width: 800px;*/
+        /*margin: 0 auto;*/
+        box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    /*.form-signin {*/
+        /*padding: 40px 15px;*/
+        /*background-color: rgba(1, 62, 91, 0.5);*/
+        /*.logo {*/
+
+            /*}*/
+        /*}*/
+
+
+
+        /*padding-top: 40px;*/
         .logo.main img {
             padding: 0;
         }
 
-        .form-signin .user-links {
+        .form-signin {
+            background-color: rgba(1, 62, 91, 0.5);
+            .user-links {
             margin-bottom: 0;
         }
+            }
     }
 }
 
 @media all and (min-width: 992px) {
-    .page-signin {
+        .container {
         padding-top: 60px;
+    }
+
+    .page-signin {
+        /*padding-top: 60px;*/
     }
 }
