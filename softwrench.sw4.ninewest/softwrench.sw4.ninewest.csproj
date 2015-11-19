@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\ninewest\readme.txt" />
+    <Content Include="web_content\ninewest\images\branding.png" />
+    <Content Include="web_content\ninewest\images\header-email.jpg" />
     <Content Include="web_content\ninewest\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>
