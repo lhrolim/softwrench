@@ -665,12 +665,6 @@
     <Content Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </Content>
-    <Content Include="Content\styles\default\_grid.css">
-      <DependentUpon>_grid.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\_grid.min.css">
-      <DependentUpon>_grid.css</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
     <None Include="Content\styles\default\_button.scss" />
