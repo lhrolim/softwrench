@@ -33,34 +33,32 @@
       </Declarations>
       <Code Language="JavaScript">
         <![CDATA[
-    (function() {
+    (function(angular) {
     	"use strict";
 
 	    angular.module("$module$").directive("$directive$", ["$dependency$", function ($dependency$) {
 	        var directive = {
-	            restrict: "AEC",
-	            scope: {
+	            
+              restrict: "AEC",
+	            transclude: false,
+              replace: false,
+              scope: {
 
 	            },
-	            controller: controller,
-	            link: link,
-	        };
+	            
+              controller: ["$ctrldeps$", function($ctrldeps$) {
 
-	        var controller = ["$ctrldeps$", function($ctrldeps$) {
-
-	        }];
-
-	        var link = function (scope, element, attrs) {
-	        
+              }],
+	            
+              link: function (scope, element, attrs) {
+          
+              },
 	        };
 
 	        return directive;
-	    
 	    }]);
     
-    })();
-
-                ]]>
+    })(angular);]]>
       </Code>
     </Snippet>
   </CodeSnippet>
