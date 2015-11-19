@@ -48,7 +48,8 @@
 
         var addSignature = function(parameters) {
             if (parameters.datamap.message == undefined) {
-                parameters.datamap['message'] = "<br/><br/>" + contextService.getUserData().signature;
+                var signature = contextService.getUserData().signature;
+                parameters.datamap['message'] = signature != "" ? "<br/><br/>" + signature : signature;
             }
         }
 
