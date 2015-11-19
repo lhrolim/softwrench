@@ -87,7 +87,6 @@
                        ng-init="initField(fieldMetadata)"
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" />
 
-
             </div>
             
             
@@ -374,25 +373,48 @@
                 <div ng-switch-default>
                     <ng-switch on="fieldMetadata.type">
                         <div ng-switch-when="ApplicationSection">
-                            <div ng-if="fieldMetadata.resourcepath != null"
-                                 ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
-                            <div ng-if="fieldMetadata.resourcepath == null">
-                                <section-element-input extraparameters="extraparameters"
-                                                       schema="schema"
-                                                       datamap="datamap"
-                                                       is-dirty="isDirty"
-                                                       displayables="fieldMetadata.displayables"
-                                                       association-options="associationOptions"
-                                                       association-schemas="associationSchemas"
-                                                       blockedassociations="blockedassociations"
-                                                       renderer-parameters="fieldMetadata.rendererParameters"
-                                                       elementid="{{elementid + 'Section' + fieldMetadata.id}}"
-                                                       orientation="{{fieldMetadata.orientation}}"
-                                                       islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
-                                                       lookup-associations-code="lookupAssociationsCode"
-                                                       lookup-associations-description="lookupAssociationsDescription">
-                                </section-element-input>
+                            
+                            <div ng-if="fieldMetadata.secondaryContent">
+                                <crud-expandable-section extraparameters="extraparameters"
+                                                         schema="schema"
+                                                         datamap="datamap"
+                                                         is-dirty="isDirty"
+                                                         displayables="fieldMetadata.displayables"
+                                                         association-options="associationOptions"
+                                                         association-schemas="associationSchemas"
+                                                         blockedassociations="blockedassociations"
+                                                         renderer-parameters="fieldMetadata.rendererParameters"
+                                                         elementid="{{elementid + 'Section' + fieldMetadata.id}}"
+                                                         orientation="{{fieldMetadata.orientation}}"
+                                                         islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                                         lookup-associations-code="lookupAssociationsCode"
+                                                         lookup-associations-description="lookupAssociationsDescription" />
                             </div>
+                            
+                            <div ng-if="!fieldMetadata.secondaryContent">
+                                <div ng-if="fieldMetadata.resourcepath != null"
+                                     ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
+                                <div ng-if="fieldMetadata.resourcepath == null">
+                                    <section-element-input extraparameters="extraparameters"
+                                                           schema="schema"
+                                                           datamap="datamap"
+                                                           is-dirty="isDirty"
+                                                           displayables="fieldMetadata.displayables"
+                                                           association-options="associationOptions"
+                                                           association-schemas="associationSchemas"
+                                                           blockedassociations="blockedassociations"
+                                                           renderer-parameters="fieldMetadata.rendererParameters"
+                                                           elementid="{{elementid + 'Section' + fieldMetadata.id}}"
+                                                           orientation="{{fieldMetadata.orientation}}"
+                                                           islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                                           lookup-associations-code="lookupAssociationsCode"
+                                                           lookup-associations-description="lookupAssociationsDescription">
+                                    </section-element-input>
+
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                         <div ng-switch-when="ApplicationCompositionDefinition">
 
@@ -450,6 +472,8 @@
 
             </div>
         </fieldset>
+    
     </div>
+
 
 </section>

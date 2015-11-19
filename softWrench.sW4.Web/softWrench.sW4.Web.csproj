@@ -504,6 +504,7 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
+    <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
@@ -753,6 +754,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
@@ -775,7 +777,6 @@
     <Content Include="Content\Templates\directives\gridtoolbar.html" />
     <Content Include="Content\Templates\directives\commandBar.html" />
     <Content Include="Content\Templates\crud\inline_composition_list.html" />
-    <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\crud_output_fields.html" />
     <Content Include="Content\Templates\directives\printSection.html" />
     <Content Include="Content\Templates\hapag\Actionentry.html" />
