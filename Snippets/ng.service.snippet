@@ -33,27 +33,10 @@
       </Declarations>
       <Code Language="JavaScript">
         <![CDATA[
-(function () {
+(function (angular) {
     "use strict";
     
-    //#region Service registration
-
-    angular.module("$module$").factory("$service$", ["$dependency$", $service$]);
-
-    //#endregion
-    
     function $service$($dependency$) {
-    
-      //#region Service Instance
-
-        var service = {
-            $member1$: $member1$
-        };
-
-        return service;
-
-        //#endregion
-    		
     		//#region Utils
     		
     		//#endregion
@@ -66,13 +49,21 @@
 
         //#endregion
 
-      
+        //#region Service Instance
+        var service = {
+            $member1$: $member1$
+        };
+        return service;
+        //#endregion
     }
-    
-  
 
-})();
-                ]]>
+    //#region Service registration
+
+    angular.module("$module$").factory("$service$", ["$dependency$", $service$]);
+
+    //#endregion
+
+})(angular);]]>
       </Code>
     </Snippet>
   </CodeSnippet>
