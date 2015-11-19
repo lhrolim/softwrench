@@ -144,15 +144,15 @@
                     }
                     cmpfacade.digestAndrefresh(association, $scope, newValue);
                 });
-                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
-                    if (newvalue == old) {
-                        return;
-                    }
-                    $timeout(
-                    function () {
-                        cmpfacade.digestAndrefresh(association, $scope);
-                    }, 0, false);
-                });
+//                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
+//                    if (newvalue == old) {
+//                        return;
+//                    }
+//                    $timeout(
+//                    function () {
+//                        cmpfacade.digestAndrefresh(association, $scope);
+//                    }, 0, false);
+//                });
                 $scope.$watch('blockedassociations.' + association.associationKey, function (newValue, oldValue) {
                     cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
                 });

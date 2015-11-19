@@ -24,8 +24,8 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
 
 
 app.controller('DashboardController', [
-    '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService',
-    function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService) {
+    '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService','crudContextHolderService',
+    function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService,crudContextHolderService) {
 
         $scope.doInit = function () {
 
@@ -123,7 +123,7 @@ app.controller('DashboardController', [
 
             modalService.show(schema, null, {
                 title: "Create Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                    scope.associationOptions['applications'] = $scope.applications;
+//                    scope.associationOptions['applications'] = $scope.applications;
                     //                scope.$digest();
                 }
             });
@@ -230,9 +230,9 @@ app.controller('DashboardController', [
             modalService.show(schema, null, {
                 title: "New Dashboard",
                 cssclass: "dashboardmodal",
-                onloadfn: function (scope) {
-                    scope.associationOptions['applications'] = $scope.applications;
-                }
+//                onloadfn: function (scope) {
+//                    scope.associationOptions['applications'] = ;
+//                }
             });
         }
 

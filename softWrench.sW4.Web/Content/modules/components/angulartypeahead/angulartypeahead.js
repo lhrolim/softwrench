@@ -101,6 +101,7 @@
             element.on("focus", function (e) {
                 $timeout(function () {
                     element.typeahead("moveToBegin");
+                    element.typeahead("highlight");
                 }, 0, false);
 
             });

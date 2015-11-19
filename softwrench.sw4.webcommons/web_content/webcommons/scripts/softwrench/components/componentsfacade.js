@@ -4,7 +4,7 @@
 
 
 
-    function cmpfacade($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, contextHolderService) {
+    function cmpfacade($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, crudContextHolderService) {
 
 
         function unblock(displayable, scope) {
@@ -101,7 +101,7 @@
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, contextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
+                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
             } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType === 'combodropdown') {
@@ -155,24 +155,10 @@
 
     angular
       .module('sw_layout')
-      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'contextHolderService', cmpfacade]);
+      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'crudContextHolderService', cmpfacade]);
 
-})
-
-
-
-(angular);
+})(angular);
 
 
-angular.module('sw_layout').factory('cmpfacade', function () {
-
-    return {
-
-
-
-
-    }
-
-});
 
 

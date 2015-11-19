@@ -47,7 +47,7 @@
             };
         }
 
-        var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
+        var doGetFullObject = function (associationFieldMetadata, selectedValue,contextData) {
             if (selectedValue == null) {
                 return null;
             } else if (Array.isArray(selectedValue)) {
@@ -55,7 +55,7 @@
 
                 // Extract each item into an array object
                 for (var i = 0; i < selectedValue.length; i++) {
-                    var Object = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue[i]);
+                    var Object = doGetFullObject(associationFieldMetadata, selectedValue[i], contextData);
                     ObjectArray = ObjectArray.concat(Object);
                 }
 
@@ -67,7 +67,12 @@
             // we only have the "value" on the datamap 
             var key = associationFieldMetadata.associationKey;
 
-            var listToSearch = associationOptions[key];
+            if (associationFieldMetadata.schema.isLazyLoaded) {
+                return crudContextHolderService.fetchLazyAssociationOption(key, selectedValue);
+            } 
+            
+
+            var listToSearch = crudContextHolderService.fetchEagerAssociationOptions(key, contextData);
 
             if (listToSearch == null) {
                 //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
@@ -103,7 +108,7 @@
             return "(" + item.value + ")" + " - " + item.label;
         };
 
-        function getFullObject(associationFieldMetadata, datamap, associationOptions) {
+        function getFullObject(associationFieldMetadata, datamap) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -112,7 +117,7 @@
             if (selectedValue == null) {
                 return null;
             }
-            var resultValue = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue);
+            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
@@ -339,24 +344,24 @@
             });
         }
 
-        function updateEagerOptions(eagerOptions) {
+        function updateEagerOptions(eagerOptions,contextData) {
             angular.forEach(eagerOptions, function (value, key) {
-                crudContextHolderService.updateEagerAssociationOptions(key, value);
+                crudContextHolderService.updateEagerAssociationOptions(key, value, contextData);
             });
         }
 
         function updateEagerCompositionOptions(compositionData) {
         }
 
-        function updateFromServerSchemaLoadResult(schemaLoadResult) {
+        function updateFromServerSchemaLoadResult(schemaLoadResult,contextData) {
             if (schemaLoadResult==null) {
-                return;
+                return $q.when();
             }
 
             updateLazyOptions(schemaLoadResult.preFetchLazyOptions);
-            updateEagerOptions(schemaLoadResult.eagerOptions);
+            updateEagerOptions(schemaLoadResult.eagerOptions, contextData);
             updateEagerCompositionOptions(schemaLoadResult.eagerCompositionAssociations);
-            $timeout(function () {
+            return $timeout(function () {
                 //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
                 //and so the listeners
                 crudContextHolderService.markAssociationsResolved();
@@ -379,7 +384,12 @@
             var parameters = {
                 key: key
             };
-            var fields = datamap.fields ? datamap.fields : datamap;
+
+            var fields = datamap;
+            if (datamap && datamap.fields) {
+                fields = datamap.fields;
+            }
+            
             var fieldsTosubmit = submitService.removeExtraFields(fields, true, schema);
 
             var urlToUse = url("/api/generic/Association/GetSchemaOptions?" + $.param(parameters));
@@ -391,7 +401,7 @@
 
             return $http.post(urlToUse, jsonString, config)
                 .then(function (serverResponse) {
-                    return updateFromServerSchemaLoadResult(serverResponse.data.resultObject);
+                    return updateFromServerSchemaLoadResult(serverResponse.data.resultObject,options.contextData);
                 });
 
         }
@@ -622,8 +632,8 @@
             }
         };
 
-        function insertAssocationLabelsIfNeeded(schema, datamap, associationoptions) {
-            if (schema.properties['addassociationlabels'] != "true") {
+        function insertAssocationLabelsIfNeeded(schema, datamap) {
+            if (schema.properties['addassociationlabels'] !== "true") {
                 return;
             }
             var associations = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -631,7 +641,7 @@
             $.each(associations, function (key, value) {
                 var targetName = value.target;
                 var labelName = "#" + targetName + "_label";
-                var realValue = fn.getFullObject(value, datamap, associationoptions);
+                var realValue = fn.getFullObject(value, datamap);
                 if (realValue != null && Array.isArray(realValue)) {
                     datamap[labelName] = "";
                     // store result into a string with newline delimiter

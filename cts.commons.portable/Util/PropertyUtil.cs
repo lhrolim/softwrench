@@ -11,15 +11,10 @@ namespace cts.commons.portable.Util {
                 if (propertyString == null) {
                     return result;
                 }
-                char separatorChar = ';';
-                if (propertyString.Contains(",")) {
-                    separatorChar = ',';
-                }
-
-                if (propertyString.EndsWith("" + separatorChar)) {
+                if (propertyString.EndsWith(";")) {
                     propertyString = propertyString.Substring(0, propertyString.Length - 1);
                 }
-                var strings = propertyString.Split(separatorChar);
+                var strings = propertyString.Split(';');
                 foreach (String s in strings) {
                     var equals = s.IndexOf("=", StringComparison.Ordinal);
                     if (equals == -1) {

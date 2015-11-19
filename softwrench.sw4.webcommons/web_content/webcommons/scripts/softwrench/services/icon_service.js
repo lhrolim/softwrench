@@ -1,11 +1,12 @@
-﻿var app = angular.module('sw_layout');
+﻿
+(function (angular) {
+    'use strict';
 
-app.factory('iconService', function ($rootScope, $timeout, i18NService) {
+  
+    function iconService($log) {
+      
 
-    return {
-
-
-        loadIcon: function (value,metadata) {
+        function loadIcon(value, metadata) {
             var expression = metadata.rendererParameters['expression'];
             if (expression != null) {
                 expression = replaceAll(expression, '\'', "\"");
@@ -28,10 +29,16 @@ app.factory('iconService', function ($rootScope, $timeout, i18NService) {
             //forgot to declare it, just return
             return '';
         }
-     
-        
-    };
 
-});
+        var service = {
+            loadIcon: loadIcon
+        };
 
+        return service;
+    }
 
+    angular
+    .module('sw_layout')
+    .factory('iconService', ['$log', iconService]);
+
+})(angular);

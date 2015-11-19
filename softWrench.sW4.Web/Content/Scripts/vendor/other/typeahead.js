@@ -1780,6 +1780,16 @@
                         $input.setCursorPosition(0);
                     }
                 }
+            },
+
+            highlight: function () {
+                return this.each(begin);
+                function begin() {
+                    var $input = $(this), typeahead;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        $input.select();
+                    }
+                }
             }
 
         };

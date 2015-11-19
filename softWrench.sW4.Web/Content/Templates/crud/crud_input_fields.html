@@ -160,7 +160,7 @@
                                             class="hidden-phone form-control combobox"
                                             ng-class="{'combobox-dynamic' : isDesktop()}"
                                             ng-model="datamap[fieldMetadata.target]"
-                                            ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
+                                            ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
                                             data-associationkey="{{fieldMetadata.associationKey}}">
                                         <option value=""></option>
@@ -190,7 +190,7 @@
                                         class="hidden-phone form-control combobox"
                                         ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
-                                        ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
+                                        ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{fieldMetadata.associationKey}}">
                                     <option value=""></option>
@@ -201,7 +201,7 @@
                 </div>
                 <div ng-switch-when="multiselectautocompleteclient">
                     <selectize config="{create:true, valueField:'value', labelField:'label', searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
-                               options="associationOptions[fieldMetadata.associationKey]"
+                               options="GetAssociationOptions(fieldMetadata)"
                                ng-model="datamap[fieldMetadata.target]">
                     </selectize>
                 </div>
@@ -211,7 +211,7 @@
                 </div>
                 <div ng-switch-when="lookup" >
                     <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema" disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                  lookup-associations-code="lookupAssociationsCode" lookup-associations-description="lookupAssociationsDescription" association-options="associationOptions"/>
+                                  />
                 </div>
 
                 <div ng-switch-when="modal" class="row">
@@ -381,15 +381,13 @@
                                                        datamap="datamap"
                                                        is-dirty="isDirty"
                                                        displayables="fieldMetadata.displayables"
-                                                       association-options="associationOptions"
                                                        association-schemas="associationSchemas"
                                                        blockedassociations="blockedassociations"
                                                        renderer-parameters="fieldMetadata.rendererParameters"
                                                        elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                                        orientation="{{fieldMetadata.orientation}}"
                                                        islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
-                                                       lookup-associations-code="lookupAssociationsCode"
-                                                       lookup-associations-description="lookupAssociationsDescription">
+                                                       >
                                 </section-element-input>
                             </div>
                         </div>
@@ -435,15 +433,12 @@
                                            datamap="datamap"
                                            is-dirty="isDirty"
                                            displayables="fieldMetadata.detailSection.displayables"
-                                           association-options="associationOptions"
                                            association-schemas="associationSchemas"
                                            blockedassociations="blockedassociations"
                                            renderer-parameters="fieldMetadata.rendererParameters"
                                            elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                            orientation="{{fieldMetadata.orientation}}"
-                                           islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
-                                           lookup-associations-code="lookupAssociationsCode"
-                                           lookup-associations-description="lookupAssociationsDescription">
+                                           islabelless="{{isSectionWithoutLabel(fieldMetadata)}}">
                     </section-element-input>
                 </div>
 

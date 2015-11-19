@@ -22,7 +22,7 @@ app.directive('lookupModalWrapper', function ($compile) {
             "<lookup-modal lookup-obj='lookupObj'" +
                 "lookup-associations-code='lookupAssociationsCode'" +
                 "lookup-associations-description='lookupAssociationsDescription'" +
-                "schema='schema' datamap='datamap' association-options='associationOptions'>" +
+                "schema='schema' datamap='datamap'>" +
             "</lookup-modal>"
             );
             $compile(element.contents())(scope);
@@ -39,7 +39,6 @@ app.directive('lookupModal', function (contextService) {
         scope: {
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
-            associationOptions: '=',
             lookupObj: '=',
             schema: '=',
             datamap: '='

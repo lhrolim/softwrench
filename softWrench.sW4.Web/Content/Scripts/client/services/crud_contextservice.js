@@ -251,6 +251,9 @@
             var schemaId = contextData.schemaId;
             var entryId = contextData.entryId || "#global";
 
+            _crudContext._eagerassociationOptions[schemaId] = _crudContext._eagerassociationOptions[schemaId] || {};
+            _crudContext._eagerassociationOptions[schemaId][entryId] = _crudContext._eagerassociationOptions[schemaId][entryId] || {};
+
             _crudContext._eagerassociationOptions[schemaId][entryId][associationKey] = options;
 
         }
@@ -267,6 +270,22 @@
 
         //#endregion
         //#endregion
+
+        //#region modal
+
+        function disposeModal() {
+            _crudContext.showingModal = false;
+            _crudContext._eagerassociationOptions["#modal"] = {};
+            _crudContext._lazyAssociationOptions["#modal"] = {};
+        };
+
+        function modalLoaded() {
+            disposeModal();
+            _crudContext.showingModal = true;
+        }
+
+        //#endregion
+
 
         //#region Service Instance
 
@@ -290,7 +309,6 @@
         var associationServices = {
             updateLazyAssociationOption: updateLazyAssociationOption,
             fetchLazyAssociationOption: fetchLazyAssociationOption,
-
             updateEagerAssociationOptions: updateEagerAssociationOptions,
             fetchEagerAssociationOptions: fetchEagerAssociationOptions,
             associationsResolved: associationsResolved,
@@ -306,7 +324,13 @@
             compositionsLoaded: compositionsLoaded
         }
 
-        return angular.extend({}, service, hookServices, associationServices);
+        var modalService = {
+            disposeModal: disposeModal,
+            modalLoaded : modalLoaded
+        }
+
+
+        return angular.extend({}, service, hookServices, associationServices, modalService);
 
 
         //#endregion

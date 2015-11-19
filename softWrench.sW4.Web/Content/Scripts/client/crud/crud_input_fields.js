@@ -49,7 +49,6 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             datamap: '=',
             isDirty: '=',
             displayables: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
             extraparameters: '=',
@@ -69,7 +68,6 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 "datamap='datamap'" +
                 "is-dirty='isDirty'" +
                 "displayables='displayables'" +
-                "association-options='associationOptions'" +
                 "association-schemas='associationSchemas'" +
                 "blockedassociations='blockedassociations'" +
                 "section-parameters='rendererParameters'" +
@@ -94,7 +92,6 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             extraparameters: '=',
             isDirty: '=',
             displayables: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
             elementid: '@',
@@ -193,7 +190,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
-                return $scope.associationOptions[fieldMetadata.associationKey];
+                return crudContextHolderService.fetchEagerOptions(fieldMetadata.associationKey);
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
@@ -490,7 +487,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 return lengthclass;
             };
             $scope.GetAssociationOptions = function (fieldMetadata) {
-                if (fieldMetadata.type == "OptionField") {
+                if (fieldMetadata.type === "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
                 return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey);
@@ -499,7 +496,6 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
                 }
-                $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
                 return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute);
             }
             $scope.contextPath = function (path) {

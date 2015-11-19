@@ -100,6 +100,10 @@
         }
 
         function removeExtraFields(datamap, clone, schema) {
+            if (!datamap) {
+                return null;
+            }
+
             if (!datamap.extrafields) {
                 if (clone) {
                     return jQuery.extend(true, {}, datamap);

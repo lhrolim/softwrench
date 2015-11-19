@@ -2,7 +2,6 @@
     <section class="container" ng-if="isList">
         <crud-list datamap="datamap"
                    schema="schema"
-                   association-options="associationOptions"
                    is-list="isList"
                    ismodal="{{ismodal}}"
                    timestamp="{{timestamp}}" />
@@ -63,7 +62,6 @@
                                                     schema="schema" datamap="datamap.fields"
                                                     original-datamap="originalDatamap.fields"
                                                     is-dirty="isDirty"
-                                                    association-options="associationOptions"
                                                     association-schemas="associationSchemas"
                                                     blockedassociations="blockedassociations"
                                                     displayables="schema.displayables"
@@ -103,7 +101,6 @@
                                                     elementid="tab_{{tab.tabid}}"
                                                     displayables="tab.displayables"
                                                     schema="schema" datamap="datamap.fields"
-                                                    association-options="associationOptions"
                                                     association-schemas="associationSchemas"
                                                     blockedassociations="blockedassociations"
                                                     cancelfn="cancel(data,schema)"
@@ -129,7 +126,6 @@
                                             elementid="crudInputMain"
                                             extraparameters="extraparameters"
                                             schema="schema" datamap="datamap.fields"
-                                            association-options="associationOptions"
                                             blockedassociations="blockedassociations"
                                             association-schemas="associationSchemas"
                                             cancelfn="cancel(data,schema)"
