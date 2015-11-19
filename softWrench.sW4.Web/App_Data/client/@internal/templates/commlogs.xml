@@ -114,6 +114,7 @@
         </schema>
 
         <schema id="detail" stereotype="compositiondetail">
+          <event type="onload" service="commlogService" method="addSignature"/>
           <field attribute="commlogid" hidden="true" />
           <field attribute="ownertable" defaultexpression="$.parentdata.fields['class']" hidden="true"/>
           <association target="#templateid" label="Template" labelfield="commtemplate_.description" valuefield="templateid" >
@@ -144,7 +145,7 @@
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>
-          <field attribute="message" label="Message:" default="@user.signature">
+          <field attribute="message" label="Message:">
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="attachment" >
