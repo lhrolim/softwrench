@@ -95,8 +95,9 @@
                 };
 
                 var compileTemplate = function () {
-                    if ($scope.schema.stereotype !== "Detail" && $scope.schema.stereotype !== "detail") {
-                        throw new Error(error.unsupportedStereotype);
+                    var stereotype = $scope.schema.stereotype;
+                    if (stereotype !== "Detail" && stereotype !== "detail") {
+                        throw new Error(error.unsupportedStereotype.format(stereotype));
                     }
 
                     /*
