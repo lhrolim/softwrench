@@ -35,7 +35,6 @@
 
 .filter-label {
     display: inline-block;
-    /*margin: 0 10px;*/
 
     &:hover {
         background: $hover_background;
@@ -116,17 +115,13 @@
                                 .removable {
                                     cursor: pointer;
                                 }
-                                /*&:hover {
-                                            background: $hover_background;
-                                        }*/
                             }
                         }
                     }
 
                     .list-group {
                         margin-bottom: 0;
-                        /*max-height: 250px;
-                                overflow-y: scroll;*/
+
                         .list-group-item {
                             cursor: pointer;
                             border: none;
@@ -264,98 +259,6 @@
     display: none;
 }
 
-@media only screen and (max-width: 768px) {
-    #listgrid {
-        display: block;
-
-        thead, tbody, th, td, tr {
-            display: block;
-        }
-
-        thead {
-            background-color: #fff;
-
-            tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-        }
-
-        tbody {
-            tr {
-                /*&:first-child {
-                    margin-top: 10px;
-                }*/
-
-                /*&:last-child {
-                    margin-bottom: 10px;
-                }*/
-                padding: 10px 0;
-                /*}*/
-                td {
-                    /* Behave  like a "row" */
-                    /*border: none;*/
-                    /*border-bottom: 1px solid #eee;*/
-                    position: relative;
-                    padding: 4px 4px 4px 50%;
-                    white-space: normal;
-                    text-align: left;
-
-                                             /*&:first-child {
-                    margin-top: 10px;
-                }*/
-
-                    &.no-data {
-                        display: none;
-                    }
-
-                    &:before {
-                        /* Now like a table header */
-                        position: absolute;
-                        /* Top/left values mimic padding */
-                        /*top: 6px;*/
-                        left: 15px;
-                        width: 45%;
-                        padding-right: 10px;
-                        white-space: nowrap;
-                        text-align: left;
-                        font-weight: bold;
-                        content: attr(data-title);
-                    }
-
-                    &._color {
-                        /* Behave  like a "row" */
-                        /*border: none;*/
-                        /*border-bottom: 1px solid #eee;*/
-                        position: relative;
-                        padding-left: 50%;
-                        white-space: normal;
-                        text-align: left;
-
-                        &:before {
-                            /* Now like a table header */
-                            position: absolute;
-                            /* Top/left values mimic padding */
-                            top: 6px;
-                            left: 6px;
-                            width: 45%;
-                            padding-right: 10px;
-                            white-space: nowrap;
-                            text-align: left;
-                            font-weight: bold;
-                            content: attr(data-title);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-
 /*SWWEB-841 ~ fix header width for Firefox*/
 @-moz-document url-prefix() {
     #listgrid thead tr.filter-row .input-group-sm > .form-control {
@@ -489,14 +392,73 @@ table .detaildata {
 
 .grid-header {
     .quick-search {
-        float:left;
-        padding-top:4px;
-        padding-left:10px;
-        @media(min-width: 750px){
+        float: left;
+        padding-top: 4px;
+        padding-left: 10px;
+
+        @media(min-width: 750px) {
             width: calc(100% - 370px);
         }
-        @media(max-width: 749px){
+
+        @media(max-width: 749px) {
             width: calc(100% - 200px);
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    #listgrid {
+        display: block;
+
+        thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        thead {
+            tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+        }
+
+        tbody {
+            tr {
+                padding: 10px 0;
+
+                &:hover {
+                    background-color: #d6d6d6;
+                }
+
+                td {
+                    position: relative;
+                    padding: 4px 4px 4px 50%;
+                    white-space: normal;
+                    text-align: left;
+
+                    &.no-data {
+                        display: none;
+                    }
+
+                    &:before {
+                        position: absolute;
+                        left: 15px;
+                        width: 45%;
+                        padding-right: 10px;
+                        white-space: nowrap;
+                        text-align: left;
+                        font-weight: bold;
+                        content: attr(data-title);
+                    }
+
+                    &._color {
+                        display: inline-block;
+                        float: right;
+                        top: -28px;
+                        margin-right: 15px;
+                    }
+                }
+            }
         }
     }
 }

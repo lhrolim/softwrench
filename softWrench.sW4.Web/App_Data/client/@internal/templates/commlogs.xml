@@ -82,34 +82,34 @@
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
           <field attribute="inbound">
-            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'};widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=3%"/>
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'};width=3%"/>
           </field>
           <field attribute="read">
-            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''};widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=3%"/>
+            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''};width=3%"/>
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
           <field attribute="createdate" label="Created Date/Time">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;widthXS=10%;widthSM=10%;widthMD=10%;widthLG=10%"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=10%"/>
           </field>
           <field attribute="sendto" label="To">
-            <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%;formatter=lower"/>
+            <renderer type="default" params="width=25%;formatter=lower"/>
           </field>
           <field attribute="cc" hidden="true"/>
           <field attribute="ccflag" label="Cc">
-            <renderer type="checkbox"  params="widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=5%"/>
+            <renderer type="checkbox"  params="width=5%"/>
           </field>
           <field attribute="bcc" hidden="true"/>
           <field attribute="bccflag" label="BCc">
-            <renderer type="checkbox"  params="widthXS=-1%;widthSM=-1%;widthMD=5%;widthLG=5%"/>
+            <renderer type="checkbox"  params="width=5%"/>
           </field>
           <field attribute="sendfrom" label="From">
-            <renderer type="default" params="widthXS=50%;widthSM=35%;widthMD=30%;widthLG=25%;formatter=lower"/>
+            <renderer type="default" params="width=25%;formatter=lower"/>
           </field>
           <field attribute="subject" label="Subject">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;"/>
+            <renderer type="default"/>
           </field>
           <section resourcepath="/Content/Templates/otb/commlogaction.html">
-            <renderer type="default" params="widthXS=-1%;widthSM=30%;widthMD=20%;widthLG=13%"/>
+            <renderer type="default" params="width=13%"/>
           </section>
         </schema>
 

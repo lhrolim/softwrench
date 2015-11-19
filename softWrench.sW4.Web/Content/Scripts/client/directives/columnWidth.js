@@ -47,26 +47,14 @@ app.directive('columnWidths', function ($log, $timeout) {
                             if (json[id].rendererParameters) {
                                 width = removePercent(json[id].rendererParameters.width);
 
-                                //if width is set override responsive widths, else add responsive widths
+                                //use provided width or default to 0
                                 if (width) {
                                     row.width = width;
-                                //    //row.widthXS = width;
-                                //    //row.widthSM = width;
-                                //    row.widthMD = width;
-                                //    //row.widthLG = width;
                                 } else {
-                                    row.width = 0;
-                                //    //row.widthXS = removePercent(json[id].rendererParameters.widthXS);
-                                //    //row.widthSM = removePercent(json[id].rendererParameters.widthSM);
-                                //    row.widthMD = removePercent(json[id].rendererParameters.widthMD);
-                                //    //row.widthLG = removePercent(json[id].rendererParameters.widthLG);
+                                    row.width = 0
                                 }
                             } else {
                                 row.width = 0;
-                                //row.widthXS = 0;
-                                //row.widthSM = 0;
-                                //row.widthMD = 0;
-                                //row.widthLG = 0;
                             }
 
                             if (json[id].attribute) {
@@ -83,20 +71,57 @@ app.directive('columnWidths', function ($log, $timeout) {
 
                     //balance remaining width between missing column widths
                     balanceColumns(widths, 'width');
-                    //balanceColumns(widths, 'widthXS');
-                    //balanceColumns(widths, 'widthSM');
-                    //balanceColumns(widths, 'widthMD');
-                    //balanceColumns(widths, 'widthLG');
 
                     log.debug('Widths Found', widths);
 
                     //build css rules
                     var css = '';
-                    //css += getViewRules(widths, 'width', null, 'screen', scope.schema);
-                    //css += getViewRules(widths, 'widthXS', '1px', 'screen', scope.schema);
-                    //css += getViewRules(widths, 'widthSM', '480px', 'screen', scope.schema);
+                    //css += '@media only screen and (max-width: 767px) {';
+                    //css += '#listgrid {';
+                    //css += 'display: block; }';
+                    //css += '#listgrid thead, #listgrid tbody, #listgrid th, #listgrid td, #listgrid tr {';
+                    //css += 'display: block; }';
+                    //css += '#listgrid thead tr {';
+                    //css += 'position: absolute;';
+                    //css += 'top: -9999px;';
+                    //css += 'left: -9999px; }';
+                    //css += '#listgrid tbody tr {';
+                    //css += 'padding: 10px 0;';
+                    //css += '}';
+                    //css += '#listgrid tbody tr td {';
+                    //css += 'position: relative;';
+                    //css += 'padding: 4px 4px 4px 50%;';
+                    //css += 'white-space: normal;';
+                    //css += 'text-align: left;';
+                    //css += '}';
+                    //css += '#listgrid tbody tr td.no-data {';
+                    //css += 'display: none; }';
+                    //css += '#listgrid tbody tr td:before {';
+                    //css += 'position: absolute;';
+                    //css += 'left: 15px;';
+                    //css += 'width: 45%;';
+                    //css += 'padding-right: 10px;';
+                    //css += 'white-space: nowrap;';
+                    //css += 'text-align: left;';
+                    //css += 'font-weight: bold;';
+                    //css += 'content: attr(data-title); }';
+                    //css += '#listgrid tbody tr td._color {';
+                    //css += 'position: relative;';
+                    //css += 'padding-left: 50%;';
+                    //css += 'white-space: normal;';
+                    //css += 'text-align: left; }';
+                    //css += '#listgrid tbody tr td._color:before {';
+                    //css += 'position: absolute;';
+                    //css += 'top: 6px;';
+                    //css += 'left: 6px;';
+                    //css += 'width: 45%;';
+                    //css += 'padding-right: 10px;';
+                    //css += 'white-space: nowrap;';
+                    //css += 'text-align: left;';
+                    //css += 'font-weight: bold;';
+                    //css += 'content: attr(data-title); } }';
+
                     css += getViewRules(widths, 'width', '768px', 'screen', scope.schema);
-                    //css += getViewRules(widths, 'width', '992px', 'screen', scope.schema);
                     css += getViewRules(widths, 'width', '1px', 'print', scope.schema);
 
                     if (css) {
@@ -189,9 +214,9 @@ function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
     if (columnWidth) {
         //-1 hide this column, else set width and show
         if (columnWidth === -1) {
-            properties = 'display:none;';
+            properties = '';
         } else {
-            properties = 'width:' + columnWidth + '%;display:table-cell;';
+            properties = 'width:' + columnWidth + '%;';
         }
     }
 
