@@ -1,11 +1,11 @@
 ﻿$signin_color: #16509e;
+$form_background: rgba(0, 88, 155, 0.64);
 $asset_path: "../images";
 
 .page-signin {
     background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
 
     .form-signin {
-        background-color: rgba(0, 88, 155, 0.64);
         padding: 0 0 40px 0;
 
         .logo.main {
@@ -46,10 +46,31 @@ $asset_path: "../images";
     }
 }
 
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .overlay {
+            background-color: $form_background;
+        }
+
+        .form-signin {
+            background-color: none;
+            padding: 15px;
+        }
+    }
+}
+
 /* Small Devices, Tablets */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .page-signin {
         background: $signin_color url(#{$asset_path}/signin-sm.jpg) no-repeat center center fixed;
+    }
+}
+
+@media all and (min-width: 850px) {
+    .page-signin {
+        .form-signin {
+            background-color: $form_background;
+        }
     }
 }
 
