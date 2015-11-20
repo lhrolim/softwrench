@@ -9,7 +9,7 @@
     <template path="@commlogs.xml"/>
   </templates>
   <entities>
-    <entity name="SR" idAttribute="ticketid">
+    <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="accumulatedholdtime" type="float" required="false" />
         <attribute name="accumulateslaholdtime" type="smallint" required="false" query="(select COALESCE(slahold, 0) from slarecords sla inner join pluspservagree on sanum = sla.slanum where ownertable = 'TICKET' and ownerid = !@ticketuid)" />
