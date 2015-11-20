@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Search {
     public class QuickSearchHelper {
@@ -7,7 +9,7 @@ namespace softWrench.sW4.Data.Search {
         private const string QUICK_SEARCH_PARAM_VALUE_PATTERN = "%{0}%";
         private const string QUICK_SEARCH_PARAM_QUERY_PATTERN = "({0} like :" + QUICK_SEARCH_PARAM_NAME + ")";
 
-        public static bool HasQuickSearchData([NotNull]SearchRequestDto dto){
+        public static bool HasQuickSearchData([NotNull]SearchRequestDto dto) {
             return !string.IsNullOrEmpty(dto.QuickSearchData);
         }
 
@@ -21,6 +23,11 @@ namespace softWrench.sW4.Data.Search {
 
         public static string QuickSearchDataValue(string data) {
             return string.Format(QUICK_SEARCH_PARAM_VALUE_PATTERN, data);
+        }
+
+        public static string BuildOrWhereClause(IEnumerable<string> attributes) {
+            // iterate filters and 'OR' the attributes
+            return "(" + string.Join("OR", attributes.Select(QuickSearchStatement)) + ")";
         }
     }
 }

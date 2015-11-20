@@ -294,11 +294,13 @@
           , caseSensitive = []
           , caseInsensitive = []
           , item;
-        if (items[0] == "") {
-            items.shift();
-        }
+        
 
-        while (item = items.shift()) {
+        while ((item = items.shift()) != null) {
+            if (item === "") {
+                continue;
+            }
+
             item = item.replace(/\s+/g, ' ');
             if (!item.toLowerCase().indexOf(this.query.toLowerCase())) {
                 beginswith.push(item);

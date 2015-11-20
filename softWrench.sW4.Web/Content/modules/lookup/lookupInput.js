@@ -5,7 +5,6 @@
 
     angular.module("sw_lookup").directive("lookupInput", ["cmplookup", "contextService", 'expressionService', 'cmpfacade', 'dispatcherService', 'modalService', 'compositionCommons',
         function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons) {
-
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl('/Content/modules/lookup/templates/lookupinput.html'),
@@ -16,8 +15,6 @@
                     fieldMetadata: '=',
                     disabledassociations: '=',
                     blockedassociations: '=',
-                    lookupAssociationsCode: '=',
-                    lookupAssociationsDescription: '=',
                     mode: '@'
                 },
 
@@ -45,7 +42,7 @@
                             return true;
                         }
                         var result = (scope.blockedassociations == null || !scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, searchDatamap, scope);
-                        if (result != scope.disabledassociations[key]) {
+                        if (result !== scope.disabledassociations[key]) {
                             cmpfacade.blockOrUnblockAssociations(scope, !result, !scope.disabledassociations[key], fieldMetadata);
                             scope.disabledassociations[key] = result;
                         }
@@ -53,27 +50,27 @@
                     };
 
 
-                    scope.lookupCodeChange = function (fieldMetadata) {
-                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-                        if (allowFreeText === "true") {
-                            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
-                            scope.datamap[fieldMetadata.target] = code;
-                        }
-                    };
+//                    scope.lookupCodeChange = function (fieldMetadata) {
+//                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+//                        if (allowFreeText === "true") {
+//                            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+//                            scope.datamap[fieldMetadata.target] = code;
+//                        }
+//                    };
 
-                    scope.lookupCodeBlur = function (fieldMetadata) {
-                        var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
-                        var targetValue = scope.datamap[fieldMetadata.target];
-                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-
-                        if (code != targetValue) {
-                            if (code == null || code == '') {
-                                scope.datamap[fieldMetadata.target] = null;
-                            } else if (allowFreeText != "true") {
-                                scope.showLookupModal(fieldMetadata);
-                            }
-                        }
-                    };
+//                    scope.lookupCodeBlur = function (fieldMetadata) {
+//                        var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+//                        var targetValue = scope.datamap[fieldMetadata.target];
+//                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+//
+//                        if (code != targetValue) {
+//                            if (code == null || code == '') {
+//                                scope.datamap[fieldMetadata.target] = null;
+//                            } else if (allowFreeText != "true") {
+//                                scope.showLookupModal(fieldMetadata);
+//                            }
+//                        }
+//                    };
 
 
                     scope.showCustomModal = function (fieldMetadata, schema, datamap) {
@@ -109,9 +106,7 @@
 
                     scope.showLookupModal = function (text) {
                         var fieldMetadata = scope.fieldMetadata;
-
-                        scope.lookupAssociationsDescription = scope.lookupAssociationsDescription || {};
-
+                        
                         if (fieldMetadata.rendererType === "modal") {
                             this.showCustomModal(fieldMetadata, $scope.schema, $scope.datamap);
                             return;
@@ -129,10 +124,7 @@
                             return;
                         }
 
-                        var code = '';
-                        if (scope.lookupAssociationsCode[fieldMetadata.attribute] != scope.datamap[fieldMetadata.attribute]) {
-                            code = scope.lookupAssociationsCode[fieldMetadata.attribute];
-                        }
+                        var code = scope.datamap[fieldMetadata.attribute];
 
                         scope.lookupObj.element = element;
                         cmplookup.updateLookupObject(scope, fieldMetadata, code, searchDatamap);

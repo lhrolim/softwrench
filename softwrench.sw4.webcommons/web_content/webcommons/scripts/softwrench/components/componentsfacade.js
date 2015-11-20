@@ -40,10 +40,41 @@
             this.digestAndrefresh(displayable, scope);
         };
 
+        function updateEagerOptions(scope, displayable) {
+            var log = $log.getInstance("cmpfacade#updateEagerOptions",["association"]);
+            var attribute = displayable.attribute;
+            var rendererType = displayable.rendererType;
+            var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            log.debug("updating list for component {0}".format(attribute));
+            var fn = function doRefresh() {
+                if (rendererType === 'autocompleteclient') {
+                    cmpAutocompleteClient.refreshFromAttribute(attribute, null, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey,contextData));
+                } else if (rendererType === 'combodropdown') {
+                    cmpComboDropdown.refreshFromAttribute(attribute);
+                }
+            }
+
+            try {
+                scope.$digest();
+                fn();
+            } catch (e) {
+                $timeout(
+                    function () {
+                        fn();
+                        try {
+                            scope.$digest();
+                        } catch (e) {
+                            $log.getInstance('componentfacade#digestandrefresh').warn('validating this is actually being thrown. if u see this, remove this log' + e);
+                            //nothing
+                        }
+                    }, 0, false);
+            }
+
+        }
 
         function digestAndrefresh(displayable, scope, newValue) {
             var rendererType = displayable.rendererType;
-            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup' && rendererType != 'modal') {
+            if (rendererType !== 'autocompleteclient' && rendererType !== 'autocompleteserver' && rendererType !== 'combodropdown' && rendererType !== 'lookup' && rendererType !== 'modal') {
                 return;
             }
             try {
@@ -116,7 +147,8 @@
             var schema = scope.schema;
             cmpComboDropdown.init(bodyElement);
             cmpAutocompleteClient.init(bodyElement, datamap, schema, scope);
-            cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
+            //deprecating autocompleteservers
+//            cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
             screenshotService.init(bodyElement, datamap);
         };
 
@@ -146,6 +178,7 @@
             unblock: unblock,
             block: block,
             digestAndrefresh: digestAndrefresh,
+            updateEagerOptions: updateEagerOptions,
             focus: focus,
             refresh: refresh,
             init: init,

@@ -13,11 +13,16 @@
         }
 
         function restore() {
+            var log = $log.get("schemaCacheService#restore", ["performance"]);
+            var t0=performance.now();
             var urlContext = url("");
             var schemaCacheJson = localStorage[urlContext + ":schemaCache"];
             if (schemaCacheJson) {
                 schemaCache = JSON.parse(schemaCacheJson);
             }
+            var t1 = performance.now();
+            log.debug("schema restore took ",t1-t0);
+
         }
 
         restore();
@@ -41,8 +46,11 @@
 
         function getSchemaFromResult(result) {
             if (result.cachedSchemaId) {
-                $log.get("schemaCacheService#getSchemaFromResult").info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
-                return this.getCachedSchema(result.applicationName, result.cachedSchemaId);
+                var log = $log.get("schemaCacheService#getSchemaFromResult",["performance"]);
+                log.info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
+                var cachedSchema = this.getCachedSchema(result.applicationName, result.cachedSchemaId);
+                log.info("finish retrieving from cache".format(result.applicationName, result.cachedSchemaId));
+                return cachedSchema;
             }
             return result.schema;
 
@@ -60,11 +68,13 @@
             var schemaKey = schema.applicationName + "." + schema.schemaId;
             if (!schemaCache[schemaKey]) {
                 var systeminitMillis = contextService.getFromContext("systeminittime");
-                $log.get("schemaCacheService#addSchemaToCache").info("adding schema {0} retrieved to cache".format(schemaKey));
+                var log = $log.get("schemaCacheService#addSchemaToCache",["performance"]);
+                log.info("adding schema {0} retrieved to cache".format(schemaKey));
                 schemaCache[schemaKey] = schema;
                 schemaCache.systeminitMillis = systeminitMillis;
                 var urlContext = url("");
                 localStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
+                log.info("finishing adding schema {0} retrieved to cache".format(schemaKey));
             }
         }
 

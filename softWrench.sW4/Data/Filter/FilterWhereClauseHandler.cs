@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Filter {
             //force cache here
             var parameters = searchDto.GetParameters();
             var schemaFilters = schema.SchemaFilters;
-            
+
             // if all filters are the column filters no need to take any action
             if (!schemaFilters.HasOverridenFilter || parameters == null) {
                 return searchDto;
@@ -99,7 +99,12 @@ namespace softWrench.sW4.Data.Filter {
             var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
 
             if (!string.IsNullOrEmpty(labelSearchString)) {
-                return "({0} like '%{1}%' or {2} like '%{1}%')".Fmt(primaryAttribute.To, labelSearchString, entityAssociation.Item2.Name);
+                return QuickSearchHelper.BuildOrWhereClause(new List<string>
+                {
+                    primaryAttribute.To,
+                    entityAssociation.Item2.Name
+                });
+
             }
             return "1=1";
         }

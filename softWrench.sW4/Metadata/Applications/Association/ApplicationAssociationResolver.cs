@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Pagination;
@@ -61,6 +62,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return ResolveOptions(applicationMetadata, originalEntity, association, new SearchRequestDto());
         }
 
+
         public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
@@ -71,10 +73,19 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var lookupAttributes = association.LookupAttributes();
             foreach (var lookupAttribute in lookupAttributes) {
                 var searchValue = SearchUtils.GetSearchValue(lookupAttribute, originalEntity);
-                if (!String.IsNullOrEmpty(searchValue)) {
+                if (!string.IsNullOrEmpty(searchValue)) {
                     associationFilter.AppendSearchEntry(lookupAttribute.To, searchValue, lookupAttribute.AllowsNull);
                 }
             }
+
+            if (!string.IsNullOrEmpty(associationFilter.QuickSearchData)) {
+                associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(new List<string>
+                {
+                    association.EntityAssociation.PrimaryAttribute().To,
+                    association.LabelFields.FirstOrDefault(),
+                }));
+            }
+
 
             // Set projections
             var numberOfLabels = BuildProjections(associationFilter, association);
@@ -95,14 +106,23 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
             associationFilter.QueryAlias = association.AssociationKey;
-            var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
+
+            var tasks = new List<Task>(1);
+
 
             if (associationFilter is PaginatedSearchRequestDto) {
-                var paginatedFilter = (PaginatedSearchRequestDto)associationFilter;
-                if (paginatedFilter.NeedsCountUpdate) {
-                    paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, associationFilter);
-                }
+                tasks.Add(Task.Factory.NewThread(c => {
+                    var paginatedFilter = (PaginatedSearchRequestDto)associationFilter;
+                    if (paginatedFilter.NeedsCountUpdate) {
+                        //cloning to avoid any concurrency issues
+                        var clonedDTO = (PaginatedSearchRequestDto)associationFilter.ShallowCopy();
+                        paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, clonedDTO);
+                    }
+                }, null));
+
             }
+            var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
+            Task.WaitAll(tasks.ToArray());
 
             var options = BuildOptions(queryResponse, association, numberOfLabels, associationFilter.SearchSort == null);
             var filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
@@ -238,5 +258,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 ValueKey = valueKey;
             }
         }
+
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService) {
+app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldService) {
 
     return {
 
@@ -50,8 +50,9 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
             for (var i = 0; i < selects.length; i++) {
                 var select = $(selects[i]);
                 var associationKey = select.data('associationkey');
+                $log.getInstance("autocompleteclient#init", ["association"]).debug("init autocompleteclient {0}".format(associationKey));
                 var parent = $(select.parents("div[rel=input-form-repeat]"));
-                if (parent.data('selectenabled') == false || select.data('alreadyconfigured')) {
+                if (parent.data('selectenabled') === false || select.data('alreadyconfigured')) {
                     continue;
                 }
 

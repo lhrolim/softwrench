@@ -5,27 +5,36 @@
 
 
 
-    function angularTypeahead(restService, $timeout, $log, contextService, associationService, crudContextHolderService, schemaService) {
+    function angularTypeahead(restService, $timeout, $log, contextService, associationService, crudContextHolderService, schemaService,submitService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
         /// <returns type=""></returns>
 
+        function beforeSendPostJsonDatamap(jqXhr, settings, datamap) {
+            if (datamap) {
+                var jsonString = angular.toJson(submitService.sanitizeDataMapToSendOnAssociationFetching(datamap));
+                settings.type = 'POST';
+                settings.data = jsonString;
+                settings.hasContent = true;
+                jqXhr.setRequestHeader("Content-type", "application/json");
+            }
+            return true;
+        }
 
-        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit) {
+        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit,datamap) {
 
             var applicationName = schema.applicationName;
 
             var parameters = {
                 key: schemaService.buildApplicationMetadataSchemaKey(schema),
                 labelSearchString: "%QUERY",
-                application: applicationName
             };
 
-            parameters.filterProvider = provider;
-            parameters.filterAttribute = attribute;
+            parameters.associationKey = provider;
+//            parameters.filterAttribute = attribute;
 
-            var urlToUse = restService.getActionUrl("FilterData", "GetFilterOptions", parameters);
+            var urlToUse = restService.getActionUrl("Association", "GetFilteredOptions", parameters);
             urlToUse = replaceAll(urlToUse, '%25', "%");
 
 
@@ -43,6 +52,11 @@
                             return scope.externalFilter(parsedResponse);
                         }
                         return parsedResponse;
+                    },
+                    ajax: {
+                        beforeSend: function (jqXhr, settings) {
+                            beforeSendPostJsonDatamap(jqXhr, settings, datamap);
+                        }
                     }
                 }
             });
@@ -141,7 +155,7 @@
             $timeout(function () {
                 //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
                 //it has enough to time to render itself on screen
-                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit);
+                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit,scope.datamap);
                 configureJqueryHooks(scope, element, engine);
 
                 if (crudContextHolderService.associationsResolved()) {
@@ -167,12 +181,17 @@
         };
 
 
-
         var directive = {
             link: link,
             restrict: 'E',
             replace: true,
-            templateUrl: contextService.getResourceUrl("/Content/modules/components/angulartypeahead/templates/angulartypeahead.html"),
+            template: '<div class="input-group lazy-search">' +
+                '<input type="search" class="hidden-phone form-control typeahead" placeholder="Find {{placeholder}}" data-association-key="{{provider}}"/>' +
+                '<span class="input-group-addon last" ng-click="executeMagnetSearch()">' +
+                '<i class="fa fa-search"></i>' +
+                '</span>'+
+            '<div></div><!--stop addon from moving on hover-->'+
+            '</div>',
             scope: {
                 schema: '=',
                 datamap: '=',
@@ -218,7 +237,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService','submitService', angularTypeahead]);
 
 })(angular, Bloodhound);
 

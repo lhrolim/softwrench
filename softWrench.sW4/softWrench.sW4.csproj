@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\API\Association\DependentAssociationLoadResult.cs" />
+    <Compile Include="Data\API\Association\Lookup\LookupOptionsFetchRequestDTO.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\BaseAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\AssociationMainSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\CompositionSchemaLoadResult.cs" />
@@ -395,7 +396,7 @@
     <Compile Include="Configuration\Services\ConfigurationService.cs" />
     <Compile Include="Configuration\Services\Api\IConfigurationFacade.cs" />
     <Compile Include="Data\API\Association\AssociationUpdateRequest.cs" />
-    <Compile Include="Data\API\Association\LookupAssociationUpdateResult.cs" />
+    <Compile Include="Data\API\Association\Lookup\LookupOptionsFetchResultDTO.cs" />
     <Compile Include="Data\API\Association\BaseAssociationUpdateResult.cs" />
     <Compile Include="Data\API\Response\GenericResponseResult.cs" />
     <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />

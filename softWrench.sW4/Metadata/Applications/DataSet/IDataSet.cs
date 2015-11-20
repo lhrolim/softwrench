@@ -7,6 +7,7 @@ using softwrench.sw4.api.classes.application;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
+using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
@@ -18,19 +19,24 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
     /// <summary>
     /// marker interface for classes that wish to provide methods for the applications
     /// </summary>
-    public interface IDataSet : IApplicationFiltereable,IComponent {
+    public interface IDataSet : IApplicationFiltereable, IComponent {
         Int32 GetCount(ApplicationMetadata application, [CanBeNull]IDataRequest request);
         IApplicationResponse Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request);
         ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request);
         CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
         ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
+
         AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
-//        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
-        TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation,Boolean isBatch);
+
+        LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata);
+
+
+        //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
+        TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch);
 
         GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData);
 
-       
+
     }
 }

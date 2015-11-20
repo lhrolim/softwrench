@@ -48,15 +48,16 @@ namespace softWrench.sW4.Web.Controllers {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="application"></param>
         /// <param name="key"></param>
         /// <param name="filterProvider">as described on MetadataOptionFilter</param>
         /// <param name="filterAttribute"></param>
         /// <param name="labelSearchString"></param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<IAssociationOption> GetFilterOptions(string application, [FromUri]ApplicationMetadataSchemaKey key,
+        public IEnumerable<IAssociationOption> GetFilterOptions([FromUri]ApplicationMetadataSchemaKey key,
             string filterProvider, string filterAttribute, string labelSearchString) {
+
+            var application = key.ApplicationName;
 
             if (filterProvider.StartsWith("@")) {
                 var methodName = filterProvider.Substring(1);
@@ -72,6 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
             var filter = new PaginatedSearchRequestDto();
 
             filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(association.OriginalLabelField, labelSearchString, app.Schema));
+            filter.QuickSearchData = labelSearchString;
             //let´s limit the filter adding an extra value so that we know there´re more to be brought
             //TODO: add a count call
             filter.PageSize = 21;
@@ -81,7 +83,7 @@ namespace softWrench.sW4.Web.Controllers {
 
         }
 
-       
+
 
 
         private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string filterProvider,

@@ -99,6 +99,19 @@
             return formId;
         }
 
+        ///remove any associations or compositions data to send 
+        function sanitizeDataMapToSendOnAssociationFetching(datamap) {
+            var result = {};
+            angular.forEach(datamap,function(value, key) {
+                if (key.indexOf("_") !== -1) {
+                    //ignoring any relationship data
+                    return;
+                }
+                result[key] = value;
+            });
+            return result;
+        }
+
         function removeExtraFields(datamap, clone, schema) {
             if (!datamap) {
                 return null;
@@ -188,6 +201,7 @@
             translateFields: translateFields,
             getFormToSubmitIfHasAttachement: getFormToSubmitIfHasAttachement,
             removeExtraFields: removeExtraFields,
+            sanitizeDataMapToSendOnAssociationFetching: sanitizeDataMapToSendOnAssociationFetching,
             createSubmissionParameters: createSubmissionParameters,
             handleDatamapForMIF: handleDatamapForMIF,
             submitConfirmation: submitConfirmation

@@ -1,33 +1,34 @@
-﻿using softwrench.sw4.Shared2.Data.Association;
+﻿using System.Collections.Generic;
+using System.Linq;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Applications;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace softWrench.sW4.Data.API.Association {
-    public class LookupAssociationUpdateResult : BaseAssociationUpdateResult {
+namespace softWrench.sW4.Data.API.Association.Lookup {
+    public class LookupOptionsFetchResultDTO : BaseAssociationUpdateResult {
 
         private readonly PaginatedSearchRequestDto _pageResultDto;
+        //TODO: rethink of this schema, shouldn't be needed to pass each time
         private readonly ApplicationSchemaDefinition _associationSchemaDefinition;
 
-        public LookupAssociationUpdateResult(IEnumerable<IAssociationOption> associationData, int defaultPageSize, List<int> paginationOptions)
-            : base(associationData) {
+        public LookupOptionsFetchResultDTO(IEnumerable<IAssociationOption> associationData, int defaultPageSize, List<int> paginationOptions) : base(associationData) {
             _pageResultDto = new PaginatedSearchRequestDto(defaultPageSize, paginationOptions) {
                 TotalCount = associationData == null ? 0 : associationData.Count()
             };
         }
 
-        public LookupAssociationUpdateResult(int totalCount, int pageNumber, int pageSize,
-            IEnumerable<IAssociationOption> associationData, ApplicationMetadata associationMetadata, List<int> paginationOptions)
+        public LookupOptionsFetchResultDTO(int totalCount, int pageNumber, int pageSize, IEnumerable<IAssociationOption> associationData, ApplicationMetadata associationApplicationMetadata)
             : base(associationData) {
-            _pageResultDto = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, paginationOptions);
-            if (associationMetadata != null) {
-                _associationSchemaDefinition = associationMetadata.Schema;
+            _pageResultDto = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            if (associationApplicationMetadata != null)
+            {
+                _associationSchemaDefinition = associationApplicationMetadata.Schema;
             }
         }
 
         public ApplicationSchemaDefinition AssociationSchemaDefinition { get { return _associationSchemaDefinition; } }
+
 
         #region PagingDelegateMethods
 

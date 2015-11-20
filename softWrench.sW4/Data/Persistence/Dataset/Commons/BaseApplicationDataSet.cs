@@ -35,6 +35,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
@@ -421,12 +422,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         if (!lazyOptions.ContainsKey(association.AssociationKey)) {
                             lazyOptions[association.AssociationKey] = new Dictionary<string, IAssociationOption>();
                         }
-                        if (associationData.Any()){
+                        if (associationData.Any()) {
                             var option = associationData[0];
                             lazyOptions[association.AssociationKey].Add(option.Value, option);
                         }
 
-                  
+
                     }
                 }, ctx));
 
@@ -494,6 +495,25 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //            }
             return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(DoUpdateAssociation(application, request, cruddata));
         }
+
+
+        public virtual LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata) {
+            var before = LoggingUtil.StartMeasuring(Log, "fetching lookup options for application {0} schema {1}", application.Name, application.Schema.Name);
+
+            var association = application.Schema.Associations.FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
+
+            var options = _associationOptionResolver.ResolveOptions(application, cruddata, association, lookupRequest.SearchDTO); ;
+
+            if (Log.IsDebugEnabled) {
+                Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of options fetching. Resolved collections: {0}"));
+            }
+
+            var associationApplicationMetadata =
+                        ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
+
+            return new LookupOptionsFetchResultDTO(lookupRequest.SearchDTO.TotalCount, lookupRequest.SearchDTO.PageNumber, lookupRequest.SearchDTO.PageSize, options, associationApplicationMetadata);
+        }
+
         /// <summary>
         ///  This will get used by lookup and autocomplete searches, as well as dependat associations changes (the original purpose) and possibly in other scenarios that needs documentation
         /// </summary>
@@ -501,7 +521,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="request"></param>
         /// <param name="cruddata"></param>
         /// <returns></returns>
-        //TODO: refactor this code, removing lookup and autocomplete searches to a specific method
+            //TODO: refactor this code, removing lookup and autocomplete searches to a specific method
         protected virtual IDictionary<string, BaseAssociationUpdateResult> DoUpdateAssociation(ApplicationMetadata application, AssociationUpdateRequest request,
             AttributeHolder cruddata) {
 
@@ -536,7 +556,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);
-                        resultObject.Add(optionField.AssociationKey, new LookupAssociationUpdateResult(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
                     }, ctx));
                 } else {
                     var associationApplicationMetadata =
@@ -558,8 +578,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                             searchRequest);
 
                         resultObject.Add(association.AssociationKey,
-                            new LookupAssociationUpdateResult(searchRequest.TotalCount, searchRequest.PageNumber,
-                                searchRequest.PageSize, options, associationApplicationMetadata, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                            new LookupOptionsFetchResultDTO(searchRequest.TotalCount, searchRequest.PageNumber,
+                                searchRequest.PageSize, options, associationApplicationMetadata));
                     }, ctx));
                 }
             }
@@ -567,7 +587,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             Task.WaitAll(tasks.ToArray());
 
             if (Log.IsDebugEnabled) {
-                var keys = String.Join(",", resultObject.Keys.Where(k => resultObject[k].AssociationData != null));
+                var keys = string.Join(",", resultObject.Keys.Where(k => resultObject[k].AssociationData != null));
                 Log.Debug(LoggingUtil.BaseDurationMessageFormat(before,
                     "Finished execution of options fetching. Resolved collections: {0}", keys));
             }

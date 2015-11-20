@@ -47,10 +47,8 @@
 
         function updateLookupObject(scope, fieldMetadata, searchValue, searchDatamap) {
 
+            scope.lookupObj = scope.lookupObj || {};
 
-            if (scope.lookupObj == null) {
-                scope.lookupObj = {};
-            }
 
             scope.lookupObj.code = searchValue;
             scope.lookupObj.fieldMetadata = fieldMetadata;
@@ -74,10 +72,11 @@
         function handleMultipleLookupOptionsFn(result, lookupObj, scope, datamap) {
             var log = $log.get("cmplookup#handleMultipleLookupOptionsFn");
 
-            var associationResult = result[lookupObj.fieldMetadata.associationKey];
+            var associationResult = result;
             lookupObj.schema = associationResult.associationSchemaDefinition;
             lookupObj.options = associationResult.associationData;
-            if (Object.keys(result).length == 1 && hasSingleElement(associationResult.associationData)) {
+
+            if (hasSingleElement(associationResult.associationData)) {
                 var firstOption = lookupObj.options[0];
                 var firstElementEqualsCode = firstOption.value != null && lookupObj.code != null && firstOption.value.toUpperCase() == lookupObj.code.toUpperCase();
                 var attribute = lookupObj.fieldMetadata.attribute;

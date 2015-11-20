@@ -55,6 +55,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             elementid: '@',
             orientation: '@',
             islabelless: '@',
+            ismodal:'@',
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
             rendererParameters: '='
@@ -67,6 +68,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 "schema='schema'" +
                 "datamap='datamap'" +
                 "is-dirty='isDirty'" +
+                "ismodal = '{{ismodal}}'" +
                 "displayables='displayables'" +
                 "association-schemas='associationSchemas'" +
                 "blockedassociations='blockedassociations'" +
@@ -190,7 +192,8 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
-                return crudContextHolderService.fetchEagerOptions(fieldMetadata.associationKey);
+                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
@@ -490,13 +493,15 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 if (fieldMetadata.type === "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey);
+                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
             }
             $scope.GetOptionFieldOptions = function (optionField) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
                 }
-                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute);
+                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute,contextData);
             }
             $scope.contextPath = function (path) {
                 return url(path);

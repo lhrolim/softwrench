@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association;
+using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
@@ -26,6 +27,7 @@ using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -51,26 +53,57 @@ namespace softWrench.sW4.Web.Controllers {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="application"></param>
         /// <param name="key"></param>
         /// <param name="associationKey"></param>
         /// <param name="labelSearchString"></param>
+        /// <param name="currentData">The current state of the detail object on the screen. Needed cause there can be whereclauses 
+        /// relying on external attributes</param>
         /// <returns></returns>
-        [HttpGet]
-        public IEnumerable<IAssociationOption> GetFilteredOptions(string application, [FromUri]ApplicationMetadataSchemaKey key,
-            string associationKey, string labelSearchString) {
+        [HttpPost]
+        public IEnumerable<IAssociationOption> GetFilteredOptions([FromUri]ApplicationMetadataSchemaKey key, [FromUri]string associationKey, [FromUri]string labelSearchString,
+            JObject currentData) {
 
             //this is the main application, such as sr
+            var application = key.ApplicationName;
+
             var app = MetadataProvider.Application(application).ApplyPoliciesWeb(key);
             var association = BuildAssociation(app, associationKey);
 
             var filter = new PaginatedSearchRequestDto();
 
             filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(association.OriginalLabelField, labelSearchString, app.Schema));
-            //adopting to use an association to keep same existing service
-            var result = _associationResolver.ResolveOptions(app, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
-            return result;
+            filter.QuickSearchData = labelSearchString;
+            var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application), app, currentData);
 
+            //adopting to use an association to keep same existing service
+            var result = _associationResolver.ResolveOptions(app, cruddata, association, filter);
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// Returns a list of lookup options based upon the criteria passed by the client side
+        /// </summary>
+        ///
+        [NotNull]
+        [HttpPost]
+        public GenericResponseResult<LookupOptionsFetchResultDTO> GetLookupOptions([FromUri] LookupOptionsFetchRequestDTO request, JObject currentData) {
+
+            var application = request.ParentKey.ApplicationName;
+
+            _contextLookuper.FillContext(request.ParentKey);
+            var applicationMetadata = MetadataProvider.Application(application).ApplyPoliciesWeb(request.ParentKey);
+
+
+            var baseDataSet = _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
+
+            var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application),
+                applicationMetadata, currentData);
+
+            var response = baseDataSet.GetLookupOptions(applicationMetadata, request, cruddata);
+
+            return new GenericResponseResult<LookupOptionsFetchResultDTO>(response);
         }
 
         /// <summary>

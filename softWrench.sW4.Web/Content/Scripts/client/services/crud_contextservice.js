@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function crudContextHolderService($rootScope,contextService, schemaCacheService) {
+    function crudContextHolderService($rootScope,$log,contextService, schemaCacheService) {
 
         //#region private variables
 
@@ -236,13 +236,20 @@
             var schemaId = contextData.schemaId;
             var entryId = contextData.entryId || "#global";
 
-            var associationOptions = _crudContext._eagerassociationOptions[schemaId][entryId][associationKey];
-            return associationOptions[key];
+            _crudContext._eagerassociationOptions[schemaId] = _crudContext._eagerassociationOptions[schemaId] || {};
+            _crudContext._eagerassociationOptions[schemaId][entryId] = _crudContext._eagerassociationOptions[schemaId][entryId] || {};
+
+            return _crudContext._eagerassociationOptions[schemaId][entryId][associationKey];
         }
 
 
         function updateEagerAssociationOptions(associationKey, options, contextData) {
+            if (_crudContext.showingModal) {
+                contextData = { schemaId: "#modal" };
+            }
+            var log =$log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
 
+            log.info("update eager list for {0}".format(associationKey));
             if (contextData==null) {
                 _crudContext._eagerassociationOptions["#global"][associationKey] = options;
                 return;
@@ -255,6 +262,19 @@
             _crudContext._eagerassociationOptions[schemaId][entryId] = _crudContext._eagerassociationOptions[schemaId][entryId] || {};
 
             _crudContext._eagerassociationOptions[schemaId][entryId][associationKey] = options;
+
+            
+            $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
+            //                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
+            //                    if (newvalue == old) {
+            //                        return;
+            //                    }
+            //                    $timeout(
+            //                    function () {
+            //                        cmpfacade.digestAndrefresh(association, $scope);
+            //                    }, 0, false);
+            //                });
+
 
         }
 
@@ -275,12 +295,10 @@
 
         function disposeModal() {
             _crudContext.showingModal = false;
-            _crudContext._eagerassociationOptions["#modal"] = {};
-            _crudContext._lazyAssociationOptions["#modal"] = {};
+            _crudContext._eagerassociationOptions["#modal"] = {"#global": {} };
         };
 
         function modalLoaded() {
-            disposeModal();
             _crudContext.showingModal = true;
         }
 
@@ -337,7 +355,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope',"contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope',"$log","contextService", "schemaCacheService", crudContextHolderService]);
 
 
 

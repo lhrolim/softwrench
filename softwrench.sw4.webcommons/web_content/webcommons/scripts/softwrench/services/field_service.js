@@ -259,6 +259,9 @@
             },
 
             getDisplayableIdxByKey: function (schema, attribute) {
+                if (!schema) {
+                    return -1;
+                }
                 schema.jscache = schema.jscache || {};
                 var results = this.getLinearDisplayables(schema);
                 for (var i = 0; i < results.length; i++) {
