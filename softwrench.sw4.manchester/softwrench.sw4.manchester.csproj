@@ -108,22 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\manchester\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web_content\manchester\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\manchester\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <EmbeddedResource Include="web_content\manchester\scripts\com_dataimport_com74.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

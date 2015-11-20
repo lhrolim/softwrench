@@ -72,10 +72,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\yavapai\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -90,9 +86,6 @@
     <Content Include="web_content\yavapai\images\signin.jpg" />
     <Content Include="web_content\yavapai\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\yavapai\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
     </Content>
     <None Include="web_content\yavapai\styles\branding.scss" />
   </ItemGroup>

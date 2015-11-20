@@ -56,22 +56,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\bering\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web_content\bering\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\bering\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <EmbeddedResource Include="metadata\bering\commands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

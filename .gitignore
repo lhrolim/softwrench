@@ -16,8 +16,6 @@ softwrench.sw4.jstest/test-results.testxml
 softWrench.sW4.Web/Content/Customers/
 softWrench.sW4.Web/Content/Shared/
 softWrench.sW4.Web/Content/Scripts/softwrench/shared
-*.min.css
-
 softWrench.sW4.WebMobile/www/Content/Customers/**/
 softWrench.sW4.WebMobile/www/Content/Shared/**/
 softWrench.sW4.WebMobile/www/Content/Vendor/scripts/*.js
@@ -65,3 +63,11 @@ TestResults
 /packages
 GitTfs/git2.*
 *.DS_Store
+
+# SASS Files
+softWrench.sW4.web/node_modules/
+softWrench.sW4.web/.sass-cache/
+**/content/styles/**/*.css
+**/content/styles/**/*.css.map
+**/web_content/**/*.css
+**/web_content/**/*.css.map

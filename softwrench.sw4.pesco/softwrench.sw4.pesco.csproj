@@ -44,12 +44,6 @@
   <ItemGroup>
     <Content Include="metadata\pesco\readme.txt" />
     <Content Include="web_content\pesco\images\header-email.jpg" />
-    <Content Include="web_content\pesco\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\pesco\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <Content Include="web_content\pesco\images\header.jpg" />
     <Content Include="web_content\pesco\images\logo-byline.png" />
     <Content Include="web_content\pesco\images\logo-main.png" />
@@ -61,10 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
     <None Include="web_content\pesco\styles\branding.scss" />

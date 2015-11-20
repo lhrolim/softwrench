@@ -45,19 +45,9 @@
     <EmbeddedResource Include="metadata\amex\deploy.xml" />
     <EmbeddedResource Include="metadata\amex\properties.xml" />
     <Content Include="metadata\amex\readme.txt" />
-    <Content Include="web_content\amex\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\amex\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
     <None Include="web_content\amex\styles\branding.scss" />

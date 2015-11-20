@@ -137,10 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -150,12 +146,6 @@
   <ItemGroup>
     <Content Include="web_content\activitystream\scripts\activitystream.js" />
     <None Include="web_content\activitystream\styles\activitystream.scss" />
-    <Content Include="web_content\activitystream\styles\activitystream.css">
-      <DependentUpon>activitystream.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\activitystream\styles\activitystream.min.css">
-      <DependentUpon>activitystream.css</DependentUpon>
-    </Content>
     <Content Include="web_content\activitystream\templates\activitystream.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

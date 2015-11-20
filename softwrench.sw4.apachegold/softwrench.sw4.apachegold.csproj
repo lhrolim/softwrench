@@ -45,12 +45,6 @@
     <EmbeddedResource Include="metadata\apachegold\deploy.xml" />
     <EmbeddedResource Include="metadata\apachegold\properties.xml" />
     <Content Include="metadata\apachegold\readme.txt" />
-    <Content Include="web_content\apachegold\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\apachegold\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <Content Include="web_content\apachegold\images\header.jpg" />
     <Content Include="web_content\apachegold\images\logo-byline.png" />
     <Content Include="web_content\apachegold\images\logo-main.png" />
@@ -62,10 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
     <None Include="web_content\apachegold\styles\branding.scss" />
