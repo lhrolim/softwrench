@@ -169,7 +169,7 @@ namespace softWrench.sW4.Metadata.Validator {
             return resultEntities;
         }
 
-
+        // TODO: When merging entities, the idAttribute and useridAttribute on the entity are not being merged. Parent values are retained and overriden values are ignored.
         private static void DoMergeEntity(EntityMetadata sourceEntity, EntityMetadata overridenEntity) {
             foreach (var association in overridenEntity.Associations) {
                 if (overridenEntity.Schema.ExcludeUndeclaredAssociations) {
