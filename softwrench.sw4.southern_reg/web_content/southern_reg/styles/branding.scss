@@ -1,15 +1,7 @@
 ﻿.page-signin {
     background: #fbf3cc url(../images/signin-lg.jpg) no-repeat center center fixed;
 
-    .shadow {
-        border: 3px #fff solid;
-        border-radius: 5px;
-    }
-
     .form-signin {
-        padding: 0 0 40px;
-        border-radius: 5px;
-
         .logo.main {
             padding: 40px 40px 50px;
             background: #fff; /* Old browsers */
@@ -72,12 +64,36 @@
     }
 }
 
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .form-signin {
+            padding: 15px;
+        }
+    }
+}
+
 /* Small Devices, Tablets */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .page-signin {
         background: #fbf3cc url(../images/signin-sm.jpg) no-repeat center center fixed;
     }
 }
+
+@media all and (min-width: 850px) {
+    .page-signin {
+
+        .shadow {
+            border: 3px #fff solid;
+            border-radius: 5px;
+        }
+
+        .form-signin {
+            padding: 0 0 40px;
+            border-radius: 5px;
+        }
+    }
+}
+
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {

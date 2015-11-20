@@ -1,10 +1,8 @@
-﻿.page-signin {
+﻿$form_background: rgba(1, 26, 45, 0.5);
+
+.page-signin {
     background: #b0dae9 url(../images/signin.jpg) no-repeat center top fixed;
     background-size: cover;
-}
-
-.page-signin .form-signin {
-    background-color: rgba(1, 26, 45, 0.5);
 }
 
 .container header {
@@ -18,4 +16,24 @@
 
 .container header .branding .logo img {
     width: 420px;
+}
+
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .overlay {
+            background-color: $form_background;
+        }
+
+        .form-signin {
+            background-color: none;
+        }
+    }
+}
+
+@media all and (min-width: 850px) {
+    .page-signin {
+        .form-signin {
+            background-color: $form_background;
+        }
+    }
 }

@@ -1,18 +1,13 @@
-﻿.page-signin {
+﻿$form_background: rgba(1, 45, 68, 0.50);
+
+.page-signin {
     background: #b0dae9 url(../Images/signin.jpg) no-repeat center top fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
 }
 
-    .page-signin .form-signin {
-        background-color: rgba(1, 45, 68, 0.50);
-    }
-
-        .page-signin .form-signin .logo.main img {
-            content: url(../images/logo-main-mobile.png);
-        }
+.page-signin .form-signin .logo.main img {
+    content: url(../images/logo-main-mobile.png);
+}
 
 @media all and (min-width: 768px) {
     .page-signin .form-signin .logo.main img {
@@ -22,16 +17,13 @@
 
 .container header {
     background: #143444 url(../images/header.jpg) no-repeat top left;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
 }
 
-    .container header .branding {
-        background: none;
-        display: none;
-    }
+.container header .branding {
+    background: none;
+    display: none;
+}
 
 .horizontal-menu-container {
     background-color: rgba(135, 135, 135, 0.50);
@@ -39,4 +31,24 @@
 
 .container header .menu-grid .menu-expand {
     background-color: rgba(135, 135, 135, 0.50);
+}
+
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .overlay {
+            background-color: $form_background;
+        }
+
+        .form-signin {
+            background-color: none;
+        }
+    }
+}
+
+@media all and (min-width: 850px) {
+    .page-signin {
+        .form-signin {
+            background-color: $form_background;
+        }
+    }
 }
