@@ -29,7 +29,7 @@
                 $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
             }
         }
-            //reset the lcoation of the content, context menu, grid header and filter bar
+        //reset the lcoation of the content, context menu, grid header and filter bar
         else {
             $('.content').css('margin-top', 'auto');
             $('.affix-pagination').css('top', 'auto');
