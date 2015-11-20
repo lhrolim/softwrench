@@ -11,20 +11,20 @@
           <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location">
-            <renderer type="lookup" params="widthXS=31%;widthSM=31%;widthMD=31%;widthLG=31%"/>
+            <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location">
-            <renderer type="lookup" params="widthXS=32%;widthSM=32%;widthMD=32%;widthLG=32%"/>
+            <renderer type="lookup"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeLocation"/>
           </association>
           <field attribute="sequence" label="Sequence" >
-            <renderer type="numericinput" params="min=1;widthXS=32%;widthSM=32%;widthMD=32%;widthLG=32%"/>
+            <renderer type="numericinput" params="min=1"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeSequence"/>
           </field>
           <field attribute="progress" label="Progress">
-            <renderer type="checkbox" params="editable=true;clickservice=multiassetlocciService.afterChangeProgress;widthXS=5%;widthSM=5%;widthMD=5%;widthLG=5%"/>
+            <renderer type="checkbox" params="editable=true;clickservice=multiassetlocciService.afterChangeProgress;width=5%"/>
           </field>
           <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
           <commandbars>

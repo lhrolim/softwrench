@@ -31,7 +31,7 @@
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Application" attribute="ownertable" >
-            <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};widthXS=-1%;widthSM=12%;widthMD=12%;widthLG=10%;showattribute=true"/>
+            <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=10%;showattribute=true"/>
           </field>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="docinfo_.urltype"/>
