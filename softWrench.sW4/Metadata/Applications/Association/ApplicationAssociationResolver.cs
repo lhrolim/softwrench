@@ -78,12 +78,24 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
+
+
             if (!string.IsNullOrEmpty(associationFilter.QuickSearchData)) {
-                associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(new List<string>
-                {
-                    association.EntityAssociation.PrimaryAttribute().To,
-                    association.LabelFields.FirstOrDefault(),
-                }));
+
+                var appMetadata = GetAssociationApplicationMetadata(association);
+
+                IEnumerable<string> listOfFields = null;
+
+                if (appMetadata != null) {
+                    listOfFields = appMetadata.Schema.NonHiddenFields.Select(f => f.Attribute);
+                } else {
+                    listOfFields = new List<string>{
+                        association.EntityAssociation.PrimaryAttribute().To,
+                        association.LabelFields.FirstOrDefault(),
+                    };
+                }
+
+                associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(listOfFields));
             }
 
 

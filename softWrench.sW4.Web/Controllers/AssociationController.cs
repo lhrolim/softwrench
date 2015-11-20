@@ -101,6 +101,7 @@ namespace softWrench.sW4.Web.Controllers {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application),
                 applicationMetadata, currentData);
 
+
             var response = baseDataSet.GetLookupOptions(applicationMetadata, request, cruddata);
 
             return new GenericResponseResult<LookupOptionsFetchResultDTO>(response);
