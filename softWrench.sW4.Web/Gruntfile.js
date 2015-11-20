@@ -1,8 +1,11 @@
-/// <binding AfterBuild='sass' ProjectOpened='watch' />
+/// <binding AfterBuild='sass' ProjectOpened='default' />
 module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
-            files: '**/*.scss',
+            files: [
+                'Content/Customers/**/*.scss',
+                'Content/Shared/**/*.scss',
+                'Content/styles/**/*.scss'],
             tasks: ['sass']
         },
         sass: {
