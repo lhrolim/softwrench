@@ -54,6 +54,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
         public string Qualifier { get; set; }
 
+        public bool SecondaryContent { get; set; }
+
         public ApplicationSection() {
 
         }
@@ -118,7 +120,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
             return new ApplicationSection(Id, ApplicationName, Abstract, Label, Attribute, Resourcepath, _parametersString,
-            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer, Role);
+            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer, Role) {
+                SecondaryContent = SecondaryContent
+            };
         }
 
         public List<IApplicationDisplayable> Displayables {

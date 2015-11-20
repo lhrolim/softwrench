@@ -2,7 +2,7 @@
     "use strict";
 
 
-app.directive('configAssociationListInputDatamap', function ($timeout) {
+app.directive('configAssociationListInputDatamap', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -11,15 +11,15 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             }
             var item = {};
             var displayables = scope.associationSchemas[scope.fieldMetadata.associationKey].displayables;
-            for (i = 0; i < displayables.length; i++) {
-                var attribute = displayables[i].attribute;
+            angular.forEach(displayables, function(displayable) {
+                var attribute = displayable.attribute;
                 item[attribute] = scope.option.extrafields[attribute];
-            }
+            });
             scope.datamap[scope.fieldMetadata.attribute].push(item);
         }
     };
 })
-.directive('configUpdateSectionDatamap', function ($timeout) {
+.directive('configUpdateSectionDatamap', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -30,7 +30,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             item["label"] = scope.i18NLabel(scope.field);
             item["value"] = scope.datamap[scope.field.attribute];
             scope.$watch('datamap["' + scope.field.attribute + '"]', function (newValue, oldValue) {
-                if (oldValue == newValue) {
+                if (oldValue === newValue) {
                     return;
                 }
                 scope.datamap[scope.fieldMetadata.id][scope.$index]["value"] = newValue;
@@ -40,7 +40,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
         }
     };
 })
-.directive('sectionElementInput', function ($compile) {
+.directive('sectionElementInput', ["$compile", function ($compile) {
     return {
         restrict: "E",
         replace: true,
@@ -82,8 +82,8 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             }
         }
     }
-})
-.directive('crudInputFields', function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
+}])
+.directive('crudInputFields', ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
     return {
         restrict: 'E',
         replace: true,
@@ -121,15 +121,13 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 scope.lookupAssociationsCode = {};
                 scope.lookupAssociationsDescription = {};
 
-                if (scope.ismodal == "true") {
+                if (scope.ismodal === "true") {
                     scope.$on('sw.modal.show', function (event, modaldata) {
                         scope.lookupAssociationsCode = {};
                         scope.lookupAssociationsDescription = {};
                     });
                 }
             }
-
-            scope.options = ["tina@a.com", "luiz@a.com"]
 
             var parameters = {
                 element: element,
@@ -138,21 +136,27 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             eventService.onload(scope, scope.schema, scope.datamap, parameters);
 
             scope.getInputType = function (fieldMetadata) {
-                if (fieldMetadata.rendererType == "email") {
+                if (fieldMetadata.rendererType === "email") {
                     return "email";
                 }
-                else if (fieldMetadata.rendererType == "password") {
+                else if (fieldMetadata.rendererType === "password") {
                     return "password";
                 }
                 return "text";
             }
         },
 
-        controller: function ($scope, $http, $element, $injector, $timeout, $log,
+        controller: ["$scope", "$http", "$element", "$injector", "$timeout", "$log",
+            "printService", "compositionService", "commandService", "fieldService", "i18NService",
+            "associationService", "expressionService", "styleService",
+            "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService", "cmplookup",
+            "layoutservice", "attachmentService", "richTextService", 
+            function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup,
             layoutservice, attachmentService, richTextService) {
+            
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
 
@@ -326,7 +330,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 if (model == undefined) {
                     model = [];
                 }
-                if (datamapKey == "selectallHLAG") {
+                if (datamapKey === "selectallHLAG") {
                     // This is wrong!!!!
                     $('option', '.multiselect').each(function (element) {
                         $('.multiselect').multiselect('select', 'ADL');
@@ -342,7 +346,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             };
             $scope.initCheckbox = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
-                if (content == "1" || content == "true" || content == true) {
+                if (content === "1" || content === "true" || content === true) {
                     content = "true";
                 } else {
                     content = "false";
@@ -352,14 +356,9 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
 
             /* LOOKUP functions */
 
-
-
-
-
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
-
 
             $scope.configureNumericInput = function () {
                 if (!$scope.datamap) return;
@@ -380,7 +379,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 $.each(fields, function (key, field) {
                     var shouldDoWatch = true;
                     $scope.$watch('datamap["' + field.attribute + '"]', function (newValue, oldValue) {
-                        if (oldValue == newValue || !shouldDoWatch) {
+                        if (oldValue === newValue || !shouldDoWatch) {
                             return;
                         }
 
@@ -417,7 +416,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             $scope.configureOptionFields = function () {
                 var log = $log.get("crud_input_fields#configureOptions");
                 //TODO: check field parameter as well, with top priority before schema
-                if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] == "true") {
+                if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] === "true") {
                     return;
                 }
                 if ($scope.displayables == null || $scope.datamap == null) {
@@ -433,7 +432,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                         continue;
                     }
 
-                    if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
+                    if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType !== 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
                         if (values != null && values.length > 0) {
                             $scope.datamap[optionfield.target] = values[0].value;
@@ -490,7 +489,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
                 return lengthclass;
             };
             $scope.GetAssociationOptions = function (fieldMetadata) {
-                if (fieldMetadata.type == "OptionField") {
+                if (fieldMetadata.type === "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
                 $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
@@ -528,10 +527,10 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             }
           
             $scope.isVerticalOrientation = function () {
-                return $scope.orientation == 'vertical';
+                return $scope.orientation === 'vertical';
             };
             $scope.isSectionWithoutLabel = function (fieldMetadata) {
-                return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
+                return fieldMetadata.type === 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
 
             $scope.isExpansionAvailable = function (fieldMetadata) {
@@ -570,7 +569,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             $scope.hasSameLineLabel = function (fieldMetadata) {
 
 
-                return (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
+                return (fieldMetadata.header != null && fieldMetadata.header.displacement !== 'ontop') ||
                 (fieldMetadata.header == null);
 
             };
@@ -601,7 +600,7 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             }
 
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
-                return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
+                return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type === 'ApplicationSection' && fieldMetadata.resourcepath == null;
             };
 
             $scope.formatId = function (id) {
@@ -659,9 +658,9 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             $scope.isFieldRequired = function (fieldMetadata) {
                 return fieldService.isFieldRequired(fieldMetadata, $scope.datamap);
             };
-        }
+        }]
     }
-})
+}])
 .directive('numberSpinner', function () {
     return {
         restrict: 'A',
