@@ -1,4 +1,4 @@
-﻿$signin_background: rgba(#013e5b, 0.6);
+﻿
 
 input:focus, select:focus, textarea:focus {
     outline: none;
@@ -121,47 +121,11 @@ input:focus, select:focus, textarea:focus {
     }
 }
 
-@media all and (min-width: 1px) and (max-width: 849px) {
-    .page-signin {
-        .overlay {
-            background-color: $signin_background;
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            z-index: -1;
-        }
-    }
-}
-
 @media all and (min-width: 768px) {
     .page-signin {
         .form-signin {
             .user-links {
                 padding-left: 30px;
-            }
-        }
-    }
-}
-
-@media all and (min-width: 850px) {
-    .container {
-        padding-top: 40px;
-    }
-
-    .page-signin {
-        .shadow {
-            box-shadow: 0 0 30px 5px rgba(#000, 0.6);
-        }
-
-        .logo.main img {
-            padding: 0;
-        }
-
-        .form-signin {
-            background-color: $signin_background;
-
-            .user-links {
-                margin-bottom: 0;
             }
         }
     }
