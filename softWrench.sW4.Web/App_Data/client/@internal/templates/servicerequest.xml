@@ -108,9 +108,7 @@
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
-            <field label="Details:" attribute="ld_.ldtext">
-              <renderer type="richtext"/>
-            </field>
+            
           </section>
 
           <field attribute="ticketuid" label="SR#" hidden="true"/>
@@ -133,46 +131,55 @@
           <field attribute="assetnum" hidden="true"/>
           <field attribute="failurecode" hidden="true"/>
           <field attribute="cinum" hidden="true"/>
-          
-          <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
-            <section id ="siteidsection"/>
-            <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            </association>
-            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-              <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="srService" method="afterChangeAsset"/>
-            </association>
-            <section id="statussection"/>
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
-              <renderer type="autocompleteclient" />
-            </optionfield>
-          </section>
 
           <field attribute="changeby" default="@username" hidden="true"/>
 
-          <section orientation="vertical" secondarycontent="true">
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
+
+
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeowner"/>
+            </association>
+
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            </association>
+
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
+              <renderer type="lookup" params="columnlabel=Name;"/>
+            </association>
+            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+
+          </section>
+
+
+          <section secondarycontent="true" orientation="vertical">
+
+            <field label="Details:" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
 
             <section orientation="horizontal">
-              <header displacement="ontop" label="Responsibility" params="fieldset=true" />
               <renderer type="default" params="childinputsize=medium" />
-
-
-              <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-                <renderer type="lookup"/>
-                <event type="afterchange" service="srService" method="afterchangeowner"/>
+              <section id ="siteidsection"/>
+              <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+                <event type="beforechange" service="srService" method="beforeChangeLocation"/>
               </association>
-
-              <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-                <renderer type="lookup"/>
-                <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+              <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                <dataprovider prefilterfunction="FilterAssets"/>
+                <event type="afterchange" service="srService" method="afterChangeAsset"/>
               </association>
-
-              <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="personid asc" >
-                <renderer type="lookup" params="columnlabel=Name;"/>
-              </association>
+              <section id="statussection"/>
+              <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+                <renderer type="autocompleteclient" />
+              </optionfield>
               <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name"/>
               </association>
@@ -193,10 +200,8 @@
               <field attribute="actualfinish" label="Actual Finish Date:">
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
-              <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-              </field>
             </section>
+            
             <section orientation="horizontal">
               <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
               <section id="attachmentsection" />
@@ -212,10 +217,11 @@
                 <renderer type="lookup" />
               </association>
             </section>
-
+            
+            <section id="compositions"/>
+            
           </section>
-          
-          <section id="compositions"/>
+
         </schema>
 
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" >         

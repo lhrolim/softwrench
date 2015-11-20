@@ -211,6 +211,7 @@
           </section>
 
           <section orientation="horizontal">
+            
             <renderer type="default" params="childinputsize=medium" />
             <section id ="siteidsection"/>
             <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
@@ -225,26 +226,14 @@
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
               <renderer type="autocompleteclient" />
             </optionfield>
-            <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
-              <renderer type="autocompleteclient" />
-            </association>
             <field hidden="true" attribute="failurelist_.failurelist"/>
-            <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true">
-              <renderer type="lookup"  />
-              <dataprovider prefilterfunction="FilterProblemCodes" />
-            </association>
             <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
               <renderer type="autocompleteclient"/>
             </optionfield>
             <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
               <renderer type="lookup" />
             </association>
-            <field label="Job Plan:" attribute="jpnum" readonly="true">
-              <renderer type="default" />
-            </field>
-            <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
-              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
-            </association>
+          
           </section>
 
           <section orientation="horizontal">
@@ -261,43 +250,67 @@
             <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
               <renderer type="lookup" params="columnlabel=Name;"/>
             </association>
-            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-              <renderer type="lookup" />
-            </association>
-          </section>
-
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <field attribute="targstartdate" label="Target Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="targcompdate" label="Target Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="schedstart" label="Scheduled Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="schedfinish" label="Scheduled Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="actstart" label="Actual Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="actfinish" label="Actual Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
             <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
             </field>
           </section>
+          
 
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <section id="attachmentsection"/>
+          <section secondarycontent="true" orientation="vertical">
+            
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+              <renderer type="default" params="childinputsize=medium" />
+              <field attribute="targstartdate" label="Target Start Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="targcompdate" label="Target Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="schedstart" label="Scheduled Start Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="schedfinish" label="Scheduled Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="actstart" label="Actual Start Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="actfinish" label="Actual Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              
+            </section>
+
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+              <renderer type="default" params="childinputsize=medium" />
+              
+              <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                <renderer type="autocompleteclient" />
+              </association>
+              <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true">
+                <renderer type="lookup"  />
+                <dataprovider prefilterfunction="FilterProblemCodes" />
+              </association>
+              <field label="Job Plan:" attribute="jpnum" readonly="true">
+                <renderer type="default" />
+              </field>
+              <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
+              </association>
+
+              <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+                <renderer type="lookup" />
+              </association>
+              
+              <section id="attachmentsection"/>
+            </section>
+            
+            <section id="compositions"/>
+          
           </section>
-          <section id="compositions"/>
+          
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
