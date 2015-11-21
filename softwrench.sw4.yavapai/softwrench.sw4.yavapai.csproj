@@ -84,6 +84,8 @@
   <ItemGroup>
     <Content Include="metadata\yavapai\readme.txt" />
     <Content Include="web_content\yavapai\images\branding.png" />
+    <Content Include="web_content\yavapai\images\footer.jpg" />
+    <Content Include="web_content\yavapai\images\header-email.jpg" />
     <Content Include="web_content\yavapai\images\header.jpg" />
     <Content Include="web_content\yavapai\images\logo-main.png" />
     <Content Include="web_content\yavapai\images\logo-byline.png" />

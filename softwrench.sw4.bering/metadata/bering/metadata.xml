@@ -510,7 +510,7 @@
           <field attribute="item_.itemtype" label="Item Type"/>
           <field attribute="transdate" label="Date"/>
           <field attribute="quantity" label="Qty" hidden="true">
-            <renderer type="default" params="hidefilter=true;widthL5%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn" hidden="true">
             <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyReturnedList;"/>

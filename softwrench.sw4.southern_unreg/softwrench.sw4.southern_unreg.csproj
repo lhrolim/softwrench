@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\southern_unreg\deploy.xml" />
+    <EmbeddedResource Include="metadata\southern_unreg\metadata.xml" />
+    <Content Include="web_content\southern_unreg\images\footer.jpg" />
+    <Content Include="web_content\southern_unreg\images\header-email.jpg" />
     <Content Include="web_content\southern_unreg\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>
@@ -54,7 +57,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\southern_unreg\metadata.xml" />
     <Content Include="metadata\southern_unreg\menu.mobile.xml" />
     <EmbeddedResource Include="metadata\southern_unreg\menu.web.xml">
       <SubType>Designer</SubType>

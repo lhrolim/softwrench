@@ -727,6 +727,7 @@
     <Content Include="Content\Scripts\vendor\other\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
+    <Content Include="Content\styles\default\_footer.scss" />
     <None Include="Content\styles\default\_grid.scss" />
     <None Include="Content\styles\default\vendor\_jscrollpane.scss" />
     <Content Include="Content\styles\default\media\media.scss" />

@@ -1,24 +1,24 @@
 ﻿$signin_color: #ffb755;
-$asset_path : "../images";
+$asset_path: "../images";
 
 .page-signin {
     background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
 }
 
-.container header {
-    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
+.container {
+    header {
+        background: $signin_color url(#{$asset_path}/header.jpg) no-repeat top left;
 
-    .admin-area {
-        background-color: rgba(1, 62, 91, 0.65);
+        .branding {
+            .logo img {
+                height: 90px;
+                width: auto;
+            }
+        }
     }
 
-    .branding {
-        background: url(#{$asset_path}/branding.png) no-repeat top left;
-
-        .logo img {
-            height: 90px;
-            width: auto;
-        }
+    footer {
+        background: $signin_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
     }
 }
 
@@ -53,6 +53,6 @@ $asset_path : "../images";
 @media only screen and (min-width: 1200px) {
 }
 
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

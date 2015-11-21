@@ -20,6 +20,11 @@
     background-size: cover;
 }
 
+.container footer {
+    background: #143444 url(../images/footer.jpg) no-repeat bottom left;
+    background-size: cover;
+}
+
 .container header .branding {
     background: none;
     display: none;
@@ -35,7 +40,7 @@
 
 @media all and (min-width: 1px) and (max-width: 849px) {
     .page-signin {
-        .overlay {
+        .page-overlay {
             background-color: $form_background;
         }
 

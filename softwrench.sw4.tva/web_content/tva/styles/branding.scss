@@ -5,9 +5,16 @@
     background-size: cover;
 }
 
-.container header {
-    background: #34a7e0 url(../images/header.jpg) no-repeat top left;
-    background-size: cover;
+.container {
+    header {
+        background: #34a7e0 url(../images/header.jpg) no-repeat top left;
+        background-size: cover;
+    }
+
+    footer {
+        background: #34a7e0 url(../images/footer.jpg) no-repeat bottom left;
+        background-size: cover;
+    }
 }
 
 .container header .branding {
@@ -20,7 +27,7 @@
 
 @media all and (min-width: 1px) and (max-width: 849px) {
     .page-signin {
-        .overlay {
+        .page-overlay {
             background-color: $form_background;
         }
 

@@ -30,24 +30,34 @@ $asset_path: "../images";
     }
 }
 
-.container header {
-    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
-    border-bottom: #000 1px solid;
+.container {
+    header {
+        background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
+        border-bottom: #000 1px solid;
 
-    .admin-area {
-        background-color: rgba(#000, 0.8);
+        .admin-area {
+            background-color: rgba(#000, 0.8);
 
-        .breadcrumb .seperator {
-            color: rgba(#fff, 0.4);
+            .breadcrumb .seperator {
+                color: rgba(#fff, 0.4);
+            }
+        }
+
+        .branding {
+            background: none;
+
+            .logo img {
+                height: 75px;
+                width: auto;
+            }
         }
     }
 
-    .branding {
-        background: none;
+    footer {
+        background: $signin_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
 
-        .logo img {
-            height: 75px;
-            width: auto;
+        .page-overlay {
+            background-color: rgba(#000, 0.8);
         }
     }
 }
@@ -67,7 +77,7 @@ $asset_path: "../images";
 
 @media all and (min-width: 1px) and (max-width: 849px) {
     .page-signin {
-        .overlay {
+        .page-overlay {
             background-color: $form_background;
         }
 
@@ -99,6 +109,6 @@ $asset_path: "../images";
     }
 }
 
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

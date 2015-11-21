@@ -118,6 +118,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\manchester\images\footer.jpg" />
+    <Content Include="web_content\manchester\images\header-email.jpg" />
     <Content Include="web_content\manchester\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>

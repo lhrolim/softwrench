@@ -46,6 +46,8 @@
     <Content Include="metadata\tva\properties.xml" />
     <Content Include="metadata\tva\readme.txt" />
     <Content Include="web_content\tva\images\branding.png" />
+    <Content Include="web_content\tva\images\footer.jpg" />
+    <Content Include="web_content\tva\images\header-email.jpg" />
     <Content Include="web_content\tva\images\header.jpg" />
     <Content Include="web_content\tva\images\logo-byline.png" />
     <Content Include="web_content\tva\images\logo-main.png" />
