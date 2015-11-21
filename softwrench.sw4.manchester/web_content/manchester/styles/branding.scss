@@ -3,6 +3,10 @@
 .page-signin {
     background: #0061cc url(../Images/signin.jpg) no-repeat center top fixed;
     background-size: cover;
+
+    .page-overlay {
+        background-color: $form_background;
+    }
 }
 
 .page-signin .form-signin .logo.main img {
@@ -34,9 +38,16 @@
     background: url(../Images/divider.png) no-repeat center center;
 }
 
-.container header {
-    background: #0061cc url(../Images/header.jpg) no-repeat center left;
-    background-size: cover;
+.container {
+    header {
+        background: #0061cc url(../Images/header.jpg) no-repeat center left;
+        background-size: cover;
+    }
+
+    footer {
+        background: #0061cc url(../Images/footer.jpg) no-repeat bottom left;
+        background-size: cover;
+    }
 }
 
 .container header .branding {
@@ -62,10 +73,6 @@
 
 @media all and (min-width: 1px) and (max-width: 849px) {
     .page-signin {
-        .overlay {
-            background-color: $form_background;
-        }
-
         .form-signin {
             background-color: none;
         }

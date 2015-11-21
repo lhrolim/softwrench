@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\pesco\readme.txt" />
+    <Content Include="web_content\pesco\images\footer.jpg" />
     <Content Include="web_content\pesco\images\header-email.jpg" />
     <Content Include="web_content\pesco\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>

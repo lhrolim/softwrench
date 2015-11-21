@@ -45,6 +45,8 @@
     <EmbeddedResource Include="metadata\apachegold\deploy.xml" />
     <EmbeddedResource Include="metadata\apachegold\properties.xml" />
     <Content Include="metadata\apachegold\readme.txt" />
+    <Content Include="web_content\apachegold\images\footer.jpg" />
+    <Content Include="web_content\apachegold\images\header-email.jpg" />
     <Content Include="web_content\apachegold\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>

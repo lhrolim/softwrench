@@ -38,7 +38,7 @@
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
-        <div class="fixed-footer">
+        @*<div class="fixed-footer">*@
             <notifications></notifications>
             <div class="vertical-menu clearfix" ng-if="menu.displacement == 'vertical'">
                 <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
@@ -79,8 +79,8 @@
             <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
                 @RenderBody()
             </div>
-        </div>
-        <footer class="site-footer hiddenonprint">
+        @*</div>*@
+        @*<footer class="site-footer hiddenonprint">
 
                         <div class="page-overlay">
                             <div class="logo">
@@ -88,7 +88,7 @@
                             </div>
                         </div>
 
-        </footer>
+        </footer>*@
     </div>
     <activitystream activities="activities" />
     <script type="text/javascript">

@@ -1,9 +1,20 @@
-﻿.page-signin {
-    background: #e0f3f1 url(../images/signin.jpg) no-repeat center top fixed;
-    background-size: cover;
+﻿$background_color: #e0f3f1;
+$asset_path: "../images";
+
+.page-signin {
+    background: $background_color url(#{$asset_path}/signin.jpg) no-repeat center top fixed;
 }
 
-.container header {
-    background: #e0f3f1 url(../images/header.jpg) no-repeat top left;
+.container {
+    header {
+        background: $background_color url(#{$asset_path}/header.jpg) no-repeat top left;
+    }
+
+    footer {
+        background: $background_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
+    }
+}
+
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

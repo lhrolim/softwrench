@@ -69,8 +69,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\deltadental\readme.txt" />
+    <Content Include="web_content\deltadental\images\footer.jpg" />
+    <Content Include="web_content\deltadental\images\header-email.jpg" />
+    <Content Include="web_content\deltadental\images\header.jpg" />
     <Content Include="web_content\deltadental\images\logo-byline.png" />
     <Content Include="web_content\deltadental\images\logo-main.png" />
+    <Content Include="web_content\deltadental\images\signin-lg.jpg" />
+    <Content Include="web_content\deltadental\images\signin-md.jpg" />
+    <Content Include="web_content\deltadental\images\signin-sm.jpg" />
+    <Content Include="web_content\deltadental\images\signin-xs.jpg" />
+    <Content Include="web_content\deltadental\images\signin-xxs.jpg" />
     <Content Include="web_content\deltadental\scripts\deltaperson_service.js" />
     <Content Include="web_content\deltadental\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>

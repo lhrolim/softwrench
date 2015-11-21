@@ -5,6 +5,10 @@ $asset_path: "../images";
 .page-signin {
     background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
 
+    .page-overlay {
+        background-color: rgba(22, 80, 158, 0.77);
+    }
+
     .form-signin {
         padding: 0 0 40px 0;
 
@@ -15,20 +19,30 @@ $asset_path: "../images";
     }
 }
 
-.container header {
-    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
-    border-bottom: 1px solid #999;
+.container {
+    header {
+        background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
+        border-bottom: 1px solid #999;
 
-    .admin-area {
-        background-color: rgba(22, 80, 158, 0.77);
+        .admin-area {
+            background-color: rgba(22, 80, 158, 0.77);
+        }
+
+        .branding {
+            background: url(#{$asset_path}/branding.png) no-repeat top left;
+
+            .logo img {
+                height: 50px;
+                width: auto;
+            }
+        }
     }
 
-    .branding {
-        background: url(#{$asset_path}/branding.png) no-repeat top left;
+    footer {
+        background: $signin_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
 
-        .logo img {
-            height: 50px;
-            width: auto;
+        .page-overlay {
+            background-color: rgba(22, 80, 158, 0.77);
         }
     }
 }
@@ -48,7 +62,7 @@ $asset_path: "../images";
 
 @media all and (min-width: 1px) and (max-width: 849px) {
     .page-signin {
-        .overlay {
+        .page-overlay {
             background-color: $form_background;
         }
 
@@ -81,6 +95,6 @@ $asset_path: "../images";
     }
 }
 
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

@@ -33,6 +33,6 @@
     background: #ffb755 url(../images/signin-md.jpg) no-repeat center center fixed; } }
 
 /* Large Devices, Wide Screen */
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
   background-size: cover; }
 

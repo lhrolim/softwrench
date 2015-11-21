@@ -66,6 +66,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\bering\images\footer.jpg" />
+    <Content Include="web_content\bering\images\header-email.jpg" />
     <Content Include="web_content\bering\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>

@@ -3,9 +3,16 @@
     background-size: cover;
 }
 
-.container header {
-    background: #34a7e0 url(../images/header.jpg) no-repeat top left;
-    background-size: cover;
+.container {
+    header {
+        background: #34a7e0 url(../images/header.jpg) no-repeat top left;
+        background-size: cover;
+    }
+
+    footer {
+        background: #34a7e0 url(../images/footer.jpg) no-repeat bottom left;
+        background-size: cover;
+    }
 }
 
 .container header .logo {

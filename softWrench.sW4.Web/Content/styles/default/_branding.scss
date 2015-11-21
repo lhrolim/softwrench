@@ -27,7 +27,7 @@ $asset_path: "../../Images";
     }
 
     footer {
-        background: $background_color url(#{$asset_path}/footer.jpg) no-repeat center left;
+        background: $background_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
 
         .page-overlay {
             background-color: $signin_background;
