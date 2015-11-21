@@ -131,8 +131,29 @@ input:focus, select:focus, textarea:focus {
     }
 }
 
+@media all and (min-width: 850px) {
+    .page-signin {
+        .container {
+            padding-top: 50px;
+        }
+
+        
+        .logo.main img {
+            padding: 0;
+        }
+
+        .form-signin {
+            .user-links {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
 @media all and (min-width: 992px) {
-    .container {
-        padding-top: 60px;
+    .page-signin {
+        .container {
+            padding-top: 60px;
+        }
     }
 }

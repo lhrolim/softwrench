@@ -65,25 +65,21 @@ $asset_path: "../../Images";
 }
 
 @media all and (min-width: 850px) {
-    .container {
-        padding-top: 40px;
-    }
-
     .page-signin {
         .shadow {
             box-shadow: 0 0 30px 5px rgba(#000, 0.6);
         }
 
-        .logo.main img {
+        /*.logo.main img {
             padding: 0;
-        }
+        }*/
 
         .form-signin {
             background-color: $signin_background;
 
-            .user-links {
+            /*.user-links {
                 margin-bottom: 0;
-            }
+            }*/
         }
     }
 }

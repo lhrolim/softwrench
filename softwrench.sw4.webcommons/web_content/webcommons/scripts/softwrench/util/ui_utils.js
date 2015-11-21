@@ -20,15 +20,16 @@
             //only adjust if table header is fixed
             if ($('.listgrid-thead').css('position') == 'fixed') {
                 //move fixed listgrid header up in IE9
-                var adjustmentTop = 1;
-                var adjustmentMargin = 6;
+                var adjustment = 0;
                 if (isIe9()) {
-                    adjustmentTop = 136;
-                    adjustmentMargin = 48;
+                    adjustment = 135;
                 }
 
-                $('.listgrid-thead').css('top', headerHeight + paginationHeight - adjustmentTop);
-                $('.listgrid-table').css('margin-top', theaderHeight - adjustmentMargin);
+                var offsetTop = headerHeight + paginationHeight - adjustment - 1;
+                var offsetMargin = paginationHeight + theaderHeight - 1;
+
+                $('.listgrid-thead').css('top', offsetTop);
+                $('.listgrid-table').css('margin-top', offsetMargin);
             }
         }
         //reset the lcoation of the content, context menu, grid header and filter bar
