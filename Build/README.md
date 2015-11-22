@@ -16,7 +16,7 @@ In order to build the solution locally there are a few steps required:
 - create a `NAnt` external task to create `symlinks` in between projects  
   - in `Visual Studio` -> click `TOOLS` -> select `External Tools...` -> `Add`
     - Title: whatever you want
-    - Command: '<path to nant.bat>'
+    - Command: `<path to nant.bat>`
     - Arguments: -f:build.xml generatelinks generatelinksMobile
     - Initial directory: $(SolutionDir)\Build
     - check option `Use Output Window`
