@@ -7,8 +7,7 @@
         }
 
         .admin-area {
-            background-color: rgba(52, 167, 224, 0.5);
-            border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
+            border-bottom: $admin_border;
             padding: 10px 20px 8px 20px;
 
             .text {

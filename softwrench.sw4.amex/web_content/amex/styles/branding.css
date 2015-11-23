@@ -6,8 +6,6 @@
 
 .container header {
   background: #ffb755 url(../images/header.jpg) no-repeat center left; }
-  .container header .admin-area {
-    background-color: rgba(1, 62, 91, 0.8); }
   .container header .branding {
     /*background: url(../images/branding.png) no-repeat top left;*/
     background: none; }
@@ -35,6 +33,6 @@
     background: #ffb755 url(../images/signin-md.jpg) no-repeat center center fixed; } }
 
 /* Large Devices, Wide Screen */
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
   background-size: cover; }
 

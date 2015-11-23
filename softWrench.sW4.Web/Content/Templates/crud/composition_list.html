@@ -70,7 +70,7 @@
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
                     ng-click="toggleDetails(compositionitem,column,'row',$event,rowindex)"
-                    >
+                   data-title="{{column.label}}">
                     <ng-switch on="column.type">
 
                         <div ng-switch-when="ApplicationAssociationDefinition">

@@ -40,13 +40,13 @@
       <schemas>
         <list title="Solution Grid" platform="web">
           <field attribute="solution" label="Solution#">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="description" label="Description">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=20%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail" />

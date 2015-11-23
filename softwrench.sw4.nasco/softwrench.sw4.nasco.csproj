@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\nasco\readme.txt" />
+    <Content Include="web_content\nasco\images\branding.png" />
+    <Content Include="web_content\nasco\images\footer.jpg" />
+    <Content Include="web_content\nasco\images\header-email.jpg" />
     <Content Include="web_content\nasco\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>

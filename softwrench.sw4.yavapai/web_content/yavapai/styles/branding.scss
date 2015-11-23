@@ -1,27 +1,24 @@
 ﻿.page-signin {
     background: #0780c9 url(../images/signin.jpg) no-repeat center top fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
 }
 
-    .page-signin .form-signin {
-        background-color: rgba(1, 62, 91, 0.6);
+.container {
+    header {
+        background: #34a7e0 url(../images/header.jpg) no-repeat top left;
+        background-size: cover;
     }
 
-.container header {
-    background: #34a7e0 url(../images/header.jpg) no-repeat top left;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    footer {
+        background: #34a7e0 url(../images/footer.jpg) no-repeat bottom left;
+        background-size: cover;
+    }
 }
 
-    .container header .logo {
-        width: 160px;
-    }
+.container header .logo {
+    width: 160px;
+}
 
-    .container header .branding {
-        background: url(../images/branding.png) no-repeat top left;
-    }
+.container header .branding {
+    background: url(../images/branding.png) no-repeat top left;
+}

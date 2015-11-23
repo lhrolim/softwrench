@@ -46,9 +46,17 @@
             }, null);
         };
 
+        var addSignature = function(parameters) {
+            if (parameters.datamap.message == undefined) {
+                var signature = contextService.getUserData().signature;
+                parameters.datamap['message'] = signature != "" ? "<br/><br/>" + signature : signature;
+            }
+        }
+
         var service = {
             formatCommTemplate: formatCommTemplate,
-            updatereadflag: updatereadflag
+            updatereadflag: updatereadflag,
+            addSignature: addSignature
         };
 
         return service;

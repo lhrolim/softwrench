@@ -299,6 +299,7 @@
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.0\20150205_SWWEB_889.cs" />
     <Compile Include="DB_Migration\4.0\20150417_PAE_001.cs" />
+    <Compile Include="DB_Migration\4.10\20151116_SWWEB_1857.cs" />
     <Compile Include="DB_Migration\4.2.0\20150529_DDCA_14.cs" />
     <Compile Include="DB_Migration\4.2.0\20150422_SWWEB_1163.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
@@ -388,7 +389,9 @@
     <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
     <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
     <Content Include="App_Data\Client\%40internal\templates\route.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
@@ -396,7 +399,9 @@
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
     <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
     <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\workorder.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\worktype.xml" />
     <Content Include="App_Data\Client\%40internal\templates\email.xml" />
     <Content Include="App_Data\Client\%40internal\templates\person.xml" />
@@ -507,6 +512,7 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
+    <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
@@ -726,6 +732,7 @@
     <Content Include="Content\Scripts\vendor\other\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
+    <Content Include="Content\styles\default\_footer.scss" />
     <None Include="Content\styles\default\_grid.scss" />
     <None Include="Content\styles\default\vendor\_jscrollpane.scss" />
     <Content Include="Content\styles\default\media\media.scss" />
@@ -756,6 +763,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
@@ -778,7 +786,6 @@
     <Content Include="Content\Templates\directives\gridtoolbar.html" />
     <Content Include="Content\Templates\directives\commandBar.html" />
     <Content Include="Content\Templates\crud\inline_composition_list.html" />
-    <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\crud_output_fields.html" />
     <Content Include="Content\Templates\directives\printSection.html" />
     <Content Include="Content\Templates\hapag\Actionentry.html" />
@@ -1451,6 +1458,10 @@
       <Project>{eca0c543-9a9a-48b8-bf22-4140656fff2c}</Project>
       <Name>softwrench.sw4.nasco</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.ninewest\softwrench.sw4.ninewest.csproj">
+      <Project>{08b929a1-6e1c-4eb7-9357-57df9be07381}</Project>
+      <Name>softwrench.sw4.ninewest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
       <Name>softwrench.sw4.offlineserver</Name>
@@ -1545,7 +1556,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>8080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

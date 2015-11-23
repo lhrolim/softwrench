@@ -1,17 +1,17 @@
-﻿input:focus, select:focus, textarea:focus {
+﻿
+
+input:focus, select:focus, textarea:focus {
     outline: none;
 }
 
-.page-signin .shadow {
-    max-width: 800px;
-    margin: 0 auto;
-    box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
-}
-
 .page-signin {
+    .shadow {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
     .form-signin {
         padding: 40px 15px;
-        background-color: rgba(1, 62, 91, 0.5);
 
         .logo {
             text-align: center;
@@ -19,13 +19,12 @@
             img {
                 max-width: 100%;
                 height: auto;
-                width: 500px;
             }
         }
 
         .divider {
             height: 60px;
-            width: 600px;
+            /*width: 600px;*/
             margin: 0 auto;
         }
 
@@ -40,7 +39,7 @@
             border-radius: 40px;
 
             &:hover {
-                background-color: rgba(255, 255, 255, 0.4);
+                background-color: rgba(#fff, 0.4);
             }
         }
 
@@ -65,7 +64,6 @@
             color: #fff;
             margin-top: -4px;
             margin-bottom: 30px;
-            padding-left: 30px;
             font-size: 14px;
             line-height: 1.5;
         }
@@ -99,7 +97,7 @@
         }
 
         .alert-warning, .text-danger {
-            background: rgba(255, 0, 0, 0.75);
+            background: rgba(#f00, 0.75);
             color: #fff;
         }
 
@@ -125,20 +123,37 @@
 
 @media all and (min-width: 768px) {
     .page-signin {
-        padding-top: 40px;
+        .form-signin {
+            .user-links {
+                padding-left: 30px;
+            }
+        }
+    }
+}
 
+@media all and (min-width: 850px) {
+    .page-signin {
+        .container {
+            padding-top: 50px;
+        }
+
+        
         .logo.main img {
             padding: 0;
         }
 
-        .form-signin .user-links {
-            margin-bottom: 0;
+        .form-signin {
+            .user-links {
+                margin-bottom: 0;
+            }
         }
     }
 }
 
 @media all and (min-width: 992px) {
     .page-signin {
-        padding-top: 60px;
+        .container {
+            padding-top: 60px;
+        }
     }
 }

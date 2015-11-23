@@ -12,10 +12,6 @@ $asset_path : "../images";
 .container header {
     background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
 
-    .admin-area {
-        background-color: rgba(1, 62, 91, 0.8);
-    }
-
     .branding {
         /*background: url(#{$asset_path}/branding.png) no-repeat top left;*/
         background: none;
@@ -58,6 +54,6 @@ $asset_path : "../images";
 @media only screen and (min-width: 1200px) {
 }
 
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

@@ -366,7 +366,43 @@ input[type="date"], input[type="time"] {
         color: #fff;
     }
 }
+.secondary-content-section {
+    padding-top: 20px;
 
+    &.hidden {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+}
+.secondary-content-section-trigger {
+    position: relative;
+    margin-top: 45px;
+    cursor: pointer;
+
+    > hr {
+        cursor: default;
+        position: absolute;
+        left: -50px;
+        bottom: 0;
+        width: 100vw;
+        margin: 0;
+        border-color: $cts-gray;
+    }
+
+    .secondary-content-section-button {
+        position: absolute;
+        bottom: 0;
+        left: 20px;
+        z-index: 999;
+        padding: 10px;
+        background-color: $cts-gray;
+
+        > span, i {
+            color: white;
+        }
+    }
+}
 .form-horizontal .control-label {
     text-align: left;
 }

@@ -125,47 +125,47 @@
             <renderer type="default" />
           </field>
           <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
+            <renderer type="default" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" />
           </field>
           <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="width=6%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="width=6%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="width=6%;hidefilter=true;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="width=6%;hidefilter=true;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
-            <renderer type="default" params="width=3%"/>
+            <renderer type="default" params="width=3%" />
           </section>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>

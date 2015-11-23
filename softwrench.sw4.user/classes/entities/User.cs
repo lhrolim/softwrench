@@ -119,7 +119,11 @@ namespace softwrench.sw4.user.classes.entities {
         public ISet<UserCustomConstraint> CustomConstraints {
             get; set;
         }
-
+        
+        [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "all")]
+        public UserPreferences UserPreferences {
+            get; set;
+        }
 
         //public string DisplayName {
         //    get { return Person.FirstName + " " + Person.LastName; }

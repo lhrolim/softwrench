@@ -25,11 +25,14 @@
                     adjustment = 135;
                 }
 
-                $('.listgrid-thead').css('top', headerHeight + paginationHeight - adjustment - 1);
-                $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
+                var offsetTop = headerHeight + paginationHeight - adjustment - 1;
+                var offsetMargin = paginationHeight + theaderHeight - 1;
+
+                $('.listgrid-thead').css('top', offsetTop);
+                $('.listgrid-table').css('margin-top', offsetMargin);
             }
         }
-            //reset the lcoation of the content, context menu, grid header and filter bar
+        //reset the lcoation of the content, context menu, grid header and filter bar
         else {
             $('.content').css('margin-top', 'auto');
             $('.affix-pagination').css('top', 'auto');

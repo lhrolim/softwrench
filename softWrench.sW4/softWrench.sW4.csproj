@@ -386,7 +386,7 @@
     <Compile Include="Preferences\GridFilterController.cs" />
     <Compile Include="Preferences\GridFilterExceptions.cs" />
     <Compile Include="Preferences\GridFilterManager.cs" />
-    <Compile Include="Preferences\UserPreferences.cs" />
+    <Compile Include="Preferences\GridPreferences.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
@@ -453,6 +453,7 @@
     <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
+    <Compile Include="Security\Services\UserPreferenceManager.cs" />
     <Compile Include="Security\UserType.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\FollowUpWorkorderHandler.cs" />
