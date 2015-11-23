@@ -3,7 +3,8 @@
 
 
 
-    angular.module("sw_lookup").directive("lookupInput", ["cmplookup", "contextService", 'expressionService', 'cmpfacade', 'dispatcherService', 'modalService', 'compositionCommons',
+    angular.module("sw_lookup").directive("lookupInput", ["cmplookup", "contextService", 'expressionService', 'cmpfacade',
+        'dispatcherService', 'modalService', 'compositionCommons',
         function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons) {
             var directive = {
                 restrict: "E",
@@ -31,6 +32,8 @@
 
 
                     scope.isSelectEnabled = function (fieldMetadata, datamap) {
+                        return true;
+
                         var searchDatamap = datamap;
                         if (scope.parentdata) {
                             searchDatamap = compositionCommons.buildMergedDatamap(datamap, scope.parentdata);
@@ -117,7 +120,9 @@
                         if (scope.parentdata) {
                             scope.lookupObj.parentdata = scope.parentdata;
                             scope.lookupObj.item = scope.datamap;
+
                             searchDatamap = compositionCommons.buildMergedDatamap(scope.datamap, scope.parentdata);
+
                         }
 
                         if (!scope.isSelectEnabled(fieldMetadata, searchDatamap)) {

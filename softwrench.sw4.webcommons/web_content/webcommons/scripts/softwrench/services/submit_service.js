@@ -4,7 +4,7 @@
 
 
 
-    function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService, attachmentService) {
+    function submitService($rootScope, fieldService, contextService, checkpointService, alertService, schemaService, attachmentService, datamapSanitizeService) {
 
 
 
@@ -99,18 +99,6 @@
             return formId;
         }
 
-        ///remove any associations or compositions data to send 
-        function sanitizeDataMapToSendOnAssociationFetching(datamap) {
-            var result = {};
-            angular.forEach(datamap,function(value, key) {
-                if (key.indexOf("_") !== -1) {
-                    //ignoring any relationship data
-                    return;
-                }
-                result[key] = value;
-            });
-            return result;
-        }
 
         function removeExtraFields(datamap, clone, schema) {
             if (!datamap) {
@@ -196,12 +184,13 @@
         }
 
         var service = {
+
+
             submitForm: submitForm,
             removeNullInvisibleFields: removeNullInvisibleFields,
             translateFields: translateFields,
             getFormToSubmitIfHasAttachement: getFormToSubmitIfHasAttachement,
             removeExtraFields: removeExtraFields,
-            sanitizeDataMapToSendOnAssociationFetching: sanitizeDataMapToSendOnAssociationFetching,
             createSubmissionParameters: createSubmissionParameters,
             handleDatamapForMIF: handleDatamapForMIF,
             submitConfirmation: submitConfirmation
@@ -211,6 +200,6 @@
 
     }
 
-    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', 'attachmentService', submitService]);
+    angular.module('sw_layout').factory('submitService', ['$rootScope', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', 'attachmentService', 'datamapSanitizeService', submitService]);
 })(angular, jQuery);
 

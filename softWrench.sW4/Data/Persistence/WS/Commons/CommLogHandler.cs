@@ -95,8 +95,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var bccEmail = w.GetRealValue(integrationObject, Bcc);
             ccEmail = ccEmail != null ? ccEmail.ToString() : "";
             bccEmail = bccEmail != null ? bccEmail.ToString() : "";
-            var allAddresses = ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
-            allAddresses = bccEmail != "" ? allAddresses + "," + bccEmail : allAddresses;
+            var allAddresses = (string) ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
+            allAddresses = (string) bccEmail != "" ? allAddresses + "," + bccEmail : allAddresses;
             return allAddresses;
         }
 

@@ -76,7 +76,9 @@ namespace softWrench.sW4.Web.Controllers {
             filter.QuickSearchData = labelSearchString;
             //let´s limit the filter adding an extra value so that we know there´re more to be brought
             //TODO: add a count call
-            filter.PageSize = 21;
+            if (!association.EntityAssociation.Cacheable) {
+                filter.PageSize = 21;
+            }
             //adopting to use an association to keep same existing service
             var result = _associationResolver.ResolveOptions(app, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
             return result;

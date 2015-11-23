@@ -25,10 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using softwrench.sw4.Shared2.Metadata.Applications.Filter;
-using softwrench.sw4.Shared2.Metadata.Applications.Notification;
-using softwrench.sW4.Shared2.Metadata.Applications.Notification;
-using softWrench.sW4.Metadata.Applications.Notification;
 
 
 namespace softWrench.sW4.Metadata.Parsing {

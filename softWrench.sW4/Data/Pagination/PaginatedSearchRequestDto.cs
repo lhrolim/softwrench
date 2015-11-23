@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Pagination {
 
         private Boolean _needsCountUpdate = true;
 
-        private IList<String> _compositionsToFetch;
+//        private IList<String> _compositionsToFetch;
 
         public static List<int> DefaultPaginationOptions {
             get { return new List<int> { 10, 30, 100 }; }

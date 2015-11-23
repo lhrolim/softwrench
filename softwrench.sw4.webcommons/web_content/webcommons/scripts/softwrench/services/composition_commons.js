@@ -3,7 +3,7 @@
 
     // service.$inject = [];
 
-    var service = function () {
+    var service = function (datamapSanitizeService) {
 
         var buildMergedDatamap = function (datamap, parentdata) {
             var toClone = parentdata;
@@ -12,6 +12,8 @@
             }
 
             var clonedDataMap = angular.copy(toClone);
+            clonedDataMap = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(clonedDataMap);
+
             if (datamap) {
                 var item = datamap;
                 for (var prop in item) {
@@ -30,6 +32,6 @@
         return api;
     };
 
-    angular.module("webcommons_services").factory("compositionCommons", service);
+    angular.module("webcommons_services").factory("compositionCommons", ['datamapSanitizeService',service]);
 
 })(angular);

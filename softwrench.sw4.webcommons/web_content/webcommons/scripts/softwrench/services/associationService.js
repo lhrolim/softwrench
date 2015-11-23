@@ -3,7 +3,7 @@
     'use strict';
 
 
-    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService) {
+    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService) {
 
 
         var doUpdateExtraFields = function(associationFieldMetadata, underlyingValue, datamap) {
@@ -558,7 +558,7 @@
             
 
             var urlToUse = url("/api/generic/Association/GetLookupOptions?" + $.param(parameters));
-            var jsonString = angular.toJson(submitService.sanitizeDataMapToSendOnAssociationFetching(fields));
+            var jsonString = angular.toJson(datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(fields));
             return $http.post(urlToUse, jsonString);
         };
 
@@ -670,7 +670,7 @@
 
     angular
     .module('sw_layout')
-    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService',
+    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService','datamapSanitizeService',
         associationService]);
 
 })(angular);

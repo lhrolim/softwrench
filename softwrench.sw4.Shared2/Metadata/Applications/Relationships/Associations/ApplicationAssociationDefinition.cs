@@ -93,7 +93,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                     string[] fields = LabelField.Split(',');
                     try {
                         var a = String.Format(LabelPattern, fields);
-                    } catch (Exception e) {
+                    } catch (Exception) {
                         throw new InvalidOperationException(String.Format("incompatible labelPattern and Label Fields at application {0}", applicationName));
                     }
                 }

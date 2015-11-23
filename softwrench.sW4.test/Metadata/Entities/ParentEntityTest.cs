@@ -20,7 +20,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
             var sr =MetadataProvider.Entity("sr");
             Assert.AreEqual(imac.GetTableName(),sr.GetTableName());
             Assert.AreNotEqual(imac.WhereClause, sr.WhereClause);
-            const EntityMetadata.AttributesMode includeCollections = EntityMetadata.AttributesMode.IncludeCollections;
+//            const EntityMetadata.AttributesMode includeCollections = EntityMetadata.AttributesMode.IncludeCollections;
 //            Assert.AreEqual(imac.Attributes(includeCollections).Count(), sr.Attributes(includeCollections).Count());
 //            Assert.AreEqual(imac.Associations.Count(), sr.Associations.Count());
 

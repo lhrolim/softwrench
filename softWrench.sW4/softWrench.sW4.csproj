@@ -225,7 +225,6 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
-    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
@@ -872,6 +871,7 @@
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
     <Folder Include="Metadata\API\" />
     <Folder Include="Metadata\Applications\DataSet\Compositions\" />
+    <Folder Include="Metadata\Applications\Notification\" />
     <Folder Include="Metadata\Applications\Relationship\Composition\" />
     <Folder Include="Metadata\Offline\" />
   </ItemGroup>

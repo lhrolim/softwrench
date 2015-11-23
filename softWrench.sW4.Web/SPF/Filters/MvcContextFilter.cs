@@ -21,7 +21,6 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (!actionContext.HttpContext.User.Identity.IsAuthenticated) {
                 return;
             }
-            IEnumerable<String> modules;
             var currentModule = GetValue(actionContext, CurrentModuleKey);
             var currentMetadataId = GetValue(actionContext, CurrentMetadataKey);
             var currentMetadataParameter = GetValue(actionContext, CurrentMetadataParameterKey);

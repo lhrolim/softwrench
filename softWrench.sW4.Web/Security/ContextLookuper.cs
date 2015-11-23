@@ -140,7 +140,7 @@ namespace softWrench.sW4.Web.Security {
                 }
                 Log.DebugFormat("adding context " + context);
                 return context;
-            } catch (Exception e) {
+            } catch (Exception) {
                 //not logged users
                 return context;
             }

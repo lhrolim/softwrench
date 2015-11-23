@@ -31,7 +31,7 @@
         function refreshFromAttribute(fieldMetadata, newValue) {
 
 
-            var log = $log.getInstance('cmplookup#refreshFromAttribute');
+            var log = $log.getInstance('cmplookup#refreshFromAttribute',["association","lookup"]);
             var associationKey = fieldMetadata.associationKey;
             var label = null;
             if (newValue != null) {

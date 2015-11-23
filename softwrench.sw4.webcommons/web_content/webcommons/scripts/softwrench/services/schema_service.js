@@ -64,6 +64,24 @@
             return datamap[schema.idFieldName];
         };
 
+        /**
+         * Returns a jquery element (section) considering the path passed as parameter.
+         * 
+         * That is needed on circumstances in which you want to search for elements inside of a given section.For example:
+         * 
+         * You need to update the assets lookup element inside of a composition row
+         * 
+         * 
+         * 
+         * @param {} schema 
+         * @param {} datamap
+         * @param {} path 
+         * @returns {} 
+         */
+        function locateJquerySectionElementByApp(schema,datamap, path) {
+            
+        }
+
         function nonTabFields(schema) {
             return fieldService.nonTabFields(schema.displayables, true);
         };
@@ -196,6 +214,7 @@
             hasEditableProperty: hasEditableProperty,
             isPropertyTrue: isPropertyTrue,
             locateDisplayableByQualifier: locateDisplayableByQualifier,
+            locateJquerySectionElementByApp:locateJquerySectionElementByApp,
             nonTabFields: nonTabFields,
             parseAppAndSchema: parseAppAndSchema
         };

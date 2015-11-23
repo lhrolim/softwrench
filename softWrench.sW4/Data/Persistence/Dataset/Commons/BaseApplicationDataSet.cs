@@ -68,7 +68,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private const string AssociationLogMsg = "starting association options fetching for application {0} schema {1}";
 
-        protected readonly ILog Log = LogManager.GetLogger(typeof(BaseApplicationDataSet));
+        protected static readonly ILog Log = LogManager.GetLogger(typeof(BaseApplicationDataSet));
 
         private readonly ApplicationAssociationResolver _associationOptionResolver = new ApplicationAssociationResolver();
         private readonly DynamicOptionFieldResolver _dynamicOptionFieldResolver = new DynamicOptionFieldResolver();

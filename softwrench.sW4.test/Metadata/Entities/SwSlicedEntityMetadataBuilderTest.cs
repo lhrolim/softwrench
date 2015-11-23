@@ -13,8 +13,6 @@ namespace softwrench.sW4.test.Metadata.Entities {
         
         private static ApplicationSchemaDefinition _schema;
 
-        private MultiItemBatch _multiItemBatch;
-
         [ClassInitialize]
         public static void Init(TestContext testContext) {
             ApplicationConfiguration.TestclientName = "otb";

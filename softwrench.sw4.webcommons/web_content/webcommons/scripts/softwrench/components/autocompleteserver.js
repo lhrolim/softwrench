@@ -43,7 +43,8 @@
                         key: {
                             schemaId: schema.schemaId,
                             mode: schema.mode,
-                            platform: "web"
+                            platform: "web",
+                            applicationName: applicationName
                         },
                         labelSearchString: "%QUERY",
                         application: applicationName

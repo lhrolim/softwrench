@@ -67,7 +67,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet
             return searchDTO;
         }
 
-        public IEnumerable<IAssociationOption> GetHlagUserLocations(OptionFieldProviderParameters parameters)
+        public new IEnumerable<IAssociationOption> GetHlagUserLocations(OptionFieldProviderParameters parameters)
         {
             var options = base.GetHlagUserLocations(parameters);
             var multivaluedOptions = new List<IAssociationOption>();
@@ -244,7 +244,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet
                         attributeHolder.Attributes[COMMODITY] = description.Substring(commodityGroup.Length + 1, description.Length - commodityGroup.Length - 1);
                     }
                 }
-                catch (ArgumentOutOfRangeException ae)
+                catch (ArgumentOutOfRangeException)
                 {
                 }
             }
@@ -260,7 +260,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet
                     attributeHolder.Attributes["#currentdatetime"] = DateTime.Now;
                     attributeHolder.Attributes[SITEID] = attributeHolder.Attributes[SITEID].ToString().Split('-').Last().Substring(0, 3);
                 }
-                catch (ArgumentOutOfRangeException ae)
+                catch (ArgumentOutOfRangeException)
                 {
                 }
             }

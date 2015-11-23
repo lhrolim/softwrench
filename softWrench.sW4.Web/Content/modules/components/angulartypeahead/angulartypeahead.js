@@ -5,7 +5,8 @@
 
 
 
-    function angularTypeahead(restService, $timeout, $log, contextService, associationService, crudContextHolderService, schemaService,submitService) {
+    function angularTypeahead(restService, $timeout, $log,
+        contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
@@ -13,7 +14,7 @@
 
         function beforeSendPostJsonDatamap(jqXhr, settings, datamap) {
             if (datamap) {
-                var jsonString = angular.toJson(submitService.sanitizeDataMapToSendOnAssociationFetching(datamap));
+                var jsonString = angular.toJson(datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap));
                 settings.type = 'POST';
                 settings.data = jsonString;
                 settings.hasContent = true;
@@ -237,7 +238,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService','submitService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', angularTypeahead]);
 
 })(angular, Bloodhound);
 
