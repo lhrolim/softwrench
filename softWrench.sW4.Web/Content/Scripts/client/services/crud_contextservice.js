@@ -203,6 +203,7 @@
          * @returns {} 
          */
         function updateLazyAssociationOption(associationKey, options, notIndexed) {
+            var log = $log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
             if (!!notIndexed && options!=null) {
                 var objIdxKey = options.value.toLowerCase();
                 var idxedObject = {};
@@ -213,8 +214,10 @@
 
             var lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
+                log.debug("creating lazy option(s) to association {0} ".format(associationKey));
                 _crudContext._lazyAssociationOptions[associationKey] = options;
             } else {
+                log.debug("appending new option(s) to association {0} ".format(associationKey));
                 _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
         }

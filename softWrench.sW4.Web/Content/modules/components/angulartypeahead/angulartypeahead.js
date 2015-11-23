@@ -110,6 +110,7 @@
                     datamap[scope.attribute] = datum.value;
                     scope.$digest();
                 }
+                crudContextHolderService.updateLazyAssociationOption(scope.provider, datum, true);
                 scope.itemSelected({ item: datum });
             });
 

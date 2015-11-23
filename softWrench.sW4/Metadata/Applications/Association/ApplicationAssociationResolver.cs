@@ -120,7 +120,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             associationFilter.QueryAlias = association.AssociationKey;
 
             var tasks = new List<Task>(1);
-
+            //caching for multithread access
+            associationFilter.GetParameters();
 
             if (associationFilter is PaginatedSearchRequestDto) {
                 tasks.Add(Task.Factory.NewThread(c => {
