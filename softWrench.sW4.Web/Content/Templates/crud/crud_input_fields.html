@@ -1,27 +1,26 @@
 <section id="{{elementid}}">
     <div ng-init="setForm(crudbodyform)" />
     <div>
-        <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
-                  class="form-group {{getFieldClass(fieldMetadata)}}"
+        <fieldset ng-repeat="fieldMetadata in ::vm.nonTabDisplayables track by $index"
+                  class="form-group {{::getFieldClass(fieldMetadata)}}"
                   ng-show="!isFieldHidden(schema,fieldMetadata)"
                   rel="input-form-repeat"
-                  bodyrendered
-                  >
+                  bodyrendered>
             <label class="control-label"
-                   rel="{{showLabelTooltip(fieldMetadata)}}"
-                   data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                   ng-if="isLabelVisible(fieldMetadata,false)"
-                   ng-style="getLabelStyle(fieldMetadata)"
-                   ng-class="getLabelClass(fieldMetadata)">
-                <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                   rel="{{::showLabelTooltip(fieldMetadata)}}"
+                   data-original-title="{{::i18NLabelTooltip(fieldMetadata)}}"
+                   ng-if="::isLabelVisible(fieldMetadata,false)"
+                   ng-style="::getLabelStyle(fieldMetadata)"
+                   ng-class="::getLabelClass(fieldMetadata)">
+                <span ng-show="::isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
                 <!--this will bring either label or header in case of section-->
-                {{i18NLabel(fieldMetadata)}}
+                {{::i18NLabel(fieldMetadata)}}
             </label>
             <legend ng-if="isLabelVisible(fieldMetadata,true)"
                     rel="tooltip"
-                    data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                    data-original-title="{{::i18NLabelTooltip(fieldMetadata)}}"
                     class="legend-label">
-                {{i18NLabel(fieldMetadata)}}
+                {{::i18NLabel(fieldMetadata)}}
             </legend>
             
             <!--Read only section-->
@@ -30,10 +29,10 @@
                 <input type="datetime" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
                        data-date-time
-                       data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
-                       data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                       data-format-string="{{fieldMetadata.rendererParameters['format']}}"
-                       data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                       data-show-time="{{::fieldMetadata.rendererParameters['showtime']}}"
+                       data-show-date="{{::fieldMetadata.rendererParameters['showdate']}}"
+                       data-format-string="{{::fieldMetadata.rendererParameters['format']}}"
+                       data-show-meridian="{{::fieldMetadata.rendererParameters['showmeridian']}}"
                        class="form-control datetimereadonly"
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" ng-readonly="true" readonly>
                 <label ng-switch-when="label" class="control-label"
@@ -44,19 +43,19 @@
                 <textarea ng-switch-when="textarea"
                           ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120" 
                           rows="10" wrap="hard"
-                          data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                          maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                          data-ng-maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
+                          maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
                           ng-readonly="true"
                           ng-enabled="isModifiableEnabled(fieldMetadata)"
                           ng-init="bindEvalExpression(fieldMetadata)"
-                          data-id="{{fieldMetadata.attribute}}"
+                          data-id="{{::fieldMetadata.attribute}}"
                           ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
 
                 <div ng-switch-when="checkbox">
                     <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
-                        <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
+                        <tr ng-repeat="option in ::getCheckboxOptions(fieldMetadata)">
                             <td ng-if="isPositionLeft(fieldMetadata)">
-                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                {{::i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                             <td>
                                 <input type="checkbox"
@@ -66,7 +65,7 @@
                                        ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
                             </td>
                             <td ng-if="!isPositionLeft(fieldMetadata)">
-                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                {{::i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                         </tr>
                     </table>
@@ -98,24 +97,24 @@
                 <div ng-switch-when="combo" class="sw-combobox-container">
 
                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
-                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
+                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{::fieldMetadata.rendererParameters['prepend']}}</span>
                     <select class="hidden-phone form-control combobox"
                             ng-model="datamap[fieldMetadata.target]"
-                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
                             ng-enabled="isSelectEnabled(fieldMetadata)"
                             ng-init="initField(fieldMetadata)"
-                            data-field="{{fieldMetadata.associationKey}}">
+                            data-field="{{::fieldMetadata.associationKey}}">
                         <option value=""></option>
                     </select>
-                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{::fieldMetadata.rendererParameters['append']}}</span>
                 </div>
 
                 </div>
                 <div ng-switch-when="checkbox">
                     <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
-                        <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
+                        <tr ng-repeat="option in ::getCheckboxOptions(fieldMetadata)">
                             <td ng-if="isPositionLeft(fieldMetadata)">
-                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                {{::i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                             <td>
                                 <input type="checkbox"
@@ -125,7 +124,7 @@
                                        ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
                             </td>
                             <td ng-if="!isPositionLeft(fieldMetadata)">
-                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                {{::i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                         </tr>
                     </table>
@@ -143,26 +142,26 @@
                         <div ng-if="fieldMetadata.rendererParameters['opendetails'] == 'true'" class="form-group samelinepickers">
                             <div class="col-xs-6 autocompleteclientopendetails">
                                 <div ng-switch-when="OptionField" class="input-group">
-                                    <select id="{{formatId(fieldMetadata.target)}}"
+                                    <select id="{{::formatId(fieldMetadata.target)}}"
                                             class="hidden-phone form-control combobox"
                                             ng-class="{'combobox-dynamic' : isDesktop()}"
                                             ng-model="datamap[fieldMetadata.target]"
-                                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}">
+                                            data-associationkey="{{::fieldMetadata.associationKey}}">
                                         <option value=""></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xs-6 autocompleteclientopendetails">
                                 <div ng-switch-default class="input-group">
-                                    <select id="{{formatId(fieldMetadata.target)}}"
+                                    <select id="{{::formatId(fieldMetadata.target)}}"
                                             class="hidden-phone form-control combobox"
                                             ng-class="{'combobox-dynamic' : isDesktop()}"
                                             ng-model="datamap[fieldMetadata.target]"
-                                            ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
+                                            ng-options="option.value as option.label for option in ::associationOptions[fieldMetadata.associationKey]"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}">
+                                            data-associationkey="{{::fieldMetadata.associationKey}}">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -175,24 +174,24 @@
                         </div>
                         <div ng-if="fieldMetadata.rendererParameters['opendetails'] != 'true'">
                             <div ng-switch-when="OptionField">
-                                <select id="{{formatId(fieldMetadata.target)}}"
+                                <select id="{{::formatId(fieldMetadata.target)}}"
                                         class="hidden-phone form-control combobox"
                                         ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
-                                        ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                        ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}">
+                                        data-associationkey="{{::fieldMetadata.associationKey}}">
                                     <option value=""></option>
                                 </select>
                             </div>
                             <div ng-switch-default>
-                                <select id="{{formatId(fieldMetadata.target)}}"
+                                <select id="{{::formatId(fieldMetadata.target)}}"
                                         class="hidden-phone form-control combobox"
                                         ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
-                                        ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
+                                        ng-options="option.value as option.label for option in ::associationOptions[fieldMetadata.associationKey]"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}">
+                                        data-associationkey="{{::fieldMetadata.associationKey}}">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -206,8 +205,8 @@
                     </selectize>
                 </div>
                 <div ng-switch-when="autocompleteserver">
-                    <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{fieldMetadata.associationKey}}" data-target="{{fieldMetadata.attribute}}" />
-                    <input type="hidden" id="{{'autocomplete_' + fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
+                    <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{::fieldMetadata.associationKey}}" data-target="{{::fieldMetadata.attribute}}" />
+                    <input type="hidden" id="autocomplete_{{::fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
                 </div>
                 <div ng-switch-when="lookup" >
                     <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema" disabledassociations="disabledassociations" blockedassociations="blockedassociations"
@@ -220,18 +219,18 @@
                 </div>
 
                 <fieldset ng-switch-when="radio">
-                    <label ng-repeat="option in fieldMetadata.options" class="checkbox-inline">
+                    <label ng-repeat="option in ::fieldMetadata.options" class="checkbox-inline">
                         <input type="radio"
-                               name="{{fieldMetadata.attribute}}"
+                               name="{{::fieldMetadata.attribute}}"
                                value="{{option.value}}"
                                ng-model="datamap[fieldMetadata.associationKey]">
-                        {{i18NOptionField(option,fieldMetadata,schema)}}
+                        {{::i18NOptionField(option,fieldMetadata,schema)}}
                     </label>
                 </fieldset>
                 <div ng-switch-when="textarea">
                     <textarea ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120" rows="10" wrap="hard"
-                              data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                              maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                              data-ng-maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
+                              maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
                               ng-enabled="isModifiableEnabled(fieldMetadata)"
                               ng-init="initField(fieldMetadata)" />
                 </div>
@@ -241,16 +240,16 @@
                          ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
                 </div>
                 <div ng-switch-when="upload">
-                    <div class="input-group" id="{{fieldMetadata.attribute}}">
+                    <div class="input-group" id="{{::fieldMetadata.attribute}}">
                         <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled"/>
                         <div class="input-group-addon fileUpload" data-upload="files">
                             <span>Choose File</span>
-                            <input class="form-control uploadfile_tooltip upload" name="{{fieldMetadata.attribute}}"
+                            <input class="form-control uploadfile_tooltip upload" name="{{::fieldMetadata.attribute}}"
                                    id="uploadBtn"
                                    type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
                                    fileread="datamap[fieldMetadata.attribute]"
                                    path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}"/>
+                                   title="{{::handlerTitleInputFile('uploadfile_tooltip')}}"/>
                         </div>
                     </div>
                 </div>
@@ -264,42 +263,42 @@
                     </div>
                 </div>
                 <div ng-switch-when="multipleupload">
-                    <div class="input-group" id="{{fieldMetadata.attribute}}">
+                    <div class="input-group" id="{{::fieldMetadata.attribute}}">
                         <div class="input-group-addon fileUpload" data-upload="files">
-                            <input name="{{fieldMetadata.attribute}}"
+                            <input name="{{::fieldMetadata.attribute}}"
                                    id="uploadBtn"
                                    type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
                                    fileread="datamap[fieldMetadata.attribute]"
                                    path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}"
+                                   title="{{::handlerTitleInputFile('uploadfile_tooltip')}}"
                                    multiple="multiple" />
                         </div>
                     </div>
                 </div>
                 <div ng-switch-when="screenshot">
-                    <div ng-show="!isIE()" id="imgHolder_{{fieldMetadata.attribute}}" name="{{fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
-                    <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
+                    <div ng-show="!isIE()" id="imgHolder_{{::fieldMetadata.attribute}}" name="{{::fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
+                    <iframe id="richTextBox_{{::fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{::contextPath('/UserControls/RichTextBox.aspx')}}"
                             class="richtextbox" frameborder="0" />
                 </div>
                 <div ng-switch-when="numericinput">
                     <input 
                             
-                           data-field="{{fieldMetadata.attribute}}"
+                           data-field="{{::fieldMetadata.attribute}}"
                            id="spinner"
                            class="hidden-phone form-control"
                            ng-model="datamap[fieldMetadata.attribute]"
                            ng-init="initField(fieldMetadata)"
-                           min="{{fieldMetadata.rendererParameters['min']}}"
-                           max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
+                           min="{{::fieldMetadata.rendererParameters['min']}}"
+                           max="{{::setMaxNumericInput(datamap,fieldMetadata)}}"
                            number-spinner />
                 </div>
                 <div ng-switch-when="combodropdown">
                     <div class="multiselect-div">
                         <select multiple="multiple" class="hidden-phone form-control combobox multiselect"
-                                data-associationkey="{{fieldMetadata.associationKey}}"
-                                id="{{formatId(fieldMetadata.target)}}"
+                                data-associationkey="{{::fieldMetadata.associationKey}}"
+                                id="{{::formatId(fieldMetadata.target)}}"
                                 ng-model="datamap[fieldMetadata.target]"
-                                ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
                                 ng-enabled="isSelectEnabled(fieldMetadata)"
                                 custombuttontext="">
                             <option value=""></option>
@@ -307,7 +306,7 @@
                         <div ng-if="fieldMetadata.rendererParameters['showvaluesbelow'] == 'true'">
                             <table>
                                 <tbody>
-                                    <tr ng-repeat="selected in getSelectedTexts(fieldMetadata)">
+                                    <tr ng-repeat="selected in ::getSelectedTexts(fieldMetadata)">
                                         <td>{{selected}}</td>
                                     </tr>
                                 </tbody>
@@ -319,13 +318,13 @@
                     <div ng-if="isDesktop()" id="datetimepicker" class="input-group" data-datepicker="true">
                         <input type="text" ng-model="datamap[fieldMetadata.attribute]"
                                data-date-time
-                               data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
-                               data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                               data-format-string="{{fieldMetadata.rendererParameters['format']}}"
-                               data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
-                               data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                               data-show-time="{{::fieldMetadata.rendererParameters['showtime']}}"
+                               data-show-date="{{::fieldMetadata.rendererParameters['showdate']}}"
+                               data-format-string="{{::fieldMetadata.rendererParameters['format']}}"
+                               data-allow-past="{{::fieldMetadata.rendererParameters['allowpast']}}"
+                               data-allow-future="{{::fieldMetadata.rendererParameters['allowfuture']}}"
                                class="form-control">
-                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{::i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
                             <i class="datetime-class"></i>
                         </span>
                     </div>
@@ -336,13 +335,13 @@
                     <div ng-if="isDesktop()" id="datetimepicker" class="input-group" data-datepicker="true">
                         <input type="text" ng-model="datamap[fieldMetadata.attribute]"
                                data-date-time
-                               data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
-                               data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                               data-format-string="{{fieldMetadata.rendererParameters['format']}}"
-                               data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
-                               data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                               data-show-time="{{::fieldMetadata.rendererParameters['showtime']}}"
+                               data-show-date="{{::fieldMetadata.rendererParameters['showdate']}}"
+                               data-format-string="{{::fieldMetadata.rendererParameters['format']}}"
+                               data-allow-past="{{::fieldMetadata.rendererParameters['allowpast']}}"
+                               data-allow-future="{{::fieldMetadata.rendererParameters['allowfuture']}}"
                                class="form-control">
-                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{::i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
                             <i class="datetime-class"></i>
                         </span>
                     </div>
@@ -353,13 +352,13 @@
                     <div ng-if="isDesktop()" id="datetimepicker" class="input-group" data-datepicker="true">
                         <input type="text" ng-model="datamap[fieldMetadata.attribute]"
                                data-date-time
-                               data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
-                               data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                               data-format-string="{{fieldMetadata.rendererParameters['format']}}"
-                               data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
-                               data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                               data-show-time="{{::fieldMetadata.rendererParameters['showtime']}}"
+                               data-show-date="{{::fieldMetadata.rendererParameters['showdate']}}"
+                               data-format-string="{{::fieldMetadata.rendererParameters['format']}}"
+                               data-allow-past="{{::fieldMetadata.rendererParameters['allowpast']}}"
+                               data-allow-future="{{::fieldMetadata.rendererParameters['allowfuture']}}"
                                class="form-control">
-                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{::i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
                             <i class="datetime-class"></i>
                         </span>
                     </div>
@@ -384,9 +383,9 @@
                                                          association-schemas="associationSchemas"
                                                          blockedassociations="blockedassociations"
                                                          renderer-parameters="fieldMetadata.rendererParameters"
-                                                         elementid="{{elementid + 'Section' + fieldMetadata.id}}"
-                                                         orientation="{{fieldMetadata.orientation}}"
-                                                         islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                                         elementid="{{::elementid}}Section{{::fieldMetadata.id}}"
+                                                         orientation="{{::fieldMetadata.orientation}}"
+                                                         islabelless="{{::isSectionWithoutLabel(fieldMetadata)}}"
                                                          lookup-associations-code="lookupAssociationsCode"
                                                          lookup-associations-description="lookupAssociationsDescription" />
                             </div>
@@ -404,9 +403,9 @@
                                                            association-schemas="associationSchemas"
                                                            blockedassociations="blockedassociations"
                                                            renderer-parameters="fieldMetadata.rendererParameters"
-                                                           elementid="{{elementid + 'Section' + fieldMetadata.id}}"
-                                                           orientation="{{fieldMetadata.orientation}}"
-                                                           islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                                           elementid="{{::elementid}}Section{{::fieldMetadata.id}}"
+                                                           orientation="{{::fieldMetadata.orientation}}"
+                                                           islabelless="{{::isSectionWithoutLabel(fieldMetadata)}}"
                                                            lookup-associations-code="lookupAssociationsCode"
                                                            lookup-associations-description="lookupAssociationsDescription">
                                     </section-element-input>
@@ -432,17 +431,17 @@
                                 <div ng-switch-default>
                                     
                                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
-                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
-                                        <input type="{{getInputType(fieldMetadata)}}"
+                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{::fieldMetadata.rendererParameters['prepend']}}</span>
+                                        <input type="{{::getInputType(fieldMetadata)}}"
                                                ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
-                                               data-field="{{fieldMetadata.attribute}}"
+                                               data-field="{{::fieldMetadata.attribute}}"
                                                ng-enabled="isModifiableEnabled(fieldMetadata)"
-                                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                               placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
+                                               data-ng-maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
+                                               maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
+                                               placeholder="{{::fieldMetadata.rendererParameters['placeholder']}}"
                                                ng-init="initField(fieldMetadata)"
                                                dynamic-name="fieldMetadata.attribute" />
-                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{::fieldMetadata.rendererParameters['append']}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -462,9 +461,9 @@
                                            association-schemas="associationSchemas"
                                            blockedassociations="blockedassociations"
                                            renderer-parameters="fieldMetadata.rendererParameters"
-                                           elementid="{{elementid + 'Section' + fieldMetadata.id}}"
-                                           orientation="{{fieldMetadata.orientation}}"
-                                           islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                           elementid="{{::elementid}}Section{{fieldMetadata.id}}"
+                                           orientation="{{::fieldMetadata.orientation}}"
+                                           islabelless="{{::isSectionWithoutLabel(fieldMetadata)}}"
                                            lookup-associations-code="lookupAssociationsCode"
                                            lookup-associations-description="lookupAssociationsDescription">
                     </section-element-input>

@@ -40,7 +40,20 @@ app.directive('configAssociationListInputDatamap', function () {
         }
     };
 })
-.directive('sectionElementInput', ["$compile", function ($compile) {
+.directive('sectionElementInput', ["$compile", "$timeout", function ($compile, $timeout) {
+    var template = "<crud-input-fields displayables='displayables'" +
+                    "schema='schema'" +
+                    "datamap='datamap'" +
+                    "is-dirty='isDirty'" +
+                    "displayables='displayables'" +
+                    "association-options='associationOptions'" +
+                    "association-schemas='associationSchemas'" +
+                    "blockedassociations='blockedassociations'" +
+                    "section-parameters='rendererParameters'" +
+                    "elementid='{{elementid}}'" +
+                    "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
+                    "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
+                    "></crud-input-fields>";
     return {
         restrict: "E",
         replace: true,
@@ -62,24 +75,13 @@ app.directive('configAssociationListInputDatamap', function () {
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
-            if (angular.isArray(scope.displayables)) {
-                element.append(
-                "<crud-input-fields displayables='displayables'" +
-                "schema='schema'" +
-                "datamap='datamap'" +
-                "is-dirty='isDirty'" +
-                "displayables='displayables'" +
-                "association-options='associationOptions'" +
-                "association-schemas='associationSchemas'" +
-                "blockedassociations='blockedassociations'" +
-                "section-parameters='rendererParameters'" +
-                "elementid='{{elementid}}'" +
-                "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
-                "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
-                "></crud-input-fields>"
-                );
-                $compile(element.contents())(scope);
+            if (!angular.isArray(scope.displayables)) {
+                return;
             }
+            $timeout(function() {
+                var compiled = $compile(template)(scope);
+                element.append(compiled);
+            }, 0, false);
         }
     }
 }])
@@ -162,6 +164,10 @@ app.directive('configAssociationListInputDatamap', function () {
 
             //dictionary containing which details are or not expanded
             $scope.expandeddetails = {};
+
+            $scope.vm = {
+                nonTabDisplayables: []
+            };
 
             $scope.handlerTitleInputFile = function (cssclassaux) {
                 var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
@@ -606,6 +612,7 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.formatId = function (id) {
                 return RemoveSpecialChars(id);
             }
+
             $scope.nonTabFields = function (displayables) {
                 return fieldService.nonTabFields(displayables);
             };
@@ -619,6 +626,9 @@ app.directive('configAssociationListInputDatamap', function () {
             }
 
             function init() {
+
+                $scope.vm.nonTabDisplayables = $scope.nonTabFields($scope.displayables);
+
                 if (!$scope.isVerticalOrientation()) {
                     var countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
                     if (countVisibleDisplayables > 0) {
