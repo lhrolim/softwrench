@@ -509,17 +509,17 @@
                 resultDTO.quickSearchData = lookupObj.quickSearchData;;
                 return resultDTO;
             }
-            var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-            var searchValues = searchObj || {};
-
-            var searchOperators = {};
-
-            for (var field in searchValues) {
-                if (searchValues.hasOwnProperty(field)) {
-                    searchOperators[field] = defaultLookupSearchOperator;
-                }
-            }
-            resultDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
+//            var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
+//            var searchValues = searchObj || {};
+//
+//            var searchOperators = {};
+//
+//            for (var field in searchValues) {
+//                if (searchValues.hasOwnProperty(field)) {
+//                    searchOperators[field] = defaultLookupSearchOperator;
+//                }
+//            }
+//            resultDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
             resultDTO.quickSearchData = lookupObj.quickSearchData;
 
             resultDTO.pageNumber = pageNumber;

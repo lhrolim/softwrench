@@ -424,7 +424,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         }
                         if (associationData.Any()) {
                             var option = associationData[0];
-                            lazyOptions[association.AssociationKey].Add(option.Value, option);
+                            lazyOptions[association.AssociationKey].Add(option.Value.ToLower(), option);
                         }
 
 

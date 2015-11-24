@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.simpleinjector;
 using NHibernate.Linq;
@@ -25,7 +26,7 @@ namespace softWrench.sW4.Data.Search {
             var validFilterAttributes = schema.SchemaFilters.Filters
                 // filter out datetime and boolean filters
                 .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter))
-                .Select(f => f.Attribute);
+                .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, schema.EntityName));
 
             var whereClause = QuickSearchHelper.BuildOrWhereClause(validFilterAttributes);
 
@@ -34,10 +35,13 @@ namespace softWrench.sW4.Data.Search {
             return dto;
         }
 
+        private static string AttribteAppendingApplicationPrefix(string attribute, string entityName) {
+            if (attribute.Contains(".")) {
+                return attribute;
+            }
+            //this is used to avoid duplications between multiple parameters
+            return entityName + "." + attribute;
 
-
-
-
-
+        }
     }
 }

@@ -111,7 +111,8 @@ app.directive('lookupModal', function (contextService) {
                 $scope.modalCanceled = false;
                 $scope.selectedOption = null;
                 $scope.searchObj = {};
-                $scope.populateModal($scope.lookupObj.options);
+//                $scope.populateModal($scope.lookupObj);
+                $scope.$digest();
             });
 
             $injector.invoke(BaseList, this, {

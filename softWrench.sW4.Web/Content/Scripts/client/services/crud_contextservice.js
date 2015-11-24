@@ -210,14 +210,17 @@
                 idxedObject[objIdxKey] = options;
                 options = idxedObject;
             }
-
+            var length = "null";
+            if (options) {
+                length = options.length ? options.length : 1;
+            }
 
             var lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
-                log.debug("creating lazy option(s) to association {0} ".format(associationKey));
+                log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
                 _crudContext._lazyAssociationOptions[associationKey] = options;
             } else {
-                log.debug("appending new option(s) to association {0} ".format(associationKey));
+                log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey,length));
                 _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
         }
@@ -252,7 +255,7 @@
             }
             var log =$log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
 
-            log.info("update eager list for {0}".format(associationKey));
+            log.info("update eager list for {0}. Size: {1}".format(associationKey,options.length));
             if (contextData==null) {
                 _crudContext._eagerassociationOptions["#global"][associationKey] = options;
                 return;
