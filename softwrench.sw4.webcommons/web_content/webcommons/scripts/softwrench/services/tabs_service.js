@@ -68,7 +68,7 @@
             var resultList = [];
 
             angular.forEach(container.displayables, function(displayable) {
-                if (fieldService.isTabOrComposition(displayable)) {
+                if (fieldService.isTabOrComposition(displayable) && !displayable.isHidden) {
                     resultList.push(displayable);
                 } else if (fieldService.isSection(displayable)) {
                     resultList = resultList.concat(this.tabsDisplayables(displayable));
