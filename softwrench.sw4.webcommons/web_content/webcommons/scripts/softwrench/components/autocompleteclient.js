@@ -29,16 +29,18 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
         },
 
         refreshFromAttribute: function (attribute, value, availableoptions) {
+            var log =$log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
             var labelValue = value;
             if (!nullOrEmpty(value) && availableoptions) {
                 //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
                 for (var i = 0; i < availableoptions.length; i++) {
-                    if (availableoptions[i].value.trim() === value.trim()) {
+                    if (availableoptions[i].value.trim() === (""+value).trim()) {
                         labelValue = availableoptions[i].label;
                     }
                 }
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
+            log.debug("setting autocompleteclient {0} to value {1}".format(attribute,labelValue));
             //due to a different timeout order this could be called on FF/IE before the availableoptions has been updated
             if (combo != undefined && availableoptions) {
                 combo.refresh(labelValue);
