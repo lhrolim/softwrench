@@ -5,6 +5,13 @@
 
     var service = function (datamapSanitizeService) {
 
+        /**
+         * merges the parent datamap with a specific composition row data, making sure that, 
+         * in case of conflicts, the composition data is sent and not the parent one (ex: both have assets)
+         * @param {} datamap 
+         * @param {} parentdata 
+         * @returns {} 
+         */
         var buildMergedDatamap = function (datamap, parentdata) {
             var toClone = parentdata;
             if (parentdata.fields) {
@@ -32,6 +39,6 @@
         return api;
     };
 
-    angular.module("webcommons_services").factory("compositionCommons", ['datamapSanitizeService',service]);
+    angular.module("webcommons_services").factory("compositionCommons", ['datamapSanitizeService', service]);
 
 })(angular);

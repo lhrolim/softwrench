@@ -33,6 +33,10 @@
 
 
         function getSchemaCacheKeys() {
+            if (sessionStorage.ignoreSchemaCache === "true") {
+                return ";";
+            }
+
             var result = ";";
             for (var key in schemaCache) {
                 if (!schemaCache.hasOwnProperty(key)) {

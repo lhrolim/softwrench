@@ -7,14 +7,11 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
-using softwrench.sw4.Shared2.Metadata.Exception;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -58,10 +55,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [JsonIgnore]
         public LazyComponentDisplayableResolver ComponentDisplayableResolver;
 
-
-        private IList<int> _tabs;
-        private IList<int> _nonInlineCompositions;
-        private IList<int> _inlineCompositions;
 
         public string SchemaId {
             get; set;
@@ -202,7 +195,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
             //to avoid eventual null pointers
             DeclaredFilters = declaredFilters ?? SchemaFilters.BlankInstance();
-            }
+        }
 
 
 
@@ -353,66 +346,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public IEnumerable<int> TabsIdxs {
-
-            get {
-                if (_tabs != null) {
-                    return _tabs;
-                }
-                var list = new List<int>();
-                for (var i = 0; i < Displayables.Count; i++) {
-                    var displayable = Displayables[i];
-                    if (displayable is ApplicationTabDefinition) {
-                        list.Add(i);
-                    }
-                }
-                _tabs = list;
-                return list;
-            }
-        }
 
 
-        /// <summary>
-        /// returns all the non inline composition this application holds, which will indicate to the screen 
-        /// to place a navigator component enclosing the detail page.
-        /// 
-        /// This List must be returned in json, as this elements won´t respect default displayables ordering. 
-        /// We´re returning indexes, in order to keep the json small. The compositions can be then fetched from the Displayables field
-        /// 
-        /// </summary>
-        public IEnumerable<int> NonInlineCompositionIdxs {
-            get {
-                return GetCompositionIdx(false, _nonInlineCompositions);
-            }
-        }
 
-        /// <summary>
-        /// returns all the inline composition this application holds.
-        /// 
-        /// This List must be returned in json, as this elements won´t respect default displayables ordering. 
-        /// We´re returning indexes, in order to keep the json small. The compositions can be then fetched from the Displayables field
-        /// 
-        /// </summary>
-        public IEnumerable<int> InlineCompositionIdxs {
-
-            get {
-                return GetCompositionIdx(true, _inlineCompositions);
-            }
-        }
-
-        private IEnumerable<int> GetCompositionIdx(bool inline, IList<int> cacheList) {
-            if (cacheList != null) {
-                return cacheList;
-            }
+        private IEnumerable<int> GetCompositionIdx(bool inline) {
             var list = new List<int>();
             for (var i = 0; i < Displayables.Count; i++) {
                 var displayable = Displayables[i];
                 if (displayable is ApplicationCompositionDefinition &&
                     ((ApplicationCompositionDefinition)displayable).Inline == inline) {
                     list.Add(i);
-                }
+                } 
             }
-            cacheList = list;
             return list;
         }
 

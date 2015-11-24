@@ -24,7 +24,9 @@ namespace softWrench.sW4.Data.Entities {
 
 
         public static T BuildFromJson<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, JObject json, string id=null) where T : Entity {
-            if (id == null) {
+            if (id == null && applicationMetadata!=null) {
+                //the id can be located inside the json payload, as long as the application metadata is provider
+                //this is not the case for new item compositions though
                 JToken token;
                 json.TryGetValue(applicationMetadata.IdFieldName, out token);
                 if (token != null) {

@@ -94,9 +94,7 @@
                 var result = [];
                 for (var i = 0; i < displayables.length; i++) {
                     var displayable = displayables[i];
-                    var type = displayable.type;
-                    var isTabComposition = this.isTabComposition(displayable);
-                    if (!isTabComposition && type != "ApplicationTabDefinition") {
+                    if (!this.isTabOrComposition(displayable)) {
                         if (includeHiddens || !displayable.isHidden) {
                             result.push(displayable);
                         }
@@ -153,7 +151,12 @@
 
             isTabComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && !displayable.inline;
+                return type === "ApplicationCompositionDefinition" && !displayable.inline;
+            },
+
+            isSection:function(displayable) {
+                var type = displayable.type;
+                return type === "ApplicationSection";
             },
 
             isInlineComposition: function (displayable) {
@@ -166,14 +169,16 @@
                 return type == "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
             },
 
+            isTabOrComposition: function (displayable) {
+                return this.isTab(displayable) || this.isTabComposition(displayable);
+            },
+
             isTab: function (displayable) {
                 if (displayable == null) {
-                    return;
+                    return false;
                 }
-                else {
-                    var type = displayable.type;
-                    return type == "ApplicationTabDefinition";
-                }
+                var type = displayable.type;
+                return type === "ApplicationTabDefinition";
             },
 
             getDisplayableByKey: function (schema, key) {
@@ -275,7 +280,7 @@
 
             getLinearDisplayables: function (container) {
                 /// <summary>
-                /// gets a list of all the displayables of the current schema/section in a linear mode, excluding any sections/tabs itselves.
+                /// gets a list of all the displayables of the current schema/section in a linear mode, excluding any sections/tabs themselves.
                 /// </summary>
                 /// <param name="container">either a schema or a section</param>
                 /// <returns type=""></returns>
@@ -442,7 +447,7 @@
             }
         };
 
-        
+
 
         return api;
 

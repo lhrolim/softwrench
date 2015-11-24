@@ -1,28 +1,13 @@
-﻿(function (modules) {
+﻿(function (angular,modules) {
     "use strict";
         
     modules.webcommons.factory('tabsService', ["fieldService", "i18NService", function (fieldService, i18NService) {
-
-    var nonInlineCompositionsDict = function (schema) {
-        if (schema.nonInlineCompositionsDict != undefined) {
-            //caching
-            return schema.nonInlineCompositionsDict;
-        }
-        var resultDict = {};
-        for (var i = 0; i < schema.nonInlineCompositionIdxs.length; i++) {
-            var idx = schema.nonInlineCompositionIdxs[i];
-            var composition = schema.displayables[idx];
-            resultDict[composition.relationship] = composition;
-        }
-        schema.nonInlineCompositionsDict = resultDict;
-        return resultDict;
-    };
 
     var getCompositionSchema = function (baseSchema, compositionKey, schemaId) {
         var schemas = nonInlineCompositionsDict(baseSchema);
         var thisSchema = schemas[compositionKey];
         schemas = thisSchema.schema.schemas;
-        return schemaId == "print" ? schemas.print : schemas.list;
+        return schemaId === "print" ? schemas.print : schemas.list;
     };
 
     var getCompositionIdName = function (baseSchema, compositionKey, schemaId) {
@@ -70,55 +55,50 @@
             return resultList;
         },
 
-        ///Returns a list of all the tabs of the passed schema
-        tabsDisplayables: function (schema) {
-            if (schema.tabsDisplayables != undefined) {
+        /**
+         * 
+         * @param {} container a DisplayableContainer, either a schema or a section or any other implementation
+         * @returns {} 
+         */
+        tabsDisplayables: function (container) {
+            if (container.tabsDisplayables != undefined) {
                 //cache
-                return schema.tabsDisplayables;
+                return container.tabsDisplayables;
             }
             var resultList = [];
-            var idxArray = [];
-            idxArray = idxArray.concat(schema.nonInlineCompositionIdxs);
-            idxArray = idxArray.concat(schema.tabsIdxs);
-            idxArray.sort(function (a, b) {
-                return a - b;
-            });
 
-            for (var i = 0; i < idxArray.length; i++) {
-                var idx = idxArray[i];
-                var displayable = schema.displayables[idx];
-                if (!displayable.isHidden) {
+            angular.forEach(container.displayables, function(displayable) {
+                if (fieldService.isTabOrComposition(displayable)) {
                     resultList.push(displayable);
+                } else if (fieldService.isSection(displayable)) {
+                    resultList = resultList.concat(this.tabsDisplayables(displayable));
                 }
-            }
-            //cache
-            schema.tabsDisplayables = resultList;
+            }, this);
+
+
+            container.tabsDisplayables = resultList;
             return resultList;
         },
 
-        tabsPrintDisplayables: function(schema) {
-            var resultList = [];
-            var idxArray = [];
-
-            idxArray = idxArray.concat(schema.nonInlineCompositionIdxs);
-            idxArray = idxArray.concat(schema.tabsIdxs);
-            idxArray.sort(function (a, b) {
-                return a - b;
+        tabsPrintDisplayables: function (container) {
+            return this.tabsDisplayables(container).filter(function(displayable) {
+                return !displayable.isHidden && displayable.isPrintEnabled;
             });
-
-            for (var i = 0; i < idxArray.length; i++) {
-                var idx = idxArray[i];
-                var displayable = schema.displayables[idx];
-                if (!displayable.isHidden && displayable.isPrintEnabled) {
-                    resultList.push(displayable);
-                }
-            }
-
-            return resultList;
         },
 
         nonInlineCompositionsDict: function (schema) {
-            return nonInlineCompositionsDict(schema);
+            if (schema.nonInlineCompositionsDict != undefined) {
+                //caching
+                return schema.nonInlineCompositionsDict;
+            }
+            var resultDict = {};
+            var allTabs = tabsDisplayables(schema);
+            allTabs.forEach(function(tab) {
+                resultDict[tab.relationship] = tab;
+            });
+
+            schema.nonInlineCompositionsDict = resultDict;
+            return resultDict;
         },
 
         /*
@@ -195,4 +175,4 @@
     };
 }]);
 
-})(modules);
+})(angular,modules);
