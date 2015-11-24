@@ -25,7 +25,7 @@ namespace softWrench.sW4.Metadata.Validator {
                         var targets = new XmlEntityTargetMetadataParser().Parse(streamReader);
                         MergeTargets(internalTargets, targets);
                     }
-                } catch (IOException e) {
+                } catch (IOException) {
                     //file not found, ok
                 }
                 MergeEntities(internalTargets);
@@ -44,7 +44,7 @@ namespace softWrench.sW4.Metadata.Validator {
                     var entity = MetadataProvider.Entity(target.Key);
                     entity.Targetschema = target.Value.TargetSchema;
                     entity.ConnectorParameters.Merge(target.Value.Parameters);
-                } catch (Exception e) {
+                } catch (Exception) {
                     Log.WarnFormat("Target entity {0} not found. This entity will be ignored.", target.Key); 
                 }
             }

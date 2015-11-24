@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function dashboardAuxService($rootScope, $log, contextService, restService, graphicPanelServiceProvider) {
+    function dashboardAuxService($rootScope, $log, contextService, restService, graphicPanelServiceProvider,crudContextHolderService) {
         //#region Utils
         function panelCreated(datamap) {
             return function(response) {
@@ -23,7 +23,7 @@
             }
             restService.getPromise('Dashboard', 'LoadFields', { applicationName: application }).then(function (response) {
                 var data = response.data;
-                event.scope.associationOptions['appfields'] = data.resultObject;
+                crudContextHolderService.updateEagerAssociationOptions("appfields", data.resultObject);
                 event.scope.datamap['appfields'] = "";
                 $.each(data.resultObject, function (key, value) {
                     event.scope.datamap['appfields'] += value.value + ",";
@@ -81,7 +81,7 @@
 
             restService.getPromise('Dashboard', 'LoadPanels', { paneltype: paneltype }).then(function (response) {
                 var data = response.data;
-                event.scope.associationOptions['availablepanels'] = data.resultObject;
+                crudContextHolderService.updateEagerAssociationOptions("availablepanels", data.resultObject);
             });
         }
 
@@ -165,7 +165,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("dashboardAuxService", ["$rootScope", "$log", "contextService", "restService", "graphicPanelServiceProvider", dashboardAuxService]);
+    angular.module("sw_layout").factory("dashboardAuxService", ["$rootScope", "$log", "contextService", "restService", "graphicPanelServiceProvider", "crudContextHolderService", dashboardAuxService]);
     //#endregion
 
 })(angular);

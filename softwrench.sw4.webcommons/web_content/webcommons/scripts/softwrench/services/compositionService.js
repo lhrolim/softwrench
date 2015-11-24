@@ -4,8 +4,9 @@
     var app = angular.module('sw_layout');
 
     app.factory('compositionService',
-        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService", "compositionCommons", "crudContextHolderService",
-    function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons, crudContextHolderService) {
+        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService",
+            "compositionCommons", "crudContextHolderService","tabsService",
+    function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons, crudContextHolderService, tabsService) {
 
             var config = {
                 defaultPageSize: 10,
@@ -31,21 +32,6 @@
 
 
             //#region private methods
-
-            function nonInlineCompositionsDict(schema) {
-                if (schema.nonInlineCompositionsDict != undefined) {
-                    //caching
-                    return schema.nonInlineCompositionsDict;
-                }
-                var resultDict = {};
-                for (var i = 0; i < schema.nonInlineCompositionIdxs.length; i++) {
-                    var idx = schema.nonInlineCompositionIdxs[i];
-                    var composition = schema.displayables[idx];
-                    resultDict[composition.relationship] = composition;
-                }
-                schema.nonInlineCompositionsDict = resultDict;
-                return resultDict;
-            };
 
             function buildPaginatedSearchDTO(pageNumber, pageSize) {
                 var dto = searchService.buildSearchDTO();
@@ -172,7 +158,7 @@
             };
 
             function locatePrintSchema(baseSchema, compositionKey) {
-                var schemas = nonInlineCompositionsDict(baseSchema);
+                var schemas = tabsService.nonInlineCompositionsDict(baseSchema);
                 var thisSchema = schemas[compositionKey];
 
                 if (thisSchema.schema.schemas.print != null) {
@@ -185,7 +171,7 @@
             };
 
             function getTitle(baseSchema, compositionKey) {
-                var schemas = nonInlineCompositionsDict(baseSchema);
+                var schemas = tabsService.nonInlineCompositionsDict(baseSchema);
                 var thisSchema = schemas[compositionKey];
                 return thisSchema.label;
             };

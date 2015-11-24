@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         private const string EntityName = "person";
         private static IProblemManager _problemManager;
 
-        private static String DefaultWhereClause = "personid in (select personid from maxuser)";
+        private const string DefaultWhereClause = "personid in (select personid from maxuser)";
 
         public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository, IProblemManager problemManager)
             : base(dao, facade, repository) {

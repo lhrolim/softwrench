@@ -50,7 +50,6 @@ namespace softWrench.sW4.Web.Controllers {
 
 
             var user = SecurityFacade.CurrentUser();
-            bool fromCache;
             //TODO: allow mobile
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
             var indexItemId = menuModel.Menu.ItemindexId;

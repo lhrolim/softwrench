@@ -12,7 +12,7 @@ namespace softWrench.sW4.Configuration.Definitions {
     [Class(Table = "CONF_PROPERTYDEFINITION", Lazy = false)]
     public class PropertyDefinition : IComparable<PropertyDefinition> {
 
-        public const string ByKey = "from PropertyDefinition where fullKey=?";
+        public const string ByKey = "from PropertyDefinition where FullKey=?";
 
         public PropertyDefinition(string fullKey) {
             FullKey = fullKey;

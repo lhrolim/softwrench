@@ -56,14 +56,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
         public class AssociationHelperResult {
-            public Set<String> ToFetch { get; set; }
-            public Set<String> ToAvoid { get; set; }
+            public Set<string> ToFetch { get; set; }
+            public Set<string> ToAvoid { get; set; }
 
-            public List<String> ToFetchList { get { return new List<string>(ToFetch); } }
-            public List<String> ToAvoidList { get { return new List<string>(ToAvoid); } }
+            public List<string> ToFetchList { get { return new List<string>(ToFetch); } }
+            public List<string> ToAvoidList { get { return new List<string>(ToAvoid); } }
 
-            public Boolean IsAll { get { return ToFetch.Contains(All) || ToFetch.Contains(AllButSchema); } }
-            public Boolean IsNone { get { return ToFetch.Contains(None); } }
+            public bool IsAll { get { return ToFetch.Contains(All) || ToFetch.Contains(AllButSchema); } }
+            public bool IsNone { get { return ToFetch.Contains(None); } }
 
             public bool ShouldResolve(string associationKey) {
                 return ((ToFetch.Contains(associationKey) || IsAll) && !ToAvoid.Contains(associationKey));

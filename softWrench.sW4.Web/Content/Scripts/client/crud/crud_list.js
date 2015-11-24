@@ -220,7 +220,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 contextService.deleteFromContext("grid_refreshdata");
                 fixHeaderService.FixHeader();
                 //usually this next call won´t do anything, but for lists with optionfields, this is needed
-                associationService.updateAssociationOptionsRetrievedFromServer($scope, data.associationOptions, null);
+                associationService.updateFromServerSchemaLoadResult(data.associationOptions);
                 $scope.$broadcast("sw_griddatachanged", $scope.datamap, $scope.schema, $scope.panelid);
 
                 var elements = [];

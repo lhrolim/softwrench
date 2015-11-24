@@ -31,7 +31,6 @@ app.directive('expandedItemInput', function ($compile) {
             displayables: '=',
             schema: '=',
             datamap: '=',
-            associationOptions: '=',
             savefn: '&',
             cancelfn: '&'
         },
@@ -42,7 +41,6 @@ app.directive('expandedItemInput', function ($compile) {
                     "<crud-input schema='schema'" +
                                 "datamap='datamap'" +
                                 "displayables='displayables'" +
-                                "associationOptions='associationOptions'" +
                                 "savefn='savefn()'" +
                                 "cancelfn='cancelfn()'></crud-input>"
                 );
@@ -74,13 +72,11 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
                 fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
-                scope.associationOptions = [];
                 element.append(
                     "<crud-input schema='schema' " +
                                 "datamap='datamap' " +
                                 "displayables='displayables' " +
                                 "elementid='crudInputNewItemComposition' " +
-                                "association-options='associationOptions' " +
                                 "association-schemas='associationSchemas' " +
                                 "blockedassociations='blockedassociations' " +
                                 "parentdata='parentdata' " +

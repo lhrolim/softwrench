@@ -43,12 +43,25 @@ function ltEnabledLevel(currLevel, enabledLevel) {
     return true;
 }
 
-function getContextLevel(context) {
+function getContextLevel(context, relatedContexts) {
 
     var methodLogLevel = sessionStorage["log_" + context];
     if (methodLogLevel !== undefined) {
         return methodLogLevel;
     }
+    var minLevel = "none";
+    if (relatedContexts) {
+        for (var i = 0; i < relatedContexts.length; i++) {
+            var relatedContext = relatedContexts[i];
+            var relatedContextLevel = sessionStorage["log_" + relatedContext];
+            if (relatedContextLevel !== undefined) {
+                if (ltEnabledLevel(relatedContextLevel, minLevel)) {
+                    minLevel = relatedContextLevel;
+                }
+            }
+        }
+    }
+
     var indexOf = context.indexOf("#");
     if (indexOf >= 0) {
         var serviceName = context.substr(0, indexOf);
@@ -57,7 +70,7 @@ function getContextLevel(context) {
             return serviceLogLevel;
         }
     }
-    return null;
+    return minLevel;
 };
 
 function getMinLevel(globalLevel, contextLevel) {
@@ -89,44 +102,10 @@ function enhanceAngularLog($log, $injector) {
 
     var contextService;
 
-    $log.get = function (context) {
-        return this.getInstance(context);
-    };
-
-    $log.getInstance = function (context) {
-        // getting around circular deps: $rootScope <- contextService <- $log <- $exceptionHandler <- $rootScope
-        if (!contextService) contextService = $injector.get("contextService");
-        return {
-            log: enhanceLogging($log.log, 'log', context, contextService),
-            info: enhanceLogging($log.info, 'info', context, contextService),
-            warn: enhanceLogging($log.warn, 'warn', context, contextService),
-            debug: enhanceLogging($log.debug, 'debug', context, contextService),
-            trace: enhanceLogging($log.debug, 'trace', context, contextService),
-            error: enhanceLogging($log.error, 'error', context, contextService),
-            enableLogging: function (enable) {
-                $log.enabledContexts[context] = enable;
-            },
-            isLevelEnabled: function (level) {
-                return isLevelEnabled(level, context);
-            }
-        };
-    };
-
-    function isLevelEnabled(level, context) {
-        var enabledLevel = sessionStorage.loglevel;
-        if (enabledLevel == undefined) {
-            enabledLevel = contextService.retrieveFromContext('defaultlevel') || "warn";
-        }
-
-        var contextLevel = getContextLevel(context);
-        enabledLevel = getMinLevel(enabledLevel, contextLevel);
-
-        return !ltEnabledLevel(level, enabledLevel);
-    }
-
-    function enhanceLogging(loggingFunc, level, context) {
+   
+    function enhanceLogging(loggingFunc, level, context, relatedContexts) {
         return function () {
-            var isEnabled = this.isLevelEnabled(level, context);
+            var isEnabled = this.isLevelEnabled(level, context, relatedContexts);
             if (!isEnabled) {
                 return [];
             }
@@ -149,6 +128,43 @@ function enhanceAngularLog($log, $injector) {
             return modifiedArguments;
         };
     }
+
+    $log.get = function (context, relatedContexts) {
+        return this.getInstance(context, relatedContexts);
+    };
+
+
+    $log.getInstance = function (context,relatedContexts) {
+        // getting around circular deps: $rootScope <- contextService <- $log <- $exceptionHandler <- $rootScope
+        if (!contextService) contextService = $injector.get("contextService");
+        return {
+            log: enhanceLogging($log.log, 'log', context,relatedContexts, contextService),
+            info: enhanceLogging($log.info, 'info', context,relatedContexts, contextService),
+            warn: enhanceLogging($log.warn, 'warn', context,relatedContexts, contextService),
+            debug: enhanceLogging($log.debug, 'debug', context,relatedContexts, contextService),
+            trace: enhanceLogging($log.debug, 'trace', context,relatedContexts, contextService),
+            error: enhanceLogging($log.error, 'error', context,relatedContexts, contextService),
+            enableLogging: function (enable) {
+                $log.enabledContexts[context] = enable;
+            },
+            isLevelEnabled: function (level) {
+                return isLevelEnabled(level, context, relatedContexts);
+            }
+        };
+    };
+
+    function isLevelEnabled(level, context, relatedContexts) {
+        var enabledLevel = sessionStorage.loglevel;
+        if (enabledLevel == undefined) {
+            enabledLevel = contextService.retrieveFromContext('defaultlevel') || "warn";
+        }
+
+        var contextLevel = getContextLevel(context, relatedContexts);
+        enabledLevel = getMinLevel(enabledLevel, contextLevel);
+
+        return !ltEnabledLevel(level, enabledLevel);
+    }
+
 };
 
 

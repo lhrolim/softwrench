@@ -49,13 +49,13 @@ app.directive('configAssociationListInputDatamap', function () {
             datamap: '=',
             isDirty: '=',
             displayables: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
             extraparameters: '=',
             elementid: '@',
             orientation: '@',
             islabelless: '@',
+            ismodal:'@',
             lookupAssociationsCode: '=',
             lookupAssociationsDescription: '=',
             rendererParameters: '='
@@ -68,8 +68,8 @@ app.directive('configAssociationListInputDatamap', function () {
                 "schema='schema'" +
                 "datamap='datamap'" +
                 "is-dirty='isDirty'" +
+                "ismodal = '{{ismodal}}'" +
                 "displayables='displayables'" +
-                "association-options='associationOptions'" +
                 "association-schemas='associationSchemas'" +
                 "blockedassociations='blockedassociations'" +
                 "section-parameters='rendererParameters'" +
@@ -94,7 +94,6 @@ app.directive('configAssociationListInputDatamap', function () {
             extraparameters: '=',
             isDirty: '=',
             displayables: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
             elementid: '@',
@@ -197,7 +196,8 @@ app.directive('configAssociationListInputDatamap', function () {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
-                return $scope.associationOptions[fieldMetadata.associationKey];
+                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
@@ -492,15 +492,15 @@ app.directive('configAssociationListInputDatamap', function () {
                 if (fieldMetadata.type === "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
-                $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
-                return $scope.associationOptions[fieldMetadata.associationKey];
+                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
             }
             $scope.GetOptionFieldOptions = function (optionField) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
                 }
-                $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
-                return $scope.associationOptions[optionField.providerAttribute];
+                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute,contextData);
             }
             $scope.contextPath = function (path) {
                 return url(path);

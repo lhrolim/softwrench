@@ -2,7 +2,6 @@
     <section class="container" ng-if="isList">
         <crud-list datamap="datamap"
                    schema="schema"
-                   association-options="associationOptions"
                    is-list="isList"
                    ismodal="{{ismodal}}"
                    timestamp="{{timestamp}}" />
@@ -13,7 +12,8 @@
           class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
         <div ng-init="setForm(crudbodyform)" />
         <ng-switch on="hasTabs(schema)">
-            <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
+           
+             <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
                 <div class="ticketid_spacer"></div>
                 <div class="well well-sm ticketid">
                     <h5>{{getTitle()}}</h5>
@@ -26,7 +26,7 @@
                         <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
                             <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
                         </li>
-                        <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered >
+                        <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
                             <a ng-switch-when="ApplicationCompositionDefinition"
                                ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowComposition(tab)" ng-click="setActiveTab(tab.tabId)">
                                 <i class="{{getTabIcon(tab)}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}&ensp;<span ng-show="showTabRecordCount(tab)" class="tabRecordCount badge">{{getTabRecordCount(tab)}}</span>
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="buttons">
-                        <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions" />
+                        <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions"/>
                     </div>
 
                 </div>
@@ -63,7 +63,6 @@
                                                     schema="schema" datamap="datamap.fields"
                                                     original-datamap="originalDatamap.fields"
                                                     is-dirty="isDirty"
-                                                    association-options="associationOptions"
                                                     association-schemas="associationSchemas"
                                                     blockedassociations="blockedassociations"
                                                     displayables="schema.displayables"
@@ -103,7 +102,6 @@
                                                     elementid="tab_{{tab.tabid}}"
                                                     displayables="tab.displayables"
                                                     schema="schema" datamap="datamap.fields"
-                                                    association-options="associationOptions"
                                                     association-schemas="associationSchemas"
                                                     blockedassociations="blockedassociations"
                                                     cancelfn="cancel(data,schema)"
@@ -123,31 +121,34 @@
 
             <!-- the false == no tabs at all. like on a new screen-->
             <div ng-switch-when="false" class="hiddenonprint detail-body" tabsrendered>
+                <!--TODO: restructure this html using id to control whether it's a new entry or not, instead of no tabs -->
                 <ng-switch on="schema.mode.equalsAny('input','none') ">
                     <div ng-switch-when="true">
                         <crud-input-wrapper ismodal="{{ismodal}}"
                                             elementid="crudInputMain"
                                             extraparameters="extraparameters"
                                             schema="schema" datamap="datamap.fields"
-                                            association-options="associationOptions"
                                             blockedassociations="blockedassociations"
                                             association-schemas="associationSchemas"
                                             cancelfn="cancel(data,schema)"
                                             displayables="schema.displayables"
                                             savefn="save(selecteditem, parameters)"
-                                            previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
+                                            previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}"/>
                     </div>
                     <div ng-switch-when="false">
                         <crud-output-wrapper schema="schema"
                                              extraparameters="extraparameters"
                                              datamap="datamap.fields"
                                              displayables="schema.displayables"
-                                             cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
+                                             cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}"/>
                     </div>
                     <div ng-switch-default>
                         {{i18N('general.modeundefined','Error, mode is undefined')}}!
                     </div>
                 </ng-switch>
+
+
+
             </div>
         </ng-switch>
     </form>

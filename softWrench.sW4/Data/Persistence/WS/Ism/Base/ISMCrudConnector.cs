@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(IsmCrudConnector));
 
-        protected readonly SWDBHibernateDAO _dao;
+        private readonly SWDBHibernateDAO _dao;
         public IsmCrudConnector() {
             _dao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
         }
@@ -80,7 +80,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             var result = new Dictionary<string, string>();
 
             var doc = XDocument.Parse(resultData);
-            var root = doc.Root;
             var xElement = doc.Descendants().First();
 
             if (xElement.Name.LocalName == "ServiceIncident") {

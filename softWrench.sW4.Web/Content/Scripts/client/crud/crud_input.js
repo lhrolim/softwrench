@@ -9,7 +9,6 @@
             displayables: '=',
             datamap: '=',
             extraparameters: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
             cancelfn: '&',
@@ -29,7 +28,7 @@
             var doLoad = function () {
                 element.append(
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
-                  "datamap='datamap' association-options='associationOptions' blockedassociations='blockedassociations'" +
+                  "datamap='datamap'  blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
                   "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
                   "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}'/>"
@@ -70,7 +69,6 @@ app.directive('crudInput', function (contextService, associationService) {
             displayables: '=',
             datamap: '=',
             extraparameters: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
             cancelfn: '&',
@@ -108,8 +106,9 @@ app.directive('crudInput', function (contextService, associationService) {
                 return id != null;
             };
 
-            if ($scope.composition == "true") {
-                associationService.getEagerAssociations($scope);
+            if ($scope.composition === "true") {
+                //really makes sense?
+                associationService.loadSchemaAssociations($scope.datamap, $scope.schema, { avoidspin: true });
             }
 
 

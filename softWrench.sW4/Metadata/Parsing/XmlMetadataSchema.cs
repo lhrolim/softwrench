@@ -173,7 +173,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationServiceAttribute = "service";
         public const string ApplicationToStringAttribute = "tostring";
         public const string ApplicationSchemaAttributeUserInteractionEnabled = "userInteractionEnabled";
-        public const string RoleAttribute = "role";
 
         public const string ApplicationPropertiesElement = "properties";
         public const string ApplicationPropertyElement = "property";

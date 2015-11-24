@@ -174,8 +174,17 @@ namespace softWrench.sW4.Data.Search {
                     }
                 }
                 var idxToReplace = sb.ToString().IndexOf(param, sbReplacingIdx, StringComparison.Ordinal);
-                sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
-                sbReplacingIdx += statement.ToString().Length;
+                try
+                {
+                    sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
+                    sbReplacingIdx += statement.ToString().Length;
+                }
+                catch
+                {
+                    //atest
+                    throw;
+                }
+                
             }
             sb.Replace("&&", " AND ");
             sb.Replace("||,", " OR ");

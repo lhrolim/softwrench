@@ -30,11 +30,11 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "'fa-ticket' AS icon,ticketid AS id, ticketuid AS uid, " +
                     "null AS parentid, null AS parentuid, " +
                     "null AS parentapplication, description AS summary," +
-                    "CASE WHEN {2} > ticketuid THEN changeby ELSE reportedby " +
+                    "CASE WHEN {1} > ticketuid THEN changeby ELSE reportedby " +
                     "END changeby, changedate, " +
                     "CONVERT(bigint, rowstamp) AS rowstamp FROM ticket sr " +
                     "WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) AND " +
-                    "changedate < '{1}' AND class='SR' "
+                    "changedate < GETDATE() AND class='SR' "
                 },
                 {
                     "servicerequestcommlogs",
@@ -48,7 +48,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "CONVERT(bigint, c.rowstamp) AS rowstamp FROM commlog c " +
                     "LEFT JOIN ticket sr ON sr.ticketuid = c.ownerid " +
                     "WHERE c.ownertable = 'SR' AND createdate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
-                    "createdate < '{1}'"
+                    "createdate < GETDATE()"
                 },
                 {
                     "servicerequestworklogs",
@@ -63,7 +63,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "CONVERT(bigint, l.rowstamp) AS rowstamp FROM worklog l " +
                     "LEFT JOIN ticket sr ON sr.ticketid = l.recordkey " +
                     "where l.class in ('SR') AND logtype = 'clientnote' " +
-                    "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND modifydate < '{1}'"
+                    "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND modifydate < GETDATE()"
                 },
 
                 {
@@ -75,7 +75,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "null AS parentapplication, description AS summary, " +
                     "changeby, changedate, CONVERT(bigint, rowstamp) AS rowstamp " +
                     "FROM ticket incident WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) " +
-                    "AND changedate < '{1}' AND class='INCIDENT' "
+                    "AND changedate < GETDATE() AND class='INCIDENT' "
                 },
                 {
                     "incidentcommlogs",
@@ -89,7 +89,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "CONVERT(bigint, c.rowstamp) AS rowstamp FROM commlog c " +
                     "LEFT JOIN ticket incident ON incident.ticketuid = c.ownerid " +
                     "WHERE c.ownertable = 'INCIDENT' AND createdate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
-                    "createdate < '{1}'"
+                    "createdate < GETDATE()"
                 },
                 {
                     "incidentworklogs",
@@ -104,7 +104,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "CONVERT(bigint, l.rowstamp) AS rowstamp FROM worklog l " +
                     "LEFT JOIN ticket incident ON incident.ticketid = l.recordkey " +
                     "where l.class = 'INCIDENT' AND logtype = 'clientnote' " +
-                    "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND modifydate < '{1}'"
+                    "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND modifydate < GETDATE()"
                 },
                 {
                     "workorder",
@@ -115,7 +115,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "null AS parentapplication, description AS summary, " +
                     "changeby, changedate, CONVERT(bigint, rowstamp) AS rowstamp " +
                     "FROM workorder WHERE changedate > DATEADD(HOUR,-{0},GETDATE()) " +
-                    "AND changedate < '{1}' "
+                    "AND changedate < GETDATE() "
                 },
                 {
                     "workorderworklogs",
@@ -131,7 +131,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
                     "LEFT JOIN workorder ON workorder.wonum = l.recordkey " +
                     "WHERE class = 'WORKORDER' AND logtype = 'clientnote' " +
                     "AND modifydate >  DATEADD(HOUR,-{0},GETDATE()) AND " +
-                    "modifydate < '{1}'"
+                    "modifydate < GETDATE()"
                 }
             };
     }
