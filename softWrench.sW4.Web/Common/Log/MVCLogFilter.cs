@@ -48,7 +48,7 @@ namespace softWrench.sW4.Web.Common.Log {
                 try {
                     request.InputStream.Position = 0;
                     logInfo.RequestBody = reader.ReadToEnd();
-                } catch (Exception ex) {
+                } catch (Exception) {
                     logInfo.RequestBody = string.Empty;
                     //log errors
                 } finally {

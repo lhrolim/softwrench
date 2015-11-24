@@ -79,8 +79,6 @@
                                     <lookup-input parentdata="parentdata"
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                                  lookup-associations-code="compositionitem"
-                                                  lookup-associations-description="lookupAssociationsDescription[rowindex]"
                                                   mode="composition"/>
                                 </div>
                             </ng-switch>
@@ -177,7 +175,6 @@
                         <expanded-item-input displayables="compositiondetailschema.displayables"
                                              schema="compositiondetailschema"
                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                             association-options="associationOptions"
                                              cancelfn="cancelComposition()"
                                              savefn="save()">
                         </expanded-item-input>

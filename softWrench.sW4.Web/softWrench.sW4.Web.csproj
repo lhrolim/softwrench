@@ -264,6 +264,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />
@@ -398,7 +399,9 @@
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
     <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
     <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\workorder.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\worktype.xml" />
     <Content Include="App_Data\Client\%40internal\templates\email.xml" />
     <Content Include="App_Data\Client\%40internal\templates\person.xml" />
@@ -498,6 +501,8 @@
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
+    <Content Include="Content\modules\components\angulartypeahead\angulartypeahead.js" />
+    <Content Include="Content\modules\components\angulartypeahead\templates\angulartypeahead.html" />
     <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
     <Content Include="Content\modules\lookup\lookupcomponent.js" />
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
@@ -1551,7 +1556,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>8080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

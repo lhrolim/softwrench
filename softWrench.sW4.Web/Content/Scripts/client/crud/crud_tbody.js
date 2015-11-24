@@ -69,7 +69,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
         scope: {
             datamap: '=',
             schema: '=',
-            associationOptions: '=',
             panelid: '='
         },
         template: "",

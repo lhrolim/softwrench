@@ -16,9 +16,14 @@ namespace cts.commons.portable.Util {
                 }
                 var strings = propertyString.Split(';');
                 foreach (String s in strings) {
-                    var equals = s.IndexOf("=");
+                    var equals = s.IndexOf("=", StringComparison.Ordinal);
+                    if (equals == -1) {
+                        continue;
+                    }
                     //TODO: Make key lower cases... 
-                    result.Add(s.Substring(0, equals).Trim(), s.Substring(equals + 1, s.Length - equals - 1).Trim());
+                    var beforeEqual = s.Substring(0, @equals).Trim();
+                    var afterEqual = s.Substring(@equals + 1, s.Length - @equals - 1).Trim();
+                    result.Add(beforeEqual, afterEqual);
                 }
                 return result;
             } catch {

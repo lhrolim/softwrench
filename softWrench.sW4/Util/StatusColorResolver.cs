@@ -96,7 +96,7 @@ namespace softWrench.sW4.Util {
                 {
                     statusColorJson = JSonUtil.BuildJSon(statusColorJsonPath);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Log.Error("Error reading Status Color JSON");
                     statusColorJson = new JObject();

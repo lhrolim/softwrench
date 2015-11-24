@@ -214,7 +214,7 @@
             
             <renderer type="default" params="childinputsize=medium" />
             <section id ="siteidsection"/>
-            <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
+            <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <renderer type="lookup" />
             </association>
@@ -321,10 +321,10 @@
           </section>
           
           <section id="compositions">
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
-              <collectionproperties listschema="newlist" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
-            </composition>
+<!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">-->
+<!--              <collectionproperties listschema="newlist" autocommit="false"/>-->
+<!--              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>-->
+<!--            </composition>-->
           </section>
 
           <!--<section id="statussection">
@@ -392,10 +392,10 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">
-              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>
-            </composition>
+<!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">-->
+<!--              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>-->
+<!--              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>-->
+<!--            </composition>-->
           </section>
 <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->

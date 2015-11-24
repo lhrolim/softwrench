@@ -32,6 +32,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var labelField = labelData.LabelField;
             association.LabelFields = ParseLabelFields(labelField);
             association.ApplicationTo = ParseApplicationTo(labelField);
+            association.OriginalLabelField = labelField;
             if (extraProjectionFields != null) {
                 BuildExtraProjectionFields(association, extraProjectionFields);
             }

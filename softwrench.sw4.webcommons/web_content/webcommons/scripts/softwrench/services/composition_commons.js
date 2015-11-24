@@ -3,8 +3,15 @@
 
     // service.$inject = [];
 
-    var service = function () {
+    var service = function (datamapSanitizeService) {
 
+        /**
+         * merges the parent datamap with a specific composition row data, making sure that, 
+         * in case of conflicts, the composition data is sent and not the parent one (ex: both have assets)
+         * @param {} datamap 
+         * @param {} parentdata 
+         * @returns {} 
+         */
         var buildMergedDatamap = function (datamap, parentdata) {
             var toClone = parentdata;
             if (parentdata.fields) {
@@ -12,6 +19,8 @@
             }
 
             var clonedDataMap = angular.copy(toClone);
+            clonedDataMap = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(clonedDataMap);
+
             if (datamap) {
                 var item = datamap;
                 for (var prop in item) {
@@ -30,6 +39,6 @@
         return api;
     };
 
-    angular.module("webcommons_services").factory("compositionCommons", service);
+    angular.module("webcommons_services").factory("compositionCommons", ['datamapSanitizeService', service]);
 
 })(angular);

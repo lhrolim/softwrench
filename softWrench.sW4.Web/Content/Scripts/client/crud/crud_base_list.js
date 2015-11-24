@@ -1,5 +1,5 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService) {
+function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService,crudContextHolderService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
@@ -96,8 +96,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
         if (fieldMetadata.type == "OptionField") {
             return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
         }
-        $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
-        return $scope.associationOptions[fieldMetadata.associationKey];
+        return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey);
     };
 
     $scope.GetOptionFieldOptions = function (optionField, forfilter) {
@@ -108,8 +107,8 @@ function BaseList($scope, formatService, expressionService, searchService, field
         if (optionField.jscache.providerOptions) {
             return optionField.jscache.providerOptions;
         }
-        $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
-        var associationOptions = $scope.associationOptions[optionField.providerAttribute];
+        
+        var associationOptions = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute);
         if (forfilter || optionField.addBlankOption) {
             associationOptions.unshift({
                 label: "",

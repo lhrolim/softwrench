@@ -2,8 +2,9 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", function (contextService, restService, filterModelService,
-            cmpAutocompleteServer, $timeout, searchService) {
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService","schemaService", 
+            function (contextService, restService, filterModelService,
+            cmpAutocompleteServer, $timeout, searchService,schemaService) {
 
             var directive = {
                 restrict: "E",
@@ -67,10 +68,7 @@
                         //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
                         var parameters = {
                             application: schema.applicationName,
-                            key: {
-                                schemaId: schema.schemaId,
-                                platform: "web"
-                            },
+                            key: schemaService.buildApplicationMetadataSchemaKey(schema),
                             labelSearchString: '',
                             filterProvider: filter.provider,
                             filterAttribute: filter.attribute

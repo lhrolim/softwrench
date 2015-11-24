@@ -13,11 +13,17 @@
         }
 
         function restore() {
+            var log = $log.get("schemaCacheService#restore", ["performance"]);
+            
+            log.debug("starting schema restore process");
             var urlContext = url("");
             var schemaCacheJson = localStorage[urlContext + ":schemaCache"];
             if (schemaCacheJson) {
                 schemaCache = JSON.parse(schemaCacheJson);
             }
+            
+            log.debug("finished schema restore took ");
+
         }
 
         restore();
@@ -28,6 +34,10 @@
 
 
         function getSchemaCacheKeys() {
+            if (sessionStorage.ignoreSchemaCache === "true") {
+                return ";";
+            }
+
             var result = ";";
             for (var key in schemaCache) {
                 if (!schemaCache.hasOwnProperty(key)) {
@@ -41,8 +51,11 @@
 
         function getSchemaFromResult(result) {
             if (result.cachedSchemaId) {
-                $log.get("schemaCacheService#getSchemaFromResult").info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
-                return this.getCachedSchema(result.applicationName, result.cachedSchemaId);
+                var log = $log.get("schemaCacheService#getSchemaFromResult",["performance"]);
+                log.info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
+                var cachedSchema = this.getCachedSchema(result.applicationName, result.cachedSchemaId);
+                log.info("finish retrieving from cache".format(result.applicationName, result.cachedSchemaId));
+                return cachedSchema;
             }
             return result.schema;
 
@@ -60,11 +73,13 @@
             var schemaKey = schema.applicationName + "." + schema.schemaId;
             if (!schemaCache[schemaKey]) {
                 var systeminitMillis = contextService.getFromContext("systeminittime");
-                $log.get("schemaCacheService#addSchemaToCache").info("adding schema {0} retrieved to cache".format(schemaKey));
+                var log = $log.get("schemaCacheService#addSchemaToCache",["performance"]);
+                log.info("adding schema {0} retrieved to cache".format(schemaKey));
                 schemaCache[schemaKey] = schema;
                 schemaCache.systeminitMillis = systeminitMillis;
                 var urlContext = url("");
                 localStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
+                log.info("finishing adding schema {0} retrieved to cache".format(schemaKey));
             }
         }
 
@@ -72,7 +87,8 @@
             var systeminitMillis = contextService.getFromContext("systeminittime");
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
-                delete localStorage["schemaCache"];
+                var urlContext = url("");
+                delete localStorage[urlContext + ":schemaCache"];
                 schemaCache = {
                     systeminitMillis: systeminitMillis
                 };

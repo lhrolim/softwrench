@@ -61,7 +61,6 @@ app.directive('crudBody', function (contextService) {
             isList: '=',
             isDetail: '=',
             blockedassociations: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             schema: '=',
             datamap: '=',
@@ -424,7 +423,7 @@ app.directive('crudBody', function (contextService) {
                 submitService.removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
                 transformedFields = submitService.removeExtraFields(transformedFields, true, schemaToSave);
                 submitService.translateFields(schemaToSave.displayables, transformedFields);
-                associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields, $scope.associationOptions);
+                associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
                 submitService.handleDatamapForMIF(schemaToSave, originalDatamap.fields, transformedFields);
 
 

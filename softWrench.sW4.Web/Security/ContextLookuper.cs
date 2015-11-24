@@ -125,6 +125,10 @@ namespace softWrench.sW4.Web.Security {
             }
             try {
                 var user = SecurityFacade.CurrentUser();
+                if (user == null) {
+                    return context;
+                }
+
                 context.UserProfiles = new SortedSet<int?>(user.Profiles.Select(s => s.Id));
                 context.Environment = ApplicationConfiguration.Profile;
                 context.OrgId = user.OrgId;
@@ -136,7 +140,7 @@ namespace softWrench.sW4.Web.Security {
                 }
                 Log.DebugFormat("adding context " + context);
                 return context;
-            } catch (Exception e) {
+            } catch (Exception) {
                 //not logged users
                 return context;
             }

@@ -21,7 +21,6 @@ namespace softWrench.sW4.Util {
 
         private static string _testclientName;
 
-        private static Version _version;
 
         private static string _clientName;
         private static string _environment;
@@ -255,7 +254,7 @@ namespace softWrench.sW4.Util {
         public static bool ActivityStreamFlag {
             get {
                 var flagStr = MetadataProvider.GlobalProperty("notifications.activityStream.enabled");
-                var flag = false;
+                bool flag;
                 bool.TryParse(flagStr, out flag);
                 return flag;
             }

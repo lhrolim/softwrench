@@ -65,7 +65,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         private void UpdateAssetDependants(ApplicationMetadata application, ApplicationDetailResult result) {
             var assetnum = result.ResultObject.GetAttribute("asset");
-            var relatedAsset = result.AssociationOptions["asset_"].AssociationData.FirstOrDefault(a => a.Value.Equals(assetnum));
+            var relatedAsset = result.AssociationOptions.EagerOptions["asset_"].FirstOrDefault(a => a.Value.Equals(assetnum));
             if (relatedAsset != null) {
                 //fill object with the entire extraprojection fields
                 result.ResultObject.SetAttribute("asset_", relatedAsset);
@@ -75,10 +75,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var assetDependants = DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "asset" },
                 result.ResultObject);
             foreach (var dependants in assetDependants) {
-                if (result.AssociationOptions.ContainsKey(dependants.Key)) {
-                    result.AssociationOptions.Remove(dependants.Key);
+                if (result.AssociationOptions.EagerOptions.ContainsKey(dependants.Key)) {
+                    result.AssociationOptions.EagerOptions.Remove(dependants.Key);
                 }
-                result.AssociationOptions[dependants.Key] = dependants.Value;
+                result.AssociationOptions.EagerOptions[dependants.Key] = dependants.Value.AssociationData;
             }
         }
 

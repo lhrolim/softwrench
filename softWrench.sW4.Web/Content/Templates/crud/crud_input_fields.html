@@ -22,7 +22,7 @@
                     class="legend-label">
                 {{::i18NLabel(fieldMetadata)}}
             </legend>
-            
+
             <!--Read only section-->
 
             <div ng-class="getInputClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
@@ -38,10 +38,10 @@
                 <label ng-switch-when="label" class="control-label"
                        ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">
                     {{::datamap[fieldMetadata.attribute]}}
-                </label>                
+                </label>
 
                 <textarea ng-switch-when="textarea"
-                          ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120" 
+                          ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120"
                           rows="10" wrap="hard"
                           data-ng-maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
                           maxlength="{{::fieldMetadata.rendererParameters['maxlength']}}"
@@ -87,8 +87,8 @@
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" />
 
             </div>
-            
-            
+
+
 
             <div ng-if="!fieldMetadata.isReadOnly"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
@@ -97,7 +97,6 @@
                 <div ng-switch-when="combo" class="sw-combobox-container">
 
                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
-                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{::fieldMetadata.rendererParameters['prepend']}}</span>
                     <select class="hidden-phone form-control combobox"
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
@@ -107,7 +106,7 @@
                         <option value=""></option>
                     </select>
                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{::fieldMetadata.rendererParameters['append']}}</span>
-                </div>
+                    </div>
 
                 </div>
                 <div ng-switch-when="checkbox">
@@ -159,7 +158,7 @@
                                             class="hidden-phone form-control combobox"
                                             ng-class="{'combobox-dynamic' : isDesktop()}"
                                             ng-model="datamap[fieldMetadata.target]"
-                                            ng-options="option.value as option.label for option in ::associationOptions[fieldMetadata.associationKey]"
+                                            ng-options="option.value as option.label for option in ::GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
                                             data-associationkey="{{::fieldMetadata.associationKey}}">
                                         <option value=""></option>
@@ -189,7 +188,7 @@
                                         class="hidden-phone form-control combobox"
                                         ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
-                                        ng-options="option.value as option.label for option in ::associationOptions[fieldMetadata.associationKey]"
+                                        ng-options="option.value as option.label for option in ::GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="::isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{::fieldMetadata.associationKey}}">
                                     <option value=""></option>
@@ -200,7 +199,7 @@
                 </div>
                 <div ng-switch-when="multiselectautocompleteclient">
                     <selectize config="{create:true, valueField:'value', labelField:'label', searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
-                               options="associationOptions[fieldMetadata.associationKey]"
+                               options="::GetAssociationOptions(fieldMetadata)"
                                ng-model="datamap[fieldMetadata.target]">
                     </selectize>
                 </div>
@@ -208,9 +207,8 @@
                     <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{::fieldMetadata.associationKey}}" data-target="{{::fieldMetadata.attribute}}" />
                     <input type="hidden" id="autocomplete_{{::fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
                 </div>
-                <div ng-switch-when="lookup" >
-                    <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema" disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                  lookup-associations-code="lookupAssociationsCode" lookup-associations-description="lookupAssociationsDescription" association-options="associationOptions"/>
+                <div ng-switch-when="lookup">
+                    <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema" disabledassociations="disabledassociations" blockedassociations="blockedassociations" />
                 </div>
 
                 <div ng-switch-when="modal" class="row">
@@ -236,12 +234,12 @@
                 </div>
                 <div ng-switch-when="richtext">
                     <div class="richtext image-holder"
-                         text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]" 
+                         text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
                          ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
                 </div>
                 <div ng-switch-when="upload">
                     <div class="input-group" id="{{::fieldMetadata.attribute}}">
-                        <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled"/>
+                        <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled" />
                         <div class="input-group-addon fileUpload" data-upload="files">
                             <span>Choose File</span>
                             <input class="form-control uploadfile_tooltip upload" name="{{::fieldMetadata.attribute}}"
@@ -257,8 +255,9 @@
                     <input id="uploadFile" ng-model="datamap.newattachment_path" class="form-control" placeholder="No file chosen" disabled="disabled" />
                     <div file-dropzone="pdf, zip, txt, doc, docx, dwg, gif, jpg, csv, xls, xlsx, ppt, xml, xsl, bmp, html, png, lic"
                          class="dropzone form-control" data-file-name="datamap.newattachment_path" data-file="datamap[fieldMetadata.attribute]"
-                         data-dropzone-hover-class="file-over"><i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
-                        <input id="uploadInput" type="file" fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"/>
+                         data-dropzone-hover-class="file-over">
+                        <i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
+                        <input id="uploadInput" type="file" fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path" />
                         <a href="" id="uploadInputLink">browse</a>
                     </div>
                 </div>
@@ -372,7 +371,6 @@
                 <div ng-switch-default>
                     <ng-switch on="fieldMetadata.type">
                         <div ng-switch-when="ApplicationSection">
-                            
                             <div ng-if="fieldMetadata.secondaryContent">
                                 <crud-expandable-section extraparameters="extraparameters"
                                                          schema="schema"
@@ -389,7 +387,8 @@
                                                          lookup-associations-code="lookupAssociationsCode"
                                                          lookup-associations-description="lookupAssociationsDescription" />
                             </div>
-                            
+
+
                             <div ng-if="!fieldMetadata.secondaryContent">
                                 <div ng-if="fieldMetadata.resourcepath != null"
                                      ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
@@ -412,13 +411,12 @@
 
                                 </div>
                             </div>
-                            
-                            
+
+
                         </div>
                         <div ng-switch-when="ApplicationCompositionDefinition">
 
-                            <inline-composition-list-wrapper 
-                                                             parentschema="schema"
+                            <inline-composition-list-wrapper parentschema="schema"
                                                              parentdata="datamap"
                                                              metadata="fieldMetadata"
                                                              iscollection="fieldMetadata.collection" />
@@ -429,7 +427,7 @@
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
                                 <div ng-switch-default>
-                                    
+
                                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
                                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{::fieldMetadata.rendererParameters['prepend']}}</span>
                                         <input type="{{::getInputType(fieldMetadata)}}"
@@ -448,30 +446,29 @@
                         </div>
                     </ng-switch>
                 </div>
-                
-                <div class="row" ng-if="fieldMetadata.type == 'ApplicationAssociationDefinition' && fieldMetadata.detailSection != null" 
+
+                <div class="row" ng-if="fieldMetadata.type === 'ApplicationAssociationDefinition' && fieldMetadata.detailSection != null"
                      ng-hide="isFieldHidden(schema,fieldMetadata.detailSection) || !detailsExpanded(fieldMetadata)">
                     <section-element-input class="expandeddetails"
                                            extraparameters="extraparameters"
                                            schema="schema"
                                            datamap="datamap"
                                            is-dirty="isDirty"
+                                           ismodal="{{ismodal}}"
                                            displayables="fieldMetadata.detailSection.displayables"
-                                           association-options="associationOptions"
                                            association-schemas="associationSchemas"
                                            blockedassociations="blockedassociations"
                                            renderer-parameters="fieldMetadata.rendererParameters"
+                                           orientation="{{fieldMetadata.orientation}}"
                                            elementid="{{::elementid}}Section{{fieldMetadata.id}}"
                                            orientation="{{::fieldMetadata.orientation}}"
-                                           islabelless="{{::isSectionWithoutLabel(fieldMetadata)}}"
-                                           lookup-associations-code="lookupAssociationsCode"
-                                           lookup-associations-description="lookupAssociationsDescription">
+                                           islabelless="{{::isSectionWithoutLabel(fieldMetadata)}}">
                     </section-element-input>
                 </div>
 
             </div>
         </fieldset>
-    
+
     </div>
 
 

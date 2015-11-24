@@ -9,7 +9,6 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Validator;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Parsing {
     /// <summary>

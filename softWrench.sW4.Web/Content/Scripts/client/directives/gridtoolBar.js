@@ -1,7 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService",
+        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);

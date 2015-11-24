@@ -179,7 +179,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
             //trigger resize to postition fixed header elements
             $timeout(function () {
-                log.debug('callWindowResize');
+//                log.debug('callWindowResize');
                 $(window).trigger('resize');
             }, 0, false);
 

@@ -3,13 +3,13 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['$log','associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse'];
+    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse',"$rootScope"];
 
-    function factory($log,associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, $parse) {
+    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, $parse, $rootScope) {
 
         var api = {
             configureAssociationChangeEvents: configureAssociationChangeEvents,
-            initField:initField
+            initField: initField
         };
 
         return api;
@@ -36,7 +36,7 @@
             }
             var maxExpression = fieldMetadata.rendererParameters['max'];
             if (maxExpression != null) {
-                var variablesToWatch = expressionService.getVariablesForWatch(maxExpression, datamappropname+".");
+                var variablesToWatch = expressionService.getVariablesForWatch(maxExpression, datamappropname + ".");
                 if (variablesToWatch == null) {
                     return null;
                 }
@@ -54,7 +54,7 @@
             return null;
         };
 
-        function configureAssociationChangeEvents($scope, datamappropertiesName,displayables) {
+        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables) {
 
 
             var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -72,7 +72,7 @@
                     if (datamap == undefined) {
                         return;
                     }
-                    if (!expressionService.evaluate(association.showExpression,datamap)) {
+                    if (!expressionService.evaluate(association.showExpression, datamap)) {
                         //if the association is hidden, there´s no sense in executing any hook methods of it
                         $log.get("crud_inputcommons#configureAssociationChangeEvents").debug("ignoring hidden association {0}".format(association.associationKey));
                         return;
@@ -90,7 +90,7 @@
                                 shouldDoWatch = true;
                             } catch (e) {
                                 //nothing to do, just checking if digest was already in place or not
-                                $timeout(function() {
+                                $timeout(function () {
                                     shouldDoWatch = true;
                                 }, 0, false);
                             }
@@ -115,7 +115,7 @@
                                 var dispatchedbytheuser = resolved ? true : false;
                                 if ($scope.compositionlistschema) {
                                     //workaround for compositions
-                                    
+
                                     $scope.datamap = datamap;
                                     $scope.schema = $scope.compositionlistschema;
                                 }
@@ -144,15 +144,25 @@
                     }
                     cmpfacade.digestAndrefresh(association, $scope, newValue);
                 });
-                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
-                    if (newvalue == old) {
-                        return;
-                    }
-                    $timeout(
-                    function () {
-                        cmpfacade.digestAndrefresh(association, $scope);
+                //                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
+                //                    if (newvalue == old) {
+                //                        return;
+                //                    }
+                //                    $timeout(
+                //                    function () {
+                //                        cmpfacade.digestAndrefresh(association, $scope);
+                //                    }, 0, false);
+                //                });
+
+                $scope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
+                    $timeout(function () {
+                        var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
+                        for (var i = 0; i < displayables.length; i++) {
+                            cmpfacade.updateEagerOptions($scope, displayables[i]);
+                        }
                     }, 0, false);
                 });
+
                 $scope.$watch('blockedassociations.' + association.associationKey, function (newValue, oldValue) {
                     cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
                 });
