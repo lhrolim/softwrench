@@ -10,7 +10,7 @@
 
         //TODO: continue implementing this methods, removing crud_context object references from the contextService
         // ReSharper disable once InconsistentNaming
-        var _crudContext = {
+        var _originalContext = {
             currentSchema: null,
             currentApplicationName: null,
 
@@ -78,6 +78,7 @@
             compositionLoadComplete: false,
         };
 
+        var _crudContext = angular.copy(_originalContext);
 
 
 
@@ -148,7 +149,7 @@
 
         //#region hooks
         function updateCrudContext(schema) {
-            _crudContext = {};
+//            _crudContext = {};
             _crudContext.currentSchema = schema;
             _crudContext.currentApplicationName = schema.applicationName;
             schemaCacheService.addSchemaToCache(schema);
@@ -173,6 +174,7 @@
         }
 
         function disposeDetail() {
+            this.setActiveTab(null);
             _crudContext.tabRecordCount = {};
             _crudContext._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};
@@ -271,17 +273,6 @@
 
             
             $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
-            //                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
-            //                    if (newvalue == old) {
-            //                        return;
-            //                    }
-            //                    $timeout(
-            //                    function () {
-            //                        cmpfacade.digestAndrefresh(association, $scope);
-            //                    }, 0, false);
-            //                });
-
-
         }
 
         function markAssociationsResolved() {
