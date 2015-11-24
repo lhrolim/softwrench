@@ -401,9 +401,9 @@
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
           </section>
           
-<!--          <field label="Details:" attribute="ld_.ldtext">-->
-<!--            <renderer type="richtext"/>-->
-<!--          </field>-->
+          <field label="Details:" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />

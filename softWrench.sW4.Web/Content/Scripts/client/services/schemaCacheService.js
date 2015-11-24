@@ -14,14 +14,15 @@
 
         function restore() {
             var log = $log.get("schemaCacheService#restore", ["performance"]);
-            var t0=performance.now();
+            
+            log.debug("starting schema restore process");
             var urlContext = url("");
             var schemaCacheJson = localStorage[urlContext + ":schemaCache"];
             if (schemaCacheJson) {
                 schemaCache = JSON.parse(schemaCacheJson);
             }
-            var t1 = performance.now();
-            log.debug("schema restore took ",t1-t0);
+            
+            log.debug("finished schema restore took ");
 
         }
 
