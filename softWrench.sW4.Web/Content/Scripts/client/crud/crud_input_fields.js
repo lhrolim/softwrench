@@ -56,7 +56,7 @@ app.directive('configAssociationListInputDatamap', function () {
                     "></crud-input-fields>";
     return {
         restrict: "E",
-        replace: true,
+        replace: false,
         scope: {
             schema: '=',
             datamap: '=',
@@ -75,20 +75,16 @@ app.directive('configAssociationListInputDatamap', function () {
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
-            if (!angular.isArray(scope.displayables)) {
-                return;
-            }
-            $timeout(function() {
-                var compiled = $compile(template)(scope);
-                element.append(compiled);
-            }, 0, false);
+            if (!angular.isArray(scope.displayables)) return;
+            var compiled = $compile(template)(scope);
+            element.append(compiled);
         }
     }
 }])
 .directive('crudInputFields', ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
     return {
         restrict: 'E',
-        replace: true,
+        replace: false,
         templateUrl: contextService.getResourceUrl('/Content/Templates/crud/crud_input_fields.html'),
         scope: {
             schema: '=',

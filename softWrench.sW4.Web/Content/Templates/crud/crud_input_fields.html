@@ -37,7 +37,7 @@
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" ng-readonly="true" readonly>
                 <label ng-switch-when="label" class="control-label"
                        ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">
-                    {{datamap[fieldMetadata.attribute]}}
+                    {{::datamap[fieldMetadata.attribute]}}
                 </label>                
 
                 <textarea ng-switch-when="textarea"
@@ -59,7 +59,7 @@
                             </td>
                             <td>
                                 <input type="checkbox"
-                                       name="datamap[fieldMetadata.attribute]"
+                                       name="::datamap[fieldMetadata.attribute]"
                                        value="{{option.value}}"
                                        ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
                                        ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
@@ -74,7 +74,7 @@
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
-                               ng-enabled="isModifiableEnabled(fieldMetadata)"
+                               ng-enabled="::isModifiableEnabled(fieldMetadata)"
                                ng-true-value="'true'" ng-false-value="'false'" />
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                     <select class="hidden-phone form-control combobox"
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
-                            ng-enabled="isSelectEnabled(fieldMetadata)"
+                            ng-enabled="::isSelectEnabled(fieldMetadata)"
                             ng-init="initField(fieldMetadata)"
                             data-field="{{::fieldMetadata.associationKey}}">
                         <option value=""></option>
@@ -133,7 +133,7 @@
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
-                               ng-enabled="isModifiableEnabled(fieldMetadata)"
+                               ng-enabled="::isModifiableEnabled(fieldMetadata)"
                                ng-true-value="'true'" ng-false-value="'false'" />
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                                         ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in ::GetAssociationOptions(fieldMetadata)"
-                                        ng-enabled="isSelectEnabled(fieldMetadata)"
+                                        ng-enabled="::isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{::fieldMetadata.associationKey}}">
                                     <option value=""></option>
                                 </select>
@@ -190,7 +190,7 @@
                                         ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as option.label for option in ::associationOptions[fieldMetadata.associationKey]"
-                                        ng-enabled="isSelectEnabled(fieldMetadata)"
+                                        ng-enabled="::isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{::fieldMetadata.associationKey}}">
                                     <option value=""></option>
                                 </select>
