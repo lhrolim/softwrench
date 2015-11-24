@@ -87,7 +87,8 @@
             var systeminitMillis = contextService.getFromContext("systeminittime");
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
-                delete localStorage["schemaCache"];
+                var urlContext = url("");
+                delete localStorage[urlContext + ":schemaCache"];
                 schemaCache = {
                     systeminitMillis: systeminitMillis
                 };
