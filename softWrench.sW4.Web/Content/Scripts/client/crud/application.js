@@ -316,7 +316,8 @@ function ApplicationController($scope, $http, $log, $timeout,
 
 
     $scope.toListSchema = function (data, schema) {
-        crudContextHolderService.setActiveTab(null);
+        
+        crudContextHolderService.disposeDetail();
 
         var log = $log.getInstance('application#toListSchema');
         $scope.multipleSchema = false;
