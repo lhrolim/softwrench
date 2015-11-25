@@ -17,8 +17,8 @@
         </relationship>
         <relationship to="person" qualifier="reportedbyp">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
-<!--          <relationshipAttribute from="reportedphone" to="phone_.phonenum"/>-->
-<!--          <relationshipAttribute from="reportedemail" to="email_.emailaddress"/>-->
+          <!--          <relationshipAttribute from="reportedphone" to="phone_.phonenum"/>-->
+          <!--          <relationshipAttribute from="reportedemail" to="email_.emailaddress"/>-->
         </relationship>
         <relationship to="email" qualifier="reportedemail">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
@@ -73,7 +73,7 @@
         <property key="rolealias" value="sr"/>
       </properties>
       <schemas>
-        
+
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="width=12%" />
@@ -98,7 +98,7 @@
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
           </properties>
         </list>
-        
+
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
@@ -108,7 +108,6 @@
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
-
             <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
               <renderer type="richtext"/>
             </field>
@@ -117,24 +116,26 @@
 
           <field attribute="ticketuid" label="SR#" hidden="true"/>
 
-          <field attribute="actlabcost" hidden="true" />
-          <field attribute="actlabhrs" hidden="true"/>
-          <field attribute="siteid" hidden="true" />
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="createby" hidden="true"/>
-          <!-- hiddens for communication template -->
-          <field attribute="changedate" hidden="true"/>
-          <field attribute="classificationid" hidden="true"/>
-          <field attribute="reportedemail" hidden="true"/>
-          <field attribute="affectedemail" hidden="true"/>
+          <section>
+            <field attribute="actlabcost" hidden="true" />
+            <field attribute="actlabhrs" hidden="true"/>
+            <field attribute="siteid" hidden="true" />
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="createby" hidden="true"/>
+            <!-- hiddens for communication template -->
+            <field attribute="changedate" hidden="true"/>
+            <field attribute="classificationid" hidden="true"/>
+            <field attribute="reportedemail" hidden="true"/>
+            <field attribute="affectedemail" hidden="true"/>
 
-          <field attribute="class" label="" hidden="true"/>
-          <field attribute="solution" hidden="true"/>
-          <field attribute="assetsiteid" hidden="true"/>
-          <field attribute="location" hidden="true"/>
-          <field attribute="assetnum" hidden="true"/>
-          <field attribute="failurecode" hidden="true"/>
-          <field attribute="cinum" hidden="true"/>
+            <field attribute="class" label="" hidden="true"/>
+            <field attribute="solution" hidden="true"/>
+            <field attribute="assetsiteid" hidden="true"/>
+            <field attribute="location" hidden="true"/>
+            <field attribute="assetnum" hidden="true"/>
+            <field attribute="failurecode" hidden="true"/>
+            <field attribute="cinum" hidden="true"/>
+          </section>
 
           <field attribute="changeby" default="@username" hidden="true"/>
 
@@ -203,7 +204,7 @@
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
             </section>
-            
+
             <section orientation="horizontal">
               <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
               <section id="attachmentsection" />
@@ -219,14 +220,14 @@
                 <renderer type="lookup" />
               </association>
             </section>
-            
+
             <section id="compositions"/>
-            
+
           </section>
 
         </schema>
 
-        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" >         
+        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
@@ -249,9 +250,9 @@
           <section id="ticketidsection">
             <field attribute="ticketid" label="SR#" hidden="true"/>
           </section>
-          
+
           <section id="siteidsection">
-           <field label="Site:" attribute="siteid" readonly="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
           <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
@@ -271,7 +272,7 @@
 
             <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-              
+
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
@@ -348,7 +349,7 @@
               <renderer type="default" params="maxlength=100" />
             </field>
           </section>
-        
+
           <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
@@ -394,7 +395,7 @@
           <field attribute="ticketuid" hidden="true"/>
 
           <field attribute="ticketid" label="SR#" readonly="true" hidden="true"/>
-          
+
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="description" label="Summary:" requiredexpression="true">
@@ -402,7 +403,7 @@
             </field>
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
           </section>
-          
+
           <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
@@ -424,7 +425,7 @@
             </association>
           </section>
           <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
         </schema>
       </schemas>
