@@ -54,7 +54,7 @@
             return null;
         };
 
-        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables) {
+        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables,bodyElement) {
 
 
             var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -144,15 +144,8 @@
                     }
                     cmpfacade.digestAndrefresh(association, $scope, newValue);
                 });
-                //                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
-                //                    if (newvalue == old) {
-                //                        return;
-                //                    }
-                //                    $timeout(
-                //                    function () {
-                //                        cmpfacade.digestAndrefresh(association, $scope);
-                //                    }, 0, false);
-                //                });
+
+                $log.getInstance("associationService#configureAssociationChangeEvents",["association"]).debug("initing watchers for {0} ".format(association.attribute));
 
                 $scope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
                     $timeout(function () {
@@ -166,6 +159,9 @@
                 $scope.$watch('blockedassociations.' + association.associationKey, function (newValue, oldValue) {
                     cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
                 });
+
+                
+
             });
 
         }
