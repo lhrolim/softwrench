@@ -566,7 +566,7 @@
         <relationship to="site">
           <relationshipAttribute from="siteid" to="siteid" primary="true"/>
           <relationshipAttribute from="assetsiteid" to="siteid"/>
-          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
+          <relationshipAttribute to="active" literal="1"/>
         </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
