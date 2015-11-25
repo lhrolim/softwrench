@@ -219,7 +219,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 }
                 var windowTop = $(window).scrollTop();
                 $("thead", table).css({ "top" : (windowTop + originalOffset) + "px" });
-                console.log("FIXHEADER!");
             }, 300, { leading: false });
 
             $(window).scroll(scrollHandler);
