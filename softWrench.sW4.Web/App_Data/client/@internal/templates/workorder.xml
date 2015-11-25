@@ -202,10 +202,10 @@
 
           <section>
             <header displacement="ontop" label="Work Order Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:">
+            <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
-            <field label="Details:" attribute="ld_.ldtext">
+            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
               <renderer type="richtext"/>
             </field>
           </section>
@@ -345,7 +345,7 @@
 
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web">
           <section id="siteidsection">
-            <field label="Site:" attribute="siteid" readonly="true">
+            <field label="Site:" attribute="siteid" readonly="true" requiredexpression="true">
               <renderer type="default" />
             </field>
           </section>
@@ -453,7 +453,7 @@
           </composition>
           <composition relationship="attachment" label="Attachments" />
           <field attribute="description" label="Description"  />
-          <field label="Details:" attribute="ld_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
           
@@ -500,7 +500,7 @@
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
           <field attribute="description" label="Description"  />
-          <field label="Details:" attribute="ld_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
         </detail>

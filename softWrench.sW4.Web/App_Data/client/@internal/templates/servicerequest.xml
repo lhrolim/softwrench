@@ -161,7 +161,7 @@
 
           <section secondarycontent="true" orientation="vertical">
 
-            <field label="Details:" attribute="ld_.ldtext">
+            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
               <renderer type="richtext"/>
             </field>
 
@@ -347,7 +347,7 @@
             </field>
           </section>
         
-          <field label="Details:" attribute="ld_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
 
@@ -401,7 +401,7 @@
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
           </section>
           
-          <field label="Details:" attribute="ld_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
 
