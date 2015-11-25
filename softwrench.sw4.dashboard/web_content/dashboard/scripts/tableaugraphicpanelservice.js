@@ -1,7 +1,7 @@
 ﻿(function (angular, tableau, $) {
     "use strict";
 
-    function tableauGraphicPanelService($q, restService) {
+    function tableauGraphicPanelService($q, restService, crudContextHolderService) {
         //#region Utils
         var config = {
             auth: null,
@@ -55,6 +55,7 @@
         function toObjectList(xml, tagName) {
             var parsed = $.parseXML(xml);
             var elements = parsed.getElementsByTagName(tagName);
+            // slice: hack to turn an HTMLCollection into an Array
             return Array.prototype.slice.call(elements).map(function (element) {
                 var attrs = element.attributes;
                 var object = {};
@@ -137,7 +138,6 @@
          * @param {} event 
          */
         function onProviderSelected(event) {
-            if (!event.scope.associationOptions) event.scope.associationOptions = {};
             authenticate(event.fields.provider)
                 .then(function (auth) {
                     var params = { provider: event.fields.provider, resource: "workbook" };
@@ -146,15 +146,12 @@
                     return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
                 .then(function (response) {
-                    return toObjectList(response.data, "workbook");
-                })
-                .then(function (workbooks) {
-                    if (!event.scope.associationOptions) event.scope.associationOptions = {};
-                    event.scope.associationOptions.workbooks = workbooks.map(function (workbook) {
+                    var workbooks = toObjectList(response.data, "workbook").map(function (workbook) {
                         workbook.value = { id: workbook.id, name: workbook.name }
                         workbook.label = workbook.name;
                         return workbook;
                     });
+                    crudContextHolderService.updateEagerAssociationOptions("workbooks", workbooks);
                 });
         }
 
@@ -174,15 +171,12 @@
                     return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
                 .then(function (response) {
-                    return toObjectList(response.data, "view");
-                })
-                .then(function (views) {
-                    if (!event.scope.associationOptions) event.scope.associationOptions = {};
-                    event.scope.associationOptions.views = views.map(function (view) {
+                    var views = toObjectList(response.data, "view").map(function (view) {
                         view.value = { name: view.name }
                         view.label = view.name;
                         return view;
                     });
+                    crudContextHolderService.updateEagerAssociationOptions("views", views);
                 });
         }
 
@@ -217,7 +211,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("tableauGraphicPanelService", ["$q", "restService", tableauGraphicPanelService]);
+    angular.module("sw_layout").factory("tableauGraphicPanelService", ["$q", "restService", "crudContextHolderService", tableauGraphicPanelService]);
     //#endregion
 
 })(angular, tableau, jQuery);
