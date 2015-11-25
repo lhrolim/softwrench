@@ -108,6 +108,10 @@
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
+
+            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
+              <renderer type="richtext"/>
+            </field>
             
           </section>
 
@@ -161,9 +165,7 @@
 
           <section secondarycontent="true" orientation="vertical">
 
-            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
-              <renderer type="richtext"/>
-            </field>
+            
 
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
