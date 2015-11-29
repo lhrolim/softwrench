@@ -269,6 +269,7 @@
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
+    <Compile Include="Controllers\CompositionController.cs" />
     <Compile Include="Controllers\FilterDataController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />

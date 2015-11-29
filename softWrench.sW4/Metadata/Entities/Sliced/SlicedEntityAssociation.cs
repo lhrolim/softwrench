@@ -8,7 +8,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
 
         public SlicedEntityAssociation(EntityAssociation innerAssociation, IEnumerable<EntityAttribute> slicedAttributes, string context = null)
-            : base(innerAssociation.Qualifier, innerAssociation.To, innerAssociation.Attributes, innerAssociation.Collection,innerAssociation.Cacheable, innerAssociation.ReverseLookupAttribute,innerAssociation.IgnorePrimaryAttribute)
+            : base(innerAssociation.Qualifier, innerAssociation.To, innerAssociation.Attributes, innerAssociation.Collection,innerAssociation.Cacheable,innerAssociation.Lazy, innerAssociation.ReverseLookupAttribute,innerAssociation.IgnorePrimaryAttribute)
         {
             if (context != null) {
                 SlicedAttributes = slicedAttributes.Select(slicedAttribute => slicedAttribute.ClonePrependingContext(context)).ToList();

@@ -866,7 +866,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     compositionListData[id] = data;
                 }
 
-                var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(buildExpandAllParams())));
+                var urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(buildExpandAllParams())));
                 $http.get(urlToInvoke).success(function (result) {
                     $.each(result.resultObject[$scope.relationship], function (key, value) {
                         //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function

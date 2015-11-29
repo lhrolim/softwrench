@@ -63,7 +63,7 @@
 
             function fetchCompositions(requestDTO, datamap, showLoading) {
                 var log = $log.getInstance('compositionservice#fetchCompositions');
-                var urlToUse = url("/api/generic/ExtendedData/GetCompositionData");
+                var urlToUse = url("/api/generic/Composition/GetCompositionData");
                 return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                     .then(function (response) {
                         var data = response.data;

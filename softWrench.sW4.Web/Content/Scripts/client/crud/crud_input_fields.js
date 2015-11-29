@@ -273,7 +273,7 @@ app.directive('configAssociationListInputDatamap', function () {
             });
 
 
-            $scope.$on("sw_configuredirtywatcher", function () {
+            $scope.$on("sw.crud.relationship.serverresolved", function () {
                 $timeout(function () {
                     $scope.$watch('datamap', function (newValue, oldValue) {
                         if (newValue !== oldValue) {
