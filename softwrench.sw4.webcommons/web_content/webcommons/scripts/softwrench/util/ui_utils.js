@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
 
     //ensure that english is the current locale for moment.js
     moment.locale('en');
