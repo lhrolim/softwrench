@@ -171,7 +171,7 @@
 
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
-              <!--<section id ="siteidsection"/>-->
+              <section id ="siteidsection"/>
               <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
                 <event type="beforechange" service="srService" method="beforeChangeLocation"/>
               </association>
