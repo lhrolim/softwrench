@@ -4,8 +4,8 @@
     moment.locale('en');
 
     $(window).resize(function () {
-        //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
         if ($('.site-header').css('position') == 'fixed') {
+            //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
             var headerHeight = $('.site-header').height();
             var paginationHeight = $('.affix-pagination').height();
             var theaderHeight = $('.listgrid-thead').height();
@@ -31,13 +31,22 @@
                 $('.listgrid-thead').css('top', offsetTop);
                 $('.listgrid-table').css('margin-top', offsetMargin);
             }
-        }
-        //reset the lcoation of the content, context menu, grid header and filter bar
-        else {
+        } else {
+            //reset the lcoation of the content, context menu, grid header and filter bar
             $('.content').css('margin-top', 'auto');
             $('.affix-pagination').css('top', 'auto');
             $('.listgrid-thead').css('top', 'auto');
             $('.listgrid-table').css('margin-top', 'auto');
+        }
+
+        //adjust footer position
+        var containerHeight = $('[ng-controller="LayoutController"]').height();
+        var windowHeight = $(window).height();
+
+        if (containerHeight > windowHeight) {
+            $('.site-footer').css('position', 'initial');
+        } else {
+            $('.site-footer').css('position', 'absolute');
         }
     });
 
