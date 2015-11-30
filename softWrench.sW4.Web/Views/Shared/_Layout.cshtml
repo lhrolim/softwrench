@@ -38,56 +38,50 @@
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
-        @*<div class="fixed-footer">*@
-            <notifications></notifications>
-            <div class="vertical-menu clearfix" ng-if="menu.displacement == 'vertical'">
-                <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
-            </div>
-            <header class="site-header navbar-fixed-top hiddenonprint">
-                <admin-menu is-client-admin="isClientAdmin"
-                            is-sys-admin="isSysAdmin"
-                            popupmode="popupmode"
-                            myprofileenabled="myprofileenabled"
-                            data-menu="menu"
-                            data-title="title">
-                </admin-menu>
-                <div class="branding">
-                    <div class="logo">
-                        @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
-                        {
-                            <img ng-src="{{resourceUrl('/Content/Images/@Model.ClientName/logo-main.png')}}">
-                        }
-                        else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
-                        {
-                            <img ng-src="{{resourceUrl('/Content/Customers/@Model.ClientName/images/logo-main.png' )}}">
-                        }
-                        else
-                        {
-                            <img ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
-                        }
-                    </div>
+        <notifications></notifications>
+        <div class="vertical-menu clearfix" ng-if="menu.displacement == 'vertical'">
+            <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
+        </div>
+        <header class="site-header navbar-fixed-top hiddenonprint">
+            <admin-menu is-client-admin="isClientAdmin"
+                        is-sys-admin="isSysAdmin"
+                        popupmode="popupmode"
+                        myprofileenabled="myprofileenabled"
+                        data-menu="menu"
+                        data-title="title">
+            </admin-menu>
+            <div class="branding">
+                <div class="logo">
+                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
+                    {
+                        <img ng-src="{{resourceUrl('/Content/Images/@Model.ClientName/logo-main.png')}}">
+                    }
+                    else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
+                    {
+                        <img ng-src="{{resourceUrl('/Content/Customers/@Model.ClientName/images/logo-main.png' )}}">
+                    }
+                    else
+                    {
+                        <img ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
+                    }
                 </div>
-                <div class="menu menu-grid" ng-if="menu.displacement == 'horizontal'">
-                    <div class="menu-expand">
-                        <i class="fa fa-bars"></i> Menu
-                    </div>
-                    <div class="menu-items">
-                        <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
-                    </div>
-                </div>
-            </header>
-            <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
-                @RenderBody()
             </div>
-        @*</div>*@
+            <div class="menu menu-grid" ng-if="menu.displacement == 'horizontal'">
+                <div class="menu-expand">
+                    <i class="fa fa-bars"></i> Menu
+                </div>
+                <div class="menu-items">
+                    <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
+                </div>
+            </div>
+        </header>
+        <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
+            @RenderBody()
+        </div>
         <footer class="site-footer hiddenonprint">
-
-                        <div class="page-overlay">
-                            <div class="logo">
-                                <img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}">
-                            </div>
-                        </div>
-
+            <div class="page-overlay">
+                <div class="logo"><img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}"></div>
+            </div>
         </footer>
     </div>
     <activitystream activities="activities" />
