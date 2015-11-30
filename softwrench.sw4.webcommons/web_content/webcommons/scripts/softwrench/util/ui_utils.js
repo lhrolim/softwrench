@@ -4,6 +4,8 @@
     moment.locale('en');
 
     $(window).resize(function () {
+        //console.log('resize');
+
         if ($('.site-header').css('position') == 'fixed') {
             //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
             var headerHeight = $('.site-header').height();

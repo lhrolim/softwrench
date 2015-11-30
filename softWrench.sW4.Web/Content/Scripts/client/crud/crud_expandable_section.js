@@ -82,6 +82,10 @@
                             $(document.body).animate({ scrollTop: $element.offset().top }, 500);
                         }, 0, false);
                     }
+
+                    $timeout(function () {
+                        $(window).trigger('resize');
+                    }, 0, false);
                 };
 
                 var showTemplateLoading = function() {

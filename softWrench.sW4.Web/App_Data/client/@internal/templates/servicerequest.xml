@@ -101,20 +101,21 @@
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
-            <section id ="ticketidsection"/>
-          </section>
-          <section>
+            <renderer type="default" params="childinputsize=small" />
+            <field attribute="ticketid" label="SR#:" hidden="true"/>
+            <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
+            <section id ="ticketidsection"/>
+          </section>
+                    
+          <section>
             <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
               <renderer type="richtext"/>
             </field>
             
           </section>
-
-          <field attribute="ticketuid" label="SR#" hidden="true"/>
 
           <section>
             <field attribute="actlabcost" hidden="true" />
@@ -170,7 +171,7 @@
 
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
-              <section id ="siteidsection"/>
+              <!--<section id ="siteidsection"/>-->
               <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
                 <event type="beforechange" service="srService" method="beforeChangeLocation"/>
               </association>
@@ -179,7 +180,7 @@
                 <dataprovider prefilterfunction="FilterAssets"/>
                 <event type="afterchange" service="srService" method="afterChangeAsset"/>
               </association>
-              <section id="statussection"/>
+              <!--<section id="statussection"/>-->
               <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
                 <renderer type="autocompleteclient" />
               </optionfield>
@@ -201,6 +202,13 @@
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
               <field attribute="actualfinish" label="Actual Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+
+              <field attribute="schedstart" label="Scheduled Start Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+              <field attribute="schedfinish" label="Scheduled Finish Date:">
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
             </section>
@@ -228,17 +236,13 @@
         </schema>
 
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" >
-          <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" hidden="true"/>
+          <section id="ticketidsection">
+            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
           </section>
-          <section id="statussection">
-            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
-          </section>
-          <!--SSWEB 173-->
+          
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
               <renderer type="upload"/>
@@ -248,16 +252,10 @@
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details">
           <section id="ticketidsection">
-            <field attribute="ticketid" label="SR#" hidden="true"/>
-          </section>
-
-          <section id="siteidsection">
-            <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
               <renderer type="combo" />
             </association>
+            <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
 
           <section id="compositions">
