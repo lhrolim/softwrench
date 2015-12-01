@@ -48,7 +48,7 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
 function hasDataClass(column, formattedText) {
     var classString = '';
 
-    if (formattedText != null || column.rendererType == 'color') {
+    if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
         classString = 'has-data';
     } else {
         classString = 'no-data';
