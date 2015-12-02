@@ -7,7 +7,7 @@
             var httpParameters = {
                 entity: schema.entityName,
                 applicationItemId: datamap["fields"][schema.idFieldName],
-                workflowName: "LMAPPROVAL"
+                workflowName: null
             };
 
             restService.invokePost("Workflow", "InitiateWorkflow", httpParameters, null, null, function () {
