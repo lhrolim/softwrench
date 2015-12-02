@@ -45,6 +45,8 @@
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
 
+        //console.log('fix footer', containerHeight, windowHeight);
+
         if (containerHeight > windowHeight) {
             $('.site-footer').css('position', 'initial');
         } else {
