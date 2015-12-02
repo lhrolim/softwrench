@@ -84,7 +84,7 @@
                     }
 
                     $timeout(function () {
-                        $(window).trigger('resize');
+                        $(window).trigger("resize");
                     }, 0, false);
                 };
 
@@ -100,7 +100,8 @@
 
                 var compileTemplate = function () {
                     var stereotype = $scope.schema.stereotype;
-                    if (stereotype !== "Detail" && stereotype !== "detail") {
+                    // validate supported stereotype
+                    if (!stereotype.contains("detail") && !stereotype.contains("Detail")) {
                         throw new Error(error.unsupportedStereotype.format(stereotype));
                     }
 
