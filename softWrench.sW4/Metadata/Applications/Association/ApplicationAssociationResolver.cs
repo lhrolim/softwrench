@@ -73,8 +73,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var isLookupMode = associationFilter is PaginatedSearchRequestDto;
 
             // needs to search by every attribute
-            if (isLookupMode) {
-                AppendLookupAttributesSearch(originalEntity, association, associationFilter);
+            if (isLookupMode || association.IsEagerLoaded()) {
+                AppendNonPrimaryAttributesSearch(originalEntity, association, associationFilter);
             }
 
             // handles quick search request
@@ -145,7 +145,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(listOfFields));
         }
 
-        private static void AppendLookupAttributesSearch(AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
+        private static void AppendNonPrimaryAttributesSearch(AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             // Set dependante lookup atributes
             association.LookupAttributes().ForEach(lookupAttribute => {
                 var searchValue = SearchUtils.GetSearchValue(lookupAttribute, originalEntity);
