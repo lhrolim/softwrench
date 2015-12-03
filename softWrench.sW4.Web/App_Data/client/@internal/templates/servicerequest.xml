@@ -191,27 +191,37 @@
 
             <section orientation="horizontal">
               <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-              <renderer type="default" params="childinputsize=medium" />
               
-              <field attribute="targetstart" label="Target Start Date:">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>
-              <field attribute="schedstart" label="Scheduled Start Date:">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>
-              <field attribute="actualstart" label="Actual Start Date:">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>             
+              <!-- target -->
+              <section orientation="vertical">
+                <field attribute="targetstart" label="Target Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+                <field attribute="targetfinish" label="Target Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+              </section>
+
+              <!-- scheduled -->
+              <section orientation="vertical">
+                <field attribute="schedstart" label="Scheduled Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+                <field attribute="schedfinish" label="Scheduled Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+              </section>
+
+              <!-- actual -->
+              <section orientation="vertical">
+                <field attribute="actualstart" label="Actual Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+                <field attribute="actualfinish" label="Actual Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+              </section>
               
-              <field attribute="targetfinish" label="Target Finish Date:">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>
-              <field attribute="schedfinish" label="Scheduled Finish Date:">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>            
-              <field attribute="actualfinish" label="Actual Finish Date:">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>
             </section>
 
             <section orientation="horizontal">
@@ -348,6 +358,9 @@
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100" />
             </field>
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>            
           </section>
 
           <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
@@ -362,9 +375,6 @@
             </association>
             <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
             <field attribute="reportedemail" label="Reported By Email:" readonly="true"/>
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
             <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
               <renderer type="lookup"/>
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
@@ -402,8 +412,11 @@
               <renderer type="default" params="maxlength=100" />
             </field>
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
           </section>
-
+          
           <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
@@ -416,9 +429,6 @@
             </association>
             <field attribute="reportedphone" label="Reported By Phone:" readonly="true"/>
             <field attribute="reportedemail" label="Reported By Email:" readonly="true"/>
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
             <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
               <renderer type="lookup"/>
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
