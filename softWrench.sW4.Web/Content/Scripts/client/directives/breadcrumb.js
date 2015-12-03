@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
     var log = $log.getInstance('sw4.breadcrumb');
