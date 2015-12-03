@@ -200,7 +200,7 @@
         </schema>
             
         <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Return Details">
-          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="matusetransid" label="Return#" hidden="true"/>
           <section>
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="enterby" label="Entered By" readonly="true"/>
@@ -437,7 +437,7 @@
         <schema title="Issue Details" id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="matusetransid" label="Issue#" hidden="true"/>
             <field attribute="enterby" label="Entered By" readonly="true"/>
             <field attribute="issuetype" label="Issue Type" readonly="true"/>
             <field attribute="issueto" label="Issued To" readonly="true"/>
