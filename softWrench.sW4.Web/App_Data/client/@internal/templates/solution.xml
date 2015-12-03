@@ -59,7 +59,7 @@
         </schema>
 
         <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution#" readonly="true" />
+          <field attribute="solution" label="Solution#" readonly="true"/>
           <field attribute="problemcode" label="Symptom:" />
           <field attribute="fr1code" label="Cause:" />
           <field attribute="fr2code" label="Resolution:" />
@@ -68,12 +68,12 @@
         <schema id="adetail" title="Solution Details" abstract="true" stereotype="detail" platform="web">
 
           <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="description" label="Description" requiredexpression="true" />
             <section id="statussection" />
           </section>
 
           <section>
-            <header displacement="ontop" label="Solution Details" params="fieldset=true" />
-            <field attribute="description" label="Description" requiredexpression="true" />
             <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext" />
             </field>
@@ -88,7 +88,7 @@
 
         <schema parentschema="adetail" title="Solution Details" id="editdetail" stereotype="detail" platform="web">
           <section id="statussection">
-            <field attribute="solution" label="Solution#" readonly="true">
+            <field attribute="solution" label="Solution#" readonly="true" hidden="true">
               <renderer type="default" />
             </field>
             <optionfield attribute="status" label="Status" requiredexpression="true">
