@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function crudContextHolderService($rootScope, $log, contextService, schemaCacheService) {
+    function crudContextHolderService($rootScope, $log, $timeout, contextService, schemaCacheService) {
 
         //#region private variables
 
@@ -94,6 +94,10 @@
 
         function setActiveTab(tabId) {
             contextService.setActiveTab(tabId);
+
+            $timeout(function () {
+                $(window).trigger('resize');
+            }, false);
         }
 
         function currentApplicationName() {
@@ -358,7 +362,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 
