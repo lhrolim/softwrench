@@ -197,20 +197,17 @@
           <!--          <field attribute="failurecode"  hidden="true"/>-->
 
           <section orientation="horizontal">
-            <section id="wonumsection" />
-            <section id ="siteidsection"/>
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="maxlength=100" />
+            </field>
             <section id="statussection" />
+            <section id ="siteidsection"/>
           </section>
 
-          <section>
-            <header displacement="ontop" label="Work Order Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=medium" />
-            </field>
-            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
-              <renderer type="richtext"/>
-            </field>
-          </section>
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
 
           <section orientation="horizontal">
 
@@ -304,7 +301,7 @@
                   <renderer type="datetime" params="format=MM/dd/yyyy;"/>
                 </field>
               </section>
-
+              
             </section>
 
             <section orientation="horizontal">
@@ -382,6 +379,9 @@
           </section>
           
           <section id="statussection">
+            <field attribute="wonum" label="WO#" readonly="true" hidden="true">
+              <renderer type="default" />
+            </field>
             <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
