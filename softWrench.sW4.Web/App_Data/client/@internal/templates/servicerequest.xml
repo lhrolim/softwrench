@@ -217,6 +217,15 @@
                 </field>
               </section>
               
+              <field attribute="targetfinish" label="Target Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+              <field attribute="schedfinish" label="Scheduled Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>            
+              <field attribute="actualfinish" label="Actual Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
             </section>
 
             <section orientation="horizontal">
