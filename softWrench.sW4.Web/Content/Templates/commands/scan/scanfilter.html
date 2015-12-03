@@ -1,8 +1,8 @@
 <span id="scanFilterController" ng-controller="ScanFilterController">
     <ng-switch on="getSchemaType()">
         <button ng-switch-when="List" data-toggle="modal" data-target="#scanfilterModal"
-                ng-click="showScanFilterModal()" class="btn btn-default btn-sm">
-            <i class="fa fa-barcode"></i><span>&ensp;Scan Config</span>
+                ng-click="showScanFilterModal()" class="btn btn-default btn-sm" rel="tooltip" data-original-title="Scan Config">
+            <i class="fa fa-barcode"></i>
         </button>
         <button ng-switch-default data-toggle="modal" data-target="#scanfilterModal"
                 ng-click="showScanFilterModal()" class="btn btn-primary commandButton navbar-btn">
