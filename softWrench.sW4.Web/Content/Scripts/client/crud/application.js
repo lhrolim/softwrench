@@ -285,8 +285,8 @@ function ApplicationController($scope, $http, $log, $timeout,
         }
         $scope.requestpopup = null;
 
-        //broadcast schema for the breadcrumbs 
-        $rootScope.$broadcast('schemaChange', $scope.schema);
+        //broadcast schema for the breadcrumbs
+        $rootScope.$broadcast('schemaChange', $scope.schema, scope.datamap);
         $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
 
     };

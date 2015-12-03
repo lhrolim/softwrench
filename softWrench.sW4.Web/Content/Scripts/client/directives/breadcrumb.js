@@ -126,15 +126,29 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
                                         //add a breadcrumb item for the unknown page
                                         var newPage = {};
+                                        newPage.title = current;
 
                                         //determine the best icon to use
                                         var icon = 'fa fa-circle-o';
                                         if (current.indexOf("Detail") > -1) {
                                             icon = 'fa fa-file-text-o';
-                                        }
 
+                                            if ($scope.datamap != null && $scope.datamap.fields != null) {
+                                                if ($scope.schema.userIdFieldName != null) {
+                                                    var userIdFieldName = $scope.schema.userIdFieldName;
+
+                                                    if (userIdFieldName != null) {
+                                                        var userID = eval('$scope.datamap.fields.' + userIdFieldName);
+                                                    }
+                                                }
+
+                                                if ($scope.schema.idDisplayable != null && userID != null) {
+                                                    newPage.title = '{0} {1}'.format($scope.schema.idDisplayable, userID);
+                                                }
+                                            }
+                                        }
+                                   
                                         newPage.icon = icon;
-                                        newPage.title = current;
                                         newPage.type = 'UnknownMenuItemDefinition';
 
                                         page.push(newPage);
@@ -253,10 +267,11 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 $('.hamburger').toggleClass('open');
             };
 
-            $scope.$on('schemaChange', function (event, schema) {
-                //log.debug('schemaChange');
+            $scope.$on('schemaChange', function (event, schema, datamap) {
+                //log.debug('schemaChange', datamap);
 
                 $scope.schema = schema;
+                $scope.datamap = datamap;
                 $scope.getCurrentTitle();
                 $scope.processBreadcrumb();
             });
