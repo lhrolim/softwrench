@@ -87,19 +87,19 @@
             var columnCount = null;
 
             switch (inputSize) {
-                case 'xxsmall':
+                case 'xsmall':
                     columnCount = 6;
                     break;
-                case 'xsmall':
+                case 'small':
                     columnCount = 4;
                     break;
-                case 'small':
+                case 'medium':
                     columnCount = 3;
                     break;
-                case 'medium':
+                case 'large':
                     columnCount = 2;
                     break;
-                case 'large':
+                case 'xlarge':
                     columnCount = 1;
                     break;
                 default:
