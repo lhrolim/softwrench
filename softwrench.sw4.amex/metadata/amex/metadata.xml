@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  
+  
+  <entities>
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+      <attributes>
+        <attribute name="RFA_OWNER" type="varchar"/>
+        <attribute name="BARCODE" type="varchar"/>
+        <attribute name="DCI_SITE" type="varchar"/>
+      </attributes>
+    </entity>
+  </entities>
+  
+  <applications>
+    <application name="asset" entity="asset" title="Asset">
+      <schemas>
+        <schema id="rrfdlist" stereotype="list">
+          <field attribute="rfa_owner" label="Owner"></field>
+          <field attribute="barcode" label="Barcode"></field>
+          <field attribute="manufacturer" label="Manufacturer"></field>
+          <field attribute="itemnum" label="Make/Model"></field>
+          <field attribute="description" label="Description"></field>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>
