@@ -150,15 +150,16 @@
               <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
                 <renderer type="autocompleteclient" />
               </optionfield>
-              <optionfield label="Priority:" attribute="internalpriority" default="1">
-                <renderer type="radio"/>
-                <option label="Critical" value="1"/>
-                <option label="High" value="2"/>
-                <option label="Medium" value="3"/>
-                <option label="Low" value="4"/>
-                <option label="Planning" value="5"/>
-              </optionfield>
             </section>
+
+            <optionfield label="Priority:" attribute="internalpriority" default="1">
+              <renderer type="radio"/>
+              <option label="Critical" value="1"/>
+              <option label="High" value="2"/>
+              <option label="Medium" value="3"/>
+              <option label="Low" value="4"/>
+              <option label="Planning" value="5"/>
+            </optionfield>
           </section>
 
           <section orientation="horizontal">
