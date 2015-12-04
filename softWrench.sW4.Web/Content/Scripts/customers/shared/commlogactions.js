@@ -64,11 +64,11 @@
 
             // If KOGT, set subject to null so that the default subject from metadata will populate
             var client = contextService.client();
-            if (!client.equalIc("kongsberg")) {
+            if (client.equalIc("kongsberg") && originalItem['ownertable'].equalIc("SR")) {
+                clonedItem['subject'] = null;
+            } else {
                 var subjectPrefix = replyMode ? "Re: " : "Fw: ";
                 clonedItem['subject'] = subjectPrefix + originalItem.subject;
-            } else {
-                clonedItem['subject'] = null;
             }
 
             // if there was a default value marked for the sendfrom it shall be used, otherwise fallinback to user default email

@@ -53,10 +53,19 @@
             }
         }
 
+        var getSubjectDefaultExpression = function (datamap, schema, displayable) {
+            var client = contextService.client();
+            if (client.equalIc("kongsberg") && datamap['ownertable'].equalIc("SR")) {
+                return "'##' + $.parentdata.fields['ticketid'] + '## ' + $.parentdata.fields['description']";
+            }
+            return "";
+        }
+
         var service = {
             formatCommTemplate: formatCommTemplate,
             updatereadflag: updatereadflag,
-            addSignature: addSignature
+            addSignature: addSignature,
+            getSubjectDefaultExpression: getSubjectDefaultExpression
         };
 
         return service;

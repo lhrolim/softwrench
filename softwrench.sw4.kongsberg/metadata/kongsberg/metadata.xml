@@ -2710,7 +2710,7 @@
             </field>
           </customization>
           <customization position="subject">
-            <field attribute="subject" label="Subject:" requiredexpression="true" defaultexpression="'##' + $.parentdata.fields['ticketid'] + '## ' + $.parentdata.fields['description']"/>
+            <field attribute="subject" label="Subject:" requiredexpression="true" defaultexpression="service:commlogService.getSubjectDefaultExpression"/>
           </customization>
         </schema>
       </schemas>

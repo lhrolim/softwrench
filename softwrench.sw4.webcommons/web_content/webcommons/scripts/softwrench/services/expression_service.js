@@ -1,7 +1,7 @@
 ﻿(function (modules) {
     "use strict";
 
-modules.webcommons.factory('expressionService', ["$rootScope", "contextService", "dispatcherService", function ($rootScope, contextService, dispatcherService) {
+modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextService", "dispatcherService", function ($rootScope, $log, contextService, dispatcherService) {
 
     var preCompiledReplaceRegex = /(?:^|\W)@(\#*)([\w+\.]+)(?!\w)/g;
 
@@ -357,14 +357,31 @@ modules.webcommons.factory('expressionService', ["$rootScope", "contextService",
 
 
 
-        evaluate: function (expression, datamap, scope) {
+        evaluate: function (expression, datamap, scope, displayable) {
+            var log = $log.getInstance('expressionService#evaluate');
             if (expression === "true" || expression === true) {
                 return true;
             }
             if (expression === undefined || expression === "false" || expression === false) {
                 return false;
             }
-            //            var expressionToEval = this.getVariables(expression, datamap);
+            
+            if (expression.startsWith('service:')) {
+                // Trim service: from the expression
+                var serviceExpression = expression.replace('service:', '');
+                // Split expression into 0:service and 1:function
+                var serviceFunction = serviceExpression.split('.');
+                // Use dispatcher to get service.function call
+                var targetFunction = dispatcherService.loadService(serviceFunction[0], serviceFunction[1]);
+                // If the service.function is not found
+                if (targetFunction == null) {
+                    log.warn('Failed to execute expression {0} due to unknown service.method'.format(expression));
+                    return false;
+                }
+                // Update expression with returned value
+                expression = targetFunction(datamap, scope.schema, displayable);
+            }
+
             expression = expression.replace(/\$/g, 'scope');
             var expressionToEval = this.getExpression(expression, datamap,scope);
             try {
