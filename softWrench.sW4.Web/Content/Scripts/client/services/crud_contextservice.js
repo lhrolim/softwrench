@@ -12,6 +12,7 @@
         // ReSharper disable once InconsistentNaming
         var _originalContext = {
             currentSchema: null,
+            rootDataMap:null,
             currentApplicationName: null,
 
             /*{
@@ -108,6 +109,10 @@
             return _crudContext.currentSchema;
         }
 
+        function rootDataMap() {
+            return _crudContext.rootDataMap;
+        }
+
         function getAffectedProfiles() {
             return _crudContext.affectedProfiles;
         }
@@ -152,9 +157,10 @@
         //#endregion
 
         //#region hooks
-        function updateCrudContext(schema) {
+        function updateCrudContext(schema,rootDataMap) {
             //            _crudContext = {};
             _crudContext.currentSchema = schema;
+            _crudContext.rootDataMap = rootDataMap;
             _crudContext.currentApplicationName = schema.applicationName;
             schemaCacheService.addSchemaToCache(schema);
         }
@@ -236,7 +242,8 @@
             if (associationOptions == null) {
                 return null;
             }
-            return associationOptions[key.toLowerCase()];
+            var keyToUse = angular.isString(key) ? key.toLowerCase() : key;
+            return associationOptions[keyToUse];
         }
 
         function fetchEagerAssociationOptions(associationKey, contextData) {
@@ -328,7 +335,8 @@
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
-            needsServerRefresh: needsServerRefresh
+            needsServerRefresh: needsServerRefresh,
+            rootDataMap: rootDataMap
         };
 
         var associationServices = {

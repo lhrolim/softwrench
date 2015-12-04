@@ -62,8 +62,14 @@
             normalizeOriginal(originalItem);
             var clonedItem = fieldService.fillDefaultValues($scope.compositiondetailschema.displayables, { commloguid :null}, $scope);
 
-            var subjectPrefix = replyMode ? "Re: " : "Fw: ";
-            clonedItem['subject'] = subjectPrefix + originalItem.subject;
+            // If KOGT, set subject to null so that the default subject from metadata will populate
+            var client = contextService.client();
+            if (client != null && client.equalIc("kongsberg") && originalItem['ownertable'].equalIc("SR")) {
+                clonedItem['subject'] = null;
+            } else {
+                var subjectPrefix = replyMode ? "Re: " : "Fw: ";
+                clonedItem['subject'] = subjectPrefix + originalItem.subject;
+            }
 
             // if there was a default value marked for the sendfrom it shall be used, otherwise fallinback to user default email
             clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;

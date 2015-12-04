@@ -17,10 +17,10 @@ function enhanceInjector($injector, contextService, $log) {
 
         try {
             var clientService = $injector.get(client + "." + serviceName);
-            var baseService = $injector.get(serviceName);
             if (clientService != null) {
                 return clientService;
             }
+            var baseService = $injector.get(serviceName);
             return baseService;
         } catch (e) {
             try {
