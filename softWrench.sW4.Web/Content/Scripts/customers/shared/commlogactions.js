@@ -64,7 +64,7 @@
 
             // If KOGT, set subject to null so that the default subject from metadata will populate
             var client = contextService.client();
-            if (client.equalIc("kongsberg") && originalItem['ownertable'].equalIc("SR")) {
+            if (client != null && client.equalIc("kongsberg") && originalItem['ownertable'].equalIc("SR")) {
                 clonedItem['subject'] = null;
             } else {
                 var subjectPrefix = replyMode ? "Re: " : "Fw: ";
