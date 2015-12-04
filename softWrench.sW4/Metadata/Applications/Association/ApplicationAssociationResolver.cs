@@ -13,7 +13,6 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using cts.commons.simpleinjector;
-using NHibernate.Linq;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -146,13 +145,21 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
         private static void AppendNonPrimaryAttributesSearch(AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
-            // Set dependante lookup atributes
-            association.LookupAttributes().ForEach(lookupAttribute => {
+            // Set dependant lookup atributes
+            foreach (var lookupAttribute in association.LookupAttributes()) {
+                // case where attribute has a query
+                if (lookupAttribute.Query != null) {
+                    // pre-interpret the query before appending
+                    var query = AssociationHelper.PrecompiledAssociationAttributeQuery(association.EntityAssociation.To, lookupAttribute);
+                    associationFilter.AppendWhereClause(query);
+                    continue;
+                }
+                // case with to->from or to->literal relationship
                 var searchValue = SearchUtils.GetSearchValue(lookupAttribute, originalEntity);
                 if (!string.IsNullOrEmpty(searchValue)) {
                     associationFilter.AppendSearchEntry(lookupAttribute.To, searchValue, lookupAttribute.AllowsNull);
                 }
-            });
+            }
         }
 
         /// Sorting Precedence 
