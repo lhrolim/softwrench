@@ -121,28 +121,28 @@
       <schemas>
         <list title="Purchase Order Grid">
           <field attribute ="ponum" label="PO#">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute ="description" label="Description">
             <renderer type="default" params="excelwidth=50"/>
           </field>
           <field attribute ="status" label="Status">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute ="siteid" label="Site">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute ="potype" label="Type">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute ="priority" label="Priority">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute ="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute ="totalcost" label="Total Cost">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="receipts" hidden="true"/>
           <properties>
@@ -151,12 +151,8 @@
         </list>
 
         <schema id="adetail" title="PO Details" abstract="true" stereotype="detail">
-          <field attribute="ponum" label="PO#" readonly="true">
-            <renderer type="default" params="inputsize=medium" />
-          </field>
-
+          <field attribute="ponum" label="PO#" readonly="true" hidden="true"/>
           <section>
-            <header displacement="ontop" label="PO Details" params="fieldset=true" />
             <field attribute="description" label="Description:">
               <renderer type="richtext"/>
             </field>
@@ -175,6 +171,7 @@
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="orderdate" label="Reported Date:" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
@@ -281,25 +278,25 @@
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Request Grid">
           <field attribute="prnum" label="PR#">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="width=10%"/>
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="requireddate" label="Required Date">
             <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
-            <renderer type="default" params="width=15%;" />
+            <renderer type="default" params="width=12%;" />
           </field>
           <field attribute="totalcost" label="Total Cost">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="siteid" label="Site ID">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=pr;column=status"/>
@@ -323,29 +320,23 @@
             <field attribute="totaltax1" label="Total Tax:" />
             <field attribute="totalcost" label="Total Cost:" default="0" requiredexpression="true" />
             <field attribute="currencycode" label="Currency:" requiredexpression="true" />
-          </section>
-
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="supervisor" label="Supervisor:" />
           </section>
-          
+
           <section>
             <header displacement="ontop" label="Vendow Info" params="fieldset=true" />
-            <optionfield attribute="novendor" label="No Vendor? :"  requiredexpression="true" >
+            <renderer type="default" params="childinputsize=medium" />
+            <optionfield attribute="novendor" label="No Vendor?"  requiredexpression="true" >
               <renderer type="radio"/>
               <option label="No" value="FALSE"/>
               <option label="Yes" value="TRUE"/>
             </optionfield>
-            <section orientation="horizontal">
               <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
                 <renderer type="lookup"/>
               </association>
               <association label="Vendor Contract:" target="contractrefnum" labelfield="contract_.description" >
                 <renderer type="lookup"/>
               </association>
-            </section>
           </section>
           
           <section id="compositions" />
