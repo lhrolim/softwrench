@@ -229,6 +229,7 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           </section>
@@ -334,12 +335,10 @@
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <reference id="site"/>
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+              <renderer type="lookup"/>
+            </association>
           </section>
-          <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
-            <renderer type="lookup"/>
-          </association>
-
-
 
           <section showexpression="@mode != 'batch'">
             <section orientation="horizontal">
@@ -383,6 +382,7 @@
 
 
             <section>
+              <renderer type="default" params="childinputsize=medium" />
               <reference id="issueitem" />
             </section>
 
@@ -469,6 +469,7 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="actualcost" label="Actual Cost" hidden="true"/>
@@ -555,6 +556,7 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="inventory_.costtype" hidden="true"/>

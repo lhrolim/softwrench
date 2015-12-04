@@ -480,6 +480,7 @@
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true" />
             <field attribute="unitcost" label="Unit Cost" readonly="true" />
             <field attribute="inventory_.costtype" hidden="true"/>
@@ -525,21 +526,21 @@
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=10%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="width=10%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean;width=6%"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean;width=6%"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
