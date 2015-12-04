@@ -1,153 +1,137 @@
-﻿<div ng-controller="ConfigController" style="padding-top: 10px">
-
-    <conditionmodal profile="currentprofile" module="currentmodule" type="type" condition="modalcondition" applications="applications"
-                    fullkey="fullkey"></conditionmodal>
-
-    <div class="row" style="padding-left: 10px">
-        <div class="col-lg-2">
-
-            <div class="form-group">
-
-                <div class="form-group" ng-show="applications.length >0">
-                    <label>{{i18N('configuration.application','Application')}}</label>
-                    <select ng-model="currentapplication" ng-options="app.label for app in applications" id="applicationsautocmp" class="form-control"></select>
-                </div>
-
-                <div class="form-group" ng-show="modules.length >1">
-                    <label>{{i18N('configuration.module','Module')}}</label>
-                    <select ng-model="currentmodule" ng-options="module.alias for module in modules"
-                            ng-change="showDefinitions(currentCategory)" class="form-control"></select>
-                </div>
-                <div class="form-group" ng-show="profiles.length >0">
-                    <label>{{i18N('configuration.profile','Security Group')}}</label>
-                    &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="If this is selected the given configuration would just apply to users which have this profile enabled.
+﻿<div class="container page" ng-controller="ConfigController">
+    <form class="form-horizontal">
+        <conditionmodal profile="currentprofile" module="currentmodule" type="type" condition="modalcondition" applications="applications"
+                        fullkey="fullkey"></conditionmodal>
+        <div class="row" style="padding-left: 10px">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <div class="form-group" ng-show="applications.length >0">
+                        <label>{{i18N('configuration.application','Application')}}</label>
+                        <select ng-model="currentapplication" ng-options="app.label for app in applications" id="applicationsautocmp" class="form-control"></select>
+                    </div>
+                    <div class="form-group" ng-show="modules.length >1">
+                        <label>{{i18N('configuration.module','Module')}}</label>
+                        <select ng-model="currentmodule" ng-options="module.alias for module in modules"
+                                ng-change="showDefinitions(currentCategory)" class="form-control"></select>
+                    </div>
+                    <div class="form-group" ng-show="profiles.length >0">
+                        <label>{{i18N('configuration.profile','Security Group')}}</label>
+                        &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="If this is selected the given configuration would just apply to users which have this profile enabled.
                                       If &quot;Any&quot;, then it would be applied to all users"></icon>
-                    <select ng-model="currentprofile" ng-options="profile.name for profile in profiles"
-                            ng-change="showDefinitions(currentCategory)" class="form-control"></select>
-                </div>
-            </div>
-            <!---->
-            <div ng-show="type == '0'"
-                 data-angular-treeview="true"
-                 data-tree-model="categoryData"
-                 data-node-id="id"
-                 data-node-label="key"
-                 data-node-children="children"
-                 style="width: 300px;">
-            </div>
-        </div>
-        <div class="col-lg-10">
-            <form class="form-horizontal">
-
-                <div ng-repeat="definition in currentCategory.definitions" class="form-group" ng-show="definition.visible" configrendered>
-
-
-
-                    <label class="control-label col-lg-2">{{Alias(definition)}}</label>
-                    <div class="col-lg-10">
-                        <div class="input-group" ng-show="getConditions(currentCategory).shouldShow" ng-if="$first">
-                            <label>{{i18N('configuration.extracondition','Extra Condition')}}</label>
-                            &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="Use this to specify any extra conditions that should be applied during the whereclause match process.
-                                              If no specific condition is applied, only the profile and module filters would take precedence"></icon>
-                            <select ng-model="currentcondition"
-                                    ng-options="condition.alias for condition in getConditions(currentCategory).values"
-                                    style="margin-left: 10px"
-                                    ng-change="showDefinitionsOfCondition(currentcondition,currentCategory)" />
-                            <button style="margin-left: 10px" ng-click="createCondition()" rel="tooltip" data-original-title="Create a new Condition">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                            <button style="margin-left: 10px" ng-click="editCondition(currentcondition)" rel="tooltip" data-original-title="Edit a existing condition" ng-show="getConditions(currentCategory).values.length>1">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button style="margin-left: 10px" ng-click="removeCondition(currentcondition)" rel="tooltip" data-original-title="Remove the existing condition" ng-show="getConditions(currentCategory).values.length>1">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-
-                        <ng-switch on="definition.renderer">
-                            <div ng-switch-when="attachment" ng-if="definition.renderer == 'attachment'">
-                                <div class="input-group" id="{{definition.fullkey}}">
-                                    <input class="form-control"
-                                           type="file" fileread="currentValues[definition.fullKey]" />
-
-                                    <button rel="tooltip" data-original-title="{{i18N('configuration.restoredefault','Restore Default')}}" style="margin-left: 30px"
-                                            ng-click="restoreDefault(definition)">
-                                        <i class="glyphicon glyphicon-remove"></i>
-                                    </button>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <div ng-show="currentValues[definition.fullKey]!=null">
-                                                <img ng-src="{{currentValues[definition.fullKey]}}" alt="defaultvalue"
-                                                     title="{{i18N('configuration.current','Current')}}"
-                                                     style="width:202px; height: 83px" />
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <img ng-src="{{currentDefaultValues[definition.fullKey]}}"
-                                                 title="{{i18N('configuration.default','Default')}}"
-                                                 alt="default" style="width:202px; height: 83px; " />
-
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </div>
-                            <div ng-switch-when="whereclause" style="margin-top:10px">
-                                <div class="input-group" id="{{definition.fullkey}}">
-                                    <label>{{i18N('configuration.value','Value')}}</label>
-                                    &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="This is the WhereClause that would be applied to the current Application, under the Condition and Profile selected.
-                                                      It overrides any systemValue present"></icon>
-                                    <textarea ng-model="currentValues[definition.fullKey]"
-                                              class="col-lg-8 form-control" cols="150" rows="{{numberofrowsofValueArea(definition.fullKey)}}" />
-                                </div>
-                                <div class="input-group" id="{{definition.fullkey}}" style="margin-top: 10px" ng-show="hasDefaultValue(definition.fullKey)">
-                                    <label>
-                                        {{i18N('configuration.whereclause.systemvalue','System Value')}}
-                                        &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="This value can only be set at development time. It would be overriden by the 'Value' field"></icon>
-                                    </label>
-                                    <textarea ng-model="currentDefaultValues[definition.fullKey]"
-                                              class="col-lg-8 form-control" cols="150" rows="3" readonly="true" />
-                                </div>
-                            </div>
-
-                            <div ng-switch-default>
-                                <ng-switch on="definition.dataType">
-
-                                    <div class="input-group" ng-switch-when="boolean">
-                                        <input type="checkbox"
-                                               ng-model="currentValues[definition.fullKey]"
-                                               ng-checked="{{currentValues[definition.fullKey]}}"
-                                               style="margin-left: 20px; margin-right: 15px;" />
-                                        <div class="config-add-on">
-                                            <label style="margin-left: 20px;">{{i18N('configuration.default','Default')}}</label>
-                                            <input type="checkbox" onclick="return false"
-                                                   ng-checked="{{currentDefaultValues[definition.fullKey]}}"
-                                                   style="margin-left: 20px" />
-                                        </div>
-                                    </div>
-                                    <div class="input-group" ng-switch-default>
-                                        <input type="text"
-                                               ng-model="currentValues[definition.fullKey]" class="col-lg-8 form-control" />
-                                        <span class="input-group-addon">({{i18N('general.default','Default')}}:{{currentDefaultValues[definition.fullKey]}})</span>
-                                    </div>
-                                </ng-switch>
-                            </div>
-                        </ng-switch>
-                        <label class="helptext">{{definition.description}}</label>
+                        <select ng-model="currentprofile" ng-options="profile.name for profile in profiles"
+                                ng-change="showDefinitions(currentCategory)" class="form-control"></select>
                     </div>
                 </div>
-
-                <div class="form-actions col-lg-offset-2 col-lg-10" ng-show="showSave">
-                    <button type="submit" id="saveBTN" class="btn btn-primary commandButton" ng-click="save()">
-                        <i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}
-                    </button>
+                <!---->
+                <div ng-show="type == '0'"
+                     data-angular-treeview="true"
+                     data-tree-model="categoryData"
+                     data-node-id="id"
+                     data-node-label="key"
+                     data-node-children="children"
+                     style="width: 300px;">
                 </div>
+            </div>
+            <div class="col-lg-10">
+                <form class="form-horizontal">
+                    <div ng-repeat="definition in currentCategory.definitions" class="form-group" ng-show="definition.visible" configrendered>
 
-            </form>
+                        <label class="control-label col-lg-2">{{Alias(definition)}}</label>
+                        <div class="col-lg-10">
+                            <div class="input-group" ng-show="getConditions(currentCategory).shouldShow" ng-if="$first">
+                                <label>{{i18N('configuration.extracondition','Extra Condition')}}</label>
+                                &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="Use this to specify any extra conditions that should be applied during the whereclause match process.
+                                              If no specific condition is applied, only the profile and module filters would take precedence"></icon>
+                                <select ng-model="currentcondition"
+                                        ng-options="condition.alias for condition in getConditions(currentCategory).values"
+                                        style="margin-left: 10px"
+                                        ng-change="showDefinitionsOfCondition(currentcondition,currentCategory)" />
+                                <button style="margin-left: 10px" ng-click="createCondition()" rel="tooltip" data-original-title="Create a new Condition">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                <button style="margin-left: 10px" ng-click="editCondition(currentcondition)" rel="tooltip" data-original-title="Edit a existing condition" ng-show="getConditions(currentCategory).values.length>1">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button style="margin-left: 10px" ng-click="removeCondition(currentcondition)" rel="tooltip" data-original-title="Remove the existing condition" ng-show="getConditions(currentCategory).values.length>1">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                            <ng-switch on="definition.renderer">
+                                <div ng-switch-when="attachment" ng-if="definition.renderer == 'attachment'">
+                                    <div class="input-group" id="{{definition.fullkey}}">
+                                        <input class="form-control"
+                                               type="file" fileread="currentValues[definition.fullKey]" />
+                                        <button rel="tooltip" data-original-title="{{i18N('configuration.restoredefault','Restore Default')}}" style="margin-left: 30px"
+                                                ng-click="restoreDefault(definition)">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </button>
+                                    </div>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div ng-show="currentValues[definition.fullKey]!=null">
+                                                    <img ng-src="{{currentValues[definition.fullKey]}}" alt="defaultvalue"
+                                                         title="{{i18N('configuration.current','Current')}}"
+                                                         style="width:202px; height: 83px" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <img ng-src="{{currentDefaultValues[definition.fullKey]}}"
+                                                     title="{{i18N('configuration.default','Default')}}"
+                                                     alt="default" style="width:202px; height: 83px; " />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div ng-switch-when="whereclause" style="margin-top:10px">
+                                    <div class="input-group" id="{{definition.fullkey}}">
+                                        <label>{{i18N('configuration.value','Value')}}</label>
+                                        &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="This is the WhereClause that would be applied to the current Application, under the Condition and Profile selected.
+                                                      It overrides any systemValue present"></icon>
+                                        <textarea ng-model="currentValues[definition.fullKey]"
+                                                  class="col-lg-8 form-control" cols="150" rows="{{numberofrowsofValueArea(definition.fullKey)}}" />
+                                    </div>
+                                    <div class="input-group" id="{{definition.fullkey}}" style="margin-top: 10px" ng-show="hasDefaultValue(definition.fullKey)">
+                                        <label>
+                                            {{i18N('configuration.whereclause.systemvalue','System Value')}}
+                                            &ensp;&ensp;<icon class="fa fa-question-circle" rel="tooltip" data-original-title="This value can only be set at development time. It would be overriden by the 'Value' field"></icon>
+                                        </label>
+                                        <textarea ng-model="currentDefaultValues[definition.fullKey]"
+                                                  class="col-lg-8 form-control" cols="150" rows="3" readonly="true" />
+                                    </div>
+                                </div>
+                                <div ng-switch-default>
+                                    <ng-switch on="definition.dataType">
+                                        <div class="input-group" ng-switch-when="boolean">
+                                            <input type="checkbox"
+                                                   ng-model="currentValues[definition.fullKey]"
+                                                   ng-checked="{{currentValues[definition.fullKey]}}"
+                                                   style="margin-left: 20px; margin-right: 15px;" />
+                                            <div class="config-add-on">
+                                                <label style="margin-left: 20px;">{{i18N('configuration.default','Default')}}</label>
+                                                <input type="checkbox" onclick="return false"
+                                                       ng-checked="{{currentDefaultValues[definition.fullKey]}}"
+                                                       style="margin-left: 20px" />
+                                            </div>
+                                        </div>
+                                        <div class="input-group" ng-switch-default>
+                                            <input type="text"
+                                                   ng-model="currentValues[definition.fullKey]" class="col-lg-8 form-control" />
+                                            <span class="input-group-addon">({{i18N('general.default','Default')}}:{{currentDefaultValues[definition.fullKey]}})</span>
+                                        </div>
+                                    </ng-switch>
+                                </div>
+                            </ng-switch>
+                            <label class="helptext">{{definition.description}}</label>
+                        </div>
+                    </div>
+                    <div class="form-actions col-lg-offset-2 col-lg-10" ng-show="showSave">
+                        <button type="submit" id="saveBTN" class="btn btn-primary commandButton" ng-click="save()">
+                            <i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-
-
+    </form>
 </div>

@@ -217,6 +217,10 @@ String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
     return s.toLowerCase() == other.toLowerCase();
 };
 
+String.prototype.contains = function(str) {
+    return this.indexOf(str) >= 0;
+};
+
 Array.prototype.subarray = function (start, end) {
     if (!end) {
         end = -1;

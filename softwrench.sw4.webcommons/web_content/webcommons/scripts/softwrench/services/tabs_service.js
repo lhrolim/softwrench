@@ -105,7 +105,7 @@
         * param notExpansible = array of compositions that we do not need to hit the server, since they are not expandable
         *
         *
-        * Returns a string in the same format the server expects for expanding the compositions on the ExtendedDataController.ExpandCompositions method
+        * Returns a string in the same format the server expects for expanding the compositions on the Composition.ExpandCompositions method
         *
         */
         buildCompositionsToExpand: function (compositionsToExpandObj, schema, datamap, schemaId, notExpansible) {

@@ -581,7 +581,7 @@
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
           <relationshipAttribute to="ownertable" literal="SR" quoteLiteral="true"/>
         </relationship>
-        <relationship to="longdescription" qualifier="ld">
+        <relationship to="longdescription" qualifier="ld" lazy="true">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;

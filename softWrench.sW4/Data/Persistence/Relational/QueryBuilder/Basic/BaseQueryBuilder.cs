@@ -6,7 +6,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
     class BaseQueryBuilder {
 
-        protected static string GetServiceQuery(string query, string context = null) {
+        public static string GetServiceQuery(string query, string context = null) {
             //removing leading @
             query = query.Substring(1);
             var split = query.Split('.');

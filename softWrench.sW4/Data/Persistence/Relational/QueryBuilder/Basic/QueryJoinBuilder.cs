@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using softWrench.sW4.Metadata.Applications.Association;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
     class QueryJoinBuilder : BaseQueryBuilder {
@@ -23,10 +24,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 var attribute = attributes[i];
 
                 if (null != attribute.Query) {
-                    var query = attribute.GetQueryReplacingMarkers(association.Qualifier);
-                    if (query.StartsWith("@")) {
-                        query = GetServiceQuery(query);
-                    }
+                    var query = AssociationHelper.PrecompiledAssociationAttributeQuery(association.Qualifier, attribute);
                     sb.Append(query + suffix);
 
                 } else if (null != attribute.From) {

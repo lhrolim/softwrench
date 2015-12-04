@@ -59,6 +59,11 @@
             <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
                 @RenderBody()
             </div>
+            <footer class="site-footer hiddenonprint">
+                <div class="page-overlay">
+                    <div class="logo"><img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}"></div>
+                </div>
+            </footer>
         </div>
         <script type="text/javascript">
             $(document).on('touch click', '*[data-calendericon="true"]', function (e) {

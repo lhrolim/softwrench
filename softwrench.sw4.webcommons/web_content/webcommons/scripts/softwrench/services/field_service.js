@@ -51,6 +51,10 @@
                 return isFieldHidden(datamap, application, fieldMetadata);
             },
 
+            getParameter : function(fieldMetadata, key) {
+                return fieldMetadata.rendererParameters[key];
+            },
+
             isFieldRequired: function (fieldMetadata, datamap) {
                 if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
                     return "true" === fieldMetadata.parameters["required"];
