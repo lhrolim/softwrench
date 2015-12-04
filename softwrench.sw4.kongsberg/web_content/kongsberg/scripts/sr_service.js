@@ -19,6 +19,14 @@
                 return;
             }
         },
+
+        getSubjectDefaultExpression: function (datamap, schema, displayable) {
+            if (datamap['ownertable'].equalIc("SR")) {
+                return "'##' + $.parentdata.fields['ticketid'] + '## ' + $.parentdata.fields['description']";
+            }
+            return "";
+        },
+
     };
 
 });
