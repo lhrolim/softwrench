@@ -362,24 +362,16 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
             if (expression === "true" || expression === true) {
                 return true;
             }
-            if (expression === undefined || expression === "false" || expression === false) {
+            if (expression == null || expression === "false" || expression === false) {
                 return false;
             }
             
             if (expression.startsWith('service:')) {
                 // Trim service: from the expression
-                var serviceExpression = expression.replace('service:', '');
-                // Split expression into 0:service and 1:function
-                var serviceFunction = serviceExpression.split('.');
-                // Use dispatcher to get service.function call
-                var targetFunction = dispatcherService.loadService(serviceFunction[0], serviceFunction[1]);
+                var realServiceDefinition = expression.substr(8);
+                var targetFunction = dispatcherService.loadServiceByString(realServiceDefinition);
                 // If the service.function is not found
-                if (targetFunction == null) {
-                    log.warn('Failed to execute expression {0} due to unknown service.method'.format(expression));
-                    return false;
-                }
-                // Update expression with returned value
-                expression = targetFunction(datamap, scope.schema, displayable);
+                return targetFunction(datamap, scope.schema, displayable);
             }
 
             expression = expression.replace(/\$/g, 'scope');

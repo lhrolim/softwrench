@@ -57,6 +57,7 @@
   <ItemGroup>
     <Content Include="web_content\kongsberg\images\footer.jpg" />
     <Content Include="web_content\kongsberg\images\header-email.jpg" />
+    <Content Include="web_content\kongsberg\scripts\kongsbergcommunication_service.js" />
     <Content Include="web_content\kongsberg\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
     </Content>

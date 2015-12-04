@@ -1,6 +1,7 @@
-﻿kongsbergmod.clientfactory('srService', function (srService) {
+﻿kongsbergmod.clientfactory('srService', ['srService', 'crudContextHolderService', function (srService, crudContextHolderService) {
 
     return {
+
         afterchangeowner: function (event) {
             srService.afterchangeowner(event);
         },
@@ -21,12 +22,14 @@
         },
 
         getSubjectDefaultExpression: function (datamap, schema, displayable) {
+
+            var parentData = crudContextHolderService.rootDataMap();
             if (datamap['ownertable'].equalIc("SR")) {
-                return "'##' + $.parentdata.fields['ticketid'] + '## ' + $.parentdata.fields['description']";
+                return "##" + parentData.fields['ticketid'] + '## ' + parentData.fields['description'];
             }
             return "";
         },
 
     };
 
-});
+}]);
