@@ -428,7 +428,7 @@
           <section>
             <field attribute="invreserveid" hidden="true"/>
             <field attribute="requireddate" hidden="true"/>
-            <field attribute="requestnum" hidden="true"/>
+            <field attribute="requestnum" label="ID#" hidden="true"/>
             <field attribute="itemsetid" hidden="true"/>
             <field attribute="siteid" hidden="true"/>
             <field attribute="orgid" hidden="true"/>
