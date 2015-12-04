@@ -216,6 +216,7 @@
               <renderer type="default"/>
 
               <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=large" />
               <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
                 <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
                 <renderer type="lookup" />
@@ -229,17 +230,17 @@
 
               <section orientation="horizontal">
                 <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
-                  <renderer type="autocompleteclient" params="class=col-md-6" />
+                  <renderer type="autocompleteclient" params="inputsize=large" />
                 </optionfield>
                 <field hidden="true" attribute="failurelist_.failurelist"/>
                 
 
                 <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
-                  <renderer type="lookup" params="class=col-md-4"/>
+                  <renderer type="lookup" params="inputsize=small"/>
                 </association>
 
                 <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
-                  <renderer type="autocompleteclient" params="class=col-md-2"/>
+                  <renderer type="autocompleteclient" params="inputsize=small"/>
                 </optionfield>
               </section>
 
@@ -247,7 +248,7 @@
 
             <section orientation="horizontal">
               <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-              <renderer type="default" params="childinputsize=medium" />
+              <renderer type="default" params="childinputsize=large" />
               <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
                 <renderer type="lookup"  />
                 <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
