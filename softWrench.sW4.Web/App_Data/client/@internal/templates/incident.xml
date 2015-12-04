@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -126,7 +126,7 @@
               <renderer type="default" params="maxlength=100"/>
             </field>
             <section id="statussection"/>
-            <field label="Site" attribute="siteid"  readonly="true"/>
+            <field label="Site" attribute="siteid" readonly="true"/>
           </section>
 
           <section>
