@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="rrfdlist">
+
+
+  <application id="rrfdlist" ref="asset" schema="rrfdlist" title="Receiving Raised Floor Devices" />
+
+</Menu>
+

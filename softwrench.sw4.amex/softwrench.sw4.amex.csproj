@@ -7,8 +7,8 @@
     <ProjectGuid>{93E0B0E8-F6CA-4E06-8A82-616E2DFC905A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.firstsolar</RootNamespace>
-    <AssemblyName>softwrench.sw4.firstsolar</AssemblyName>
+    <RootNamespace>softwrench.sw4.amex</RootNamespace>
+    <AssemblyName>softwrench.sw4.amex</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,11 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\amex\configuration\AmexPostLoginManager.cs" />
+    <Compile Include="classes\com\cts\amex\configuration\AmexWhereClauseRegistry.cs" />
+    <Compile Include="classes\com\cts\amex\connector\AmexAssetConnectors.cs" />
+    <Compile Include="classes\com\cts\amex\dataset\AmexAssetDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\amex\deploy.xml" />
     <EmbeddedResource Include="metadata\amex\properties.xml" />
+    <EmbeddedResource Include="metadata\amex\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="metadata\amex\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="metadata\amex\readme.txt" />
     <Content Include="web_content\amex\styles\branding.css">
       <DependentUpon>branding.scss</DependentUpon>
@@ -63,9 +75,6 @@
     <None Include="web_content\amex\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\amex\configuration\" />
-    <Folder Include="classes\com\cts\amex\connector\" />
-    <Folder Include="classes\com\cts\amex\dataset\" />
     <Folder Include="classes\com\cts\amex\migration\" />
     <Folder Include="web_content\amex\htmls\" />
     <Folder Include="web_content\amex\images\" />
@@ -79,6 +88,14 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{CE228C26-938D-4D6F-95FA-12CC5241AFB5}</Project>
