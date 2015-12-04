@@ -328,8 +328,11 @@ namespace softWrench.sW4.Data.Search {
                 var attribute = originalEntity.GetAttribute(lookupAttribute.From);
                 return attribute == null ? null : attribute.ToString();
             }
-
-            return lookupAttribute.Literal;
+            var literal = lookupAttribute.Literal;
+            if (lookupAttribute.QuoteLiteral) {
+                literal = "'" + literal + "'";
+            }
+            return literal;
 
         }
 
