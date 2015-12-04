@@ -29,7 +29,6 @@ fieldset.form-group {
 }
 
 .control-label {
-    padding-right: 30px;
     color: #000;
     word-wrap: break-word;
 }
@@ -329,12 +328,6 @@ input[type=search] {
 input[type="date"], input[type="time"] {
     -webkit-appearance: none;
     -moz-appearance: none;
-}
-
-@media all and (max-width: 768px) {
-    .col-xs-12 {
-        width: auto !important;
-    }
 }
 
 .select-left-right {

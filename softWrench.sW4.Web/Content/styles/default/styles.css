@@ -245,7 +245,6 @@ fieldset.form-group {
   margin-left: 0; }
 
 .control-label {
-  padding-right: 30px;
   color: #000;
   word-wrap: break-word; }
 
@@ -469,10 +468,6 @@ input[type=search] {
 input[type="date"], input[type="time"] {
   -webkit-appearance: none;
   -moz-appearance: none; }
-
-@media all and (max-width: 768px) {
-  .col-xs-12 {
-    width: auto !important; } }
 
 .select-left-right .left, .select-left-right .right {
   padding-right: 15px;
