@@ -1579,10 +1579,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
   display: inline;
   padding-top: 20px;
   margin: 0 15px 10px;
-  /*width: 95%;*/
   width: calc(100% - 30px);
-  /*font-size: 75%;*/
-  /*line-height: 1;*/
   white-space: nowrap;
   vertical-align: baseline;
   font-size: 12px;
