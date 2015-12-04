@@ -221,9 +221,6 @@ fieldset[disabled] .btn-service.active {
   .gridtop .applicationcommand {
     display: inline-block; } }
 
-fieldset.hasheader {
-  /*clear: both;*/ }
-
 fieldset.form-group {
   min-height: 59px; }
 
@@ -305,8 +302,6 @@ textarea .readonly {
   background-color: white; }
 
 .richtextbox, .image-holder {
-  /*min-height: 21px;*/
-  /*height: 100%;*/
   overflow: hidden; }
 
 .richtextbox {
@@ -1590,7 +1585,6 @@ input.ng-dirty.ng-invalid, .not-found:focus {
   /*line-height: 1;*/
   white-space: nowrap;
   vertical-align: baseline;
-  /*font: 12px/24px Arial, Helvetica, sans-serif;*/
   font-size: 12px;
   line-height: 24px; }
 
