@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="classes\com\cts\amex\configuration\AmexPostLoginManager.cs" />
     <Compile Include="classes\com\cts\amex\configuration\AmexWhereClauseRegistry.cs" />
-    <Compile Include="classes\com\cts\amex\connector\AmexAssetConnectors.cs" />
     <Compile Include="classes\com\cts\amex\dataset\AmexAssetDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
