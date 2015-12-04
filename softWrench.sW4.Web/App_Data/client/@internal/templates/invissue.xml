@@ -238,7 +238,7 @@
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="refwo" label="Work Order" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
-            <field attribute="assetnum" label="Asse" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
             <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
           </section>
           <commandbars>
@@ -547,7 +547,7 @@
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
             </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
-            <field attribute="quantity" label="Issue Quantit:y" default="1" requiredexpression="true">
+            <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;max=@curbal;"/>
             </field>
             <field attribute="inventory_.location" hidden="true" />
