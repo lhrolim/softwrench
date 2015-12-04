@@ -121,14 +121,15 @@
           <field attribute="cinum" hidden="true"/>
 
           <section orientation="horizontal">
-            <section id="statussection"/>
-          </section>
-
-          <section>
-            <header displacement="ontop" label="Incident Details" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="description" label="Summary:">
               <renderer type="default" params="maxlength=100"/>
             </field>
+            <section id="statussection"/>
+            <field label="Site Id:" attribute="siteid"  readonly="true"/>
+          </section>
+
+          <section>
             <field label="Details:" attribute="ld_.ldtext">
               <renderer type="textarea"/>
             </field>
@@ -138,7 +139,6 @@
 
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
-              <field label="Site Id:" attribute="siteid"  readonly="true"/>
               <association label="Location:" target="location" labelfield="location_.description" >
                 <event type="beforechange" service="srService" method="beforeChangeLocation"/>
               </association>
@@ -180,18 +180,26 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="actualfinish" label="Actual Finish Date:" attributeToServer="#notusedattribute">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
+
+            <!-- target -->
+            <section orientation="vertical">
+              <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+            </section>
+
+            <!-- actual -->
+            <section orientation="vertical">
+              <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+              <field attribute="actualfinish" label="Actual Finish Date:" attributeToServer="#notusedattribute">
+                <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+              </field>
+            </section>
           </section>
 
           <section orientation="horizontal">
@@ -213,7 +221,7 @@
         
         <schema parentschema="adetail" id="detail" title="Incident Details">
           <section id="statussection">
-            <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" />
+            <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" hidden="true"/>
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="false">
               <renderer type="combo" />
             </association>
