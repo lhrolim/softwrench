@@ -1,4 +1,4 @@
-﻿/* Standard Variables */
+/* Standard Variables */
 /* Standard Styles */
 .breadcrumb {
   padding: 0;
@@ -223,6 +223,9 @@ fieldset[disabled] .btn-service.active {
 
 fieldset.hasheader {
   /*clear: both;*/ }
+
+fieldset.form-group {
+  min-height: 59px; }
 
 .form-horizontal .form-group {
   margin-right: 0;
