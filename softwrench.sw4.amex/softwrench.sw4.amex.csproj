@@ -56,12 +56,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="metadata\amex\readme.txt" />
-    <Content Include="web_content\amex\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\amex\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -71,13 +65,13 @@
     </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
-    <None Include="web_content\amex\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\amex\migration\" />
     <Folder Include="web_content\amex\htmls\" />
     <Folder Include="web_content\amex\images\" />
     <Folder Include="web_content\amex\scripts\" />
+    <Folder Include="web_content\amex\styles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
