@@ -1,3 +1,4 @@
+﻿using System.Resources;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -5,23 +6,15 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("cts.commons")]
-[assembly: AssemblyDescription("Commons codebase to be shared")]
+[assembly: AssemblyTitle("cts.commons.DynamicProxy")]
+[assembly: AssemblyDescription("Dynamic WCF Proxy generator")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("cts")]
-[assembly: AssemblyProduct("cts.commons")]
+[assembly: AssemblyProduct("cts.commons.DynamicProxy")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("92f62b56-1a75-45e7-ac7a-b729c2a47141")]
-
+[assembly: NeutralResourcesLanguage("en")]
 
 // Version information for an assembly consists of the following four values:
 //

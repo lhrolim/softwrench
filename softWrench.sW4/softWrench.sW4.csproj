@@ -160,6 +160,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WcfSamples.DynamicProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="XDesigner.RTF">
       <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>
@@ -938,10 +942,6 @@
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WCFDynamicProxy\src\DynamicProxyLibrary.csproj">
-      <Project>{20fd2b93-bd84-48d7-a7fb-4231972d3e26}</Project>
-      <Name>DynamicProxyLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
