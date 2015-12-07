@@ -5,6 +5,7 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using softwrench.sw4.Shared2.Metadata.Entity;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 
@@ -65,7 +66,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         /// <param name="entityName"></param>
         /// <param name="attribute"></param>
         /// <returns></returns>
-        public static string PrecompiledAssociationAttributeQuery([NotNull]string entityName, [NotNull]EntityAssociationAttribute attribute) {
+        public static string PrecompiledAssociationAttributeQuery([NotNull]string entityName, [NotNull]IQueryHolder attribute) {
             if (attribute.Query == null) return null;
             var query = attribute.GetQueryReplacingMarkers(entityName);
             if (query.StartsWith("@")) {
