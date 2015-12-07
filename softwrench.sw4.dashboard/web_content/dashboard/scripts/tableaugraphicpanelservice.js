@@ -4,7 +4,6 @@
     function tableauGraphicPanelService($q, restService, crudContextHolderService, localStorageService, contextService) {
         //#region Utils
         var config = {
-            authPromise: null,
             defaultProvider: "Tableau",
             auth: {
                 ticketTTL: 3 * 60 * 1000, // 3min trusted ticket timeout
