@@ -211,6 +211,9 @@
             </field>
           </section>
 
+
+          <section id="compositions"/>
+          
           <section orientation="horizontal">
 
             <section orientation="vertical">
@@ -218,15 +221,15 @@
               <renderer type="default"/>
 
               <section orientation="horizontal">
-              <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
-                <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-                <renderer type="lookup" />
-              </association>
-              <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-                <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-                <dataprovider prefilterfunction="FilterAssets"/>
-                <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-              </association>
+                <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
+                  <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+                  <renderer type="lookup" />
+                </association>
+                <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                  <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                  <dataprovider prefilterfunction="FilterAssets"/>
+                  <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+                </association>
               </section>
 
               <section orientation="horizontal">
@@ -234,7 +237,7 @@
                   <renderer type="autocompleteclient" params="class=col-md-6" />
                 </optionfield>
                 <field hidden="true" attribute="failurelist_.failurelist"/>
-                
+
 
                 <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
                   <renderer type="lookup" params="class=col-md-4"/>
@@ -268,12 +271,13 @@
 
           </section>
 
+          
 
           <section secondarycontent="true" orientation="vertical">
 
             <section orientation="horizontal">
               <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-              
+
               <!-- target -->
               <section orientation="vertical">
                 <field attribute="targstartdate" label="Target Start Date:">
@@ -331,7 +335,7 @@
               <section id="attachmentsection"/>
             </section>
 
-            <section id="compositions"/>
+            
 
           </section>
 
@@ -345,20 +349,12 @@
           </section>
 
           <section id="compositions">
-            <!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">-->
-            <!--              <collectionproperties listschema="newlist" autocommit="false"/>-->
-            <!--              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>-->
-            <!--            </composition>-->
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+              <collectionproperties listschema="newlist" autocommit="false"/>
+              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+            </composition>
           </section>
 
-          <!--<section id="statussection">
-            <field attribute="wonum" label="WO#" readonly="true">
-              <renderer type="default" />
-            </field>
-            <field label="Status:" attribute="status" readonly="true" default="WAPPR">
-              <renderer type="default" />
-            </field>
-          </section>-->
 
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
@@ -416,10 +412,11 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
-            <!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">-->
-            <!--              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>-->
-            <!--              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>-->
-            <!--            </composition>-->
+            
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">
+              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>
+              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>
+            </composition>
           </section>
           <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->
