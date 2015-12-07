@@ -2,8 +2,6 @@
 
 function UserController($scope, $http, $templateCache, pwdenforceService, i18NService, redirectService) {
 
-    var app = angular.module('plunker', ['ui.multiselect']);
-
     $scope.addSelectedProfiles = function (availableprofilesselected) {
         $scope.user.profiles = $scope.user.profiles.concat(availableprofilesselected);
         var availableProfilesArr = $scope.availableprofiles;

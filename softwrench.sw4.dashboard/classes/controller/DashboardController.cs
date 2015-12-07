@@ -155,7 +155,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpPost]
-        public string LoadGraphicResource([FromUri] string provider, [FromUri] string resource, [FromBody] JObject dto ) {
+        public string LoadGraphicResource([FromUri] string provider, [FromUri] string resource, [FromBody] IDictionary<string, string> dto) {
             return _graphicServiceProvider.GetService(provider).LoadExternalResource(resource, dto);
         }
 
@@ -176,11 +176,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
         /// Authenticates the user the selected graphic storage system provider.
         /// </summary>
         /// <param name="provider"></param>
+        /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
-        public IGenericResponseResult Authenticate([FromUri]string provider) {
+        public IGenericResponseResult Authenticate([FromUri]string provider, [FromBody] IDictionary<string, string> dto) {
             var service = _graphicServiceProvider.GetService(provider);
-            var auth = service.Authenticate(SecurityFacade.CurrentUser());
+            var auth = service.Authenticate(SecurityFacade.CurrentUser(), dto);
             return new GenericResponseResult<IGraphicStorageSystemAuthDto>(auth);
         }
 

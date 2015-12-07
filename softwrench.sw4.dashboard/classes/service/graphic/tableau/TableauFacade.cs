@@ -132,42 +132,54 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             }
         }
 
-        public IGraphicStorageSystemAuthDto Authenticate(ISWUser user) {
+        public IGraphicStorageSystemAuthDto Authenticate(ISWUser user, IDictionary<string, string> requestConfig) {
             var auth = new TableauAuthDto() {
                 SiteName = _site,
                 ServerUrl = _server
             };
-            var tasks = new Task[2];
+            // lookup auth type
+            var authType = requestConfig[TableauConstants.AuthType.KEY];
             try {
-                // fill authdto with rest api authentication data
-                tasks[0] = Task.Factory.StartNew(() => AuthToRestApi(auth));
-                // fill authdto with trustedticket for the js api
-                tasks[1] = Task.Factory.StartNew(() => FetchTrustedTicket(auth));
-                Task.WaitAll(tasks);
-                // return fully filled authdto
+                switch (authType) {
+                    case TableauConstants.AuthType.REST_API:
+                        AuthToRestApi(auth);
+                        break;
+                    case TableauConstants.AuthType.TRUSTED_TICKET:
+                        FetchTrustedTicket(auth);
+                        break;
+                    default:
+                        throw GraphicStorageSystemException.AuthenticationFailed(TableauConstants.SYSTEM_NAME, _server);
+                }
                 return auth;
+
             } catch (Exception e) {
                 if (e is GraphicStorageSystemException) throw;
                 throw GraphicStorageSystemException.AuthenticationFailed(TableauConstants.SYSTEM_NAME, _server, e);
             }
         }
 
-        public string LoadExternalResource(string resource, JObject request) {
-            var auth = (TableauAuthDto)request.GetValue("auth").ToObject(typeof(TableauAuthDto));
+        public string LoadExternalResource(string resource, IDictionary<string, string> requestConfig) {
             string url;
-            if (resource == "workbook") {
-                url = string.Format("sites/{0}/users/{1}/workbooks", auth.SiteId, auth.UserId);
-            } else if (resource == "view") {
-                var workbook = (string)request.GetValue("workbook").ToObject(typeof(string));
-                url = string.Format("sites/{0}/workbooks/{1}/views", auth.SiteId, workbook);
-            } else {
-                throw GraphicStorageSystemException.ExternalResourceLoadFailed(TableauConstants.SYSTEM_NAME, resource);
+
+            switch (resource) {
+                case TableauConstants.RestApi.RESOURCE_WORKBOOK:
+                    url = string.Format("sites/{0}/users/{1}/workbooks", requestConfig["siteId"], requestConfig["userId"]);
+                    break;
+                case TableauConstants.RestApi.RESOURCE_VIEW:
+                    var workbook = requestConfig["workbook"];
+                    url = string.Format("sites/{0}/workbooks/{1}/views", requestConfig["siteId"], workbook);
+                    break;
+                default:
+                    throw GraphicStorageSystemException.ExternalResourceLoadFailed(TableauConstants.SYSTEM_NAME, resource);
             }
-            var headers = new Dictionary<string, string>() { { TableauConstants.RestApi.AUTH_HEADER_NAME, auth.Token } };
+
+            var headers = new Dictionary<string, string>() { { TableauConstants.RestApi.AUTH_HEADER_NAME, requestConfig["token"] } };
             var response = CallRestApi(url, "GET", headers);
+
             if (response.StatusCode != HttpStatusCode.OK) {
                 throw GraphicStorageSystemException.ExternalResourceLoadFailed(TableauConstants.SYSTEM_NAME, resource);
             }
+
             using (var responseStream = response.GetResponseStream()) {
                 using (var responseReader = new StreamReader(responseStream)) {
                     //TODO: smart caching

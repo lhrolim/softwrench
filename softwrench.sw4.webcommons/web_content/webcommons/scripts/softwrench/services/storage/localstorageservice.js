@@ -1,4 +1,4 @@
-﻿(function (mobileServices) {
+﻿(function (angular) {
     "use strict";
 
     function localStorageService() {
@@ -106,7 +106,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("localStorageService", [localStorageService]);
+    angular.module("webcommons_services").factory("localStorageService", [localStorageService]);
     //#endregion
 
-})(mobileServices);
+})(angular);
