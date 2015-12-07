@@ -80,15 +80,15 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         if (!$scope.isVerticalOrientation()) {
             return false;
         }
-        if (fieldMetadata.rendererType == "TABLE") {
+        if (fieldMetadata.rendererType === "TABLE") {
             //workaround because compositions are appending "" as default label values, but we dont want it!
             return false;
         }
-        return fieldMetadata.label != null || (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop');
+        return fieldMetadata.label != null || (fieldMetadata.header != null && fieldMetadata.header.displacement !== 'ontop');
     };
 
     $scope.isVerticalOrientation = function () {
-        return $scope.orientation == 'vertical';
+        return $scope.orientation === 'vertical';
     };
 
 
@@ -105,7 +105,7 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
 
 
     $scope.getFieldClass = function (fieldMetadata) {
-        if (fieldMetadata.rendererParameters["class"]) {
+        if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["class"]) {
             return fieldMetadata.rendererParameters["class"];
         }
 
