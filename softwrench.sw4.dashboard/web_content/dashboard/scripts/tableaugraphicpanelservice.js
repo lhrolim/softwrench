@@ -59,12 +59,24 @@
         }
 
         function trustedTicketCacheKey(panel) {
+            // cache key composed of user, workbook and view requested:
+            // tableau expects a different trusted ticket for each different view
             var workbook = sanitizeName(panel.configurationDictionary["workbook"]);
             var view = sanitizeName(panel.configurationDictionary["view"]);
             var user = contextService.getUserData().login;
             return "sw:graphic:tableau:auth:ticket:" + user + ":" + workbook + ":" + view;
         }
         
+        /**
+         * Authenticates the user to the Tableau in one of two manners: 
+         * - authenticates to REST api (retrieves token and user info)
+         * - fetches trusted ticket for the Javascript api
+         * 
+         * @param String type authentication type: ["REST" or "TICKET"] 
+         * @param String cacheKey localstorage key to store the authentication response 
+         * @param Long cachettl authentication response's cache TTL (in milliseconds)
+         * @returns Promise resolved with the authentication response 
+         */
         function authenticate(type, cacheKey, cachettl) {
             // hit cache first
             var cachedAuth = localStorageService.get(cacheKey);
@@ -90,7 +102,10 @@
                     // clear in-progress promise
                     config.auth.cacheRegion[undergoingPromiseCacheKey] = null;
                 });
+
+            // cache in-progress promise
             config.auth.cacheRegion[undergoingPromiseCacheKey] = authPromise;
+
             return authPromise;
         }
 
