@@ -6,7 +6,7 @@
         var config = {
             defaultProvider: "Tableau",
             auth: {
-                ticketTTL: 3 * 60 * 1000, // 3min trusted ticket timeout
+                ticketTTL: null, // don't cache ticket values, they're only worth a single view at a time 
                 restTTL: 4 * 60 * 60 * 1000, // 240min rest token timeout
                 cacheRegion: {}
             },
@@ -70,17 +70,21 @@
          * Authenticates the user to the Tableau in one of two manners: 
          * - authenticates to REST api (retrieves token and user info)
          * - fetches trusted ticket for the Javascript api
+         * Caches the response with the appropriate timeout. 
+         * Caches the promises to avoid multiple simultaneous identical requests.
          * 
          * @param String type authentication type: ["REST" or "TICKET"] 
          * @param String cacheKey localstorage key to store the authentication response 
-         * @param Long cachettl authentication response's cache TTL (in milliseconds)
+         * @param Long cachettl authentication response's cache TTL (in milliseconds): if negative or NaN the response won't be cached
          * @returns Promise resolved with the authentication response 
          */
         function authenticate(type, cacheKey, cachettl) {
+            var shouldCache = angular.isNumber(cachettl) && cachettl > 0;
             // hit cache first
-            var cachedAuth = localStorageService.get(cacheKey);
-            if (!!cachedAuth) return $q.when(cachedAuth);
-            
+            if (shouldCache) {
+                var cachedAuth = localStorageService.get(cacheKey);
+                if (!!cachedAuth) return $q.when(cachedAuth);
+            }
             // hit in-progress request promise (avoid multiple identical requests)
             var undergoingPromiseCacheKey = cacheKey + ":promise";
             var undergoingPromise = config.auth.cacheRegion[undergoingPromiseCacheKey];
@@ -94,7 +98,7 @@
                 .then(function (response) {
                     var auth = response.data["resultObject"];
                     // update cache
-                    localStorageService.put(cacheKey, auth, { ttl: cachettl });
+                    if(shouldCache) localStorageService.put(cacheKey, auth, { ttl: cachettl });
                     return auth;
                 })
                 .finally(function () {

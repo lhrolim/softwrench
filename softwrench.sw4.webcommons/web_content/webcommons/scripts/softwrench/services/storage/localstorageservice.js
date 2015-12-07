@@ -35,6 +35,7 @@
             }
             // entry expired it's ttl
             if (expires <= now) {
+                localStorage.removeItem(key);
                 return null;
             }
             // entry still within it's ttl
