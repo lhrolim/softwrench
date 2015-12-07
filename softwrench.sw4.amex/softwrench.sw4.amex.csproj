@@ -45,6 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\amex\readme.txt" />
     <EmbeddedResource Include="metadata\amex\deploy.xml" />
     <EmbeddedResource Include="metadata\amex\properties.xml" />
     <EmbeddedResource Include="metadata\amex\menu.web.xml">
