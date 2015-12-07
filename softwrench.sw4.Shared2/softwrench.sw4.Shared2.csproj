@@ -81,6 +81,7 @@
     <Compile Include="Metadata\Applications\UI\OptionFieldRenderer.cs" />
     <Compile Include="Metadata\Applications\UI\ApplicationTabDefinition.cs" />
     <Compile Include="Metadata\Applications\Command\CommandBarDefinition.cs" />
+    <Compile Include="Metadata\Entity\IQueryHolder.cs" />
     <Compile Include="Metadata\Exception\FilterMetadataException.cs" />
     <Compile Include="Metadata\Exception\MetadataException.cs" />
     <Compile Include="Metadata\IApplicationIdentifier.cs" />

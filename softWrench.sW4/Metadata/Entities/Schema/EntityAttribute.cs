@@ -4,9 +4,10 @@ using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Util;
 using System;
 using cts.commons.Util;
+using softwrench.sw4.Shared2.Metadata.Entity;
 
 namespace softWrench.sW4.Metadata.Entities.Schema {
-    public class EntityAttribute {
+    public class EntityAttribute :IQueryHolder{
         public const string AttributeQualifierSeparator = ".";
 
         private readonly string _name;
