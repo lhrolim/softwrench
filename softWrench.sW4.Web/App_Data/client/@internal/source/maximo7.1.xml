@@ -109,6 +109,12 @@
         <attribute name="inactivesites" type="smallint" required="true" />
         <attribute name="screenreader" type="smallint" required="true" />
         <attribute name="rowstamp" type="bigint" required="true" />
+        <attribute name="active" type="boolean"
+                  auto-generated="true"
+                  query="cast(case 
+                   when !@status='ACTIVE' then 1 
+                   when !@status='INACTIVE' or !@status is null then 0 
+                   end as bit)" />
       </attributes>
       <relationships>
         <relationship to="person">

@@ -46,13 +46,15 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                             continue;
                         }
                     }
+                    //Item1 = Attribute, item2 = relationshipname
                     var result = LocateAttribute(entityMetadata, attributes, field);
-                    if (!field.Name.Contains('.') && result == null) {
+                    if ((!field.Name.Contains('.') && result == null) || (result!=null && result.Item1==null)) {
+                        //second condition shouldn't happen unless due to a metadata misconfiguration
                         //this field is not mapped
                         continue;
                     }
                     string aliasAttribute;
-                    if (result != null && result.Item1.Query != null) {
+                    if (result.Item1.Query != null) {
                         aliasAttribute = AliasAttributeWithQuery(entityMetadata, field.Alias, result.Item1, result.Item2);
                     } else {
                         aliasAttribute = AliasAttribute(entityMetadata, field);
