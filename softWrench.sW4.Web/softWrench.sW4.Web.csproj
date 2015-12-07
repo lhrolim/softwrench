@@ -9,7 +9,7 @@
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
-   <PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>
@@ -489,10 +489,6 @@
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\logo-byline.png" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\pagination-first.png" />
-    <Content Include="Content\Images\pagination-last.png" />
-    <Content Include="Content\Images\pagination-next.png" />
-    <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\signin-lg.jpg" />
     <Content Include="Content\Images\signin-md.jpg" />
     <Content Include="Content\Images\signin-sm.jpg" />
