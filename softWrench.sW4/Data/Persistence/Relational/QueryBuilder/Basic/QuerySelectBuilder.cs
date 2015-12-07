@@ -54,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                         continue;
                     }
                     string aliasAttribute;
-                    if (result.Item1.Query != null) {
+                    if (result != null && result.Item1.Query != null) {
                         aliasAttribute = AliasAttributeWithQuery(entityMetadata, field.Alias, result.Item1, result.Item2);
                     } else {
                         aliasAttribute = AliasAttribute(entityMetadata, field);
@@ -78,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return buffer.ToString().Substring(0, buffer.Length - SelectSeparator.Count()) + " ";
         }
 
-       
+
 
         private static string AliasAttributeWithQuery(EntityMetadata entityMetadata, string alias, EntityAttribute attribute, string context) {
             var contextToUse = context ?? entityMetadata.Name;
