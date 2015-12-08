@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata" xmlns:f="http://www.controltechnologysolutions.com/filters">
   <templates>
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
@@ -291,10 +291,19 @@
   <applications>
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
 
-
+      <!-- added back as per customer request
       <filters>
         <filter attribute="ownerperson_.displayname" remove="true"/>
         <filter attribute="reportedbyp_.displayname" remove="true"/>
+      </filters>
+      -->
+      <filters>
+        <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+          <f:option label="Current User" value="@username"/>
+        </optionfilter>
+        <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
+          <f:option label="Current User" value="@username"/>
+        </optionfilter>
       </filters>
       
       <schemas>
@@ -319,10 +328,22 @@
       <properties>
         <property key="crud.disableautofocus" value="true"/>
       </properties>
+      <!-- added back as per customer request
       <filters>
         <filter attribute="ownerperson_.displayname" remove="true"/>
         <filter attribute="reportedbyp_.displayname" remove="true"/>
       </filters>
+      -->
+      <filters>
+        <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
+          <f:option label="Current User" value="@username"/>
+        </optionfilter>
+        <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
+          <f:option label="Current User" value="@username"/>
+        </optionfilter>
+      </filters>
+      
+      
       <schemas>
         <list title="Service Request Grid" redeclaring="false">
           <customization position="reportedby">
