@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="workflow" title="Workflow" entity="wfprocess" id="00000000-0000-0000-0000-000000020503">
+      <schemas>
+        <schema id="workflowselection">
+          <field attribute="wfprocessid" hidden="true" />
+          <optionfield attribute="processname" label="Process Name" providerattribute="workflows" requiredexpression="true">
+            
+          </optionfield>
+          <commandbars>
+            <commandgroup position="detailform">
+              <!--<removecommand id="save"/>-->
+              <removecommand id="print"/>
+              <!--<command id="save" icon="fa-check" service="workflowService" method="initiateWorkflow"
+                       parameters="previousschema,previousdata"
+                       label="Initiate Workflow" tooltip="Add Widget" position="&lt;cancel" />-->
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+
+
+</metadata>
