@@ -91,7 +91,7 @@ namespace softWrench.sW4.Web.Controllers {
         private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string filterProvider,
             string filterAttribute) {
             var registeredAssociation =
-                application.Schema.Associations.FirstOrDefault(a => a.Target.Equals(filterAttribute));
+                application.Schema.Associations().FirstOrDefault(a => a.Target.Equals(filterAttribute));
             if (registeredAssociation != null) {
                 return registeredAssociation;
             }

@@ -11,6 +11,7 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Entities {
 
@@ -22,7 +23,7 @@ namespace softWrench.sW4.Data.Entities {
         private static readonly ILog Log = LogManager.GetLogger(typeof(EntityBuilder));
 
 
-
+        [NotNull]
         public static T BuildFromJson<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, JObject json, string id=null) where T : Entity {
             if (id == null && applicationMetadata!=null) {
                 //the id can be located inside the json payload, as long as the application metadata is provider

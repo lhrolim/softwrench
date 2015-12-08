@@ -26,7 +26,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
         ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
 
-        AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
+        AssociationMainSchemaLoadResult BuildAssociationOptions([NotNull]AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
 
         LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata);
 

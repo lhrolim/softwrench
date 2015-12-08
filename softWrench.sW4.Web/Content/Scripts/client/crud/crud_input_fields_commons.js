@@ -3,7 +3,7 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse',"$rootScope"];
+    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse', "$rootScope"];
 
     function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, $parse, $rootScope) {
 
@@ -54,7 +54,7 @@
             return null;
         };
 
-        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables,bodyElement) {
+        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables, bodyElement) {
 
 
             var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -145,13 +145,15 @@
                     cmpfacade.digestAndrefresh(association, $scope, newValue);
                 });
 
-                $log.getInstance("associationService#configureAssociationChangeEvents",["association"]).debug("initing watchers for {0} ".format(association.attribute));
+                $log.getInstance("associationService#configureAssociationChangeEvents", ["association"]).debug("initing watchers for {0} ".format(association.attribute));
 
                 $scope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
                     $timeout(function () {
-                        var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
-                        for (var i = 0; i < displayables.length; i++) {
-                            cmpfacade.updateEagerOptions($scope, displayables[i]);
+                        if ($scope.schema) {
+                            var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
+                            for (var i = 0; i < displayables.length; i++) {
+                                cmpfacade.updateEagerOptions($scope, displayables[i]);
+                            }
                         }
                     }, 0, false);
                 });
@@ -160,7 +162,7 @@
                     cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
                 });
 
-                
+
 
             });
 

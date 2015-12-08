@@ -68,7 +68,8 @@
             // inlining simple template for performance
             template: templates.directive,
 
-            controller: ["$scope", "$element", "$compile", "$timeout", "spinService", function ($scope, $element, $compile, $timeout, spinService) {
+            controller: ["$scope", "$element", "$compile", "$timeout", "spinService", "associationService","crudContextHolderService",
+                function ($scope, $element, $compile, $timeout, spinService, associationService, crudContextHolderService) {
                 $scope.config = {
                     compiled: false,
                     expanded: false
@@ -125,7 +126,10 @@
 
                 $scope.expandSection = function () {
                     // make sure compilation happens only once per $scope/directive instance
-                    if (!$scope.config.compiled) compileTemplate();
+                    if (!$scope.config.compiled) {
+                        compileTemplate();
+                        associationService.loadSchemaAssociations(crudContextHolderService.rootDataMap(), crudContextHolderService.currentSchema(), { avoidspin: true, showmore:true });
+                    }
                     toggleExpansion();
                 };
             }]

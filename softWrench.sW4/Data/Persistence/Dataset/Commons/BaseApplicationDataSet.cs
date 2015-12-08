@@ -342,7 +342,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
 
-        public AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap,
+        public AssociationMainSchemaLoadResult BuildAssociationOptions([NotNull]AttributeHolder dataMap,
             ApplicationMetadata application, IAssociationPrefetcherRequest request) {
 
             var result = new AssociationMainSchemaLoadResult();
@@ -361,7 +361,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var before = LoggingUtil.StartMeasuring(Log, AssociationLogMsg, application.Name, application.Schema.Name);
 
-            var associations = application.Schema.Associations;
+            var associations = application.Schema.Associations(request.IsShowMoreMode);
             var tasks = new List<Task>();
             var ctx = ContextLookuper.LookupContext();
 
@@ -393,13 +393,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         continue;
                     }
 
-                    if (dataMap != null && dataMap.GetAttribute(applicationAssociation.Target) != null) {
+                    if (dataMap.GetAttribute(applicationAssociation.Target) != null) {
                         //if the field has a value, fetch only this single element, for showing eventual extra label fields... 
                         //==> lookup with a selected value
                         var toAttribute = primaryAttribute.To;
                         var prefilledValue = dataMap.GetAttribute(applicationAssociation.Target).ToString();
                         search.AppendSearchEntry(toAttribute, prefilledValue);
-                    } else if (dataMap != null && applicationAssociation.EntityAssociation.Reverse && dataMap.GetAttribute(primaryAttribute.From) != null) {
+                    } else if (applicationAssociation.EntityAssociation.Reverse && dataMap.GetAttribute(primaryAttribute.From) != null) {
                         var toAttribute = primaryAttribute.To;
                         var prefilledValue = dataMap.GetAttribute(primaryAttribute.From).ToString();
                         search.AppendSearchEntry(toAttribute, prefilledValue);
@@ -435,7 +435,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             #endregion
 
             #region optionfields
-            foreach (var optionField in application.Schema.OptionFields) {
+            foreach (var optionField in application.Schema.OptionFields(request.IsShowMoreMode)) {
                 if (!associationsToFetch.ShouldResolve(optionField.AssociationKey)) {
                     Log.Debug("ignoring association fetching: {0}".Fmt(optionField.AssociationKey));
                     continue;
@@ -454,7 +454,23 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             #endregion
 
+        
+
             Task.WaitAll(tasks.ToArray());
+
+            //let's handle eventual inline compositions afterwards to avoid a eventual thread explosion
+            #region inlineCompositions
+            if (application.Schema.HasInlineComposition) {
+                var inlineCompositions = application.Schema.Compositions().Where(c => c.Inline);
+                foreach (var composition in inlineCompositions) {
+                    if (dataMap.ContainsAttribute(composition.AssociationKey)) {
+
+                    }
+                }
+            }
+            #endregion
+
+
             if (Log.IsDebugEnabled) {
                 var keys = string.Join(",", eagerFetchedOptions.Keys.Where(k => eagerFetchedOptions[k] != null)) + string.Join(",", lazyOptions.Keys.Where(k => lazyOptions[k] != null));
                 Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of options fetching. Resolved collections: {0}", keys));
@@ -462,6 +478,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             result.EagerOptions = eagerFetchedOptions;
             result.PreFetchLazyOptions = lazyOptions;
+
+
 
             return result;
         }
@@ -500,7 +518,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata) {
             var before = LoggingUtil.StartMeasuring(Log, "fetching lookup options for application {0} schema {1}", application.Name, application.Schema.Name);
 
-            var association = application.Schema.Associations.FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
+            var association = application.Schema.Associations().FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
 
             var options = _associationOptionResolver.ResolveOptions(application, cruddata, association, lookupRequest.SearchDTO); ;
 
@@ -549,10 +567,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //there might be some associations/optionfields to be updated after the first value is selected
             foreach (var associationToUpdate in associationsToUpdate) {
-                var association = application.Schema.Associations.FirstOrDefault(f => (
+                var association = application.Schema.Associations().FirstOrDefault(f => (
                     EntityUtil.IsRelationshipNameEquals(f.AssociationKey, associationToUpdate)));
                 if (association == null) {
-                    var optionField = application.Schema.OptionFields.First(f => f.AssociationKey == associationToUpdate);
+                    var optionField = application.Schema.OptionFields().First(f => f.AssociationKey.EqualsIc(associationToUpdate));
                     tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);

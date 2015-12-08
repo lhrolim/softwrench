@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {
-                        names.AddRange(schema.Value.Compositions.Select(association => association.Relationship));
+                        names.AddRange(schema.Value.Compositions().Select(association => association.Relationship));
                     }
                 }
             }
@@ -57,7 +57,7 @@ namespace softWrench.sW4.Metadata {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas) {
                     if (schema.Value.IsMobilePlatform()) {
-                        names.AddRange(schema.Value.Associations.Select(association => new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo)));
+                        names.AddRange(schema.Value.Associations().Select(association => new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo)));
                     }
                 }
             }

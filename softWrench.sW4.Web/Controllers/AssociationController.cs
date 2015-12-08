@@ -120,7 +120,7 @@ namespace softWrench.sW4.Web.Controllers {
         ///
         [NotNull]
         [HttpPost]
-        public GenericResponseResult<AssociationMainSchemaLoadResult> GetSchemaOptions([FromUri] ApplicationMetadataSchemaKey key, JObject currentData) {
+        public GenericResponseResult<AssociationMainSchemaLoadResult> GetSchemaOptions([FromUri] ApplicationMetadataSchemaKey key, [FromUri] bool showmore, JObject currentData) {
             var user = SecurityFacade.CurrentUser();
 
             if (null == user) {
@@ -137,7 +137,11 @@ namespace softWrench.sW4.Web.Controllers {
             var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, currentData);
 
-            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata, new SchemaAssociationPrefetcherRequest());
+            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore });
+
+
+
+
 
             return new GenericResponseResult<AssociationMainSchemaLoadResult>(result);
 
@@ -145,7 +149,7 @@ namespace softWrench.sW4.Web.Controllers {
 
         private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string associationKey) {
             var registeredAssociation =
-                application.Schema.Associations.FirstOrDefault(a => a.AssociationKey.Equals(associationKey));
+                application.Schema.Associations().FirstOrDefault(a => a.AssociationKey.Equals(associationKey));
             return registeredAssociation;
 
         }

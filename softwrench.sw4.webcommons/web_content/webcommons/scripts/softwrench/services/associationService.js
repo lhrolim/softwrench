@@ -383,7 +383,8 @@
 
             var key = schemaService.buildApplicationMetadataSchemaKey(schema);
             var parameters = {
-                key: key
+                key: key,
+                showmore: options.showmore || false
             };
 
             var fields = datamap;

@@ -22,6 +22,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        #region cache
+        private readonly IDictionary<bool, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<bool, IList<ApplicationAssociationDefinition>>();
+        private readonly IDictionary<bool, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<bool, IList<ApplicationCompositionDefinition>>();
+        private readonly IDictionary<bool, IList<OptionField>> _cachedOptionFields = new Dictionary<bool, IList<OptionField>>();
+        #endregion
+
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
         private IDictionary<string, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
@@ -228,12 +234,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        [JsonIgnore]
-        public virtual IList<ApplicationCompositionDefinition> Compositions {
-            get {
-                return GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition));
-            }
-        }
+
 
 
         public SchemaFilters SchemaFilters {
@@ -289,11 +290,34 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        [JsonIgnore]
-        public virtual IList<ApplicationAssociationDefinition> Associations {
-            get {
-                return GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition));
+        public virtual IList<ApplicationAssociationDefinition> Associations(bool fetchSecondaryContent = true) {
+            if (_cachedAssociations.ContainsKey(fetchSecondaryContent)) {
+                return _cachedAssociations[fetchSecondaryContent];
             }
+            var result = GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition),
+                true, fetchSecondaryContent);
+            _cachedAssociations[fetchSecondaryContent] = result;
+            return result;
+        }
+
+        public virtual IList<ApplicationCompositionDefinition> Compositions(bool fetchSecondaryContent = true) {
+            if (_cachedCompositions.ContainsKey(fetchSecondaryContent)) {
+                return _cachedCompositions[fetchSecondaryContent];
+            }
+            var result = GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition),
+                true, fetchSecondaryContent);
+            _cachedCompositions[fetchSecondaryContent] = result;
+            return result;
+        }
+
+        public virtual IList<OptionField> OptionFields(bool fetchSecondaryContent = true) {
+            if (_cachedOptionFields.ContainsKey(fetchSecondaryContent)) {
+                return _cachedOptionFields[fetchSecondaryContent];
+            }
+            var result = GetDisplayable<OptionField>(typeof(OptionField),
+                true, fetchSecondaryContent);
+            _cachedOptionFields[fetchSecondaryContent] = result;
+            return result;
         }
 
         [JsonIgnore]
@@ -303,12 +327,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        [JsonIgnore]
-        public virtual IList<OptionField> OptionFields {
-            get {
-                return GetDisplayable<OptionField>(typeof(OptionField));
-            }
-        }
+
 
         [JsonIgnore]
         public virtual IList<IDependableField> DependableFields {
@@ -334,14 +353,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true) {
-            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, fetchInner);
+        public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true, bool fetchSecondaryContent = true) {
+            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, fetchInner, fetchSecondaryContent);
         }
 
 
         public IEnumerable<ApplicationRelationshipDefinition> CollectionRelationships() {
-            IEnumerable<ApplicationRelationshipDefinition> applicationAssociations = Associations.Where(a => a.Collection);
-            IEnumerable<ApplicationRelationshipDefinition> applicationCompositions = Compositions.Where(a => a.Collection);
+            IEnumerable<ApplicationRelationshipDefinition> applicationAssociations = Associations().Where(a => a.Collection);
+            IEnumerable<ApplicationRelationshipDefinition> applicationCompositions = Compositions().Where(a => a.Collection);
             return applicationAssociations.Union(applicationCompositions);
         }
 
@@ -356,7 +375,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 if (displayable is ApplicationCompositionDefinition &&
                     ((ApplicationCompositionDefinition)displayable).Inline == inline) {
                     list.Add(i);
-                } 
+                }
             }
             return list;
         }
@@ -370,7 +389,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// </summary>
         public bool HasNonInlineComposition {
             get {
-                return Compositions.Any(c => c.Schema.INLINE == false && !c.isHidden);
+                return Compositions().Any(c => c.Schema.INLINE == false && !c.isHidden);
             }
         }
 
@@ -379,7 +398,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// </summary>
         public bool HasInlineComposition {
             get {
-                return Compositions.Any(c => c.Schema.INLINE == true && !c.isHidden);
+                return Compositions().Any(c => c.Schema.INLINE == true && !c.isHidden);
             }
         }
 
