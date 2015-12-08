@@ -9,7 +9,6 @@
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -270,6 +269,7 @@
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
+    <Compile Include="Controllers\CompositionController.cs" />
     <Compile Include="Controllers\FilterDataController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
@@ -491,10 +491,6 @@
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\logo-byline.png" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\pagination-first.png" />
-    <Content Include="Content\Images\pagination-last.png" />
-    <Content Include="Content\Images\pagination-next.png" />
-    <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\signin-lg.jpg" />
     <Content Include="Content\Images\signin-md.jpg" />
     <Content Include="Content\Images\signin-sm.jpg" />

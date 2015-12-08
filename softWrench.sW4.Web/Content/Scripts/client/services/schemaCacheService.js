@@ -78,8 +78,13 @@
                 schemaCache[schemaKey] = schema;
                 schemaCache.systeminitMillis = systeminitMillis;
                 var urlContext = url("");
-                localStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
-                log.info("finishing adding schema {0} retrieved to cache".format(schemaKey));
+                try {
+                    localStorage[urlContext + ":schemaCache"] = JSON.stringify(schemaCache);
+                    log.info("finishing adding schema {0} retrieved to cache".format(schemaKey));
+                } catch (e) {
+                    //TODO:urgently reduce json payload
+                    log.warn("localStorage is full... avoiding cache");
+                }
             }
         }
 
@@ -87,7 +92,8 @@
             var systeminitMillis = contextService.getFromContext("systeminittime");
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
-                delete localStorage["schemaCache"];
+                var urlContext = url("");
+                delete localStorage[urlContext + ":schemaCache"];
                 schemaCache = {
                     systeminitMillis: systeminitMillis
                 };

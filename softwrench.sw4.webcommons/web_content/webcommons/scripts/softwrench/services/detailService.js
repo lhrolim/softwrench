@@ -69,7 +69,7 @@
             $q.all([associationPromise, compositionPromise]).then(function (results) {
                 //ready to listen for dirty watchers
                 $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
-                scope.$broadcast("sw_configuredirtywatcher");
+                scope.$broadcast("sw.crud.relationship.serverresolved");
             });
         };
 

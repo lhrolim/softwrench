@@ -105,6 +105,10 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
 
 
     $scope.getFieldClass = function (fieldMetadata) {
+        if (fieldMetadata.rendererParameters["class"]) {
+            return fieldMetadata.rendererParameters["class"];
+        }
+
         return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
     }
 

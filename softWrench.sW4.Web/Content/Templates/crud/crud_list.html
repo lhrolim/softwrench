@@ -16,7 +16,7 @@
                              class="gridtop"/>
                 
                 <!-- quick search input -->
-                <div class="quick-search">
+                <div class="quick-search col-xs-4">
                     <div class="input-group">
                         <input type="text"
                                placeholder="Search"
@@ -24,10 +24,13 @@
                                ng-model="vm.quickSearchData"
                                ng-enter="quickSearch(vm.quickSearchData)">
                         <span class="input-group-btn">
-                        <button class="btn btn-default advancedSearch" type="button" ng-enabled="!!vm.quickSearchData" ng-click="quickSearch(vm.quickSearchData)" disabled="disabled">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
+                            <button class="btn btn-default"
+                                    type="button" ng-enabled="!!vm.quickSearchData"
+                                    ng-click="quickSearch(vm.quickSearchData)"
+                                    disabled="disabled">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
                     </div>
                 </div>
 

@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function crudContextHolderService($rootScope,$log,contextService, schemaCacheService) {
+    function crudContextHolderService($rootScope, $log, $timeout, contextService, schemaCacheService) {
 
         //#region private variables
 
@@ -10,8 +10,9 @@
 
         //TODO: continue implementing this methods, removing crud_context object references from the contextService
         // ReSharper disable once InconsistentNaming
-        var _crudContext = {
+        var _originalContext = {
             currentSchema: null,
+            rootDataMap:null,
             currentApplicationName: null,
 
             /*{
@@ -60,7 +61,7 @@
              * asset_
              * 
              */
-            _blockedAssociations:{},
+            _blockedAssociations: {},
 
             //TODO: below is yet to be implemented/refactored
             detail_previous: "0",
@@ -78,6 +79,7 @@
             compositionLoadComplete: false,
         };
 
+        var _crudContext = angular.copy(_originalContext);
 
 
 
@@ -93,6 +95,10 @@
 
         function setActiveTab(tabId) {
             contextService.setActiveTab(tabId);
+
+            $timeout(function () {
+                $(window).trigger('resize');
+            }, false);
         }
 
         function currentApplicationName() {
@@ -101,6 +107,10 @@
 
         function currentSchema() {
             return _crudContext.currentSchema;
+        }
+
+        function rootDataMap() {
+            return _crudContext.rootDataMap;
         }
 
         function getAffectedProfiles() {
@@ -147,9 +157,10 @@
         //#endregion
 
         //#region hooks
-        function updateCrudContext(schema) {
-            _crudContext = {};
+        function updateCrudContext(schema,rootDataMap) {
+            //            _crudContext = {};
             _crudContext.currentSchema = schema;
+            _crudContext.rootDataMap = rootDataMap;
             _crudContext.currentApplicationName = schema.applicationName;
             schemaCacheService.addSchemaToCache(schema);
         }
@@ -173,6 +184,7 @@
         }
 
         function disposeDetail() {
+            this.setActiveTab(null);
             _crudContext.tabRecordCount = {};
             _crudContext._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};
@@ -204,7 +216,7 @@
          */
         function updateLazyAssociationOption(associationKey, options, notIndexed) {
             var log = $log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
-            if (!!notIndexed && options!=null) {
+            if (!!notIndexed && options != null) {
                 var objIdxKey = options.value.toLowerCase();
                 var idxedObject = {};
                 idxedObject[objIdxKey] = options;
@@ -220,7 +232,7 @@
                 log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
                 _crudContext._lazyAssociationOptions[associationKey] = options;
             } else {
-                log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey,length));
+                log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey, length));
                 _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
         }
@@ -230,12 +242,13 @@
             if (associationOptions == null) {
                 return null;
             }
-            return associationOptions[key.toLowerCase()];
+            var keyToUse = angular.isString(key) ? key.toLowerCase() : key;
+            return associationOptions[keyToUse];
         }
 
         function fetchEagerAssociationOptions(associationKey, contextData) {
 
-            if (contextData==null) {
+            if (contextData == null) {
                 return _crudContext._eagerassociationOptions["#global"][associationKey];
             }
 
@@ -253,11 +266,14 @@
             if (_crudContext.showingModal) {
                 contextData = { schemaId: "#modal" };
             }
-            var log =$log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
+            var log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
 
-            log.info("update eager list for {0}. Size: {1}".format(associationKey,options.length));
-            if (contextData==null) {
+            
+
+            if (contextData == null) {
+                log.info("update eager global list for {0}. Size: {1}".format(associationKey, options.length));
                 _crudContext._eagerassociationOptions["#global"][associationKey] = options;
+                $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
                 return;
             }
 
@@ -269,17 +285,9 @@
 
             _crudContext._eagerassociationOptions[schemaId][entryId][associationKey] = options;
 
-            
+            log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
+
             $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
-            //                $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
-            //                    if (newvalue == old) {
-            //                        return;
-            //                    }
-            //                    $timeout(
-            //                    function () {
-            //                        cmpfacade.digestAndrefresh(association, $scope);
-            //                    }, 0, false);
-            //                });
 
 
         }
@@ -301,7 +309,7 @@
 
         function disposeModal() {
             _crudContext.showingModal = false;
-            _crudContext._eagerassociationOptions["#modal"] = {"#global": {} };
+            _crudContext._eagerassociationOptions["#modal"] = { "#global": {} };
         };
 
         function modalLoaded() {
@@ -327,7 +335,8 @@
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
-            needsServerRefresh: needsServerRefresh
+            needsServerRefresh: needsServerRefresh,
+            rootDataMap: rootDataMap
         };
 
         var associationServices = {
@@ -350,7 +359,7 @@
 
         var modalService = {
             disposeModal: disposeModal,
-            modalLoaded : modalLoaded
+            modalLoaded: modalLoaded
         }
 
 
@@ -361,7 +370,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope',"$log","contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 

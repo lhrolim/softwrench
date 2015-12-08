@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -75,12 +75,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
-      <Name>cts.commons.portable</Name>
-    </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
-      <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
+      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
       <Name>cts.commons</Name>
     </ProjectReference>
   </ItemGroup>

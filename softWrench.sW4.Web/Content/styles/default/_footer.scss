@@ -1,12 +1,8 @@
 ﻿.container {
-    /*.fixed-footer {
-        min-height: 100%;
-        padding-bottom: 70px;
-    }*/
-
     footer {
-        /*position: relative;*/
-        /*top: 78px;*/
+        bottom: 0;
+        z-index: 1010;
+        width: 100%;
 
         .page-overlay {
             border-top: $admin_border;

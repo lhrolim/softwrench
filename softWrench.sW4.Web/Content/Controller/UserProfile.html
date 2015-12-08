@@ -1,114 +1,116 @@
-﻿<article class="container" ng-controller="UserProfileController">
-    <section ng-show="isList">
-        <button type="button" class="btn btn-primary new-button" ng-click="new();">
-            <i class="fa fa-plus"></i>&ensp;{{i18N('general.newuserprofile','New Security Group')}}
-        </button>
+﻿<article class="container page" ng-controller="UserProfileController">
+    <form class="form-horizontal">
+        <section ng-show="isList">
+            <button type="button" class="btn btn-primary new-button" ng-click="new();">
+                <i class="fa fa-plus"></i>&ensp;{{i18N('general.newuserprofile','New Security Group')}}
+            </button>
 
-        <div id="dvUserList">
-            <form id="roleForm">
-                <table class="table table-striped table-hover hidden-phone">
-                    <thead>
-                        <tr>
-                            <th>
-                                {{i18N('general.profile','Profile')}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="gvUsers">
-                        <tr ng-repeat="profile in listObjects" ng-click="editProfile(profile)" style="cursor: pointer">
-                            <td><a>{{profile.name}}</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
-    </section>
-
-    <section ng-show="isDetail">
-        <div id="dvDetail" class="form-horizontal container">
-            <div class="form-group">
-
-                <label class="control-label col-lg-2">{{i18N('general.profile','Security Group')}}</label>
-                <div class="col-lg-10">
-                    <input type="text" id="txtUserName" ng-model="profile.name" placeholder="{{i18N('placeholder.required.profilename','Security Group name is required')}}!" class="form-control"></input>
-                </div>
+            <div id="dvUserList">
+                <form id="roleForm">
+                    <table class="table table-striped table-hover hidden-phone">
+                        <thead>
+                            <tr>
+                                <th>
+                                    {{i18N('general.profile','Profile')}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="gvUsers">
+                            <tr ng-repeat="profile in listObjects" ng-click="editProfile(profile)" style="cursor: pointer">
+                                <td><a>{{profile.name}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
             </div>
-            <div class="form-group">
-                <label class="control-label col-lg-2">{{i18N('general.description','Description')}}</label>
-                <div class="col-lg-10">
-                    <input type="text" id="txtDescription" ng-model="profile.description" class="form-control"></input>
-                </div>
-            </div>
-            <div id="roles" class="form-group">
-                <label class="control-label col-lg-2">Available Permissions</label>
-                <div class="col-lg-10">
-                    <div class="select-left-right">
+        </section>
 
-                        <select multiple="multiple" ng-model="availablerolesselected" ng-options="role.name for role in availableroles"
-                                class="form-control hidden-phone input-block-level" />
+        <section ng-show="isDetail">
+            <div id="dvDetail" class="form-horizontal container">
+                <div class="form-group">
 
-                        <div class="buttons">
-                            <button type="button" class="btn btn-sm btn-defualt" ng-click="addSelectedRoles(availablerolesselected)"><i class="fa fa-plus"></i>&ensp;ADD</button>
-                            <button type="button" class="btn btn-sm btn-defualt" ng-click="removeSelectedRoles(selectedroles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
-                        </div>
-                        <label>{{i18N('general.selectedroles','Selected Permissions')}}</label>
-
-                        <select multiple="multiple" ng-model="selectedroles" ng-options="role.name for role in profile.roles"
-                                class="form-control hidden-phone input-block-level" />
-
-
+                    <label class="control-label col-lg-2">{{i18N('general.profile','Security Group')}}</label>
+                    <div class="col-lg-10">
+                        <input type="text" id="txtUserName" ng-model="profile.name" placeholder="{{i18N('placeholder.required.profilename','Security Group name is required')}}!" class="form-control"></input>
                     </div>
                 </div>
-            </div>
-            <!--            <div id="constraints" class="form-group">-->
-            <!--                <div class="row">-->
-            <!--                    <div class="col-lg-3">-->
-            <!--                        <label class="control-label">{{i18N('general.contraints','Constraints')}}</label>-->
-            <!--                        <button type="button" class="btn btn-sm fa fa-plus" ng-click="addConstraint()" />-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--                <div class="row">-->
-            <!--                    <div class="col-lg-12">-->
-            <!--                        <table class="table table-striped">-->
-            <!--                            <thead>-->
-            <!--                                <tr>-->
-            <!--                                    <th></th>-->
-            <!--                                    <th>{{i18N('general.entity','Entity')}}</th>-->
-            <!--                                    <th>{{i18N('general.whereclause','Where Clause')}}</th>-->
-            <!--                                    <th>{{i18N('general.active','Active')}}</th>-->
-            <!--                                </tr>-->
-            <!--                            </thead>-->
-            <!--                            {{profile.constraints}}-->
-            <!--                                                      <tbody>-->
-            <!--                                <tr ng-repeat="constraint in profile.dataConstraints">-->
-            <!--                                    <td>-->
-            <!--                                        <button type="button" class="btn btn-sm glyphicon glyphicon-remove" ng-click="removeConstraint(constraint)"></button>-->
-            <!--                                    </td>-->
-            <!--                                    <td>-->
-            <!--                                        <input type="text" ng-model="constraint.entityName" class="hidden-phone checkbox" />-->
-            <!--                                    </td>-->
-            <!--                                    <td>-->
-            <!--                                        <input type="text" id="contraint_whereclause" ng-model="constraint.whereClause" class="hidden-phone checkbox" style="width: 500px" />-->
-            <!--                                    </td>-->
-            <!--                                    <td>-->
-            <!--                                        <input type="checkbox" id="role_active" ng-model="constraint.isactive" class="hidden-phone checkbox" />-->
-            <!--                                    </td>-->
-            <!--                                </tr>-->
-            <!--                            </tbody>-->
-            <!--                        </table>-->
-            <!---->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <div class="form-actions hidden-phone">
-                <div class="col-lg-offset-2 col-lg-10">
-                    <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}</button>
-                    <button type="button" class="btn" ng-click="cancel()"><i class="fa fa-times"></i>&ensp;{{i18N('general.cancel','Cancel')}}</button>
-                    <button type="button" class="btn" ng-click="delete()"><i class="fa fa-trash"></i>&ensp;{{i18N('general.delete','Delete')}}</button>
+                <div class="form-group">
+                    <label class="control-label col-lg-2">{{i18N('general.description','Description')}}</label>
+                    <div class="col-lg-10">
+                        <input type="text" id="txtDescription" ng-model="profile.description" class="form-control"></input>
+                    </div>
                 </div>
+                <div id="roles" class="form-group">
+                    <label class="control-label col-lg-2">Available Permissions</label>
+                    <div class="col-lg-10">
+                        <div class="select-left-right">
+
+                            <select multiple="multiple" ng-model="availablerolesselected" ng-options="role.name for role in availableroles"
+                                    class="form-control hidden-phone input-block-level" />
+
+                            <div class="buttons">
+                                <button type="button" class="btn btn-sm btn-defualt" ng-click="addSelectedRoles(availablerolesselected)"><i class="fa fa-plus"></i>&ensp;ADD</button>
+                                <button type="button" class="btn btn-sm btn-defualt" ng-click="removeSelectedRoles(selectedroles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
+                            </div>
+                            <label>{{i18N('general.selectedroles','Selected Permissions')}}</label>
+
+                            <select multiple="multiple" ng-model="selectedroles" ng-options="role.name for role in profile.roles"
+                                    class="form-control hidden-phone input-block-level" />
+
+
+                        </div>
+                    </div>
+                </div>
+                <!--            <div id="constraints" class="form-group">-->
+                <!--                <div class="row">-->
+                <!--                    <div class="col-lg-3">-->
+                <!--                        <label class="control-label">{{i18N('general.contraints','Constraints')}}</label>-->
+                <!--                        <button type="button" class="btn btn-sm fa fa-plus" ng-click="addConstraint()" />-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--                <div class="row">-->
+                <!--                    <div class="col-lg-12">-->
+                <!--                        <table class="table table-striped">-->
+                <!--                            <thead>-->
+                <!--                                <tr>-->
+                <!--                                    <th></th>-->
+                <!--                                    <th>{{i18N('general.entity','Entity')}}</th>-->
+                <!--                                    <th>{{i18N('general.whereclause','Where Clause')}}</th>-->
+                <!--                                    <th>{{i18N('general.active','Active')}}</th>-->
+                <!--                                </tr>-->
+                <!--                            </thead>-->
+                <!--                            {{profile.constraints}}-->
+                <!--                                                      <tbody>-->
+                <!--                                <tr ng-repeat="constraint in profile.dataConstraints">-->
+                <!--                                    <td>-->
+                <!--                                        <button type="button" class="btn btn-sm glyphicon glyphicon-remove" ng-click="removeConstraint(constraint)"></button>-->
+                <!--                                    </td>-->
+                <!--                                    <td>-->
+                <!--                                        <input type="text" ng-model="constraint.entityName" class="hidden-phone checkbox" />-->
+                <!--                                    </td>-->
+                <!--                                    <td>-->
+                <!--                                        <input type="text" id="contraint_whereclause" ng-model="constraint.whereClause" class="hidden-phone checkbox" style="width: 500px" />-->
+                <!--                                    </td>-->
+                <!--                                    <td>-->
+                <!--                                        <input type="checkbox" id="role_active" ng-model="constraint.isactive" class="hidden-phone checkbox" />-->
+                <!--                                    </td>-->
+                <!--                                </tr>-->
+                <!--                            </tbody>-->
+                <!--                        </table>-->
+                <!---->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--            </div>-->
+                <div class="form-actions hidden-phone">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}</button>
+                        <button type="button" class="btn" ng-click="cancel()"><i class="fa fa-times"></i>&ensp;{{i18N('general.cancel','Cancel')}}</button>
+                        <button type="button" class="btn" ng-click="delete()"><i class="fa fa-trash"></i>&ensp;{{i18N('general.delete','Delete')}}</button>
+                    </div>
+                </div>
+                <!--this is redundant and is removed from the page since the error message gets printed on the message section above-->
+                <!--{{errorMessage}}-->
             </div>
-            <!--this is redundant and is removed from the page since the error message gets printed on the message section above-->
-            <!--{{errorMessage}}-->
-        </div>
-    </section>
+        </section>
+    </form>
 </article>

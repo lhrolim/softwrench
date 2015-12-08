@@ -63,5 +63,6 @@ TestResults
 
 # 3rd-party stuff copied during build
 /packages
+**/packages
 GitTfs/git2.*
 *.DS_Store

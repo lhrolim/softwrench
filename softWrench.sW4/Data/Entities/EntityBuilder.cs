@@ -59,7 +59,7 @@ namespace softWrench.sW4.Data.Entities {
             } else if (collectionAssociation != null) {
                 HandleCollections<T>(entityType, metadata, applicationMetadata, collectionAssociation, associationAttributes, property);
             } else {
-                var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name == name);
+                var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(name));
                 // if we´re on add mode, make sure the id isn´t setted 
                 if (operationType == OperationType.Add && Equals(metadata.Schema.IdAttribute, attribute)) {
                     return;

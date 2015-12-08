@@ -100,7 +100,7 @@
                 return null;
             }
 
-            if ("true" === hideDescription || true === hideDescription) {
+            if ("true" === hideDescription || true === hideDescription || item.label==null) {
                 return item.value;
             }
             return "(" + item.value + ")" + " - " + item.label;

@@ -115,9 +115,6 @@ namespace softWrench.sW4.Data.Search {
             var sbReplacingIdx = 0;
             var sb = new StringBuilder(BuildSearchTemplate(listDto, searchParameters));
 
-            var quickSearchData = listDto.QuickSearchData;
-            var isQuickSearch = !string.IsNullOrEmpty(quickSearchData);
-
             foreach (var param in parameters) {
                 var statement = new StringBuilder();
 
@@ -126,7 +123,6 @@ namespace softWrench.sW4.Data.Search {
                     //this search parameter needs to be ignored
                     continue;
                 }
-                //if (isQuickSearch) searchParameter.Value = quickSearchData;
 
                 var parameterData = GetParameterData(entityName, searchParameter, param);
                 searchParameter.IsNumber = parameterData.Item2 == ParameterType.Number;
@@ -174,17 +170,9 @@ namespace softWrench.sW4.Data.Search {
                     }
                 }
                 var idxToReplace = sb.ToString().IndexOf(param, sbReplacingIdx, StringComparison.Ordinal);
-                try
-                {
-                    sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
-                    sbReplacingIdx += statement.ToString().Length;
-                }
-                catch
-                {
-                    //atest
-                    throw;
-                }
-                
+                sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
+                sbReplacingIdx += statement.ToString().Length;
+
             }
             sb.Replace("&&", " AND ");
             sb.Replace("||,", " OR ");
@@ -264,11 +252,11 @@ namespace softWrench.sW4.Data.Search {
             return resultDictionary;
         }
 
-        private static Tuple<string, ParameterType,string> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
+        private static Tuple<string, ParameterType, string> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
 
             // UNION statements cases
             if (paramName.StartsWith("null")) {
-                return new Tuple<string, ParameterType,string>("null", ParameterType.Default,paramName);
+                return new Tuple<string, ParameterType, string>("null", ParameterType.Default, paramName);
             }
             if (paramName.EndsWith("_union")) {
                 paramName = paramName.Substring(0, paramName.Length - "_union".Length);
@@ -290,13 +278,13 @@ namespace softWrench.sW4.Data.Search {
                 }
             }
             if (resultType == ParameterType.Date || resultType == ParameterType.Number) {
-                return new Tuple<string, ParameterType,string>(baseResult, resultType, baseResult);
+                return new Tuple<string, ParameterType, string>(baseResult, resultType, baseResult);
             }
             if (searchParameter.FilterSearch) {
                 //if this is a filter search input lets make it case insensitive
-                return new Tuple<string, ParameterType,string>("UPPER(COALESCE(" + baseResult + ",''))", resultType,baseResult);
+                return new Tuple<string, ParameterType, string>("UPPER(COALESCE(" + baseResult + ",''))", resultType, baseResult);
             }
-            return new Tuple<string, ParameterType,string>(baseResult, resultType, baseResult);
+            return new Tuple<string, ParameterType, string>(baseResult, resultType, baseResult);
         }
 
         enum ParameterType {
@@ -340,9 +328,8 @@ namespace softWrench.sW4.Data.Search {
                 var attribute = originalEntity.GetAttribute(lookupAttribute.From);
                 return attribute == null ? null : attribute.ToString();
             }
-
+            //quotes do not need to be added at this layer, since they are already being added when evaluating the parameters at the SearchUtils
             return lookupAttribute.Literal;
-
         }
 
 

@@ -69,35 +69,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 return null;
             }
 
-            // Set dependante lookup atributes
-            var lookupAttributes = association.LookupAttributes();
-            foreach (var lookupAttribute in lookupAttributes) {
-                var searchValue = SearchUtils.GetSearchValue(lookupAttribute, originalEntity);
-                if (!string.IsNullOrEmpty(searchValue)) {
-                    associationFilter.AppendSearchEntry(lookupAttribute.To, searchValue, lookupAttribute.AllowsNull);
-                }
+            var isLookupMode = associationFilter is PaginatedSearchRequestDto;
+
+            // needs to search by every attribute
+            if (isLookupMode || association.IsEagerLoaded()) {
+                AppendNonPrimaryAttributesSearch(originalEntity, association, associationFilter);
             }
 
-
-
+            // handles quick search request
             if (!string.IsNullOrEmpty(associationFilter.QuickSearchData)) {
-
-                var appMetadata = GetAssociationApplicationMetadata(association);
-
-                IEnumerable<string> listOfFields = null;
-
-                if (appMetadata != null) {
-                    listOfFields = appMetadata.Schema.NonHiddenFields.Select(f => f.Attribute);
-                } else {
-                    listOfFields = new List<string>{
-                        association.EntityAssociation.PrimaryAttribute().To,
-                        association.LabelFields.FirstOrDefault(),
-                    };
-                }
-
-                associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(listOfFields));
+                AppendQuickSearch(association, associationFilter);
             }
-
 
             // Set projections
             var numberOfLabels = BuildProjections(associationFilter, association);
@@ -119,27 +101,65 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
             associationFilter.QueryAlias = association.AssociationKey;
 
-            var tasks = new List<Task>(1);
             //caching for multithread access
             associationFilter.GetParameters();
 
-            if (associationFilter is PaginatedSearchRequestDto) {
-                tasks.Add(Task.Factory.NewThread(c => {
-                    var paginatedFilter = (PaginatedSearchRequestDto)associationFilter;
-                    if (paginatedFilter.NeedsCountUpdate) {
-                        //cloning to avoid any concurrency issues
-                        var clonedDTO = (PaginatedSearchRequestDto)associationFilter.ShallowCopy();
-                        paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, clonedDTO);
-                    }
-                }, null));
-
-            }
             var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
-            Task.WaitAll(tasks.ToArray());
+
+            // execute query count in separate thread and update the dto with the pagination data
+            if (isLookupMode) {
+                ExecuteCountQuery(associationFilter, entityMetadata);
+            }
 
             var options = BuildOptions(queryResponse, association, numberOfLabels, associationFilter.SearchSort == null);
             var filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
             return filterFunctionName != null ? ApplyFilters(applicationMetadata, originalEntity, filterFunctionName, options, association) : options;
+        }
+
+        private void ExecuteCountQuery(SearchRequestDto associationFilter, EntityMetadata entityMetadata) {
+            var tasks = new List<Task>(1) {
+                Task.Factory.NewThread(c => {
+                    var paginatedFilter = (PaginatedSearchRequestDto) associationFilter;
+                    if (paginatedFilter.NeedsCountUpdate) {
+                        //cloning to avoid any concurrency issues
+                        var clonedDTO = (PaginatedSearchRequestDto) associationFilter.ShallowCopy();
+                        paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, clonedDTO);
+                    }
+                }, null)
+            };
+
+            Task.WaitAll(tasks.ToArray());
+        }
+
+        private static void AppendQuickSearch(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
+            var appMetadata = GetAssociationApplicationMetadata(association);
+
+            IEnumerable<string> listOfFields = appMetadata != null
+                ? appMetadata.Schema.NonHiddenFields.Select(f => f.Attribute)
+                : new List<string> {
+                    association.EntityAssociation.PrimaryAttribute().To,
+                    association.LabelFields.FirstOrDefault(),
+                };
+
+            associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(listOfFields));
+        }
+
+        private static void AppendNonPrimaryAttributesSearch(AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
+            // Set dependant lookup atributes
+            foreach (var lookupAttribute in association.LookupAttributes()) {
+                // case where attribute has a query
+                if (lookupAttribute.Query != null) {
+                    // pre-interpret the query before appending
+                    var query = AssociationHelper.PrecompiledAssociationAttributeQuery(association.EntityAssociation.To, lookupAttribute);
+                    associationFilter.AppendWhereClause(query);
+                    continue;
+                }
+                // case with to->from or to->literal relationship
+                var searchValue = SearchUtils.GetSearchValue(lookupAttribute, originalEntity);
+                if (!string.IsNullOrEmpty(searchValue)) {
+                    associationFilter.AppendSearchEntry(lookupAttribute.To, searchValue, lookupAttribute.AllowsNull);
+                }
+            }
         }
 
         /// Sorting Precedence 

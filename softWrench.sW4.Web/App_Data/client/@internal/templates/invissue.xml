@@ -434,7 +434,7 @@
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
         </schema>
 
-        <schema title="View Issue and Return" id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
+        <schema title="Issue Details" id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" hidden="true"/>

@@ -1,5 +1,5 @@
 ﻿fieldset.hasheader {
-    clear: both;
+    /*clear: both;*/
 }
 
 .form-horizontal .form-group {
@@ -366,6 +366,7 @@ input[type="date"], input[type="time"] {
         color: #fff;
     }
 }
+
 .secondary-content-section {
     padding-top: 20px;
 
@@ -375,6 +376,7 @@ input[type="date"], input[type="time"] {
         height: 0;
     }
 }
+
 .secondary-content-section-trigger {
     position: relative;
     margin-top: 45px;
@@ -393,7 +395,7 @@ input[type="date"], input[type="time"] {
     .secondary-content-section-button {
         position: absolute;
         bottom: 0;
-        left: 20px;
+        left: 15px;
         padding: 10px;
         background-color: $cts-gray;
 
@@ -402,6 +404,12 @@ input[type="date"], input[type="time"] {
         }
     }
 }
+
 .form-horizontal .control-label {
     text-align: left;
+}
+
+#crudInputNewItemComposition {
+    max-width: 768px;
+    margin: 0 auto;
 }

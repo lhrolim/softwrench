@@ -18,7 +18,7 @@ namespace softWrench.sW4.Web {
 
             // TODO: To disable tracing in your application, please comment out or remove the following line of code
             // For more information, refer to: http://www.asp.net/web-api
-            config.EnableSystemDiagnosticsTracing();
+//            config.EnableSystemDiagnosticsTracing();
         }
 
         private static void ConfigRoutes(HttpConfiguration config) {

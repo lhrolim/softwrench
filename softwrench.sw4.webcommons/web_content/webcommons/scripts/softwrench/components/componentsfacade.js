@@ -45,10 +45,11 @@
             var attribute = displayable.attribute;
             var rendererType = displayable.rendererType;
             var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-            log.debug("updating list for component {0}".format(attribute));
             var fn = function doRefresh() {
+                log.debug("updating list for component {0}".format(attribute));
                 if (rendererType === 'autocompleteclient') {
-                    cmpAutocompleteClient.refreshFromAttribute(attribute, null, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey,contextData));
+                    var value = scope.datamap[displayable.target];
+                    cmpAutocompleteClient.refreshFromAttribute(attribute, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
                 } else if (rendererType === 'combodropdown') {
                     cmpComboDropdown.refreshFromAttribute(attribute);
                 }

@@ -51,6 +51,10 @@
                 return isFieldHidden(datamap, application, fieldMetadata);
             },
 
+            getParameter : function(fieldMetadata, key) {
+                return fieldMetadata.rendererParameters[key];
+            },
+
             isFieldRequired: function (fieldMetadata, datamap) {
                 if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
                     return "true" === fieldMetadata.parameters["required"];
@@ -117,10 +121,10 @@
                         var expressionResult = null;
                         var displayable = displayables[key];
                         if (displayable.evalExpression != null) {
-                            expressionResult = expressionService.evaluate(displayable.evalExpression, datamap, scope);
+                            expressionResult = expressionService.evaluate(displayable.evalExpression, datamap, scope, displayable);
                             datamap[target] = expressionResult;
                         } else if (displayable.defaultExpression != null) {
-                            expressionResult = expressionService.evaluate(displayable.defaultExpression, datamap, scope);
+                            expressionResult = expressionService.evaluate(displayable.defaultExpression, datamap, scope, displayable);
                             datamap[target] = expressionResult;
                         }
                         if (expressionResult == null && value.defaultValue != null) {

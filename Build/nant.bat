@@ -1,2 +1,2 @@
 @echo off
-"C:\Users\rolim\programs\nant\bin\NAnt.exe" %*
+"C:\programs\nant-0.92-bin\bin\NAnt.exe" %*
