@@ -25,9 +25,18 @@ namespace softWrench.sW4.Data.Search {
             return string.Format(QUICK_SEARCH_PARAM_VALUE_PATTERN, data).ToUpper();
         }
 
-        public static string BuildOrWhereClause(IEnumerable<string> attributes) {
+        /// <summary>
+        /// Builds a whereclause statement for a quick search query. 
+        /// The statement is applied to the attributes. 
+        /// Optionally you can pass a context parameter to be used as the attributes's alias in the statement.
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static string BuildOrWhereClause(IEnumerable<string> attributes, string context = null) {
+            var attributesForStatement = context == null ? attributes : attributes.Select(a => context + "." + a);
             // iterate filters and 'OR' the attributes
-            return "(" + string.Join("OR", attributes.Select(QuickSearchStatement)) + ")";
+            return "(" + string.Join("OR", attributesForStatement.Select(QuickSearchStatement)) + ")";
         }
     }
 }
