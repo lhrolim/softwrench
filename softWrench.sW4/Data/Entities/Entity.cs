@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 
 
 namespace softWrench.sW4.Data.Entities {
@@ -52,7 +53,7 @@ namespace softWrench.sW4.Data.Entities {
             attributeName = attributeName.EndsWith("_") ? attributeName : attributeName + "_";
             _associationAttributes.TryGetValue(attributeName, out relationship);
             if (relationship == null) {
-                if (_metadata.ListAssociations().Any(l => l.Qualifier == attributeName)) {
+                if (_metadata.ListAssociations().Any(l => l.Qualifier.EqualsAny(attributeName))) {
                     return BlankList();
                 }
             }

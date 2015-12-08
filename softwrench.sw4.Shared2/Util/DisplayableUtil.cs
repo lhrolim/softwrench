@@ -10,10 +10,17 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Util {
+
+    public enum SchemaFetchMode {
+        MainContent, SecondaryContent, All
+    }
+
     public class DisplayableUtil {
 
 
-        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables, bool fetchInner = true, bool fetchSecondaryContent = true) {
+
+        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables, 
+            bool fetchInner = true, SchemaFetchMode schemaFetchMode = SchemaFetchMode.All) {
             var resultingDisplayables = new List<T>();
 
             foreach (IApplicationDisplayable displayable in originalDisplayables) {
@@ -23,12 +30,16 @@ namespace softwrench.sW4.Shared2.Util {
                 if (displayable is IApplicationDisplayableContainer && fetchInner) {
                     var container = displayable as IApplicationDisplayableContainer;
                     var section = container as ApplicationSection;
-                    if (section != null && (section.SecondaryContent && !fetchSecondaryContent)) {
+                    var isSecondarySection = section != null && section.SecondaryContent;
+                    if (isSecondarySection && SchemaFetchMode.MainContent.Equals(schemaFetchMode)) {
                         //under some circustances we might not be interested in returning the secondary content displayables
                         continue;
                     }
+                    if (!isSecondarySection && SchemaFetchMode.SecondaryContent.Equals(schemaFetchMode)) {
+                        continue;
+                    }
                     resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, true,
-                        fetchSecondaryContent));
+                        schemaFetchMode));
                 }
             }
             return resultingDisplayables;

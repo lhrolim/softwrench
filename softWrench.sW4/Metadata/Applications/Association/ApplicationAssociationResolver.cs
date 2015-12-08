@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using cts.commons.simpleinjector;
+using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -62,7 +63,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return ResolveOptions(applicationMetadata, originalEntity, association, new SearchRequestDto());
         }
 
-
+        [CanBeNull]
         public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
