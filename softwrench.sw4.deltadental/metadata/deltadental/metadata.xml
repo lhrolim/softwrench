@@ -359,21 +359,27 @@
             </field>
           </customization>
         </list>
+        
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-          <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
-            <section id="siteidsection"/>
-            <!--<field attribute="ticketid" label="SR#" readonly="true"/>-->
-          </section>
 
-          <section>
+          <section orientation="vertical">
             <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=medium" />
-            </field>
+            <section orientation="horizontal">
+              <field attribute="description" label="Summary:" requiredexpression="true">
+                <!--<renderer type="default" params="maxlength=100;inputsize=medium" />-->
+              </field>
+              <section id="siteidsection"/>
+              <section id="statussection">
+                <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
+                  <renderer type="combo" />
+                </association>
+              </section>
+            </section>
+
             <field label="Details:" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
+
           </section>
 
           <section orientation="horizontal">
@@ -398,63 +404,85 @@
               <dataprovider prefilterfunction="FilterAssets"/>
               <event type="afterchange" service="srService" method="afterChangeAsset"/>
             </association>
-            <section id="statussection">
-              <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-                <renderer type="combo" />
-              </association>
-            </section>
+            
             <optionfield attribute="classstructureid" label="Request Code:" dependantfields="siteid" providerattribute="_SRClassStructureType">
               <renderer type="autocompleteclient" />
             </optionfield>
+          
           </section>
+          
           <field attribute="changeby" default="@username" hidden="true"/>
+
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="person.personid asc">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeowner"/>
-            </association>
-            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="phone_.phonenum,email_.emailaddress">
-              <renderer type="lookup" params="columnlabel=Name"/>
-            </association>
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-            </association>
-             <field attribute="person_.phone_.phonenum" label="Affected Person Phone:" readonly="true" attributeToServer="affectedphone"/>
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="email_.emailaddress,phone_.phonenum,altdisplayname,altphone,altemail,displayname" enableexpression="true" showexpression="true">
-              <renderer type="lookup" params="columnlabel=Name;"/>
-            </association>
-             <field attribute="person_.email_.emailaddress" label="Affected Person Email:" readonly="true" attributeToServer="affectedemail"/>
-            <field attribute="reportedbyp_.phone_.phonenum" label="Reported By Phone:" readonly="true" attributeToServer="reportedphone"/>
-             <field attribute="reportedbyp_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
-            <field attribute="reportedbyp_.email_.emailaddress" label="Reported By Email:" readonly="true" attributeToServer="reportedemail" />
-             <field attribute="reportedbyp_.altphone" label="Alt Contact Phone:" readonly="true"/>
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-            </field>                
-            <field attribute="reportedbyp_.altemail" label="Alt Contact Email:" readonly="true"/>
+            <!--<renderer type="default" params="childinputsize=medium" />-->
+
+
+            <!-- owner -->
+            <section orientation="vertical">
+              <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="person.personid asc">
+                <renderer type="lookup"/>
+                <event type="afterchange" service="srService" method="afterchangeowner"/>
+              </association>
+              <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+                <renderer type="lookup"/>
+                <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+              </association>
+              <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              </field>
+            </section>
+
+            <!-- reportedby -->
+            <section orientation="vertical">
+              <association label="Reported By:" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="email_.emailaddress,phone_.phonenum,altdisplayname,altphone,altemail,displayname" enableexpression="true" showexpression="true">
+                <renderer type="lookup" params="columnlabel=Name;"/>
+              </association>
+              <field attribute="reportedbyp_.email_.emailaddress" label="Reported By Email:" readonly="true" attributeToServer="reportedemail" />
+              <field attribute="reportedbyp_.phone_.phonenum" label="Reported By Phone:" readonly="true" attributeToServer="reportedphone"/>
+            </section>
+
+            <!-- reportedby.alt -->
+            <section orientation="vertical">
+              <field attribute="reportedbyp_.altdisplayname" label="Alt Contact Name:" readonly="true"/>
+              <field attribute="reportedbyp_.altemail" label="Alt Contact Email:" readonly="true"/>
+              <field attribute="reportedbyp_.altphone" label="Alt Contact Phone:" readonly="true"/>
+            </section>
+
+            <!-- affected -->
+            <section orientation="vertical">
+              <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="person.personid asc" extraprojectionvalues="phone_.phonenum,email_.emailaddress">
+                <renderer type="lookup" params="columnlabel=Name"/>
+              </association>
+              <field attribute="person_.email_.emailaddress" label="Affected Person Email:" readonly="true" attributeToServer="affectedemail"/>
+              <field attribute="person_.phone_.phonenum" label="Affected Person Phone:" readonly="true" attributeToServer="affectedphone"/>
+            </section>
+
           </section>
+          
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
+
+            <section orientation="vertical">
             <field attribute="targetstart" label="Target Start Date:" >
               <renderer type="datetime" params="format=MM/dd/yyyy"/>
             </field>
             <field attribute="targetfinish" label="Target Finish Date:">
               <renderer type="datetime" params="format=MM/dd/yyyy"/>
             </field>
-            <field attribute="actualstart" label="Actual Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy"/>
-            </field>
-            <field attribute="actualfinish" label="Actual Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy"/>
-            </field>
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime" hidden="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-            </field>
+            </section>
+
+            <section orientation="vertical">
+              <field attribute="actualstart" label="Actual Start Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+              <field attribute="actualfinish" label="Actual Finish Date:">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+            </section>
+          
           </section>
+          
           <section orientation="horizontal">
             <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
             <!--<renderer type="default" params="childinputsize=medium" />-->
@@ -489,7 +517,7 @@
           <!--SSWEB 173-->
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
-              <renderer type="upload"/>
+              <renderer type="upload" params="class=col-md-6" />
             </field>
           </section>
         </schema>
@@ -548,13 +576,11 @@
       </properties>
       <filters>
         <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
-          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
+          <f:option label="Current User" value="@username"/>
         </optionfilter>
       </filters>
       <schemas>
         <list title="Work Order Grid" platform="web" redeclaring="false">
-
-
 
           <customization position="asset_.description">
             <field attribute="ownerperson_.displayname" label="Owner">
