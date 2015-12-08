@@ -142,7 +142,7 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                                                     }
                                                 }
 
-                                                if ($scope.schema.idDisplayable != null && userID != null) {
+                                                if ($scope.schema.idDisplayable && userID != null) {
                                                     newPage.title = '{0} {1}'.format($scope.schema.idDisplayable, userID);
                                                 }
                                             }
