@@ -290,7 +290,7 @@
             <property key="nextschema.schemaid" value="physicalcountList"/>
             <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
-          <field label="ID#" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
@@ -356,7 +356,7 @@
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
             <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
-          <field label="ID#" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
 
           <section orientation="horizontal">
@@ -428,7 +428,7 @@
           <section>
             <field attribute="invreserveid" hidden="true"/>
             <field attribute="requireddate" hidden="true"/>
-            <field attribute="requestnum" label="ID#" hidden="true"/>
+            <field attribute="requestnum" hidden="true"/>
             <field attribute="itemsetid" hidden="true"/>
             <field attribute="siteid" hidden="true"/>
             <field attribute="orgid" hidden="true"/>
@@ -564,7 +564,7 @@
           <properties>
             <property key="nextschema.schemaid" value="invbalancesList"/>
           </properties>
-          <field label="ID#" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
@@ -660,7 +660,7 @@
         </schema>
 
         <schema id="detail" title="Inventory Transfer Details">
-          <field attribute="matrectransid" label="Transfer#" hidden="true"></field>
+          <field attribute="matrectransid" hidden="true"></field>
           
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
