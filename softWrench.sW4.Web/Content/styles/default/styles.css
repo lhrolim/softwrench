@@ -1483,7 +1483,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
   margin: 5px auto; }
 
 .commandbar {
-  margin-top: 60px; }
+  margin-top: 15px; }
   .commandbar .print {
     display: none; }
 
