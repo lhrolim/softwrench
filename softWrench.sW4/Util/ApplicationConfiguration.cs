@@ -28,7 +28,9 @@ namespace softWrench.sW4.Util {
         private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
 
         public static string SystemVersion {
-            get { return ConfigurationManager.AppSettings["version"]; }
+            get {
+                return ConfigurationManager.AppSettings["version"];
+            }
         }
 
         public static string SystemRevision {
@@ -39,7 +41,9 @@ namespace softWrench.sW4.Util {
         }
 
         public static long SystemBuildDateInMillis {
-            get { return (long)(SystemBuildDate - new DateTime(1970, 1, 1)).TotalMilliseconds; }
+            get {
+                return (long)(SystemBuildDate - new DateTime(1970, 1, 1)).TotalMilliseconds;
+            }
         }
 
         public static DateTime SystemBuildDate {
@@ -76,8 +80,12 @@ namespace softWrench.sW4.Util {
         }
 
         public static string TestclientName {
-            get { return _testclientName; }
-            set { _testclientName = value; }
+            get {
+                return _testclientName;
+            }
+            set {
+                _testclientName = value;
+            }
         }
 
 
@@ -99,24 +107,32 @@ namespace softWrench.sW4.Util {
         /// name of this system in maximo
         /// </summary>
         public static string ExternalSystemName {
-            get { return MetadataProvider.GlobalProperty("externalSystemName", true); }
+            get {
+                return MetadataProvider.GlobalProperty("externalSystemName", true);
+            }
         }
 
         /// <summary>
         /// Identifies the maximo webservice provider
         /// </summary>
         public static string WsProvider {
-            get { return WsUtil.WsProvider().ToString().ToLower(); }
+            get {
+                return WsUtil.WsProvider().ToString().ToLower();
+            }
         }
 
 
 
         public static string WsUrl {
-            get { return MetadataProvider.GlobalProperty("basewsURL", true); }
+            get {
+                return MetadataProvider.GlobalProperty("basewsURL", true);
+            }
         }
 
         public static string WsPrefix {
-            get { return MetadataProvider.GlobalProperty("baseWSPrefix"); }
+            get {
+                return MetadataProvider.GlobalProperty("baseWSPrefix");
+            }
         }
 
         public static bool IgnoreWsCertErrors {
@@ -131,15 +147,21 @@ namespace softWrench.sW4.Util {
         #region Ldap
 
         public static string LdapServer {
-            get { return MetadataProvider.GlobalProperty("ldapServer"); }
+            get {
+                return MetadataProvider.GlobalProperty("ldapServer");
+            }
         }
 
         public static int LdapPortNumber {
-            get { return Convert.ToInt32(MetadataProvider.GlobalProperty("ldapPortNumber")); }
+            get {
+                return Convert.ToInt32(MetadataProvider.GlobalProperty("ldapPortNumber"));
+            }
         }
 
         public static string LdapBaseDn {
-            get { return MetadataProvider.GlobalProperty("ldapBaseDn"); }
+            get {
+                return MetadataProvider.GlobalProperty("ldapBaseDn");
+            }
         }
 
         #endregion
@@ -147,11 +169,15 @@ namespace softWrench.sW4.Util {
         #region Mif Credentials
 
         public static string MifCredentialsUser {
-            get { return MetadataProvider.GlobalProperty("mifcredentials.user"); }
+            get {
+                return MetadataProvider.GlobalProperty("mifcredentials.user");
+            }
         }
 
         public static string MifCredentialsPassword {
-            get { return MetadataProvider.GlobalProperty("mifcredentials.password"); }
+            get {
+                return MetadataProvider.GlobalProperty("mifcredentials.password");
+            }
         }
 
         #endregion
@@ -159,11 +185,15 @@ namespace softWrench.sW4.Util {
         #region Ism Credentials
 
         public static string IsmCredentialsUser {
-            get { return MetadataProvider.GlobalProperty("ismcredentials.user"); }
+            get {
+                return MetadataProvider.GlobalProperty("ismcredentials.user");
+            }
         }
 
         public static string IsmCredentialsPassword {
-            get { return MetadataProvider.GlobalProperty("ismcredentials.password"); }
+            get {
+                return MetadataProvider.GlobalProperty("ismcredentials.password");
+            }
         }
 
         #endregion
@@ -171,15 +201,21 @@ namespace softWrench.sW4.Util {
         #region ServiceIT Config
 
         public static string ServiceItLoginPath {
-            get { return MetadataProvider.GlobalProperty("serviceItLoginPath"); }
+            get {
+                return MetadataProvider.GlobalProperty("serviceItLoginPath");
+            }
         }
 
         public static string SertiveItFaqUsefulLinksPath {
-            get { return MetadataProvider.GlobalProperty("faqusefullinksPath"); }
+            get {
+                return MetadataProvider.GlobalProperty("faqusefullinksPath");
+            }
         }
 
         public static string SertiveItSsoServicesQueryPath {
-            get { return MetadataProvider.GlobalProperty("ssoServicesQueryPath"); }
+            get {
+                return MetadataProvider.GlobalProperty("ssoServicesQueryPath");
+            }
         }
 
         #endregion
@@ -187,15 +223,21 @@ namespace softWrench.sW4.Util {
         #region Login
 
         public static string LoginErrorMessage {
-            get { return MetadataProvider.GlobalProperty("loginErrorMessage"); }
+            get {
+                return MetadataProvider.GlobalProperty("loginErrorMessage");
+            }
         }
 
         public static string LoginUserNameMessage {
-            get { return MetadataProvider.GlobalProperty("loginUserNameMessage"); }
+            get {
+                return MetadataProvider.GlobalProperty("loginUserNameMessage");
+            }
         }
 
         public static string LoginPasswordMessage {
-            get { return MetadataProvider.GlobalProperty("loginPasswordMessage"); }
+            get {
+                return MetadataProvider.GlobalProperty("loginPasswordMessage");
+            }
         }
 
         #endregion
@@ -203,15 +245,21 @@ namespace softWrench.sW4.Util {
         #region Database default values
 
         public static string DefaultOrgId {
-            get { return MetadataProvider.GlobalProperty("defaultOrgId"); }
+            get {
+                return MetadataProvider.GlobalProperty("defaultOrgId");
+            }
         }
 
         public static string DefaultSiteId {
-            get { return MetadataProvider.GlobalProperty("defaultSiteId"); }
+            get {
+                return MetadataProvider.GlobalProperty("defaultSiteId");
+            }
         }
 
         public static string DefaultStoreloc {
-            get { return MetadataProvider.GlobalProperty("defaultStoreloc"); }
+            get {
+                return MetadataProvider.GlobalProperty("defaultStoreloc");
+            }
         }
 
         #endregion
@@ -280,10 +328,8 @@ namespace softWrench.sW4.Util {
 
         #region UI Options
 
-        public static bool UIShowClassicAdminMenu
-        {
-            get
-            {
+        public static bool UIShowClassicAdminMenu {
+            get {
                 var flagStr = MetadataProvider.GlobalProperty("ui.adminmenu.showclassic");
                 var flag = false;
                 bool.TryParse(flagStr, out flag);
@@ -360,12 +406,16 @@ namespace softWrench.sW4.Util {
         }
 
         public static bool IsUnitTest {
-            get { return GetProfile() == UnitTestProfile; }
+            get {
+                return GetProfile() == UnitTestProfile;
+            }
         }
 
 
 
-        public static long StartTimeMillis { get; set; }
+        public static long StartTimeMillis {
+            get; set;
+        }
 
 
         public static long GetStartTimeInMillis() {
@@ -521,15 +571,15 @@ namespace softWrench.sW4.Util {
             var type = connectionStringSettings.ProviderName;
             switch (type) {
                 case "System.Data.SQL":
-                    return DBMS.MSSQL;
+                return DBMS.MSSQL;
                 case "System.Data.SqlClient":
-                    return DBMS.MSSQL;
+                return DBMS.MSSQL;
                 case "System.Data.OracleClient":
-                    return DBMS.ORACLE;
+                return DBMS.ORACLE;
                 case "Oracle.DataAccess.Client":
-                    return DBMS.ORACLE;
+                return DBMS.ORACLE;
                 case "IBM.Data.DB2":
-                    return DBMS.DB2;
+                return DBMS.DB2;
             }
             return DBMS.MYSQL;
         }
@@ -545,6 +595,10 @@ namespace softWrench.sW4.Util {
             _swdbType = null;
             _environment = null;
             _maximodbType = null;
+        }
+
+        public static bool IsClient(string clientName) {
+            return ClientName.Equals(clientName);
         }
     }
 
