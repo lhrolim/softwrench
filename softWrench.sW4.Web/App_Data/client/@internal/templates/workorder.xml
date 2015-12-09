@@ -217,7 +217,7 @@
           <section orientation="horizontal">
 
             <section orientation="vertical">
-              <header displacement="ontop" label="Asset Management" params="fieldset=true" />
+              <header displacement="ontop" label="Details" params="fieldset=true" />
               <renderer type="default"/>
 
               <section orientation="horizontal">

@@ -23,6 +23,8 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         return i18NService.getI18nCommandLabel(command, $scope.schema);
     };
 
+   
+
     $scope.i18NTabLabel = function (tab) {
         return i18NService.getTabLabel(tab, $scope.schema);
     };

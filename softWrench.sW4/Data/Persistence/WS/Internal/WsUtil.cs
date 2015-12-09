@@ -87,7 +87,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object SetValueIfNull(object baseObject, string propertyName, object value,
-            Boolean markSpecified = false) {
+            Boolean markSpecified = false, bool setIfNegativeToo = false) {
             if (baseObject == null) {
                 Log.Warn(String.Format("property {0} not found on object null", propertyName));
                 return null;
@@ -99,11 +99,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             var propertyVal = property.GetValue(baseObject);
             var currentValue = ReflectionUtil.GetProperty(propertyVal, "Value");
-            if (currentValue == null) {
+            if (currentValue == null || (setIfNegativeToo && Convert.ToInt64(currentValue) < 0)) {
                 return SetValue(baseObject, propertyName, value, markSpecified);
             }
             return property;
         }
+
 
         public static void CopyFromRootEntity(object rootObject, object integrationObject, string propertyName, object defaultValue, string rootPropertyName = null, bool onlyIfNull = true) {
             var rootPropertyNameToUse = rootPropertyName ?? propertyName;

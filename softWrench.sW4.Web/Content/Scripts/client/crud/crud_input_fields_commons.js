@@ -54,7 +54,7 @@
             return null;
         };
 
-        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables, bodyElement) {
+        function configureAssociationChangeEvents($scope, datamappropertiesName, displayables, datamapId) {
 
 
             var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -105,7 +105,7 @@
                         displayables: displayables,
                         scope: $scope,
                         'continue': function () {
-                            if (isMultiValued && association.rendererType != 'lookup') {
+                            if (isMultiValued && association.rendererType !== 'lookup') {
                                 associationService.updateUnderlyingAssociationObject(association, null, $scope);
                             }
                             var result = associationService.updateAssociations(association, $scope);
@@ -142,7 +142,7 @@
                         //from the scenario where the list was changed first and the value was simply undefined due to the workflow
                         newValue = null;
                     }
-                    cmpfacade.digestAndrefresh(association, $scope, newValue);
+                    cmpfacade.digestAndrefresh(association, $scope, newValue, datamapId);
                 });
 
                 $log.getInstance("associationService#configureAssociationChangeEvents", ["association"]).debug("initing watchers for {0} ".format(association.attribute));

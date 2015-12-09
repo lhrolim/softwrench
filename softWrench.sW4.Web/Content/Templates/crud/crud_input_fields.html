@@ -209,12 +209,20 @@
                     <input type="hidden" id="{{'autocomplete_' + fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
                 </div>
                 <div ng-switch-when="lookup">
-                    <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema" disabledassociations="disabledassociations" blockedassociations="blockedassociations" />
+                    <lookup-input datamap="datamap"
+                                  field-metadata="fieldMetadata"
+                                  schema="schema"
+                                  disabledassociations="disabledassociations"
+                                  blockedassociations="blockedassociations"
+                                  displayablepath="{{getApplicationPah(fieldMetadata)}}"
+                                  />
                 </div>
 
                 <div ng-switch-when="modal" class="row">
-                    <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema" disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                  lookup-associations-code="lookupAssociationsCode" lookup-associations-description="lookupAssociationsDescription" />
+                    <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema"
+                                  disabledassociations="disabledassociations" blockedassociations="blockedassociations"
+                                  displayablepath="{{getApplicationPah(fieldMetadata)}}"
+                                   />
                 </div>
 
                 <fieldset ng-switch-when="radio">
@@ -376,15 +384,12 @@
                                                          datamap="datamap"
                                                          is-dirty="isDirty"
                                                          displayables="fieldMetadata.displayables"
-                                                         association-options="associationOptions"
-                                                         association-schemas="associationSchemas"
                                                          blockedassociations="blockedassociations"
                                                          renderer-parameters="fieldMetadata.rendererParameters"
                                                          elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                                          orientation="{{fieldMetadata.orientation}}"
                                                          islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
-                                                         lookup-associations-code="lookupAssociationsCode"
-                                                         lookup-associations-description="lookupAssociationsDescription" />
+                                                         />
                             </div>
 
 
@@ -397,16 +402,13 @@
                                                            datamap="datamap"
                                                            is-dirty="isDirty"
                                                            displayables="fieldMetadata.displayables"
-                                                           association-options="associationOptions"
-                                                           association-schemas="associationSchemas"
                                                            blockedassociations="blockedassociations"
                                                            renderer-parameters="fieldMetadata.rendererParameters"
                                                            elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                                            orientation="{{fieldMetadata.orientation}}"
                                                            islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
                                                            ismodal="{{ismodal}}"
-                                                           lookup-associations-code="lookupAssociationsCode"
-                                                           lookup-associations-description="lookupAssociationsDescription">
+                                                           >
                                     </section-element-input>
 
                                 </div>
@@ -456,7 +458,6 @@
                                            is-dirty="isDirty"
                                            ismodal="{{ismodal}}"
                                            displayables="fieldMetadata.detailSection.displayables"
-                                           association-schemas="associationSchemas"
                                            blockedassociations="blockedassociations"
                                            renderer-parameters="fieldMetadata.rendererParameters"
                                            elementid="{{elementid + 'Section' + fieldMetadata.id}}"

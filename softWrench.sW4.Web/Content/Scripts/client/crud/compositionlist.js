@@ -212,6 +212,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.crudform = form;
             };
 
+           
+
             $scope.compositionData = function () {
                 if (this.isBatch() || !this.hasDetailSchema()) {
                     return $scope.compositiondata;
@@ -305,7 +307,9 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.isNoRecords = $scope.compositiondata.length <= 0;
 
                 $scope.compositionData().forEach(function(value, index, array) {
-                    crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables);
+                    var id = schemaService.getId(value, $scope.compositionlistschema);
+                    crud_inputcommons.configureAssociationChangeEvents($scope, 
+                        "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, id);
                 });
 
                 $scope.showPagination = !$scope.isNoRecords && // has items to show
@@ -314,6 +318,11 @@ app.directive('compositionList', function (contextService, formatService, schema
                                             return $scope.paginationData.totalCount > option;
                                         });
             };
+
+            $scope.getApplicationPah = function(datamap,fieldMetadata) {
+                var path = fieldMetadata.applicationPath + schemaService.getId(datamap, $scope.compositionlistschema);
+                return replaceAll(path, "\\.", "_");
+            }
 
             $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
                 if (!compositiondata[$scope.relationship]) {
@@ -609,7 +618,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
 
                 var idx = $scope.compositionData().length;
-                if (idx != 0) {
+                if (idx !== 0) {
                     var itemMap = $scope.compositionData()[idx - 1];
                     var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
                     var arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
@@ -621,10 +630,13 @@ app.directive('compositionList', function (contextService, formatService, schema
                     //used to make a differentiation between a compositionitem datamap and a regular datamap
                     '#datamaptype': "compositionitem",
                     '#datamapidx': idx
+
                 };
                 fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+                var fakeNegativeId = -Date.now().getTime();
+                newItem[$scope.compositionlistschema.idFieldName] = fakeNegativeId;
                 $scope.compositionData().push(newItem);
-                crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables);
+                crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
             }
 
             $scope.isItemExpanded = function (item) {

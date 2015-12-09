@@ -16,6 +16,7 @@
                     fieldMetadata: '=',
                     disabledassociations: '=',
                     blockedassociations: '=',
+                    displayablepath: '@',
                     mode: '@'
                 },
 
