@@ -56,7 +56,7 @@ namespace softWrench.sW4.Metadata.Properties {
         public string GlobalProperty(string key, bool throwException = false, bool testRequired = false, bool fixedProfile = false) {
             string value;
             var profile = ApplicationConfiguration.Profile;
-            if (ApplicationConfiguration.IsDevPR() && fixedProfile) {
+            if (ApplicationConfiguration.IsDevPR() && !fixedProfile) {
                 profile = "dev";
             }
 
