@@ -84,7 +84,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 dashBoardMenu = action;
                 user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
             } else if (canCreateDashBoards && count == 0) {
-                Log.DebugFormat("User {0} cannot create dashboards and there is no visible panel, returning", user.Identity.Name);
+                Log.DebugFormat("No visible dashboards but user {0} can create them", user.Identity.Name);
                 var action = ManageDashboardAction;
                 dashBoardMenu = action;
             } else {
@@ -100,16 +100,6 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     Id = "loadpreferred"
 
                 };
-
-                //SM - Don't add Manage Dashboard to submenu (click any of the save dashbaord will take you to the same place)
-                //Maybe needed if we build a manage dashboard function
-
-                // Only display manage dashboard option if user has access to do so
-                //if (canCreateDashBoards) {
-                //    var manageAction = ManageDashboardAction();
-                //    container.AddLeaf(manageAction);
-                //    container.AddLeaf(new DividerMenuItem());
-                //}
 
                 foreach (var dashboard in enumerable) {
                     var action = new ActionMenuItemDefinition {

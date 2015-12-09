@@ -1,4 +1,4 @@
-﻿(function (mobileServices) {
+﻿(function (angular) {
     "use strict";
 
     function localStorageService() {
@@ -9,7 +9,7 @@
             var ttl = options && options.ttl ? options.ttl : null;
             var entry = { data: data };
             if (!!ttl) {
-                entry.expires = new Date(new Date().getTime() + ttl);
+                entry.expires = new Date().getTime() + ttl;
             }
             return JSON.stringify(entry);
         }
@@ -21,7 +21,7 @@
         };
 
         var doGet = function(key) {
-            var now = new Date();
+            var now = new Date().getTime();
             var entry = localStorage.getItem(key);
             // no entry found for key
             if (!entry) {
@@ -34,7 +34,8 @@
                 return obj["data"];
             }
             // entry expired it's ttl
-            if (expires >= now) {
+            if (expires <= now) {
+                localStorage.removeItem(key);
                 return null;
             }
             // entry still within it's ttl
@@ -106,7 +107,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("localStorageService", [localStorageService]);
+    angular.module("webcommons_services").factory("localStorageService", [localStorageService]);
     //#endregion
 
-})(mobileServices);
+})(angular);
