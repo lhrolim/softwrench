@@ -18,10 +18,13 @@ namespace softwrench.sw4.amex.classes.com.cts.amex.configuration {
         }
 
         public string RrfdListWhereClauseProvider() {
+            if (!ApplicationConfiguration.IsClient("amex")) {
+                return null;
+            }
             var user = SecurityFacade.CurrentUser();
             //amex relies on DCI_SITE rather than siteid for filtering their data
             var dciSite = user.Genericproperties["DCI_SITE"];
-            return string.Format("ASSET.DCI_SITE = '{0}' AND ASSET.STATUS in ('NOT READY','SPACE PLANNED')" , dciSite);
+            return string.Format("ASSET.DCI_SITE = '{0}' AND ASSET.STATUS in ('NOT READY','SPACE PLANNED')", dciSite);
         }
 
     }
