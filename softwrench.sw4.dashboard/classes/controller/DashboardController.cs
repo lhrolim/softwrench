@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
@@ -155,8 +156,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpPost]
-        public string LoadGraphicResource([FromUri] string provider, [FromUri] string resource, [FromBody] JObject dto ) {
-            return _graphicServiceProvider.GetService(provider).LoadExternalResource(resource, dto);
+        public async Task<string> LoadGraphicResource([FromUri] string provider, [FromUri] string resource, [FromBody] IDictionary<string, string> dto) {
+            var service = _graphicServiceProvider.GetService(provider);
+            return await service.LoadExternalResource(resource, dto);
         }
 
         [HttpGet]
@@ -176,11 +178,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
         /// Authenticates the user the selected graphic storage system provider.
         /// </summary>
         /// <param name="provider"></param>
+        /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
-        public IGenericResponseResult Authenticate([FromUri]string provider) {
+        public async Task<IGenericResponseResult> Authenticate([FromUri]string provider, [FromBody] IDictionary<string, string> dto) {
             var service = _graphicServiceProvider.GetService(provider);
-            var auth = service.Authenticate(SecurityFacade.CurrentUser());
+            var auth = await service.Authenticate(SecurityFacade.CurrentUser(), dto);
             return new GenericResponseResult<IGraphicStorageSystemAuthDto>(auth);
         }
 
