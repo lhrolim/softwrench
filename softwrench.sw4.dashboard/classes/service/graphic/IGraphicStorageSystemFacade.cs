@@ -13,7 +13,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic {
         /// Name of the Graphic Storage System the instance connects to.
         /// </summary>
         /// <returns></returns>
-        string SystemName();
+        string SystemName { get; }
         /// <summary>
         /// Authenticates the user to the Graphic Strage System.
         /// The requestConfig parameter is used to configure the authentication request and is 

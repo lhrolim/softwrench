@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.service.graphic.exception;
@@ -21,6 +22,8 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
     /// Tableau's implementation of <see cref="IGraphicStorageSystemFacade"></see>
     /// </summary>
     public class TableauFacade : IGraphicStorageSystemFacade {
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof (TableauFacade));
 
         /* CONFIGURATION */
         private readonly string _server; // tableau's server url
@@ -60,11 +63,11 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             _username = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_USERNAME, true);
             _password = MetadataProvider.GlobalProperty(TableauConstants.Config.KEY_PASSWORD, true);
             _requireTicket = !ApplicationConfiguration.IsLocal() || !ApplicationConfiguration.IsDev();
+
+            Log.DebugFormat("Instantiating TableauFacade: server:{0}, site:{1}, username:{2}", _server, _site, _username);
         }
 
-        public string SystemName() {
-            return TableauConstants.SYSTEM_NAME;
-        }
+        public string SystemName { get { return TableauConstants.SYSTEM_NAME; } }
 
         private async Task<HttpWebResponse> CallRestApi(string resourceUrl, string method, Dictionary<string, string> headers = null, string payload = null) {
             var url = string.Format(TableauConstants.RestApi.URL_PATTERN, _server, resourceUrl);
@@ -98,7 +101,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             using (var responseStream = response.GetResponseStream()) {
                 using (var responseReader = new StreamReader(responseStream)) {
                     // parse xml response
-                    var text = responseReader.ReadToEnd();
+                    var text = await responseReader.ReadToEndAsync();
                     var xml = XDocument.Parse(text);
                     XNamespace xmlns = TableauConstants.RestApi.DOCUMENT_NAMESPACE; // implicit convertion doesn't work with constants
                     var credentials = xml.Root.Descendants(xmlns + "credentials").First();
@@ -127,9 +130,9 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
                 // -1 gets returned if user being used does not have enough permissions
                 // or the domain in which SW is deployed is not trusted by the Tableau server
                 if (ticket == "-1" /* permission check */ || string.IsNullOrWhiteSpace(ticket) /* safety check (should never happen) */ ) {
-                    if (_requireTicket) {
-                        throw DomainNotTrustedByTableauException.InvalidTicket(ticket);
-                    }
+
+                    if (_requireTicket) throw DomainNotTrustedByTableauException.InvalidTicket(ticket);
+                    
                     // fail silently: require manual authentication
                     ticket = null;
                 }
@@ -141,6 +144,14 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             }
         }
 
+        /// <summary>
+        /// Supports two forms of authentication to tableau server. The auth mechanism should come as requestConfig["authtype"]:
+        /// - "REST": authenticates to server's rest api returning a session token, userid and siteid
+        /// - "TICKET": fetches trusted ticket
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="requestConfig"></param>
+        /// <returns></returns>
         public async Task<IGraphicStorageSystemAuthDto> Authenticate(ISWUser user, IDictionary<string, string> requestConfig) {
             // lookup auth type
             var authType = requestConfig[TableauConstants.AuthType.KEY];
@@ -162,6 +173,16 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             }
         }
 
+        /// <summary>
+        /// Makes a request to tableau server's REST api to fetch the resource from the server.
+        /// Supported resources:
+        /// - "workbook": fetches a xml list of the workbooks visible by the user in the site
+        /// - "view":  fetches a xml list of the views pertaining to a workbook; requires a workbook id under requestConfig["workbook"]
+        /// Both resources require the REST api authentication information to be passed in the requestConfig dictionary.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="requestConfig"></param>
+        /// <returns></returns>
         public async Task<string> LoadExternalResource(string resource, IDictionary<string, string> requestConfig) {
             string url;
 
@@ -187,7 +208,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic.tableau {
             using (var responseStream = response.GetResponseStream()) {
                 using (var responseReader = new StreamReader(responseStream)) {
                     //TODO: smart caching
-                    return responseReader.ReadToEnd();
+                    return await responseReader.ReadToEndAsync();
                 }
             }
         }
