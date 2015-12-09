@@ -179,12 +179,12 @@
 
         function gridLoaded(applicationListResult) {
             this.disposeDetail();
+            this.setActiveTab(null);
             _crudContext.affectedProfiles = applicationListResult.affectedProfiles;
             _crudContext.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
 
         function disposeDetail() {
-            this.setActiveTab(null);
             _crudContext.tabRecordCount = {};
             _crudContext._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};

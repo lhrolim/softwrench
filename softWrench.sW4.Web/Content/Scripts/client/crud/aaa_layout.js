@@ -126,7 +126,7 @@ app.directive("ngEnabled", function () {
     };
 });
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService,logoutService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService) {
 
     $scope.$name = 'LayoutController';
     var log = $log.getInstance('sw4.LayoutController');
@@ -213,9 +213,9 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
 
     $scope.AjaxResult = function (result) {
-        var log = $log.getInstance('layoutcontroller#AjaxResult');
+        var log = $log.getInstance('layoutcontroller#AjaxResult', ["redirect"]);
         var newUrl = url(result.redirectURL);
-        if ($scope.includeURL != newUrl) {
+        if ($scope.includeURL !== newUrl) {
             log.debug("redirection detected new:{0} old:{1}".format(newUrl, $scope.includeURL));
             $scope.includeURL = newUrl;
         }
