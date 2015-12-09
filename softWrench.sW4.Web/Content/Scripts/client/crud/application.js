@@ -426,7 +426,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             }
         });
         $scope.$on('sw_applicationredirected', function (event, parameters) {
-            if (parameters.popupmode == "browser" || parameters.popupmode == "modal") {
+            if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
                 return;
             }
 
