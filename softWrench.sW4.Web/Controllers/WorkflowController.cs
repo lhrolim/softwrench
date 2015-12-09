@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using NHibernate.Linq;
 using NHibernate.Util;
 using Quartz.Util;
+using cts.commons.web.Attributes;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -20,7 +21,6 @@ using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Controllers {
-
     public class WorkflowController : ApiController {
         private readonly MaximoHibernateDAO _maximoDao;
 
@@ -29,47 +29,45 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IGenericResponseResult InitiateWorkflow(string entity, string schema, string applicationItemId, string workflowName) {
-            List<Dictionary<string, string>> workflows = null;
-            Dictionary<string, string> workflow;
+        public IGenericResponseResult InitiateWorkflow(string entityName, string applicationItemId, string siteid, string workflowName) {
+            List<Dictionary<string, string>> workflows;
             if (workflowName == null) {
-                workflows = _maximoDao.FindByNativeQuery("select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and objectname = '{0}'".FormatInvariant(entity));
-
+                workflows = _maximoDao.FindByNativeQuery("select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and objectname = '{0}'".FormatInvariant(entityName));
             } else {
                 workflows = _maximoDao.FindByNativeQuery("select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and processname = '{0}'".FormatInvariant(workflowName));
             }
             // If there are no work flows
-            if (workflows.Count < 1) {
+            if (!workflows.Any()) {
+                // Return some type of error response if there are no workflows?
                 return null;
             }
             // If there are multiple work flows
             if (workflows.Count > 1) {
                 var workflowSchema = MetadataProvider.Application("workflow").Schema(new ApplicationMetadataSchemaKey("workflowselection"));
-                IList<IAssociationOption> workflowOptions = workflows.Select(w => new GenericAssociationOption(w["wfprocessid"], w["processname"])).Cast<IAssociationOption>().ToList();
+                IList<IAssociationOption> workflowOptions = workflows.Select(w => new GenericAssociationOption(w["processname"], w["processname"])).Cast<IAssociationOption>().ToList();
                 var dto = new WorkflowDTO() {
-                    workflows = workflowOptions,
-                    schema = workflowSchema
+                    Workflows = workflowOptions,
+                    Schema = workflowSchema
                 };
                 return new GenericResponseResult<WorkflowDTO>(dto);
             }
-            workflow = workflows[0];
-            var baseUrl = ApplicationConfiguration.WfUrl;
-            // URL
-            var url = baseUrl + workflow["processname"];
-            // {0}-workflow, {1}-entity, {2}-attributes
-            var template = @"<Initiate{0} xmlns='http://www.ibm.com/maximo'>
-                               <{1}MboKey>
-                                 <{1}>
-                                   {2}
-                                 </{1}>
-                               </{1}MboKey>
-                             </Initiate{0}> ";
-            // format the message content
-            var msg = template.FormatInvariant(workflowName, entity, BuildAttributesString(entity, schema, applicationItemId));
-            // submit the calla nd get response
-            var response = CallRestApi(url, "POST", null, msg);
-            // return response from initiate
-            return new GenericResponseResult<HttpWebResponse>(response);
+            var workflow = workflows[0];
+            workflowName = workflow["processname"];
+            var baseUri = ApplicationConfiguration.WfUrl;
+            var requestUri = baseUri + workflowName;
+            // {0} - workflowName, {1} - entity, {2} - key attribute, {3} - siteid
+            var requestTemplate = @"<Initiate{0} xmlns='http://www.ibm.com/maximo'>
+                                      <{1}MboKey>
+                                        <{1}>
+                                          {2}
+                                          <SITEID>{3}</SITEID>
+                                        </{1}>
+                                      </{1}MboKey>
+                                    </Initiate{0}>";
+            var msg = requestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(), BuildKeyAttributeString(entityName, applicationItemId), siteid);
+            var response = CallRestApi(requestUri, "POST", null, msg);
+            var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
+            return new GenericResponseResult<HttpWebResponse>(response, successMessage);
         }
 
         private HttpWebResponse CallRestApi(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
@@ -92,20 +90,20 @@ namespace softWrench.sW4.Web.Controllers {
             return (HttpWebResponse)request.GetResponse();
         }
 
-        private string BuildAttributesString(string entity, string schema, string applicationItemId) {
+        private string BuildKeyAttributeString(string entityName, string applicationItemId) {
             string keyTemplate = "<{0}>{1}</{0}>";
-            EntityMetadata Entity = MetadataProvider.Entity(entity);
-            var formattedKey = keyTemplate.FormatInvariant(Entity.UserIdFieldName, applicationItemId);
+            EntityMetadata Entity = MetadataProvider.Entity(entityName);
+            var formattedKey = keyTemplate.FormatInvariant(Entity.UserIdFieldName.ToUpper(), applicationItemId);
             return formattedKey;
         }
     }
 
     public class WorkflowDTO {
-        public ApplicationSchemaDefinition schema {
+        public ApplicationSchemaDefinition Schema {
             get; set;
         }
 
-        public IEnumerable<IAssociationOption> workflows {
+        public IEnumerable<IAssociationOption> Workflows {
             get; set;
         }
     }

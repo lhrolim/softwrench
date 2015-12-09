@@ -282,7 +282,7 @@
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatch"/>
-                <command id="initiateWorkflow" icon="fa-tachometer" label="Initiate Workflow"
+                <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow"
                           parameters="schema,datamap" service="workflowService" method="initiateWorkflow"/>
               </container>
             </commandgroup>

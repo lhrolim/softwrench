@@ -5,19 +5,19 @@
     function workflowService($http, restService, crudContextHolderService, modalService) {
         var initiateWorkflow = function (schema, datamap, workflowName) {
             var httpParameters = {
-                entity: schema.entityName,
-                schema: schema.schemaId,
-                applicationItemId: datamap["fields"][schema.idFieldName],
+                entityName: schema.entityName,
+                applicationItemId: datamap["fields"][schema.userIdFieldName],
+                siteid: datamap["fields"]["siteid"],
                 workflowName: workflowName
             };
             //schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema
             restService.invokePost("Workflow", "InitiateWorkflow", httpParameters, null,
-                function(response) {
-                    //modalService.show(response.resultObject.schema, {}, {
-                    //    title: "Select Workflow", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                    //        crudContextHolderService.updateEagerAssociationOptions("workflows", response.resultObject.workflows);
-                    //    }
-                    //}, null, null, schema, datamap);
+                function (response) {
+                    // If the response does not have a list of workflows, it has sucessfully found and executed one
+                    if (!response.resultObject.hasOwnProperty("workflows")) {
+                        modalService.hide();
+                        return;
+                    }
                     modalService.show(response.resultObject.schema, {}, {
                         title: "Select Workflow", cssclass: "dashboardmodal", onloadfn: function (scope) {
                             crudContextHolderService.updateEagerAssociationOptions("workflows", response.resultObject.workflows);
