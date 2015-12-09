@@ -29,7 +29,17 @@
                     };
                     scope.$name = "lookupinput";
 
+                    scope.getPlaceholderText = function (fieldMetadata) {
+                        var label = fieldMetadata.label;
+                        var lastChar = label.substr(label.length - 1);
 
+                        if (lastChar != ":") {
+                            return label;
+                        }
+
+                        var placeholder = label.substr(0, label.length - 1);
+                        return placeholder
+                    }
 
                     scope.isSelectEnabled = function (fieldMetadata, datamap) {
                         return true;
