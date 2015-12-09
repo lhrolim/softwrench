@@ -27,7 +27,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         public static string BuildDescription(CrudOperationData jsonObject, ApplicationMetadata metadata) {
             var sb = new StringBuilder();
             sb.AppendLine();
-            var applicationSections = metadata.Schema.GetDisplayable<ApplicationSection>(typeof(ApplicationSection), false);
+            var applicationSections = metadata.Schema.GetDisplayable<ApplicationSection>(typeof(ApplicationSection), SchemaFetchMode.FirstLevelOnly);
             foreach (var section in applicationSections) {
                 CreateSection(jsonObject, sb, section);
             }

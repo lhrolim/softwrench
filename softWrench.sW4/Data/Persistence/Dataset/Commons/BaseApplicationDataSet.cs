@@ -34,6 +34,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
@@ -41,6 +42,7 @@ using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using EntityUtil = softWrench.sW4.Util.EntityUtil;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
@@ -442,12 +444,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var crudData = dataMap as CrudOperationData;
                 var inlineCompositions = application.Schema.Compositions().Where(c => c.Inline);
                 foreach (var composition in inlineCompositions) {
-                    if (composition.Schema.Schemas.List.HasAssociation)
 
-                    var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
-                    if (compositionData != null) {
-                        var compositeData = dataMap.GetAttribute(composition.AssociationKey);
+                    SchemaFetchMode mode = request.IsShowMoreMode
+                        ? SchemaFetchMode.SecondaryContent
+                        : SchemaFetchMode.MainContent;
+                    var compositionAssociations = composition.Schema.Schemas.List.Associations(mode);
+                    if (compositionAssociations.Any()){
+                        var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
+                        if (compositionData != null) {
+                            var compositeData = dataMap.GetAttribute(composition.AssociationKey);
+                        }
                     }
+
+                    
                 }
             }
             #endregion

@@ -1,33 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Util {
 
     public enum SchemaFetchMode {
-        MainContent, SecondaryContent, All
+        FirstLevelOnly, MainContent, SecondaryContent, All
     }
 
     public class DisplayableUtil {
 
 
 
-        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables, 
-            bool fetchInner = true, SchemaFetchMode schemaFetchMode = SchemaFetchMode.All) {
+        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables,
+            SchemaFetchMode schemaFetchMode = SchemaFetchMode.All, bool insideSecondary = false) {
             var resultingDisplayables = new List<T>();
 
             foreach (IApplicationDisplayable displayable in originalDisplayables) {
                 if (displayableType.IsInstanceOfType(displayable)) {
-                    resultingDisplayables.Add((T)displayable);
+                    if (schemaFetchMode != SchemaFetchMode.SecondaryContent || insideSecondary) {
+                        resultingDisplayables.Add((T)displayable);
+                    }
                 }
-                if (displayable is IApplicationDisplayableContainer && fetchInner) {
+                if (displayable is IApplicationDisplayableContainer && SchemaFetchMode.FirstLevelOnly != schemaFetchMode) {
                     var container = displayable as IApplicationDisplayableContainer;
                     var section = container as ApplicationSection;
                     var isSecondarySection = section != null && section.SecondaryContent;
@@ -35,11 +33,7 @@ namespace softwrench.sW4.Shared2.Util {
                         //under some circustances we might not be interested in returning the secondary content displayables
                         continue;
                     }
-                    if (!isSecondarySection && SchemaFetchMode.SecondaryContent.Equals(schemaFetchMode)) {
-                        continue;
-                    }
-                    resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, true,
-                        schemaFetchMode));
+                    resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, schemaFetchMode, insideSecondary || isSecondarySection));
                 }
             }
             return resultingDisplayables;

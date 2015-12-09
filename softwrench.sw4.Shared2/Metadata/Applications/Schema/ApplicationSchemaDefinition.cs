@@ -23,9 +23,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         #region cache
-        private readonly IDictionary<bool, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<bool, IList<ApplicationAssociationDefinition>>();
-        private readonly IDictionary<bool, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<bool, IList<ApplicationCompositionDefinition>>();
-        private readonly IDictionary<bool, IList<OptionField>> _cachedOptionFields = new Dictionary<bool, IList<OptionField>>();
+        private readonly IDictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>>();
+        private readonly IDictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>>();
+        private readonly IDictionary<SchemaFetchMode, IList<OptionField>> _cachedOptionFields = new Dictionary<SchemaFetchMode, IList<OptionField>>();
         #endregion
 
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
@@ -290,33 +290,39 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public virtual IList<ApplicationAssociationDefinition> Associations(bool fetchSecondaryContent = true) {
-            if (_cachedAssociations.ContainsKey(fetchSecondaryContent)) {
-                return _cachedAssociations[fetchSecondaryContent];
+        public virtual IList<ApplicationAssociationDefinition> Associations(bool isShowMoreMode) {
+            return Associations(isShowMoreMode ? SchemaFetchMode.SecondaryContent : SchemaFetchMode.MainContent);
+        }
+
+        public virtual IList<ApplicationAssociationDefinition> Associations(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedAssociations.ContainsKey(mode)) {
+                return _cachedAssociations[mode];
             }
-            var result = GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition),
-                true, fetchSecondaryContent);
-            _cachedAssociations[fetchSecondaryContent] = result;
+            var result = GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition), mode);
+            _cachedAssociations[mode] = result;
             return result;
         }
 
-        public virtual IList<ApplicationCompositionDefinition> Compositions(bool fetchSecondaryContent = true) {
-            if (_cachedCompositions.ContainsKey(fetchSecondaryContent)) {
-                return _cachedCompositions[fetchSecondaryContent];
+        public virtual IList<ApplicationCompositionDefinition> Compositions(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedCompositions.ContainsKey(mode)) {
+                return _cachedCompositions[mode];
             }
-            var result = GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition),
-                true, fetchSecondaryContent);
-            _cachedCompositions[fetchSecondaryContent] = result;
+            var result = GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition), mode);
+            _cachedCompositions[mode] = result;
             return result;
         }
 
-        public virtual IList<OptionField> OptionFields(bool fetchSecondaryContent = true) {
-            if (_cachedOptionFields.ContainsKey(fetchSecondaryContent)) {
-                return _cachedOptionFields[fetchSecondaryContent];
+
+        public virtual IList<OptionField> OptionFields(bool isShowMoreMode) {
+            return OptionFields(isShowMoreMode ? SchemaFetchMode.SecondaryContent : SchemaFetchMode.MainContent);
+        }
+
+        public virtual IList<OptionField> OptionFields(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedOptionFields.ContainsKey(mode)) {
+                return _cachedOptionFields[mode];
             }
-            var result = GetDisplayable<OptionField>(typeof(OptionField),
-                true, fetchSecondaryContent);
-            _cachedOptionFields[fetchSecondaryContent] = result;
+            var result = GetDisplayable<OptionField>(typeof(OptionField), mode);
+            _cachedOptionFields[mode] = result;
             return result;
         }
 
@@ -353,8 +359,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true, bool fetchSecondaryContent = true) {
-            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, fetchInner, fetchSecondaryContent);
+        public IList<T> GetDisplayable<T>(Type displayableType, SchemaFetchMode mode = SchemaFetchMode.All) {
+            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, mode);
         }
 
 
