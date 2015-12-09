@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using cts.commons.portable.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Properties {
@@ -96,6 +97,29 @@ namespace softWrench.sW4.Metadata.Properties {
 
         public string MultiTenantQueryConstraint() {
             return GlobalProperty("multitenantprefix");
+        }
+
+        /// <summary>
+        /// Override any property declared on the properties.xml of the given customer with the ones eventually present on the "local" properties.xml
+        /// 
+        /// In Summary Local properties has precedence over the customer
+        ///  
+        /// </summary>
+        /// <param name="localProperties"></param>
+        public void MergeWithLocal(MetadataProperties localProperties) {
+            foreach (var property in localProperties.Properties) {
+                Properties[property.Key] = property.Value;
+            }
+            foreach (var localEnvironment in localProperties._envProperties) {
+                var customerEnvironment = _envProperties.FirstOrDefault(f => f.Key.EqualsIc(localEnvironment.Key));
+                if (customerEnvironment == null) {
+                    _envProperties.Add(localEnvironment);
+                } else {
+                    foreach (var property in localEnvironment.Properties) {
+                        customerEnvironment.Properties[property.Key] = property.Value;
+                    }
+                }
+            }
         }
     }
 }
