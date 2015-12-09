@@ -483,9 +483,9 @@ namespace softWrench.sW4.Util {
                     }
                     return swdbConnectionString;
                 }
-
-                var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true);
-                var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true);
+                //need to assure that we use the real swdb_urls, in order for it to work on pr environments
+                var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true,false,true);
+                var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true,false, true);
 
 
                 return new ConnectionStringSettings("swdb", url, provider);
