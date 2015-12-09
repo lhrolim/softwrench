@@ -1312,6 +1312,10 @@
         </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <field attribute="ticketid" label="Reference ID:" readonly="true" hidden="true"/>
           <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
@@ -1697,6 +1701,10 @@
           </properties>
         </list>
         <schema id="adetail" abstract="true" stereotype="detail" title="Incident Details">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <field attribute="actlabcost" default="0" hidden="true" />
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true" />
@@ -2780,6 +2788,10 @@
           <field attribute="fr2code" label="Resolution:" />
         </detail>
         <schema id="adetail" abstract="true" stereotype="detail" title="Solution Details">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <section id="idsection" />
           <field attribute="description" label="Description" requiredexpression="true">
             <renderer type="default" params="inputsize=medium" />

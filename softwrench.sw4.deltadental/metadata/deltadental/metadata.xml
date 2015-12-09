@@ -339,6 +339,10 @@
           </customization>
         </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <section id="siteidsection"/>
@@ -548,6 +552,10 @@
         </list>
         
         <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <customization position="matusetrans"/>
           <customization position="labtrans"/>
           <customization position="tooltrans"/>
