@@ -660,7 +660,7 @@
         </schema>
 
         <schema id="detail" title="Inventory Transfer Details">
-          <field attribute="matrectransid" label="Transfer" hidden="true"></field>
+          <field attribute="matrectransid" hidden="true"></field>
           
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
