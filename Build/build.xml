@@ -32,10 +32,11 @@
   <!--These will come from jenkins-->
   <if test="${environment::variable-exists('clientsw4')}">
     <property name="client" value="${environment::get-variable('clientsw4')}" />
+    <property name="deployclientsw4" value="${client}" />
   </if>
 
 
-  <property name="deployclientsw4" value="${client}" />
+  
 
   <if test="${environment::variable-exists('deployclientsw4')}">
     <property name="deployclientsw4" value="${environment::get-variable('deployclientsw4')}" />
