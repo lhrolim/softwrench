@@ -17,7 +17,7 @@ namespace softWrench.sW4.Util {
                 return null;
             }
 
-            if (applicationPath != null && applicationPath.StartsWith("/")) {
+            if (applicationPath != null && applicationPath.StartsWith("/") && !ApplicationConfiguration.IsDevPR()) {
                 return applicationPath.Substring(1);
             }
             return null;
