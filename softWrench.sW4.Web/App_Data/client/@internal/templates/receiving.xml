@@ -78,7 +78,7 @@
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
               <field attribute="ponum" label="PO#" readonly="true" requiredexpression="true" hidden="true"/>
-              <field label="Site:" attribute="siteid" readonly="true" />
+              <field label="Site" attribute="siteid" readonly="true" />
             </section>
           </section>
           
@@ -114,7 +114,7 @@
         </list>
 
         <detail stereotype="compositiondetail">
-          <field attribute="polinenum" label="PO Line:"/>
+          <field attribute="polinenum" label="PO Line"/>
         </detail>
       </schemas>
     </application>

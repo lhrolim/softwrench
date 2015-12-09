@@ -25,7 +25,7 @@
         </schema>
         <schema id="compositiondetail" stereotype="compositiondetail">
           <field attribute="personid" hidden="true" />
-          <field attribute="displayname" label="Display Name:" requiredexpression="true" />
+          <field attribute="displayname" label="Display Name" requiredexpression="true" />
         </schema>
 
 

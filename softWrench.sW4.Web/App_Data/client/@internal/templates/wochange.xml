@@ -97,27 +97,27 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="description" label="Summary:">
+            <field attribute="description" label="Summary">
               <renderer type="default" params="maxlength=100"/>
             </field>
-            <field attribute="location" label="Location:"/>
-            <field attribute="classstructureid" label="Classification:"/>
-            <field attribute="worktype" label="Category:"/>
-            <field attribute="reasonforchange" label="Reason:"/>
-            <field attribute="reasonforchange_.ldtext" label="Reason Details:"/>
-            <field attribute="verification" label="Verification:"/>
-            <field attribute="backoutplan" label="Back Out Plan:"/>
-            <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail:"/>
-            <field attribute="pretestdetail_.ldtext" label="Pretest Details:"/>
-            <field attribute="wopriority" label="Priority:"/>
-            <field attribute="longdescription_.ldtext" label="Remarks:"/>
+            <field attribute="location" label="Location"/>
+            <field attribute="classstructureid" label="Classification"/>
+            <field attribute="worktype" label="Category"/>
+            <field attribute="reasonforchange" label="Reason"/>
+            <field attribute="reasonforchange_.ldtext" label="Reason Details"/>
+            <field attribute="verification" label="Verification"/>
+            <field attribute="backoutplan" label="Back Out Plan"/>
+            <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
+            <field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
+            <field attribute="wopriority" label="Priority"/>
+            <field attribute="longdescription_.ldtext" label="Remarks"/>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="ownergroup" label="Owner Group:"/>
-            <field attribute="reportedby" label="Reported By:"/>
+            <field attribute="ownergroup" label="Owner Group"/>
+            <field attribute="reportedby" label="Reported By"/>
           </section>
           
           <section orientation="horizontal">
@@ -126,20 +126,20 @@
             
             <!-- scheduled -->
             <section orientation="vertical">
-              <field attribute="schedstart" label="Scheduled Start Date:">
+              <field attribute="schedstart" label="Scheduled Start Date">
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
-              <field attribute="schedfinish" label="Scheduled Finish Date:">
+              <field attribute="schedfinish" label="Scheduled Finish Date">
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
             </section>         
             
             <!-- target -->
             <section orientation="vertical">
-              <field attribute="targstartdate" label="Target Start Date:">
+              <field attribute="targstartdate" label="Target Start Date">
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
-              <field attribute="targcompdate" label="Target Finish Date:">
+              <field attribute="targcompdate" label="Target Finish Date">
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
             </section>          
@@ -157,7 +157,7 @@
         <schema parentschema="adetail" id="editdetail" title="Change Details">
           <section id="statussection">
             <field attribute="wonum" label="Change#" readonly="true" hidden="true"/>
-            <field attribute="status" label="Status:" readonly="true"/>
+            <field attribute="status" label="Status" readonly="true"/>
           </section>
 
           <section id="remainingflieds">
@@ -200,7 +200,7 @@
           </section>
 
           <section id="attachmentsection">
-            <field label="Attachment:" attribute="newattachment" >
+            <field label="Attachment" attribute="newattachment" >
               <renderer type="upload"/>
             </field>
           </section>
