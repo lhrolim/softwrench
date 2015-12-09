@@ -80,17 +80,17 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Site" target="siteid" labelfield="site_.description"
+            <association label="Site:" target="siteid" labelfield="site_.description"
              extraprojectionvalues="description" requiredexpression="true" hideDescription="true" default="@usersite">
               <renderer type="lookup" params="inputsize=medium" />
               <event type="afterchange" service="invtransferService" method="afterChangeSite"/>
             </association>
-            <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description"
+            <association label="Item:" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description"
                          extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
               <event type="afterchange" service="invtransferService" method="afterChangeItem"/>
             </association>
-            <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type">
+            <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type:">
               <renderer type="default" />
             </field>
           </section>
