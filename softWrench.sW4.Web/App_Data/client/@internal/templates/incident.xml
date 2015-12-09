@@ -110,7 +110,7 @@
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
-          <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
+          <field attribute="ticketuid" label="Incident ID" hidden="true"/>
 
           <field attribute="class" label="" hidden="true"/>
           <field attribute="solution" hidden="true"/>
@@ -122,15 +122,15 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="description" label="Summary:">
+            <field attribute="description" label="Summary">
               <renderer type="default" params="maxlength=100"/>
             </field>
             <section id="statussection"/>
-            <field label="Site Id:" attribute="siteid"  readonly="true"/>
+            <field label="Site" attribute="siteid"  readonly="true"/>
           </section>
 
           <section>
-            <field label="Details:" attribute="ld_.ldtext">
+            <field label="Details" attribute="ld_.ldtext">
               <renderer type="textarea"/>
             </field>
             <field attribute="statusdate" hidden="true" />
@@ -139,20 +139,20 @@
 
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
-              <association label="Location:" target="location" labelfield="location_.description" >
+              <association label="Location" target="location" labelfield="location_.description" >
                 <event type="beforechange" service="srService" method="beforeChangeLocation"/>
               </association>
-              <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
                 <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                 <dataprovider prefilterfunction="FilterAssets"/>
                 <event type="afterchange" service="srService" method="afterChangeAsset"/>
               </association>
-              <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+              <optionfield attribute="classstructureid" label="Classification" providerattribute="_IncidentClassStructureType" default="@classstructureid">
                 <renderer type="autocompleteclient" />
               </optionfield>
             </section>
 
-            <optionfield label="Priority:" attribute="internalpriority" default="1">
+            <optionfield label="Priority" attribute="internalpriority" default="1">
               <renderer type="radio"/>
               <option label="Critical" value="1"/>
               <option label="High" value="2"/>
@@ -165,15 +165,15 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-            <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
+            <field attribute="reportedby" label="Reported By" default="@username" readonly="true"/>
+            <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username">
               <renderer type="lookup"/>
             </association>
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
+            <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeowner"/>
             </association>
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+            <association label="Owner Group" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
               <renderer type="lookup"/>
             </association>
           </section>
@@ -184,20 +184,20 @@
 
             <!-- target -->
             <section orientation="vertical">
-              <field attribute="targetstart" label="Target Start Date:" attributeToServer="#notusedattribute">
+              <field attribute="targetstart" label="Target Start Date" attributeToServer="#notusedattribute">
                 <renderer type="datetime" params="format=MM/dd/yyyy;"/>
               </field>
-              <field attribute="targetfinish" label="Target Finish Date:" attributeToServer="#notusedattribute">
+              <field attribute="targetfinish" label="Target Finish Date" attributeToServer="#notusedattribute">
                 <renderer type="datetime" params="format=MM/dd/yyyy;"/>
               </field>
             </section>
 
             <!-- actual -->
             <section orientation="vertical">
-              <field attribute="actualstart" label="Actual Start Date:" attributeToServer="#notusedattribute">
+              <field attribute="actualstart" label="Actual Start Date" attributeToServer="#notusedattribute">
                 <renderer type="datetime" params="format=MM/dd/yyyy;"/>
               </field>
-              <field attribute="actualfinish" label="Actual Finish Date:" attributeToServer="#notusedattribute">
+              <field attribute="actualfinish" label="Actual Finish Date" attributeToServer="#notusedattribute">
                 <renderer type="datetime" params="format=MM/dd/yyyy;"/>
               </field>
             </section>
@@ -214,7 +214,7 @@
         
         <schema id="newdetail" stereotype="detailnew" parentschema="adetail" mode="input" title="New Incident">
           <section id="attachmentsection">
-            <field label="Attachment:" attribute="newattachment" >
+            <field label="Attachment" attribute="newattachment" >
               <renderer type="upload"/>
             </field>
           </section>
@@ -223,7 +223,7 @@
         <schema parentschema="adetail" id="detail" title="Incident Details">
           <section id="statussection">
             <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" hidden="true"/>
-            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="false">
+            <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="false">
               <renderer type="combo" />
             </association>
           </section>
@@ -231,18 +231,18 @@
           <section id="compositions">
             <tab label="Solution" id="solution" icon="fa fa-book">
               <field attribute="solution" hidden="true"/>
-              <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
+              <association label="Solution" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
                 <renderer type="lookup"/>
                 <event type="afterchange" service="solutionService" method="setsolutiondata"/>
               </association>
-              <field attribute="solution_.description" label="Description:" readonly="true"/>
-              <field attribute="symptom_.ldtext" label="Symptom:">
+              <field attribute="solution_.description" label="Description" readonly="true"/>
+              <field attribute="symptom_.ldtext" label="Symptom">
                 <renderer type="richtext"/>
               </field>
-              <field attribute="cause_.ldtext" label="Cause:" >
+              <field attribute="cause_.ldtext" label="Cause" >
                 <renderer type="richtext"/>
               </field>
-              <field attribute="resolution_.ldtext" label="Resolution:" >
+              <field attribute="resolution_.ldtext" label="Resolution" >
                 <renderer type ="richtext"/>
               </field>
             </tab>

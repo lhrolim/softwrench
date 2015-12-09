@@ -14,13 +14,13 @@
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
         <detail>
-          <field attribute="assetid" label="ID:"  requiredexpression="true" />
-          <field attribute="assetnum" label="Asset:"  requiredexpression="true" />
-          <field attribute="location" label="Location:"  requiredexpression="true" />
-          <field attribute="vendor" label="Vendor:"  />
-          <field attribute="description" label="Description:"  />
-          <field attribute="failurecode" label="Failure Class:"  />
-          <field attribute="priority" label="Priority:"  />
+          <field attribute="assetid" label="ID"  requiredexpression="true" />
+          <field attribute="assetnum" label="Asset"  requiredexpression="true" />
+          <field attribute="location" label="Location"  requiredexpression="true" />
+          <field attribute="vendor" label="Vendor"  />
+          <field attribute="description" label="Description"  />
+          <field attribute="failurecode" label="Failure Class"  />
+          <field attribute="priority" label="Priority"  />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
         <schema id="assetLookupList" stereotype="list" >

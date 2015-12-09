@@ -24,8 +24,8 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="itemnum" label="Item:"  requiredexpression="true" />
-          <field attribute="description" label="Description:"  requiredexpression="true" />
+          <field attribute="itemnum" label="Item"  requiredexpression="true" />
+          <field attribute="description" label="Description"  requiredexpression="true" />
         </detail>
 
         <schema id="itemlookupreserved" stereotype="detail" mode="output">
