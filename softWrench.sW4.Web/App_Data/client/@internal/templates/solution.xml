@@ -55,7 +55,7 @@
 
         <schema id="complist" stereotype="compositionlist">
           <field attribute="solution" label="Solution#" />
-          <field attribute="description" label="Description" />
+          <field attribute="description" label="Description:" />
         </schema>
 
         <detail stereotype="compositiondetail">
@@ -69,7 +69,7 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="description" label="Description" requiredexpression="true" />
+            <field attribute="description" label="Description:" requiredexpression="true" />
             <section id="statussection" />
           </section>
 
@@ -91,7 +91,7 @@
             <field attribute="solution" label="Solution#" readonly="true" hidden="true">
               <renderer type="default" />
             </field>
-            <optionfield attribute="status" label="Status" requiredexpression="true">
+            <optionfield attribute="status" label="Status:" requiredexpression="true">
               <renderer type="combo" />
               <option label="DRAFT" value="DRAFT" />
               <option label="ACTIVE" value="ACTIVE" />

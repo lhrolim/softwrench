@@ -236,7 +236,7 @@
               <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
               <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
               <!--COMSW 24 association field used for lazy lookup-->
-              <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+              <association label="Service Address:" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
                 <renderer type="lookup"/>
               </association>
             </section>
