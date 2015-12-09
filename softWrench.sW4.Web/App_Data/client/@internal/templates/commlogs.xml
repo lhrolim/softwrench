@@ -95,11 +95,11 @@
             <renderer type="default" params="width=25%;formatter=lower"/>
           </field>
           <field attribute="cc" hidden="true"/>
-          <field attribute="ccflag" label="Cc">
+          <field attribute="ccflag" label="CC">
             <renderer type="checkbox"  params="width=5%"/>
           </field>
           <field attribute="bcc" hidden="true"/>
-          <field attribute="bccflag" label="BCc">
+          <field attribute="bccflag" label="BCC">
             <renderer type="checkbox"  params="width=5%"/>
           </field>
           <field attribute="sendfrom" label="From">
