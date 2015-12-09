@@ -294,35 +294,35 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Item" attribute="itemnum" readonly="true" />
-            <field label="Description" attribute="item_.description" readonly="true" />
-            <field label="Lot" attribute="lotnum" readonly="true" />
+            <field label="Item:" attribute="itemnum" readonly="true" />
+            <field label="Description:" attribute="item_.description" readonly="true" />
+            <field label="Lot:" attribute="lotnum" readonly="true" />
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-              <field label="Site" attribute="siteid" readonly="true" />
-              <field label="Storeroom" attribute="location" readonly="true" />
-              <field label="Bin" attribute="binnum" readonly="true" />
+              <field label="Site:" attribute="siteid" readonly="true" />
+              <field label="Storeroom:" attribute="location" readonly="true" />
+              <field label="Bin:" attribute="binnum" readonly="true" />
             </section>
 
             <section orientation="horizontal">
               <header displacement="ontop" label="Issuing" params="fieldset=true" />
               <renderer type="default" params="childinputsize=medium" />
-              <field label="Condition Code" attribute="conditioncode" readonly="true">
+              <field label="Condition Code:" attribute="conditioncode" readonly="true">
                 <renderer type="default" params="inputsize=small" />
               </field>
-              <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true">
+              <field label="Issue Unit:" attribute="inventory_.issueunit" readonly="true">
                 <renderer type="default" params="inputsize=small" />
               </field>
-            <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
+            <field label="Last Count Date:" attribute="#lastCountDate" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field label="Count Date" attribute="physcntdate">
+            <field label="Count Date:" attribute="physcntdate">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field label="New Count" attribute="physcnt">
+            <field label="New Count:" attribute="physcnt">
               <renderer type="numericinput" params="min=0;"/>
             </field>
           </section>
@@ -361,31 +361,31 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Item" attribute="itemnum" readonly="true"/>
-            <field label="Description" attribute="item_.description" readonly="true"/>
-            <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field label="Item:" attribute="itemnum" readonly="true"/>
+            <field label="Description:" attribute="item_.description" readonly="true"/>
+            <field label="Lot:" attribute="lotnum" readonly="true"/>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Site" attribute="siteid" readonly="true"/>
-            <field label="Storeroom" attribute="location" readonly="true"/>
-            <field label="Bin" attribute="binnum" readonly="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+            <field label="Storeroom:" attribute="location" readonly="true"/>
+            <field label="Bin:" attribute="binnum" readonly="true"/>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Issuing" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Condition Code" attribute="conditioncode" readonly="true"/>
-            <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
-            <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
+            <field label="Condition Code:" attribute="conditioncode" readonly="true"/>
+            <field label="Issue Unit:" attribute="item_.issueunit" readonly="true"/>
+            <field label="Last Count Date:" attribute="#lastCountDate" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field label="Count Date" attribute="physcntdate">
+            <field label="Count Date:" attribute="physcntdate">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field label="New Count" attribute="physcnt">
+            <field label="New Count:" attribute="physcnt">
               <renderer type="numericinput" params="min=0;"/>
             </field>
             <field attribute="curbal" hidden="true"/>
@@ -439,29 +439,29 @@
               <field attribute="requestedby" label="Requested By" readonly="true" />
               <field attribute="enterby" label="Entered By" readonly="true" default="@username" />
               <field attribute="#issuetype" label="Issue Type" readonly="true" />
-              <field attribute="issueto" label="Issue To:\" readonly="true" />
+              <field attribute="issueto" label="Issue To" readonly="true" />
             </section>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="itemnum" label="Item" readonly="true"/>
-            <field attribute="invbalances_.lotnum" label="Lot" readonly="true" />
-            <field attribute="item_.itemtype" label="Item Type" readonly="true" />
-            <association target="#rotatingAssetNumber" label="Rotating Asset" valuefield="assetnum" labelfield="asset_.description" extraprojectionvalues="binnum" enableexpression="@item_.rotating==1" requiredexpression="@item_.rotating==1">
+            <field attribute="itemnum" label="Item:" readonly="true"/>
+            <field attribute="invbalances_.lotnum" label="Lot:" readonly="true" />
+            <field attribute="item_.itemtype" label="Item Type:" readonly="true" />
+            <association target="#rotatingAssetNumber" label="Rotating Asset:" valuefield="assetnum" labelfield="asset_.description" extraprojectionvalues="binnum" enableexpression="@item_.rotating==1" requiredexpression="@item_.rotating==1">
               <dataprovider prefilterfunction="FilterAssets"/>
               <renderer type="lookup" />
               <event type="afterchange" service="inventoryService" method="afterChangeInvreserveAsset"/>
             </association>
-            <field attribute="item_.rotating" label="Rotating" enableexpression="false">
+            <field attribute="item_.rotating" label="Rotating:" enableexpression="false">
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="item_.iskit" label="Kit" enableexpression="false">
+            <field attribute="item_.iskit" label="Kit:" enableexpression="false">
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="invbalances_.curbal" label="Current Balance" readonly="true" />
-            <field attribute="reservedqty" label="Reserved Quantity" readonly="true" />
-            <field attribute="#issueqty" label="Issue Quantity">
+            <field attribute="invbalances_.curbal" label="Current Balance:" readonly="true" />
+            <field attribute="reservedqty" label="Reserved Quantity:" readonly="true" />
+            <field attribute="#issueqty" label="Issue Quantity:">
               <renderer type="numericinput" params="min=1;max=@reservedqty"/>
               <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>
             </field>
@@ -470,9 +470,9 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-              <field attribute="siteid" label="Site" readonly="true" />
-              <field attribute="location" label="Storeroom" readonly="true" />
-              <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
+              <field attribute="siteid" label="Site:" readonly="true" />
+              <field attribute="location" label="Storeroom:" readonly="true" />
+              <association label="Bin:" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
                 <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
                 <dataprovider prefilterfunction="FilterBins"/>
               </association>
@@ -481,17 +481,17 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="item_.issueunit" label="Issue Unit" readonly="true" />
-            <field attribute="unitcost" label="Unit Cost" readonly="true" />
+            <field attribute="item_.issueunit" label="Issue Unit:" readonly="true" />
+            <field attribute="unitcost" label="Unit Cost:" readonly="true" />
             <field attribute="inventory_.costtype" hidden="true"/>
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Charge Details" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="wonum" label="Work Order" readonly="true" />
-            <field attribute="tostoreloc" label="Location" readonly="true" />
-            <field attribute="assetnum" label="Asset" readonly="true" />
-            <field attribute="glaccount" label="GL Account" readonly="true" />
+            <field attribute="wonum" label="Work Order:" readonly="true" />
+            <field attribute="tostoreloc" label="Location:" readonly="true" />
+            <field attribute="assetnum" label="Asset:" readonly="true" />
+            <field attribute="glaccount" label="GL Account:" readonly="true" />
           </section>
           <event type="onload" service="inventoryService" method="onloadReservation"/>
           <commandbars>
@@ -568,30 +568,30 @@
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Item" attribute="itemnum" readonly="true"/>
-            <field label="Description" attribute="item_.description" readonly="true"/>
-            <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field label="Item:" attribute="itemnum" readonly="true"/>
+            <field label="Description:" attribute="item_.description" readonly="true"/>
+            <field label="Lot:" attribute="lotnum" readonly="true"/>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Site" attribute="siteid" readonly="true"/>
-            <field label="Storeroom" attribute="location" readonly="true"/>
-            <field label="Bin" attribute="binnum" readonly="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+            <field label="Storeroom:" attribute="location" readonly="true"/>
+            <field label="Bin:" attribute="binnum" readonly="true"/>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Issuing" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field label="Rotating" attribute="item_.rotating" enableexpression="false">
+            <field label="Rotating:" attribute="item_.rotating" enableexpression="false">
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
-            <field label="Kit" attribute="item_.iskit" enableexpression="false">
+            <field label="Kit:" attribute="item_.iskit" enableexpression="false">
               <renderer type="checkbox" />
             </field>
-            <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
-            <field label="Balance" attribute="curbal"/>
+            <field label="Issue Unit:" attribute="item_.issueunit" readonly="true"/>
+            <field label="Balance:" attribute="curbal"/>
             <field attribute="physcnt" hidden="true"/>
           </section>
         </schema>
@@ -662,25 +662,25 @@
         <schema id="detail" title="Inventory Transfer Details">
           <field attribute="matrectransid" hidden="true"></field>
           
-          <field attribute="itemnum" label="Item" readonly="true">
+          <field attribute="itemnum" label="Item:" readonly="true">
             <renderer type="default" params="inputsize=medium" />
           </field>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="fromstoreloc" label="From Storeroom" readonly="true"/>
-            <field attribute="frombin" label="From Bin" readonly="true"/>
-            <field attribute="tostoreloc" label="To Storeroom" readonly="true"/>
-            <field attribute="tobin" label="To Bin" readonly="true"/>
+            <field attribute="fromstoreloc" label="From Storeroom:" readonly="true"/>
+            <field attribute="frombin" label="From Bin:" readonly="true"/>
+            <field attribute="tostoreloc" label="To Storeroom:" readonly="true"/>
+            <field attribute="tobin" label="To Bin:" readonly="true"/>
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Issuing" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="issueunit" label="Issue Unit" readonly="true"/>
-            <field attribute="quantity" label="Quantity" readonly="true"/>
-            <field attribute="actualdate" label="Transfer Date" readonly="true">
+            <field attribute="issueunit" label="Issue Unit:" readonly="true"/>
+            <field attribute="quantity" label="Quantity:" readonly="true"/>
+            <field attribute="actualdate" label="Transfer Date:" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </section>
