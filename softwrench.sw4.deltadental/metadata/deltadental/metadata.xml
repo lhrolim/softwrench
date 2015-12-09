@@ -623,6 +623,13 @@
               <renderer type="default" />
             </field>
           </customization>
+          <customization position="status">
+            <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
+              <dataprovider prefilterfunction="FilterStatusCodes"/>
+              <renderer type="lookup" params="avoidautofocus=true"/>
+              <event type="afterchange" method="onStatusChanged" service="workorderService"/>
+            </association>
+          </customization>
         </schema>
         
         <schema id="newdetail" platform="web" redeclaring="false" stereotype="detailnew">
