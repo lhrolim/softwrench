@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.user;
@@ -21,7 +22,7 @@ namespace softwrench.sw4.dashboard.classes.service.graphic {
         /// <param name="user"></param>
         /// <param name="requestConfig"></param>
         /// <returns></returns>
-        IGraphicStorageSystemAuthDto Authenticate(ISWUser user, IDictionary<string, string> requestConfig);
+        Task<IGraphicStorageSystemAuthDto> Authenticate(ISWUser user, IDictionary<string, string> requestConfig);
         /// <summary>
         /// Loads some resource from the graphic storage system (maybe through an api).
         /// Returns the resource as a string so it can be serialization/format agnostic, 
@@ -32,6 +33,6 @@ namespace softwrench.sw4.dashboard.classes.service.graphic {
         /// <param name="resource"></param>
         /// <param name="requestConfig"></param>
         /// <returns></returns>
-        string LoadExternalResource(string resource, IDictionary<string, string> requestConfig);
+        Task<string> LoadExternalResource(string resource, IDictionary<string, string> requestConfig);
     }
 }
