@@ -2717,6 +2717,9 @@
               <renderer type="email"/>
             </field>
           </customization>
+          <customization position="subject">
+            <field attribute="subject" label="Subject:" requiredexpression="true" defaultexpression="service:kongsbergCommunicationService.getSubjectDefaultExpression"/>
+          </customization>
         </schema>
       </schemas>
     </application>

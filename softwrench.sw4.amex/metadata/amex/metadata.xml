@@ -1,27 +1,138 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-  
-  
+
+  <templates>
+    <template path="@person.xml"/>
+  </templates>
+
   <entities>
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+      <entity name="item" idAttribute="itemid" useridAttribute="itemnum">
+        <attributes>
+          <attribute name="requiresparent" type="bool"/>
+        </attributes>
+      </entity>
+      <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
       <attributes>
         <attribute name="RFA_OWNER" type="varchar"/>
         <attribute name="BARCODE" type="varchar"/>
         <attribute name="DCI_SITE" type="varchar"/>
+        <attribute name="RECDATE" type="datetime"/>
       </attributes>
+      <relationships>
+        <relationship to="asset" qualifier="rfaparasset2">
+          <relationshipAttribute primary="true" from ="parent" to ="assetnum"/>
+          <!--TODO discover what exactly to put here-->
+          <relationshipAttribute query="!@itemnum like 'a%'"/>
+        </relationship>
+        <relationship to ="item">
+          <relationshipAttribute primary="true" from ="itemnum" to ="itemnum"/>
+        </relationship>
+      
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.AMEX.AmexAssetConnectors"/>
+      </connectorParameters>
     </entity>
   </entities>
   
   <applications>
-    <application name="asset" entity="asset" title="Asset">
+    <application name="asset" entity="asset" title="Asset" >
+      <components> 
+        <componentdisplayable id ="assethiddenfields">
+          <field attribute ='addtostore' hidden='true'/>
+          <field attribute ='assetid' hidden='true' />
+          <field attribute ='assetnum' hidden='true' />
+          <field attribute ='assetuid' hidden='true' />
+          <field attribute ='autowogen' hidden='true' />
+          <field attribute ='budgetcost' hidden='true' />
+          <field attribute ='cb_back' hidden='true' />
+          <field attribute ='cb_shunt' hidden='true' />
+          <field attribute ='cb_testcomp' hidden='true' />
+          <field attribute ='cb_testfailed' hidden='true' />
+          <field attribute ='changeby' hidden='true' />
+          <field attribute ='changedate' hidden='true' />
+          <field attribute ='children' hidden='true' />
+          <field attribute ='dbdrw' hidden='true' />
+          <field attribute ='disabled' hidden='true' />
+          <field attribute ='haschildren' hidden='true' />
+          <field attribute ='hasld' hidden='true' />
+          <field attribute ='hasparent' hidden='true' />
+          <field attribute ='invcost' hidden='true' />
+          <field attribute ='iscalibration' hidden='true' />
+          <field attribute ='islinear' hidden='true' />
+          <field attribute ='isrunning' hidden='true' />
+          <field attribute ='langcode' hidden='true' />
+          <field attribute ='mainthierchy' hidden='true' />
+          <field attribute ='markedforretest' hidden='true' />
+          <field attribute ='moved' hidden='true' />
+          <field attribute ='orgid' hidden='true' />
+          <field attribute ='plusciscontam' hidden='true' />
+          <field attribute ='pluscisinhousecal' hidden='true' />
+          <field attribute ='pluscismte' hidden='true' />
+          <field attribute ='pluscpmextdate' hidden='true' />
+          <field attribute ='pluscsolution' hidden='true' />
+          <field attribute ='purchaseprice' hidden='true' />
+          <field attribute ='replacecost' hidden='true' />
+          <field attribute ='returnedtovendor' hidden='true' />
+          <field attribute ='rkmwval' hidden='true' />
+          <field attribute ='siteid' hidden='true' />
+          <field attribute ='statusiface' hidden='true' />
+          <field attribute ='tloampartition' hidden='true' />
+          <field attribute ='totalcost' hidden='true' />
+          <field attribute ='totdowntime' hidden='true' />
+          <field attribute ='totunchargedcost' hidden='true' />
+          <field attribute ='unchargedcost' hidden='true' />
+          <field attribute ='ytdcost' hidden='true' />
+          <field attribute="itemnum" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="item_.requiresparent" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          
+        </componentdisplayable>
+      </components>
+      
       <schemas>
         <schema id="rrfdlist" stereotype="list">
+          
           <field attribute="rfa_owner" label="Owner"></field>
           <field attribute="barcode" label="Barcode"></field>
           <field attribute="manufacturer" label="Manufacturer"></field>
           <field attribute="itemnum" label="Make/Model"></field>
           <field attribute="description" label="Description"></field>
+          <properties>
+            <property key="nextschema.schemaid" value="rrfdetail"/>
+          </properties>
+        
         </schema>
+
+        <schema id="rrfdetail" stereotype="detail">
+          <reference id ="assethiddenfields"/>
+
+          <field attribute="#serialnum" label="SN#" requiredexpression="true" attributeToServer="serialnum"/>
+          
+          <association label="Main Unit" requiredexpression="true" target="parent" 
+                       labelfield="rfaparasset2_.description" 
+                       showexpression="@itemnum == @item_.itemnum &amp;&amp; @item_.requiresparent =='1'">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="#recdate" label="Received Date" attributeToServer="recdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="nextschema.schemaid" value="rrfdlist"/>
+          </properties>
+          
+          
+        </schema>
+        
       </schemas>
     </application>
   </applications>

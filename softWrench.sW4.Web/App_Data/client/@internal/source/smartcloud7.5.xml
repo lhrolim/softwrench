@@ -107,6 +107,11 @@
         <attribute name="sysuser" type="integer" required="true" />
         <attribute name="type" type="varchar" required="true" />
         <attribute name="userid" type="varchar" required="true" />
+        <attribute name="active" type="boolean"
+                  query="cast(case 
+                   when !@status='ACTIVE' then 1 
+                   when !@status='INACTIVE' or !@status is null then 0 
+                   end as bit)" />
       </attributes>
       <relationships>
         <relationship to="person">

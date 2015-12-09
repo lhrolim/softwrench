@@ -32,7 +32,16 @@
   <!--These will come from jenkins-->
   <if test="${environment::variable-exists('clientsw4')}">
     <property name="client" value="${environment::get-variable('clientsw4')}" />
+    <property name="deployclientsw4" value="${client}" />
   </if>
+
+
+  
+
+  <if test="${environment::variable-exists('deployclientsw4')}">
+    <property name="deployclientsw4" value="${environment::get-variable('deployclientsw4')}" />
+  </if>
+  
   <if test="${environment::variable-exists('environmentsw4')}">
     <property name="profile" value="${environment::get-variable('environmentsw4')}" />
   </if>
@@ -341,8 +350,8 @@
   <target name="deploypeek" depends="setenv,setclient">
 
 
-    <property name="clientfile1" value="${deploypath}/App_Data/Client/${client}/deploy.xml" />
-    <property name="clientfile2" value="../softwrench.sW4.${client}/metadata/${client}/deploy.xml" />
+    <property name="clientfile1" value="${deploypath}/App_Data/Client/${deployclientsw4}/deploy.xml" />
+    <property name="clientfile2" value="../softwrench.sW4.${deployclientsw4}/metadata/${deployclientsw4}/deploy.xml" />
 
     <echo message="${clientfile1}"/>
     <echo message="${clientfile2}"/>

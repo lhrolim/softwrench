@@ -259,7 +259,7 @@ function ApplicationController($scope, $http, $log, $timeout,
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
-            crudContextHolderService.updateCrudContext(scope.schema);
+            crudContextHolderService.updateCrudContext(scope.schema,scope.datamap);
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
@@ -426,7 +426,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             }
         });
         $scope.$on('sw_applicationredirected', function (event, parameters) {
-            if (parameters.popupmode == "browser" || parameters.popupmode == "modal") {
+            if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
                 return;
             }
 
