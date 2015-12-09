@@ -40,7 +40,7 @@
 
 
         <componentdisplayable id="issueitem">
-          <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating"
+          <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating"
                        dependantfields="siteid" requiredexpression="true" enableexpression="(@mode=='batch' &amp;&amp; @siteid!=null) || (@mode!='batch' &amp;&amp; @siteid!=null &amp;&amp; @storeloc!=null)">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
             <event type="afterchange" service="invissueService" method="afterchangeItem"/>
@@ -48,11 +48,11 @@
               <section orientation="horizontal">
                 <header displacement="ontop" label="Item Details" params="fieldset=true;font-weight=bold;"/>
                 <renderer type="default"/>
-                <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-                <field attribute="inventory_.item_.rotating" label="Rotating" enableexpression="false">
+                <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type:"/>
+                <field attribute="inventory_.item_.rotating" label="Rotating:" enableexpression="false">
                   <renderer type="checkbox" params="formatter=numberToBoolean"/>
                 </field>
-                <field attribute="inventory_.item_.iskit" label="Kit" enableexpression="false">
+                <field attribute="inventory_.item_.iskit" label="Kit:" enableexpression="false">
                   <renderer type="checkbox" params="formatter=numberToBoolean"/>
                 </field>
               </section>
@@ -72,7 +72,7 @@
         </componentdisplayable>
 
         <componentdisplayable id="site">
-          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid" hideDescription="true">
+          <association label="Site:" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid" hideDescription="true">
             <renderer type="lookup"/>
           </association>
         </componentdisplayable>
@@ -203,43 +203,43 @@
           <field attribute="matusetransid" hidden="true"/>
           <section>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="enterby" label="Entered By" readonly="true"/>
-            <field attribute="issuetype" label="Issue Type" readonly="true"/>
-            <field attribute="issueto" label="Issued To" readonly="true"/>
+            <field attribute="enterby" label="Entered By:" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type:" readonly="true"/>
+            <field attribute="issueto" label="Issued To:" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="siteid" label="Site" readonly="true"/>
-            <field attribute="storeloc" label="Storeroom" readonly="true"/>
-            <field attribute="itemnum" label="Item" readonly="true"/>
-            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
-            <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
-            <field attribute="item_.rotating" label="Rotating" readonly="true">
+            <field attribute="siteid" label="Site:" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom:" readonly="true"/>
+            <field attribute="itemnum" label="Item:" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type:" readonly="true"/>
+            <field attribute="rotassetnum" label="Rotating Asset:" readonly="true"/>
+            <field attribute="item_.rotating" label="Rotating:" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="item_.iskit" label="Kit" readonly="true">
+            <field attribute="item_.iskit" label="Kit:" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="binnum" label="Bin" readonly="true"/>
-            <field attribute="lotnum" label="Lot" readonly="true"/>
-            <field attribute="quantity" label="Quantity Returned" readonly="true">
+            <field attribute="binnum" label="Bin:" readonly="true"/>
+            <field attribute="lotnum" label="Lot:" readonly="true"/>
+            <field attribute="quantity" label="Quantity Returned:" readonly="true">
               <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
             </field>
           </section>
           <section orientation="horizontal">
-            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <header displacement="ontop" label="Cost Details:" params="fieldset=true;font-weight=bold;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
-            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="item_.issueunit" label="Issue Unit:" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost:" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="refwo" label="Work Order" readonly="true"/>
-            <field attribute="location" label="Location" readonly="true"/>
-            <field attribute="assetnum" label="Asset" readonly="true"/>
-            <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
+            <field attribute="refwo" label="Work Order:" readonly="true"/>
+            <field attribute="location" label="Location:" readonly="true"/>
+            <field attribute="assetnum" label="Asset:" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Account:" readonly="true"/>
           </section>
           <commandbars>
             <commandgroup position="detailform">
@@ -255,41 +255,41 @@
           <section>
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" hidden="true"/>
-            <field attribute="issueto" label="Issued To" readonly="true" showexpression="@issueto != null"/>
-            <field attribute="enterby" label="Entered By" readonly="true"/>
-            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To:" readonly="true" showexpression="@issueto != null"/>
+            <field attribute="enterby" label="Entered By:" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type:" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="siteid" label="Site" readonly="true"/>
-            <field attribute="storeloc" label="Storeroom" readonly="true"/>
-            <field attribute="itemnum" label="Item" readonly="true"/>
-            <field attribute="item_.description" label="Description" readonly="true"/>
-            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
-            <field attribute="rotassetnum" showexpression="@rotassetnum != null" readonly="true" label="Rotating Asset"/>
-            <field attribute="binnum" label="Bin" readonly="true"/>
-            <field attribute="lotnum" label="Lot" readonly="true"/>
-            <field attribute="quantity" label="Quantity Issued" readonly="true">
+            <field attribute="siteid" label="Site:" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom:" readonly="true"/>
+            <field attribute="itemnum" label="Item:" readonly="true"/>
+            <field attribute="item_.description" label="Description:" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type:" readonly="true"/>
+            <field attribute="rotassetnum" showexpression="@rotassetnum != null" readonly="true" label="Rotating Asset:"/>
+            <field attribute="binnum" label="Bin:" readonly="true"/>
+            <field attribute="lotnum" label="Lot:" readonly="true"/>
+            <field attribute="quantity" label="Quantity Issued:" readonly="true">
               <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
             </field>
-            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+            <field attribute="qtyreturned" label="Quantity Returned:" readonly="true">
               <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
             </field>
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
-            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="item_.issueunit" label="Issue Unit:" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost:" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="refwo" label="Work Order" readonly="true"/>
-            <field attribute="location" label="Location" readonly="true"/>
-            <field attribute="assetnum" label="Asset" readonly="true"/>
-            <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
+            <field attribute="refwo" label="Work Order:" readonly="true"/>
+            <field attribute="location" label="Location:" readonly="true"/>
+            <field attribute="assetnum" label="Asset:" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Account:" readonly="true"/>
           </section>
           <commandbars>
             <commandgroup position="detailform">
@@ -333,16 +333,16 @@
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="enterby" label="Entered By:" readonly="true" default="@username"/>
             <reference id="site"/>
-            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+            <association label="Issued To:" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
               <renderer type="lookup"/>
             </association>
           </section>
 
           <section showexpression="@mode != 'batch'">
             <section orientation="horizontal">
-              <header displacement="ontop" label="Location" params="fieldset=true"/>
+              <header displacement="ontop" label="Location:" params="fieldset=true"/>
               <renderer type="default" params="childinputsize=medium" />
               
               <reference id="issuestoreloc"/>
@@ -353,26 +353,26 @@
               <renderer type="default" params="childinputsize=medium" />
               <reference id="issueitem"/>
               <reference id="issuebin"/>
-              <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
+              <field label="Lot:" attribute="binbalances_.lotnum" readonly="true">
                 <event type="afterchange" service="invissueService" method="afterChangeLotnum"/>
               </field>
-              <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+              <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type:"/>
               <reference id="rotasset"/>
-              <field attribute="inventory_.item_.rotating" label="Rotating" enableexpression="false">
+              <field attribute="inventory_.item_.rotating" label="Rotating:" enableexpression="false">
                 <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
-              <field attribute="inventory_.item_.iskit" label="Kit" enableexpression="false">
+              <field attribute="inventory_.item_.iskit" label="Kit:" enableexpression="false">
                 <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
-              <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
+              <field attribute="binbalances_.curbal" label="Current Balance:" readonly="true">
                 <event type="afterchange" service="invissueService" method="afterChangeCurbal"/>
               </field>
               <reference id="issuequantity"/>
             </section>
             <section orientation="horizontal">
               <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
-              <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-              <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+              <field attribute="inventory_.issueunit" label="Issue Unit:" readonly="true"/>
+              <field attribute="unitcost" label="Unit Cost:" readonly="true"/>
               <field attribute="inventory_.costtype" hidden="true"/>
             </section>
 
@@ -399,21 +399,21 @@
 
 
 
-            <association label="Work Order" target="refwo" labelfield="workorder_.description"  extraprojectionvalues="location,assetnum"
+            <association label="Work Order:" target="refwo" labelfield="workorder_.description"  extraprojectionvalues="location,assetnum"
                          requiredexpression="(@location=='' || @location==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
               <event type="afterchange" service="invissueService" method="afterChangeWorkorder"/>
             </association>
-            <association label="Location" target="location" labelfield="location_.description"  requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
+            <association label="Location:" target="location" labelfield="location_.description"  requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@assetnum== '' || @assetnum==undefined)">
               <renderer type="lookup"/>
               <event type="afterchange" service="invissueService" method="afterChangeLocation"/>
             </association>
-            <association label="Asset" target="assetnum" labelfield="asset_.description"  extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
+            <association label="Asset:" target="assetnum" labelfield="asset_.description"  extraprojectionvalues="location" requiredexpression="(@refwo=='' || @refwo==undefined) &amp;&amp; (@location== '' || @location==undefined)">
               <renderer type="lookup"/>
               <event type="afterchange" service="invissueService" method="afterChangeAsset"/>
             </association>
-            <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+            <association label="GL Debit Account:" target="gldebitacct"  labelfield="glcomponents_.comptext" >
               <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
             </association>
           </section>
@@ -438,51 +438,51 @@
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" hidden="true"/>
-            <field attribute="enterby" label="Entered By" readonly="true"/>
-            <field attribute="issuetype" label="Issue Type" readonly="true"/>
-            <field attribute="issueto" label="Issued To" readonly="true"/>
+            <field attribute="enterby" label="Entered By:" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type:" readonly="true"/>
+            <field attribute="issueto" label="Issued To:" readonly="true"/>
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Location" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="siteid" label="Site" readonly="true"/>
-            <field attribute="storeloc" label="Storeroom" readonly="true"/>
-            <field attribute="binnum" label="Bin" readonly="true"/>
+            <field attribute="siteid" label="Site:" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom:" readonly="true"/>
+            <field attribute="binnum" label="Bin:" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="itemnum" label="Item" readonly="true"/>
-            <field attribute="lotnum" label="Lot" readonly="true"/>
-            <field attribute="item_.description" label="Description" readonly="true"/>
-            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
-            <field attribute="rotassetnum" readonly="true" label="Rotating Asset"/>
-            <field attribute="quantity" label="Quantity Issued" readonly="true">
+            <field attribute="itemnum" label="Item:" readonly="true"/>
+            <field attribute="lotnum" label="Lot:" readonly="true"/>
+            <field attribute="item_.description" label="Description:" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type:" readonly="true"/>
+            <field attribute="rotassetnum" readonly="true" label="Rotating Asset:"/>
+            <field attribute="quantity" label="Quantity Issued:" readonly="true">
               <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
             </field>
-            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+            <field attribute="qtyreturned" label="Quantity Returned:" readonly="true">
               <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
             </field>
-            <field attribute="#quantityadj" label="New Return Quantity" default="1">
+            <field attribute="#quantityadj" label="New Return Quantity:" default="1">
               <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
             </field>
           </section>
           <section orientation="horizontal">
-            <header displacement="ontop" label="Cost Details" params="fieldset=true;"/>
+            <header displacement="ontop" label="Cost Detail:s" params="fieldset=true;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
-            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-            <field attribute="actualcost" label="Actual Cost" hidden="true"/>
+            <field attribute="item_.issueunit" label="Issue Unit:" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost:" readonly="true"/>
+            <field attribute="actualcost" label="Actual Cost:" hidden="true"/>
             <field attribute="linecost" hidden="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="refwo" label="Work Order:" readonly="true"/>
             <field attribute="issueid" hidden="true"/>
-            <field attribute="location" label="Location" readonly="true"/>
-            <field attribute="assetnum" label="Asset" readonly="true"/>
-            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <field attribute="location" label="Location:" readonly="true"/>
+            <field attribute="assetnum" label="Asset:" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Account:" readonly="true"/>
             <field attribute="glcreditacct" hidden="true"/>
             <field attribute="issueid" hidden="true"/>
           </section>
@@ -507,33 +507,33 @@
         <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
           <section>
             <field attribute="matusetransid" hidden="true"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
-            <field attribute="siteid" label="Site" readonly="true"/>
-            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="enterby" label="Entered By:" readonly="true" default="@username"/>
+            <field attribute="siteid" label="Site:" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom:" readonly="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
-            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
+            <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssueBatch_afterChangeItem"/>
             </association>
-            <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="inventory_.item_.itemtype" label="Item Type:" readonly="true"/>
             <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; 
               @inventory_.item_.rotating==1" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
-            <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
+            <field attribute="inventory_.item_.rotating" label="Rotating:" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
+            <field attribute="inventory_.item_.iskit" label="Kit:" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@inventory_.item_.rotating==0">
+            <association label="Bin:" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@inventory_.item_.rotating==0">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
-            <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field label="Lot:" attribute="lotnum" readonly="true"/>
             <field attribute="binbalances_.binnum" hidden="true">
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
             </field>
@@ -546,8 +546,8 @@
             <field attribute="lotbalances_.curbal" hidden="true">
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
             </field>
-            <field attribute="#curbal" label="Current Balance" readonly="true"/>
-            <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
+            <field attribute="#curbal" label="Current Balance:" readonly="true"/>
+            <field attribute="quantity" label="Issue Quantit:y" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;max=@curbal;"/>
             </field>
             <field attribute="inventory_.location" hidden="true" />
@@ -557,14 +557,14 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="inventory_.issueunit" label="Issue Unit:" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost:" readonly="true"/>
             <field attribute="inventory_.costtype" hidden="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
-            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
-            <association label="Override GL Debit Account" target="#gldebitacct"  labelfield="glcomponents_.comptext" >
+            <field attribute="gldebitacct" label="GL Debit Account:" readonly="true"/>
+            <association label="Override GL Debit Account:" target="#gldebitacct"  labelfield="glcomponents_.comptext" >
               <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
               <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
             </association>
@@ -584,30 +584,30 @@
 
         <schema id="batchInvIssueFilter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
+          <association label="Site:" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
+          <association label="Work Order:" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
             <dataprovider prefilterfunction="FilterWorkorders"/>
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>-->
           </association>
-          <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname">
+          <association label="Issued To:" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid">
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>-->
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
             <renderer type="lookup"/>
             <!--<dataprovider prefilterfunction="FilterAssets" />-->
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>-->
           </association>
-          <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" default="@storeloc" dependantfields="siteid" requiredexpression="true" >
+          <association label="Storeroom:" target="storeloc" labelfield="storeroom_.description" default="@storeloc" dependantfields="siteid" requiredexpression="true" >
             <renderer type="lookup"/>
           </association>
-          <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+          <association label="GL Debit Account:" target="gldebitacct"  labelfield="glcomponents_.comptext" >
             <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
           </association>
           <commandbars>
