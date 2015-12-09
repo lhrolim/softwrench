@@ -182,6 +182,7 @@
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
+    <Compile Include="Data\CompositeDatamap.cs" />
     <Compile Include="Data\Entities\Commlog\EmailCounterHandler.cs" />
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />

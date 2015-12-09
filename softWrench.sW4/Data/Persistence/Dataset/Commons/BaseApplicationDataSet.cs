@@ -440,6 +440,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //let's handle eventual inline compositions afterwards to avoid an eventual thread explosion
             #region inlineCompositions
+
+            tasks = new List<Task>();
+
             if (application.Schema.HasInlineComposition && dataMap is CrudOperationData) {
                 var crudData = dataMap as CrudOperationData;
                 var inlineCompositions = application.Schema.Compositions().Where(c => c.Inline);
@@ -449,16 +452,23 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         ? SchemaFetchMode.SecondaryContent
                         : SchemaFetchMode.MainContent;
                     var compositionAssociations = composition.Schema.Schemas.List.Associations(mode);
-                    if (compositionAssociations.Any()){
+
+                    if (compositionAssociations.Any()) {
                         var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
                         if (compositionData != null) {
                             var compositeData = dataMap.GetAttribute(composition.AssociationKey);
+
                         }
                     }
 
-                    
+
                 }
             }
+            if (tasks.Any()) {
+                Task.WaitAll(tasks.ToArray());
+            }
+
+
             #endregion
 
 
