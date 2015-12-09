@@ -8,15 +8,11 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
 
     //to allow overriding
     $scope.i18NLabel = $scope.i18NLabel || function (fieldMetadata) {
-        var label = i18NService.getI18nLabel(fieldMetadata, $scope.schema);
-        var lastChar = label.substr(label.length - 1);
+        return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
+    };
 
-        if (lastChar == ":" || lastChar == "?" || lastChar == "#" || fieldMetadata.type == 'ApplicationSection') {
-            return label;
-        }
-
-        label = label + ':';
-        return label;
+    $scope.i18NInputLabel = function (fieldMetadata) {
+        return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
     };
 
     $scope.i18NInputLabel = function (fieldMetadata) {
