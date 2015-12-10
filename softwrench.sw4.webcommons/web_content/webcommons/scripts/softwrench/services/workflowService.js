@@ -10,31 +10,28 @@
                 siteid: datamap["fields"]["siteid"],
                 workflowName: workflowName
             };
-            //schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema
-            restService.invokePost("Workflow", "InitiateWorkflow", httpParameters, null,
-                function (response) {
-                    // If the response is null, no workflows were found
-                    if (response == "null") {
-                        alertService.notifymessage('warn', 'There are no active and enabled Workflows for this record type.');
-                    }
-                    // If the response does not have a list of workflows, it has sucessfully found and executed one
-                    if (!response.resultObject.hasOwnProperty("workflows")) {
-                        modalService.hide();
-                        return;
-                    }
-                    modalService.show(response.resultObject.schema, {}, {
-                        title: "Select Workflow", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                            crudContextHolderService.updateEagerAssociationOptions("workflows", response.resultObject.workflows);
-                        }
-                    }, function (datamap) {
-                        var parentDatamap = angular.element(document).injector().get('crudContextHolderService').rootDataMap();
-                        var parentSchema = angular.element(document).injector().get('crudContextHolderService').currentSchema();
-                        initiateWorkflow(parentSchema, parentDatamap, datamap["processname"]);
-                    });
-                }, function (response) {
-                    // There was an error while trying to initiate workflow
+            restService.postPromise("Workflow", "InitiateWorkflow", httpParameters).then(function (response) {
+                // If the response is null, no workflows were found
+                if (response.data == "null") {
+                    alertService.notifymessage('warn', 'There are no active and enabled Workflows for this record type.');
                 }
-            );
+                // If the response does not have a list of workflows, it has sucessfully found and executed one
+                if (!response.data.resultObject.hasOwnProperty("workflows")) {
+                    modalService.hide();
+                    return;
+                }
+                modalService.show(response.data.resultObject.schema, {}, {
+                    title: "Select Workflow", cssclass: "dashboardmodal", onloadfn: function () {
+                        crudContextHolderService.updateEagerAssociationOptions("workflows", response.data.resultObject.workflows);
+                    }
+                }, function (datamap) {
+                    var parentDatamap = angular.element(document).injector().get('crudContextHolderService').rootDataMap();
+                    var parentSchema = angular.element(document).injector().get('crudContextHolderService').currentSchema();
+                    initiateWorkflow(parentSchema, parentDatamap, datamap["processname"]);
+                });
+            }).catch(function (response) {
+                alertService.error(response.data.errorMessage);
+            });
         };
 
         var service = {
