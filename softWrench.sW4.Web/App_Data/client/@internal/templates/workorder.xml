@@ -197,6 +197,7 @@
           <!--          <field attribute="failurecode"  hidden="true"/>-->
 
           <section orientation="horizontal">
+            <section id="wonumsection" />
             <section id ="siteidsection"/>
             <section id="statussection" />
           </section>
@@ -284,22 +285,22 @@
                 </field>
               </section>
 
-              <!-- actual -->
-              <section orientation="vertical">
-                <field attribute="actstart" label="Actual Start Date:">
-                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-                </field>
-                <field attribute="actfinish" label="Actual Finish Date:">
-                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-                </field>
-              </section>
-
               <!-- scheduled -->
               <section orientation="vertical">
                 <field attribute="schedstart" label="Scheduled Start Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy;"/>
                 </field>
                 <field attribute="schedfinish" label="Scheduled Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+              </section>
+              
+              <!-- actual -->
+              <section orientation="vertical">
+                <field attribute="actstart" label="Actual Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+                <field attribute="actfinish" label="Actual Finish Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy;"/>
                 </field>
               </section>
@@ -368,15 +369,19 @@
         </schema>
 
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web">
+          <section id="wonumsection">
+            <field attribute="wonum" label="WO#" readonly="true">
+              <renderer type="default" />
+            </field>
+          </section>
+          
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true" requiredexpression="true">
               <renderer type="default" />
             </field>
           </section>
+          
           <section id="statussection">
-            <field attribute="wonum" label="WO#" readonly="true">
-              <renderer type="default" />
-            </field>
             <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>

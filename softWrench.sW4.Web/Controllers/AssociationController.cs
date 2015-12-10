@@ -69,10 +69,9 @@ namespace softWrench.sW4.Web.Controllers {
             var app = MetadataProvider.Application(application).ApplyPoliciesWeb(key);
             var association = BuildAssociation(app, associationKey);
 
-            var filter = new PaginatedSearchRequestDto();
+            var filter = new PaginatedSearchRequestDto { QuickSearchData = labelSearchString };
 
-            filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(association.OriginalLabelField, labelSearchString, app.Schema));
-            filter.QuickSearchData = labelSearchString;
+            // filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(association.OriginalLabelField, labelSearchString, app.Schema));
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application), app, currentData);
 
             //adopting to use an association to keep same existing service
