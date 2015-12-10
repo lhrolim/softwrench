@@ -343,6 +343,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                     menuService.doAction(leaf, null);
                 }
 
+                crudContextHolderService.clearCrudContext();
                 $scope.closeBreadcrumbs();
             };
 
