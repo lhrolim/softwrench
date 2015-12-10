@@ -49,6 +49,9 @@ var BrowserDetect =
 };
 BrowserDetect.init();
 
+
+
+
 var DeviceDetect =
 {
     init: function () {
@@ -212,6 +215,10 @@ String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
         return false;
     }
     return s.toLowerCase() == other.toLowerCase();
+};
+
+String.prototype.contains = function(str) {
+    return this.indexOf(str) >= 0;
 };
 
 Array.prototype.subarray = function (start, end) {

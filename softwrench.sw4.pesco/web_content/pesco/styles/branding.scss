@@ -1,28 +1,34 @@
 ﻿$signin_color: #000106;
+$form_background: rgba(0, 1, 6, 0.77);
 $asset_path: "../images";
 
 .page-signin {
     background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
-
-    .form-signin {
-        background-color: rgba(0, 1, 6, 0.77);
-        border: 2px solid #676768;
-    }
 }
 
-.container header {
-    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
+.container {
+    header {
+        background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
 
-    .admin-area {
-        background-color: rgba(0, 1, 6, 0.77);
+        .admin-area {
+            background-color: $form_background;
+        }
+
+        .branding {
+            background: url(#{$asset_path}/branding.png) no-repeat top left;
+
+            .logo img {
+                height: 40px;
+                width: auto;
+            }
+        }
     }
 
-    .branding {
-        background: url(#{$asset_path}/branding.png) no-repeat top left;
+    footer {
+        background: $signin_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
 
-        .logo img {
-            height: 40px;
-            width: auto;
+        .page-overlay {
+            background-color: $form_background;
         }
     }
 }
@@ -40,10 +46,31 @@ $asset_path: "../images";
     }
 }
 
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .page-overlay {
+            background-color: $form_background;
+        }
+
+        .form-signin {
+            background-color: none;
+        }
+    }
+}
+
 /* Small Devices, Tablets */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .page-signin {
         background: $signin_color url(#{$asset_path}/signin-sm.jpg) no-repeat center center fixed;
+    }
+}
+
+@media all and (min-width: 850px) {
+    .page-signin {
+        .form-signin {
+            background-color: $form_background;
+            border: 2px solid #676768;
+        }
     }
 }
 
@@ -54,6 +81,6 @@ $asset_path: "../images";
     }
 }
 
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

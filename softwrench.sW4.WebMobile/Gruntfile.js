@@ -45,6 +45,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/storage/localstorageservice.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
     ];

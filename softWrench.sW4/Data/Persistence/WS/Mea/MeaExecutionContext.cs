@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
 
         public const string _MethodName = "processDocument";
 
-        private DynamicObject _queryProxy;
+        private DynamicObject _queryProxy =null;
 
         public MeaExecutionContext(IOperationData operationData, DynamicObject proxy = null)
             : base(operationData) {

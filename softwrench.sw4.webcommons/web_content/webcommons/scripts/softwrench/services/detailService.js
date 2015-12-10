@@ -8,24 +8,7 @@
 
     function detailService($log, $q, $timeout, $rootScope, associationService, compositionService, fieldService, schemaService, contextService) {
 
-        var api = {
-            fetchRelationshipData: fetchRelationshipData,
-            isEditDetail: isEditDetail
-        };
-
-        return api;
-
-        function fetchRelationshipData(scope, result) {
-
-
-            var associationPromise = handleAssociations(scope, result);
-            var compositionPromise = handleCompositions(scope, result);
-            $q.all([associationPromise, compositionPromise]).then(function (results) {
-                //ready to listen for dirty watchers
-                $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
-                scope.$broadcast("sw_configuredirtywatcher");
-            });
-        };
+       
 
         function isEditDetail(schema, datamap) {
             return fieldService.getId(datamap, schema) != undefined;
@@ -35,13 +18,13 @@
             var shouldFetchAssociations = !result.allAssociationsFetched;
 
             //some associations might already been retrieved
-            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
+            associationService.updateFromServerSchemaLoadResult(result.associationOptions);
 
             if (shouldFetchAssociations) {
                 return $timeout(function () {
                     //why this timeout?
                     $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(scope.schema.applicationName));
-                    associationService.getEagerAssociations(scope, { avoidspin: true });
+                    associationService.loadSchemaAssociations(scope.datamap,scope.schema, { avoidspin: true });
 
                 });
             } else {
@@ -77,6 +60,27 @@
             });
 
         }
+
+        function fetchRelationshipData(scope, result) {
+
+
+            var associationPromise = handleAssociations(scope, result);
+            var compositionPromise = handleCompositions(scope, result);
+            $q.all([associationPromise, compositionPromise]).then(function (results) {
+                //ready to listen for dirty watchers
+                $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
+                scope.$broadcast("sw.crud.relationship.serverresolved");
+            });
+        };
+
+        var api = {
+            fetchRelationshipData: fetchRelationshipData,
+            isEditDetail: isEditDetail
+        };
+
+        return api;
+
+      
 
     };
 

@@ -18,7 +18,6 @@ using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
-        private static ILog Log = LogManager.GetLogger(typeof(HapagChangeDataSet));
 
         public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
             : base(locationManager, entityRepository, maxDao)

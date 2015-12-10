@@ -79,6 +79,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RelationshipAttributePrimary = "primary";
         public const string RelationshipAttributeCollection = "collection";
         public const string RelationshipCacheableAttribute = "cacheable";
+        public const string RelationshipLazyAttribute = "lazy";
         public const string RelationshipAttributeReverse = "reverselookupattribute";
         public const string IgnorePrimaryAttribute = "ignoreprimary";
         public const string RelationshipAttributeElement = "relationshipAttribute";
@@ -173,7 +174,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationServiceAttribute = "service";
         public const string ApplicationToStringAttribute = "tostring";
         public const string ApplicationSchemaAttributeUserInteractionEnabled = "userInteractionEnabled";
-        public const string RoleAttribute = "role";
 
         public const string ApplicationPropertiesElement = "properties";
         public const string ApplicationPropertyElement = "property";
@@ -188,6 +188,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationSectionAttributeAttribute = "attribute";
         public const string ApplicationSectionOrientationAttribute = "orientation";
         public const string ApplicationSectionRoleAttribute = "role";
+        public const string ApplicationSectionSecondaryContentAttribute = "secondarycontent";
 
         public const string ApplicationTabElement = "tab";
 

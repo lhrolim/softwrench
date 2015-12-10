@@ -1,5 +1,3 @@
-using System.Xml.Linq;
-
 namespace softWrench.sW4.Metadata.Parsing {
     /// <summary>
     ///     A utility class to register all XML schema

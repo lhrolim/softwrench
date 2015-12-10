@@ -228,41 +228,21 @@
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
-          <field attribute="itemnum" label="Item">
-            <renderer type="default" />
-          </field>
-          <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%" />
-          </field>
-          <field attribute="rotassetnum" label="Rotating Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
-          </field>
-          <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%" />
-          </field>
-          <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
-          </field>
-          <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1" />
-          </field>
-          <field attribute="location" label="Location" default="OFFICE">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
-          <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
-          </field>
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="item_.itemtype" label="Item Type"/>
+          <field attribute="rotassetnum" label="Rotating Asset"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="issueto" label="Issued To"/>
+          <field attribute="refwo" label="Work Order"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="location" label="Location" default="OFFICE"/>
+          <field attribute="siteid" label="Site"/>
+          <field attribute="issuetype" label="Issue Type"/>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
@@ -522,48 +502,24 @@
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
-          <field attribute="itemnum" label="Item">
-            <renderer type="default" />
-          </field>
-          <field attribute="rotassetnum" label="Rotating Asset">
-            <renderer type="default" params="widthXS=15%;widthSM=15%;widthMD=15%" />
-          </field>
-          <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%" />
-          </field>
-          <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="storeloc" label="Store Room">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%" />
-          </field>
-          <field attribute="transdate" label="Date">
-            <renderer type="datetime" params="widthXS=15%;widthSM=15%;widthMD=15%;"/>
-          </field>
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="rotassetnum" label="Rotating Asset"/>
+          <field attribute="issueto" label="Issued To"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="storeloc" label="Store Room"/>
+          <field attribute="item_.itemtype" label="Item Type"/>
+          <field attribute="transdate" label="Date"/>
           <field attribute="quantity" label="Qty" hidden="true">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn" hidden="true">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
-          <field attribute="lotnum" label="Lot" hidden="true">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
-          </field>
-          <field attribute="refwo" label="Work Order" hidden="true">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
-          </field>
-          <field attribute="assetnum" label="Asset" hidden="true">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1" />
-          </field>
-          <field attribute="siteid" label="Site" hidden="true">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
-          <field attribute="issuetype" label="Issue Type" hidden="true">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
-          </field>
+          <field attribute="lotnum" label="Lot" hidden="true"/>
+          <field attribute="refwo" label="Work Order" hidden="true"/>
+          <field attribute="assetnum" label="Asset" hidden="true"/>
+          <field attribute="siteid" label="Site" hidden="true"/>
+          <field attribute="issuetype" label="Issue Type" hidden="true"/>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
           </section>
@@ -820,21 +776,13 @@
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
-          <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=35%;widthSM=30%;widthMD=20%;widthLG=10%" />
-          </field>
+          <field attribute="itemnum" label="Item"/>
           <field attribute="item_.description" label="Description">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="location" label="Storeroom">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
-          <field attribute="binnum" label="Bin">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
-          <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
+          <field attribute="location" label="Storeroom"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="lotnum" label="Lot"/>
           <optionfield attribute="item_.rotating" label="Rotating">
             <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
@@ -845,12 +793,8 @@
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
-          <field attribute="curbal" label="Balance">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
+          <field attribute="curbal" label="Balance"/>
+          <field attribute="siteid" label="Site"/>
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>

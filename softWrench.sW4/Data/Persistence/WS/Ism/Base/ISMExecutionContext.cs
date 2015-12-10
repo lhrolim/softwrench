@@ -19,7 +19,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
 
         
 
-        private static readonly ILog Log = LogManager.GetLogger(WsInputLog);
+        private new static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
         public IsmExecutionContext(DynamicObject proxy, IOperationData operationData)
             : base(operationData) {

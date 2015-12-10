@@ -11,11 +11,12 @@ In order to build the solution locally there are a few steps required:
   on top of the dialog click `Restore` -> wait for it to finish
 - install [NAnt](http://nant.sourceforge.net/)
   - follow the installation [guidelines](http://nant.sourceforge.net/release/latest/help/introduction/installation.html)
+  - As an external step: http://stackoverflow.com/questions/8605122/how-do-i-resolve-configuration-errors-with-nant-0-91  
   in order to create a `nant.bat` executable file
 - create a `NAnt` external task to create `symlinks` in between projects  
   - in `Visual Studio` -> click `TOOLS` -> select `External Tools...` -> `Add`
     - Title: whatever you want
-    - Command: <path to nant.bat>
+    - Command: `<path to nant.bat>`
     - Arguments: -f:build.xml generatelinks generatelinksMobile
     - Initial directory: $(SolutionDir)\Build
     - check option `Use Output Window`

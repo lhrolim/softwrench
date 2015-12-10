@@ -44,6 +44,7 @@
   <ItemGroup>
     <Content Include="metadata\ninewest\readme.txt" />
     <Content Include="web_content\ninewest\images\branding.png" />
+    <Content Include="web_content\ninewest\images\footer.jpg" />
     <Content Include="web_content\ninewest\images\header-email.jpg" />
     <Content Include="web_content\ninewest\images\header.jpg" />
     <Content Include="web_content\ninewest\images\logo-byline.png" />

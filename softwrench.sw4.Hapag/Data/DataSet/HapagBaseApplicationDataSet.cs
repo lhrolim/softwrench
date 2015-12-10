@@ -41,9 +41,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 
 
-        protected MaximoHibernateDAO MaxDAO {
-            get { return _maxDao; }
-        }
+        
 
         public IEnumerable<IAssociationOption> GetHlagAllLocations(OptionFieldProviderParameters parameters) {
             return LocationManager.FindAllLocations();

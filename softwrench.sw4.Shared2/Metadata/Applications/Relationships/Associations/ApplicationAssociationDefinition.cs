@@ -93,7 +93,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                     string[] fields = LabelField.Split(',');
                     try {
                         var a = String.Format(LabelPattern, fields);
-                    } catch (Exception e) {
+                    } catch (Exception) {
                         throw new InvalidOperationException(String.Format("incompatible labelPattern and Label Fields at application {0}", applicationName));
                     }
                 }
@@ -311,9 +311,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         ///  This decision will be delegated to the renderer type; a combo is a good example of a eager association, whileas a modal and autocomplete are lazy fetched components. 
         /// Those components data will only be fetched when the user makes some kind of interaction with it.
         /// </summary>
-        public Boolean IsLazyLoaded() {
+        public bool IsLazyLoaded() {
             return _applicationAssociationSchema.IsLazyLoaded;
         }
+
+        public bool IsEagerLoaded() {
+            return !IsLazyLoaded();
+        }
+
 
         public Boolean IsPaginated() {
             return _applicationAssociationSchema.IsPaginated;
@@ -337,6 +342,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             }
         }
 
+        //exacttly as it comes from metadata parsing
+        public string OriginalLabelField { get; set; }
+
         public void SetLazyRendererParametersResolver(Lazy<IDictionary<string, object>> resolver) {
             LazyRendererParametersResolver = resolver;
         }
@@ -348,6 +356,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                 LabelFields = LabelFields,
                 ApplicationTo = ApplicationTo,
             };
+            cloned.OriginalLabelField = OriginalLabelField;
             cloned.SetLazyResolver(LazyEntityAssociation);
             cloned.SetLazyRendererParametersResolver(LazyRendererParametersResolver);
             return cloned;

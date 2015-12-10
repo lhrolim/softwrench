@@ -104,7 +104,7 @@
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="entermeter_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.MeterReadingOperationHandler" />
-<!--        <connectorParameter key="markmultiassetcomplete_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.ProgressMultiAssetHandler" />-->
+        <!--        <connectorParameter key="markmultiassetcomplete_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.ProgressMultiAssetHandler" />-->
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
@@ -126,19 +126,19 @@
           </filters>
 
           <field attribute="wonum" label="WO#" >
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=20%;widthLG=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=30%;widthLG=25%" />
+            <renderer type="default" params="width=25%" />
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -194,110 +194,148 @@
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
-<!--          <field attribute="failurecode"  hidden="true"/>-->
+          <!--          <field attribute="failurecode"  hidden="true"/>-->
 
           <section orientation="horizontal">
+            <section id="wonumsection" />
+            <section id ="siteidsection"/>
             <section id="statussection" />
           </section>
 
           <section>
             <header displacement="ontop" label="Work Order Details" params="fieldset=true" />
-            <field attribute="description" label="Summary:">
+            <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=medium" />
             </field>
-            <field label="Details:" attribute="ld_.ldtext">
+            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
               <renderer type="richtext"/>
             </field>
           </section>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
-            <section id ="siteidsection"/>
-            <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
-              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-              <renderer type="lookup" />
-            </association>
-            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-              <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-            </association>
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
-              <renderer type="autocompleteclient" />
-            </optionfield>
-            <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
-              <renderer type="autocompleteclient" />
-            </association>
-            <field hidden="true" attribute="failurelist_.failurelist"/>
-            <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true">
-              <renderer type="lookup"  />
-              <dataprovider prefilterfunction="FilterProblemCodes" />
-            </association>
-            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
-              <renderer type="autocompleteclient"/>
-            </optionfield>
-            <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
-              <renderer type="lookup" />
-            </association>
-            <field label="Job Plan:" attribute="jpnum" readonly="true">
-              <renderer type="default" />
-            </field>
-            <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
-              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
-            </association>
+
+            <section orientation="vertical">
+              <header displacement="ontop" label="Asset Management" params="fieldset=true" />
+              <renderer type="default"/>
+
+              <section orientation="horizontal">
+              <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
+                <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+                <renderer type="lookup" />
+              </association>
+              <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                <dataprovider prefilterfunction="FilterAssets"/>
+                <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+              </association>
+              </section>
+
+              <section orientation="horizontal">
+                <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
+                  <renderer type="autocompleteclient" params="class=col-md-6" />
+                </optionfield>
+                <field hidden="true" attribute="failurelist_.failurelist"/>
+                
+
+                <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
+                  <renderer type="lookup" params="class=col-md-4"/>
+                </association>
+
+                <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+                  <renderer type="autocompleteclient" params="class=col-md-2"/>
+                </optionfield>
+              </section>
+
+            </section>
+
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Responsibility" params="fieldset=true" />
+              <renderer type="default" params="childinputsize=medium" />
+              <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+                <renderer type="lookup"  />
+                <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+              </association>
+              <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+                <renderer type="lookup"  />
+                <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+              </association>
+              <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
+                <renderer type="lookup" params="columnlabel=Name;"/>
+              </association>
+              <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
+              </field>
+            </section>
+
           </section>
 
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-              <renderer type="lookup"  />
-              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
-            </association>
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-              <renderer type="lookup"  />
-              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
-            </association>
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
-              <renderer type="lookup" params="columnlabel=Name;"/>
-            </association>
-            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-              <renderer type="lookup" />
-            </association>
+
+          <section secondarycontent="true" orientation="vertical">
+
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Scheduling" params="fieldset=true" />
+              
+              <!-- target -->
+              <section orientation="vertical">
+                <field attribute="targstartdate" label="Target Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+                <field attribute="targcompdate" label="Target Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+              </section>
+
+              <!-- scheduled -->
+              <section orientation="vertical">
+                <field attribute="schedstart" label="Scheduled Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+                <field attribute="schedfinish" label="Scheduled Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+              </section>
+              
+              <!-- actual -->
+              <section orientation="vertical">
+                <field attribute="actstart" label="Actual Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+                <field attribute="actfinish" label="Actual Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+                </field>
+              </section>
+
+            </section>
+
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+              <renderer type="default" params="childinputsize=medium" />
+
+              <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                <renderer type="autocompleteclient" />
+              </association>
+              <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true">
+                <renderer type="lookup"  />
+                <dataprovider prefilterfunction="FilterProblemCodes" />
+              </association>
+              <field label="Job Plan:" attribute="jpnum" readonly="true">
+                <renderer type="default" />
+              </field>
+              <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
+              </association>
+
+              <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+                <renderer type="lookup" />
+              </association>
+
+              <section id="attachmentsection"/>
+            </section>
+
+            <section id="compositions"/>
+
           </section>
 
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <field attribute="targstartdate" label="Target Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="targcompdate" label="Target Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="schedstart" label="Scheduled Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="schedfinish" label="Scheduled Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="actstart" label="Actual Start Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field attribute="actfinish" label="Actual Finish Date:">
-              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
-            </field>
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
-            </field>
-          </section>
-
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <section id="attachmentsection"/>
-          </section>
-          <section id="compositions"/>
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
@@ -306,12 +344,12 @@
               <renderer type="lookup" />
             </association>
           </section>
-          
+
           <section id="compositions">
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
-              <collectionproperties listschema="newlist" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
-            </composition>
+            <!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">-->
+            <!--              <collectionproperties listschema="newlist" autocommit="false"/>-->
+            <!--              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>-->
+            <!--            </composition>-->
           </section>
 
           <!--<section id="statussection">
@@ -331,15 +369,19 @@
         </schema>
 
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web">
-          <section id="siteidsection">
-            <field label="Site:" attribute="siteid" readonly="true">
-              <renderer type="default" />
-            </field>
-          </section>
-          <section id="statussection">
+          <section id="wonumsection">
             <field attribute="wonum" label="WO#" readonly="true">
               <renderer type="default" />
             </field>
+          </section>
+          
+          <section id="siteidsection">
+            <field label="Site:" attribute="siteid" readonly="true" requiredexpression="true">
+              <renderer type="default" />
+            </field>
+          </section>
+          
+          <section id="statussection">
             <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
@@ -350,7 +392,7 @@
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
             </composition>
-         
+
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
             </composition>
@@ -379,26 +421,26 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">
-              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>
-            </composition>
+            <!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">-->
+            <!--              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>-->
+            <!--              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>-->
+            <!--            </composition>-->
           </section>
-<!--          <commandbars>-->
+          <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->
-<!--            <commandgroup position="actions">-->
-<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-<!--                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" -->
-<!--                         properties="modalclass=readingsmodal"-->
-<!--                         parameters="schema,datamap" service="meterReadingService" method="read"/>-->
-<!---->
-<!--                <command id ="applyroute" icon="fa-steam" label="Apply Route"  nextSchemaId="routes.selection" stereotype="modal"-->
-<!--                         properties="modalclass=readingsmodal"-->
-<!--                         parameters="schema,datamap" service="routeService" method="apply"/>-->
-<!--              </container>-->
-<!--            </commandgroup>-->
-<!--          </commandbars>-->
-          
+          <!--            <commandgroup position="actions">-->
+          <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+          <!--                <command id ="readmeters" icon="fa-tachometer" label="Enter Readings"  nextSchemaId="readings" stereotype="modal" -->
+          <!--                         properties="modalclass=readingsmodal"-->
+          <!--                         parameters="schema,datamap" service="meterReadingService" method="read"/>-->
+          <!---->
+          <!--                <command id ="applyroute" icon="fa-steam" label="Apply Route"  nextSchemaId="routes.selection" stereotype="modal"-->
+          <!--                         properties="modalclass=readingsmodal"-->
+          <!--                         parameters="schema,datamap" service="routeService" method="apply"/>-->
+          <!--              </container>-->
+          <!--            </commandgroup>-->
+          <!--          </commandbars>-->
+
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
@@ -440,10 +482,10 @@
           </composition>
           <composition relationship="attachment" label="Attachments" />
           <field attribute="description" label="Description"  />
-          <field label="Details:" attribute="ld_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
-          
+
         </schema>
 
         <detail platform="mobile" title="Work Order">
@@ -487,12 +529,12 @@
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
           <field attribute="description" label="Description"  />
-          <field label="Details:" attribute="ld_.ldtext">
+          <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
         </detail>
       </schemas>
-      
+
     </application>
 
 

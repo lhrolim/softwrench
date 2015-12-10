@@ -24,8 +24,8 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
 
 
 app.controller('DashboardController', [
-    '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService',
-    function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService) {
+    '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService', 'crudContextHolderService',
+    function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService) {
 
         $scope.doInit = function () {
 
@@ -67,7 +67,7 @@ app.controller('DashboardController', [
                     return dashboards[i];
                 }
             }
-            
+
             return dashboards[0];
         }
 
@@ -78,7 +78,7 @@ app.controller('DashboardController', [
                     return i;
                 }
             }
-            
+
             return -1;
         }
 
@@ -94,8 +94,8 @@ app.controller('DashboardController', [
             dm.numberofpanels = $scope.dashboard.panels.length;
             modalService.show($scope.newpanelschema, dm, {
                 title: "Add Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                    scope.associationOptions['applications'] = $scope.applications;
-                    //                scope.$digest();
+                    crudContextHolderService.updateEagerAssociationOptions("applications", $scope.applications);
+//                    scope.$digest();
                 }
             });
         }
@@ -105,7 +105,7 @@ app.controller('DashboardController', [
 
             modalService.show(schema, null, {
                 title: "Create Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                    scope.associationOptions['applications'] = $scope.applications;
+                    crudContextHolderService.updateEagerAssociationOptions("applications", $scope.applications);
                     //                scope.$digest();
                 }
             });
@@ -123,7 +123,7 @@ app.controller('DashboardController', [
 
             modalService.show(schema, null, {
                 title: "Create Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                    scope.associationOptions['applications'] = $scope.applications;
+                    //                    scope.associationOptions['applications'] = $scope.applications;
                     //                scope.$digest();
                 }
             });
@@ -138,13 +138,13 @@ app.controller('DashboardController', [
 
             // Lazy load of the dashboards - also set focus to the new dashboard
             var preexistingdashboardIdx = $scope.getCurrentIndexById(dashboard.id, true);
-            
+
             if (preexistingdashboardIdx == -1) {
                 $scope.dashboards.push(dashboard);
             } else {
                 $scope.dashboards[preexistingdashboardIdx] = (dashboard);
             }
-            
+
             $scope.dashboard = dashboard;
             $scope.currentdashboardid = dashboard.id;
 
@@ -230,9 +230,9 @@ app.controller('DashboardController', [
             modalService.show(schema, null, {
                 title: "New Dashboard",
                 cssclass: "dashboardmodal",
-                onloadfn: function (scope) {
-                    scope.associationOptions['applications'] = $scope.applications;
-                }
+                //                onloadfn: function (scope) {
+                //                    scope.associationOptions['applications'] = ;
+                //                }
             });
         }
 

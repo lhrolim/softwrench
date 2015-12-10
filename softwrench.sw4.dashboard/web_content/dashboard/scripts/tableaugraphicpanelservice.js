@@ -1,12 +1,15 @@
 ﻿(function (angular, tableau, $) {
     "use strict";
 
-    function tableauGraphicPanelService($q, restService) {
+    function tableauGraphicPanelService($q, restService, crudContextHolderService, localStorageService, contextService) {
         //#region Utils
         var config = {
-            auth: null,
-            authPromise: null,
             defaultProvider: "Tableau",
+            auth: {
+                ticketTTL: null, // don't cache ticket values, they're only worth a single view at a time 
+                restTTL: 4 * 60 * 60 * 1000, // 240min rest token timeout
+                cacheRegion: {}
+            },
             render: {
                 options: {
                     hideToolbar: true,
@@ -15,25 +18,13 @@
             }
         }
 
-        function doAuthenticate(provider) {
-            var params = { provider: provider || config.defaultProvider };
-            var requestconfig = { avoidspin: true };
-            config.authPromise = restService
-                .postPromise("Dashboard", "Authenticate", params, null, requestconfig)
-                .then(function (response) {
-                    config.auth = response.data["resultObject"];
-                    return config.auth;
-                })
-                .catch(function (err) {
-                    config.authPromise = null;
-                    return $q.reject(err);
-                });
-            return config.authPromise;
+        function sanitizeName(name) {
+            return window.replaceAll(name, " ", "");
         }
 
         function viewUrl(panel, auth) {
-            var workbook = window.replaceAll(panel.configurationDictionary["workbook"], " ", "");
-            var view = window.replaceAll(panel.configurationDictionary["view"], " ", "");
+            var workbook = sanitizeName(panel.configurationDictionary["workbook"]);
+            var view = sanitizeName(panel.configurationDictionary["view"]);
             var ticket = auth.ticket;
             var site = auth.siteName;
             var serverUrl = auth.serverUrl.endsWith("/") ? auth.serverUrl.substring(0, auth.serverUrl.length - 1) : auth.serverUrl;
@@ -55,6 +46,7 @@
         function toObjectList(xml, tagName) {
             var parsed = $.parseXML(xml);
             var elements = parsed.getElementsByTagName(tagName);
+            // slice: hack to turn an HTMLCollection into an Array
             return Array.prototype.slice.call(elements).map(function (element) {
                 var attrs = element.attributes;
                 var object = {};
@@ -65,28 +57,74 @@
             });
         }
 
+        function trustedTicketCacheKey(panel) {
+            // cache key composed of user, workbook and view requested:
+            // tableau expects a different trusted ticket for each different view
+            var workbook = sanitizeName(panel.configurationDictionary["workbook"]);
+            var view = sanitizeName(panel.configurationDictionary["view"]);
+            var user = contextService.getUserData().login;
+            return "sw:graphic:tableau:auth:ticket:" + user + ":" + workbook + ":" + view;
+        }
+        
+        /**
+         * Authenticates the user to the Tableau in one of two manners: 
+         * - authenticates to REST api (retrieves token and user info)
+         * - fetches trusted ticket for the Javascript api
+         * Caches the response with the appropriate timeout. 
+         * Caches the promises to avoid multiple simultaneous identical requests.
+         * 
+         * @param String type authentication type: ["REST" or "TICKET"] 
+         * @param String cacheKey localstorage key to store the authentication response 
+         * @param Long cachettl authentication response's cache TTL (in milliseconds): if negative or NaN the response won't be cached
+         * @returns Promise resolved with the authentication response 
+         */
+        function authenticate(type, cacheKey, cachettl) {
+            var shouldCache = angular.isNumber(cachettl) && cachettl > 0;
+            // hit cache first
+            if (shouldCache) {
+                var cachedAuth = localStorageService.get(cacheKey);
+                if (!!cachedAuth) return $q.when(cachedAuth);
+            }
+            // hit in-progress request promise (avoid multiple identical requests)
+            var undergoingPromiseCacheKey = cacheKey + ":promise";
+            var undergoingPromise = config.auth.cacheRegion[undergoingPromiseCacheKey];
+            if (!!undergoingPromise) return undergoingPromise;            
+            
+            // execute request
+            var params = { provider: config.defaultProvider };
+            var payload = { authtype: type };
+            var ajaxconfig = { avoidspin: true };
+            var authPromise = restService.postPromise("Dashboard", "Authenticate", params, payload, ajaxconfig)
+                .then(function (response) {
+                    var auth = response.data["resultObject"];
+                    // update cache
+                    if(shouldCache) localStorageService.put(cacheKey, auth, { ttl: cachettl });
+                    return auth;
+                })
+                .finally(function () {
+                    // clear in-progress promise
+                    config.auth.cacheRegion[undergoingPromiseCacheKey] = null;
+                });
+
+            // cache in-progress promise
+            config.auth.cacheRegion[undergoingPromiseCacheKey] = authPromise;
+
+            return authPromise;
+        }
+
+        function fetchTrustedTicket(panel) {
+            return authenticate("TICKET", trustedTicketCacheKey(panel), config.auth.ticketTTL);
+        }
+
+        function authToRestApi() {
+            var cacheKey = "sw:graphic:tableau:auth:rest:" + contextService.getUserData().login;
+            return authenticate("REST", cacheKey, config.auth.restTTL);
+        }
+
         //#endregion
 
         //#region Public methods
-
-        function isAuthenticated() {
-            return !!config.auth;
-        }
-
-        /**
-         * Authenticates the user to the graphic provider server.
-         * 
-         * @param String provider 
-         * @returns Promise resolved with the auth data 
-         */
-        function authenticate(provider) {
-            // following technique from Dave Smith's presentation (https://www.youtube.com/watch?v=33kl0iQByME)
-            // for handling multiple function calls avoiding sending multiple requests:
-            return $q.when( // promise resolved with
-                config.auth // cached result 
-                || config.authPromise // already undergoing request's response
-                || doAuthenticate(provider)); // new request's response
-        }
+       
 
         /**
          * Renders the requested graphic.
@@ -121,7 +159,7 @@
          * @returns Promise resolved with tableau Viz instantiated 
          */
         function loadGraphic(element, panel, options) {
-            return authenticate().then(function (auth) {
+            return fetchTrustedTicket(panel).then(function (auth) {
                 return renderGraphic(element, panel, auth, options);
             });
         }
@@ -131,58 +169,54 @@
         }
 
         /**
-         * Authenticates to tableau server (if not already authenticated) 
+         * Authenticates to tableau server's REST api (if not already authenticated) 
          * and populates the associationOptions with the user's workbooks.
          * 
          * @param {} event 
          */
         function onProviderSelected(event) {
-            if (!event.scope.associationOptions) event.scope.associationOptions = {};
-            authenticate(event.fields.provider)
+
+            authToRestApi()
                 .then(function (auth) {
                     var params = { provider: event.fields.provider, resource: "workbook" };
-                    var payload = { auth: auth };
+                    var payload = angular.copy(auth);
                     var requestconfig = { avoidspin: true };
                     return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
                 .then(function (response) {
-                    return toObjectList(response.data, "workbook");
-                })
-                .then(function (workbooks) {
-                    if (!event.scope.associationOptions) event.scope.associationOptions = {};
-                    event.scope.associationOptions.workbooks = workbooks.map(function (workbook) {
+                    var workbooks = toObjectList(response.data, "workbook").map(function (workbook) {
                         workbook.value = { id: workbook.id, name: workbook.name }
                         workbook.label = workbook.name;
                         return workbook;
                     });
+                    crudContextHolderService.updateEagerAssociationOptions("workbooks", workbooks);
                 });
         }
 
         /**
-         * Authenticates to tableau server (if not already authenticated) 
+         * Authenticates to tableau server's REST api (if not already authenticated) 
          * and populates the associationOptions with the selected workbook's views.
          * 
          * @param {} event 
          */
         function onWorkbookSelected(event) {
             if (!event.fields.workbook) return;
-            authenticate(event.fields.provider)
+
+            authToRestApi()
                 .then(function (auth) {
                     var params = { provider: event.fields.provider, resource: "view" };
-                    var payload = { workbook: event.fields.workbook.id, auth: auth };
+                    var payload = angular.copy(auth);
+                    payload.workbook = event.fields.workbook.id;
                     var requestconfig = { avoidspin: true };
                     return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
                 .then(function (response) {
-                    return toObjectList(response.data, "view");
-                })
-                .then(function (views) {
-                    if (!event.scope.associationOptions) event.scope.associationOptions = {};
-                    event.scope.associationOptions.views = views.map(function (view) {
+                    var views = toObjectList(response.data, "view").map(function (view) {
                         view.value = { name: view.name }
                         view.label = view.name;
                         return view;
                     });
+                    crudContextHolderService.updateEagerAssociationOptions("views", views);
                 });
         }
 
@@ -203,10 +237,8 @@
 
         //#region Service Instance
         var service = {
-            authenticate: authenticate,
             renderGraphic: renderGraphic,
             loadGraphic: loadGraphic,
-            isAuthenticated: isAuthenticated,
             resizeGraphic: resizeGraphic,
             onProviderSelected: onProviderSelected,
             onWorkbookSelected: onWorkbookSelected,
@@ -217,7 +249,10 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("tableauGraphicPanelService", ["$q", "restService", tableauGraphicPanelService]);
+    angular
+        .module("sw_layout")
+        .factory("tableauGraphicPanelService",
+            ["$q", "restService", "crudContextHolderService", "localStorageService", "contextService", tableauGraphicPanelService]);
     //#endregion
 
 })(angular, tableau, jQuery);

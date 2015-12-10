@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.amex", "..\softwrench.sw4.amex\softwrench.sw4.amex.csproj", "{93E0B0E8-F6CA-4E06-8A82-616E2DFC905A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.deltadental", "..\softwrench.sw4.deltadental\softwrench.sw4.deltadental.csproj", "{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.apachegold", "..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj", "{CBF64EA8-97DF-43B4-97CB-477769F9941C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.bering", "..\softwrench.sw4.bering\softwrench.sw4.bering.csproj", "{A267FE4B-887C-47A5-B09D-F29E5C55A868}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.entegra", "..\softwrench.sw4.entegra\softwrench.sw4.entegra.csproj", "{5497FCBC-4AB9-44C2-A966-90BC6A4C5427}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93E0B0E8-F6CA-4E06-8A82-616E2DFC905A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E0B0E8-F6CA-4E06-8A82-616E2DFC905A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E0B0E8-F6CA-4E06-8A82-616E2DFC905A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E0B0E8-F6CA-4E06-8A82-616E2DFC905A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A267FE4B-887C-47A5-B09D-F29E5C55A868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A267FE4B-887C-47A5-B09D-F29E5C55A868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A267FE4B-887C-47A5-B09D-F29E5C55A868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A267FE4B-887C-47A5-B09D-F29E5C55A868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5497FCBC-4AB9-44C2-A966-90BC6A4C5427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5497FCBC-4AB9-44C2-A966-90BC6A4C5427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5497FCBC-4AB9-44C2-A966-90BC6A4C5427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5497FCBC-4AB9-44C2-A966-90BC6A4C5427}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -61,7 +61,6 @@ app.directive('crudBody', function (contextService) {
             isList: '=',
             isDetail: '=',
             blockedassociations: '=',
-            associationOptions: '=',
             associationSchemas: '=',
             schema: '=',
             datamap: '=',
@@ -195,7 +194,7 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.shouldShowTitle = function () {
-                return $scope.ismodal == "false" && $scope.schema.properties['detail.hidetitle'] != 'true';
+                return $scope.ismodal == "false" && $scope.schema.properties['detail.showtitle'] == 'true';
             }
 
             $scope.getTitle = function () {
@@ -424,7 +423,7 @@ app.directive('crudBody', function (contextService) {
                 submitService.removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
                 transformedFields = submitService.removeExtraFields(transformedFields, true, schemaToSave);
                 submitService.translateFields(schemaToSave.displayables, transformedFields);
-                associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields, $scope.associationOptions);
+                associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
                 submitService.handleDatamapForMIF(schemaToSave, originalDatamap.fields, transformedFields);
 
 

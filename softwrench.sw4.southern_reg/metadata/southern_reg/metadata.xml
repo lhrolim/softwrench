@@ -37,45 +37,29 @@
           <field attribute="itemnum" label="Item">
             <renderer type="default" />
           </field>
-          <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
-          </field>
-          <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
-          </field>
-          <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
-          </field>
-          <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
-          <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
-          </field>
-          <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
-          </field>
+          <field attribute="item_.itemtype" label="Item Type"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="refwo" label="Work Order"/>
+          <field attribute="issueto" label="Issued To"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="siteid" label="Site"/>
+          <field attribute="issuetype" label="Issue Type"/>
           <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
@@ -190,17 +174,11 @@
           </commandbars>
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthMD=15%;widthLG=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%" />
-          </field>
-          <field attribute="location" label="Storeroom">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
-          </field>
-          <field attribute="binnum" label="Bin">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
-          </field>
+          <field attribute="inventory_.siteid" label="Site"/>
+          <field attribute="location" label="Storeroom"/>
+          <field attribute="binnum" label="Bin"/>
           <event type="onload" service="scannerdetectionService" method="initSouthernPhysicalCountGridListener"/>
         </schema>
       </schemas>
@@ -212,21 +190,13 @@
       </properties>
       <schemas>
         <list title="Service Request Grid">
-          <field attribute="ticketid" label="SR#">
-            <renderer type="default" params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=12%" />
-          </field>
+          <field attribute="ticketid" label="SR#"/>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
-          </field>
-          <field attribute="owner" label="Owner">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
-          </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
-          </field>
+          <field attribute="reportedby" label="Reported By"/>
+          <field attribute="owner" label="Owner"/>
+          <field attribute="status" label="Status"/>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>

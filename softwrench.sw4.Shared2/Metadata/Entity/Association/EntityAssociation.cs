@@ -11,6 +11,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         public bool Collection { get; set; }
 
         public bool Cacheable { get; set; }
+        public bool Lazy { get; set; }
 
         public string ReverseLookupAttribute { get; set; }
         public bool Reverse { get { return ReverseLookupAttribute != null; } }
@@ -22,7 +23,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
 
         public EntityAssociation(string qualifier, string to,
-                                 IEnumerable<EntityAssociationAttribute> attributes, bool collection,bool cacheable, string reverseLookupAttribute,bool ignorePrimaryAttribute) {
+                                 IEnumerable<EntityAssociationAttribute> attributes, bool collection,bool cacheable,bool lazy, string reverseLookupAttribute,bool ignorePrimaryAttribute) {
             
             //            if (qualifier == null) throw new ArgumentNullException("qualifier");
             if (to == null) throw new ArgumentNullException("to");
@@ -31,6 +32,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             _to = to;
             _attributes = attributes;
             Cacheable = cacheable;
+            Lazy = lazy;
             IgnorePrimaryAttribute = ignorePrimaryAttribute;
             if (PrimaryAttribute() == null && !ignorePrimaryAttribute) {
                 throw new InvalidOperationException(String.Format("Entity must have a primary attribute on association {0}, or have the ignoreprimary marked as true", to));
@@ -77,7 +79,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
 
         public EntityAssociation CloneWithContext(string contextAlias) {
-            var cloned = new EntityAssociation(contextAlias + Qualifier, To, Attributes, Collection,Cacheable, ReverseLookupAttribute,IgnorePrimaryAttribute);
+            var cloned = new EntityAssociation(contextAlias + Qualifier, To, Attributes, Collection,Cacheable,Lazy, ReverseLookupAttribute,IgnorePrimaryAttribute);
             if (EntityName == null) {
                 cloned.EntityName = contextAlias;
             } else {

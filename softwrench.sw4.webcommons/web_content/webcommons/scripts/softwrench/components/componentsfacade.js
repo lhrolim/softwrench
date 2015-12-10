@@ -1,10 +1,13 @@
-var app = angular.module('sw_layout');
 
-app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService) {
+(function (angular) {
+    'use strict';
 
-    return {
 
-        unblock: function (displayable, scope) {
+
+    function cmpfacade($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, crudContextHolderService) {
+
+
+        function unblock(displayable, scope) {
             var log = $log.getInstance('cmpfacade#unblock');
             var rendererType = displayable.rendererType;
             var attribute = displayable.attribute;
@@ -19,9 +22,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             //                cmpAutocompleteServer.unblock(displayable, scope);
 
             this.digestAndrefresh(displayable, scope);
-        },
+        };
 
-        block: function (displayable, scope) {
+        function block(displayable, scope) {
             var log = $log.getInstance('cmpfacade#block');
             var rendererType = displayable.rendererType;
             var attribute = displayable.attribute;
@@ -35,12 +38,44 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 cmpComboDropdown.block(displayable.associationKey);
             }
             this.digestAndrefresh(displayable, scope);
-        },
+        };
 
-
-        digestAndrefresh: function (displayable, scope,newValue) {
+        function updateEagerOptions(scope, displayable) {
+            var log = $log.getInstance("cmpfacade#updateEagerOptions",["association"]);
+            var attribute = displayable.attribute;
             var rendererType = displayable.rendererType;
-            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup' && rendererType != 'modal') {
+            var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            var fn = function doRefresh() {
+                log.debug("updating list for component {0}".format(attribute));
+                if (rendererType === 'autocompleteclient') {
+                    var value = scope.datamap[displayable.target];
+                    cmpAutocompleteClient.refreshFromAttribute(attribute, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                } else if (rendererType === 'combodropdown') {
+                    cmpComboDropdown.refreshFromAttribute(attribute);
+                }
+            }
+
+            try {
+                scope.$digest();
+                fn();
+            } catch (e) {
+                $timeout(
+                    function () {
+                        fn();
+                        try {
+                            scope.$digest();
+                        } catch (e) {
+                            $log.getInstance('componentfacade#digestandrefresh').warn('validating this is actually being thrown. if u see this, remove this log' + e);
+                            //nothing
+                        }
+                    }, 0, false);
+            }
+
+        }
+
+        function digestAndrefresh(displayable, scope, newValue) {
+            var rendererType = displayable.rendererType;
+            if (rendererType !== 'autocompleteclient' && rendererType !== 'autocompleteserver' && rendererType !== 'combodropdown' && rendererType !== 'lookup' && rendererType !== 'modal') {
                 return;
             }
             try {
@@ -61,9 +96,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                         }
                     }, 0, false);
             }
-        },
+        };
 
-        focus: function (displayable) {
+        function focus(displayable) {
             var log = $log.getInstance('cmpfacade#focus');
 
             var attribute = displayable.attribute;
@@ -85,39 +120,40 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             }
 
             log.debug('change focus to {0}'.format(attribute));
-        },
+        };
 
-        refresh: function (displayable, scope, fromDigestAndRefresh,newValue) {
+        function refresh(displayable, scope, fromDigestAndRefresh, newValue) {
             var attribute = displayable.attribute;
 
-            var log = $log.getInstance('cmpfacade#refresh');
+            var log = $log.getInstance('cmpfacade#refresh',["association"]);
             var rendererType = displayable.rendererType;
             var msg = fromDigestAndRefresh ? 'calling digest and refresh for field {0}, component {1} | value {2}' : 'calling refresh for field {0}, component {1} | value {2}';
             var valueToLog = newValue ? newValue : scope.datamap[displayable.target];
 
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
-            if (rendererType == 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(attribute, newValue, scope.associationOptions[displayable.associationKey]);
-            } else if (rendererType == 'autocompleteserver') {
+            if (rendererType === 'autocompleteclient') {
+                cmpAutocompleteClient.refreshFromAttribute(attribute, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
+            } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
-            } else if (rendererType == 'combodropdown') {
+            } else if (rendererType === 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
-            } else if (rendererType == 'lookup' || rendererType == 'modal') {
-                cmplookup.refreshFromAttribute(displayable, scope);
+            } else if (rendererType === 'lookup' || rendererType === 'modal') {
+                cmplookup.refreshFromAttribute(displayable, newValue);
             }
-        },
+        };
 
-        init: function (bodyElement, scope) {
+        function init(bodyElement, scope) {
             var datamap = scope.datamap;
             var schema = scope.schema;
             cmpComboDropdown.init(bodyElement);
             cmpAutocompleteClient.init(bodyElement, datamap, schema, scope);
-            cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
+            //deprecating autocompleteservers
+//            cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
             screenshotService.init(bodyElement, datamap);
-        },
+        };
 
-        blockOrUnblockAssociations: function (scope, newValue, oldValue, association) {
+        function blockOrUnblockAssociations(scope, newValue, oldValue, association) {
             if (oldValue == newValue) {
                 return;
             }
@@ -139,9 +175,24 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             }
         }
 
-
+        return {
+            unblock: unblock,
+            block: block,
+            digestAndrefresh: digestAndrefresh,
+            updateEagerOptions: updateEagerOptions,
+            focus: focus,
+            refresh: refresh,
+            init: init,
+            blockOrUnblockAssociations: blockOrUnblockAssociations
+        };;
     }
 
-});
+    angular
+      .module('sw_layout')
+      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'crudContextHolderService', cmpfacade]);
+
+})(angular);
+
+
 
 

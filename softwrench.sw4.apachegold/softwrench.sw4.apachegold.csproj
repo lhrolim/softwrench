@@ -45,6 +45,8 @@
     <EmbeddedResource Include="metadata\apachegold\deploy.xml" />
     <EmbeddedResource Include="metadata\apachegold\properties.xml" />
     <Content Include="metadata\apachegold\readme.txt" />
+    <Content Include="web_content\apachegold\images\footer.jpg" />
+    <Content Include="web_content\apachegold\images\header-email.jpg" />
     <Content Include="web_content\apachegold\images\header.jpg" />
     <Content Include="web_content\apachegold\images\logo-byline.png" />
     <Content Include="web_content\apachegold\images\logo-main.png" />

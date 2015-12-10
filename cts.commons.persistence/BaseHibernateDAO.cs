@@ -13,15 +13,9 @@ using System.Dynamic;
 using System.Linq;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
-using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
-using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using JetBrains.Annotations;
-using log4net;
-using NHibernate;
-using NHibernate.Transform;
-using NHibernate.Type;
 
 namespace cts.commons.persistence {
 

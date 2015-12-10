@@ -5,7 +5,7 @@ namespace softWrench.sW4.Data {
         private readonly string _entityName;
         private readonly string _idField;
         private readonly string _idValue;
-        private readonly string _projectionFields;
+        private readonly string _projectionFields=null;
 
         public EntityDetailData(CompleteApplicationMetadataDefinition application, string idValue = null) {
             this._idValue = idValue;

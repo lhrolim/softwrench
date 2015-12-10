@@ -1,0 +1,18 @@
+﻿.container {
+    footer {
+        bottom: 0;
+        z-index: 1010;
+        width: 100%;
+
+        .page-overlay {
+            border-top: $admin_border;
+            min-height: 70px;
+            padding: 15px;
+
+            .logo {
+                float: right;
+                margin-top: 2px;
+            }
+        }
+    }
+}

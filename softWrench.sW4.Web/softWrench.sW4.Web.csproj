@@ -9,7 +9,6 @@
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -264,10 +263,12 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
+    <Compile Include="Controllers\CompositionController.cs" />
     <Compile Include="Controllers\FilterDataController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
@@ -388,7 +389,9 @@
     <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
     <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
     <Content Include="App_Data\Client\%40internal\templates\route.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
@@ -396,7 +399,9 @@
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
     <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
     <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\workorder.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\worktype.xml" />
     <Content Include="App_Data\Client\%40internal\templates\email.xml" />
     <Content Include="App_Data\Client\%40internal\templates\person.xml" />
@@ -484,10 +489,6 @@
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\logo-byline.png" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\pagination-first.png" />
-    <Content Include="Content\Images\pagination-last.png" />
-    <Content Include="Content\Images\pagination-next.png" />
-    <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\signin-lg.jpg" />
     <Content Include="Content\Images\signin-md.jpg" />
     <Content Include="Content\Images\signin-sm.jpg" />
@@ -496,6 +497,8 @@
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
+    <Content Include="Content\modules\components\angulartypeahead\angulartypeahead.js" />
+    <Content Include="Content\modules\components\angulartypeahead\templates\angulartypeahead.html" />
     <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
     <Content Include="Content\modules\lookup\lookupcomponent.js" />
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
@@ -505,6 +508,7 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
+    <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
@@ -696,6 +700,7 @@
     <Content Include="Content\Scripts\vendor\other\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
+    <Content Include="Content\styles\default\_footer.scss" />
     <None Include="Content\styles\default\_grid.scss" />
     <None Include="Content\styles\default\vendor\_jscrollpane.scss" />
     <Content Include="Content\styles\default\media\media.scss" />
@@ -726,6 +731,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
@@ -748,7 +754,6 @@
     <Content Include="Content\Templates\directives\gridtoolbar.html" />
     <Content Include="Content\Templates\directives\commandBar.html" />
     <Content Include="Content\Templates\crud\inline_composition_list.html" />
-    <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\crud_output_fields.html" />
     <Content Include="Content\Templates\directives\printSection.html" />
     <Content Include="Content\Templates\hapag\Actionentry.html" />

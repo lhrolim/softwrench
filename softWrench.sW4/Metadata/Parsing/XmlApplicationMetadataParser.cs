@@ -25,10 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using softwrench.sw4.Shared2.Metadata.Applications.Filter;
-using softwrench.sw4.Shared2.Metadata.Applications.Notification;
-using softwrench.sW4.Shared2.Metadata.Applications.Notification;
-using softWrench.sW4.Metadata.Applications.Notification;
 
 
 namespace softWrench.sW4.Metadata.Parsing {
@@ -178,15 +174,11 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="schema"></param>
         /// <param name="entityName"></param>
         private static List<IApplicationDisplayable> ParseDisplayables(string applicationName, XContainer schema, string entityName) {
-            var displayables = new List<IApplicationDisplayable>();
             var entityMetadata = MetadataProvider.Entity(entityName);
-            foreach (var xElement in schema.Elements()) {
-                var applicationDisplayable = FindDisplayable(applicationName, entityName, xElement, entityMetadata);
-                if (applicationDisplayable != null) {
-                    displayables.Add(applicationDisplayable);
-                }
-            }
-            return displayables;
+            return schema.Elements()
+                .Select(xElement => FindDisplayable(applicationName, entityName, xElement, entityMetadata))
+                .Where(applicationDisplayable => applicationDisplayable != null)
+                .ToList();
         }
 
         private static ReferenceDisplayable ParseReference(XElement xElement) {
@@ -224,19 +216,33 @@ namespace softWrench.sW4.Metadata.Parsing {
             var attribute = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionAttributeAttribute).ValueOrDefault((string)null);
             var showExpression = sectionElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
             var toolTip = sectionElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault(label);
+
             var displayables = ParseDisplayables(applicationName, sectionElement, entityMetadata.Name);
+            var secondaries = ValidateSingleSecondarySection(displayables);
+            var secondarycontent = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionSecondaryContentAttribute).ValueOrDefault(false);
+            if (secondaries > 0 && secondarycontent) {
+                throw new InvalidOperationException("A section with secondarycontent=\"true\" cannot have a child section with secondarycontent=\"true\"");
+            }
+
             var header = ParseHeader(sectionElement);
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((string)null);
             var renderer = ParseRendererNew(sectionElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
                 attribute, FieldRendererType.SECTION, entityMetadata);
             var role = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionRoleAttribute).ValueOrDefault((string)null);
-
             // Removing this code due to "Asset Specification" section in IMAC application, Update Schema
             /*if (displayables != null && displayables.Count > 0 && !String.IsNullOrWhiteSpace(resourcePath)) {
                 throw new InvalidOperationException("<section> cannot contains inner elements AND resourcePath attribute");
             }*/
             return new ApplicationSection(id, applicationName, @abstract, label, attribute, resourcePath, parameters,
-                displayables, showExpression, toolTip, orientation, header, renderer, role);
+                displayables, showExpression, toolTip, orientation, header, renderer, role) { SecondaryContent = secondarycontent };
+        }
+
+        private static int ValidateSingleSecondarySection(IEnumerable<IApplicationDisplayable> displayables) {
+            var secondaries = displayables.Count(d => d is ApplicationSection && (((ApplicationSection)d).SecondaryContent));
+            if (secondaries > 1) {
+                throw new InvalidOperationException("An element cannot have more than one child section with secondarycontent=\"true\"");
+            }
+            return secondaries;
         }
 
         private static IApplicationDisplayable ParseCustomization(string applicationName, XElement customizationElement, EntityMetadata entityMetadata) {
@@ -498,6 +504,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 }
             }
             var displayables = ParseDisplayables(applicationName, xElement, entityName);
+            ValidateSingleSecondarySection(displayables);
             var schemaProperties = ParseProperties(xElement, id);
             var filters = XmlFilterMetadataParser.ParseSchemaFilters(xElement, stereotype);
             ApplicationSchemaDefinition parentSchema = null;

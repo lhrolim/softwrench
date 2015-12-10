@@ -9,7 +9,6 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Validator;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Parsing {
     /// <summary>
@@ -190,9 +189,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var to = association.Attribute(XmlMetadataSchema.RelationshipAttributeTo).Value;
                 var collection = association.Attribute(XmlMetadataSchema.RelationshipAttributeCollection).ValueOrDefault(false);
                 var cacheable = association.Attribute(XmlMetadataSchema.RelationshipCacheableAttribute).ValueOrDefault(false);
+                var lazy = association.Attribute(XmlMetadataSchema.RelationshipCacheableAttribute).ValueOrDefault(false);
                 var reverseLookupAttribute = association.Attribute(XmlMetadataSchema.RelationshipAttributeReverse).ValueOrDefault((string)null);
                 var ignorePrimaryAttribute = association.Attribute(XmlMetadataSchema.IgnorePrimaryAttribute).ValueOrDefault(false);
-                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, cacheable, reverseLookupAttribute, ignorePrimaryAttribute);
+                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, cacheable, lazy,reverseLookupAttribute, ignorePrimaryAttribute);
             }
 
             /// <summary>

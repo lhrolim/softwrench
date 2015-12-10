@@ -5,9 +5,14 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
     $scope.i18NLabelTooltip = function (fieldMetadata) {
         return i18NService.getI18nLabelTooltip(fieldMetadata, $scope.schema);
     };
+
     //to allow overriding
     $scope.i18NLabel = $scope.i18NLabel || function (fieldMetadata) {
         return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
+    };
+
+    $scope.i18NInputLabel = function (fieldMetadata) {
+        return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
     };
 
     $scope.i18NOptionField = function (option, fieldMetadata, schema) {
@@ -80,15 +85,15 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         if (!$scope.isVerticalOrientation()) {
             return false;
         }
-        if (fieldMetadata.rendererType == "TABLE") {
+        if (fieldMetadata.rendererType === "TABLE") {
             //workaround because compositions are appending "" as default label values, but we dont want it!
             return false;
         }
-        return fieldMetadata.label != null || (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop');
+        return fieldMetadata.label != null || (fieldMetadata.header != null && fieldMetadata.header.displacement !== 'ontop');
     };
 
     $scope.isVerticalOrientation = function () {
-        return $scope.orientation == 'vertical';
+        return $scope.orientation === 'vertical';
     };
 
 
@@ -105,6 +110,10 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
 
 
     $scope.getFieldClass = function (fieldMetadata) {
+        if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["class"]) {
+            return fieldMetadata.rendererParameters["class"];
+        }
+
         return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
     }
 

@@ -27,7 +27,6 @@ namespace softWrench.sW4.Util {
 
 
         public static JObject BuildJSon(string filePath) {
-            string line;
             var sb = new StringBuilder();
             FileUtils.DoWithLines(filePath, s => NormalizeJson(s, sb));
             var json = "{" + sb + "}";

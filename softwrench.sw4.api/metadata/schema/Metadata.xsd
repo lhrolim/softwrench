@@ -161,6 +161,7 @@
     <attribute name="to" type="string"></attribute>
     <attribute name="collection" type="boolean" default="false"></attribute>
     <attribute name="qualifier" type="string" />
+    <attribute name="lazy" type="boolean"/>
     <attribute name="cacheable" type="boolean" >
       <annotation>
         <documentation>
@@ -357,7 +358,8 @@
             </documentation>
           </annotation>
 
-        </attribute>
+        </attribute> 
+       
       </extension>
     </complexContent>
   </complexType>
@@ -1008,6 +1010,18 @@
       </simpleType>
     </attribute>
     <attribute name="role" type="string"></attribute>
+    
+    <attribute name="secondarycontent" type="boolean" use="optional" default="false">
+      <annotation>
+        <documentation>
+          When true indicates that this section holds content that can be toggled in the UI
+          (e.g. the UI doesn't display the content until the user clicks a button that reveals it).
+          A schema can only have A SINGLE section that is `secondarycontent="true"` i.e. put all of the 'secondary'
+          schema content in this single section and leave the 'main' content out of it.
+        </documentation>
+      </annotation>
+    </attribute>
+  
   </complexType>
   <element name="commands" type="tns:CommandsDeclarationsType">
 

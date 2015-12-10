@@ -160,12 +160,22 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WcfSamples.DynamicProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="XDesigner.RTF">
       <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\API\Association\DependentAssociationLoadResult.cs" />
+    <Compile Include="Data\API\Association\Lookup\LookupOptionsFetchRequestDTO.cs" />
+    <Compile Include="Data\API\Association\SchemaLoading\BaseAssociationSchemaLoadResult.cs" />
+    <Compile Include="Data\API\Association\SchemaLoading\AssociationMainSchemaLoadResult.cs" />
+    <Compile Include="Data\API\Association\SchemaLoading\CompositionSchemaLoadResult.cs" />
+    <Compile Include="Data\API\Association\SchemaAssociationPrefetcher.cs" />
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
     <Compile Include="Data\API\Composition\PreFetchedCompositionFetchRequest.cs" />
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
@@ -186,6 +196,7 @@
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
+    <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
@@ -197,7 +208,6 @@
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
-    <Compile Include="Data\Relationship\Association\AssociationCacheManager.cs" />
     <Compile Include="Data\Search\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearchWhereClauseHandler.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
@@ -220,7 +230,6 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
-    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
@@ -391,7 +400,7 @@
     <Compile Include="Configuration\Services\ConfigurationService.cs" />
     <Compile Include="Configuration\Services\Api\IConfigurationFacade.cs" />
     <Compile Include="Data\API\Association\AssociationUpdateRequest.cs" />
-    <Compile Include="Data\API\Association\LookupAssociationUpdateResult.cs" />
+    <Compile Include="Data\API\Association\Lookup\LookupOptionsFetchResultDTO.cs" />
     <Compile Include="Data\API\Association\BaseAssociationUpdateResult.cs" />
     <Compile Include="Data\API\Response\GenericResponseResult.cs" />
     <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
@@ -868,6 +877,7 @@
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
     <Folder Include="Metadata\API\" />
     <Folder Include="Metadata\Applications\DataSet\Compositions\" />
+    <Folder Include="Metadata\Applications\Notification\" />
     <Folder Include="Metadata\Applications\Relationship\Composition\" />
     <Folder Include="Metadata\Offline\" />
   </ItemGroup>
@@ -932,10 +942,6 @@
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WCFDynamicProxy\src\DynamicProxyLibrary.csproj">
-      <Project>{20fd2b93-bd84-48d7-a7fb-4231972d3e26}</Project>
-      <Name>DynamicProxyLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

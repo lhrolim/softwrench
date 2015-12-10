@@ -22,7 +22,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
 
 
         public object EnterMeter(EnterMeterOperationData woData) {
-            MaximoOperationExecutionContext maximoExecutionContext = null;
             var assetMeters = (IEnumerable<Entity>)woData.CrudData.GetRelationship("assetmeter");
             var locationMeters = (IEnumerable<Entity>)woData.CrudData.GetRelationship("locationmeter");
 

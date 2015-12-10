@@ -92,8 +92,7 @@
         public const string PaginationOptions = "list.paginationoptions";
 
         /// <summary>
-        ///  if true, the associations will be prefetched on the same request to the server to get the details itself.
-        ///  This is a optimization property, that should be marked only if the schema has very few associations, and they are not heavy
+        ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazy nature.
         /// </summary>
         public const string PreFetchAssociations = "associationstoprefetch";
 
@@ -144,9 +143,9 @@
 
 
         /// <summary>
-        /// If true, the title of the detail schema will be hidden
+        /// If true, the title of the detail schema will be shown
         /// </summary>
-        public static string DetailHideTitle = "detail.hidetitle";
+        public static string DetailShowTitle = "detail.showtitle";
 
         /// <summary>
         /// If true, the title of the detail schema will be hidden

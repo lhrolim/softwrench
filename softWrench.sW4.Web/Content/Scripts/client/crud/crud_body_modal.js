@@ -17,7 +17,6 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                     "is-list='isList' " +
                     "is-detail='true' " +
                     "original-datamap='OriginalDatamp' " +
-                    "association-options='associationOptions' " +
                     "association-schemas='associationSchemas' " +
                     "blockedassociations='blockedassociations' " +
                     "paginationdata='paginationData' " +
@@ -35,7 +34,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
             $scope.$name = "crudbodymodalwrapper";
 
 
-         
+
 
 
 
@@ -52,49 +51,20 @@ app.directive('crudBodyModalWrapper', function ($compile) {
 });
 
 
-app.directive('crudBodyModal', function ($rootScope, modalService) {
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: url('/Content/Templates/crud/crud_body_modal.html'),
-        scope: {
-            isList: '=',
-            isDetail: '=',
-            blockedassociations: '=',
-            associationOptions: '=',
-            associationSchemas: '=',
-            schema: '=',
-            datamap: '=',
-            isDirty: '=',
-            originalDatamap: '=',
-            cancelfn: '&',
-            savefn: '&',
-            paginationdata: '=',
-            searchData: '=',
-            searchOperator: '=',
-            searchSort: '=',
-            ismodal: '@',
-            checked: '='
-        },
 
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                post: function postLink(scope, iElement, iAttrs, controller) {
-                    var modalData = $rootScope.modalTempData;
-                    modalService.show(modalData);
-                    $rootScope.modalTempData = null;
-                }
-            }
-        },
+(function () {
+    'use strict';
 
 
 
-        controller: function ($scope, $http, $filter, $injector,
-           formatService, fixHeaderService,
-           searchService, tabsService,
-           fieldService, commandService, i18NService,
-           submitService, redirectService,
-           associationService) {
+    function crudBodyModal($rootScope, modalService, crudContextHolderService) {
+
+        var controller = function ($scope, $http, $filter, $injector,
+         formatService, fixHeaderService,
+         searchService, tabsService,
+         fieldService, commandService, i18NService,
+         submitService, redirectService,
+         associationService) {
 
             $scope.$name = "crudbodymodal";
             $scope.save = function (selecteditem) {
@@ -112,6 +82,7 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
 
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
                 $('.no-touch [rel=tooltip]').tooltip('hide');
+                crudContextHolderService.disposeModal();
             }
 
             $scope.cancel = function () {
@@ -146,10 +117,14 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $("#crudmodal").draggable();
                 $rootScope.showingModal = true;
                 //TODO: review this decision here it might not be suitable for all the scenarios
-                associationService.getEagerAssociations($scope, { datamap: datamapToUse });
-                if (modaldata.onloadfn) {
-                    modaldata.onloadfn($scope);
-                }
+                crudContextHolderService.modalLoaded();
+
+                associationService.loadSchemaAssociations(datamapToUse, schema).then(function () {
+                    if (modaldata.onloadfn) {
+                        modaldata.onloadfn($scope);
+                    }
+                });
+
             }
 
 
@@ -173,11 +148,46 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
 
 
         }
+
+        var directive = {
+            restrict: 'E',
+            replace: true,
+            templateUrl: url('/Content/Templates/crud/crud_body_modal.html'),
+            scope: {
+                isList: '=',
+                isDetail: '=',
+                blockedassociations: '=',
+                associationSchemas: '=',
+                schema: '=',
+                datamap: '=',
+                isDirty: '=',
+                originalDatamap: '=',
+                cancelfn: '&',
+                savefn: '&',
+                paginationdata: '=',
+                searchData: '=',
+                searchOperator: '=',
+                searchSort: '=',
+                ismodal: '@',
+                checked: '='
+            },
+
+            compile: function compile(tElement, tAttrs, transclude) {
+                return {
+                    post: function postLink(scope, iElement, iAttrs, controller) {
+                        var modalData = $rootScope.modalTempData;
+                        modalService.show(modalData);
+                        $rootScope.modalTempData = null;
+                    }
+                }
+            },
+            controller: controller
+
+        };
+
+        return directive;
     }
-});
 
+    angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', crudBodyModal]);
 
-
-
-
-
+})(angular);

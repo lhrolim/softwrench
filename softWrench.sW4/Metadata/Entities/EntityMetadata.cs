@@ -232,7 +232,38 @@ namespace softWrench.sW4.Metadata.Entities {
             }
         }
 
-        public Tuple<EntityAssociation,EntityAttribute> LocateAssociationByLabelField(string labelField, bool validate=false) {
+        public Tuple<EntityAttribute, string> LocateNonCollectionAttribute(string attributeName, IEnumerable<EntityAttribute> attributes = null) {
+            if (attributes == null) {
+                //this invocation is a bit slow, therefore we can cache it whenever possible
+                attributes = Attributes(AttributesMode.NoCollections) as IList<EntityAttribute> ?? Attributes(AttributesMode.NoCollections).ToList();
+            }
+
+            if (!attributeName.Contains('.')) {
+                var resultAttribute = attributes.FirstOrDefault(f => f.Name.EqualsIc(attributeName));
+                if (resultAttribute == null) {
+                    return null;
+                }
+                return new Tuple<EntityAttribute, string>(resultAttribute, null);
+            }
+            var currentAttributeName = attributeName;
+            string resultName;
+            var innerMetadata = this;
+            var context = "";
+            do {
+                var relationshipName = EntityUtil.GetRelationshipName(currentAttributeName, out resultName);
+                context += relationshipName;
+                innerMetadata = innerMetadata.RelatedEntityMetadata(relationshipName);
+                currentAttributeName = resultName;
+            } while (currentAttributeName.Contains("_") && innerMetadata != null);
+            if (innerMetadata == null) {
+                return null;
+            }
+            var attribute = innerMetadata.Attributes(AttributesMode.NoCollections).FirstOrDefault(f => f.Name.EqualsIc(resultName));
+            return new Tuple<EntityAttribute, string>(attribute, context);
+        }
+
+
+        public Tuple<EntityAssociation, EntityAttribute> LocateAssociationByLabelField(string labelField, bool validate = false) {
             var indexOf = labelField.IndexOf(".", StringComparison.Ordinal);
             var firstPart = labelField.Substring(0, indexOf);
             var lookupString = firstPart.EndsWith("_") ? firstPart : firstPart + "_";
@@ -248,10 +279,10 @@ namespace softWrench.sW4.Metadata.Entities {
             var relatedEntity = MetadataProvider.Entity(association.To);
             var field = labelField.Substring(indexOf + 1);
             var attribute = relatedEntity.Attributes(AttributesMode.NoCollections).FirstOrDefault(a => a.Name.EqualsIc(field));
-            if (validate && attribute==null){
-                throw new InvalidOperationException("field {0} not found on entity {1}".Fmt(field,relatedEntity.Name));
+            if (validate && attribute == null) {
+                throw new InvalidOperationException("field {0} not found on entity {1}".Fmt(field, relatedEntity.Name));
             }
-            return new Tuple<EntityAssociation, EntityAttribute>(association,attribute);
+            return new Tuple<EntityAssociation, EntityAttribute>(association, attribute);
         }
 
         public EntityAttribute LocateAttribute(string attributeName) {

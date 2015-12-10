@@ -49,6 +49,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="metadata\southern_reg\metadata.xml" />
+    <Content Include="web_content\southern_reg\images\footer.jpg" />
+    <Content Include="web_content\southern_reg\images\header-email.jpg" />
     <EmbeddedResource Include="metadata\southern_reg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

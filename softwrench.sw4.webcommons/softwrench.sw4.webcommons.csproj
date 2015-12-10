@@ -78,6 +78,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\data\datamapSanitize_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\multiassetlocci_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\scannerCommons.js" />
@@ -92,6 +93,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\focus_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\application_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\invissue_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\storage\localstorageservice.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\user_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\sharedservices_module.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />
@@ -129,7 +131,6 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\icon_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\labtrans_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\localstorage_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\matusetrans_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\menu_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\mock_service.js" />
@@ -153,6 +154,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\menu.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\jquery_utils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\ui_utils.js" />
     <Content Include="web_content\webcommons\templates\swlabel.html" />
   </ItemGroup>

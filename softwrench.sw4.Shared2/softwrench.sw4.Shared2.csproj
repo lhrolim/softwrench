@@ -61,9 +61,7 @@
     <Compile Include="Metadata\Applications\Filter\BaseMetadataFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\MetadataOptionFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\SchemaFilters.cs" />
-    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationKey.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationDisplayable.cs" />
-    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationDefinition.cs" />
     <Compile Include="Metadata\Applications\Notification\SchemaStereotype.cs" />
     <Compile Include="Metadata\Applications\Relationships\Compositions\FetchType.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />
@@ -83,6 +81,7 @@
     <Compile Include="Metadata\Applications\UI\OptionFieldRenderer.cs" />
     <Compile Include="Metadata\Applications\UI\ApplicationTabDefinition.cs" />
     <Compile Include="Metadata\Applications\Command\CommandBarDefinition.cs" />
+    <Compile Include="Metadata\Entity\IQueryHolder.cs" />
     <Compile Include="Metadata\Exception\FilterMetadataException.cs" />
     <Compile Include="Metadata\Exception\MetadataException.cs" />
     <Compile Include="Metadata\IApplicationIdentifier.cs" />

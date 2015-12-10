@@ -1,14 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using NHibernate.Linq;
 
 namespace softWrench.sW4.Util {
     public static class DictionaryExtensions {
 
 
+        public static IDictionary<TKey, TValue> AddRange<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IDictionary<TKey, TValue> other) {
+            if (other == null) {
+                return dictionary;
+            }
+            other.ForEach(dictionary.Add);
+            return dictionary;
+        }
 
 
-        public static ExpandoObject ToExpando(this IDictionary<string, string> dictionary){
+        public static ExpandoObject ToExpando(this IDictionary<string, string> dictionary) {
             var tempDict = dictionary.ToObjectDir();
             return tempDict.ToExpando();
         }

@@ -1,42 +1,29 @@
 ﻿<div>
-    <div ng-class="{'col-lg-12': !shouldShowDescription(fieldMetadata) ,
-         'col-md-6 col-lg-4': shouldShowDescription(fieldMetadata) }">
-        <div class="input-group">
-            <span class="input-group-addon" ng-show="!isFieldHidden(schema,fieldMetadata.detailSection)
+    <div class="input-group col-xs-12">
+        <span class="input-group-addon" ng-show="!isFieldHidden(schema,fieldMetadata.detailSection)
                   && isExpansionAvailable(fieldMetadata)" ng-click="toggleDetailExpansion(fieldMetadata)">
-                <div>
-                    <i class="fa fa-caret-right" ng-hide="detailsExpanded(fieldMetadata)"></i>
-                    <i class="fa fa-caret-down" ng-show="detailsExpanded(fieldMetadata)"></i>
-                </div>
-            </span>
+            <div>
+                <i class="fa fa-caret-right" ng-hide="detailsExpanded(fieldMetadata)"></i>
+                <i class="fa fa-caret-down" ng-show="detailsExpanded(fieldMetadata)"></i>
+            </div>
+        </span>
+        
+        <angulartypeahead schema="schema" datamap="datamap"
+                          attribute="fieldMetadata.attribute"
+                          provider="fieldMetadata.associationKey"
+                          placeholder="getPlaceholderText(fieldMetadata)"
+                          search-text="vm.searchText"
+                          hide-description="{{fieldMetadata.hideDescription}}"
+                          magnet-clicked="showLookupModal(text)"
+                          />
 
-            <input type="text" placeholder="{{fieldMetadata.label}}" class="form-control"
-                   ng-model="lookupAssociationsCode[fieldMetadata.attribute]"
-                   ng-change="lookupCodeChange(fieldMetadata)"
-                   ng-blur="lookupCodeBlur(fieldMetadata)"
-                   ng-enabled="isSelectEnabled(fieldMetadata,datamap)"
-                   ng-enter="showLookupModal(fieldMetadata)"
-                   data-field="{{fieldMetadata.associationKey}}"
-                   rel="tooltip" data-original-title="Enter {{fieldMetadata.label}} id to lookup " />
-            <span class="input-group-addon last" ng-click="showLookupModal(fieldMetadata)"
-                  rel="tooltip" data-original-title="Open the lookup popup" ng-enabled="isSelectEnabled(fieldMetadata,datamap)">
-                <i class="glyphicon glyphicon-search" ng-enabled="isSelectEnabled(fieldMetadata,datamap)"
-                   ng-style="{cursor: isSelectEnabled(fieldMetadata,datamap)?'pointer':'auto' }"></i>
-            </span>
-            <div></div><!--stop addon from moving on hover-->
-        </div>
-    </div>
-    <div ng-if="shouldShowDescription(fieldMetadata)" class="col-md-6 col-lg-8">
-        <input type="text" placeholder="{{getLookUpDescriptionLabel(fieldMetadata)}}" class="form-control" disabled
-               ng-model="lookupAssociationsDescription[fieldMetadata.attribute]" />
     </div>
     <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
-    
+
     <div>
         <lookup-modal-wrapper lookup-obj="lookupObj"
                               lookup-associations-code="lookupAssociationsCode"
                               lookup-associations-description="lookupAssociationsDescription"
-                              association-options="associationOptions"
                               schema="schema"
                               datamap="datamap">
         </lookup-modal-wrapper>

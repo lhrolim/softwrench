@@ -3,8 +3,11 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
-using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using softwrench.sw4.Shared2.Metadata.Entity;
+using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
     public class AssociationHelper {
@@ -55,15 +58,32 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return result;
         }
 
+        /// <summary>
+        /// Returns a precompiled attribute.Query. 
+        /// Since the attribute.Query can lead to a service invocation or runtime string processing this helper takes care of that.
+        /// The query will be precompiled against the entityName (i.e. '!@' -> 'entityName'.)
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
+        public static string PrecompiledAssociationAttributeQuery([NotNull]string entityName, [NotNull]IQueryHolder attribute) {
+            if (attribute.Query == null) return null;
+            var query = attribute.GetQueryReplacingMarkers(entityName);
+            if (query.StartsWith("@")) {
+                query = BaseQueryBuilder.GetServiceQuery(query);
+            }
+            return query;
+        }
+
         public class AssociationHelperResult {
-            public Set<String> ToFetch { get; set; }
-            public Set<String> ToAvoid { get; set; }
+            public Set<string> ToFetch { get; set; }
+            public Set<string> ToAvoid { get; set; }
 
-            public List<String> ToFetchList { get { return new List<string>(ToFetch); } }
-            public List<String> ToAvoidList { get { return new List<string>(ToAvoid); } }
+            public List<string> ToFetchList { get { return new List<string>(ToFetch); } }
+            public List<string> ToAvoidList { get { return new List<string>(ToAvoid); } }
 
-            public Boolean IsAll { get { return ToFetch.Contains(All) || ToFetch.Contains(AllButSchema); } }
-            public Boolean IsNone { get { return ToFetch.Contains(None); } }
+            public bool IsAll { get { return ToFetch.Contains(All) || ToFetch.Contains(AllButSchema); } }
+            public bool IsNone { get { return ToFetch.Contains(None); } }
 
             public bool ShouldResolve(string associationKey) {
                 return ((ToFetch.Contains(associationKey) || IsAll) && !ToAvoid.Contains(associationKey));

@@ -141,7 +141,7 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
             }
 
             log.info('calling expanding compositions on service; params: {0}'.format(params));
-            var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(params)));
+            var urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(params)));
             $http.get(urlToInvoke).success(function (result) {
 
                 var compositions = result.resultObject;

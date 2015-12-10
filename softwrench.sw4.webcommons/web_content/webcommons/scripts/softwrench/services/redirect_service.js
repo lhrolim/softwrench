@@ -1,27 +1,23 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, $q,contextService, fixHeaderService, restService, applicationService, alertService) {
 
-    
-
-
+(function (angular) {
+    'use strict';
 
 
+    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, $timeout) {
 
 
-    return {
-
-
-        getActionUrl: function (controller, action, parameters) {
+        function getActionUrl(controller, action, parameters) {
             return restService.getActionUrl(controller, action, parameters);
-        },
+        };
 
-        redirectToHome: function () {
+        function redirectToHome() {
             contextService.deleteFromContext("swGlobalRedirectURL");
             window.location.reload();
-        },
+        };
 
-        redirectToAction: function (title, controller, action, parameters, target) {
+        function redirectToAction(title, controller, action, parameters, target) {
             if (parameters === undefined || parameters == null) {
                 parameters = {};
             }
@@ -53,19 +49,22 @@ app.factory('redirectService', function ($http, $rootScope, $log, $q,contextServ
                     $rootScope.$broadcast("sw_ajaxerror", errordata);
                     alertService.notifyexception(errordata);
                 });
-        },
+        };
 
-        getApplicationUrl: function (applicationName, schemaId, mode, title, parameters) {
+        function getApplicationUrl(applicationName, schemaId, mode, title, parameters) {
             return applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters);
-        },
+        };
 
+        function redirectToTab(tabId) {
+            $timeout(function () {
+                //this timeout is needed because a digest might already be in progress
+                contextService.setActiveTab(tabId);
+                var tab = $('a[href="#' + tabId + '"]');
+                tab.trigger('click');;
+            }, 0, false);
+        };
 
-        redirectToTab: function (tabId) {
-            var tab = $('a[href="#' + tabId + '"]');
-            tab.trigger('click');;
-        },
-
-        goToAction: function (controller, action, parameters) {
+        function goToAction(controller, action, parameters) {
             /// <summary>
             /// Shortcut method for the most common case
             /// </summary>
@@ -75,17 +74,17 @@ app.factory('redirectService', function ($http, $rootScope, $log, $q,contextServ
             /// <param name="parameters"></param>
             /// <param name="target"></param>
             return this.redirectToAction(null, controller, action, parameters, null);
-        },
+        };
 
-        goToApplication: function (applicationName, schemaId, parameters, jsonData) {
+        function goToApplication(applicationName, schemaId, parameters, jsonData) {
             this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
-        },
+        };
 
-        redirectWithData: function (applicationName, schemaId, mode, searchData, extraParameters) {
+        function redirectWithData(applicationName, schemaId, mode, searchData, extraParameters) {
             /// <summary>
             /// Shortcut method to redirect to an application with search data 
             /// </summary>
-            
+
             if (!extraParameters) {
                 //to avoid extra checkings all along
                 extraParameters = {};
@@ -112,19 +111,17 @@ app.factory('redirectService', function ($http, $rootScope, $log, $q,contextServ
             var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
-            $http.get(urlToUse).success(function(data) {
+            $http.get(urlToUse).success(function (data) {
                 jsonData = data;
-                this.goToApplicationView(applicationName, schemaId, null, null, null,jsonData);
-                }).
-                error(function(data) {
+                this.goToApplicationView(applicationName, schemaId, null, null, null, jsonData);
+            }).
+                error(function (data) {
 
                 });
-        },
+        };
 
-        
-
-        goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
-            var log = $log.getInstance('redirectService#goToApplication');
+        function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
+            var log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
 
             if (parameters === undefined || parameters == null) {
                 parameters = {};
@@ -132,14 +129,10 @@ app.factory('redirectService', function ($http, $rootScope, $log, $q,contextServ
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
             var redirectURL = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
-            var popupMode = parameters.popupmode;
-            if (popupMode == "report") {
-                //does not popup any window for incident detail report
-                //TODO: is this really necessary?
-                return;
-            }
 
-            if (popupMode == "browser") {
+            var popupMode = parameters.popupmode;
+
+            if (popupMode === "browser") {
                 if (contextService.isLocal()) {
                     //easier to debug on chrome like this
                     var w = window.open(redirectURL);
@@ -156,28 +149,32 @@ app.factory('redirectService', function ($http, $rootScope, $log, $q,contextServ
             //this code will get called when the user is already on a crud page and tries to switch view only.
             $rootScope.popupmode = popupMode;
             fixHeaderService.unfix();
+
+
+
             if (jsonData == undefined) {
-                contextService.insertIntoContext("swGlobalRedirectURL", redirectURL, false);
+
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
-                $http.get(redirectURL).success(function (data) {
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                return $http.get(redirectURL).then(function (data) {
+                    contextService.insertIntoContext("swGlobalRedirectURL", redirectURL, false);
+                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data.data, mode, applicationName);
                     if (afterRedirectHook != null) {
                         afterRedirectHook();
                     }
+                    return $q.when(data.data.resultObject);
                 });
             } else {
                 var jsonString = angular.toJson(jsonData);
                 log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
-                $http.post(redirectURL, jsonString).success(function (data) {
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                return $http.post(redirectURL, jsonString).success(function (data) {
+                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data.data, mode, applicationName);
+                    return $q.when(data.data.resultObject);
                 });
             }
-        },
+        };
 
-
-
-        redirectNewWindow: function (newWindowURL, needReload, initialData) {
+        function redirectNewWindow(newWindowURL, needReload, initialData) {
 
             if (contextService.isLocal()) {
                 //easier to debug on chrome like this
@@ -209,8 +206,28 @@ app.factory('redirectService', function ($http, $rootScope, $log, $q,contextServ
             }
 
         }
-    };
 
-});
 
+        var service = {
+            getActionUrl: getActionUrl,
+            getApplicationUrl: getApplicationUrl,
+            goToAction: goToAction,
+            goToApplication: goToApplication,
+            goToApplicationView: goToApplicationView,
+            redirectNewWindow: redirectNewWindow,
+            redirectToAction: redirectToAction,
+            redirectToHome: redirectToHome,
+            redirectToTab: redirectToTab,
+            redirectWithData: redirectWithData
+        };
+
+        return service;
+    }
+
+    angular
+    .module('sw_layout')
+    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', '$timeout', redirectService]);
+
+
+})(angular);
 

@@ -125,7 +125,7 @@ namespace softWrench.sW4.Util {
                     try {
                         var maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
                         maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
-                    } catch (Exception e) {
+                    } catch (Exception) {
                         throw new MetadataException("wrong maximo utc property was set, review your properties.xml file");
                     }
                 } else {

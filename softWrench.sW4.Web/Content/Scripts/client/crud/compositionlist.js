@@ -31,7 +31,6 @@ app.directive('expandedItemInput', function ($compile) {
             displayables: '=',
             schema: '=',
             datamap: '=',
-            associationOptions: '=',
             savefn: '&',
             cancelfn: '&'
         },
@@ -42,7 +41,6 @@ app.directive('expandedItemInput', function ($compile) {
                     "<crud-input schema='schema'" +
                                 "datamap='datamap'" +
                                 "displayables='displayables'" +
-                                "associationOptions='associationOptions'" +
                                 "savefn='savefn()'" +
                                 "cancelfn='cancelfn()'></crud-input>"
                 );
@@ -74,13 +72,11 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
                 fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
-                scope.associationOptions = [];
                 element.append(
                     "<crud-input schema='schema' " +
                                 "datamap='datamap' " +
                                 "displayables='displayables' " +
                                 "elementid='crudInputNewItemComposition' " +
-                                "association-options='associationOptions' " +
                                 "association-schemas='associationSchemas' " +
                                 "blockedassociations='blockedassociations' " +
                                 "parentdata='parentdata' " +
@@ -137,7 +133,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
-                element.append("<composition-list data-original-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
+                element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
                     "compositionschemadefinition='compositionschemadefinition' " +
                     "relationship='{{relationship}}' " +
                     "compositiondata='compositiondata' " +
@@ -870,7 +866,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                     compositionListData[id] = data;
                 }
 
-                var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(buildExpandAllParams())));
+                var urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(buildExpandAllParams())));
                 $http.get(urlToInvoke).success(function (result) {
                     $.each(result.resultObject[$scope.relationship], function (key, value) {
                         //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function

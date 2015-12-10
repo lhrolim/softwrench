@@ -1,5 +1,4 @@
 ﻿using cts.commons.portable.Util;
-using log4net;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
@@ -19,7 +18,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,38 +27,6 @@ using softWrench.sW4.Metadata.Applications.DataSet.Faq;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagServiceRequestDataSet : HapagBaseApplicationDataSet {
 
-        #region scripttestcode
-
-        private static ILog Log = LogManager.GetLogger(typeof(HapagServiceRequestDataSet));
-
-        String code = @"
-                    using System; 
-                    using System.Collections.Generic;
-                    using System.Text;
-                    using System.Threading.Tasks;
-                    using softWrench.sW4.Data.Search;
-                    namespace softWrench.sW4.Metadata.Applications.DataSet {
-                        public class ScriptTest {
-
-                            public SearchRequestDto LocationFilterByStatusFunction(AssociationPreFilterFunctionParameters parameters) {
-                                var filter = parameters.BASEDto;
-                                filter.WhereClause = ""Status NOT IN ('DECOMMISSIONED') AND TYPE='OPERATING'"";
-                                return filter;
-                            }
-
-                            public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
-                                var filter = parameters.BASEDto;
-                                if (parameters.Metadata.Schema.SchemaId.Equals(""printer"") || parameters.Metadata.Schema.SchemaId.Equals(""phone"")) {
-                                    filter.WhereClause = String.Format(""SiteID = '{0}'"", parameters.OriginalEntity.Attributes[""assetsiteid""]);
-                                }                                
-                                return filter;
-                            }
-                            public SearchRequestDto PreFilterFunction(AssociationPreFilterFunctionParameters parameters) {                                
-                                return parameters.BASEDto;
-                            }
-                        }
-                    }";
-        #endregion
 
         public HapagServiceRequestDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
             : base(locationManager, entityRepository, maxDao) {
@@ -100,7 +66,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         private void AdjustInitialValues(Entity initialValues, string schemaId) {
-            var isCustodian = (String)initialValues.GetAttribute("#iscustodian");
+            var isCustodian = (string)initialValues.GetAttribute("#iscustodian");
             var originalLocation = (string)initialValues.GetAttribute(ISMConstants.PluspCustomerColumn, true);
             //workaround as the dropdown values of the  locations contains currently, just MT4,MT4 instead of HLC-DE-MT4
             //TODO: shouldn´t that be the entire value?
@@ -250,7 +216,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 
         public SearchRequestDto FilterAssetsByItcLocation(AssociationPreFilterFunctionParameters parameters) {
-            var fromLocation = parameters.OriginalEntity.GetAttribute("itcassetlocation") as String;
+            var fromLocation = parameters.OriginalEntity.GetAttribute("itcassetlocation") as string;
             return AssetByLocationCondition(parameters.BASEDto, fromLocation);
         }
 
@@ -271,7 +237,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             if (parameters.Metadata.Schema.SchemaId.Equals("printer") || parameters.Metadata.Schema.SchemaId.Equals("phone")) {
-                filter.WhereClause = String.Format("LOCATION = '{0}'", parameters.OriginalEntity.Attributes["location"]);
+                filter.WhereClause = string.Format("LOCATION = '{0}'", parameters.OriginalEntity.Attributes["location"]);
             }
             return filter;
         }

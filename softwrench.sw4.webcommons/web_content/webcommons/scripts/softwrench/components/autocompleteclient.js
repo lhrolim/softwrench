@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService) {
+app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldService) {
 
     return {
 
@@ -29,16 +29,18 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
         },
 
         refreshFromAttribute: function (attribute, value, availableoptions) {
+            var log =$log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
             var labelValue = value;
             if (!nullOrEmpty(value) && availableoptions) {
                 //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
                 for (var i = 0; i < availableoptions.length; i++) {
-                    if (availableoptions[i].value.trim() === value.trim()) {
+                    if (availableoptions[i].value.trim() === (""+value).trim()) {
                         labelValue = availableoptions[i].label;
                     }
                 }
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
+            log.debug("setting autocompleteclient {0} to value {1}".format(attribute,labelValue));
             //due to a different timeout order this could be called on FF/IE before the availableoptions has been updated
             if (combo != undefined && availableoptions) {
                 combo.refresh(labelValue);
@@ -50,8 +52,9 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
             for (var i = 0; i < selects.length; i++) {
                 var select = $(selects[i]);
                 var associationKey = select.data('associationkey');
+                $log.getInstance("autocompleteclient#init", ["association"]).debug("init autocompleteclient {0}".format(associationKey));
                 var parent = $(select.parents("div[rel=input-form-repeat]"));
-                if (parent.data('selectenabled') == false || select.data('alreadyconfigured')) {
+                if (parent.data('selectenabled') === false || select.data('alreadyconfigured')) {
                     continue;
                 }
 

@@ -101,7 +101,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                         }
                     }                    
                 }
-                catch (ArgumentOutOfRangeException ae) {
+                catch (ArgumentOutOfRangeException) {
                 }
             }
 

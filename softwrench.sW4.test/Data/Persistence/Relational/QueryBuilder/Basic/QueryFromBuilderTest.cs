@@ -43,7 +43,6 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
             var completeOne = MetadataProvider.Application("incident");
             var metadata = completeOne.ApplyPolicies(new ApplicationMetadataSchemaKey("hardwarerepair"), InMemoryUser.TestInstance(),
                 ClientPlatform.Web);
-            ApplicationSchemaDefinition schema;
             var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("incident"), metadata.Schema);
             var result = QueryFromBuilder.Build(sliced, dto);
             Assert.AreEqual("from incident as incident left join asset as asset_ on (incident.assetnum = asset_.assetnum and incident.siteid = asset_.siteid)left join assetloccomm as asset_assetloccomm_ on (asset_.assetnum = asset_assetloccomm_.assetnum and asset_.siteid = asset_assetloccomm_.siteid)left join commodities as asset_assetloccomm_commoditiesownedby_ on (asset_assetloccomm_.commodity = asset_assetloccomm_commoditiesownedby_.commodity and asset_assetloccomm_.itemsetid = asset_assetloccomm_commoditiesownedby_.itemsetid and (asset_assetloccomm_commoditiesownedby_.description like 'Asset owened by%'))", result);

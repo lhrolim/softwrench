@@ -42,10 +42,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 }
             }
             var idFieldName = entityMetadata.IdFieldName;
-            if (operationData.Id != null) {
+            if (!string.IsNullOrEmpty(operationData.Id)) {
                 w.SetValueIfNull(integrationObject, idFieldName, operationData.Id);
             }
-            if (operationData.UserId != null) {
+            if (!string.IsNullOrEmpty(operationData.UserId)) {
                 w.SetValueIfNull(integrationObject, entityMetadata.UserIdFieldName, operationData.UserId);
             }
 

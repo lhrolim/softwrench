@@ -1,29 +1,31 @@
 ﻿$signin_color: #ffb755;
-$asset_path : "../images";
+$form_background: rgba(1, 62, 91, 0.8);
+$asset_path: "../images";
 
 .page-signin {
     background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
-        .form-signin {
-        /*padding: 40px 15px;*/
-        background-color: rgba(1, 62, 91, 0.8);
-}
 }
 
-.container header {
-    background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
+.container {
+    header {
+        background: $signin_color url(#{$asset_path}/header.jpg) no-repeat center left;
 
-    .admin-area {
-        background-color: rgba(1, 62, 91, 0.8);
+        .admin-area {
+            background-color: rgba(1, 62, 91, 0.8);
+        }
+
+        .branding {
+            background: none;
+
+            .logo img {
+                height: 115px;
+                width: auto;
+            }
+        }
     }
 
-    .branding {
-        /*background: url(#{$asset_path}/branding.png) no-repeat top left;*/
-        background: none;
-
-        .logo img {
-            height: 115px;
-            width: auto;
-        }
+    footer {
+        background: $signin_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
     }
 }
 
@@ -40,10 +42,30 @@ $asset_path : "../images";
     }
 }
 
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .page-overlay {
+            background-color: $form_background;
+        }
+
+        .form-signin {
+            background-color: none;
+        }
+    }
+}
+
 /* Small Devices, Tablets */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .page-signin {
         background: $signin_color url(#{$asset_path}/signin-sm.jpg) no-repeat center center fixed;
+    }
+}
+
+@media all and (min-width: 850px) {
+    .page-signin {
+        .form-signin {
+            background-color: $form_background;
+        }
     }
 }
 
@@ -58,6 +80,6 @@ $asset_path : "../images";
 @media only screen and (min-width: 1200px) {
 }
 
-.page-signin, .container header {
+.page-signin, .container header, .container footer {
     background-size: cover;
 }

@@ -10,16 +10,20 @@ function griditemclick(rowNumber, columnNumber, element) {
     }
 }
 
-function defaultAppending(formattedText,updatable, rowst, column) {
+function defaultAppending(formattedText, updatable, rowst, column) {
     var st = "";
     if (updatable) {
         st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
-    }
-    else if (formattedText!=null) {
+    } else {
         st += '<div class="cell-wrapper">';
-        //else to avoid appending "null"
-        st += formattedText;
+
+        if (formattedText != null) {
+            st += formattedText;
+        } else {
+            st += '&nbsp';
+        }
     }
+
     return st;
 }
 
@@ -41,11 +45,21 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
     return style + " \"";
 };
 
+function hasDataClass(column, formattedText) {
+    var classString = '';
+
+    if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
+        classString = 'has-data';
+    } else {
+        classString = 'no-data';
+    }
+
+    return classString;
+}
 
 function parseBooleanValue(attrValue) {
     return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
 }
-
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
     fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService) {
@@ -55,7 +69,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
         scope: {
             datamap: '=',
             schema: '=',
-            associationOptions: '=',
             panelid: '='
         },
         template: "",
@@ -150,7 +163,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     //TODO: to be implemented
                     html += '</td>';
 
-
                     var dm = datamap[i];
                     for (j = 0; j < schema.displayables.length; j++) {
                         var columnst = "columnarray[{0}]".format(j);
@@ -167,7 +179,8 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         var isHidden = hiddencolumnArray[j];
 
-                        html += "<td {2} onclick='griditemclick({0},{1},this)' class=\"{3}\" ".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute));
+                        html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText));
+                        html += "data-title='{0}'".format(column.label);
                         html += ">";
                         if (column.rendererType === 'color') {
                             var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);

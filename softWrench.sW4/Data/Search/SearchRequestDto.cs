@@ -15,7 +15,6 @@ using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
-        private ApplicationLookupContext _context;
 
         public IDictionary<string, string> CustomParameters {
             get; set;

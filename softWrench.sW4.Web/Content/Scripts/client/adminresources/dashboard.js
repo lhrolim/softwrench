@@ -106,7 +106,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
             }
         };
 
-        if (parameters.popupmode == 'browser') {
+        if (parameters.popupmode === 'browser') {
             $scope.$parent.goToApplicationView(applicationToUse, parameters.key.schemaId, parameters.key.mode, $scope.schema.title, parameters);
             return;
         }
@@ -127,7 +127,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
                     $scope.modal.title = result.schema.title;
                 }
 
-                $scope.modal.associationOptions = result.associationOptions;
+//                $scope.modal.associationOptions = result.associationOptions;
                 $scope.modal.associationSchemas = result.associationSchemas;
                 $scope.modal.compositions = result.Compositions;
                 $scope.modal.isDetail = true;

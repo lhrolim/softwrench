@@ -46,8 +46,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                             continue;
                         }
                     }
-                    var result = LocateAttribute(entityMetadata, attributes, field);
-                    if (!field.Name.Contains('.') && result == null) {
+                    //Item1 = Attribute, item2 = relationshipname
+                    var result = entityMetadata.LocateNonCollectionAttribute(field.Name, attributes);
+                    if ((!field.Name.Contains('.') && result == null) || (result != null && result.Item1 == null)) {
+                        //second condition shouldn't happen unless due to a metadata misconfiguration
                         //this field is not mapped
                         continue;
                     }
@@ -76,38 +78,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return buffer.ToString().Substring(0, buffer.Length - SelectSeparator.Count()) + " ";
         }
 
-        private static Tuple<EntityAttribute, string> LocateAttribute(EntityMetadata entityMetadata, IEnumerable<EntityAttribute> attributes, ProjectionField field) {
-            var attributeName = field.Name;
-            if (!attributeName.Contains('.')) {
-                var resultAttribute = attributes.FirstOrDefault(f => f.Name.EqualsIc(attributeName));
-                if (resultAttribute == null) {
-                    return null;
-                }
-                return new Tuple<EntityAttribute, string>(resultAttribute, null);
-            }
-            var currentAttributeName = attributeName;
-            string resultName;
-            var innerMetadata = entityMetadata;
-            var context = "";
-            do {
-                var relationshipName = EntityUtil.GetRelationshipName(currentAttributeName, out resultName);
-                context += relationshipName;
-                innerMetadata = innerMetadata.RelatedEntityMetadata(relationshipName);
-                currentAttributeName = resultName;
-            } while (currentAttributeName.Contains("_") && innerMetadata != null);
-            if (innerMetadata == null) {
-                return null;
-            }
-            var attribute = innerMetadata.Attributes(NoCollections).FirstOrDefault(f => f.Name.EqualsIc(resultName));
-            return new Tuple<EntityAttribute, string>(attribute, context);
-        }
+
 
         private static string AliasAttributeWithQuery(EntityMetadata entityMetadata, string alias, EntityAttribute attribute, string context) {
             var contextToUse = context ?? entityMetadata.Name;
             var query = attribute.Query;
             var qualifiedName = "";
             if (query.StartsWith("@")) {
-                qualifiedName = GetServiceQuery(query,contextToUse);
+                qualifiedName = GetServiceQuery(query, contextToUse);
             } else {
                 qualifiedName = attribute.GetQueryReplacingMarkers(contextToUse);
             }

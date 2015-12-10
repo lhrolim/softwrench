@@ -187,7 +187,6 @@
         <attribute name="type" type="varchar" required="true" />
         <attribute name="userid" type="varchar" required="true" />
         <attribute name="active" type="boolean" 
-                   auto-generated="true" 
                    query="cast(case 
                    when !@status='ACTIVE' then 1 
                    when !@status='INACTIVE' or !@status is null then 0 
@@ -566,7 +565,7 @@
         <relationship to="site">
           <relationshipAttribute from="siteid" to="siteid" primary="true"/>
           <relationshipAttribute from="assetsiteid" to="siteid"/>
-          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
+          <relationshipAttribute to="active" literal="1"/>
         </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
@@ -581,7 +580,7 @@
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
           <relationshipAttribute to="ownertable" literal="SR" quoteLiteral="true"/>
         </relationship>
-        <relationship to="longdescription" qualifier="ld">
+        <relationship to="longdescription" qualifier="ld" lazy="true">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
