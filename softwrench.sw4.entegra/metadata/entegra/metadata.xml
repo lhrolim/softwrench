@@ -23,6 +23,9 @@
           <customization position="classstructureid"></customization>
         </schema>
         <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
           <customization position="classstructureid"></customization>
         </schema>
       </schemas>
@@ -33,6 +36,9 @@
           <customization position="classstructureid"></customization>
         </schema>
         <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
           <customization position="classstructureid"></customization>
         </schema>
       </schemas>
