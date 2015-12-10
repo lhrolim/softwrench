@@ -1,5 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity name="wfprocess" idAttribute="wfprocessid">
+      <attributes>
+        <attribute name="processname" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="enabled" type="smallint" required="true" />
+        <attribute name="processrev" type="int" required="true" />
+        <attribute name="changeby" type="varchar" required="false" />
+        <attribute name="changedate" type="datetime" required="false" />
+        <attribute name="migrated" type="smallint" required="true" />
+        <attribute name="objectname" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="wfprocessid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="autoinitiate" type="smallint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="deletable" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="wfprocess" />
+        <connectorParameter key="integration_interface" value="SWWFPROCESS" />
+      </connectorParameters>
+    </entity>
+  </entities>
 
   <applications>
     <application name="workflow" title="Workflow" entity="wfprocess" id="00000000-0000-0000-0000-000000020503">
@@ -11,11 +40,7 @@
           </optionfield>
           <commandbars>
             <commandgroup position="detailform">
-              <!--<removecommand id="save"/>-->
               <removecommand id="print"/>
-              <!--<command id="save" icon="fa-check" service="workflowService" method="initiateWorkflow"
-                       parameters="previousschema,previousdata"
-                       label="Initiate Workflow" tooltip="Add Widget" position="&lt;cancel" />-->
             </commandgroup>
           </commandbars>
           <properties>
