@@ -79,9 +79,9 @@
   </if>
 
 
-  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,deploy"/>
+  <target name="fulldeploy" depends="compile,copydlls,webcompile,copylinkedfolders,deploy"/>
 
-  <target name="fullbuildlocal" depends="compile,zip"/>
+  <target name="fullbuildlocal" depends="compile,webcompile,zip"/>
 
   <target name="compile">
     <exec program="${MSBuildPath}">
@@ -91,6 +91,13 @@
       <arg value="/verbosity:normal" />
       <arg value="/nologo" />
     </exec>
+  </target>
+
+  <target name="webcompile">
+    <!-- install npm dependencies -->
+    <exec program="npm" workingdir="../softWrench.sW4.Web" commandline="install --save-dev" failonerror="true"></exec>
+    <!-- compile sass -->
+    <exec program="grunt" workingdir="../softWrench.sW4.Web" commandline="sass:prod" failonerror="true"></exec>
   </target>
 
   <target name="test">
