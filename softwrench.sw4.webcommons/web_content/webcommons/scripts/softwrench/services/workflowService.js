@@ -25,8 +25,8 @@
                         crudContextHolderService.updateEagerAssociationOptions("workflows", response.data.resultObject.workflows);
                     }
                 }, function (datamap) {
-                    var parentDatamap = angular.element(document).injector().get('crudContextHolderService').rootDataMap();
-                    var parentSchema = angular.element(document).injector().get('crudContextHolderService').currentSchema();
+                    var parentDatamap = crudContextHolderService.rootDataMap();
+                    var parentSchema = crudContextHolderService.currentSchema();
                     initiateWorkflow(parentSchema, parentDatamap, datamap["processname"]);
                 });
             }).catch(function (response) {
