@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <applications>
+    <application name="locationspec" title="Location Specification" entity="locationspec" id="00000000-0000-0000-0000-000108056902">
+      <schemas>
+        <schema id="compositionlist" title="Location Specification List" stereotype="compositionlist">
+          <field attribute="classstructure_.hierarchypath" label="Classification"/>
+          <field attribute="classstructure_.description" label="Class Description"/>
+        </schema>
+        <schema id="compositiondetail" title="Location Specification Detail" stereotype="compositiondetail">
+          <field attribute="assetattrid" label="Attribute:"/>
+          <field attribute="assetattribute_.description" label="Asset Attribute Description:"/>
+          <field attribute="assetattribute_.datatype" label="Data Type:"/>
+          <field attribute="measureunitid" label="Unit of Measure:"/>
+          <field attribute="section" label="Section:"/>
+          <field attribute="alnvalue" label="Alphanumeric Value:"/>
+          <field attribute="numvalue" label="Numeric Value:"/>
+          <field attribute="classspec_.inheritedfrom" label="Inherited From:"/>
+          <field attribute="classspec_.applydownhier" label="Apply Down Hierarchy:"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

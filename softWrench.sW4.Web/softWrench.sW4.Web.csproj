@@ -331,6 +331,12 @@
     <Compile Include="Util\RequestUtil.cs" />
     <Compile Include="Util\RowStampScriptHelper.cs" />
     <Content Include="apple-touch-icon.png" />
+    <Content Include="App_Data\Client\%40internal\templates\locationspec.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\lochierarchy.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\menu\menutemplate.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -381,7 +387,9 @@
     <Content Include="App_Data\Client\%40internal\templates\item.xml" />
     <Content Include="App_Data\Client\%40internal\templates\labor.xml" />
     <Content Include="App_Data\Client\%40internal\templates\labtrans.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\location.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\location.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\longdescription.xml" />
     <Content Include="App_Data\Client\%40internal\templates\materials.xml" />
     <Content Include="App_Data\Client\%40internal\templates\meter.xml" />
