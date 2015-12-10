@@ -121,7 +121,7 @@ namespace softWrench.sW4.Data.Entities {
             return UnmappedAttributes.ContainsKey(key) ? UnmappedAttributes[key] : null;
         }
 
-        protected override string HolderName() {
+        public override string HolderName() {
             return _metadata.Name;
         }
     }

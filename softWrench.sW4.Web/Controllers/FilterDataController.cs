@@ -80,7 +80,7 @@ namespace softWrench.sW4.Web.Controllers {
                 filter.PageSize = 21;
             }
             //adopting to use an association to keep same existing service
-            var result = _associationResolver.ResolveOptions(app, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
+            var result = _associationResolver.ResolveOptions(app.Schema, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
             return result;
 
         }

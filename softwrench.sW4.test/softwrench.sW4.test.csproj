@@ -84,6 +84,7 @@
     <Compile Include="Category\CategoryUtilTest.cs" />
     <Compile Include="Category\CategoryTreeCacheTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
+    <Compile Include="Data\CompositeDatamapTest.cs" />
     <Compile Include="Data\Entities\EntityBuilderTest2.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestHapag.cs" />

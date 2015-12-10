@@ -60,15 +60,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association) {
-            return ResolveOptions(applicationMetadata, originalEntity, association, new SearchRequestDto());
+            return ResolveOptions(applicationMetadata.Schema, originalEntity, association, new SearchRequestDto());
         }
 
         [CanBeNull]
-        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
+        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationSchemaDefinition schema,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
                 return null;
             }
+            //TODO: remove this workaround, but need to refactor a bunch of prefilters
+            var applicationMetadata = ApplicationMetadata.FromSchema(schema);
 
             var isLookupMode = associationFilter is PaginatedSearchRequestDto;
 

@@ -75,7 +75,7 @@ namespace softWrench.sW4.Web.Controllers {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application), app, currentData);
 
             //adopting to use an association to keep same existing service
-            var result = _associationResolver.ResolveOptions(app, cruddata, association, filter);
+            var result = _associationResolver.ResolveOptions(app.Schema, cruddata, association, filter);
             return result;
         }
 
@@ -136,7 +136,7 @@ namespace softWrench.sW4.Web.Controllers {
             var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, currentData);
 
-            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore });
+            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata.Schema, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore });
 
 
 
