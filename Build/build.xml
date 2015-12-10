@@ -96,14 +96,15 @@
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
-    <exec program="npm.cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
-      <arg value="install"></arg>
-      <arg value="--save-dev"></arg>
+    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+      <arg value="/c"></arg>
+      <arg value="npm install --save-dev"></arg>
     </exec>
     <!-- compile sass -->
     <echo message="installing npm dependencies"></echo>
-    <exec program="grunt.cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
-      <arg value="sass:prod"></arg>
+    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+      <arg value="/c"></arg>
+      <arg value="grunt sass:prod"></arg>
     </exec>
   </target>
 
