@@ -14,13 +14,13 @@
                    ng-class="getLabelClass(fieldMetadata)">
                 <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
                 <!--this will bring either label or header in case of section-->
-                {{i18NLabel(fieldMetadata)}}
+                {{i18NInputLabel(fieldMetadata)}}
             </label>
             <legend ng-if="isLabelVisible(fieldMetadata,true)"
                     rel="tooltip"
                     data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                     class="legend-label">
-                {{i18NLabel(fieldMetadata)}}
+                {{i18NInputLabel(fieldMetadata)}}
             </legend>
 
             <!--Read only section-->
