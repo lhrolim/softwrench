@@ -11,7 +11,7 @@
 
             var log = $log.getInstance("layoutservice#getDefaultColumnClassesForFieldSet", ["layout"]);
 
-            log.debug(params);
+            //log.debug(params);
 
             //console.log(params);
 
