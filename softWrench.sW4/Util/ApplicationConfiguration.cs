@@ -432,6 +432,14 @@ namespace softWrench.sW4.Util {
             return Profile.Contains("dev");
         }
 
+        /// <summary>
+        /// whether we're using a Pull request dev environment 
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsDevPR() {
+            return Profile.Contains("dev_pr");
+        }
+
         public static bool IsQA() {
             return Profile == "qa";
         }
@@ -475,8 +483,11 @@ namespace softWrench.sW4.Util {
                     }
                     return swdbConnectionString;
                 }
-                var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true);
-                var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true);
+                //need to assure that we use the real swdb_urls, in order for it to work on pr environments
+                var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true,false,true);
+                var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true,false, true);
+
+
                 return new ConnectionStringSettings("swdb", url, provider);
             }
         }

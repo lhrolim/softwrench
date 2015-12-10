@@ -4,8 +4,8 @@
 
 
     angular.module("sw_lookup").directive("lookupInput", ["cmplookup", "contextService", 'expressionService', 'cmpfacade',
-        'dispatcherService', 'modalService', 'compositionCommons',
-        function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons) {
+        'dispatcherService', 'modalService', 'compositionCommons', 'i18NService',
+        function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService) {
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl('/Content/modules/lookup/templates/lookupinput.html'),
@@ -30,7 +30,9 @@
                     };
                     scope.$name = "lookupinput";
 
-
+                    scope.getPlaceholderText = function (fieldMetadata) {
+                        return i18NService.getI18nPlaceholder(fieldMetadata);
+                    }
 
                     scope.isSelectEnabled = function (fieldMetadata, datamap) {
                         return true;

@@ -15,20 +15,21 @@ namespace softWrench.sW4.Metadata.Validator {
 
         internal MetadataProperties Initialize(Stream streamValidator = null) {
             using (var stream = MetadataParsingUtils.GetStream(streamValidator, Properties)) {
-                var metadata = new XmlPropertyMetadataParser().Parse(stream);
-                metadata.ValidateRequiredProperties();
+                var metadataProperties = new XmlPropertyMetadataParser().Parse(stream);
+                metadataProperties.ValidateRequiredProperties();
 
                 var localFilePath = EnvironmentUtil.GetLocalSWFolder() + "properties.xml";
                 var fileInfo = new FileInfo(localFilePath);
                 if (fileInfo.Exists && fileInfo.Length != 0) {
                     var localStream = new StreamReader(localFilePath);
                     var localProperties = new XmlPropertyMetadataParser().Parse(localStream);
-                    foreach (var property in localProperties.Properties) {
-                        metadata.Properties[property.Key] = property.Value;
-                    }
+                  
+
+                    metadataProperties.MergeWithLocal(localProperties);
+
                 }
 
-                return metadata;
+                return metadataProperties;
             }
         }
 

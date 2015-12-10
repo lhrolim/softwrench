@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using cts.commons.portable.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Properties {
@@ -41,12 +42,24 @@ namespace softWrench.sW4.Metadata.Properties {
         }
 
         public IDictionary<string, string> Properties {
-            get { return _globalProperties; }
+            get {
+                return _globalProperties;
+            }
         }
-
-        public string GlobalProperty(string key, bool throwException = false, bool testRequired = false) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="throwException"></param>
+        /// <param name="testRequired"></param>
+        /// <param name="fixedProfile">we need to fallback devpr profiles to dev, except when this flag is true </param>
+        /// <returns></returns>
+        public string GlobalProperty(string key, bool throwException = false, bool testRequired = false, bool fixedProfile = false) {
             string value;
             var profile = ApplicationConfiguration.Profile;
+            if (ApplicationConfiguration.IsDevPR() && !fixedProfile) {
+                profile = "dev";
+            }
 
             //First web.config
             var configValue = ConfigurationManager.AppSettings[key];
@@ -84,6 +97,29 @@ namespace softWrench.sW4.Metadata.Properties {
 
         public string MultiTenantQueryConstraint() {
             return GlobalProperty("multitenantprefix");
+        }
+
+        /// <summary>
+        /// Override any property declared on the properties.xml of the given customer with the ones eventually present on the "local" properties.xml
+        /// 
+        /// In Summary Local properties has precedence over the customer
+        ///  
+        /// </summary>
+        /// <param name="localProperties"></param>
+        public void MergeWithLocal(MetadataProperties localProperties) {
+            foreach (var property in localProperties.Properties) {
+                Properties[property.Key] = property.Value;
+            }
+            foreach (var localEnvironment in localProperties._envProperties) {
+                var customerEnvironment = _envProperties.FirstOrDefault(f => f.Key.EqualsIc(localEnvironment.Key));
+                if (customerEnvironment == null) {
+                    _envProperties.Add(localEnvironment);
+                } else {
+                    foreach (var property in localEnvironment.Properties) {
+                        customerEnvironment.Properties[property.Key] = property.Value;
+                    }
+                }
+            }
         }
     }
 }

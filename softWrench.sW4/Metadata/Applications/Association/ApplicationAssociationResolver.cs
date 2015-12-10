@@ -142,7 +142,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                     association.LabelFields.FirstOrDefault(),
                 };
 
-            associationFilter.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(listOfFields));
+            var quickSearchWhereClause = QuickSearchHelper.BuildOrWhereClause(listOfFields, association.EntityAssociation.To);
+            associationFilter.AppendWhereClause(quickSearchWhereClause);
         }
 
         private static void AppendNonPrimaryAttributesSearch(AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
