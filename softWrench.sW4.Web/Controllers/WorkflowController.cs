@@ -32,11 +32,12 @@ namespace softWrench.sW4.Web.Controllers {
                                                      </{1}>
                                                    </{1}MboKey>
                                                  </Initiate{0}>";
-
         private const string WFQueryString = "select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and {0} = '{1}'";
+        readonly ApplicationSchemaDefinition _workflowSchema;
 
         public WorkflowController(MaximoHibernateDAO dao) {
             _maximoDao = dao;
+            _workflowSchema = MetadataProvider.Application("workflow").Schema(new ApplicationMetadataSchemaKey("workflowselection"));
         }
 
         [HttpPost]
@@ -53,11 +54,10 @@ namespace softWrench.sW4.Web.Controllers {
             }
             // If there are multiple work flows
             if (workflows.Count > 1) {
-                var workflowSchema = MetadataProvider.Application("workflow").Schema(new ApplicationMetadataSchemaKey("workflowselection"));
                 IList<IAssociationOption> workflowOptions = workflows.Select(w => new GenericAssociationOption(w["processname"], w["processname"])).Cast<IAssociationOption>().ToList();
                 var dto = new WorkflowDTO() {
                     Workflows = workflowOptions,
-                    Schema = workflowSchema
+                    Schema = _workflowSchema
                 };
                 return new GenericResponseResult<WorkflowDTO>(dto);
             }
