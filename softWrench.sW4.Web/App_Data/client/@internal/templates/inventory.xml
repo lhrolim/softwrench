@@ -290,7 +290,7 @@
             <property key="nextschema.schemaid" value="physicalcountList"/>
             <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
-          <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
@@ -356,7 +356,7 @@
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
             <property key="detail.titleexpression" value="'Physical Count: {0}'.format(@invbalancesid)"/>
           </properties>
-          <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
 
           <section orientation="horizontal">
@@ -420,6 +420,7 @@
           <field attribute="availablequantity" label="Available">
             <renderer type="default" params="hidefilter=true"/>
           </field>
+          <!--<field attribute="location" hidden="true"/>-->
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
@@ -563,7 +564,7 @@
           <properties>
             <property key="nextschema.schemaid" value="invbalancesList"/>
           </properties>
-          <field label="Inventory Balances ID:" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
@@ -659,7 +660,7 @@
         </schema>
 
         <schema id="detail" title="Inventory Transfer Details">
-          <field attribute="matrectransid" label="Transfer:" hidden="true"></field>
+          <field attribute="matrectransid" hidden="true"></field>
           
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
