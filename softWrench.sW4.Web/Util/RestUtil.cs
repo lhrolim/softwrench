@@ -9,7 +9,7 @@ using NHibernate.Linq;
 
 namespace softWrench.sW4.Web.Util {
     public static class RestUtil {
-        public static async Task<HttpWebResponse> CallRestApi(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
+        public static async Task<WebResponse> CallRestApi(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             // headers
@@ -26,7 +26,7 @@ namespace softWrench.sW4.Web.Util {
                 }
             }
             // fetch response
-            return (HttpWebResponse)request.GetResponse();
+            return await request.GetResponseAsync();
         }
     }
 }

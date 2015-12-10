@@ -70,7 +70,7 @@ namespace softWrench.sW4.Web.Controllers {
             var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(), BuildKeyAttributeString(entityName, applicationItemId), siteid);
             var response = await RestUtil.CallRestApi(requestUri, "POST", null, msg);
             var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
-            return new GenericResponseResult<HttpWebResponse>(response, successMessage);
+            return new GenericResponseResult<WebResponse>(response, successMessage);
         }
 
         private string BuildKeyAttributeString(string entityName, string applicationItemId) {
