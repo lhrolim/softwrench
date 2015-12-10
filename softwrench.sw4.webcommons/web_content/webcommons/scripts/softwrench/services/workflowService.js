@@ -2,7 +2,7 @@
 (function (angular) {
     'use strict';
 
-    function workflowService($http, restService, crudContextHolderService, modalService) {
+    function workflowService($http, restService, crudContextHolderService, modalService, alertService) {
         var initiateWorkflow = function (schema, datamap, workflowName) {
             var httpParameters = {
                 entityName: schema.entityName,
@@ -13,6 +13,10 @@
             //schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema
             restService.invokePost("Workflow", "InitiateWorkflow", httpParameters, null,
                 function (response) {
+                    // If the response is null, no workflows were found
+                    if (response == "null") {
+                        alertService.notifymessage('warn', 'There are no active and enabled Workflows for this record type.');
+                    }
                     // If the response does not have a list of workflows, it has sucessfully found and executed one
                     if (!response.resultObject.hasOwnProperty("workflows")) {
                         modalService.hide();
@@ -41,5 +45,5 @@
 
     };
 
-    angular.module('webcommons_services').factory('workflowService', ['$http', 'restService', 'crudContextHolderService', 'modalService', workflowService]);
+    angular.module('webcommons_services').factory('workflowService', ['$http', 'restService', 'crudContextHolderService', 'modalService', 'alertService', workflowService]);
 })(angular);

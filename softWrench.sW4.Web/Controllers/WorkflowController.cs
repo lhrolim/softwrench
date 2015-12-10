@@ -23,6 +23,17 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers {
     public class WorkflowController : ApiController {
         private readonly MaximoHibernateDAO _maximoDao;
+        // {0} - workflowName, {1} - entity, {2} - key attribute, {3} - siteid
+        private const string RequestTemplate = @"<Initiate{0} xmlns='http://www.ibm.com/maximo'>
+                                                   <{1}MboKey>
+                                                     <{1}>
+                                                       {2}
+                                                       <SITEID>{3}</SITEID>
+                                                     </{1}>
+                                                   </{1}MboKey>
+                                                 </Initiate{0}>";
+
+        private const string WFQueryString = "select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and {0} = '{1}'";
 
         public WorkflowController(MaximoHibernateDAO dao) {
             _maximoDao = dao;
@@ -31,14 +42,13 @@ namespace softWrench.sW4.Web.Controllers {
         [HttpPost]
         public IGenericResponseResult InitiateWorkflow(string entityName, string applicationItemId, string siteid, string workflowName) {
             List<Dictionary<string, string>> workflows;
-            if (workflowName == null) {
-                workflows = _maximoDao.FindByNativeQuery("select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and objectname = '{0}'".FormatInvariant(entityName));
-            } else {
-                workflows = _maximoDao.FindByNativeQuery("select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and processname = '{0}'".FormatInvariant(workflowName));
-            }
+            var queryString = workflowName != null
+                ? WFQueryString.FormatInvariant("processname", workflowName)
+                : WFQueryString.FormatInvariant("objectname", entityName);
+            workflows = _maximoDao.FindByNativeQuery(queryString);
             // If there are no work flows
             if (!workflows.Any()) {
-                // Return some type of error response if there are no workflows?
+                // Returning null will pop a warning message on the client side
                 return null;
             }
             // If there are multiple work flows
@@ -55,16 +65,7 @@ namespace softWrench.sW4.Web.Controllers {
             workflowName = workflow["processname"];
             var baseUri = ApplicationConfiguration.WfUrl;
             var requestUri = baseUri + workflowName;
-            // {0} - workflowName, {1} - entity, {2} - key attribute, {3} - siteid
-            var requestTemplate = @"<Initiate{0} xmlns='http://www.ibm.com/maximo'>
-                                      <{1}MboKey>
-                                        <{1}>
-                                          {2}
-                                          <SITEID>{3}</SITEID>
-                                        </{1}>
-                                      </{1}MboKey>
-                                    </Initiate{0}>";
-            var msg = requestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(), BuildKeyAttributeString(entityName, applicationItemId), siteid);
+            var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(), BuildKeyAttributeString(entityName, applicationItemId), siteid);
             var response = CallRestApi(requestUri, "POST", null, msg);
             var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
             return new GenericResponseResult<HttpWebResponse>(response, successMessage);
