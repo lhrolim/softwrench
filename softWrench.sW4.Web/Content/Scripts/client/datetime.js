@@ -1,5 +1,8 @@
 (function (angular, $) {
-    "use strict";
+    // "use strict";
+    // [IMPORTANT!] Do not go back to strict mode, it causes a production error:
+    // 'Uncaught SyntaxError: In strict mode code, functions can only be declared at top level or immediately within another function' 
+    // for the `watchForStartDate` function
 
     var app = angular.module("sw_layout");
 

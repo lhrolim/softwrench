@@ -7,7 +7,7 @@ app.factory('formatService', function ($filter, i18NService) {
             return null;
         }
 
-        if (value == "@currentdatetime" || value == "@currentdate") {
+        if (value === "@currentdatetime" || value === "@currentdate") {
             return $filter('date')(new Date(), dateFormat);
         }
 
