@@ -2,45 +2,36 @@
 (function (angular, modules) {
     "use strict";
 
-modules.webcommons.run(['$injector', 'contextService', '$log', enhanceInjector]);
+    modules.webcommons.run(["$injector", "contextService", "$log", enhanceInjector]);
 
 
-function enhanceInjector($injector, contextService, $log) {
+    function enhanceInjector($injector, contextService, $log) {
 
-    $injector.getInstance = function (serviceName) {
-        try {
-            return doGet(serviceName);
-        } catch (e) {
-            $log.error(e);
-            return null;
-        }
-    };
-
-    function doGet(serviceName) {
-        var client = contextService.client();
-        var clientServiceName = client + "." + serviceName;
-        // has client specif implementation
-        if ($injector.has(clientServiceName)) {
-            var clientService = $injector.get(clientServiceName);
-            // delegate 'super' methods to the base implementation
-            if ($injector.has(serviceName)) {
-                var baseService = $injector.get(serviceName);
-                angular.forEach(baseService, function (property, name) {
-                    // skip useless (prototypically inherited from JS runtime) properties and overriden properties
-                    if (!baseService.hasOwnProperty(name) || clientService.hasOwnProperty(name)) return;
-                    var overridenProperty = angular.isFunction(property) ? property.bind(baseService) : property;
-                    clientService[name] = overridenProperty;
-                });
+        $injector.getInstance = function (serviceName) {
+            var client = contextService.client();
+            var clientServiceName = client + "." + serviceName;
+            // has client specif implementation
+            if ($injector.has(clientServiceName)) {
+                $log.debug("Client specific service", clientServiceName, "found.");
+                var clientService = $injector.get(clientServiceName);
+                // delegate 'super' methods to the base implementation
+                if ($injector.has(serviceName)) {
+                    $log.debug(serviceName, "base implementation found. Applying base property bindings to", clientServiceName);
+                    var baseService = $injector.get(serviceName);
+                    angular.forEach(baseService, function (property, name) {
+                        // skip useless (prototypically inherited from JS runtime) properties and overriden properties
+                        if (!baseService.hasOwnProperty(name) || clientService.hasOwnProperty(name)) return;
+                        var overridenProperty = angular.isFunction(property) ? property.bind(baseService) : property;
+                        clientService[name] = overridenProperty;
+                    });
+                }
+                return clientService;
             }
-            return clientService;
-        }
-        // has base service implementation
-        if ($injector.has(serviceName)) {
+            $log.debug("Client specific service", clientServiceName, "not found. Attempting to instantiate base service", serviceName);
+            // if there's no base implementation let the error go up
             return $injector.get(serviceName);
-        }
-        // has nothing...
-        return null;
-    }
-};
+        };
+    
+    };
 
 })(angular, modules);
