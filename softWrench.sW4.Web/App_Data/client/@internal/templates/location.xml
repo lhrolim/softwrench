@@ -4,6 +4,7 @@
     <!--Location-->
     <template path="@lochierarchy.xml"/>
     <template path="@locationspec.xml"/>
+    <template path="@assettrans.xml"/>
   </templates>
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
@@ -42,6 +43,7 @@
           <field attribute="location" label="Location:" readonly="true"/>
           <field attribute="description" label="Description:" readonly="true"/>
           <field attribute="siteid" label="Site:" readonly="true"/>
+          <field attribute="orgid" showexpression="false"/>
           <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
           <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>
           <field attribute="locoper_.calnum" label="Calendar:" readonly="true"/>
@@ -69,6 +71,9 @@
           </composition>
           <composition relationship="workorder" label="Work Order History" detailschema="">
             <collectionproperties listschema="locationwolist"/>
+          </composition>
+          <composition relationship="assettrans" label="Assets" detailschema="">
+            <collectionproperties listschema="compositionlist" prefilterfunction="BuildAssettransWhereClause"/>
           </composition>
           <composition relationship="locationspec" label="Specifications" detailschema="compositiondetail">
             <collectionproperties listschema="compositionlist"/>

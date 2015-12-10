@@ -982,6 +982,7 @@
         <attribute name="location" type="varchar"  required="true" />
         <attribute name="description" type="varchar"  required="true" />
         <attribute name="siteid"  type="varchar" />
+        <attribute name="orgid" type="varchar" />
         <attribute name="type"  type="varchar" />
         <attribute name="status"  type="varchar" />
         <attribute name="glaccount" type="varchar" />
@@ -1035,9 +1036,10 @@
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
-        <!--<relationship to="locsystem">
-          
-        </relationship>-->
+        <relationship to="assettrans" collection="true" ignoreprimary="true">
+          <!--Required to have a relationshipAttribute on relationship declaration, real query build in prefilterfunction-->
+          <relationshipAttribute query=""/>
+        </relationship>            
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="locations" />
@@ -1439,6 +1441,11 @@
         <attribute name="transtype" type="varchar" required="false" />
         <attribute name="wonum" type="varchar" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="assettrans" />
       </connectorParameters>
