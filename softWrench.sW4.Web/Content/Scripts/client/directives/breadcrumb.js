@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.directive('breadcrumb', function (contextService, $log, $timeout, recursionHelper, crudContextHolderService) {
+app.directive('breadcrumb', function (contextService, $log, $timeout, recursionHelper, crudContextHolderService, i18NService) {
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
@@ -106,8 +106,6 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                             }
 
                             var schema = crudContextHolderService.currentSchema();
-                            var datamap = crudContextHolderService.rootDataMap();
-
                             if (schema != null) {
                                 //if the current leaf matches the current application
                                 var isParent = leafs[id].applicationContainer == schema.applicationName;
@@ -136,19 +134,9 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                                         if (current.indexOf("Detail") > -1) {
                                             icon = 'fa fa-file-text-o';
 
-                                            if (datamap != null && datamap.fields != null) {
-                                                if (schema.userIdFieldName != null) {
-
-                                                    var userIdFieldName = schema.userIdFieldName;
-
-                                                    if (userIdFieldName != null) {
-                                                        var userID = datamap.fields[userIdFieldName];
-                                                    }
-                                                }
-
-                                                if (schema.idDisplayable && userID != null) {
-                                                    newPage.title = '{0} {1}'.format(schema.idDisplayable, userID);
-                                                }
+                                            var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
+                                            if (record) {
+                                                newPage.title = record;
                                             }
                                         }
                                    
