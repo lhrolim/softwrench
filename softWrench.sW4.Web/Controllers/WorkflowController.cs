@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Windows.Input;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -19,6 +20,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
+using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.Controllers {
     public class WorkflowController : ApiController {
@@ -41,7 +43,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IGenericResponseResult InitiateWorkflow(string entityName, string applicationItemId, string siteid, string workflowName) {
+        public async Task<IGenericResponseResult> InitiateWorkflow(string entityName, string applicationItemId, string siteid, string workflowName) {
             List<Dictionary<string, string>> workflows;
             var queryString = workflowName != null
                 ? WFQueryString.FormatInvariant("processname", workflowName)
@@ -66,29 +68,9 @@ namespace softWrench.sW4.Web.Controllers {
             var baseUri = ApplicationConfiguration.WfUrl;
             var requestUri = baseUri + workflowName;
             var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(), BuildKeyAttributeString(entityName, applicationItemId), siteid);
-            var response = CallRestApi(requestUri, "POST", null, msg);
+            var response = await RestUtil.CallRestApi(requestUri, "POST", null, msg);
             var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
             return new GenericResponseResult<HttpWebResponse>(response, successMessage);
-        }
-
-        private HttpWebResponse CallRestApi(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = method;
-            // headers
-            if (headers != null) {
-                headers.ForEach((e) => request.Headers[e.Key] = e.Value);
-            }
-            request.ContentType = "application/xml";
-            // write payload to requests stream
-            if (!string.IsNullOrEmpty(payload)) {
-                var body = Encoding.UTF8.GetBytes(payload);
-                request.ContentLength = body.Length;
-                using (var requestStream = request.GetRequestStream()) {
-                    requestStream.Write(body, 0, body.Length);
-                }
-            }
-            // fetch response
-            return (HttpWebResponse)request.GetResponse();
         }
 
         private string BuildKeyAttributeString(string entityName, string applicationItemId) {

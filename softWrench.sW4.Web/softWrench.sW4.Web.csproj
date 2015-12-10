@@ -330,6 +330,7 @@
     <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\I18NUtil.cs" />
     <Compile Include="Util\RequestUtil.cs" />
+    <Compile Include="Util\RestUtil.cs" />
     <Compile Include="Util\RowStampScriptHelper.cs" />
     <Content Include="apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\menu\menutemplate.web.xml">
