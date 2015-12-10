@@ -255,7 +255,6 @@ function ApplicationController($scope, $http, $log, $timeout,
         }
         scope.mode = result.mode;
         
-        
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
@@ -284,13 +283,8 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }
         $scope.requestpopup = null;
-
-        //broadcast schema for the breadcrumbs
-        $rootScope.$broadcast('schemaChange', $scope.schema, scope.datamap);
         $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
-
     };
-
 
     $scope.$on('sw_canceldetail', function (event, data, schema, msg) {
         $scope.doConfirmCancel(data, schema, "Are you sure you want to go back?");
@@ -307,6 +301,9 @@ function ApplicationController($scope, $http, $log, $timeout,
         else {
             $scope.toListSchema(data, schema);
         }
+
+        //update the crud context to update the breadcrumbs 
+        crudContextHolderService.updateCrudContext(schema, data);
     }
 
     $scope.toConfirmCancel = function (data, schema) {

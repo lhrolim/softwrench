@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
+app.directive('breadcrumb', function (contextService, $log, $timeout, recursionHelper, crudContextHolderService) {
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
@@ -105,14 +105,17 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                                 }
                             }
 
-                            if ($scope.schema != null) {
+                            var schema = crudContextHolderService.currentSchema();
+                            var datamap = crudContextHolderService.rootDataMap();
+
+                            if (schema != null) {
                                 //if the current leaf matches the current application
-                                var isParent = leafs[id].applicationContainer == $scope.schema.applicationName;
+                                var isParent = leafs[id].applicationContainer == schema.applicationName;
 
                                 //if the lcurrent leaf is likely the parent
-                                var possibleParent = leafs[id].application == $scope.schema.applicationName;
+                                var possibleParent = leafs[id].application == schema.applicationName;
                                 possibleParent = possibleParent && leafs[id].schema.toLowerCase().indexOf('list') > -1;
-                                possibleParent = possibleParent && leafs[id].title != $scope.schema.title;
+                                possibleParent = possibleParent && leafs[id].title != schema.title;
 
                                 if ((isParent || possibleParent) && childPage == null) {
                                     //add to the breadcrumb
@@ -133,17 +136,18 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                                         if (current.indexOf("Detail") > -1) {
                                             icon = 'fa fa-file-text-o';
 
-                                            if ($scope.datamap != null && $scope.datamap.fields != null) {
-                                                if ($scope.schema.userIdFieldName != null) {
-                                                    var userIdFieldName = $scope.schema.userIdFieldName;
+                                            if (datamap != null && datamap.fields != null) {
+                                                if (schema.userIdFieldName != null) {
+
+                                                    var userIdFieldName = schema.userIdFieldName;
 
                                                     if (userIdFieldName != null) {
-                                                        var userID = eval('$scope.datamap.fields.' + userIdFieldName);
+                                                        var userID = datamap.fields[userIdFieldName];
                                                     }
                                                 }
 
-                                                if ($scope.schema.idDisplayable && userID != null) {
-                                                    newPage.title = '{0} {1}'.format($scope.schema.idDisplayable, userID);
+                                                if (schema.idDisplayable && userID != null) {
+                                                    newPage.title = '{0} {1}'.format(schema.idDisplayable, userID);
                                                 }
                                             }
                                         }
@@ -221,11 +225,13 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
 
             $scope.getCurrentTitle = function () {
                 var menu = $scope.getCurrentMenu();
+                var schema = crudContextHolderService.currentSchema();
 
                 $scope.currentTitle = $scope.title;
+
                 if (menu.displacement != 'admin') {
-                    if ($scope.schema != null) {
-                        $scope.currentTitle = $scope.schema.title;
+                    if (schema != null) {
+                        $scope.currentTitle = schema.title;
                     }
                 }
             };
@@ -259,22 +265,18 @@ app.directive('breadcrumb', function (contextService, $log, recursionHelper) {
                 var currentMenu = $scope.getCurrentMenu();
                 var breadcrumbItems = $scope.getBreadcrumbItems(currentMenu);
 
-                log.debug('$scope', $scope, 'currentMenu', currentMenu, 'breadcrumbItems', breadcrumbItems);
+                log.debug('$scope', $scope);
+                log.debug('schema', crudContextHolderService.currentSchema());
+                //log.debug('datamap', crudContextHolderService.rootDataMap());
+                //log.debug('currentMenu', currentMenu);
+                log.debug('breadcrumbItems', breadcrumbItems);
+
                 $scope.breadcrumbItems = breadcrumbItems;
             };
 
             $scope.toggleOpen = function (event) {
                 $('.hamburger').toggleClass('open');
             };
-
-            $scope.$on('schemaChange', function (event, schema, datamap) {
-                //log.debug('schemaChange', datamap);
-
-                $scope.schema = schema;
-                $scope.datamap = datamap;
-                $scope.getCurrentTitle();
-                $scope.processBreadcrumb();
-            });
 
             $scope.$watch('title', function (newValue, oldValue) {
                 //log.debug('titleChange');
