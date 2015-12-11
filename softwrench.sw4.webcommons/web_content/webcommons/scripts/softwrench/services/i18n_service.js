@@ -180,6 +180,19 @@
             return placeholder
         },
 
+        getI18nRecordLabel: function (schema, datamap) {
+            if (datamap == null || datamap.fields == null || schema == null) {
+                return
+            }
+
+            var userIdFieldName = schema.userIdFieldName;
+            var userID = datamap.fields[userIdFieldName];
+
+            if (schema.idDisplayable && userID != null) {
+                return '{0} {1}'.format(schema.idDisplayable, userID);
+            }
+        },
+
         getI18nTitle: function (schema) {
             var applicationName = schema.applicationName;
             var key = applicationName + "._title." + schema.schemaId;

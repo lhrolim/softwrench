@@ -129,6 +129,12 @@ namespace softWrench.sW4.Util {
             }
         }
 
+        public static string WfUrl {
+            get {
+                return MetadataProvider.GlobalProperty("basewfURL", true);
+            }
+        }
+
         public static string WsPrefix {
             get {
                 return MetadataProvider.GlobalProperty("baseWSPrefix");
