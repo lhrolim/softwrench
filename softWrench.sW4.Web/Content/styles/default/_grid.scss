@@ -406,7 +406,7 @@ table .detaildata {
         .cell-wrapper {
             border-radius: 3px;
             display: inline-block;
-            padding: 3px 8px;
+            padding: 5px 8px 3px;
         }
     }
 }
@@ -462,6 +462,10 @@ table .detaildata {
                         top: -28px;
                         margin-right: 15px;
                         padding-left: 0;
+                    }
+
+                    &.statuscolor {
+                        padding: 4px 0 4px 50%;
                     }
                 }
             }
