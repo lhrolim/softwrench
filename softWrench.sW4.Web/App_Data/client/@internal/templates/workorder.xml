@@ -218,7 +218,7 @@
           <section orientation="horizontal">
 
             <section orientation="vertical">
-              <header displacement="ontop" label="Details" params="fieldset=true" />
+              <header displacement="ontop" label="Work Details" params="fieldset=true" />
               <renderer type="default"/>
 
               <section orientation="horizontal">
