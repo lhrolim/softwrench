@@ -194,7 +194,7 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.shouldShowTitle = function () {
-                return $scope.ismodal == "false" && $scope.schema.properties['detail.hidetitle'] != 'true';
+                return $scope.ismodal == "false" && $scope.schema.properties['detail.showtitle'] == 'true';
             }
 
             $scope.getTitle = function () {

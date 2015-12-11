@@ -1,4 +1,4 @@
-﻿(function (app, angular, $) {
+(function (app, angular, $) {
     "use strict";
     
     // inlined templates

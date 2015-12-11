@@ -143,9 +143,9 @@
 
 
         /// <summary>
-        /// If true, the title of the detail schema will be hidden
+        /// If true, the title of the detail schema will be shown
         /// </summary>
-        public static string DetailHideTitle = "detail.hidetitle";
+        public static string DetailShowTitle = "detail.showtitle";
 
         /// <summary>
         /// If true, the title of the detail schema will be hidden

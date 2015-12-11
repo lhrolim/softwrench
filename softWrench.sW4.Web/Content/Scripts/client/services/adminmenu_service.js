@@ -1,9 +1,10 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('adminMenuService', function (menuService, redirectService, contextService, logoutService) {
+app.factory('adminMenuService', function (menuService, redirectService, contextService, logoutService, crudContextHolderService) {
     return {
         doAction: function (title, controller, action, parameters, target) {
             menuService.setActiveLeaf(target);
+            crudContextHolderService.clearCrudContext();
             return redirectService.redirectToAction(title, controller, action, parameters);
         },
 
