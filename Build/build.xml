@@ -98,13 +98,19 @@
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
       <arg value="/c"></arg>
-      <arg value="npm install --save-dev"></arg>
+      <arg value="npm install"></arg>
     </exec>
     <!-- compile sass -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
       <arg value="/c"></arg>
       <arg value="grunt sass:prod --verbose"></arg>
+    </exec>
+
+    <!-- deleting node_modules folder -->
+    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+      <arg value="/c"></arg>
+      <arg value="rmdir /S /Q node_modules"></arg>
     </exec>
   </target>
 
