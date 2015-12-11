@@ -110,10 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
   </ItemGroup>
@@ -167,12 +163,6 @@
     <None Include="web_content\dashboard\styles\dashboards.scss" />
     <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
     <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\styles\dashboards.css">
-      <DependentUpon>dashboards.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\dashboard\styles\dashboards.min.css">
-      <DependentUpon>dashboards.css</DependentUpon>
-    </Content>
     <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
     <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
     <Content Include="web_content\dashboard\templates\dashboardgridpanel.html" />

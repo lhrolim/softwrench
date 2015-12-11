@@ -82,16 +82,6 @@
     <Content Include="web_content\deltadental\scripts\deltadental_srservice.js" />
     <Content Include="web_content\deltadental\scripts\deltadental_workorderservice.js" />
     <Content Include="web_content\deltadental\scripts\deltaperson_service.js" />
-    <Content Include="web_content\deltadental\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\deltadental\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="web_content\deltadental\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>

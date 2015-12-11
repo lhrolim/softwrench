@@ -46,12 +46,6 @@
     <Content Include="web_content\nasco\images\branding.png" />
     <Content Include="web_content\nasco\images\footer.jpg" />
     <Content Include="web_content\nasco\images\header-email.jpg" />
-    <Content Include="web_content\nasco\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\nasco\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <Content Include="web_content\nasco\images\header.jpg" />
     <Content Include="web_content\nasco\images\logo-byline.png" />
     <Content Include="web_content\nasco\images\logo-main.png" />
@@ -63,10 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
     <None Include="web_content\nasco\styles\branding.scss" />
