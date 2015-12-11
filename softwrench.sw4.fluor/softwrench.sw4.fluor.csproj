@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D31084AE-E36F-4328-A6E2-A92AA3ACA623}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>softwrench.sw4.fluor</RootNamespace>
+    <AssemblyName>softwrench.sw4.fluor</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="metadata\fluor\readme.txt" />
+    <Content Include="web_content\fluor\images\branding.png" />
+    <Content Include="web_content\fluor\images\footer.jpg" />
+    <Content Include="web_content\fluor\images\header-email.jpg" />
+    <Content Include="web_content\fluor\styles\branding.css">
+      <DependentUpon>branding.scss</DependentUpon>
+    </Content>
+    <Content Include="web_content\fluor\styles\branding.min.css">
+      <DependentUpon>branding.css</DependentUpon>
+    </Content>
+    <Content Include="web_content\fluor\images\header.jpg" />
+    <Content Include="web_content\fluor\images\logo-byline.png" />
+    <Content Include="web_content\fluor\images\logo-main.png" />
+    <Content Include="web_content\fluor\images\signin-lg.jpg" />
+    <Content Include="web_content\fluor\images\signin-md.jpg" />
+    <Content Include="web_content\fluor\images\signin-sm.jpg" />
+    <Content Include="web_content\fluor\images\signin-xs.jpg" />
+    <Content Include="web_content\fluor\images\signin-xxs.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <None Include="customer.placeholder" />
+    <None Include="packages.config" />
+    <None Include="web_content\fluor\styles\branding.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="classes\com\cts\fluor\configuration\" />
+    <Folder Include="classes\com\cts\fluor\connector\" />
+    <Folder Include="classes\com\cts\fluor\dataset\" />
+    <Folder Include="classes\com\cts\fluor\migration\" />
+    <Folder Include="web_content\fluor\htmls\" />
+    <Folder Include="web_content\fluor\scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{A6A14991-81DD-45B5-B5C8-154E44D84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{CE228C26-938D-4D6F-95FA-12CC5241AFB5}</Project>
+      <Name>softWrench.sW4</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
