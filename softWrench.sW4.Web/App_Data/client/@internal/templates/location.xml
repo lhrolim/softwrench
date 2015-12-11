@@ -10,6 +10,7 @@
     <entity name="location" idAttribute="locationsid">
       <attributes>
         <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
+        <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
       </attributes>
     </entity>
   </entities>
@@ -40,10 +41,12 @@
           <field attribute="classstructure_.description" label="Class Structure"/>
           <field attribute="parentlocation_.parent" label="Parent Location"/>
           <field attribute="parentlocation_.systemid" label="System"/>
-          <field attribute="children" label="Child Location(s)"/>
+          <field attribute="children" label="Child Locations"/>
+          <field attribute="assets" label="Assets"/>
           <field attribute="type" label="Type"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site"/>
+          <field attribute="orgid" hidden="true"/>
           <!--Child Locations-->
           <!--Open Work Orders-->
         </schema>
