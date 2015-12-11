@@ -46,12 +46,6 @@
     <Content Include="web_content\fluor\images\branding.png" />
     <Content Include="web_content\fluor\images\footer.jpg" />
     <Content Include="web_content\fluor\images\header-email.jpg" />
-    <Content Include="web_content\fluor\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\fluor\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <Content Include="web_content\fluor\images\header.jpg" />
     <Content Include="web_content\fluor\images\logo-byline.png" />
     <Content Include="web_content\fluor\images\logo-main.png" />
@@ -63,10 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
     <None Include="web_content\fluor\styles\branding.scss" />

@@ -47,9 +47,6 @@
     <Content Include="metadata\firstsolar\readme.txt" />
     <Content Include="web_content\firstsolar\images\footer.jpg" />
     <Content Include="web_content\firstsolar\images\header-email.jpg" />
-    <Content Include="web_content\firstsolar\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
     <Content Include="web_content\firstsolar\images\header.jpg" />
     <Content Include="web_content\firstsolar\images\logo-byline.png" />
     <Content Include="web_content\firstsolar\images\logo-main.png" />

@@ -19,7 +19,7 @@ $asset_path: "../images";
 
 .container {
     header {
-        background: $background_color url(#{$asset_path}/header.jpg) no-repeat bottom left;
+        background: $background_color url(#{$asset_path}/header.jpg) no-repeat top left;
         border-bottom: #000 1px solid;
 
         .admin-area {
