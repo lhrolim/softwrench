@@ -1,5 +1,37 @@
 /// <binding AfterBuild='sass' ProjectOpened='default' />
 module.exports = function (grunt) {
+
+    var path = grunt.option("path") || "";
+    var customer = grunt.option("customer") || "";
+
+    var filesToCompile = [
+        {
+            expand: true,
+            cwd: "Content/Customers/" + (!!customer ? customer + "/" : ""),
+            dest: "Content/Customers/" + (!!customer ? customer + "/" : ""),
+            src: ["**/*.scss"],
+            ext: ".css"
+        },
+        {
+            expand: true,
+            cwd: "Content/Shared/",
+            dest: "Content/Shared/",
+            src: ["**/*.scss"],
+            ext: ".css"
+        },
+        {
+            expand: true,
+            cwd: "Content/styles/",
+            dest: "Content/styles/",
+            src: ["**/*.scss"],
+            ext: ".css"
+        }
+    ].map(function (file) {
+        file.cwd = path + "/" + file.cwd;
+        file.dest = path + "/" + file.dest;
+        return file;
+    });
+
     grunt.initConfig({
         watch: {
             files: [
@@ -10,27 +42,7 @@ module.exports = function (grunt) {
         },
         sass: {
             config: {
-                files: [{
-                    expand: true,
-                    cwd: "Content/Customers/",
-                    dest: "Content/Customers/",
-                    src: ["**/*.scss"],
-                    ext: ".css"
-                },
-                {
-                    expand: true,
-                    cwd: "Content/Shared/",
-                    dest: "Content/Shared/",
-                    src: ["**/*.scss"],
-                    ext: ".css"
-                },
-                {
-                    expand: true,
-                    cwd: "Content/styles/",
-                    dest: "Content/styles/",
-                    src: ["**/*.scss"],
-                    ext: ".css"
-                }]
+                files: filesToCompile
             },
             dev: {
                 options: {

@@ -104,7 +104,7 @@
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
       <arg value="/c"></arg>
-      <arg value="grunt sass:prod --verbose"></arg>
+      <arg value='grunt sass:prod --path="${deploypath}" --customer="${client}" --verbose'></arg>
     </exec>
 
     <!-- deleting node_modules folder -->
