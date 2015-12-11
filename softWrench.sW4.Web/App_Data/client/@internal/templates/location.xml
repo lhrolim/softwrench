@@ -66,11 +66,11 @@
           <composition relationship="asset" label="Assets" detailschema="">
             <collectionproperties listschema="locationassets"/>
           </composition>
-          <composition relationship="locationmeter" label="Meters" detailschema="locationdetail">
-            <collectionproperties listschema="locationcomposition"/>
-          </composition>
           <composition relationship="workorder" label="Work Order History" detailschema="">
             <collectionproperties listschema="locationwolist"/>
+          </composition>
+          <composition relationship="locationmeter" label="Meters" detailschema="locationdetail">
+            <collectionproperties listschema="locationcomposition"/>
           </composition>
           <composition relationship="assettrans" label="Assets" detailschema="">
             <collectionproperties listschema="compositionlist" prefilterfunction="BuildAssettransWhereClause"/>
