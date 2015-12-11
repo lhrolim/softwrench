@@ -160,7 +160,7 @@
 
                     </ng-switch>
                 </td>
-                <td ng-if="isBatch()" ng-hide="compositionitem[compositionlistschema.idFieldName] != null">
+                <td ng-if="isBatch()" ng-hide="compositionitem[compositionlistschema.idFieldName] > 0">
                     <button class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
                 </td>
             </tr>

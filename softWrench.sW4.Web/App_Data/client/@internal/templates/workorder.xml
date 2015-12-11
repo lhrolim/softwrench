@@ -272,13 +272,12 @@
 
           </section>
 
-          
 
           <section secondarycontent="true" orientation="vertical">
 
             <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
               <collectionproperties listschema="newlist" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+              <renderer type="TABLE" params="mode=batch;"/>
             </composition>
 
             <section orientation="horizontal">
