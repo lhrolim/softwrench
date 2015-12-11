@@ -6,6 +6,13 @@
     <template path="@locationspec.xml"/>
     <template path="@assettrans.xml"/>
   </templates>
+  <entities>
+    <entity name="location" idAttribute="locationsid">
+      <attributes>
+        <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
+      </attributes>
+    </entity>
+  </entities>
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
@@ -33,6 +40,7 @@
           <field attribute="classstructure_.description" label="Class Structure"/>
           <field attribute="parentlocation_.parent" label="Parent Location"/>
           <field attribute="parentlocation_.systemid" label="System"/>
+          <field attribute="children" label="Child Location(s)"/>
           <field attribute="type" label="Type"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site"/>
