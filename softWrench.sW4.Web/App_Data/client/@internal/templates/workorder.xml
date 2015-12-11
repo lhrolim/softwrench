@@ -213,7 +213,7 @@
           </section>
 
 
-          <section id="compositions"/>
+          
           
           <section orientation="horizontal">
 
@@ -276,6 +276,11 @@
 
           <section secondarycontent="true" orientation="vertical">
 
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+              <collectionproperties listschema="newlist" autocommit="false"/>
+              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+            </composition>
+
             <section orientation="horizontal">
               <header displacement="ontop" label="Scheduling" params="fieldset=true" />
 
@@ -335,10 +340,13 @@
 
               <section id="attachmentsection"/>
             </section>
-
+            
             
 
           </section>
+
+          <section id="compositions"/>
+
 
         </schema>
 
@@ -347,13 +355,6 @@
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
               <renderer type="lookup" />
             </association>
-          </section>
-
-          <section id="compositions">
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
-              <collectionproperties listschema="newlist" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
-            </composition>
           </section>
 
 
@@ -417,11 +418,7 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
-            
-            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="eager">
-              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>
-            </composition>
+        
           </section>
           <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->

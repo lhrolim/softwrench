@@ -342,6 +342,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
 
+
+
         public AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap,
             ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request) {
 
@@ -441,35 +443,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //let's handle eventual inline compositions afterwards to avoid an eventual thread explosion
             #region inlineCompositions
 
-            tasks = new List<Task>();
-
-            if (schema.HasInlineComposition && dataMap is CrudOperationData) {
-                var crudData = dataMap as CrudOperationData;
-                var inlineCompositions = schema.Compositions().Where(c => c.Inline);
-                foreach (var composition in inlineCompositions) {
-
-                    var mode = request.IsShowMoreMode
-                        ? SchemaFetchMode.SecondaryContent
-                        : SchemaFetchMode.MainContent;
-                    var listCompositionSchema = composition.Schema.Schemas.List;
-                    var compositionAssociations = listCompositionSchema.Associations(mode);
-
-                    if (compositionAssociations.Any())
-                    {
-                        
-                        var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
-                        if (compositionData != null) {
-                            var compositeDataMap =new CompositeDatamap(compositionData);
-                            BuildAssociationOptions(compositeDataMap, listCompositionSchema, request);
-                        }
-                    }
 
 
-                }
-            }
-            if (tasks.Any()) {
-                Task.WaitAll(tasks.ToArray());
-            }
+
+
+        
+
 
 
             #endregion
@@ -483,12 +462,53 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             result.EagerOptions = eagerFetchedOptions;
             result.PreFetchLazyOptions = lazyOptions;
 
+            if (schema.HasInlineComposition && dataMap is CrudOperationData) {
+                var innerCompositions =GenerateInlineCompositionResult(dataMap, schema, request);
+                result.MergeWithOtherSchemas(innerCompositions);
+            }
 
 
             return result;
         }
 
+        private List<AssociationMainSchemaLoadResult> GenerateInlineCompositionResult(AttributeHolder dataMap, ApplicationSchemaDefinition schema,
+            IAssociationPrefetcherRequest request) {
 
+            //TODO: switch to CompositionSchemaLoadResult in order to have different eager options available
+            var inlineCompositionTasks = new List<Task>();
+
+            var result = new List<AssociationMainSchemaLoadResult>();
+
+            var crudData = dataMap as CrudOperationData;
+            var inlineCompositions = schema.Compositions().Where(c => c.Inline);
+            foreach (var composition in inlineCompositions) {
+                var mode = request.IsShowMoreMode
+                    ? SchemaFetchMode.SecondaryContent
+                    : SchemaFetchMode.MainContent;
+                var listCompositionSchema = composition.Schema.Schemas.List;
+                var compositionAssociations = listCompositionSchema.Associations(mode);
+
+                if (compositionAssociations.Any()) {
+                    var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
+                    if (compositionData != null) {
+                        var compositeDataMap = new CompositeDatamap(compositionData);
+                        var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request,composition.AssociationKey);
+                        var task = Task<AssociationMainSchemaLoadResult>.Factory.StartNew(() => BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest));
+                        inlineCompositionTasks.Add(task);
+                    }
+                }
+            }
+
+            if (!inlineCompositionTasks.Any()) {
+                return result;
+            }
+
+            Task.WaitAll(inlineCompositionTasks.ToArray());
+            foreach (var completedTask in inlineCompositionTasks) {
+                result.Add(((Task<AssociationMainSchemaLoadResult>)completedTask).Result);
+            }
+            return result;
+        }
 
 
         //        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {

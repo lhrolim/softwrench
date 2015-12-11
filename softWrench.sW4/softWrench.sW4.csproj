@@ -171,11 +171,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\API\Association\DependentAssociationLoadResult.cs" />
+    <Compile Include="Data\API\Association\InlineCompositionAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Association\Lookup\LookupOptionsFetchRequestDTO.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\BaseAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\AssociationMainSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\CompositionSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaAssociationPrefetcher.cs" />
+    <Compile Include="Data\API\Association\SchemaLoading\IAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
     <Compile Include="Data\API\Composition\PreFetchedCompositionFetchRequest.cs" />
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
