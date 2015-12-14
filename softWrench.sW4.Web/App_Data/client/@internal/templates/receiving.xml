@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <entities>
@@ -76,8 +76,9 @@
         <schema id="editdetail" parentschema="adetail" title="Receipt Details">
           <section id="siteidsection">
             <section orientation="horizontal">
-              <field attribute="ponum" label="PO#" readonly="true" requiredexpression="true" />
-              <field label="Site:" attribute="siteid" readonly="true" />
+              <renderer type="default" params="childinputsize=medium" />
+              <field attribute="ponum" label="PO#" readonly="true" requiredexpression="true" hidden="true"/>
+              <field label="Site" attribute="siteid" readonly="true" />
             </section>
           </section>
           
@@ -113,7 +114,7 @@
         </list>
 
         <detail stereotype="compositiondetail">
-          <field attribute="polinenum" label="PO Line:"/>
+          <field attribute="polinenum" label="PO Line"/>
         </detail>
       </schemas>
     </application>

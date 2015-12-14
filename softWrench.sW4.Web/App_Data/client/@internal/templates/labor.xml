@@ -35,12 +35,12 @@
           <field attribute="person_.displayname" hidden="true"/>
         </list>
         <detail>
-          <field attribute="laborid" label="Labor:"  requiredexpression="true" />
-          <field attribute="orgid" label="Labor:"  requiredexpression="true" />
-          <field attribute="laborcode" label="Labor:"  requiredexpression="true" />
-          <field attribute="personid" label="Labor:"  requiredexpression="true" />
-          <field hidden="true" label="Person:" attribute="person_.displayname" />
-          <association label="Person:" target="personid" labelfield="person.displayname" />
+          <field attribute="laborid" label="Labor"  requiredexpression="true" />
+          <field attribute="orgid" label="Labor"  requiredexpression="true" />
+          <field attribute="laborcode" label="Labor"  requiredexpression="true" />
+          <field attribute="personid" label="Labor"  requiredexpression="true" />
+          <field hidden="true" label="Person" attribute="person_.displayname" />
+          <association label="Person" target="personid" labelfield="person.displayname" />
         </detail>
       </schemas>
     </application>

@@ -25,9 +25,9 @@
           <field attribute="accountname" label="Name" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="chartofaccountsid" label="ID:"  requiredexpression="true" />
-          <field attribute="glaccount" label="Account:"  requiredexpression="true" />
-          <field attribute="accountname" label="Name:"  requiredexpression="true" />
+          <field attribute="chartofaccountsid" label="ID"  requiredexpression="true" />
+          <field attribute="glaccount" label="Account"  requiredexpression="true" />
+          <field attribute="accountname" label="Name"  requiredexpression="true" />
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
