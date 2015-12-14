@@ -123,6 +123,16 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
+
+            <!-- target -->
+            <section orientation="vertical">
+              <field attribute="targstartdate" label="Target Start Date">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+              <field attribute="targcompdate" label="Target Finish Date">
+                <renderer type="datetime" params="format=MM/dd/yyyy"/>
+              </field>
+            </section>
             
             <!-- scheduled -->
             <section orientation="vertical">
@@ -133,16 +143,6 @@
                 <renderer type="datetime" params="format=MM/dd/yyyy"/>
               </field>
             </section>         
-            
-            <!-- target -->
-            <section orientation="vertical">
-              <field attribute="targstartdate" label="Target Start Date">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>
-              <field attribute="targcompdate" label="Target Finish Date">
-                <renderer type="datetime" params="format=MM/dd/yyyy"/>
-              </field>
-            </section>          
           </section>
 
           <section orientation="horizontal">
