@@ -1439,6 +1439,10 @@
       <Project>{08b929a1-6e1c-4eb7-9357-57df9be07381}</Project>
       <Name>softwrench.sw4.ninewest</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.nisource\softwrench.sw4.nisource.csproj">
+      <Project>{e15deedc-a4c9-45d2-b548-459c5da52a14}</Project>
+      <Name>softwrench.sw4.nisource</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
       <Name>softwrench.sw4.offlineserver</Name>
