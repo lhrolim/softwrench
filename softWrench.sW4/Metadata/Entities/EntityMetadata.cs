@@ -115,7 +115,7 @@ namespace softWrench.sW4.Metadata.Entities {
             return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (entityAssociation.Collection)));
         }
 
-        public virtual ISet<EntityAssociation> NonListAssociations() {
+        public virtual ISet<EntityAssociation> NonListAssociations(bool innerCall = false) {
             return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (!entityAssociation.Collection && !entityAssociation.Reverse)));
         }
 

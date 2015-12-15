@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Data;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -18,7 +19,9 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         //key= base alias of the entity
         private List<SlicedEntityMetadata> _innerMetadatas = new List<SlicedEntityMetadata>();
 
-        public string ContextAlias { get; set; }
+        public string ContextAlias {
+            get; set;
+        }
 
 
         public SlicedEntityMetadata([NotNull] string name, [NotNull] EntitySchema schema,
@@ -32,15 +35,19 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         public List<SlicedEntityMetadata> InnerMetadatas {
-            get { return _innerMetadatas; }
-            set { _innerMetadatas = value; }
+            get {
+                return _innerMetadatas;
+            }
+            set {
+                _innerMetadatas = value;
+            }
         }
 
         public override AttributeHolder GetAttributeHolder(IEnumerable<KeyValuePair<string, object>> keyValuePairs) {
-             return new DataMap(ApplicationName, keyValuePairs.ToDictionary(pair => pair.Key, pair => pair.Value));
+            return new DataMap(ApplicationName, keyValuePairs.ToDictionary(pair => pair.Key, pair => pair.Value));
         }
 
-        public override ISet<EntityAssociation> NonListAssociations() {
+        public override ISet<EntityAssociation> NonListAssociations(bool innerCall = false) {
             var resultList = new List<EntityAssociation>();
             var directAssociations = base.NonListAssociations();
             if (!String.IsNullOrEmpty(ContextAlias)) {
@@ -59,8 +66,15 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             }
 
             foreach (var innerMetadata in InnerMetadatas) {
-                resultList.AddRange(innerMetadata.NonListAssociations());
+                resultList.AddRange(innerMetadata.NonListAssociations(true));
             }
+
+            if (!innerCall) {
+
+                var entityAssociationsNotUsedByAppAssociations = resultList.Where(r => !_appSchema.Associations().Any(a => a.AssociationKey.EqualsIc(r.Qualifier) || a.AssociationKey.EqualsIc(r.To)));
+                return new HashSet<EntityAssociation>(entityAssociationsNotUsedByAppAssociations);
+            }
+
             return new HashSet<EntityAssociation>(resultList);
         }
 
@@ -84,15 +98,21 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         public string ApplicationName {
-            get { return _appSchema.ApplicationName; }
+            get {
+                return _appSchema.ApplicationName;
+            }
         }
 
         public ApplicationSchemaDefinition AppSchema {
-            get { return _appSchema; }
+            get {
+                return _appSchema;
+            }
         }
 
         public SlicedEntityMetadata UnionSchema {
-            get { return _unionSchema; }
+            get {
+                return _unionSchema;
+            }
         }
 
         public override bool HasUnion() {
