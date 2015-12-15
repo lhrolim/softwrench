@@ -108,10 +108,6 @@
     </exec>
 
     <!-- deleting node_modules folder -->
-    <call target="rmnodemodules"></call>
-  </target>
-
-  <target name="rmnodemodules">
     <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
       <arg value="/c"></arg>
       <arg value="rmdir /S /Q node_modules"></arg>
@@ -160,7 +156,14 @@
 
   </target>
 
-  <target name="copydlls" depends="mkdir,rmnodemodules">
+  <target name="copydlls" depends="mkdir">
+    <!-- deleting node_modules folder -->
+    <exec if="${directory::exists('../softWrench.sW4.Web/node_modules')}" 
+      program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+      <arg value="/c"></arg>
+      <arg value="rmdir /S /Q node_modules"></arg>
+    </exec>
+
     <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />
