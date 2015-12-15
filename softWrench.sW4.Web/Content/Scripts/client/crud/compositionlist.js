@@ -518,6 +518,13 @@ app.directive('compositionList', function (contextService, formatService, schema
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
             $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
+                // if there is a custom list click action, do it
+                var customAction = $scope.compositionlistschema.properties["list.click.event"];
+                if (customAction) {
+                    dispatcherService.invokeServiceByString(customAction, [item]);
+                    return;
+                }
+
                 if (columnMode === "arrow" || columnMode === "singleselection") {
                     //to avoid second call
                     $event.stopImmediatePropagation();

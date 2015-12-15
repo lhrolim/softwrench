@@ -157,6 +157,10 @@
         </schema>
 
         <schema id="locationwolist" title="Work Orders" stereotype="compositionlist">
+          <properties>
+            <property key="list.click.event" value="workorderService.goToDetail"/>
+          </properties>
+          <field attribute="workorderid" hidden="true"/>
           <field attribute="wonum" label="Work Order"/>
           <field attribute="description" label="Description"/>
           <field attribute="assetnum" label="Asset"/>
