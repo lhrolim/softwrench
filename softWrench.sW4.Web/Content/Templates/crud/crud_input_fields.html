@@ -94,6 +94,7 @@
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
                  ng-class="getInputClass(fieldMetadata)">
+            
                 <div ng-switch-when="combo" class="sw-combobox-container">
 
                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
@@ -208,7 +209,8 @@
                     <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{fieldMetadata.associationKey}}" data-target="{{fieldMetadata.attribute}}" />
                     <input type="hidden" id="{{'autocomplete_' + fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
                 </div>
-                <div ng-switch-when="lookup">
+            
+                <div ng-if="fieldMetadata.rendererType == 'lookup' ||  fieldMetadata.rendererType == 'modal'">
                     <lookup-input datamap="datamap"
                                   field-metadata="fieldMetadata"
                                   schema="schema"
@@ -218,12 +220,7 @@
                                   />
                 </div>
 
-                <div ng-switch-when="modal" class="row">
-                    <lookup-input datamap="datamap" field-metadata="fieldMetadata" schema="schema"
-                                  disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                  displayablepath="{{getApplicationPah(fieldMetadata)}}"
-                                   />
-                </div>
+              
 
                 <fieldset ng-switch-when="radio">
                     <label ng-repeat="option in fieldMetadata.options" class="checkbox-inline">
@@ -428,7 +425,7 @@
                                 <div ng-switch-when="true">
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
-                                <div ng-switch-default>
+                                <div ng-switch-default ng-if="fieldMetadata.rendererType != 'lookup' &&  fieldMetadata.rendererType != 'modal'">
 
                                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
                                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>

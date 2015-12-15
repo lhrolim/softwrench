@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_lookup');
 
-app.directive('lookupModalWrapper', function ($compile) {
+app.directive('lookupModalWrapper', function ($compile,$timeout) {
     return {
         restrict: "E",
         replace: true,
@@ -15,13 +15,18 @@ app.directive('lookupModalWrapper', function ($compile) {
                 scope.datamap = {};
             }
 
-
+//
             element.append(
             "<lookup-modal lookup-obj='lookupObj'" +
                 "schema='schema' datamap='datamap'>" +
             "</lookup-modal>"
             );
-            $compile(element.contents())(scope);
+
+            $timeout(function () {
+                //lazy load the real directive gaining in performance
+                $compile(element.contents())(scope);
+                
+            }, 0, false);
         },
 
     }
