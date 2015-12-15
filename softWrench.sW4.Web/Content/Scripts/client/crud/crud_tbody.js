@@ -10,20 +10,18 @@ function griditemclick(rowNumber, columnNumber, element) {
     }
 }
 
-function defaultAppending(formattedText, updatable, rowst, column, background) {
+function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
     var st = "";
     if (updatable) {
         st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
     } else {
-
         st += '<div class="cell-wrapper"';
 
         if (background) {
-            var forground = foregroundColor(background);
-            st += 'style="background:' + background + ';color:' + forground + '">';
-        } else {
-            st += '>';
+            st += 'style="background:' + background + ';color:' + foreground + '"';
         }
+
+        st += '>';
 
         if (formattedText != null) {
             st += formattedText;
@@ -69,59 +67,6 @@ function hasDataClass(column, formattedText) {
     }
 
     return classString;
-}
-
-/// <summary>
-/// convert hex color string #rrggbb or #rgb into RGB parts
-/// </summary>
-/// <param name="hex">color value</param>
-/// <returns type="object">
-/// r: int
-/// g: int
-/// b: int
-/// </returns>
-function hexToRgb(hex) {
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
-/// <summary>
-/// calculate foreground color based on background color value
-/// based on https://24ways.org/2010/calculating-color-contrast/
-/// </summary>
-/// <param name="hex">color value</param>
-/// <returns type="string">
-/// hex color value
-/// </returns>
-function foregroundColor(hex) {
-    var backgroundRGB = hexToRgb(hex);
-
-    if (!backgroundRGB) {
-        //default to balck foreground color
-        return '#000';
-    }
-
-    //calculate foreground color based on weighted color values
-    var yiq = Math.round(((parseInt(backgroundRGB.r) * 299) + (parseInt(backgroundRGB.b) * 587) + (parseInt(backgroundRGB.g) * 114)) / 1000);
-    var black = yiq > 128;
-
-    if (black) {
-        //fine tune calculation based on straight color values
-        if (parseInt(hex.substring(1), 16) < 0xffffff / 2) {
-            black = false;
-        }
-    }
-
-    return black ? '#000' : '#fff';
 }
 
 function parseBooleanValue(attrValue) {
@@ -271,7 +216,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                                 html += "<div class=\"input-group\" data-datepicker=\"true\">";
                                 html += scope.appendDateTimeComponent(columnst, column.rendererParameters, attribute, openCalendarTooltip);
                             } else {
-                                html += defaultAppending(formattedText, updatable, rowst, column, null);
+                                html += defaultAppending(formattedText, updatable, rowst, column, null, null);
                             }
                         } else if (column.rendererType === "icon") {
                             var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
@@ -283,17 +228,16 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         else if (column.type === 'ApplicationFieldDefinition') {
                             if (!editable) {
 
-                                var text = defaultAppending(formattedText, updatable, rowst, column, null);
+                                var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
                                 //console.log(text);
                                 
                                 if (column.rendererType === 'statuscolor') {
-                                    var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
-                                    //console.log(color);
-                                    //var color = '#f00';
+                                    var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                    var foreground = statuscolorService.foregroundColor(background);
 
-                                    html += defaultAppending(formattedText, updatable, rowst, column, color);
+                                    html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);
                                 } else {
-                                    html += defaultAppending(formattedText, updatable, rowst, column, null);
+                                    html += defaultAppending(formattedText, updatable, rowst, column, null, null);
                                 }                               
                             } else {
                                 needsWatchers = true;
@@ -306,7 +250,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         else if (column.type == "OptionField") {
                             if (column.rendererParameters['filteronly'] == 'true') {
-                                html += defaultAppending(formattedText, updatable, rowst, column, null);
+                                html += defaultAppending(formattedText, updatable, rowst, column, null, null);
                             } else {
                                 if (column.rendererType == "combo") {
                                     needsWatchers = true;
