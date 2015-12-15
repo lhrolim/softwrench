@@ -47,12 +47,6 @@
     <EmbeddedResource Include="metadata\southern_unreg\metadata.xml" />
     <Content Include="web_content\southern_unreg\images\footer.jpg" />
     <Content Include="web_content\southern_unreg\images\header-email.jpg" />
-    <Content Include="web_content\southern_unreg\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\southern_unreg\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <EmbeddedResource Include="metadata\southern_unreg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -74,10 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="Dependencies\Oracle.DataAccess.dll.64bck" />
     <None Include="web_content\southern_unreg\styles\branding.scss" />

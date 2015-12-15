@@ -101,7 +101,7 @@
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section orientation="horizontal">
-            <renderer type="default" />
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketid" label="SR#:" hidden="true"/>
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field attribute="description" label="Summary:" requiredexpression="true">
@@ -176,7 +176,7 @@
               <section>
               <section orientation="horizontal">
                 <header displacement="ontop" label="Work Details" params="fieldset=true" />
-                <renderer type="default" params="childinputsize=medium" />
+                <renderer type="default" params="childinputsize=large" />
                 <!--<section id ="siteidsection"/>-->
                 <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
                   <event type="beforechange" service="srService" method="beforeChangeLocation"/>
@@ -193,8 +193,6 @@
                 <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
                   <renderer type="lookup" params="columnlabel=Name"/>
                 </association>
-              </section>
-                <section>
                   <section id="attachmentsection" />
 
                   <!--COMSW 24 required field for population purposes-->
@@ -211,24 +209,24 @@
               </section>
               <section orientation="horizontal">
                 <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-                <renderer type="default" params="childinputsize=medium" />
+  
+                <renderer type="default" params="childinputsize=large" />
                 <field attribute="targetstart" label="Target Start Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
                 <field attribute="targetfinish" label="Target Finish Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
-                <field attribute="actualstart" label="Actual Start Date:">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
-                </field>
-                <field attribute="actualfinish" label="Actual Finish Date:">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
-                </field>
-
                 <field attribute="schedstart" label="Scheduled Start Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
                 <field attribute="schedfinish" label="Scheduled Finish Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+                <field attribute="actualstart" label="Actual Start Date:">
+                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                </field>
+                <field attribute="actualfinish" label="Actual Finish Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
               </section>

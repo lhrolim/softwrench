@@ -25,8 +25,8 @@
           <field attribute="siteid" hidden="true" />
         </list>
         <detail stereotype="compositiondetail">
-          <field attribute="relatedreckey" label="Related Record Key:" />
-          <field attribute="relatedrecclass" label="Related Record Class:" />
+          <field attribute="relatedreckey" label="Related Record Key" />
+          <field attribute="relatedrecclass" label="Related Record Class" />
           <field attribute="siteid" hidden="true" />
         </detail>
         <schema id="newdetail" title="New Related Record" stereotype="detailnew" platform="web">

@@ -15,6 +15,10 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
     };
 
+    $scope.i18NInputLabel = function (fieldMetadata) {
+        return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
+    };
+
     $scope.i18NOptionField = function (option, fieldMetadata, schema) {
         return i18NService.getI18nOptionField(option, fieldMetadata, schema);
     };

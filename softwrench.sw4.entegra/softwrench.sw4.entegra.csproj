@@ -72,10 +72,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\entegra\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -85,12 +81,6 @@
     <Content Include="metadata\entegra\readme.txt" />
     <Content Include="web_content\entegra\images\logo-byline.png" />
     <Content Include="web_content\entegra\images\logo-main.png" />
-    <Content Include="web_content\entegra\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\entegra\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
     <None Include="web_content\entegra\styles\branding.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

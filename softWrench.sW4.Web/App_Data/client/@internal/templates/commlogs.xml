@@ -95,11 +95,11 @@
             <renderer type="default" params="width=25%;formatter=lower"/>
           </field>
           <field attribute="cc" hidden="true"/>
-          <field attribute="ccflag" label="Cc">
+          <field attribute="ccflag" label="CC">
             <renderer type="checkbox"  params="width=5%"/>
           </field>
           <field attribute="bcc" hidden="true"/>
-          <field attribute="bccflag" label="BCc">
+          <field attribute="bccflag" label="BCC">
             <renderer type="checkbox"  params="width=5%"/>
           </field>
           <field attribute="sendfrom" label="From">
@@ -125,30 +125,30 @@
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
-          <!--<field attribute="sendto" label="To:" requiredexpression="true">
+          <!--<field attribute="sendto" label="To" requiredexpression="true">
             <renderer type="email"/>
           </field>-->
-          <association label="To:" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
+          <association label="To" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
-          <association label="Cc:" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+          <association label="CC" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
-          <association label="BCc:" target="bcc" labelfield="2email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+          <association label="BCC" target="bcc" labelfield="2email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
           </association>
 
-          <field attribute="sendfrom" label="From:" requiredexpression="true" default="@user.email" readonly="true" >
+          <field attribute="sendfrom" label="From" requiredexpression="true" default="@user.email" readonly="true" >
             <renderer type="email"/>
           </field>
-          <field attribute="subject" label="Subject:" requiredexpression="true"/>
-          <field attribute="message" label="Message:">
+          <field attribute="subject" label="Subject" requiredexpression="true"/>
+          <field attribute="message" label="Message">
             <renderer type="richtext"/>
           </field>
-          <field label="Attachment:" attribute="attachment" >
+          <field label="Attachment" attribute="attachment" >
             <renderer type="multipleupload"/>
           </field>
 

@@ -78,14 +78,13 @@
           <field attribute="invuseline_.fromstoreloc" default="@storeloc" hidden="true"/>
           <field attribute="mode" label="Mode" qualifier="batchselector" default="true" hidden="true"/>
 
-          <association label="Site" target="siteid" labelfield="site_.description"
-                       extraprojectionvalues="description" requiredexpression="true" hideDescription="true" default="@usersite">
-            <renderer type="lookup" params="inputsize=medium" />
-            <event type="afterchange" service="invtransferService" method="afterChangeSite"/>
-          </association>
-
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
+            <association label="Site" target="siteid" labelfield="site_.description"
+             extraprojectionvalues="description" requiredexpression="true" hideDescription="true" default="@usersite">
+              <renderer type="lookup" params="inputsize=medium" />
+              <event type="afterchange" service="invtransferService" method="afterChangeSite"/>
+            </association>
             <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description"
                          extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>

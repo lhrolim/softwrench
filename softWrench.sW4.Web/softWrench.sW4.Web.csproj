@@ -640,46 +640,18 @@
     <Content Include="Content\fonts\gstatic-varela-ie9.eot" />
     <Content Include="Content\fonts\gstatic-varela-ie9local.eot" />
     <Content Include="Content\Scripts\vendor\other\tableau\tableau-2.0.0-min.js" />
-    <Content Include="Content\styles\default\application\application.css">
-      <DependentUpon>application.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\application\application.min.css">
-      <DependentUpon>application.css</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
-    <Content Include="Content\styles\default\styles.css">
-      <DependentUpon>styles.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\vendor\vendor.css">
-      <DependentUpon>vendor.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\vendor\vendor.min.css">
-      <DependentUpon>vendor.css</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\vendor\vendor.scss" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\font-awesome\fonts\FontAwesome.otf" />
-    <None Include="compilerconfig.json" />
     <Content Include="Content\styles\default\_define-password.scss" />
-    <Content Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
     <None Include="Content\styles\default\_button.scss" />
-    <Content Include="Content\styles\default\media\media.css">
-      <DependentUpon>media.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\media\media.min.css">
-      <DependentUpon>media.css</DependentUpon>
-    </Content>
     <None Include="Content\styles\default\vendor\_xeditable.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
@@ -832,6 +804,7 @@
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="Doc\scanner.txt" />
+    <Content Include="Gruntfile.js" />
     <Content Include="IBM.Data.DB2.dll" />
     <None Include="Content\styles\default\_site.scss" />
     <Content Include="favicon.ico" />
@@ -861,6 +834,7 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\softWrench QA.pubxml" />
     <Content Include="Content\Images\softWrench.gif" />
     <Content Include="Content\Images\update_24.png" />
@@ -1437,6 +1411,10 @@
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
       <Name>softwrench.sw4.firstsolar</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.fluor\softwrench.sw4.fluor.csproj">
+      <Project>{d31084ae-e36f-4328-a6e2-a92aa3aca623}</Project>
+      <Name>softwrench.sw4.fluor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>
@@ -1460,6 +1438,10 @@
     <ProjectReference Include="..\softwrench.sw4.ninewest\softwrench.sw4.ninewest.csproj">
       <Project>{08b929a1-6e1c-4eb7-9357-57df9be07381}</Project>
       <Name>softwrench.sw4.ninewest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.nisource\softwrench.sw4.nisource.csproj">
+      <Project>{e15deedc-a4c9-45d2-b548-459c5da52a14}</Project>
+      <Name>softwrench.sw4.nisource</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
