@@ -27,7 +27,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
+                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
 
             });
         }

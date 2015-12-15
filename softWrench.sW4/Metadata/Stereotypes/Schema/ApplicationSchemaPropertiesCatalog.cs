@@ -158,6 +158,16 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-     
+        #region composition
+
+        /// <summary>
+        /// Whether the inline composition starts with an initial row on screen
+        /// </summary>
+        public static string InlineCompositionStartWithData = "composition.inline.startwithentry";
+
+        #endregion
+
+
+
     }
 }

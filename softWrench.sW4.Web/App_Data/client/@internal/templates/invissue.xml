@@ -388,7 +388,7 @@
 
             <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail" showexpression="@itemnum!=null">
               <collectionproperties listschema="batchitemline" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
             </composition>
 
           </section>
