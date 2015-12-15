@@ -32,7 +32,7 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
-        <schema id="locationlist" title="Location List" stereotype="list">
+        <schema id="locationlist" title="Location Grid" stereotype="list">
           <properties>
             <property key="list.click.schema" value="locationdetail"/>
           </properties>
