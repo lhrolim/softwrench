@@ -19,12 +19,7 @@ function defaultAppending(formattedText, updatable, rowst, column, background) {
         st += '<div class="cell-wrapper"';
 
         if (background) {
-            //var backgroundRGB = hexToRgb(background);
             var forground = foregroundColor(background);
-            //var forground = foregroundColor('red');
-            //console.log(backgroundRGB);
-            //console.log(forgroundColor);
-
             st += 'style="background:' + background + ';color:' + forground + '">';
         } else {
             st += '>';
@@ -58,6 +53,12 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
     return style + " \"";
 };
 
+/// <summary>
+/// create a class based on column value
+/// </summary>
+/// <param name="column"></param>
+/// <param name="formattedText"></param>
+/// <returns type="string">html class</returns>
 function hasDataClass(column, formattedText) {
     var classString = '';
 
@@ -70,19 +71,15 @@ function hasDataClass(column, formattedText) {
     return classString;
 }
 
-//function rendererTypeClass(column) {
-////var classString = '';
-
-//    //console.log(column);
-//    //if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
-//    //    classString = 'has-data';
-//    //} else {
-//    //    classString = 'no-data';
-//    //}
-
-//    return column.rendererType;
-//}
-
+/// <summary>
+/// convert hex color string #rrggbb or #rgb into RGB parts
+/// </summary>
+/// <param name="hex">color value</param>
+/// <returns type="object">
+/// r: int
+/// g: int
+/// b: int
+/// </returns>
 function hexToRgb(hex) {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, function (m, r, g, b) {
@@ -97,24 +94,34 @@ function hexToRgb(hex) {
     } : null;
 }
 
+/// <summary>
+/// calculate foreground color based on background color value
+/// based on https://24ways.org/2010/calculating-color-contrast/
+/// </summary>
+/// <param name="hex">color value</param>
+/// <returns type="string">
+/// hex color value
+/// </returns>
 function foregroundColor(hex) {
-    //https://24ways.org/2010/calculating-color-contrast/
     var backgroundRGB = hexToRgb(hex);
 
-    if (backgroundRGB) {
-        var yiq = Math.round(((parseInt(backgroundRGB.r) * 299) + (parseInt(backgroundRGB.b) * 587) + (parseInt(backgroundRGB.g) * 114)) / 1000);
-        var black = yiq > 128;
-
-        if (black) {
-            if (parseInt(hex.substring(1), 16) < 0xffffff / 2) {
-                black = false;
-            }
-        }
-
-        return black ? '#000' : '#fff'; 
-    } else {
+    if (!backgroundRGB) {
+        //default to balck foreground color
         return '#000';
     }
+
+    //calculate foreground color based on weighted color values
+    var yiq = Math.round(((parseInt(backgroundRGB.r) * 299) + (parseInt(backgroundRGB.b) * 587) + (parseInt(backgroundRGB.g) * 114)) / 1000);
+    var black = yiq > 128;
+
+    if (black) {
+        //fine tune calculation based on straight color values
+        if (parseInt(hex.substring(1), 16) < 0xffffff / 2) {
+            black = false;
+        }
+    }
+
+    return black ? '#000' : '#fff';
 }
 
 function parseBooleanValue(attrValue) {
