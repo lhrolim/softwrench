@@ -80,7 +80,7 @@ namespace softWrench.sW4.Web.Controllers {
                 filter.PageSize = 21;
             }
             //adopting to use an association to keep same existing service
-            var result = _associationResolver.ResolveOptions(app, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
+            var result = _associationResolver.ResolveOptions(app.Schema, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
             return result;
 
         }
@@ -91,7 +91,7 @@ namespace softWrench.sW4.Web.Controllers {
         private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string filterProvider,
             string filterAttribute) {
             var registeredAssociation =
-                application.Schema.Associations.FirstOrDefault(a => a.Target.Equals(filterAttribute));
+                application.Schema.Associations().FirstOrDefault(a => a.Target.Equals(filterAttribute));
             if (registeredAssociation != null) {
                 return registeredAssociation;
             }

@@ -206,13 +206,16 @@
           </section>
 
           <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
-            <renderer type="richtext"/>
-          </field>
+              <renderer type="richtext"/>
+            </field>
 
+
+          
+          
           <section orientation="horizontal">
 
             <section orientation="vertical">
-              <header displacement="ontop" label="Asset Management" params="fieldset=true" />
+              <header displacement="ontop" label="Work Details" params="fieldset=true" />
               <renderer type="default"/>
 
               <section orientation="horizontal">
@@ -270,6 +273,11 @@
 
           <section secondarycontent="true" orientation="vertical">
 
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+              <collectionproperties listschema="newlist" autocommit="false"/>
+              <renderer type="TABLE" params="mode=batch;"/>
+            </composition>
+
             <section orientation="horizontal">
               <header displacement="ontop" label="Scheduling" params="fieldset=true" />
               
@@ -302,7 +310,7 @@
                   <renderer type="datetime" params="format=MM/dd/yyyy;"/>
                 </field>
               </section>
-              
+
             </section>
 
             <section orientation="horizontal">
@@ -330,9 +338,12 @@
               <section id="attachmentsection"/>
             </section>
 
-            <section id="compositions"/>
+            
 
           </section>
+
+            <section id="compositions"/>
+
 
         </schema>
 
@@ -343,12 +354,6 @@
             </association>
           </section>
 
-          <section id="compositions">
-            <!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations" detailschema="detail" showexpression="true">-->
-            <!--              <collectionproperties listschema="newlist" autocommit="false"/>-->
-            <!--              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>-->
-            <!--            </composition>-->
-          </section>
 
           <!--<section id="statussection">
             <field attribute="wonum" label="WO#" readonly="true">
@@ -422,10 +427,7 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
-            <!--            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations" detailschema="" showexpression="true" fetchtype="eager">-->
-            <!--              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" allowupdate="true" allowremoval="true"/>-->
-            <!--              <renderer type="TABLE" params="mode=batch;startwithentry=false"/>-->
-            <!--            </composition>-->
+        
           </section>
           <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->

@@ -7,7 +7,7 @@ namespace softWrench.sW4.Metadata.Applications {
 
 
 
-        public ApplicationMetadata(Guid? id, string name,  string title,  string entity,
+        public ApplicationMetadata(Guid? id, string name, string title, string entity,
              string idFieldName, ApplicationSchemaDefinition schema, string service, bool? auditFlag)
             : base(id, name, title, entity, idFieldName, schema, service, auditFlag) {
         }
@@ -39,5 +39,9 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
 
+        public static ApplicationMetadata FromSchema(ApplicationSchemaDefinition schema) {
+            //workaround adatper for methods that still require an ApplicationMetadata instance
+            return new ApplicationMetadata(null, schema.ApplicationName, "", "", schema.IdFieldName, schema, null, null);
+        }
     }
 }

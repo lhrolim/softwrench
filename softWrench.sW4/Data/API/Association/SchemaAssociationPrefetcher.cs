@@ -8,5 +8,6 @@ using softWrench.sW4.Metadata.Applications.Association;
 namespace softWrench.sW4.Data.API.Association {
     public class SchemaAssociationPrefetcherRequest :IAssociationPrefetcherRequest{
         public string AssociationsToFetch { get {return AssociationHelper.AllButSchema; } set {} }
+        public bool IsShowMoreMode { get; set; }
     }
 }

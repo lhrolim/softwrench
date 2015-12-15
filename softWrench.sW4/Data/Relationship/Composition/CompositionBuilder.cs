@@ -22,7 +22,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 return schema.CachedCompositions;
             }
             var compositionMetadatas = new Dictionary<string, ApplicationCompositionSchema>();
-            foreach (var composition in schema.Compositions) {
+            foreach (var composition in schema.Compositions()) {
                 compositionMetadatas.Add(composition.Relationship, DoInitializeCompositionSchemas(schema, composition, new IdentitySet()));
             }
             schema.CachedCompositions = compositionMetadatas;
@@ -52,7 +52,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             checkedCompositions.Add(composition.Relationship);
             if (compositionResult.Detail != null) {
                 //sometimes,we don´t have a detail schema, just a list one
-                foreach (var innerComposition in compositionResult.Detail.Compositions) {
+                foreach (var innerComposition in compositionResult.Detail.Compositions()) {
                     if (!checkedCompositions.Contains(innerComposition.Relationship)) {
                         //to avod infinte loop
                         DoInitializeCompositionSchemas(schema, innerComposition, checkedCompositions);
@@ -99,7 +99,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 //sometimes we might need only to see the list
                 return false;
             }
-            if (EnumerableExtensions.Any(detail.Associations) || EnumerableExtensions.Any(detail.Compositions)) {
+            if (EnumerableExtensions.Any(detail.Associations()) || EnumerableExtensions.Any(detail.Compositions())) {
                 return true;
             }
             foreach (var displayable in detail.Displayables) {

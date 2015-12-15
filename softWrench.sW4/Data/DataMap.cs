@@ -8,6 +8,7 @@ using System.Collections.Generic;
 namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
 
+        [NotNull]
         public static DataMap BlankInstance(String application) {
             return new DataMap(application, new Dictionary<string, object>(), null, true);
         }

@@ -92,7 +92,7 @@
         public const string PaginationOptions = "list.paginationoptions";
 
         /// <summary>
-        ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazy nature.
+        ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazyness nature.
         /// </summary>
         public const string PreFetchAssociations = "associationstoprefetch";
 
@@ -158,6 +158,16 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-     
+        #region composition
+
+        /// <summary>
+        /// Whether the inline composition starts with an initial row on screen
+        /// </summary>
+        public static string InlineCompositionStartWithData = "composition.inline.startwithentry";
+
+        #endregion
+
+
+
     }
 }

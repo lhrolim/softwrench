@@ -610,6 +610,10 @@ app.directive('configAssociationListInputDatamap', function () {
                 return fieldService.nonTabFields(displayables);
             };
 
+            $scope.getApplicationPah = function (fieldMetadata) {
+                return replaceAll(fieldMetadata.applicationPath,"\\.","_");
+            }
+
             $scope.getDispatchFn = function (serviceCall) {
                 var validationFunction = dispatcherService.loadServiceByString(serviceCall);
                 if (validationFunction == null) {

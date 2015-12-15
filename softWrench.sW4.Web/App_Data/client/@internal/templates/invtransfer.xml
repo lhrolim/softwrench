@@ -98,7 +98,7 @@
 
           <composition inline="true" relationship="#batchitem" label="Transfers" detailschema="transferdetail" showexpression="@itemnum!=null">
             <collectionproperties listschema="transferline" autocommit="false"/>
-            <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+            <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
 
           <!--                    <section orientation="horizontal">-->

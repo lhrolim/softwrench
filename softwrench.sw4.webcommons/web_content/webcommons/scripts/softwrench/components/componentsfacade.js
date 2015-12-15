@@ -73,21 +73,21 @@
 
         }
 
-        function digestAndrefresh(displayable, scope, newValue) {
+        function digestAndrefresh(displayable, scope, newValue,datamapId) {
             var rendererType = displayable.rendererType;
             if (rendererType !== 'autocompleteclient' && rendererType !== 'autocompleteserver' && rendererType !== 'combodropdown' && rendererType !== 'lookup' && rendererType !== 'modal') {
                 return;
             }
             try {
                 scope.$digest();
-                this.refresh(displayable, scope, true, newValue);
+                this.refresh(displayable, scope, true, newValue, datamapId);
             } catch (e) {
                 //nothing to do, just checking if digest was already in place or not, because we need angular to update screen first of all
                 //if inside a digest already, exception would be thrown --> force a timeout with false flag
                 var fn = this;
                 $timeout(
                     function () {
-                        fn.refresh(displayable, scope, true, newValue);
+                        fn.refresh(displayable, scope, true, newValue, datamapId);
                         try {
                             scope.$digest();
                         } catch (e) {
@@ -122,7 +122,7 @@
             log.debug('change focus to {0}'.format(attribute));
         };
 
-        function refresh(displayable, scope, fromDigestAndRefresh, newValue) {
+        function refresh(displayable, scope, fromDigestAndRefresh, newValue, datamapId) {
             var attribute = displayable.attribute;
 
             var log = $log.getInstance('cmpfacade#refresh',["association"]);
@@ -139,7 +139,7 @@
             } else if (rendererType === 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
             } else if (rendererType === 'lookup' || rendererType === 'modal') {
-                cmplookup.refreshFromAttribute(displayable, newValue);
+                cmplookup.refreshFromAttribute(displayable, scope.datamap, datamapId, newValue);
             }
         };
 

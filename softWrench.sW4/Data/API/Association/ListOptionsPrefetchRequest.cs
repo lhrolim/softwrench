@@ -4,5 +4,6 @@
     /// </summary>
     internal class ListOptionsPrefetchRequest : IAssociationPrefetcherRequest {
         public string AssociationsToFetch { get; set; }
+        public bool IsShowMoreMode { get; set; }
     }
 }

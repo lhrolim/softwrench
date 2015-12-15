@@ -13,7 +13,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private const string WrongMethod = "Attribute provider {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
 
-        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata application, OptionField optionField, AttributeHolder dataMap) {
+        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationSchemaDefinition schema, OptionField optionField, AttributeHolder dataMap) {
             if (!FullSatisfied(optionField, dataMap)) {
                 return null;
             }
@@ -24,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
 
             var methodName = GetMethodName(attribute);
-            var dataSet = FindDataSet(application.Name,application.Schema.SchemaId, methodName);
+            var dataSet = FindDataSet(schema.ApplicationName,schema.SchemaId, methodName);
             var mi = dataSet.GetType().GetMethod(methodName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, methodName, dataSet.GetType().Name));
@@ -32,6 +32,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (mi.GetParameters().Count() != 1 || mi.GetParameters()[0].ParameterType != typeof(OptionFieldProviderParameters)) {
                 throw new InvalidOperationException(String.Format(WrongMethod, methodName, dataSet.GetType().Name));
             }
+            var application = ApplicationMetadata.FromSchema(schema);
             var associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { new OptionFieldProviderParameters { OriginalEntity = dataMap, ApplicationMetadata = application, OptionField = optionField } });
             if (optionField.Sort) {
                 associationOptions = associationOptions.OrderBy(f => f.Label);

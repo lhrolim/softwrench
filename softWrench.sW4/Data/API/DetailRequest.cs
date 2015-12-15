@@ -37,6 +37,8 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
+        public bool IsShowMoreMode { get; set; }
+
 
         public DetailRequest() {
         }

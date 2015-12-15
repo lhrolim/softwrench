@@ -84,6 +84,7 @@
     <Compile Include="Category\CategoryUtilTest.cs" />
     <Compile Include="Category\CategoryTreeCacheTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
+    <Compile Include="Data\CompositeDatamapTest.cs" />
     <Compile Include="Data\Entities\EntityBuilderTest2.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestHapag.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PaginationUtilsTest.cs" />
     <Compile Include="Util\CompressorUtilTest.cs" />
+    <Compile Include="Util\DisplayableUtilTest.cs" />
     <Compile Include="Util\FaqTest.cs" />
     <Compile Include="Util\TestUtil.cs" />
     <Compile Include="Util\I18NResolverTest.cs" />

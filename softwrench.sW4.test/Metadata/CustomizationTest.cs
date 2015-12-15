@@ -89,18 +89,18 @@ namespace softwrench.sW4.test.Metadata {
 
             var app = MetadataProvider.Application("incident");
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
-            var compositions = detailSchema.Compositions;
+            var compositions = detailSchema.Compositions();
             var attachmentComposition = compositions.FirstOrDefault(c => c.AssociationKey == "attachment");
             Assert.IsNull(attachmentComposition);
 
-            var associations = detailSchema.Associations;
+            var associations = detailSchema.Associations();
             Assert.IsNull(associations.FirstOrDefault(c => c.Attribute == "location"));
             //This was not replaced
             Assert.IsNotNull(associations.FirstOrDefault(c => c.Attribute == "ownergroup"));
 
             Assert.AreEqual(1, associations.Count(c => c.Attribute == "owner"));
 
-            var optionFields = detailSchema.OptionFields;
+            var optionFields = detailSchema.OptionFields();
             Assert.IsNull(optionFields.FirstOrDefault(c => c.Attribute == "classstructureid"));
         }
 
@@ -112,7 +112,7 @@ namespace softwrench.sW4.test.Metadata {
             var app = MetadataProvider.Application("invissue");
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
 
-            var associations = detailSchema.Associations;
+            var associations = detailSchema.Associations();
             var issueTo = associations.FirstOrDefault(c => c.Attribute == "issueto");
             Assert.IsNotNull(issueTo);
             Assert.AreNotEqual("lookup", issueTo.RendererType);
@@ -127,7 +127,7 @@ namespace softwrench.sW4.test.Metadata {
             var app = MetadataProvider.Application("workorder");
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("editdetail"));
 
-            var associations = detailSchema.Associations;
+            var associations = detailSchema.Associations();
             var count = associations.Count(c => c.Attribute == "failurecode");
             Assert.AreEqual(1, count);
 

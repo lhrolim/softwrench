@@ -1,43 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Util {
+
+    public enum SchemaFetchMode {
+        FirstLevelOnly, MainContent, SecondaryContent, All
+    }
+
     public class DisplayableUtil {
-        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables, Boolean fetchInner = true) {
+
+
+
+        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables,
+            SchemaFetchMode schemaFetchMode = SchemaFetchMode.All, bool insideSecondary = false) {
             var resultingDisplayables = new List<T>();
 
             foreach (IApplicationDisplayable displayable in originalDisplayables) {
                 if (displayableType.IsInstanceOfType(displayable)) {
-                    resultingDisplayables.Add((T)displayable);
-                }
-                if (displayable is IApplicationDisplayableContainer) {
-                    if (fetchInner) {
-                        var container = displayable as IApplicationDisplayableContainer;
-                        resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, fetchInner));
+                    if (schemaFetchMode != SchemaFetchMode.SecondaryContent || insideSecondary) {
+                        resultingDisplayables.Add((T)displayable);
                     }
                 }
-
+                if (displayable is IApplicationDisplayableContainer && SchemaFetchMode.FirstLevelOnly != schemaFetchMode) {
+                    var container = displayable as IApplicationDisplayableContainer;
+                    var section = container as ApplicationSection;
+                    var isSecondarySection = section != null && section.SecondaryContent;
+                    if (isSecondarySection && SchemaFetchMode.MainContent.Equals(schemaFetchMode)) {
+                        //under some circustances we might not be interested in returning the secondary content displayables
+                        continue;
+                    }
+                    resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, schemaFetchMode, insideSecondary || isSecondarySection));
+                }
             }
             return resultingDisplayables;
         }
 
         public static List<IApplicationDisplayable> PerformReferenceReplacement(IEnumerable<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema,
-            ApplicationSchemaDefinition.LazyComponentDisplayableResolver componentDisplayableResolver,IEnumerable<DisplayableComponent> components=null) {
+            ApplicationSchemaDefinition.LazyComponentDisplayableResolver componentDisplayableResolver, IEnumerable<DisplayableComponent> components = null) {
 
             var realDisplayables = new List<IApplicationDisplayable>();
 
 
             foreach (var displayable in displayables) {
                 if (displayable is ReferenceDisplayable) {
-                    var reference = componentDisplayableResolver((ReferenceDisplayable)displayable, schema,components);
+                    var reference = componentDisplayableResolver((ReferenceDisplayable)displayable, schema, components);
                     if (reference == null) {
                         //interrupting things here...
                         return null;

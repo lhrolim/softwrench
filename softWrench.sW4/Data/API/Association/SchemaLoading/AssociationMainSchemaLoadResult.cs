@@ -15,7 +15,9 @@ namespace softWrench.sW4.Data.API.Association.SchemaLoading {
     public class AssociationMainSchemaLoadResult : BaseAssociationSchemaLoadResult<IEnumerable<IAssociationOption>> {
 
         [CanBeNull]
-        public IDictionary<string, CompositionSchemaLoadResult> EagerCompositionAssociations { get; set; }
+        public IDictionary<string, CompositionSchemaLoadResult> EagerCompositionAssociations {
+            get; set;
+        }
 
         public AssociationMainSchemaLoadResult(IDictionary<string, CompositionSchemaLoadResult> eagerCompositionAssociations = null) {
             EagerCompositionAssociations = eagerCompositionAssociations;
@@ -36,6 +38,13 @@ namespace softWrench.sW4.Data.API.Association.SchemaLoading {
                 PreFetchLazyOptions[associationKey] = new Dictionary<string, IAssociationOption>();
             }
             PreFetchLazyOptions[associationKey].AddRange(item.Value);
+        }
+
+        public void MergeWithOtherSchemas(List<AssociationMainSchemaLoadResult> innerCompositionsResult) {
+            //TODO: this should be replaced when we switch to CompositionSchemaLoadResult
+            foreach (var innerResult in innerCompositionsResult) {
+                innerResult.PreFetchLazyOptions.ForEach(MergeAssociation);
+            }
         }
     }
 }

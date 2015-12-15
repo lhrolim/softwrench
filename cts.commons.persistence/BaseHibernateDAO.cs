@@ -8,9 +8,12 @@ using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
 using cts.commons.simpleinjector.app;
@@ -126,6 +129,8 @@ namespace cts.commons.persistence {
             }
             return query;
         }
+
+
         [NotNull]
         public List<Dictionary<string, string>> FindByNativeQuery(String queryst, params object[] parameters) {
             IList<dynamic> queryResult;

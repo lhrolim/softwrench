@@ -11,9 +11,9 @@ namespace softwrench.sw4.amex.classes.com.cts.amex.configuration {
                 return;
             }
             facade.Register("asset", "@amexWhereClauseRegistry.RrfdListWhereClauseProvider", new WhereClauseRegisterCondition() {
-                AppContext = new ApplicationLookupContext(){
-                Schema = "rrfdlist"
-            }
+                AppContext = new ApplicationLookupContext() {
+                    Schema = "rrfdlist"
+                }
             });
         }
 
