@@ -217,7 +217,7 @@
           </section>
         </schema>
         
-        <schema parentschema="adetail" id="detail" title="Incident Details">
+        <schema parentschema="adetail" id="editdetail" title="Incident Details">
           <section id="statussection">
             <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" hidden="true"/>
             <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="false">

@@ -2,13 +2,13 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="horizontal" indexitem="SR">
 
   <reference id="servicereq"/>
-  <!--<reference id="qservicereq"/>-->
-  <!--<reference id="workorder"/>-->
-  <!--<reference id="solution"/>-->
-  <!--<reference id="change"/>-->
-  <!--<reference id="purchase"/>-->
-  <!--<reference id="Incident"/>-->
-  <!--<reference id="Inventory"/>-->
+  <reference id="qservicereq"/>
+  <reference id="workorder"/>
+  <reference id="solution"/>
+  <reference id="change"/>
+  <reference id="purchase"/>
+  <reference id="incident"/>
+  <reference id="inventory"/>
 
 </Menu>
 

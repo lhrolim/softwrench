@@ -338,7 +338,7 @@
           <section id="compositions" />
         </schema>
         
-        <schema parentschema="adetail" id="detail" stereotype="detail" mode="input" title="Purchase Request Details">
+        <schema parentschema="adetail" id="editdetail" stereotype="detail" mode="input" title="Purchase Request Details">
           <section id="compositions">
             <composition relationship="prline" label="PR Lines" ></composition>
             <commandbars>
