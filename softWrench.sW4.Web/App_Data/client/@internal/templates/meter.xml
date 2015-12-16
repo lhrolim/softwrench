@@ -68,29 +68,51 @@
       </properties>
       <schemas>
         <schema id="locationcomposition" stereotype="compositionlist" title="Meters">
+          <field attribute="sequence" label="Sequence"/>
+          <field attribute="metername" label="Meter"/>
+          
+          <field attribute="measureunitid" label="Unit of Measure"/>
+          <field attribute="active" label="Active"/>
+          
           <field attribute="locoper_.groupname" label="Meter Group"/>
           <field attribute="metergroup_.description" label="Description"/>
         </schema>
         <schema id="locationdetail" stereotype="compositiondetail" title="Meter" mode="output">
-          <field attribute="sequence" label="Sequence"/>
-          <field attribute="metername" label="Meter"/>
-          <field attribute="meter_.description" label="Description"/>
-          <field attribute="meter_.metertype" label="Meter Type"/>
-          <field attribute="measureunitid" label="Unit of Measure"/>
-          <field attribute="active" label="Active"/>
-          <field attribute="pointnum" label="Point"/>
-          <field attribute="lastreading" label="Last Reading"/>
-          <field attribute="lastreadingdate" label="Last Reading Date"/>
-          <field attribute="lastreadinginspctr" label="Last Reading Inspector"/>
-          <field attribute="remarks" label="Remarks"/>
+          <section orientation="horizontal">
+            <section orientation="vertical">
+              <field attribute="sequence" label="Sequence"/>
+              <field attribute="active" label="Active"/>
+            </section>
+            <section orientation="vertical">
+              <field attribute="metername" label="Meter"/>
+              <field attribute="pointnum" label="Point"/>
+            </section>
+            <section orientation="vertical">
+              <field attribute="meter_.description" label="Description"/>
+            </section>
+            <section orientation="vertical">
+              <field attribute="meter_.metertype" label="Meter Type"/>
+              <field attribute="measureunitid" label="Unit of Measure"/>
+            </section>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="lastreading" label="Last Reading"/>
+            <field attribute="lastreadingdate" label="Last Reading Date"/>
+            <field attribute="lastreadinginspctr" label="Last Reading Inspector"/>
+            <field attribute="remarks" label="Remarks"/>
+          </section>
           <section id="continuousmeterdetails" showexpression="@meter_.metertype == 'CONTINUOUS'">
-            <field attribute="avgcalcmethod" label="Average Calculation Method"/>
-            <field attribute="averagemethod_.description" label="Average Method Description"/>
-            <field attribute="slidingwindowsize" label="Sliding Window Size"/>
-            <field attribute="average" label="Average"/>
-            <field attribute="lifetodate" label="Life to Date for Location"/>
-            <field attribute="rollover" label="Rollover"/>
-            <field attribute="readingtype" label="Reading Type"/>
+            <section orientation="horizontal">
+              <field attribute="avgcalcmethod" label="Average Calculation Method"/>
+              <field attribute="averagemethod_.description" label="Average Method Description"/>
+              <field attribute="rollover" label="Rollover"/>
+              <field attribute="readingtype" label="Reading Type"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="slidingwindowsize" label="Sliding Window Size"/>
+              <field attribute="average" label="Average"/>
+              <field attribute="lifetodate" label="Life to Date for Location"/>
+            </section>
           </section>
         </schema>
         <schema id="composition" stereotype="compositionlist" title="Location Meter Readings">
