@@ -6,6 +6,7 @@
     <template path="@attachments.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@commlogs.xml"/>
+    <template path="@failurecode.xml"/>
   </templates>
 
   <entities>
