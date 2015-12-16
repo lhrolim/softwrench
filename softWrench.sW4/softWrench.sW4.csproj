@@ -381,13 +381,13 @@
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\CommandsXMLSourceInitializer.cs" />
-    <Compile Include="Metadata\Validator\MetadataMerger.cs" />
+    <Compile Include="Metadata\Merger\MetadataMerger.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlTargetInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
-    <Compile Include="Metadata\Validator\SchemaMerger.cs" />
+    <Compile Include="Metadata\Merger\SchemaMerger.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />

@@ -50,7 +50,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 throw new ArgumentNullException("entityMetadata");
             }
             var applicationMetadata = new List<CompleteApplicationMetadataDefinition>();
-            var parser = new XmlApplicationMetadataParser(entityMetadata, commandBars, IsSWDB());
+            var parser = new XmlApplicationMetadataParser(entityMetadata, commandBars, IsSWDB(), false);
             using (var stream = MetadataParsingUtils.GetStream(streamValidator, MetadataPath())) {
                 if (stream != null) {
                     applicationMetadata.AddRange(parser.Parse(stream));
