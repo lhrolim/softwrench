@@ -27,15 +27,7 @@
   <property key="notifications.activityStream.enabled" value="true"/>
 
 
- <environment key="dev">
-    <property key="basewsURL" value="http://10.50.100.153:9080/meaweb/wsdl/" />
-    <property key="swdb_provider" value="System.Data.SQL"/>
-    <property key="maximo_DB_provider" value="System.Data.SQL"/>
-    <property key="swdb_url" value="Data Source=10.50.100.50;Initial Catalog=swdb_dd75dev;User Id=sw;password=softwrench;" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.50;Initial Catalog=DD75DEV;User Id=MAXIMO;password=MAXIMO;" />
-  </environment>
-
-    <environment key="uat">
+  <environment key="uat">
     <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
     <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_ENT75MAX;User Id=sw;password=softwrench;" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=ENT75MAX;User Id=MAXIMO;password=MAXIMO;" />
@@ -50,5 +42,5 @@
 </Properties>
 
 
-  
+
 
