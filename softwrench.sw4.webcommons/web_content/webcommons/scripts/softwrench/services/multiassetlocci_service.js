@@ -23,8 +23,6 @@
         var service = {
             afterChangeAsset: afterChangeAsset,
             afterChangeLocation: afterChangeLocation,
-            afterChangeSequence: afterChangeSequence,
-            afterChangeProgress: afterChangeProgress
         };
 
         return service;

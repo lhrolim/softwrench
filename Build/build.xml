@@ -106,14 +106,10 @@
       <arg value="/c"></arg>
       <arg value='grunt sass:prod --path="${deploypath}" --customer="${client}" --verbose'></arg>
     </exec>
-
-    <!-- deleting node_modules folder -->
-    <!--<call target="rmnodemodules"></call>-->
   </target>
 
   <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
     <echo message="deleting 'softWrench.sW4.Web/node_modules' directory"></echo>
-    
     <!-- Nant's <delete> task solution-->
     <!-- <delete dir="../softWrench.sW4.Web/node_modules" 
       includeemptydirs="true" verbose="true" failonerror="true" 
@@ -127,7 +123,7 @@
       <arg value="rmdir /S /Q node_modules"></arg>
     </exec> -->
 
-    <!-- robocopy solution: 
+    <!-- robocopy solution (the one that works): 
       mkdir empty_dir
       robocopy empty_dir the_dir_to_delete /s /mir
       rmdir empty_dir
@@ -201,9 +197,6 @@
   </target>
 
   <target name="copydlls" depends="mkdir">
-    <!-- deleting node_modules folder before creating the fileset -->
-    <!--<call target="rmnodemodules"></call>-->
-
     <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />
