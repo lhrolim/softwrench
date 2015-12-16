@@ -140,7 +140,7 @@
       
       <echo message="using robocopy trick to delete longpaths"></echo>
       <exec program="robocopy" workingdir="../softWrench.sW4.Web" failonerror="false">
-        <arg line="temp_empty node_modules /s /mir /purge"></arg>
+        <arg line="temp_empty node_modules /s /mir /purge /njh /njs /ndl /nc /ns /nfl"></arg>
       </exec>
 
       <echo message="deleting temp_empty folder"></echo>
