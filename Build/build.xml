@@ -96,19 +96,19 @@
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
-    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+    <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
       <arg value="npm install"></arg>
     </exec>
     <!-- compile sass -->
     <echo message="installing npm dependencies"></echo>
-    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+    <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
       <arg value='grunt sass:prod --path="${deploypath}" --customer="${client}" --verbose'></arg>
     </exec>
 
     <!-- deleting node_modules folder -->
-    <call target="rmnodemodules"></call>
+    <!--<call target="rmnodemodules"></call>-->
   </target>
 
   <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
@@ -202,7 +202,7 @@
 
   <target name="copydlls" depends="mkdir">
     <!-- deleting node_modules folder before creating the fileset -->
-    <call target="rmnodemodules"></call>
+    <!--<call target="rmnodemodules"></call>-->
 
     <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
