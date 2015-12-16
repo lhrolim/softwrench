@@ -15,7 +15,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
-    public class ApplicationSchemaDefinition : BaseDefinition, IApplicationIdentifier, IApplicationDisplayableContainer {
+    public class ApplicationSchemaDefinition : BaseDefinition, IApplicationIdentifier, IApplicationDisplayableContainer, IPropertyHolder {
 
 
         public Dictionary<string, ApplicationCompositionSchema> CachedCompositions {
@@ -113,7 +113,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<string, ISet<string>> _depandantFields = new Dictionary<string, ISet<string>>();
 
-        private readonly IDictionary<string, string> _properties = new Dictionary<string, string>();
+        private IDictionary<string, string> _properties = new Dictionary<string, string>();
 
 
         public ICollection<string> _fieldWhichHaveDeps = new HashSet<string>();
@@ -409,10 +409,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public IDictionary<string, string> Properties {
+        public IDictionary<string, string> Properties
+        {
             get {
                 return _properties;
             }
+            set { _properties = value; }
         }
 
 

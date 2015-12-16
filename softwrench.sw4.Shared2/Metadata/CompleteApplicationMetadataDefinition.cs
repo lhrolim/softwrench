@@ -7,11 +7,12 @@ using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Notification;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.Notification;
 
 namespace softwrench.sW4.Shared2.Metadata {
 
-    public class CompleteApplicationMetadataDefinition : BaseDefinition, IApplicationIdentifier {
+    public class CompleteApplicationMetadataDefinition : BaseDefinition, IApplicationIdentifier, IPropertyHolder {
         public CompleteApplicationMetadataDefinition() {
         }
 
@@ -206,5 +207,10 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
 
 
+        public IDictionary<string, string> Properties
+        {
+            get { return Parameters; }
+            set { Parameters = value; }
+        }
     }
 }
