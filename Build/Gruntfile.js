@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     var path = grunt.option("path") || "";
     var customer = grunt.option("customer") || "";
     var customerPath = (!!customer ? customer + "/" : "");
-    var fullPath = !!path ? path + "/" : "";
+    var fullPath = !!path ? path + "/" : "../softWrench.sW4.Web/";
 
     var filesToCompile = [
         {
