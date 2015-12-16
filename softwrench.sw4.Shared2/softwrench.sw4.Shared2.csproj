@@ -74,6 +74,7 @@
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationFieldContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IDependableField.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IPropertyHolder.cs" />
     <Compile Include="Metadata\Applications\Schema\ReferenceDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSchemaCustomization.cs" />
     <Compile Include="Metadata\Applications\UI\FieldFilter.cs" />

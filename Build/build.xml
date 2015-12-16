@@ -96,22 +96,62 @@
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
-    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+    <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
       <arg value="npm install"></arg>
     </exec>
     <!-- compile sass -->
     <echo message="installing npm dependencies"></echo>
-    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+    <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
       <arg value='grunt sass:prod --path="${deploypath}" --customer="${client}" --verbose'></arg>
     </exec>
+  </target>
 
-    <!-- deleting node_modules folder -->
-    <exec program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
+  <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
+    <echo message="deleting 'softWrench.sW4.Web/node_modules' directory"></echo>
+    <!-- Nant's <delete> task solution-->
+    <!-- <delete dir="../softWrench.sW4.Web/node_modules" 
+      includeemptydirs="true" verbose="true" failonerror="true" 
+      if="${directory::exists('../softWrench.sW4.Web/node_modules')}">
+    </delete> -->
+
+    <!-- cmd + rmdir solution -->
+    <!-- <exec if="${directory::exists('../softWrench.sW4.Web/node_modules')}" 
+      program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
       <arg value="/c"></arg>
       <arg value="rmdir /S /Q node_modules"></arg>
-    </exec>
+    </exec> -->
+
+    <!-- robocopy solution (the one that works): 
+      mkdir empty_dir
+      robocopy empty_dir the_dir_to_delete /s /mir
+      rmdir empty_dir
+      rmdir the_dir_to_delete
+    -->
+    <if test="${directory::exists('../softWrench.sW4.Web/node_modules')}">
+      
+      <mkdir dir="../softWrench.sW4.Web/temp_empty" 
+        unless="${directory::exists('../softWrench.sW4.Web/temp_empty')}" />
+      
+      <echo message="using robocopy trick to delete longpaths"></echo>
+      <exec program="robocopy" workingdir="../softWrench.sW4.Web" failonerror="false">
+        <arg line="temp_empty node_modules /s /mir /purge /njh /njs /ndl /nc /ns /nfl"></arg>
+      </exec>
+
+      <echo message="deleting temp_empty folder"></echo>
+      <exec program="cmd" workingdir="../softWrench.sW4.Web">
+        <arg value="/c"></arg>
+        <arg value="rmdir temp_empty /S /Q"></arg>
+      </exec>
+
+      <echo message="deleting node_modules folder"></echo>
+      <exec program="cmd" workingdir="../softWrench.sW4.Web">
+        <arg value="/c"></arg>
+        <arg value="rmdir node_modules /S /Q"></arg>
+      </exec>
+    </if>
+
   </target>
 
   <target name="test">
@@ -157,13 +197,6 @@
   </target>
 
   <target name="copydlls" depends="mkdir">
-    <!-- deleting node_modules folder -->
-    <exec if="${directory::exists('../softWrench.sW4.Web/node_modules')}" 
-      program="cmd" workingdir="../softWrench.sW4.Web" failonerror="true">
-      <arg value="/c"></arg>
-      <arg value="rmdir /S /Q node_modules"></arg>
-    </exec>
-
     <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />

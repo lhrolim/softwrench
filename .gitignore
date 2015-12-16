@@ -66,9 +66,11 @@ GitTfs/git2.*
 *.DS_Store
 
 # SASS Files
-softWrench.sW4.web/node_modules/
-softWrench.sW4.web/.sass-cache/
+softWrench.sW4.Web/node_modules/
+softWrench.sW4.Web/.sass-cache/
 **/content/styles/**/*.css
 **/content/styles/**/*.css.map
 **/web_content/**/*.css
 **/web_content/**/*.css.map
+Build/node_modules/
+Build/.sass-cache/

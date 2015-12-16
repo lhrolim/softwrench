@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
@@ -130,6 +131,20 @@ namespace softwrench.sW4.test.Metadata {
             var associations = detailSchema.Associations();
             var count = associations.Count(c => c.Attribute == "failurecode");
             Assert.AreEqual(1, count);
+
+
+        }
+
+
+        [TestMethod]
+        public void TestPropertyCustomizationSWWEB1948() {
+
+
+            var app = MetadataProvider.Application("servicerequest");
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("editdetail"));
+
+            Assert.AreEqual("true",detailSchema.GetProperty(ApplicationSchemaPropertiesCatalog.DetailShowTitle));
+
 
 
         }

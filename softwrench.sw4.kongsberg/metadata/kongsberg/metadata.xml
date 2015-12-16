@@ -1205,10 +1205,7 @@
             <renderer type="datetime" params="width=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=6%" />
-          </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status" />
+            <renderer type="statuscolor" params="width=10%;grid=servicerequest;column=status" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -1692,9 +1689,8 @@
           <field attribute="reportedpriority" label="Reported Priority"/>
           <field attribute="owner" label="Owner"/>
           <field attribute="ownergroup" label="Owner Group"/>
-          <field attribute="status" label="Status"/>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=incident;column=status"/>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="grid=incident;column=status"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -2770,8 +2766,8 @@
           <field attribute="siteid" label="Site">
             <renderer type="default"/>
           </field>
-          <field attribute="status" label="Status" >
-            <renderer type="default"/>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="grid=solution;column=status" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
