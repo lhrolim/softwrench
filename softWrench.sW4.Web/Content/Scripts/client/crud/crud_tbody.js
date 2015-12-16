@@ -10,12 +10,18 @@ function griditemclick(rowNumber, columnNumber, element) {
     }
 }
 
-function defaultAppending(formattedText, updatable, rowst, column) {
+function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
     var st = "";
     if (updatable) {
         st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
     } else {
-        st += '<div class="cell-wrapper">';
+        st += '<div class="cell-wrapper"';
+
+        if (background) {
+            st += 'style="background:' + background + ';color:' + foreground + '"';
+        }
+
+        st += '>';
 
         if (formattedText != null) {
             st += formattedText;
@@ -45,6 +51,12 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
     return style + " \"";
 };
 
+/// <summary>
+/// create a class based on column value
+/// </summary>
+/// <param name="column"></param>
+/// <param name="formattedText"></param>
+/// <returns type="string">html class</returns>
 function hasDataClass(column, formattedText) {
     var classString = '';
 
@@ -179,7 +191,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         var isHidden = hiddencolumnArray[j];
 
-                        html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText));
+                        html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4} {5}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
                         html += "data-title='{0}'".format(column.label);
                         html += ">";
                         if (column.rendererType === 'color') {
@@ -204,7 +216,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                                 html += "<div class=\"input-group\" data-datepicker=\"true\">";
                                 html += scope.appendDateTimeComponent(columnst, column.rendererParameters, attribute, openCalendarTooltip);
                             } else {
-                                html += defaultAppending(formattedText, updatable, rowst, column);
+                                html += defaultAppending(formattedText, updatable, rowst, column, null, null);
                             }
                         } else if (column.rendererType === "icon") {
                             var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
@@ -215,7 +227,18 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         else if (column.type === 'ApplicationFieldDefinition') {
                             if (!editable) {
-                                html += defaultAppending(formattedText, updatable, rowst, column);
+
+                                var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
+                                //console.log(text);
+                                
+                                if (column.rendererType === 'statuscolor') {
+                                    var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                    var foreground = statuscolorService.foregroundColor(background);
+
+                                    html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);
+                                } else {
+                                    html += defaultAppending(formattedText, updatable, rowst, column, null, null);
+                                }                               
                             } else {
                                 needsWatchers = true;
                                 var maxlength = column.rendererParameters['maxlength'];
@@ -227,7 +250,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         else if (column.type == "OptionField") {
                             if (column.rendererParameters['filteronly'] == 'true') {
-                                html += defaultAppending(formattedText, updatable, rowst, column);
+                                html += defaultAppending(formattedText, updatable, rowst, column, null, null);
                             } else {
                                 if (column.rendererType == "combo") {
                                     needsWatchers = true;
@@ -265,17 +288,11 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 });
             }
 
-
-
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                 if (panelid == scope.panelid) {
                     scope.refreshGrid(datamap, schema);
                 }
             });
-
-
-
-
 
             $injector.invoke(BaseList, this, {
                 $scope: scope,

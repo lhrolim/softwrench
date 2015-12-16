@@ -61,6 +61,59 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             contextService.insertIntoContext("statuscolor", jsonString);
         },
 
+        /// <summary>
+        /// convert hex color string #rrggbb or #rgb into RGB parts
+        /// </summary>
+        /// <param name="hex">color value</param>
+        /// <returns type="object">
+        /// r: int
+        /// g: int
+        /// b: int
+        /// </returns>
+        hexToRgb: function (hex) {
+            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                return r + r + g + g + b + b;
+            });
+
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        },
+
+        /// <summary>
+        /// calculate foreground color based on background color value
+        /// based on https://24ways.org/2010/calculating-color-contrast/
+        /// </summary>
+        /// <param name="hex">color value</param>
+        /// <returns type="string">
+        /// hex color value
+        /// </returns>
+        foregroundColor: function (hex) {
+            var backgroundRGB = this.hexToRgb(hex);
+
+            if (!backgroundRGB) {
+                //default to balck foreground color
+                return '#000';
+            }
+
+            //calculate foreground color based on weighted color values
+            var yiq = Math.round(((parseInt(backgroundRGB.r) * 299) + (parseInt(backgroundRGB.b) * 587) + (parseInt(backgroundRGB.g) * 114)) / 1000);
+            var black = yiq > 128;
+
+            if (black) {
+                //fine tune calculation based on straight color values
+                if (parseInt(hex.substring(1), 16) < 0xffffff / 2) {
+                    black = false;
+                }
+            }
+
+            return black ? '#000' : '#fff';
+        }
+
     };
 
 }]);
