@@ -1,4 +1,4 @@
-/// <binding AfterBuild='sass' ProjectOpened='default' />
+/// <binding AfterBuild='sass:dev' ProjectOpened='default' />
 module.exports = function (grunt) {
 
     var path = grunt.option("path") || "";
@@ -40,25 +40,24 @@ module.exports = function (grunt) {
                 "Content/Customers/**/*.scss",
                 "Content/Shared/**/*.scss",
                 "Content/styles/**/*.scss"],
-            tasks: ["sass"]
+            tasks: ["sass:dev"]
         },
         sass: {
             config: {
                 files: filesToCompile
-            },
-            dev: {
-                options: {
-                    sourceMap: true
-                },
-                files: "<%= sass.config.files %>"
             },
             prod: {
                 options: {
                     sourceMap: false
                 },
                 files: "<%= sass.config.files %>"
+            },
+            dev: {
+                options: {
+                    sourceMap: true
+                },
+                files: "<%= sass.config.files %>"
             }
-
         }
     });
 
@@ -68,4 +67,5 @@ module.exports = function (grunt) {
 
     // define default task
     grunt.registerTask("default", ["sass", "watch"]);
+    //grunt.registerTask("default:dev", ["sass:dev", "watch"]);
 };
