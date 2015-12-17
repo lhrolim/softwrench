@@ -120,6 +120,10 @@ app.directive('messagesection', function (contextService,$timeout,logoutService)
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
+
+            $scope.closeSuccessMessage = function() {
+                hideSuccessMessage();
+            }
         }
     };
 });

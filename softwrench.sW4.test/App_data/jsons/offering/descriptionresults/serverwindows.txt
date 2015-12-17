@@ -5,7 +5,7 @@ Geplantes Produktionsende:   28/05/2015 22:50
 Betriebsart / LPAR-Typ:   Production 7x24
 CPU:   1vCPU
 Memory:   2GB
-Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C):   111GB
+Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partition C):   111GB
 Disk (E:):   120GB
 Host Name:   KFDCtest
 OS:   Windows Server 2008 Standard Edition

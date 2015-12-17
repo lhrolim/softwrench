@@ -18,7 +18,7 @@ app.directive('printModal', function ($log, contextService) {
 
             $scope.print = function () {
                 if (Array.isArray($scope.datamap)) {
-                    printService.printDetailedList($scope.printSchema, $scope.datamap, $scope.buildPrintOptions());
+                    printService.printDetailedList($scope.printSchema, $scope.datamap,$scope.searchSort, $scope.buildPrintOptions());
                 } else {
                     printService.printDetail($scope.printSchema, $scope.datamap, $scope.buildPrintOptions());
                 }
@@ -44,10 +44,11 @@ app.directive('printModal', function ($log, contextService) {
 
             });
 
-            $scope.$on('sw_showprintmodal', function (event, schema) {
+            $scope.$on('sw_showprintmodal', function (event, schema,searchSort) {
                 $log.getInstance('printmodal').info("starting printing modal");
                 $scope.compositionstoprint = {};
                 $scope.printSchema = schema;
+                $scope.searchSort = searchSort;
 
                 var tabs = tabsService.tabsDisplayables($scope.printSchema);
                 for (var i = 0; i < tabs.length ; i++) {

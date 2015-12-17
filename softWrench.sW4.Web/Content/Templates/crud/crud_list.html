@@ -39,7 +39,8 @@
                                            data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                            data-show-ignoretime="true"
                                            data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
-                                           placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" ng-enter="filterSearch(column.attribute,$event)" />
+                                           placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" 
+                                           data-date-enter="filterSearch(column.attribute,$event)" />
                                     <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{getOpenCalendarTooltip(column.attribute)}}"><i class="glyphicon glyphicon-calendar"></i></span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
@@ -112,7 +113,7 @@
     </div>
 
     <div ng-if="isCommand(schema)">
-        <commandbar schema="schema" mode="schema.mode" datamap="datamap" />
+        <commandbar schema="schema" mode="schema.mode" datamap="datamap" search-sort="searchSort" />
     </div>
 </form>
 

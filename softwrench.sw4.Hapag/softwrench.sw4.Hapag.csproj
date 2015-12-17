@@ -117,7 +117,10 @@
     <Compile Include="Data\RoleType.cs" />
     <Compile Include="Data\ProfileType.cs" />
     <Compile Include="Data\R0017WhereClauseProvider.cs" />
+    <Compile Include="Data\Scheduler\Jobs\Helper\ClassStructureConfigFileReader.cs" />
+    <Compile Include="Data\Scheduler\Jobs\Helper\R102ExtractorHelper.cs" />
     <Compile Include="Data\Scheduler\Jobs\Helper\R101ExtractorHelper.cs" />
+    <Compile Include="Data\Scheduler\Jobs\RI102ExtractorJob.cs" />
     <Compile Include="Data\Scheduler\Jobs\RI101ExtractorJob.cs" />
     <Compile Include="Data\Sync\HapagPersonGroupConstants.cs" />
     <Compile Include="Data\Sync\HapagPersonGroupHelper.cs" />

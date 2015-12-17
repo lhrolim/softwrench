@@ -6,7 +6,7 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            if (scope.schema.mode != 'output' && scope.isSelectEnabled) {
+            if (scope.schema.mode !== 'output' && scope.isSelectEnabled) {
                 element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
             }
             if (scope.$last === true) {

@@ -72,7 +72,7 @@ namespace softWrench.sW4.Data.Search {
 
         public DateTime GetAsDate {
             get {
-                DateTime? temp = DateUtil.Parse(Value.ToString());
+                var temp = DateUtil.Parse(Value.ToString());
                 return temp != null ? temp.Value : new DateTime();
             }
         }

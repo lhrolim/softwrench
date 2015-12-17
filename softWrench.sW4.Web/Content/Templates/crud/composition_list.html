@@ -91,7 +91,7 @@
         <div class="col-lg-12 hapag-align-button" style="padding-top: 5px">
             <!--This button will only be show at this position in case of an inline composition.
                 Otherwise, it shoul join the default command bar-->
-            <button type="button" id="additem" class="btn commandButton" ng-click="newDetailFn()" ng-show="allowButton(collectionproperties.allowInsertion)">
+            <button type="button" id="additem" class="btn commandButton" ng-click="newDetailFn($event)" ng-show="allowButton(collectionproperties.allowInsertion)">
                 <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N(relationship + '.add','Add ' + title)}}
             </button>
 
@@ -107,7 +107,7 @@
                 savefn="save()"
                 cancelfn="cancel(previousdata,previousschema)" />
 
-    <div ng-if="newDetail" style="margin-top: 10px">
+    <div ng-if="newDetail" class="js_compositionnewitem" style="margin-top: 10px">
 
         <new-item-input displayables="compositiondetailschema.displayables"
                         elementid="inputComposition"

@@ -74,9 +74,7 @@ app.directive('crudBody', function (contextService) {
             associationService, $timeout, dispatcherService) {
 
             $scope.$name = 'crudbody' + ($scope.ismodal == "false" ? 'modal' : '');
-
-
-
+            contextService.insertIntoContext("sw:crudbody:scrolltop", true);
 
 
             $scope.getFormattedValue = function (value, column) {
@@ -102,20 +100,27 @@ app.directive('crudBody', function (contextService) {
                 }
             };
             $scope.isNotHapagTest = function () {
-                if ($rootScope.clientName != 'hapag')
-                    return true;
-            }
+                return $rootScope.clientName !== 'hapag';
+            };
             $scope.tabsDisplayables = function (schema) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+            $scope.$on('sw_bodyrenderedevent', function (parentElementId) {
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
-                //make sure we are seeing the top of the grid 
-                window.scrollTo(0, 0);
+                // make sure we are seeing the top of the grid 
+                // unless it is prevented
+                var scrollTop = contextService.fetchFromContext("sw:crudbody:scrolltop", false, false);
+                if (!!scrollTop && scrollTop !== "false") {
+                    window.scrollTo(0, 0);
+                } else {
+                    // do not scroll and reset to default behaviour
+                    contextService.insertIntoContext("sw:crudbody:scrolltop", true);
+                }
+
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
                     var data = {

@@ -11,7 +11,8 @@
             localschema: '=',
             cancelfn: '&',
             savefn: '&',
-            datamap: '='
+            datamap: '=',
+            searchSort: '='
         },
 
         controller: function ($scope, $http, $element, $log, $rootScope, printService, i18NService, commandService, redirectService, alertService) {

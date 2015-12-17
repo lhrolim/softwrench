@@ -153,14 +153,15 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             });
         },
         
-        printDetailedList: function (schema, datamap, printOptions) {
+        printDetailedList: function (schema, datamap,searchSort, printOptions) {
 
+            searchSort = searchSort || {};
             var printSchema = schema.printSchema != null ? schema.printSchema : schema;
 
             if (printSchema.hasNonInlineComposition && printOptions === undefined) {
                 //this case, we have to choose which extra compositions to choose, so we will open the print modal
                 //open print modal...
-                $rootScope.$broadcast("sw_showprintmodal", printSchema);
+                $rootScope.$broadcast("sw_showprintmodal", printSchema, searchSort);
                 return;
             }
 
@@ -182,7 +183,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             searchData[printSchema.idFieldName] =  ids.join(',');
             searchOperator[printSchema.idFieldName] = searchService.getSearchOperationById('EQ');
 
-            parameters.searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator, {});
+            parameters.searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, {});
             parameters.searchDTO.pageSize = ids.length;
 
             parameters.searchDTO.compositionsToFetch = [];

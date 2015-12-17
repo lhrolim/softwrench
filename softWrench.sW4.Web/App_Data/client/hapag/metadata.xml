@@ -110,12 +110,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <attribute name="noid" type="varchar" required="false" query="case when (!@parent is not null) then !@parent else '' end || ' ' || !@assetnum"/>
         <attribute name="computername" type="varchar" required="false" query="CASE WHEN LOCATE('//',!@Description) > 0 THEN LTRIM(RTRIM(SUBSTR(!@Description,1,LOCATE('//',!@Description)-1))) ELSE LTRIM(RTRIM(!@Description)) END"/>
+        <attribute name="upper_computername" type="varchar" required="false" query="CASE WHEN LOCATE('//',!@Description) > 0 THEN UPPER(LTRIM(RTRIM(SUBSTR(!@Description,1,LOCATE('//',!@Description)-1)))) ELSE UPPER(LTRIM(RTRIM(!@Description))) END"/>
         <attribute name="hlagdescription" type="varchar" required="false" query="CASE WHEN LOCATE('//',!@Description) > 0 THEN LTRIM(RTRIM(SUBSTR(!@Description, LOCATE('//', !@Description)+3))) ELSE LTRIM(RTRIM(!@Description)) END" />
         <attribute name="hlagdescription2" type="varchar" required="false" query="'('||!@assetnum ||') ' || !@Description || case when !@serialnum is null then '' else ' // ' || !@serialnum end " />
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagswd" type="varchar" required="false" query="CASE WHEN assetloccommswd_.commodity = 'HLC-0007' THEN 'Yes' ELSE 'No' END"/>
         <attribute name="hlagscanclient" type="varchar" required="false" query="CASE WHEN assetloccommscanclient_.commodity = 'HLC-0006' THEN 'Yes' ELSE 'No' END"/>
         <attribute name="ownedby" type="varchar" required="false" query="@assetReportControlWhereClauseProvider.GetCommodityOwnedByWhere"/>
+        
 
         <attribute name="assetcategory" type="varchar" query="COALESCE(classstructure_category_.description,'')" />
         <attribute name="assetregion" type="varchar" query="COALESCE(aucisnotowner_person_.department,'')" />
@@ -346,7 +348,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <entity name="wochange" idAttribute="wonum">
       <attributes>
-        <attribute name="hlagchangesummary" type="varchar" required="false" query="CASE WHEN (relatedsr_.relatedreckey IS NOT NULL and relatedsr_sr_.DESCRIPTION is NOT NULL) THEN relatedsr_sr_.DESCRIPTION WHEN (sr_.ticketid IS NOT NULL and sr_.DESCRIPTION IS NOT NULL) THEN sr_.DESCRIPTION ELSE !@description END" />
+        <attribute name="hlagchangesummary" type="varchar" required="false" query="CASE WHEN (!@description is not null) then !@description when (relatedsr_.relatedreckey IS NOT NULL and relatedsr_sr_.DESCRIPTION is NOT NULL) THEN relatedsr_sr_.DESCRIPTION WHEN (sr_.ticketid IS NOT NULL and sr_.DESCRIPTION IS NOT NULL) THEN sr_.DESCRIPTION ELSE !@description END" />
         <attribute name="hlagchangeticketid" type="varchar" required="false" query="CASE WHEN sr_.ticketid IS NOT NULL THEN sr_.ticketid ELSE relatedsr_.relatedreckey END" />
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagsrid" type="varchar" required="false" query="CASE WHEN !@ORIGRECORDCLASS IS NOT NULL AND !@ORIGRECORDCLASS = 'SR' THEN !@ORIGRECORDID ELSE '' END"/>
@@ -897,7 +899,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <reference id="R017RequiredFields"/>
           <commands>
-            <command id="print" label="Print" stereotype="print" service="reportservice" method="printSelected" parameters="schema,datamap" enableexpression="$scope:shouldCommandBeEnabled"/>
+            <command id="print" label="Print" stereotype="print" service="reportservice" method="printSelected" parameters="schema,datamap,searchSort" enableexpression="$scope:shouldCommandBeEnabled"/>
             <command id="cancel" label="Close" stereotype="cancel" service="srsummaryService" method="redirectToHapagHome" />
             <command id="selectAll" label="Select All" method="selectAll" service="reportservice" parameters="schema,datamap" />
             <command id="deselectAll" label="Deselct All" method="deselectAll" service="reportservice" parameters="schema,datamap"/>
@@ -1077,7 +1079,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="servicename" value="Windows"/>
           </properties>
           <section id="diskdata">
-            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
+            <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partition C)" attribute="disksizec" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
               <renderer type="default" params="append=GB"/>
             </field>
             <field label="Disk (E:)" attribute="disksizee" required="true" tooltip="Bitte definieren Sie die gewünschte Größe der Partition E">
@@ -2255,6 +2257,9 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <composition relationship="worklog" label="Work Log" printschema="printschema" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
+          <composition relationship="attachment" label="Attachment" printschema="detailPrint">
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+          </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="detail" printschema="list">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
           </composition>
@@ -3032,6 +3037,30 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
 
+        </schema>
+
+        <schema id="RI102Export" stereotype="list">
+          <field label="Country" attribute="location_pluspservaddr_.country">
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
+          </field>
+          <field label="Loc Code" attribute="hlagpluspcustomer">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Street Address" attribute="location_pluspservaddr_.streetaddress">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+         <field label="Floor" attribute="location_.floor">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Room" attribute="location_.room">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Computer Name" attribute="computername">
+            <renderer type="default" params="minwidth=80px;excelwidth=50"/>
+          </field>
+          <field label="New Location" attribute="#rI102newlocation">
+            <renderer type="default" params="minwidth=80px;excelwidth=50"/>
+          </field>
         </schema>
 
         <schema id="assetlistreport" stereotype="list">

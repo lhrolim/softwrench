@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
-using SpreadsheetLight;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using System.Text.RegularExpressions;
+using NHibernate.Linq;
+using softwrench.sw4.Shared2.Util;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 
-namespace softWrench.sW4.Web.Util {
+namespace softWrench.sW4.Util {
     public class ExcelUtil : ISingletonComponent {
 
-        private readonly Dictionary<String, String> _cellStyleDictionary;
-        private readonly Dictionary<String, String> _changeCellStyleDictionary;
+        private readonly Dictionary<string, string> _cellStyleDictionary;
+        private readonly Dictionary<string, string> _changeCellStyleDictionary;
 
         private readonly I18NResolver _i18NResolver;
 
@@ -76,6 +78,33 @@ namespace softWrench.sW4.Web.Util {
             _changeCellStyleDictionary = new Dictionary<string, string>{
                 {"ACC_CAT", "6"}
              };
+        }
+
+
+        public byte[] ConvertGridToCsv(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows, Func<AttributeHolder, ApplicationFieldDefinition,string, string> ColumnValueDelegate = null) {
+            var csv = new StringBuilder();
+            var enumerableFields = schema.Fields.Where(ShouldShowField());
+            var fields = enumerableFields as IList<ApplicationFieldDefinition> ?? enumerableFields.ToList();
+            // HEADER: line of comma separated labels
+            var header = string.Join(",", fields.Select(field => GetI18NLabel(field, schema.Name)));
+            csv.AppendLine(header);
+            // ROWS
+            rows.ForEach(item => {
+                var row = new StringBuilder();
+                var values = fields.Select(field => {
+                    var data = GetValueAsString(item, field);
+                    if (ColumnValueDelegate != null) {
+                        data = ColumnValueDelegate(item, field,data);
+                    }
+                    var displayableData = AsDisplayableData(data, field, user);
+                    return AsCsvCompliantData(displayableData);
+                });
+                row.Append(string.Join(",", values));
+                csv.AppendLine(row.ToString());
+            });
+            // dump to byte array
+            return Encoding.UTF8.GetBytes(csv.ToString());
+//            return csv.ToString().GetBytes();
         }
 
         public byte[] ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
@@ -150,7 +179,7 @@ namespace softWrench.sW4.Web.Util {
 
             // create sheetdata element
             writer.WriteStartElement(new SheetData());
-          
+
             var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
             stylesPart.Stylesheet = new Stylesheet();
 
@@ -171,16 +200,76 @@ namespace softWrench.sW4.Web.Util {
 
             // cell format list
             CreateCellFormats(stylesPart);
-            
+
             rowIdx = 1;
             return worksheetpart;
+        }
+
+        /// <summary>
+        /// Return a string that conforms to CSV rules:
+        /// https://en.wikipedia.org/wiki/Comma-separated_values#Basic_rules
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private string AsCsvCompliantData(string data) {
+            var hasQuotes = data.Contains("\"");
+            var hasLineBreak = data.Contains("\n") || data.Contains("\r");
+            var hasComma = data.Contains(",");
+            if (hasQuotes) {
+                return "\"" + data.Replace("\"", "\"\"") + "\"";
+            }
+            if (hasComma || hasLineBreak) {
+                return "\"" + data + "\"";
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// Gets the data in the field as a string. Handles edge cases (numbers, #, etc).
+        /// </summary>
+        /// <param name="holder"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private string GetValueAsString(AttributeHolder holder, IDefaultValueApplicationDisplayable field) {
+            var attributes = holder.Attributes;
+            object dataAux;
+            attributes.TryGetValue(field.Attribute, out dataAux);
+            if (dataAux == null && field.Attribute.StartsWith("#") && char.IsNumber(field.Attribute[1])) {
+                attributes.TryGetValue(field.Attribute.Substring(2), out dataAux);
+            }
+            return dataAux == null ? string.Empty : dataAux.ToString();
+        }
+
+        /// <summary>
+        /// Returns a string that can be diaplayed in a report from a raw string data, 
+        /// handling date formatting and magic strings/numbers/codes.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="field"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private string AsDisplayableData(string data, IApplicationDisplayable field, InMemoryUser user) {
+            DateTime dtTimeAux;
+            var formatToUse = "dd/MM/yyyy HH:mm";
+            if (field.RendererParameters.ContainsKey("format")) {
+                formatToUse = field.RendererParameters["format"];
+            }
+            var dateParsed = DateTime.TryParse(data, out dtTimeAux);
+            var dataToCell = data;
+            if (dateParsed) {
+                dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
+            }
+            if (dataToCell == "-666") {
+                //this magic number should never be displayed! 
+                //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                dataToCell = "";
+            }
+            return dataToCell;
         }
 
         private void DoWriteRows(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows, int rowIdx,
             OpenXmlWriter writer, IEnumerable<ApplicationFieldDefinition> applicationFields) {
             foreach (var item in rows) {
-                var attributes = item.Attributes;
-
                 // create new row
                 var xmlAttributes = new List<OpenXmlAttribute>
                 {
@@ -190,14 +279,7 @@ namespace softWrench.sW4.Web.Util {
 
                 var nonHiddenFields = applicationFields.Where(ShouldShowField());
                 foreach (var applicationField in nonHiddenFields) {
-                    object dataAux;
-                    attributes.TryGetValue(applicationField.Attribute, out dataAux);
-                    if (dataAux == null && applicationField.Attribute.StartsWith("#") &&
-                        Char.IsNumber(applicationField.Attribute[1])) {
-                        attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
-                    }
-
-                    var data = dataAux == null ? string.Empty : dataAux.ToString();
+                    var data = GetValueAsString(item, applicationField);
 
                     xmlAttributes = new List<OpenXmlAttribute> { new OpenXmlAttribute("t", null, "str") };
                     // this is the data type ("t"), with CellValues.String ("str")
@@ -226,21 +308,7 @@ namespace softWrench.sW4.Web.Util {
                     // start a cell
                     writer.WriteStartElement(new Cell(), xmlAttributes);
                     // write cell content
-                    DateTime dtTimeAux;
-                    var formatToUse = "dd/MM/yyyy HH:mm";
-                    if (applicationField.RendererParameters.ContainsKey("format")) {
-                        formatToUse = applicationField.RendererParameters["format"];
-                    }
-                    var dateParsed = DateTime.TryParse(data, out dtTimeAux);
-                    var dataToCell = data;
-                    if (dateParsed) {
-                        dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
-                    }
-                    if (dataToCell == "-666") {
-                        //this magic number should never be displayed! 
-                        //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                        dataToCell = "";
-                    }
+                    var dataToCell = AsDisplayableData(data, applicationField, user);
                     writer.WriteElement(new CellValue(dataToCell));
                     // end cell
                     writer.WriteEndElement();
@@ -338,7 +406,7 @@ namespace softWrench.sW4.Web.Util {
             stylesPart.Stylesheet.CellFormats.Count = 8;
         }
 
-        private void createCellFormat(WorkbookStylesPart stylesPart, UInt32 formatId, UInt32 fontId, UInt32 borderId, UInt32 fillId, bool applyFill) {
+        private void createCellFormat(WorkbookStylesPart stylesPart, uint formatId, uint fontId, uint borderId, uint fillId, bool applyFill) {
             stylesPart.Stylesheet.CellFormats.AppendChild(
                 new CellFormat {
                     FormatId = formatId, FontId = fontId, BorderId = borderId, FillId = fillId, ApplyFill = applyFill

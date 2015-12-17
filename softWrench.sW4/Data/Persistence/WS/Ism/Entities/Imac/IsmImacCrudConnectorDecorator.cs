@@ -41,6 +41,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
             var webServiceObject = (ServiceIncident)maximoTemplateData.IntegrationObject;
             var classificationId = jsonObject.GetAttribute("classificationid") as string;
+            ISMAttachmentHandler.HandleAttachmentsForUpdate(jsonObject, webServiceObject);
             webServiceObject.Problem.System = classificationId;
         }
 
