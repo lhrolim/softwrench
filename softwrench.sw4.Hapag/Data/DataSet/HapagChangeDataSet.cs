@@ -152,6 +152,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             foreach (var status in wostatuse) {
                 if (status["status"].EqualsIc("AUTH")) {
                     latestAuthStatusDate = status["changedate"] as DateTime?;
+                    break;
                 }
             }
             if (latestAuthStatusDate == null) {
