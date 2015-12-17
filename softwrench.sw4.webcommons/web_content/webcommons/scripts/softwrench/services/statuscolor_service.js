@@ -96,26 +96,13 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             var backgroundRGB = this.hexToRgb(hex);
 
             if (!backgroundRGB) {
-                //default to balck foreground color
+                //default to black foreground color
                 return '#000';
             }
 
-            //calculate foreground color based on weighted color values
-            var yiq = Math.round(((parseInt(backgroundRGB.r) * 299) + (parseInt(backgroundRGB.b) * 587) + (parseInt(backgroundRGB.g) * 114)) / 1000);
-            var black = yiq > 128;
-
-            if (black) {
-                //fine tune calculation based on straight color values
-                if (parseInt(hex.substring(1), 16) < 0xffffff / 2) {
-                    black = false;
-                }
-            }
-
-            return black ? '#000' : '#fff';
+            return parseInt(hex.substring(1), 16) > 0xffffff / 2 ? '#000' : '#fff';
         }
-
     };
-
 }]);
 
 })(modules);
