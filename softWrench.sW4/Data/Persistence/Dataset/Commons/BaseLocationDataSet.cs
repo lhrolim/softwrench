@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using Quartz.Util;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
@@ -37,6 +39,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 			                                        For XML PATH ('')
 		                                          ), 3, 1000) [hierarchypath]
                                                 from classificationhierarchy{1} ch2";
+
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
+        {
+            var result = base.GetApplicationDetail(application, user, request);
+
+            result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
+
+            return result;
+        }
+
         public SearchRequestDto BuildAssettransWhereClause(CompositionPreFilterFunctionParameters parameter) {
             var originalEntity = parameter.OriginalEntity;
             var location = originalEntity.GetAttribute("location");
@@ -73,6 +85,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
             }
             return result;
+        }
+
+        public SearchRequestDto FilterLocationHierarchy(CompositionPreFilterFunctionParameters parameter)
+        {
+            var systemid = parameter.OriginalEntity.GetAttribute("parentlocation_.systemid");
+            var where = "systemid = '{0}'".FormatInvariant(systemid);
+            parameter.BASEDto.AppendWhereClause(where);
+            return parameter.BASEDto;
         }
 
         private List<Dictionary<string, string>> GetClassstructureHierarchyPath(List<string> classificationids) {

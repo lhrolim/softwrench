@@ -7,6 +7,11 @@
           <field attribute="classstructure_.hierarchypath" label="Classification"/>
           <field attribute="classstructure_.description" label="Class Description"/>
           <field attribute="classstructure_.classificationid" hidden="true"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </schema>
         <schema id="compositiondetail" title="Location Specification Detail" stereotype="compositiondetail">
           <field attribute="assetattrid" label="Attribute:"/>

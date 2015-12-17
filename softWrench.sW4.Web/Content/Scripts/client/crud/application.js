@@ -157,7 +157,7 @@ function ApplicationController($scope, $http, $log, $timeout,
         parameters.key.schemaId = schemaId;
         parameters.key.mode = mode;
         parameters.key.platform = platform();
-        parameters.customParameters = {};
+        parameters.customParameters = parameters.customParameters ? parameters.customParameters : {};
         parameters.title = title;
 
         $scope.applicationname = applicationName;

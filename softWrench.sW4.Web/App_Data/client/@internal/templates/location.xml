@@ -35,6 +35,7 @@
         <schema id="locationlist" title="Location Grid" stereotype="list">
           <properties>
             <property key="list.click.schema" value="locationdetail"/>
+            <property key="list.click.customparams" value="parentlocation_.systemid,parentlocation_.parent"/>
           </properties>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>
@@ -79,26 +80,31 @@
           </section>
           
           <composition relationship="parentlocation" label="Parent" detailschema="" inline="true">
-            <collectionproperties listschema="locationparentlist" allowcreation="false"/>
+            <collectionproperties listschema="locationparentlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
           </composition>
           <composition relationship="childlocation" label="Children" detailschema="" inline="true">
-            <collectionproperties listschema="locationchildlist" allowcreation="false"/>
+            <collectionproperties listschema="locationchildlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
           </composition>
-          <composition relationship="asset" label="Assets" detailschema="">
-            <collectionproperties listschema="locationassets"/>
+          <composition relationship="asset" label="Assets" detailschema="" rendermode="output">
+            <collectionproperties listschema="locationassets" allowcreation="false" allowupdate="false" allowremoval="false"/>
           </composition>
-          <composition relationship="workorder" label="Work Order History" detailschema="">
-            <collectionproperties listschema="locationwolist"/>
+          <composition relationship="workorder" label="Work Order History" detailschema="" rendermode="output">
+            <collectionproperties listschema="locationwolist" allowcreation="false" allowupdate="false" allowremoval="false"/>
           </composition>
-          <composition relationship="assettrans" label="History" detailschema="">
-            <collectionproperties listschema="compositionlist" prefilterfunction="BuildAssettransWhereClause"/>
+          <composition relationship="assettrans" label="History" detailschema="" rendermode="output">
+            <collectionproperties listschema="compositionlist" allowcreation="false" allowupdate="false" allowremoval="false" prefilterfunction="BuildAssettransWhereClause"/>
           </composition>
-          <composition relationship="locationmeter" label="Meters" detailschema="locationdetail">
-            <collectionproperties listschema="locationcomposition" orderbyfield="sequence"/>
+          <composition relationship="locationmeter" label="Meters" detailschema="locationdetail" rendermode="output">
+            <collectionproperties listschema="locationcomposition" allowcreation="false" allowupdate="false" allowremoval="false" orderbyfield="sequence"/>
           </composition>
-          <composition relationship="locationspec" label="Specifications" detailschema="compositiondetail">
-            <collectionproperties listschema="compositionlist"/>
+          <composition relationship="locationspec" label="Specifications" detailschema="compositiondetail" rendermode="output">
+            <collectionproperties listschema="compositionlist"  allowcreation="false" allowupdate="false" allowremoval="false"/>
           </composition>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>

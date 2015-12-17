@@ -14,6 +14,11 @@
           <field attribute="toloc" label="To Location"/>
           <field attribute="fromparent" label="From Parent"/>
           <field attribute="toparent" label="To Parent"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
