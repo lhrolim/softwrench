@@ -70,12 +70,10 @@
         <schema id="locationcomposition" stereotype="compositionlist" title="Meters">
           <field attribute="sequence" label="Sequence"/>
           <field attribute="metername" label="Meter"/>
-          
+          <field attribute="meter_.description" label="Description"/>
+          <field attribute="meter_.metertype" label="Meter Type"/>
           <field attribute="measureunitid" label="Unit of Measure"/>
           <field attribute="active" label="Active"/>
-          
-          <field attribute="locoper_.groupname" label="Meter Group"/>
-          <field attribute="metergroup_.description" label="Description"/>
         </schema>
         <schema id="locationdetail" stereotype="compositiondetail" title="Meter" mode="output">
           <section orientation="horizontal">

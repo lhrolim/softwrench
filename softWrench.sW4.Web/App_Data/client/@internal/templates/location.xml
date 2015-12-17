@@ -94,7 +94,7 @@
             <collectionproperties listschema="compositionlist" prefilterfunction="BuildAssettransWhereClause"/>
           </composition>
           <composition relationship="locationmeter" label="Meters" detailschema="locationdetail">
-            <collectionproperties listschema="locationcomposition"/>
+            <collectionproperties listschema="locationcomposition" orderbyfield="sequence"/>
           </composition>
           <composition relationship="locationspec" label="Specifications" detailschema="compositiondetail">
             <collectionproperties listschema="compositionlist"/>
