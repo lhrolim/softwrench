@@ -168,8 +168,9 @@
                 var jsonString = angular.toJson(jsonData);
                 log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
                 return $http.post(redirectURL, jsonString).success(function (data) {
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data.data, mode, applicationName);
-                    return $q.when(data.data.resultObject);
+                    var localData = data.data ? data.data : data;
+                    $rootScope.$broadcast("sw_redirectapplicationsuccess", localData, mode, applicationName);
+                    return $q.when(localData.resultObject);
                 });
             }
         };

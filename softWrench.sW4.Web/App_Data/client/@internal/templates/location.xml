@@ -101,6 +101,12 @@
             <collectionproperties listschema="compositionlist"  allowcreation="false" allowupdate="false" allowremoval="false"/>
           </composition>
           <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
+                          parameters="schema,datamap" service="locationService" method="dispatchWO"/>
+              </container>
+            </commandgroup>
             <commandgroup position="detailform">
               <removecommand id="save"/>
             </commandgroup>
