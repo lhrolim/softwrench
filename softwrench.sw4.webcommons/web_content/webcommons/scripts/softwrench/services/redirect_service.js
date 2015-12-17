@@ -167,10 +167,10 @@
             } else {
                 var jsonString = angular.toJson(jsonData);
                 log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
-                return $http.post(redirectURL, jsonString).success(function (data) {
-                    var localData = data.data ? data.data : data;
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", localData, mode, applicationName);
-                    return $q.when(localData.resultObject);
+                return $http.post(redirectURL, jsonString).success(function (httpResponse) {
+                    httpResponse = httpResponse.data ? httpResponse.data : httpResponse;
+                    $rootScope.$broadcast("sw_redirectapplicationsuccess", httpResponse, mode, applicationName);
+                    return $q.when(httpResponse.resultObject);
                 });
             }
         };
