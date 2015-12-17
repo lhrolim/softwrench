@@ -10,6 +10,7 @@
           </properties>-->
           <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
+          <field attribute="isprimary" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterAssets"/>

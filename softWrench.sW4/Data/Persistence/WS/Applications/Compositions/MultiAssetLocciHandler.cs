@@ -24,11 +24,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             WsUtil.CloneArray(dirtyEntries, rootObject, "MULTIASSETLOCCI", delegate (object integrationObject, CrudOperationData crudData) {
                 var multiid = EntityRepository.GetNextEntityId(entity.EntityMetadata);
                 WsUtil.SetValueIfNull(integrationObject, "multiid", multiid,false,true);
+                WsUtil.SetValueIfNull(integrationObject, "ISPRIMARY", false);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
-
             });
         }
 

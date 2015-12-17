@@ -99,6 +99,13 @@
           <relationshipAttribute from="workorderid" to="ownerid" primary="true" />
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
         </relationship>
+        <relationship to="multiassetlocci" collection="true">
+          <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
+          <relationshipAttribute from="woclass" to="RECORDCLASS" />
+          <relationshipAttribute from="siteid" to="worksiteid" />
+          <!--we need to exclde primary entries to keep consistency with maximo behaviour-->
+          <relationshipAttribute to="ISPRIMARY" literal="0"/>
+        </relationship>
 
       </relationships>
       <connectorParameters>

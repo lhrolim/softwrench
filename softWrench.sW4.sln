@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7F0343DC-37A4-41A3-A5E6-773600FA2F1A}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,7 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3FBB2C5
 	ProjectSection(SolutionItems) = preProject
 		Build\build.xml = Build\build.xml
 		Build\Builds.build.proj = Build\Builds.build.proj
+		Build\Gruntfile.js = Build\Gruntfile.js
 		Build\Notes.txt = Build\Notes.txt
+		Build\package.json = Build\package.json
 		Build\refreshdb.xml = Build\refreshdb.xml
 		Build\rmtables.sql = Build\rmtables.sql
 		Build\SharedBuild.targets = Build\SharedBuild.targets
