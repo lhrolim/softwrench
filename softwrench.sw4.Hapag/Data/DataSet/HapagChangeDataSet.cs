@@ -127,11 +127,16 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             approval["#shouldshowaction"] = user.HasPersonGroup(approvalGroup); ;
 
             if (apprWl != null || rejWl != null) {
+
+                Log.DebugFormat("Specific approval or rejected worklog found");
+
                 approval[c.ChangeByColumn] = apprWl != null ? apprWl[c.CreateByColumn] : rejWl[c.CreateByColumn];
                 approval[c.ChangeDateColumn] = apprWl != null ? apprWl[c.CreateDate] : rejWl[c.CreateDate];
                 approval[c.StatusColumn] = apprWl != null ? c.ApprovedStatus : c.RejectedStatus;
                 approval["#shouldshowaction"] = false;
             } else if (anyrejWl != null) {
+
+                Log.DebugFormat("At least one rejected worklog found scenario");
                 //if there´s a rejected worklog on the level, then all groups should be rejected, except the ones that might have approved it already...
                 approval[c.StatusColumn] = c.RejectedStatus;
                 //HAP-993 if any of the groups rejected it, we should no longer display the actions
@@ -153,11 +158,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 return worklogs;
             }
 
+            Log.DebugFormat("Auth status date found {0}".Fmt(latestAuthStatusDate));
+
             //remove any worklogs older than the last date that the change has been marked as AUTH
             var resultList = new List<Dictionary<string, object>>();
             foreach (var worklog in worklogs) {
                 var wlDate = worklog["itdcreatedate"] as DateTime?;
                 if (wlDate > latestAuthStatusDate) {
+                    Log.DebugFormat("Adding worklog {0}, with date {1} to list",worklog["worklogid"], worklog["itdcreatedate"]);
                     resultList.Add(worklog);
                 }
             }
