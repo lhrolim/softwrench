@@ -48,13 +48,15 @@ module.exports = function (grunt) {
             },
             prod: {
                 options: {
-                    sourceMap: false
+                    sourceMap: false,
+                    outputStyle: "compressed"
                 },
                 files: "<%= sass.config.files %>"
             },
             dev: {
                 options: {
-                    sourceMap: true
+                    sourceMap: true,
+                    outputStyle: "compact",
                 },
                 files: "<%= sass.config.files %>"
             }
@@ -67,5 +69,4 @@ module.exports = function (grunt) {
 
     // define default task
     grunt.registerTask("default", ["sass", "watch"]);
-    //grunt.registerTask("default:dev", ["sass:dev", "watch"]);
 };
