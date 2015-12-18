@@ -617,11 +617,10 @@
     <Compile Include="SPF\RouteParameterManager.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
     <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
-    <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
-    <Compile Include="Util\CollectionExtensions.cs" />
+    <Compile Include="Util\IesiCollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
     <Compile Include="Util\CompressionUtil.cs" />
     <Compile Include="Util\ConversionUtil.cs" />

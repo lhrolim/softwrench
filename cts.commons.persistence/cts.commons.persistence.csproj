@@ -76,6 +76,7 @@
     <Compile Include="IBaseAuditEntity.cs" />
     <Compile Include="IBaseEntity.cs" />
     <Compile Include="ISWDBHibernateDAO.cs" />
+    <Compile Include="SessionManagerWrapper.cs" />
     <Compile Include="Util\BooleanToIntUserType.cs" />
     <Compile Include="Util\HibernateUtil.cs" />
     <Compile Include="IPaginationData.cs" />

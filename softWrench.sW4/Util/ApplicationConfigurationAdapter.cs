@@ -3,7 +3,7 @@ using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
 
 namespace softWrench.sW4.Util {
-    public class ApplicationConfigurationAdapter : IApplicationConfiguration, ISingletonComponent {
+    public class ApplicationConfigurationAdapter : IApplicationConfiguration {
         public bool IsDB2(DBType maximo) {
             return ApplicationConfiguration.IsDB2(maximo);
         }
@@ -20,5 +20,7 @@ namespace softWrench.sW4.Util {
         {
             return ApplicationConfiguration.ClientName;
         }
+
+        public bool IsUnitTest { get { return ApplicationConfiguration.IsUnitTest; } }
     }
 }

@@ -11,5 +11,6 @@ namespace cts.commons.simpleinjector.app
         DBMS? LookupDBMS(DBType dbtype);
         bool IsOracle(DBType maximo);
         string GetClientKey();
+        bool IsUnitTest { get; }
     }
 }
