@@ -14,15 +14,24 @@
           </commandbars>
         </schema>
         <schema id="compositiondetail" title="Location Specification Detail" stereotype="compositiondetail">
-          <field attribute="assetattrid" label="Attribute:"/>
-          <field attribute="assetattribute_.description" label="Asset Attribute Description:"/>
-          <field attribute="assetattribute_.datatype" label="Data Type:"/>
-          <field attribute="measureunitid" label="Unit of Measure:"/>
-          <field attribute="section" label="Section:"/>
-          <field attribute="alnvalue" label="Alphanumeric Value:"/>
-          <field attribute="numvalue" label="Numeric Value:"/>
-          <field attribute="classspec_.inheritedfrom" label="Inherited From:"/>
-          <field attribute="classspec_.applydownhier" label="Apply Down Hierarchy:"/>
+          <section orientation="horizontal">
+            <field attribute="assetattrid" label="Attribute:"/>
+            <field attribute="assetattribute_.description" label="Asset Attribute Description:"/>
+            <field attribute="assetattribute_.datatype" label="Data Type:"/>
+            <field attribute="measureunitid" label="Unit of Measure:"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="section" label="Section:"/>
+            <field attribute="alnvalue" label="Alphanumeric Value:"/>
+            <field attribute="numvalue" label="Numeric Value:"/>
+            <field attribute="tablevalue" label="Table Value:"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="classspec_.inheritedfrom" label="Inherited From:"/>
+            <field attribute="classspec_.applydownhier" label="Apply Down Hierarchy:">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+          </section>
         </schema>
       </schemas>
     </application>

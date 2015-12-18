@@ -40,6 +40,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 		                                          ), 3, 1000) [hierarchypath]
                                                 from classificationhierarchy{1} ch2";
 
+        /// <summary>
+        /// Populate the result object for the detail page with the systemid from the list grid so that we know which related records to display.
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="user"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
         {
             var result = base.GetApplicationDetail(application, user, request);
@@ -49,6 +56,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return result;
         }
 
+        /// <summary>
+        /// There is no way of using an OR for a relation ship on the entity metadata so we add a custom where caluse.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public SearchRequestDto BuildAssettransWhereClause(CompositionPreFilterFunctionParameters parameter) {
             var originalEntity = parameter.OriginalEntity;
             var location = originalEntity.GetAttribute("location");
@@ -67,6 +79,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return parameter.BASEDto;
         }
 
+        /// <summary>
+        /// The locationspec composition list requires a field that lists the hierarchy of the classifications in a single string delimited with /'s
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="request"></param>
+        /// <param name="currentData"></param>
+        /// <returns></returns>
         public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
 
@@ -87,6 +106,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return result;
         }
 
+        /// <summary>
+        /// Additional where clause so that we only see the related records with the systemid that was selected on the list grid.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public SearchRequestDto FilterLocationHierarchy(CompositionPreFilterFunctionParameters parameter)
         {
             var systemid = parameter.OriginalEntity.GetAttribute("parentlocation_.systemid");

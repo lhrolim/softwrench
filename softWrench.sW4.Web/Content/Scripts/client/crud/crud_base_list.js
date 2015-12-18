@@ -172,14 +172,16 @@ function BaseList($scope, formatService, expressionService, searchService, field
 
     $scope.getCustomParameters = function (schema, rowdm) {
         var customParams = {};
-        var customParamFields = schema.properties["list.click.customparams"].replace(" ", "").split(",");
-        for (var param in customParamFields) {
-            if (!customParamFields.hasOwnProperty(param)) {
-                continue;
+        if (schema.properties["list.click.customparams"]) {
+            var customParamFields = schema.properties["list.click.customparams"].replace(" ", "").split(",");
+            for (var param in customParamFields) {
+                if (!customParamFields.hasOwnProperty(param)) {
+                    continue;
+                }
+                customParams[param] = {};
+                customParams[param]["key"] = customParamFields[param];
+                customParams[param]["value"] = rowdm.fields[customParamFields[param]];
             }
-            customParams[param] = {};
-            customParams[param]["key"] = customParamFields[param];
-            customParams[param]["value"] = rowdm.fields[customParamFields[param]];
         }
         return customParams;
     }

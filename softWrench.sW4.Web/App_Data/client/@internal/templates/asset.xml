@@ -42,7 +42,9 @@
           <field attribute="parentasset_.assetnum" label="Parent"/>
           <field attribute="parentasset_.description" label="Parent Description"/>
           <field attribute="itemnum" label="Rotating Item"/>
-          <field attribute="isrunning" label="Asset Up?"/>
+          <field attribute="isrunning" label="Asset Up?">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
           <field attribute="calnum" label="Calendar"/>
           <commandbars>
             <commandgroup position="compositionbottom">

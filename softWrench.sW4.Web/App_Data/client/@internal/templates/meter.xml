@@ -86,7 +86,9 @@
           <section orientation="horizontal">
             <section orientation="vertical">
               <field attribute="sequence" label="Sequence"/>
-              <field attribute="active" label="Active"/>
+              <field attribute="active" label="Active">
+                <renderer type="default" params="formatter=numberToBoolean"/>
+              </field>
             </section>
             <section orientation="vertical">
               <field attribute="metername" label="Meter"/>

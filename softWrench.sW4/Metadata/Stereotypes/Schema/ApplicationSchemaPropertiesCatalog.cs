@@ -158,6 +158,10 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-     
+
+        /// <summary>
+        /// A comma delimited list of attributes that should be passed from the selected rows datamap to the backend during the GET call after the line is clicked.
+        /// </summary>
+        public static string ListClickCustomParams = "list.click.customparams";
     }
 }
