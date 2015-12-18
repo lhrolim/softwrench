@@ -2,15 +2,13 @@
 module.exports = function (grunt) {
 
     var path = grunt.option("path") || "";
-    var customer = grunt.option("customer") || "";
-    var customerPath = (!!customer ? customer + "/" : "");
     var fullPath = !!path ? path + "/" : "";
 
     var filesToCompile = [
         {
             expand: true,
-            cwd: "Content/Customers/" + customerPath,
-            dest: "Content/Customers/" + customerPath,
+            cwd: "Content/Customers/",
+            dest: "Content/Customers/",
             src: ["**/*.scss"],
             ext: ".css"
         },
