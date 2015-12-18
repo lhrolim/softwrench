@@ -127,7 +127,9 @@
     <Content Include="web_content\manchester\images\logo-main.png" />
     <Content Include="web_content\manchester\images\signin-branding.png" />
     <Content Include="web_content\manchester\images\signin.jpg" />
-    <None Include="web_content\manchester\styles\branding.scss" />
+    <None Include="web_content\manchester\styles\branding.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
