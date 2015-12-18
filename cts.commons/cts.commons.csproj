@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\AuthUtils.cs" />
+    <Compile Include="Util\BaseReflectionUtil.cs" />
     <Compile Include="Util\CollectionExtensions.cs" />
     <Compile Include="Util\CompressionUtil.cs" />
     <Compile Include="Util\DateUtil.cs" />

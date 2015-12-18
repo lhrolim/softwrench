@@ -1,5 +1,4 @@
-﻿using cts.commons.portable.Util;
-using log4net;
+﻿using log4net;
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
@@ -15,11 +14,10 @@ using System.Linq;
 using System.Reflection;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using JetBrains.Annotations;
-using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Util;
 using FlushMode = NHibernate.FlushMode;
 
 namespace cts.commons.persistence {
@@ -31,27 +29,27 @@ namespace cts.commons.persistence {
 
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly ISessionManager _sessionManager;
-        protected HibernateUtil _hibernateUtil;
+        protected HibernateUtil HibernateUtil;
 
 
         [SuppressMessage("ReSharper", "DoNotCallOverridableMethodsInConstructor")]
-        protected BaseHibernateDAO(IApplicationConfiguration applicationConfiguration, HibernateUtil hibernateUtil) {
+        protected BaseHibernateDAO([NotNull]IApplicationConfiguration applicationConfiguration,HibernateUtil hibernateUtil) {
             _applicationConfiguration = applicationConfiguration;
-            _hibernateUtil = hibernateUtil;
+            HibernateUtil = hibernateUtil;
             _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies());
         }
 
         
-
+        [CanBeNull]
         protected virtual IEnumerable<Assembly> GetListOfAssemblies() {
             return new[] { Assembly.GetCallingAssembly() };
         }
-
+        [NotNull]
         protected abstract string GetDialect();
-
+        [NotNull]
         protected abstract string GetDriverName();
 
-
+        [NotNull]
         protected abstract string GetConnectionString();
 
 

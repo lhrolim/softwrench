@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3FBB2C5
 		Build\Builds.build.proj = Build\Builds.build.proj
 		Build\Gruntfile.js = Build\Gruntfile.js
 		Build\Notes.txt = Build\Notes.txt
+		nuget.txt = nuget.txt
 		Build\package.json = Build\package.json
 		Build\refreshdb.xml = Build\refreshdb.xml
 		Build\rmtables.sql = Build\rmtables.sql

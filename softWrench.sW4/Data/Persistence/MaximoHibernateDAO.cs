@@ -33,11 +33,11 @@ namespace softWrench.sW4.Data.Persistence {
 
 
         protected override string GetDialect() {
-            return _hibernateUtil.HibernateDialect(DBType.Maximo);
+            return HibernateUtil.HibernateDialect(DBType.Maximo);
         }
 
         protected override string GetDriverName() {
-            return _hibernateUtil.HibernateDriverName(DBType.Maximo);
+            return HibernateUtil.HibernateDriverName(DBType.Maximo);
         }
 
         protected override string GetConnectionString() {
@@ -47,12 +47,12 @@ namespace softWrench.sW4.Data.Persistence {
         protected override ILog GetLog() {
             return Log;
         }
-      
+
 
         protected override IEnumerable<Assembly> GetListOfAssemblies() {
             return null;
         }
 
-     
+
     }
 }

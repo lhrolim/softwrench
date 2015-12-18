@@ -16,11 +16,14 @@ namespace softWrench.sW4.Util {
             return ApplicationConfiguration.IsOracle(maximo);
         }
 
-        public string GetClientKey()
-        {
+        public string GetClientKey() {
             return ApplicationConfiguration.ClientName;
         }
 
-        public bool IsUnitTest { get { return ApplicationConfiguration.IsUnitTest; } }
+        public bool IsUnitTest {
+            get {
+                return ApplicationConfiguration.IsUnitTest;
+            }
+        }
     }
 }

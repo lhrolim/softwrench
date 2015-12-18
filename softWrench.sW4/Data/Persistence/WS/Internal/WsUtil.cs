@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using cts.commons.Util;
 using r = softWrench.sW4.Util.ReflectionUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
@@ -118,7 +119,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object SetValue(object baseObject, string propertyName, object value, Boolean markSpecified = false) {
-            var propDescriptor = ReflectionUtil.PropertyDescriptor(baseObject, propertyName);
+            var propDescriptor = BaseReflectionUtil.PropertyDescriptor(baseObject, propertyName);
             if (propDescriptor == null) {
                 if (ApplicationConfiguration.IsLocal()) {
                     Log.WarnFormat("property {0} not found on object {1}. Review metadata config or maximo config",
