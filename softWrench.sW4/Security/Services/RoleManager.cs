@@ -50,7 +50,7 @@ namespace softWrench.sW4.Security.Services {
         public static void DeleteRole(Role role)
         {
             var dao = SWDBHibernateDAO.GetInstance();
-            using (ISession session = SWDBHibernateDAO.CurrentSession()) {
+            using (ISession session = SWDBHibernateDAO.GetInstance().GetSession()) {
                 using (ITransaction transaction = session.BeginTransaction()) {
                     dao.ExecuteSql("delete from sw_userprofile_role where role_id = ? ", role.Id);
                     dao.ExecuteSql("delete from sw_user_customrole where role_id = ? ",role.Id);

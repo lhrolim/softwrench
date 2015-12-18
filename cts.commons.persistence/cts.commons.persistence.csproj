@@ -76,6 +76,7 @@
     <Compile Include="IBaseAuditEntity.cs" />
     <Compile Include="IBaseEntity.cs" />
     <Compile Include="ISWDBHibernateDAO.cs" />
+    <Compile Include="SessionManagerWrapper.cs" />
     <Compile Include="Util\BooleanToIntUserType.cs" />
     <Compile Include="Util\HibernateUtil.cs" />
     <Compile Include="IPaginationData.cs" />
@@ -86,10 +87,6 @@
     <Compile Include="Util\UTCDateTime.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
-      <Name>cts.commons.portable</Name>
-    </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>

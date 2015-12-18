@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Iesi.Collections.Generic;
 
 namespace softWrench.sW4.Util {
 
@@ -12,8 +11,8 @@ namespace softWrench.sW4.Util {
     public static class AttributeUtil {
 
 
-        private static readonly IDictionary<Type, Iesi.Collections.Generic.ISet<Type>> AttributesCache
-            = new Dictionary<Type, Iesi.Collections.Generic.ISet<Type>>();
+        private static readonly IDictionary<Type, ISet<Type>> AttributesCache
+            = new Dictionary<Type, ISet<Type>>();
 
         /// <summary>
         /// Lookups for the given annotation in all of the softwrench dlls (hence, excluding third-party useless searchs) of the executing program.
@@ -23,24 +22,24 @@ namespace softWrench.sW4.Util {
         /// </summary>
         /// <param name="typeToSearch"></param>
         /// <returns></returns>
-        public static Iesi.Collections.Generic.ISet<Type> FindTypesAnnotattedWith(Type typeToSearch) {
+        public static ISet<Type> FindTypesAnnotattedWith(IEnumerable<Assembly> assembliesToSearch,Type typeToSearch) {
             if (AttributesCache.ContainsKey(typeToSearch)) {
                 return AttributesCache[typeToSearch];
             }
-            var result = FindTypesAnnotattedWith(new[] { typeToSearch });
+            var result = FindTypesAnnotattedWith(assembliesToSearch,new[] { typeToSearch });
             AttributesCache[typeToSearch] = result;
             return result;
         }
 
 
         //TODO:cache this call
-        public static Iesi.Collections.Generic.ISet<Type> FindTypesAnnotattedWith(params Type[] typesToSearch) {
-            var resulTypes = new HashedSet<Type>();
+        public static ISet<Type> FindTypesAnnotattedWith(IEnumerable<Assembly> assembliesToSearch,params Type[] typesToSearch) {
+            var resulTypes = new HashSet<Type>();
             IList<Type> typesNotYetCached = new List<Type>();
             foreach (var typeToSearch in typesToSearch) {
                 if (!AttributesCache.ContainsKey(typeToSearch)) {
                     typesNotYetCached.Add(typeToSearch);
-                    AttributesCache[typeToSearch] = new HashedSet<Type>();
+                    AttributesCache[typeToSearch] = new HashSet<Type>();
                 } else {
                     resulTypes.AddAll(AttributesCache[typeToSearch]);
                 }
@@ -49,7 +48,7 @@ namespace softWrench.sW4.Util {
                 return resulTypes;
             }
 
-            var swAssemblies = AssemblyLocator.GetSWAssemblies();
+            var swAssemblies = assembliesToSearch;
             foreach (var swAssembly in swAssemblies) {
                 foreach (var type in swAssembly.GetTypes()) {
                     foreach (var typeToSearch in typesNotYetCached) {

@@ -617,11 +617,10 @@
     <Compile Include="SPF\RouteParameterManager.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
     <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
-    <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
-    <Compile Include="Util\CollectionExtensions.cs" />
+    <Compile Include="Util\IesiCollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
     <Compile Include="Util\CompressionUtil.cs" />
     <Compile Include="Util\ConversionUtil.cs" />
@@ -908,10 +907,6 @@
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
       <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
       <Name>cts.commons.persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757C5D7F-9E3C-4509-BAFE-29FFB35EBE46}</Project>
-      <Name>cts.commons.portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
