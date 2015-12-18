@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace cts.commons.simpleinjector.app
 {
-    public interface IApplicationConfiguration :ISingletonComponent
+    public interface IApplicationConfiguration 
     {
         bool IsDB2(DBType maximo);
         DBMS? LookupDBMS(DBType dbtype);
