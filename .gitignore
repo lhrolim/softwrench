@@ -3,6 +3,7 @@
 *.user
 !softwrench.sw4.user/
 *.apk
+*.nupkg
 *.gpState
 _ReSharper.*
 UpgradeLog2.*
