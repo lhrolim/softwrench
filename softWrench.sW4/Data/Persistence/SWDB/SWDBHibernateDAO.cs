@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
         private readonly HibernateUtil _hibernateUtil;
 
 
-        public SWDBHibernateDAO(IApplicationConfiguration applicationConfiguration, HibernateUtil hibernateUtil) : base(applicationConfiguration, hibernateUtil) {
+        public SWDBHibernateDAO(ApplicationConfigurationAdapter applicationConfiguration, HibernateUtil hibernateUtil) : base(applicationConfiguration, hibernateUtil) {
             _hibernateUtil = hibernateUtil;
         }
 

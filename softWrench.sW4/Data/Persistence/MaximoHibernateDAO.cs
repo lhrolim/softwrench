@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQL_LOG);
 
-        public MaximoHibernateDAO(IApplicationConfiguration applicationConfiguration, HibernateUtil hibernateUtil) : base(applicationConfiguration, hibernateUtil) {
+        public MaximoHibernateDAO(ApplicationConfigurationAdapter applicationConfiguration, HibernateUtil hibernateUtil) : base(applicationConfiguration, hibernateUtil) {
         }
 
         private static MaximoHibernateDAO _instance;
