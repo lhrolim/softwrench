@@ -1,6 +1,7 @@
 ﻿using cts.commons.persistence;
 
 namespace cts.commons.simpleinjector.app {
+    [IgnoreComponent]
     class MySqlSimpleApplicationConfiguration : IApplicationConfiguration {
         public bool IsDB2(DBType maximo) {
             return false;

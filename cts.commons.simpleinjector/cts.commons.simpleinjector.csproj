@@ -66,6 +66,7 @@
     <Compile Include="app\DBType.cs" />
     <Compile Include="app\IApplicationConfiguration.cs" />
     <Compile Include="app\MySqlSimpleApplicationConfiguration.cs" />
+    <Compile Include="IgnoreComponentAttribute.cs" />
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="Core\Order\IOrdered.cs" />
     <Compile Include="Core\Order\IPriorityOrdered.cs" />
