@@ -133,16 +133,20 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
-                element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
-                    "compositionschemadefinition='compositionschemadefinition' " +
-                    "relationship='{{relationship}}' " +
-                    "compositiondata='compositiondata' " +
-                    "metadatadeclaration='metadata' " +
-                    "parentschema='parentschema' " +
-                    "parentdata='parentdata' " +
-                    "cancelfn='cancel(data,schema)' " +
-                    "previousschema='previousschema' " +
-                    "previousdata='previousdata' />");
+                //element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
+                //    "compositionschemadefinition='compositionschemadefinition' " +
+                //    "relationship='{{relationship}}' " +
+                //    "compositiondata='compositiondata' " +
+                //    "metadatadeclaration='metadata' " +
+                //    "parentschema='parentschema' " +
+                //    "parentdata='parentdata' " +
+                //    "cancelfn='cancel(data,schema)' " +
+                //    "previousschema='previousschema' " +
+                //    "previousdata='previousdata' />");
+
+                //TODO: Used for layout testing only
+                //Should we made a generic or stand-alone wrapper component?
+                element.append("<composition-master-details/>");
                 $compile(element.contents())(scope);
                 //controls tab lazy loading
                 scope.loaded = true;

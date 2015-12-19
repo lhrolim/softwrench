@@ -1,4 +1,3 @@
-/// <binding AfterBuild='sass' ProjectOpened='default' />
 module.exports = function (grunt) {
 
     var path = grunt.option("path") || "";

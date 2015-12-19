@@ -477,7 +477,6 @@
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
-    <Content Include="Content\Customers\readme.txt" />
     <Content Include="Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
@@ -507,6 +506,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
@@ -702,6 +702,7 @@
     <Content Include="Content\Scripts\vendor\other\textAngular-min.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
+    <Content Include="Content\styles\default\_crud-mastersetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />
     <None Include="Content\styles\default\_grid.scss" />
@@ -734,6 +735,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\crud\composition_masterdetails.html" />
     <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
