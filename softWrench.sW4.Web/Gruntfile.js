@@ -44,13 +44,6 @@ module.exports = function (grunt) {
             config: {
                 files: filesToCompile
             },
-            prod: {
-                options: {
-                    sourceMap: false,
-                    outputStyle: "compressed"
-                },
-                files: "<%= sass.config.files %>"
-            },
             dev: {
                 options: {
                     sourceMap: true,

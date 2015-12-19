@@ -2,15 +2,13 @@
 module.exports = function (grunt) {
 
     var path = grunt.option("path") || "";
-    var customer = grunt.option("customer") || "";
-    var customerPath = (!!customer ? customer + "/" : "");
     var fullPath = !!path ? path + "/" : "../softWrench.sW4.Web/";
 
     var filesToCompile = [
         {
             expand: true,
-            cwd: "Content/Customers/" + customerPath,
-            dest: "Content/Customers/" + customerPath,
+            cwd: "Content/Customers/",
+            dest: "Content/Customers/",
             src: ["**/*.scss"],
             ext: ".css"
         },
@@ -35,26 +33,14 @@ module.exports = function (grunt) {
     });
 
     grunt.initConfig({
-        watch: {
-            files: [
-                "Content/Customers/**/*.scss",
-                "Content/Shared/**/*.scss",
-                "Content/styles/**/*.scss"],
-            tasks: ["sass"]
-        },
         sass: {
             config: {
                 files: filesToCompile
             },
-            dev: {
-                options: {
-                    sourceMap: true
-                },
-                files: "<%= sass.config.files %>"
-            },
             prod: {
                 options: {
-                    sourceMap: false
+                    sourceMap: false,
+                    outputStyle: "compressed",
                 },
                 files: "<%= sass.config.files %>"
             }
@@ -64,8 +50,7 @@ module.exports = function (grunt) {
 
     // load npm tasks
     grunt.loadNpmTasks("grunt-sass");
-    grunt.loadNpmTasks("grunt-contrib-watch");
 
     // define default task
-    grunt.registerTask("default", ["sass", "watch"]);
+    grunt.registerTask("default", ["sass"]);
 };
