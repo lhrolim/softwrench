@@ -187,7 +187,9 @@
         <tbody ng-show="isNoRecords">
             <tr>
                 <td colspan="100%">
-                    {{i18N('general.norecords','No records to display')}}
+                    <p class="no-results">
+                        <i class="fa fa-info-circle"></i>&ensp;{{i18N('general.norecords','No records to display.')}}
+                    </p>
                 </td>
             </tr>
         </tbody>
