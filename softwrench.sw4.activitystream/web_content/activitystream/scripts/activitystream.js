@@ -46,7 +46,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             }
 
             $scope.getMultiplesProfiles = function () {
-                return $scope.availableProfiles;
+                return $scope.availableProfiles || [];
             }
 
             $scope.changeCurrentProfile = function () {

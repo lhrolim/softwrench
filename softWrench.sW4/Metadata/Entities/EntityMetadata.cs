@@ -268,7 +268,11 @@ namespace softWrench.sW4.Metadata.Entities {
             var firstPart = labelField.Substring(0, indexOf);
             var lookupString = firstPart.EndsWith("_") ? firstPart : firstPart + "_";
             if (char.IsNumber(lookupString[0])) {
+                //deprecated, in flavor of using it on the final of the string to avoid angular errors
                 lookupString = lookupString.Substring(1);
+            }else if (char.IsNumber(lookupString[lookupString.Length - 2])) {
+                //disconsidering the _ and the number itself
+                lookupString = lookupString.Substring(0, lookupString.Length - 2) + "_";
             }
             var entityAssociations = Associations;
             var association = entityAssociations.FirstOrDefault(a => a.Qualifier.EqualsIc(lookupString));

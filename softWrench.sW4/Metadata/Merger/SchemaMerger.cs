@@ -10,6 +10,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Metadata.Applications.Schema;
 
@@ -76,10 +77,27 @@ namespace softWrench.sW4.Metadata.Validator {
                             (f.Position.Equals(attribute) || f.Position.Equals("+" + attribute) ||
                              f.Position.Equals("-" + attribute)));
                 if (customization == null) {
+                    if (displayable is ApplicationAssociationDefinition) {
+                        //if the field is an association let´s give it a change to search for the label field instead before assuming there´s no customization present
+                        //this is needed because sometimes we might have multiple fields pointing to a same target and would be preferable to use that strategy, otherwise
+                        // both fields would be customized. See materials.xml
+                        var association = displayable as ApplicationAssociationDefinition;
+                        var labelField = association.OriginalLabelField;
+                        customization =
+                            customizations.FirstOrDefault(
+                        f =>
+                            (f.Position.Equals(labelField) || f.Position.Equals("+" + labelField) ||
+                             f.Position.Equals("-" + labelField)));
+
+                    }
+                }
+
+                if (customization == null) {
                     //no customization found, add the original field normally
                     resultDisplayables.Add(displayable);
                     continue;
                 }
+
                 Log.DebugFormat("applying customization {0} on schema {1}", customization.Position, overridenSchema);
                 customizationsActuallyApplied.Add(customizations.IndexOf(customization));
 

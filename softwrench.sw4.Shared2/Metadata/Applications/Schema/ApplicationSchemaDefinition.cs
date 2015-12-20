@@ -11,6 +11,7 @@ using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
@@ -236,7 +237,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
 
 
-
+        [CanBeNull]
         public SchemaFilters SchemaFilters {
             get {
                 if (Stereotype != SchemaStereotype.List) {

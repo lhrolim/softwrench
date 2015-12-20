@@ -12,6 +12,19 @@ app.directive('dashboardsdone', function ($timeout) {
     };
 });
 
+/**
+ * This is legacy code for Hapag
+ * 
+ * @param {type} $scope
+ * @param {type} $http
+ * @param {type} $templateCache
+ * @param {type} $rootScope
+ * @param {type} formatService
+ * @param {type} i18NService
+ * @param {type} contextService
+ * @param {type} schemaService
+ * @param {type} fixHeaderService
+ */
 function DashboardController($scope, $http, $templateCache, $rootScope, formatService, i18NService, contextService, schemaService,fixHeaderService) {
 
     $scope.i18N = function (key, defaultValue, paramArray) {

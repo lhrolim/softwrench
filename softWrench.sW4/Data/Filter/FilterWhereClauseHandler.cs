@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Filter {
             var schemaFilters = schema.SchemaFilters;
 
             // if all filters are the column filters no need to take any action
-            if (!schemaFilters.HasOverridenFilter || parameters == null) {
+            if (schemaFilters==null || !schemaFilters.HasOverridenFilter || parameters == null) {
                 return searchDto;
             }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -147,6 +148,16 @@ namespace softwrench.sW4.test.Metadata {
 
 
 
+        }
+
+
+        [TestMethod]
+        public void TestCustomizationWithMultipleAssociationsPointingToSameTarget() {
+            var matusetrans = MetadataProvider.Application("matusetrans");
+            var schema = matusetrans.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var associations = new List<ApplicationAssociationDefinition>(schema.Associations().Where(a => a.Target == "itemnum"));
+            Assert.AreEqual("sparepart_.description", associations[0].OriginalLabelField);
+            Assert.AreEqual("item_.description", associations[1].OriginalLabelField);
         }
 
     }

@@ -221,6 +221,8 @@
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
+                crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData);
+
                 var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
                 if (associationFieldMetadatas == null) {
                     //should never happen, playing safe here
@@ -416,7 +418,7 @@
         function updateAssociations(association, scope, options) {
             options = options || {};
 
-            var log = $log.getInstance('sw4.associationservice#updateAssociations');
+            var log = $log.getInstance('sw4.associationservice#updateAssociations',['association']);
 
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
