@@ -224,16 +224,19 @@
             <option label="MATERIAL" value="MATERIAL"/>
             <option label="SPARE PART" value="SPAREPART"/>
           </optionfield>
+         
           <association label="Item" target="itemnum" labelfield="sparepart_.description" extraprojectionvalues="description" showexpression="@linetype == 'SPAREPART'">
             <dataprovider prefilterfunction="filterSpareParts"/>
             <renderer type="lookup" params="application=sparepart;schemaId=sparepartlist;"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
+          
           <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
             <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
+    
           <association label="Storeroom" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>

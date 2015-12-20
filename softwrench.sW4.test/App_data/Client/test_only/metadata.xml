@@ -3,10 +3,12 @@
 
   <templates>
     <template path="@worklogs.xml"/>
+    <template path="@materials.xml"/>
     <template path="@incident.xml"/>
     <template path="@inventory.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@servicerequest.xml"/>
+    
   </templates>
 
   <entities>
@@ -712,51 +714,7 @@
       </schemas>
     </application>
 
-    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009" >
-      <properties>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-        <property key="mobile.fetchlimit" value="300"/>
-      </properties>
-      <schemas>
-        <list>
-          <field attribute="item_.description" label="Description" qualifier="title"/>
-          <field attribute="quantity" label="Quantity" qualifier="subtitle"/>
-        </list>
-        <detail>
-          <field attribute="matusetransid" hidden="true" />
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true" />
-          <field attribute="refwo" hidden="true" />
-          <field attribute="description" hidden="true" />
-          <field attribute="transdate" label="Date" readonly="true" />
-          <field attribute="quantity" label="Quantity" requiredexpression="true">
-            <!--            <renderer type="numericinput" params="decimals=2"/>-->
-            <number decimals="2"  min="" max="" />
-          </field>
-          <!--                    <field attribute="unitcost" label="UnitCost" requiredexpression="true">-->
-          <!--                      <number decimals="2" min="0" max="" />-->
-          <!--                    </field>-->
-          <association label="Item" target="itemnum" labelfield="item.itemnum,item.description" />
-          <association label="Storeroom" target="storeloc" labelfield="storeroom.locationsid,storeroom.description" />
-
-          <field attribute="itemnum" hidden="true" />
-          <field attribute="item_.description" label="Item" >
-            <lookup sourceApplication="item" sourceField="itemnum" sourceDisplay="description,itemnum" targetField="itemnum" targetQualifier=""/>
-          </field>
-
-          <field attribute="storeloc" hidden="true" />
-          <field attribute="storeroom_.description" label="Storeroom" >
-            <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,locationsid" targetField="storeloc" targetQualifier="storeroom_">
-              <lookupFilters>
-                <lookupFilter sourceField="siteid" targetField="siteid" />
-                <lookupFilter sourceField="type" literal="STOREROOM" />
-              </lookupFilters>
-            </lookup>
-          </field>
-
-        </detail>
-      </schemas>
-    </application>
+   
 
     <application name="item" title="Item" entity="item" id="00000000-0000-0000-0000-000000000010">
       <properties>
@@ -892,6 +850,21 @@
       </schemas>
     </application>
 
+
+    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
+      <schemas>
+        <detail platform="web" redeclaring="false">
+          <!-- to simulate a scenario where there are two associations binding to the same target...-->
+          <customization position="item_.description">
+            <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
+              <dataprovider prefilterfunction="filterPlannedMaterials"/>
+              <renderer type="lookup"/>
+              <event type="afterchange" service="matusetranService" method="afteritemchange"/>
+            </association>
+          </customization>
+        </detail>
+      </schemas>
+    </application>
 
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
