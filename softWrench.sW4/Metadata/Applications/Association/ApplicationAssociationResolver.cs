@@ -72,7 +72,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             //TODO: remove this workaround, but need to refactor a bunch of prefilters
             var applicationMetadata = ApplicationMetadata.FromSchema(schema);
 
-            var isLookupMode = associationFilter is PaginatedSearchRequestDto;
+            var isLookupMode = associationFilter is PaginatedSearchRequestDto && association.RendererType == "lookup";
 
             // needs to search by every attribute
             if (isLookupMode || association.IsEagerLoaded()) {

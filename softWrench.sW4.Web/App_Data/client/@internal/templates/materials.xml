@@ -237,19 +237,19 @@
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
     
-          <association label="Storeroom" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Storeroom" target="storeloc" labelfield="invbal0.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <association label="Bin" target="binnum" labelfield="1invbal_.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Bin" target="binnum" labelfield="invbal1.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterBinnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <association label="Lot" target="lotnum" labelfield="2invbal_.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Lot" target="lotnum" labelfield="invbal2.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterLotnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <association label="Condition" target="conditioncode" labelfield="3invbal_.conditioncode" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Condition" target="conditioncode" labelfield="invbal3.conditioncode" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterLotnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
