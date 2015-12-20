@@ -68,7 +68,7 @@
         <property key ="icon.composition.tab" value="fa fa-wrench"/>
       </properties>
         <schemas>
-          <list>
+          <list stereotype="compositionlist">
             <field attribute="tooltransid" hidden="true"/>
             <field attribute="itemnum" label="Item#" qualifier="title"/>
             <field attribute="tool_.description" label="Description" qualifier="subtitle"/>

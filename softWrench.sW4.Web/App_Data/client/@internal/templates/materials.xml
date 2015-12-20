@@ -147,7 +147,7 @@
 
     <application entity="item" name="itemlookup" title="itemlookup">
       <schemas>
-        <schema id="list" title="item" stereotype="list">
+        <schema id="list" title="item" stereotype="compositionlist">
           <field attribute="itemnum" label="item"/>
           <field attribute="itemsetid" label="itemsetid"/>
           <!--Extract Data-->
@@ -194,7 +194,7 @@
         <property key ="icon.composition.tab" value="fa fa-suitcase"/>
       </properties>
       <schemas>
-        <list>
+        <list stereotype="compositionlist">
           <field attribute="matusetransid" hidden="true" />
           <field attribute="itemnum" label="Item#" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>

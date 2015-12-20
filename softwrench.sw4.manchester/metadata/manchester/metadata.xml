@@ -604,7 +604,7 @@
 
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
-        <list>
+        <list stereotype="compositionlist">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
