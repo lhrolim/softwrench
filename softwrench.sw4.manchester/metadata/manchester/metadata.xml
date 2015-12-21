@@ -393,15 +393,20 @@
             <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
-
             <section id="statussection"/>
           </section>
 
 
-          <section>
-            <field attribute="description" label="Summary:">
-              <renderer type="default" params="maxlength=100;inputsize=large"/>
+          <section orientation="horizontal">
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" params="maxlength=100;"/>
             </field>
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType" requiredexpression="true">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
           </section>
 
           <field label="Details:" attribute="longdescription_.ldtext" >
@@ -429,9 +434,7 @@
           <!--Classification GL Account Work Type -->
           <section orientation="horizontal">
             <!--COMSW-2-->
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
-              <renderer type="autocompleteclient" />
-            </optionfield>
+
 
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
@@ -448,9 +451,7 @@
 
             <field label="Job Plan:" attribute="jpnum" readonly="true" />
 
-            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType" requiredexpression="true">
-              <renderer type="autocompleteclient"/>
-            </optionfield>
+            
 
             <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
               <!--renderer type="lookup"/-->
@@ -504,7 +505,7 @@
           <!--Target Start Date Scheduled Start Date (required field) Actual Start Date  -->
           <section orientation="horizontal">
 
-            <field attribute="targstartdate" label="Target Start Date:" requiredexpression="true">
+            <field attribute="targstartdate" label="Target Start Date:" >
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
 
@@ -628,6 +629,7 @@
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
 
+          <field attribute="defaultrate" hidden="true" defaultexpression="@user.defaultcraftrate"/>
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()" extraprojectionvalues="worksite,orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>

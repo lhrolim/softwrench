@@ -28,7 +28,9 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
             }
         },
 
-        refreshFromAttribute: function (attribute, value, availableoptions) {
+        refreshFromAttribute: function (displayable, value, availableoptions) {
+            var attribute = displayable.attribute;
+
             var log =$log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
             var labelValue = value;
             if (!nullOrEmpty(value) && availableoptions) {
@@ -38,6 +40,8 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
                         labelValue = availableoptions[i].label;
                     }
                 }
+            } else if ("true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions && availableoptions.length === 1) {
+                labelValue = availableoptions[0].label;
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
             log.debug("setting autocompleteclient {0} to value {1}".format(attribute,labelValue));

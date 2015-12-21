@@ -240,6 +240,7 @@
           <association label="Storeroom" target="storeloc" labelfield="invbal0.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
+            <renderer type="autocompleteclient" params="selectonlyavailableoption=true"/>
           </association>
           <association label="Bin" target="binnum" labelfield="invbal1.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterBinnum"/>

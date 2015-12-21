@@ -49,7 +49,7 @@
                 log.debug("updating list for component {0}".format(attribute));
                 if (rendererType === 'autocompleteclient') {
                     var value = scope.datamap[displayable.target];
-                    cmpAutocompleteClient.refreshFromAttribute(attribute, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                    cmpAutocompleteClient.refreshFromAttribute(displayable, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
                 } else if (rendererType === 'combodropdown') {
                     cmpComboDropdown.refreshFromAttribute(attribute);
                 }
