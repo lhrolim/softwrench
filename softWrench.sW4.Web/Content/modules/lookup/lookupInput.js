@@ -97,8 +97,16 @@
                                 onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
                                 modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                             }
+                            var properties = (function () {
+                                var props = {}
+                                var cssclass = fieldMetadata.rendererParameters["cssclass"];
+                                if (!!cssclass) props.cssclass = cssclass;
+                                var title = fieldMetadata.rendererParameters["title"];
+                                if (!!title) props.title = title;
+                                return props;
+                            })();
 
-                            modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function (selecteditem) {
+                            modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, properties, function (selecteditem) {
                                 savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
                             }, null, datamap, schema);
 
