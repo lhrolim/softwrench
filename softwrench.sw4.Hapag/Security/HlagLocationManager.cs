@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using DocumentFormat.OpenXml.Bibliography;
 using log4net;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
