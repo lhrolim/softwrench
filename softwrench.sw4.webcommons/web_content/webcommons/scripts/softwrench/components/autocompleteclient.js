@@ -40,7 +40,7 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
                         labelValue = availableoptions[i].label;
                     }
                 }
-            } else if ("true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions.length === 1) {
+            } else if ("true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions && availableoptions.length === 1) {
                 labelValue = availableoptions[0].label;
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
