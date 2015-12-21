@@ -9,6 +9,7 @@
   <reference id="purchase"/>
   <reference id="Incident"/>
   <reference id="Inventory"/>
+  <reference id="location"/>
 
 </Menu>
 

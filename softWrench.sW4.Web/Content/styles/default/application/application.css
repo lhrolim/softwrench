@@ -1,0 +1,6 @@
+/******************************************************************************* Place form specific CSS (based on data-application/data-schema attributes)  * */
+@media all and (min-width: 1px) { [data-class="commandbar"] .commandButton { width: 100%; } }
+
+@media all and (min-width: 380px) { [data-class="commandbar"] .commandButton { width: auto; } }
+
+/*# sourceMappingURL=application.css.map */

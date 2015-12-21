@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="assettrans" title="Asset Trans" entity="assettrans" id="00000000-0000-0000-0000-040079045007" >
+      <schemas>
+        <schema id="compositionlist" title="Asset Trans" stereotype="compositionlist">
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="asset_.description" label="Description"/>
+          <field attribute="datemoved" label="Moved Date"/>
+          <field attribute="siteid" label="From Site"/>
+          <field attribute="tositeid" label="To Site"/>
+          <field attribute="fromloc" label="From Location"/>
+          <field attribute="toloc" label="To Location"/>
+          <field attribute="fromparent" label="From Parent"/>
+          <field attribute="toparent" label="To Parent"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+
+
+
+
+</metadata>

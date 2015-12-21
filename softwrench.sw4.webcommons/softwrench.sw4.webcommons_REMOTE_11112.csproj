@@ -78,12 +78,9 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\workflowService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\data\datamapSanitize_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\location_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\multiassetlocci_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\scannerCommons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\person\person_service.js" />
@@ -171,10 +168,6 @@
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
       <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
       <Name>cts.commons.persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
-      <Name>cts.commons.portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>

@@ -1,0 +1,22 @@
+.editable-click, a.editable-click { text-decoration: none; color: black; border-bottom: none; }
+
+.dashboardmodal { width: 700px; }
+
+.tab-pane .tab-header { margin: 0 5px 15px; }
+
+.tab-pane .tab-header .title { font-size: 24px; font-weight: bold; }
+
+.dash-header { padding: 20px 20px 0; }
+
+.dash-header .column { padding: 0; }
+
+.dash-header .column .wrap { padding: 0 20px; }
+
+.dash-header .column .wrap .panel .header { background: #5090c6; color: #fff; padding: 10px 20px 8px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+
+.dash-header .column .wrap .panel .body { border: 2px solid #5090c6; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; min-height: 460px; overflow: hidden; }
+
+@media all and (min-width: 768px) { .container.desktop .dash-header .listgrid-table { margin-top: 83px !important; }
+  .container.desktop .dash-header .affix-pagination, .container.desktop .dash-header .listgrid-thead { position: absolute; top: -83px !important; } }
+
+/*# sourceMappingURL=dashboards.css.map */
