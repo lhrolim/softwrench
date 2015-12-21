@@ -98,7 +98,13 @@
                                 modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                             }
 
-                            modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function (selecteditem) {
+                            var properties = {};
+                            var cssclass = fieldMetadata.rendererParameters["cssclass"];
+                            if (!!cssclass) properties.cssclass = cssclass;
+                            var title = fieldMetadata.rendererParameters["title"];
+                            if(!!title) properties.title = title;
+
+                            modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, properties, function (selecteditem) {
                                 savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
                             }, null, datamap, schema);
 
