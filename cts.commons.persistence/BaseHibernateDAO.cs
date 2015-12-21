@@ -1,5 +1,4 @@
-﻿using cts.commons.portable.Util;
-using log4net;
+﻿using log4net;
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
@@ -9,13 +8,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using JetBrains.Annotations;
+using FlushMode = NHibernate.FlushMode;
 
 namespace cts.commons.persistence {
 
@@ -25,21 +28,39 @@ namespace cts.commons.persistence {
         private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
         private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ISessionManager _sessionManager;
+        protected HibernateUtil HibernateUtil;
 
 
-        public BaseHibernateDAO(IApplicationConfiguration applicationConfiguration) {
+        [SuppressMessage("ReSharper", "DoNotCallOverridableMethodsInConstructor")]
+        protected BaseHibernateDAO([NotNull]IApplicationConfiguration applicationConfiguration,HibernateUtil hibernateUtil) {
             _applicationConfiguration = applicationConfiguration;
+            HibernateUtil = hibernateUtil;
+            _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies());
         }
 
+        
+        [CanBeNull]
+        protected virtual IEnumerable<Assembly> GetListOfAssemblies() {
+            return new[] { Assembly.GetCallingAssembly() };
+        }
+        [NotNull]
+        protected abstract string GetDialect();
+        [NotNull]
+        protected abstract string GetDriverName();
 
-        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false,string queryAlias=null) {
+        [NotNull]
+        protected abstract string GetConnectionString();
+
+
+        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false, string queryAlias = null) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
             queryst = result.query;
             parameters = result.Parameters;
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
             query.SetFlushMode(FlushMode.Never);
-            LogQuery(queryst, queryAlias,parameters);
+            LogQuery(queryst, queryAlias, parameters);
             if (result.Parameters == null) {
                 return query;
             }
@@ -79,13 +100,13 @@ namespace cts.commons.persistence {
             return query;
         }
 
-        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null,string queryAlias=null) {
-            LogQuery(queryst,queryAlias, parameters);
+        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null, string queryAlias = null) {
+            LogQuery(queryst, queryAlias, parameters);
             if (paginationData != null && _applicationConfiguration.IsDB2(DBType.Maximo)) {
                 //nhibernate pagination breaks in some scenarios, at least in DB2, keeping others intact for now
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
-            LogPaginationQuery(queryst,queryAlias, parameters);
+            LogPaginationQuery(queryst, queryAlias, parameters);
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
 
@@ -126,10 +147,12 @@ namespace cts.commons.persistence {
             }
             return query;
         }
+
+
         [NotNull]
-        public List<Dictionary<string, string>> FindByNativeQuery(String queryst, params object[] parameters) {
+        public List<Dictionary<string, string>> FindByNativeQuery(string queryst, params object[] parameters) {
             IList<dynamic> queryResult;
-            using (var session = GetSessionManager().OpenSession()) {
+            using (var session = GetSession()) {
                 using (session.BeginTransaction()) {
                     var query = BuildQuery(queryst, parameters, session, true);
                     query.SetResultTransformer(NhTransformers.ExpandoObject);
@@ -146,19 +169,22 @@ namespace cts.commons.persistence {
         }
 
 
-        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias=null) {
+        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias = null) {
             var before = Stopwatch.StartNew();
-            using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true, paginationData);
-                query.SetResultTransformer(NhTransformers.ExpandoObject);
-                var result = query.List<dynamic>();
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
-                return result;
+            using (var session = GetSession()) {
+                using (session.BeginTransaction()) {
+                    var query = BuildQuery(queryst, parameters, session, true, paginationData);
+                    query.SetResultTransformer(NhTransformers.ExpandoObject);
+                    var result = query.List<dynamic>();
+                    GetLog()
+                        .Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
+                    return result;
+                }
             }
         }
 
-        public T FindSingleByNativeQuery<T>(String queryst, params object[] parameters) where T : class {
-            using (var session = GetSessionManager().OpenSession()) {
+        public T FindSingleByNativeQuery<T>(string queryst, params object[] parameters) where T : class {
+            using (var session = GetSession()) {
                 using (session.BeginTransaction()) {
                     var query = BuildQuery(queryst, parameters, session, true);
                     return (T)query.UniqueResult();
@@ -174,13 +200,15 @@ namespace cts.commons.persistence {
         //        }
         //    }
         //}
-        public int CountByNativeQuery(String queryst, ExpandoObject parameters, string queryAlias = null) {
+        public int CountByNativeQuery(string queryst, ExpandoObject parameters, string queryAlias = null) {
             var before = Stopwatch.StartNew();
-            using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true, null, queryAlias);
-                var result = Convert.ToInt32(query.UniqueResult());
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
-                return result;
+            using (var session = GetSession()) {
+                using (session.BeginTransaction()) {
+                    var query = BuildQuery(queryst, parameters, session, true, null, queryAlias);
+                    var result = Convert.ToInt32(query.UniqueResult());
+                    GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
+                    return result;
+                }
             }
         }
 
@@ -216,28 +244,29 @@ namespace cts.commons.persistence {
         protected abstract ILog GetLog();
 
 
-        private void LogQuery(string queryst,string queryAlias, params object[] parameters) {
+        private void LogQuery(string queryst, string queryAlias, params object[] parameters) {
             if (!GetLog().IsDebugEnabled) {
                 return;
             }
-            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst,queryAlias, parameters));
+            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias, parameters));
         }
 
-        private void LogPaginationQuery(string queryst,string queryAlias, params object[] parameters) {
+        private void LogPaginationQuery(string queryst, string queryAlias, params object[] parameters) {
             if (!HibernateLog.IsDebugEnabled) {
                 return;
             }
-            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst,queryAlias, parameters));
+            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias, parameters));
         }
 
-        public interface ISessionManager {
-            ISession OpenSession();
 
-            void Restart();
-
+        protected ISessionManager GetSessionManager() {
+            return _sessionManager;
         }
 
-        protected abstract ISessionManager GetSessionManager();
+
+        public ISession GetSession() {
+            return _sessionManager.OpenSession();
+        }
 
 
         public void HandleEvent(RestartDBEvent eventToDispatch) {

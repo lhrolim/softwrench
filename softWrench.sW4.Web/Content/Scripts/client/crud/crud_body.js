@@ -194,7 +194,7 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.shouldShowTitle = function () {
-                return $scope.ismodal == "false" && $scope.schema.properties['detail.showtitle'] == 'true';
+                return $scope.ismodal === "false" && $scope.schema.properties['detail.showtitle'] === 'true';
             }
 
             $scope.getTitle = function () {
@@ -245,8 +245,6 @@ app.directive('crudBody', function (contextService) {
                 return id != null;
             };
 
-
-
             $scope.shouldShowField = function (expression) {
                 if (expression == "true") {
                     return true;
@@ -256,13 +254,16 @@ app.directive('crudBody', function (contextService) {
                 return ret;
             };
 
-
             $scope.isHapag = function () {
                 return $rootScope.clientName == "hapag";
             };
 
             $scope.getTabIcon = function (tab) {
                 return tab.schema.schemas.list.properties['icon.composition.tab'];
+            };
+
+            $scope.getDetailTabTitle = function (schema, datamap) {
+                return i18NService.getI18nRecordLabel(schema, datamap) + ' Details';
             };
 
             $scope.crawl = function (direction) {

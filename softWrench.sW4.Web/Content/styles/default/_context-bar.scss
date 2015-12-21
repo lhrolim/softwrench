@@ -15,10 +15,9 @@
 
         .group {
             margin: 5px 10px 0;
-            /*&.pagesize {
-                padding-top: 5px;
-            }*/
-
+            &.pagesize {
+                padding-top: 8px;
+            }
             &.pagination {
                 padding-top: 8px;
             }
@@ -44,15 +43,21 @@
     pagination {
         .pagination {
             a {
-                    color: #555;
-    font-size: 16px;
+                color: #555;
+                font-size: 16px;
 
-                &:hover {
+                &:hover, &:active, &:focus {
                     color: #999;
                     text-decoration: none;
                 }
             }
         }
+    }
+
+    #affixpagination1 {
+        padding-top: 0px;
+        padding-bottom: 8px;
+        border-bottom: none;
     }
 }
 

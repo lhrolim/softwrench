@@ -1,0 +1,4 @@
+1) nuget spec 
+2) nuget pack xxx.csproj
+3) nuget SetApiKey ctsrulez -Source http://10.50.100.125:57008
+4) nuget push *.nupkg -s http://10.50.100.125:57008

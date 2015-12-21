@@ -2,5 +2,7 @@
     public interface IAssociationPrefetcherRequest {
 
         string AssociationsToFetch { get; set; }
+
+        bool IsShowMoreMode { get; set; }
     }
 }

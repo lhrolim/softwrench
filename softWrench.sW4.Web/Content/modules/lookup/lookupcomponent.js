@@ -5,7 +5,7 @@
 
 
 
-    function service($rootScope, $timeout, $log, associationService, crudContextHolderService) {
+    function service($rootScope, $timeout, $log, associationService, crudContextHolderService, schemaService) {
 
 
 
@@ -28,21 +28,37 @@
 
         };
 
-        function refreshFromAttribute(fieldMetadata, newValue) {
+        /**
+         * 
+         * @param {} fieldMetadata 
+         * @param {} datamap 
+         * @param {} datamapId used to diferentiate compositions entries
+         * @param {} newValue 
+         * @returns {} 
+         */
+        function refreshFromAttribute(fieldMetadata, datamap, datamapId, newValue) {
 
-
-            var log = $log.getInstance('cmplookup#refreshFromAttribute',["association","lookup"]);
+            var log = $log.getInstance('cmplookup#refreshFromAttribute', ["association", "lookup"]);
             var associationKey = fieldMetadata.associationKey;
             var label = null;
             if (newValue != null) {
                 var option = crudContextHolderService.fetchLazyAssociationOption(associationKey, newValue);
                 label = associationService.getLabelText(option, fieldMetadata.hideDescription);
             }
-            log.debug('setting lookup {0} to {1}'.format(associationKey, label));
-            $("input[data-association-key=" + fieldMetadata.associationKey + "]").typeahead('val', label);
+            var key = fieldMetadata.applicationPath;
+            if (datamapId) {
+                key += datamapId;
+            }
+            key = replaceAll(key, "\\.", "_");
+            log.debug('setting lookup {0} to {1}'.format(key, label));
+            var el = $("input[data-displayablepath=" + key + "]");
+            if (el.length === 0) {
+                log.warn('lookup {0} not found'.format(key));
+            }
+            el.typeahead('val', label);
             return;
 
-       
+
         }
 
         function updateLookupObject(scope, fieldMetadata, searchValue, searchDatamap) {
@@ -123,7 +139,7 @@
 
     }
 
-    service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService'];
+    service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService', 'schemaService'];
 
     angular.module("sw_lookup").factory('cmplookup', service);
 

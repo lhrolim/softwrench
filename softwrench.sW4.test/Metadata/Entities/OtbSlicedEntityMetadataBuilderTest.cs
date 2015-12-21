@@ -29,7 +29,9 @@ namespace softwrench.sW4.test.Metadata.Entities {
             var select = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.Detail);
             Debug.Write(select);
             Assert.IsFalse(select.Contains("person_.langcode"));
-            Assert.IsTrue(select.Contains("person_.displayname"));
+            Assert.IsFalse(select.Contains("person_.displayname"));
+            //non associations should get fetched, unless marked as lazy
+            Assert.IsTrue(select.Contains("resolution_.ldtext"));
         }
 
         [TestMethod]
@@ -38,7 +40,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
             var from = QueryFromBuilder.Build(sliced);
             Debug.Write(from);
             //assert that the relationships are not being duplicated
-            Assert.AreEqual(1, from.GetNumberOfItems("solution_.solution"));
+            Assert.AreEqual(0, from.GetNumberOfItems("solution_.solution"));
         }
         
     }

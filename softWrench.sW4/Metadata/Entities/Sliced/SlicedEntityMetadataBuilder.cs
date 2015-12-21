@@ -48,8 +48,8 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                 usedAttributes.Add(entityMetadata.Schema.RowstampAttribute);
             }
 
-            usedRelationships.UnionWith(HandleAssociations(appSchema.Associations, entityMetadata));
-            usedRelationships.UnionWith(HandleCompositions(appSchema.Compositions, entityMetadata, appSchema));
+            usedRelationships.UnionWith(HandleAssociations(appSchema.Associations(), entityMetadata));
+            usedRelationships.UnionWith(HandleCompositions(appSchema.Compositions(), entityMetadata, appSchema));
 
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(appSchema.RelationshipFields.Select(r => r.Attribute), entityMetadata);

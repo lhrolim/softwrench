@@ -1,5 +1,5 @@
-﻿fieldset.hasheader {
-    /*clear: both;*/
+fieldset.form-group {
+    min-height: 59px;
 }
 
 .form-horizontal .form-group {
@@ -25,7 +25,6 @@
 }
 
 .control-label {
-    padding-right: 30px;
     color: #000;
     word-wrap: break-word;
 }
@@ -108,8 +107,6 @@ textarea .readonly {
 }
 
 .richtextbox, .image-holder {
-    /*min-height: 21px;*/
-    /*height: 100%;*/
     overflow: hidden;
 }
 
@@ -327,12 +324,6 @@ input[type="date"], input[type="time"] {
     -moz-appearance: none;
 }
 
-@media all and (max-width: 768px) {
-    .col-xs-12 {
-        width: auto !important;
-    }
-}
-
 .select-left-right {
     .left, .right {
         padding-right: 15px;
@@ -409,7 +400,7 @@ input[type="date"], input[type="time"] {
     text-align: left;
 }
 
-#crudInputNewItemComposition {
+#crudInputNewItemComposition, .expanded-item-composition {
     max-width: 768px;
     margin: 0 auto;
 }

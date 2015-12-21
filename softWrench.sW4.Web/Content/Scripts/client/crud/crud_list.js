@@ -243,7 +243,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 ///  implementation of searchService#refreshgrid see there for details
                 /// </summary>
                 extraparameters = extraparameters || {};
-                if (extraparameters.panelid && extraparameters.panelid !== $scope.panelid) {
+                if (extraparameters.panelid && extraparameters.panelid.toString() !== $scope.panelid) {
                     //this is none of my business --> another dashboard will handle it
                     return;
                 }

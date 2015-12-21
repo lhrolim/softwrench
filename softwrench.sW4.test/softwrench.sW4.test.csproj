@@ -84,6 +84,7 @@
     <Compile Include="Category\CategoryUtilTest.cs" />
     <Compile Include="Category\CategoryTreeCacheTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
+    <Compile Include="Data\CompositeDatamapTest.cs" />
     <Compile Include="Data\Entities\EntityBuilderTest2.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestHapag.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PaginationUtilsTest.cs" />
     <Compile Include="Util\CompressorUtilTest.cs" />
+    <Compile Include="Util\DisplayableUtilTest.cs" />
     <Compile Include="Util\FaqTest.cs" />
     <Compile Include="Util\TestUtil.cs" />
     <Compile Include="Util\I18NResolverTest.cs" />
@@ -236,10 +238,6 @@
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
       <Project>{A6A14991-81DD-45B5-B5C8-154E44D84975}</Project>
       <Name>cts.commons.persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
-      <Name>cts.commons.portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>

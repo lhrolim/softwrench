@@ -92,7 +92,7 @@
         public const string PaginationOptions = "list.paginationoptions";
 
         /// <summary>
-        ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazy nature.
+        ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazyness nature.
         /// </summary>
         public const string PreFetchAssociations = "associationstoprefetch";
 
@@ -158,10 +158,6 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-
-        /// <summary>
-        /// A comma delimited list of attributes that should be passed from the selected rows datamap to the backend during the GET call after the line is clicked.
-        /// </summary>
-        public static string ListClickCustomParams = "list.click.customparams";
+     
     }
 }

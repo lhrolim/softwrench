@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <entities>
@@ -126,9 +126,6 @@
           <field attribute ="description" label="Description">
             <renderer type="default" params="excelwidth=50"/>
           </field>
-          <field attribute ="status" label="Status">
-            <renderer type="default" params="width=15%" />
-          </field>
           <field attribute ="siteid" label="Site">
             <renderer type="default" params="width=15%" />
           </field>
@@ -144,6 +141,9 @@
           <field attribute ="totalcost" label="Total Cost">
             <renderer type="default" params="width=15%" />
           </field>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=15%;grid=po;column=status" />
+          </field>
           <field attribute="receipts" hidden="true"/>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -151,34 +151,31 @@
         </list>
 
         <schema id="adetail" title="PO Details" abstract="true" stereotype="detail">
-          <field attribute="ponum" label="PO#" readonly="true">
-            <renderer type="default" params="inputsize=medium" />
-          </field>
-
+          <field attribute="ponum" label="PO#" readonly="true" hidden="true"/>
           <section>
-            <header displacement="ontop" label="PO Details" params="fieldset=true" />
-            <field attribute="description" label="Description:">
+            <field attribute="description" label="Description">
               <renderer type="richtext"/>
             </field>
             <field attribute="siteid" hidden="true" />
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
-              <association label="Type:" target="type" labelfield="potype_.description">
+              <association label="Type" target="type" labelfield="potype_.description">
                 <renderer type="lookup"/>
               </association>
-              <field attribute="priority" label="Priority:">
+              <field attribute="priority" label="Priority">
                 <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
               </field>
-              <field attribute="companies_.phone" label="Phone:"/>
+              <field attribute="companies_.phone" label="Phone"/>
             </section>
           </section>
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-            <field attribute="orderdate" label="Reported Date:" readonly="true">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="orderdate" label="Reported Date" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field attribute="targetstart" label="Required Date:" attributeToServer="#notusedattribute">
+            <field attribute="targetstart" label="Required Date" attributeToServer="#notusedattribute">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </section>
@@ -249,9 +246,9 @@
 
         <detail stereotype="compositiondetail">
           <field attribute="ponum" label="PO#" readonly="true"/>
-          <field attribute="itemnum" label="Item:" readonly="true"/>
-          <field attribute="#qtydue" label="Quantity Due:" readonly="true"/>
-          <field attribute="#qtytoreceive" label="Quantity to Receive:">
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="#qtydue" label="Quantity Due" readonly="true"/>
+          <field attribute="#qtytoreceive" label="Quantity to Receive">
             <renderer type="numericinput" params="min=1;max=@#qtydue;"/>
           </field>
           <commandbars>
@@ -286,9 +283,6 @@
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="width=15%" />
-          </field>
           <field attribute="requireddate" label="Required Date">
             <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false" />
           </field>
@@ -301,10 +295,9 @@
           <field attribute="siteid" label="Site ID">
             <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=pr;column=status"/>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=15%;grid=pr;column=status" />
           </field>
-
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>
@@ -317,35 +310,29 @@
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="description" label="Summary" hidden="true" />
             <field attribute="prnum" label="PR#" hidden="true" />
-            <field attribute="priority" label="Priority:" requiredexpression="true" default="0">
+            <field attribute="priority" label="Priority" requiredexpression="true" default="0">
               <renderer type="numericinput" params="min=0;max=9;decimals=0" />
             </field>
-            <field attribute="totaltax1" label="Total Tax:" />
-            <field attribute="totalcost" label="Total Cost:" default="0" requiredexpression="true" />
-            <field attribute="currencycode" label="Currency:" requiredexpression="true" />
+            <field attribute="totaltax1" label="Total Tax" />
+            <field attribute="totalcost" label="Total Cost" default="0" requiredexpression="true" />
+            <field attribute="currencycode" label="Currency" requiredexpression="true" />
+            <field attribute="supervisor" label="Supervisor" />
           </section>
 
-          <section orientation="horizontal">
-            <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=medium" />
-            <field attribute="supervisor" label="Supervisor:" />
-          </section>
-          
           <section>
             <header displacement="ontop" label="Vendow Info" params="fieldset=true" />
-            <optionfield attribute="novendor" label="No Vendor? :"  requiredexpression="true" >
+            <renderer type="default" params="childinputsize=medium" />
+            <optionfield attribute="novendor" label="No Vendor?"  requiredexpression="true" >
               <renderer type="radio"/>
               <option label="No" value="FALSE"/>
               <option label="Yes" value="TRUE"/>
             </optionfield>
-            <section orientation="horizontal">
-              <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
+              <association label="Vendor" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
                 <renderer type="lookup"/>
               </association>
-              <association label="Vendor Contract:" target="contractrefnum" labelfield="contract_.description" >
+              <association label="Vendor Contract" target="contractrefnum" labelfield="contract_.description" >
                 <renderer type="lookup"/>
               </association>
-            </section>
           </section>
           
           <section id="compositions" />
@@ -385,31 +372,31 @@
         </schema>
 
         <detail stereotype="compositiondetail">
-          <optionfield attribute="linetype" label="Line Type:" >
+          <optionfield attribute="linetype" label="Line Type" >
             <renderer type="radio"/>
             <option label="Item" value="item"/>
             <option label="Material" value="material"/>
           </optionfield>
           <field attribute="prnum" label="PR#" readonly="true"/>
-          <field attribute="prlinenum" label="Line:"  >
+          <field attribute="prlinenum" label="Line"  >
             <renderer type="default"/>
           </field>
-          <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
+          <association label="Item" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
             <renderer type="lookup"/>
           </association>
-          <field attribute="description" label="Description:" enableexpression="@linetype=='material'">
+          <field attribute="description" label="Description" enableexpression="@linetype=='material'">
             <renderer type="textarea" params="maxlength=1000" />
           </field>
-          <field attribute="orderqty" label="Quantity:"/>
-          <field attribute="unitcost" label="Unit Cost:"/>
-          <field attribute="linecost" label="Line Cost:" evalexpression="@orderqty*@unitcost"/>
-          <association label="Tax Code:" target="tax1code" labelfield="tax_.taxcode" extraprojectionvalues="tax_.taxrate" showexpression="1 != 1">
+          <field attribute="orderqty" label="Quantity"/>
+          <field attribute="unitcost" label="Unit Cost"/>
+          <field attribute="linecost" label="Line Cost" evalexpression="@orderqty*@unitcost"/>
+          <association label="Tax Code" target="tax1code" labelfield="tax_.taxcode" extraprojectionvalues="tax_.taxrate" showexpression="1 != 1">
             <renderer type="lookup"/>
           </association>
-          <field attribute="tax_.taxrate" label="Tax Rate:"/>
-          <field attribute="tax1" label="Total Tax:" evalexpression="@linecost*@tax_.taxrate"/>
-          <!--field attribute="tax1" label="Tax:" evalexpression="@linecost*@tax_.taxrate"/-->
-          <!--field attribute="conversion" label="Conversion Factor:" hidden="true" default="1"/-->
+          <field attribute="tax_.taxrate" label="Tax Rate"/>
+          <field attribute="tax1" label="Total Tax" evalexpression="@linecost*@tax_.taxrate"/>
+          <!--field attribute="tax1" label="Tax" evalexpression="@linecost*@tax_.taxrate"/-->
+          <!--field attribute="conversion" label="Conversion Factor" hidden="true" default="1"/-->
         </detail>
       </schemas>
     </application>
@@ -429,7 +416,7 @@
           <field attribute="prnum" label="PR#" readonly="true"/>
           <field attribute="prtermid" label="Term ID" />
           <field attribute="seqnum" label="Sequence#"/>
-          <field attribute="description" label="Description:"/>
+          <field attribute="description" label="Description"/>
         </detail>
       </schemas>
     </application>

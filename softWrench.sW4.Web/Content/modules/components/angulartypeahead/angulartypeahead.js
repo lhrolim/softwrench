@@ -87,7 +87,9 @@
                 return;
             }
             var associationOption = crudContextHolderService.fetchLazyAssociationOption(scope.provider, scope.datamap[scope.attribute]);
+
             var label = associationService.getLabelText(associationOption, scope.hideDescription);
+            scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
             element.typeahead('val', label);
         }
 
@@ -139,7 +141,7 @@
 
         function link(scope, el, attrs) {
             scope.name = "angulartypeahead";
-            var log = $log.getInstance('angulartypeahed');
+            var log = $log.getInstance('angulartypeahed',['association','lookup']);
             //setting defaults
             var rateLimit = scope.rateLimit || 500;
 
@@ -147,6 +149,7 @@
             var parElement = element.parent();
 
             scope.jelement = element;
+            scope.log = log;
 
             var attribute = scope.attribute;
             var provider = scope.provider;
@@ -188,7 +191,8 @@
             restrict: 'E',
             replace: true,
             template: '<div class="input-group lazy-search">' +
-                '<input type="search" class="hidden-phone form-control typeahead" placeholder="Find {{placeholder}}" data-association-key="{{provider}}"/>' +
+                '<input type="search" class="hidden-phone form-control typeahead" placeholder="Find {{placeholder}}" ' +
+                'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}"/>' +
                 '<span class="input-group-addon last" ng-click="executeMagnetSearch()">' +
                 '<i class="fa fa-search"></i>' +
                 '</span>'+
@@ -200,6 +204,8 @@
                 //the 
                 attribute: '=',
                 provider: '=',
+                //full path of this displayable, considering eventual inline compositions (ex: #global_.asset, multiassetlocci_[1540].asset, multiassetlocci_[1550].asset where 1540, 1550 are the ids of the composition item)
+                displayablepath: '=',
                 placeholder: '=',
                 //variable to expose the search text to outer scope, and allow programtic changes on the component
                 searchText: '=',

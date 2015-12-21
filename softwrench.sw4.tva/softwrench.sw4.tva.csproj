@@ -53,19 +53,9 @@
     <Content Include="web_content\tva\images\logo-main.png" />
     <Content Include="web_content\tva\images\name-softwrench.png" />
     <Content Include="web_content\tva\images\signin.jpg" />
-    <Content Include="web_content\tva\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\tva\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <None Include="web_content\tva\styles\branding.scss" />
   </ItemGroup>

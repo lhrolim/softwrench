@@ -1,8 +1,4 @@
-﻿/*******************************************************************************
- *******************************************************************************
- * Place form specific CSS (based on data-application/data-schema attributes)  *
- *******************************************************************************
- *******************************************************************************/
+/******************************************************************************* Place form specific CSS (based on data-application/data-schema attributes)  * */
 /*@media all and (min-width: 1px) {
     #listgrid[data-application="servicerequest"][data-schema="list"] th:nth-child(3),
     #listgrid[data-application="servicerequest"][data-schema="list"] td:nth-child(3) {
@@ -157,4 +153,4 @@
     }
 }*/
 
-/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiLi4vd2ViX2NvbnRlbnQvZ3JpYy9zdHlsZXMvYXBwbGljYXRpb24vZ3JpZHMuY3NzIiwKCSJzb3VyY2VzIjogWwoJCSIuLi93ZWJfY29udGVudC9ncmljL3N0eWxlcy9hcHBsaWNhdGlvbi9ncmlkcy5zY3NzIgoJXSwKCSJzb3VyY2VzQ29udGVudCI6IFtdLAoJIm1hcHBpbmdzIjogIkFBQUE7Ozs7aUZBSWlGO0FBQ2pGOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztHQXdKRyIsCgkibmFtZXMiOiBbXQp9 */
+/*# sourceMappingURL=grids.css.map */

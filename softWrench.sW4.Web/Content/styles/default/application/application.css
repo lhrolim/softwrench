@@ -1,14 +1,6 @@
-﻿/*******************************************************************************
- *******************************************************************************
- * Place form specific CSS (based on data-application/data-schema attributes)  *
- *******************************************************************************
- *******************************************************************************/
-@media all and (min-width: 1px) {
-  [data-class="commandbar"] .commandButton {
-    width: 100%; } }
+/******************************************************************************* Place form specific CSS (based on data-application/data-schema attributes)  * */
+@media all and (min-width: 1px) { [data-class="commandbar"] .commandButton { width: 100%; } }
 
-@media all and (min-width: 380px) {
-  [data-class="commandbar"] .commandButton {
-    width: auto; } }
+@media all and (min-width: 380px) { [data-class="commandbar"] .commandButton { width: auto; } }
 
-/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiLi4vQ29udGVudC9zdHlsZXMvZGVmYXVsdC9hcHBsaWNhdGlvbi9hcHBsaWNhdGlvbi5jc3MiLAoJInNvdXJjZXMiOiBbCgkJIi4uL0NvbnRlbnQvc3R5bGVzL2RlZmF1bHQvYXBwbGljYXRpb24vYXBwbGljYXRpb24uc2NzcyIsCgkJIi4uL0NvbnRlbnQvc3R5bGVzL2RlZmF1bHQvYXBwbGljYXRpb24vX2Zvcm1zLnNjc3MiCgldLAoJInNvdXJjZXNDb250ZW50IjogW10sCgkibWFwcGluZ3MiOiAiQUNBQTs7OztpRkFJaUY7QUFDakYsTUFBTSxDQUFOLEdBQUcsTUFBTSxTQUFTLEVBQUUsR0FBRztHQUNPLEFBQUEsVUFBQyxDQUFXLFlBQVksQUFBdkIsRUFBeUIsY0FBYyxDQUF6QjtJQUNyQyxLQUFLLEVBQUUsSUFBSyxHQUQwQjs7QUFLOUMsTUFBTSxDQUFOLEdBQUcsTUFBTSxTQUFTLEVBQUUsS0FBSztHQUNLLEFBQUEsVUFBQyxDQUFXLFlBQVksQUFBdkIsRUFBeUIsY0FBYyxDQUF6QjtJQUNyQyxLQUFLLEVBQUUsSUFBSyxHQUQwQiIsCgkibmFtZXMiOiBbXQp9 */
+/*# sourceMappingURL=application.css.map */

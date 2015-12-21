@@ -40,7 +40,8 @@ app.directive('configAssociationListInputDatamap', function () {
         }
     };
 })
-.directive('sectionElementInput', ["$compile", function ($compile) {
+
+.directive('sectionElementInput', ["$compile", "$timeout", function ($compile, $timeout) {
     return {
         restrict: "E",
         replace: true,
@@ -78,7 +79,9 @@ app.directive('configAssociationListInputDatamap', function () {
                 "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
                 "></crud-input-fields>"
                 );
-                $compile(element.contents())(scope);
+                $timeout(function() {
+                    $compile(element.contents())(scope);
+                }, 0, false);
             }
         }
     }
@@ -609,6 +612,10 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.nonTabFields = function (displayables) {
                 return fieldService.nonTabFields(displayables);
             };
+
+            $scope.getApplicationPah = function (fieldMetadata) {
+                return replaceAll(fieldMetadata.applicationPath,"\\.","_");
+            }
 
             $scope.getDispatchFn = function (serviceCall) {
                 var validationFunction = dispatcherService.loadServiceByString(serviceCall);

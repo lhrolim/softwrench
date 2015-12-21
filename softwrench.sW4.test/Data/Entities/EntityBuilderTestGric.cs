@@ -21,7 +21,7 @@ namespace softwrench.sW4.test.Data.Entities {
             var sliced =MetadataProvider.SlicedEntityMetadata(completeApp.ApplyPolicies(
                 new ApplicationMetadataSchemaKey("editdetail"), InMemoryUser.TestInstance("test"), ClientPlatform.Web));
             var attributes = sliced.NonListAssociations();
-            Assert.IsTrue(attributes.Count(a => a.Qualifier=="asset_")==1);
+            Assert.IsTrue(attributes.Count(a => a.Qualifier=="asset_")==0);
 
             
 

@@ -11,7 +11,11 @@ namespace softWrench.sW4.Util {
             if (other == null) {
                 return dictionary;
             }
-            other.ForEach(dictionary.Add);
+            foreach (var entry in other) {
+                if (!dictionary.ContainsKey(entry.Key)) {
+                    dictionary.Add(entry);
+                }
+            }
             return dictionary;
         }
 

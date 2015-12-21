@@ -16,6 +16,7 @@
                     fieldMetadata: '=',
                     disabledassociations: '=',
                     blockedassociations: '=',
+                    displayablepath: '@',
                     mode: '@'
                 },
 
@@ -113,7 +114,7 @@
                         var fieldMetadata = scope.fieldMetadata;
                         
                         if (fieldMetadata.rendererType === "modal") {
-                            this.showCustomModal(fieldMetadata, $scope.schema, $scope.datamap);
+                            this.showCustomModal(fieldMetadata, scope.schema, scope.datamap);
                             return;
                         }
 

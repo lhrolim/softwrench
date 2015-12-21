@@ -147,7 +147,7 @@
 
     <application entity="item" name="itemlookup" title="itemlookup">
       <schemas>
-        <schema id="list" title="item" stereotype="list">
+        <schema id="list" title="item" stereotype="compositionlist">
           <field attribute="itemnum" label="item"/>
           <field attribute="itemsetid" label="itemsetid"/>
           <!--Extract Data-->
@@ -194,7 +194,7 @@
         <property key ="icon.composition.tab" value="fa fa-suitcase"/>
       </properties>
       <schemas>
-        <list>
+        <list stereotype="compositionlist">
           <field attribute="matusetransid" hidden="true" />
           <field attribute="itemnum" label="Item#" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>
@@ -218,46 +218,49 @@
           <field attribute="costtype" hidden="true" />
           <field attribute="unitcost" hidden="true" />
 
-          <optionfield attribute="linetype" label="Type:">
+          <optionfield attribute="linetype" label="Type">
             <renderer type="combo"/>
             <option label="ITEM" value="ITEM"/>
             <option label="MATERIAL" value="MATERIAL"/>
             <option label="SPARE PART" value="SPAREPART"/>
           </optionfield>
-          <association label="Item:" target="itemnum" labelfield="sparepart_.description" extraprojectionvalues="description" showexpression="@linetype == 'SPAREPART'">
+         
+          <association label="Item" target="itemnum" labelfield="sparepart_.description" extraprojectionvalues="description" showexpression="@linetype == 'SPAREPART'">
             <dataprovider prefilterfunction="filterSpareParts"/>
             <renderer type="lookup" params="application=sparepart;schemaId=sparepartlist;"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
-          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
+          
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
             <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
-          <association label="Storeroom:" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+    
+          <association label="Storeroom" target="storeloc" labelfield="invbal0.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <association label="Bin:" target="binnum" labelfield="1invbal_.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Bin" target="binnum" labelfield="invbal1.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterBinnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <association label="Lot:" target="lotnum" labelfield="2invbal_.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Lot" target="lotnum" labelfield="invbal2.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterLotnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <association label="Condition:" target="conditioncode" labelfield="3invbal_.conditioncode" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
+          <association label="Condition" target="conditioncode" labelfield="invbal3.conditioncode" dependantfields="itemnum" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'">
             <dataprovider postfilterfunction="filterLotnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
-          <field label="Available Balances:" attribute="curbal" readonly="true" showexpression="@linetype=='ITEM' || @linetype == 'SPAREPART'"/>
-          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" readonly="true" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'"/>
-          <field attribute="description" label="Material Description:" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
-          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="@linetype == 'MATERIAL'" showexpression="@linetype == 'MATERIAL'"/>
-          <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
+          <field label="Available Balances" attribute="curbal" readonly="true" showexpression="@linetype=='ITEM' || @linetype == 'SPAREPART'"/>
+          <field attribute="unitcost" label="Unit Cost" qualifier="quantity" readonly="true" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'"/>
+          <field attribute="description" label="Material Description" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
+          <field attribute="unitcost" label="Unit Cost" qualifier="quantity" requiredexpression="@linetype == 'MATERIAL'" showexpression="@linetype == 'MATERIAL'"/>
+          <field attribute="qtyrequested" label="Quantity" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>
-          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="true">
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
         </detail>

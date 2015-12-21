@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using cts.commons.portable.Util;
+using cts.commons.Util;
 using Newtonsoft.Json;
 
 namespace softWrench.sW4.Util {
@@ -254,11 +255,11 @@ namespace softWrench.sW4.Util {
         }
 
         public static PropertyDescriptor GetPropertyDescriptor(object baseObject, string propertyName) {
-            return PropertyDescriptor(baseObject, propertyName);
+            return BaseReflectionUtil.PropertyDescriptor(baseObject, propertyName);
         }
 
         public static object GetProperty(object baseObject, string propertyName) {
-            var prop = PropertyDescriptor(baseObject, propertyName);
+            var prop = BaseReflectionUtil.PropertyDescriptor(baseObject, propertyName);
             return prop == null ? null : prop.GetValue(baseObject);
         }
 
@@ -267,13 +268,7 @@ namespace softWrench.sW4.Util {
             return prop == null ? null : prop.GetValue(baseObject);
         }
 
-        internal static PropertyDescriptor PropertyDescriptor(object baseObject, string propertyName) {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
-            if (prop == null) {
-                prop = TypeDescriptor.GetProperties(baseObject)[propertyName.ToUpper()];
-            }
-            return prop;
-        }
+       
 
         public static bool IsNull(object baseObject, string propertyName) {
             return ReflectionUtil.GetProperty(baseObject, propertyName) == null;

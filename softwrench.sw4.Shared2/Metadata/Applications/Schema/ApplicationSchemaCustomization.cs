@@ -25,8 +25,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
             Displayables = displayables;
         }
 
-        public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true) {
-            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, fetchInner);
+        public IList<T> GetDisplayable<T>(Type displayableType, SchemaFetchMode mode = SchemaFetchMode.All) {
+            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables,mode);
         }
 
         public IList<ApplicationFieldDefinition> Fields {

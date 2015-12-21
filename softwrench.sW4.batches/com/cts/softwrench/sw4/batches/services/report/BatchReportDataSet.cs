@@ -45,7 +45,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var dataMap = SWDBDatamapBuilder.BuildDataMap(ApplicationName(), batchReport, application.Schema);
 
-            var associationResults = BuildAssociationOptions(dataMap, application, request);
+            var associationResults = BuildAssociationOptions(dataMap, application.Schema, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, batchReport.Id.ToString());
 
             var batchApplication = GetBatchSchema(batchReport);

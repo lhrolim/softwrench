@@ -95,7 +95,7 @@ namespace softwrench.sW4.Shared2.Data {
         //        }
 
 
-        protected override string HolderName() {
+        public override string HolderName() {
             return Application;
         }
     }

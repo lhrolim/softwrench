@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using cts.commons.Util;
 using r = softWrench.sW4.Util.ReflectionUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
@@ -87,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object SetValueIfNull(object baseObject, string propertyName, object value,
-            Boolean markSpecified = false) {
+            Boolean markSpecified = false, bool setIfNegativeToo = false) {
             if (baseObject == null) {
                 Log.Warn(String.Format("property {0} not found on object null", propertyName));
                 return null;
@@ -99,11 +100,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             var propertyVal = property.GetValue(baseObject);
             var currentValue = ReflectionUtil.GetProperty(propertyVal, "Value");
-            if (currentValue == null) {
+            if (currentValue == null || (setIfNegativeToo && Convert.ToInt64(currentValue) < 0)) {
                 return SetValue(baseObject, propertyName, value, markSpecified);
             }
             return property;
         }
+
 
         public static void CopyFromRootEntity(object rootObject, object integrationObject, string propertyName, object defaultValue, string rootPropertyName = null, bool onlyIfNull = true) {
             var rootPropertyNameToUse = rootPropertyName ?? propertyName;
@@ -117,7 +119,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static object SetValue(object baseObject, string propertyName, object value, Boolean markSpecified = false) {
-            var propDescriptor = ReflectionUtil.PropertyDescriptor(baseObject, propertyName);
+            var propDescriptor = BaseReflectionUtil.PropertyDescriptor(baseObject, propertyName);
             if (propDescriptor == null) {
                 if (ApplicationConfiguration.IsLocal()) {
                     Log.WarnFormat("property {0} not found on object {1}. Review metadata config or maximo config",

@@ -165,6 +165,10 @@
             schemaCacheService.addSchemaToCache(schema);
         }
 
+        function clearCrudContext() {
+            _crudContext = angular.copy(_originalContext);
+        }
+
         function afterSave() {
             this.clearDirty();
             _crudContext.needsServerRefresh = true;
@@ -335,6 +339,7 @@
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
+            clearCrudContext: clearCrudContext,
             needsServerRefresh: needsServerRefresh,
             rootDataMap: rootDataMap
         };

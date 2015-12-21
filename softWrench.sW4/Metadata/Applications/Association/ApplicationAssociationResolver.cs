@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using cts.commons.simpleinjector;
+using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -59,17 +60,19 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association) {
-            return ResolveOptions(applicationMetadata, originalEntity, association, new SearchRequestDto());
+            return ResolveOptions(applicationMetadata.Schema, originalEntity, association, new SearchRequestDto());
         }
 
-
-        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
+        [CanBeNull]
+        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationSchemaDefinition schema,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
                 return null;
             }
+            //TODO: remove this workaround, but need to refactor a bunch of prefilters
+            var applicationMetadata = ApplicationMetadata.FromSchema(schema);
 
-            var isLookupMode = associationFilter is PaginatedSearchRequestDto;
+            var isLookupMode = associationFilter is PaginatedSearchRequestDto && association.RendererType == "lookup";
 
             // needs to search by every attribute
             if (isLookupMode || association.IsEagerLoaded()) {

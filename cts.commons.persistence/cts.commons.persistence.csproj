@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,14 +33,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cts.commons, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.1.1.0\lib\net45\cts.commons.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cts.commons.simpleinjector, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.0.1.0\lib\net45\cts.commons.simpleinjector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentMigrator">
       <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
     </Reference>
     <Reference Include="FluentMigrator.Runner">
       <HintPath>..\softWrench.sW4.Web\Dependencies\FluentMigrator.Runner.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections">
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=8.0.5.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -75,6 +85,8 @@
     <Compile Include="IBaseAuditEntity.cs" />
     <Compile Include="IBaseEntity.cs" />
     <Compile Include="ISWDBHibernateDAO.cs" />
+    <Compile Include="ReadWriteHibernateDAO.cs" />
+    <Compile Include="SessionManagerWrapper.cs" />
     <Compile Include="Util\BooleanToIntUserType.cs" />
     <Compile Include="Util\HibernateUtil.cs" />
     <Compile Include="IPaginationData.cs" />
@@ -85,20 +97,7 @@
     <Compile Include="Util\UTCDateTime.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
-      <Name>cts.commons.portable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
-      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
-      <Name>cts.commons.simpleinjector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
-      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
-      <Name>cts.commons</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="cts.commons.persistence.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

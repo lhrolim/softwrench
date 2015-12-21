@@ -24,12 +24,12 @@
                 <div class="detail-header clearfix">
                     <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                         <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
-                            <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
+                            <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i>&ensp;{{getDetailTabTitle(schema, datamap)}}</a>
                         </li>
                         <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
                             <a ng-switch-when="ApplicationCompositionDefinition"
                                ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowComposition(tab)" ng-click="setActiveTab(tab.tabId)">
-                                <i class="{{getTabIcon(tab)}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}&ensp;<span ng-show="showTabRecordCount(tab)" class="tabRecordCount badge">{{getTabRecordCount(tab)}}</span>
+                                <i class="{{getTabIcon(tab)}}"></i>&ensp;{{i18N(tab.tabId + '._title',tab.label)}}&ensp;<span ng-show="showTabRecordCount(tab)" class="tabRecordCount badge">{{getTabRecordCount(tab)}}</span>
                             </a>
                             <a ng-switch-when="ApplicationTabDefinition"
                                ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
@@ -39,9 +39,6 @@
                             </a>
                         </li>
                     </ul>
-
-
-
                     <div class="buttons" ng-show="showNavigationButtons(schema)">
                         <button type="button" class="btn btn-primary" ng-click="toConfirmBack(previousdata,previousschema)" rel="tooltip" data-original-title="Back to Grid"><i class="fa fa-table"></i></button>
                         <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" ng-disabled="!disableNavigationButton(0)" data-original-title="Previous"><i class="fa fa-arrow-down"></i></button>

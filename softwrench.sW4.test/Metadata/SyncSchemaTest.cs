@@ -27,7 +27,7 @@ namespace softwrench.sW4.test.Metadata {
             var detailSchema = woApp.Schema(new ApplicationMetadataSchemaKey("detail", null, ClientPlatform.Mobile));
             var syncSchema = woApp.Schema(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema));
             Assert.IsTrue(syncSchema.Displayables.Count >= detailSchema.Displayables.Count);
-            Assert.AreEqual(detailSchema.Compositions.Count, syncSchema.Compositions.Count);
+            Assert.AreEqual(detailSchema.Compositions().Count, syncSchema.Compositions().Count);
 
         }
 
