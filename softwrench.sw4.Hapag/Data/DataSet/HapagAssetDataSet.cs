@@ -146,6 +146,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             dto.SearchParams = null;
             var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
             dto.AppendWhereClauseFormat("ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) )", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
+            
             return dto;
         }
 
@@ -157,6 +158,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             //as of HAP-882
             dto.AppendWhereClauseFormat(@"ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) ) " +
                                         "or (imac.classificationid = '81515700' and imac.description = 'Decommission of {0}')", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
+            dto.IgnoreWhereClause = true;
             return dto;
         }
 
