@@ -74,7 +74,7 @@
           <field attribute="meter_.metertype" label="Meter Type"/>
           <field attribute="measureunitid" label="Unit of Measure"/>
           <field attribute="active" label="Active">
-            <renderer type="checkbox"/>
+            <renderer type="default" params="formatter=numberToBoolean"/>
           </field>
           <commandbars>
             <commandgroup position="compositionbottom">
