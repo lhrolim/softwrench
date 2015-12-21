@@ -91,7 +91,7 @@ namespace softWrench.sW4.Web {
                 var container = SimpleInjectorScanner.InitDIController();
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
                 dispatcher.Dispatch(new ApplicationStartedEvent());
-                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
+//                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
 
             SecurityFacade.InitSecurity();

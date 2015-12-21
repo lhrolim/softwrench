@@ -21,6 +21,15 @@
                                                "</credentials>" +
                                                "</tsRequest>";
             public const string AUTH_HEADER_NAME = "X-Tableau-Auth";
+
+            public const string RESOURCE_WORKBOOK = "workbook";
+            public const string RESOURCE_VIEW = "view";
+        }
+
+        public static class AuthType {
+            public const string KEY = "authtype";
+            public const string REST_API = "REST";
+            public const string TRUSTED_TICKET = "TICKET";
         }
     }
 }

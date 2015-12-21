@@ -54,27 +54,27 @@
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
-          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
+          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
-          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+          <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
-          <field label="Start Date:" requiredexpression="true" attribute="startdate">
+          <field label="Start Date" requiredexpression="true" attribute="startdate">
             <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
-          <field label="Start Time:" attribute="starttime" >
+          <field label="Start Time" attribute="starttime" >
             <renderer type="time" params="format=HH:mm;showdate=false" />
           </field>
-          <field label="End Date:" attribute="finishdate">
+          <field label="End Date" attribute="finishdate">
             <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
           </field>
-          <field label="End Time:" attribute="finishtime" >
+          <field label="End Time" attribute="finishtime" >
             <renderer type="time" params="format=HH:mm;showdate=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
+          <association label="GL Debit Account" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
         </detail>

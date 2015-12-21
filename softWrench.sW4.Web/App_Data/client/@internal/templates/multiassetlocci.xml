@@ -10,6 +10,7 @@
           </properties>-->
           <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
+          <field attribute="isprimary" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterAssets"/>
@@ -20,11 +21,10 @@
             <event type="afterchange" service="multiassetlocciService" method="afterChangeLocation"/>
           </association>
           <field attribute="sequence" label="Sequence" >
-            <renderer type="numericinput" params="min=1"/>
-            <event type="afterchange" service="multiassetlocciService" method="afterChangeSequence"/>
+            <renderer type="numericinput" params="min=1;width=10%"/>
           </field>
           <field attribute="progress" label="Progress">
-            <renderer type="checkbox" params="editable=true;clickservice=multiassetlocciService.afterChangeProgress;width=5%"/>
+            <renderer type="checkbox" params="editable=true;width=5%"/>
           </field>
           <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
           <commandbars>

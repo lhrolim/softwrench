@@ -7,7 +7,6 @@
 }
 
 .container {
-
     .context {
         width: 100%;
         background: #eee;
@@ -16,17 +15,15 @@
 
         .group {
             margin: 5px 10px 0;
-
             &.pagesize {
-                padding-top: 5px;
+                padding-top: 8px;
             }
-
             &.pagination {
-                padding-top: 3px;
+                padding-top: 8px;
             }
 
             &.total {
-                margin-top: 10px;
+                margin-top: 15px;
             }
         }
 
@@ -42,6 +39,26 @@
     &.mobile .context .group.pagination a {
         padding: 8px 6px;
     }
+
+    pagination {
+        .pagination {
+            a {
+                color: #555;
+                font-size: 16px;
+
+                &:hover, &:active, &:focus {
+                    color: #999;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    #affixpagination1 {
+        padding-top: 0px;
+        padding-bottom: 8px;
+        border-bottom: none;
+    }
 }
 
 @media all and (min-width: 480px) {
@@ -51,7 +68,7 @@
 
             .group {
                 float: left;
-                min-height: 34px;
+                /*min-height: 34px;*/
             }
         }
     }

@@ -255,11 +255,10 @@ function ApplicationController($scope, $http, $log, $timeout,
         }
         scope.mode = result.mode;
         
-        
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
-            crudContextHolderService.updateCrudContext(scope.schema);
+            crudContextHolderService.updateCrudContext(scope.schema,scope.datamap);
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
@@ -284,13 +283,8 @@ function ApplicationController($scope, $http, $log, $timeout,
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }
         $scope.requestpopup = null;
-
-        //broadcast schema for the breadcrumbs 
-        $rootScope.$broadcast('schemaChange', $scope.schema);
         $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
-
     };
-
 
     $scope.$on('sw_canceldetail', function (event, data, schema, msg) {
         $scope.doConfirmCancel(data, schema, "Are you sure you want to go back?");
@@ -307,6 +301,9 @@ function ApplicationController($scope, $http, $log, $timeout,
         else {
             $scope.toListSchema(data, schema);
         }
+
+        //update the crud context to update the breadcrumbs 
+        crudContextHolderService.updateCrudContext(schema, data);
     }
 
     $scope.toConfirmCancel = function (data, schema) {
@@ -426,7 +423,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             }
         });
         $scope.$on('sw_applicationredirected', function (event, parameters) {
-            if (parameters.popupmode == "browser" || parameters.popupmode == "modal") {
+            if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
                 return;
             }
 

@@ -406,8 +406,8 @@ namespace softWrench.sW4.Metadata {
             DynamicProxyUtil.ClearCache();
         }
 
-        public static string GlobalProperty(string key, bool throwException = false, bool testRequired = false) {
-            return GlobalProperties.GlobalProperty(key, throwException, testRequired);
+        public static string GlobalProperty(string key, bool throwException = false, bool testRequired = false,bool fixedProfile = false) {
+            return GlobalProperties.GlobalProperty(key, throwException, testRequired, fixedProfile);
         }
 
         public static string EntityQuery(string key, bool throwException = true) {

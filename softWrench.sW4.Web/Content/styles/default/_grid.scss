@@ -32,7 +32,6 @@
     color: black;
 }
 
-
 .filter-label {
     display: inline-block;
 
@@ -316,8 +315,19 @@
         padding: 10px 0 6px;
     }
 
+    tr:hover {
+        td.progress {
+            background: #d6d6d6;
+        }
+    }
+
     .cell-wrapper {
         padding: 0 8px;
+    }
+
+    .progress {
+        background: none;
+        box-shadow: none;
     }
 }
 
@@ -368,22 +378,24 @@ table .detaildata {
     display: table-cell !important;
 }
 
-#compositionlistgrid tbody tr {
-    &:hover {
-        background: #f5f5f5;
-    }
-
-    a {
-        color: #000;
-
+#compositionlistgrid {
+    tbody tr {
         &:hover {
-            text-decoration: none;
+            background: #f5f5f5;
+        }
+
+        a {
+            color: #000;
+
+            &:hover {
+                text-decoration: none;
+            }
         }
     }
-}
 
-#compositionlistgrid td {
-    vertical-align: middle;
+    td {
+        vertical-align: middle;
+    }
 }
 
 .grid-header {
@@ -395,6 +407,18 @@ table .detaildata {
         .btn {
             height: 34px;
             border-left: none;
+        }
+    }
+}
+
+#listgrid {
+    td.statuscolor {
+        padding: 5px 0;
+
+        .cell-wrapper {
+            border-radius: 3px;
+            display: inline-block;
+            padding: 5px 8px 3px;
         }
     }
 }
@@ -451,8 +475,22 @@ table .detaildata {
                         margin-right: 15px;
                         padding-left: 0;
                     }
+
+                    &.statuscolor {
+                        padding: 4px 0 4px 50%;
+                    }
                 }
             }
+        }
+    }
+}
+
+[data-application="multiassetlocci"]#compositionlistgrid {
+    th, td {
+        padding: 10px 15px;
+
+        input {
+            background-color: white !important;
         }
     }
 }

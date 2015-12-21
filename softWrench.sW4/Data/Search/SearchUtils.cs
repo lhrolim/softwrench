@@ -328,12 +328,8 @@ namespace softWrench.sW4.Data.Search {
                 var attribute = originalEntity.GetAttribute(lookupAttribute.From);
                 return attribute == null ? null : attribute.ToString();
             }
-            var literal = lookupAttribute.Literal;
-            if (lookupAttribute.QuoteLiteral) {
-                literal = "'" + literal + "'";
-            }
-            return literal;
-
+            //quotes do not need to be added at this layer, since they are already being added when evaluating the parameters at the SearchUtils
+            return lookupAttribute.Literal;
         }
 
 

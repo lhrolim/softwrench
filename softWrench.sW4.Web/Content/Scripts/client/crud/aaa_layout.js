@@ -126,7 +126,7 @@ app.directive("ngEnabled", function () {
     };
 });
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService,logoutService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService, crudContextHolderService) {
 
     $scope.$name = 'LayoutController';
     var log = $log.getInstance('sw4.LayoutController');
@@ -156,7 +156,13 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     });
 
     $scope.$on('sw_titlechanged', function (titlechangedevent, title) {
+        var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
+        if (record) {
+            title = record + ' | ' + title;
+        }
+
         $scope.title = title;
+
         if (title) {
             window.document.title = title + ' | softWrench';
         } else {
@@ -213,9 +219,9 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
 
     $scope.AjaxResult = function (result) {
-        var log = $log.getInstance('layoutcontroller#AjaxResult');
+        var log = $log.getInstance('layoutcontroller#AjaxResult', ["redirect"]);
         var newUrl = url(result.redirectURL);
-        if ($scope.includeURL != newUrl) {
+        if ($scope.includeURL !== newUrl) {
             log.debug("redirection detected new:{0} old:{1}".format(newUrl, $scope.includeURL));
             $scope.includeURL = newUrl;
         }
@@ -323,4 +329,4 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     initController();
 }
 
-app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService", LayoutController]);
+app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService",  "crudContextHolderService", LayoutController]);

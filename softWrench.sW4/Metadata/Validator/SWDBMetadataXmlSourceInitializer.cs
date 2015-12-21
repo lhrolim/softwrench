@@ -17,8 +17,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         protected override IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
-            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute),
-                typeof(JoinedSubclassAttribute));
+            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(AssemblyLocator.GetSWAssemblies(),typeof(ClassAttribute),typeof(JoinedSubclassAttribute));
             var resultEntities = findTypesAnnotattedWith.Select(Convert).ToList();
 
             //            var subEntities = AttributeUtil.FindTypesAnnotattedWith(typeof(JoinedSubclassAttribute));

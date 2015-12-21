@@ -11,16 +11,23 @@ using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
-    public class ApplicationSchemaDefinition : BaseDefinition, IApplicationIdentifier, IApplicationDisplayableContainer {
+    public class ApplicationSchemaDefinition : BaseDefinition, IApplicationIdentifier, IApplicationDisplayableContainer, IPropertyHolder {
 
 
         public Dictionary<string, ApplicationCompositionSchema> CachedCompositions {
             get; set;
         }
+
+        #region cache
+        private readonly IDictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>>();
+        private readonly IDictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>>();
+        private readonly IDictionary<SchemaFetchMode, IList<OptionField>> _cachedOptionFields = new Dictionary<SchemaFetchMode, IList<OptionField>>();
+        #endregion
 
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
@@ -107,7 +114,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<string, ISet<string>> _depandantFields = new Dictionary<string, ISet<string>>();
 
-        private readonly IDictionary<string, string> _properties = new Dictionary<string, string>();
+        private IDictionary<string, string> _properties = new Dictionary<string, string>();
 
 
         public ICollection<string> _fieldWhichHaveDeps = new HashSet<string>();
@@ -228,14 +235,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        [JsonIgnore]
-        public virtual IList<ApplicationCompositionDefinition> Compositions {
-            get {
-                return GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition));
-            }
-        }
 
 
+        [CanBeNull]
         public SchemaFilters SchemaFilters {
             get {
                 if (Stereotype != SchemaStereotype.List) {
@@ -289,11 +291,40 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        [JsonIgnore]
-        public virtual IList<ApplicationAssociationDefinition> Associations {
-            get {
-                return GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition));
+        public virtual IList<ApplicationAssociationDefinition> Associations(bool isShowMoreMode) {
+            return Associations(isShowMoreMode ? SchemaFetchMode.SecondaryContent : SchemaFetchMode.MainContent);
+        }
+
+        public virtual IList<ApplicationAssociationDefinition> Associations(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedAssociations.ContainsKey(mode)) {
+                return _cachedAssociations[mode];
             }
+            var result = GetDisplayable<ApplicationAssociationDefinition>(typeof(ApplicationAssociationDefinition), mode);
+            _cachedAssociations[mode] = result;
+            return result;
+        }
+
+        public virtual IList<ApplicationCompositionDefinition> Compositions(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedCompositions.ContainsKey(mode)) {
+                return _cachedCompositions[mode];
+            }
+            var result = GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition), mode);
+            _cachedCompositions[mode] = result;
+            return result;
+        }
+
+
+        public virtual IList<OptionField> OptionFields(bool isShowMoreMode) {
+            return OptionFields(isShowMoreMode ? SchemaFetchMode.SecondaryContent : SchemaFetchMode.MainContent);
+        }
+
+        public virtual IList<OptionField> OptionFields(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedOptionFields.ContainsKey(mode)) {
+                return _cachedOptionFields[mode];
+            }
+            var result = GetDisplayable<OptionField>(typeof(OptionField), mode);
+            _cachedOptionFields[mode] = result;
+            return result;
         }
 
         [JsonIgnore]
@@ -303,12 +334,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        [JsonIgnore]
-        public virtual IList<OptionField> OptionFields {
-            get {
-                return GetDisplayable<OptionField>(typeof(OptionField));
-            }
-        }
+
 
         [JsonIgnore]
         public virtual IList<IDependableField> DependableFields {
@@ -334,14 +360,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true) {
-            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, fetchInner);
+        public IList<T> GetDisplayable<T>(Type displayableType, SchemaFetchMode mode = SchemaFetchMode.All) {
+            return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, mode);
         }
 
 
         public IEnumerable<ApplicationRelationshipDefinition> CollectionRelationships() {
-            IEnumerable<ApplicationRelationshipDefinition> applicationAssociations = Associations.Where(a => a.Collection);
-            IEnumerable<ApplicationRelationshipDefinition> applicationCompositions = Compositions.Where(a => a.Collection);
+            IEnumerable<ApplicationRelationshipDefinition> applicationAssociations = Associations().Where(a => a.Collection);
+            IEnumerable<ApplicationRelationshipDefinition> applicationCompositions = Compositions().Where(a => a.Collection);
             return applicationAssociations.Union(applicationCompositions);
         }
 
@@ -356,7 +382,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 if (displayable is ApplicationCompositionDefinition &&
                     ((ApplicationCompositionDefinition)displayable).Inline == inline) {
                     list.Add(i);
-                } 
+                }
             }
             return list;
         }
@@ -370,7 +396,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// </summary>
         public bool HasNonInlineComposition {
             get {
-                return Compositions.Any(c => c.Schema.INLINE == false && !c.isHidden);
+                return Compositions().Any(c => c.Schema.INLINE == false && !c.isHidden);
             }
         }
 
@@ -379,15 +405,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// </summary>
         public bool HasInlineComposition {
             get {
-                return Compositions.Any(c => c.Schema.INLINE == true && !c.isHidden);
+                return Compositions().Any(c => c.Schema.INLINE == true && !c.isHidden);
             }
         }
 
 
-        public IDictionary<string, string> Properties {
+        public IDictionary<string, string> Properties
+        {
             get {
                 return _properties;
             }
+            set { _properties = value; }
         }
 
 

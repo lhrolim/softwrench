@@ -40,7 +40,7 @@ namespace softWrench.sW4.Configuration.Services {
             foreach (var application in MetadataProvider.Applications(true)) {
                 namesToRegister.Add(application.ApplicationName);
                 foreach (var schema in application.Schemas()) {
-                    foreach (var association in schema.Value.Associations) {
+                    foreach (var association in schema.Value.Associations()) {
                         var entityName = association.EntityAssociation.To;
                         var associationApplication =
                             completeApplicationMetadataDefinitions.FirstOrDefault(a => a.Entity == entityName);

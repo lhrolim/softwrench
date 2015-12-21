@@ -7,7 +7,7 @@ namespace softWrench.sW4.Data.API.Association.SchemaLoading {
     /// <summary>
     /// This class holds the data structure to return when a given schema has been loaded on the server side.
     /// </summary>
-    public abstract class BaseAssociationSchemaLoadResult<TEager> {
+    public abstract class BaseAssociationSchemaLoadResult<TEager> : IAssociationSchemaLoadResult {
 
         //pre instantiating to avoid null pointers
         private IDictionary<string, IDictionary<string, IAssociationOption>> _preFetchLazyOptions = new Dictionary<string, IDictionary<string, IAssociationOption>>();

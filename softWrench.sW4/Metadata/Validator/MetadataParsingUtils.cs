@@ -139,8 +139,10 @@ namespace softWrench.sW4.Metadata.Validator {
                     }
                 }
 
-                if (!ApplicationConfiguration.IsUnitTest && AssemblyLocator.CustomerAssemblyExists()) {
+                if (!ApplicationConfiguration.IsLocal() && !ApplicationConfiguration.IsUnitTest && AssemblyLocator.CustomerAssemblyExists()) {
                     //we cannot call the assembly locator in unit test context
+                    //under local context we shall use symbolic links in order for the refresh metadata to work
+                    //TODO: do the same for non local environments, but need to explode the metadata files
                     var stream = GetStreamFromCustomerDll(resource);
                     if (stream != null) {
                         return new StreamReader(stream);

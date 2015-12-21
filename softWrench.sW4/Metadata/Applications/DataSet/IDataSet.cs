@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.application;
 using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Association.Lookup;
@@ -26,7 +27,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
         ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
 
-        AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
+        AssociationMainSchemaLoadResult BuildAssociationOptions([NotNull]AttributeHolder dataMap, ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request);
 
         LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata);
 

@@ -121,10 +121,10 @@
                         var expressionResult = null;
                         var displayable = displayables[key];
                         if (displayable.evalExpression != null) {
-                            expressionResult = expressionService.evaluate(displayable.evalExpression, datamap, scope);
+                            expressionResult = expressionService.evaluate(displayable.evalExpression, datamap, scope, displayable);
                             datamap[target] = expressionResult;
                         } else if (displayable.defaultExpression != null) {
-                            expressionResult = expressionService.evaluate(displayable.defaultExpression, datamap, scope);
+                            expressionResult = expressionService.evaluate(displayable.defaultExpression, datamap, scope, displayable);
                             datamap[target] = expressionResult;
                         }
                         if (expressionResult == null && value.defaultValue != null) {

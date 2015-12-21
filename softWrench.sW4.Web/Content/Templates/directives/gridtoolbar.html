@@ -5,6 +5,7 @@
                     ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
                     ng-enabled="isCommandEnabled(command)"
                     data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body" class="applicationcommand">
+                    <!--TODO: review that schema.stereotype !== 'List-->
                 <i class="fa" ng-class="commandIcon(command)"></i><span ng-show="schema.stereotype !== 'List'">&ensp;{{commandLabel(command)}}</span>
             </button>
             <span ng-switch-when="ResourceCommand" ng-click="validateRole(command)">

@@ -26,6 +26,9 @@
 
     <!--Person-->
     <template path="@person.xml"/>
+    
+    <!--Workflow-->
+    <template path="@workflow.xml"/>
   </templates>
   
   <entities>

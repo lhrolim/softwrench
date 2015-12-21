@@ -17,19 +17,6 @@
             //stores the context of the current detail loaded compositions
             var compositionContext = {};
 
-            var api = {
-                locatePrintSchema: locatePrintSchema,
-                getTitle: getTitle,
-                getListCommandsToKeep: getListCommandsToKeep,
-                hasEditableProperty: hasEditableProperty,
-                buildMergedDatamap: buildMergedDatamap,
-                populateWithCompositionData: populateWithCompositionData,
-                getCompositionList: getCompositionList,
-                isCompositionLodaded: isCompositionLodaded
-            };
-
-            return api;
-
 
             //#region private methods
 
@@ -237,7 +224,23 @@
                 return fetchCompositions(dto, datamap, true);
             }
 
-            //#endregion
+        //#endregion
+
+
+
+            var api = {
+                locatePrintSchema: locatePrintSchema,
+                getTitle: getTitle,
+                getListCommandsToKeep: getListCommandsToKeep,
+                hasEditableProperty: hasEditableProperty,
+                buildMergedDatamap: buildMergedDatamap,
+                populateWithCompositionData: populateWithCompositionData,
+                getCompositionList: getCompositionList,
+                isCompositionLodaded: isCompositionLodaded
+            };
+
+            return api;
+
 
         }]);
 

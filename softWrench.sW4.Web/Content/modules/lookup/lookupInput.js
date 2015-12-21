@@ -4,8 +4,8 @@
 
 
     angular.module("sw_lookup").directive("lookupInput", ["cmplookup", "contextService", 'expressionService', 'cmpfacade',
-        'dispatcherService', 'modalService', 'compositionCommons',
-        function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons) {
+        'dispatcherService', 'modalService', 'compositionCommons', 'i18NService',
+        function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService) {
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl('/Content/modules/lookup/templates/lookupinput.html'),
@@ -16,6 +16,7 @@
                     fieldMetadata: '=',
                     disabledassociations: '=',
                     blockedassociations: '=',
+                    displayablepath: '@',
                     mode: '@'
                 },
 
@@ -29,7 +30,9 @@
                     };
                     scope.$name = "lookupinput";
 
-
+                    scope.getPlaceholderText = function (fieldMetadata) {
+                        return i18NService.getI18nPlaceholder(fieldMetadata);
+                    }
 
                     scope.isSelectEnabled = function (fieldMetadata, datamap) {
                         return true;
@@ -94,8 +97,16 @@
                                 onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
                                 modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                             }
+                            var properties = (function () {
+                                var props = {}
+                                var cssclass = fieldMetadata.rendererParameters["cssclass"];
+                                if (!!cssclass) props.cssclass = cssclass;
+                                var title = fieldMetadata.rendererParameters["title"];
+                                if (!!title) props.title = title;
+                                return props;
+                            })();
 
-                            modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function (selecteditem) {
+                            modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, properties, function (selecteditem) {
                                 savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
                             }, null, datamap, schema);
 
@@ -111,7 +122,7 @@
                         var fieldMetadata = scope.fieldMetadata;
                         
                         if (fieldMetadata.rendererType === "modal") {
-                            this.showCustomModal(fieldMetadata, $scope.schema, $scope.datamap);
+                            this.showCustomModal(fieldMetadata, scope.schema, scope.datamap);
                             return;
                         }
 

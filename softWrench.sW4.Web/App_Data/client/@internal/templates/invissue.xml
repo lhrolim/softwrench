@@ -229,6 +229,7 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           </section>
@@ -237,7 +238,7 @@
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="refwo" label="Work Order" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
-            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="assetnum" label="Asse" readonly="true"/>
             <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
           </section>
           <commandbars>
@@ -334,12 +335,10 @@
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <reference id="site"/>
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+              <renderer type="lookup"/>
+            </association>
           </section>
-          <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
-            <renderer type="lookup"/>
-          </association>
-
-
 
           <section showexpression="@mode != 'batch'">
             <section orientation="horizontal">
@@ -383,12 +382,13 @@
 
 
             <section>
+              <renderer type="default" params="childinputsize=medium" />
               <reference id="issueitem" />
             </section>
 
             <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail" showexpression="@itemnum!=null">
               <collectionproperties listschema="batchitemline" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;startwithentry=true"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
             </composition>
 
           </section>
@@ -468,7 +468,8 @@
             </field>
           </section>
           <section orientation="horizontal">
-            <header displacement="ontop" label="Cost Details" params="fieldset=true;"/>
+            <header displacement="ontop" label="Cost Detail:s" params="fieldset=true;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="actualcost" label="Actual Cost" hidden="true"/>
@@ -481,7 +482,7 @@
             <field attribute="issueid" hidden="true"/>
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="assetnum" label="Asset" readonly="true"/>
-            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
             <field attribute="glcreditacct" hidden="true"/>
             <field attribute="issueid" hidden="true"/>
           </section>
@@ -546,7 +547,7 @@
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
             </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
-            <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
+            <field attribute="quantity" label="Issue Quantit:y" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;max=@curbal;"/>
             </field>
             <field attribute="inventory_.location" hidden="true" />
@@ -555,13 +556,14 @@
           </section>
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
             <field attribute="inventory_.costtype" hidden="true"/>
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
-            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
             <association label="Override GL Debit Account" target="#gldebitacct"  labelfield="glcomponents_.comptext" >
               <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
               <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>

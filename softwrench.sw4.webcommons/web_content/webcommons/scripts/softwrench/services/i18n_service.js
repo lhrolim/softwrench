@@ -135,6 +135,18 @@
             return valueConsideringSchemas(value, schema);
         },
 
+        getI18nInputLabel: function (fieldMetadata, schema) {
+            var label = this.getI18nLabel(fieldMetadata, schema);
+            var lastChar = label.charAt(label.length - 1);
+
+            if (lastChar == ":" || lastChar == "?" || lastChar == "#" || fieldMetadata.type == 'ApplicationSection') {
+                return label;
+            }
+
+            label = label + ':';
+            return label;
+        },
+
         getI18nMenuLabel: function (menuitem, tooltip) {
             if (nullOrUndef(menuitem.id)) {
                 return tooltip ? menuitem.tooltip : menuitem.title;
@@ -154,6 +166,31 @@
             var defaultValue = menuitem.icon;
             var key = "_menu." + menuitem.id + "_icon" ;
             return doGetValue(key, defaultValue, true);
+        },
+
+        getI18nPlaceholder: function (fieldMetadata) {
+            var label = fieldMetadata.label;
+            var lastChar = label.charAt(label.length - 1);
+
+            if (lastChar != ":") {
+                return label;
+            }
+
+            var placeholder = label.substr(0, label.length - 1);
+            return placeholder
+        },
+
+        getI18nRecordLabel: function (schema, datamap) {
+            if (datamap == null || datamap.fields == null || schema == null) {
+                return
+            }
+
+            var userIdFieldName = schema.userIdFieldName;
+            var userID = datamap.fields[userIdFieldName];
+
+            if (schema.idDisplayable && userID != null) {
+                return '{0} {1}'.format(schema.idDisplayable, userID);
+            }
         },
 
         getI18nTitle: function (schema) {

@@ -62,7 +62,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public static List<CompleteApplicationMetadataDefinition> HandleTemplatesForApplications(XContainer templates,
             [NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars, Boolean isSWDB, ISet<string> alreadyParsedTemplates) {
             return DoHandleTemplates<CompleteApplicationMetadataDefinition, IEnumerable<CompleteApplicationMetadataDefinition>>(templates, alreadyParsedTemplates,
-             new XmlApplicationMetadataParser(entityMetadata, commandBars, isSWDB));
+             new XmlApplicationMetadataParser(entityMetadata, commandBars, isSWDB, true));
         }
 
         private static Tuple<String, string> RealPath(XElement template) {

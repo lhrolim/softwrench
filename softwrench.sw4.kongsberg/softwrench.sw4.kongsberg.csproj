@@ -57,12 +57,7 @@
   <ItemGroup>
     <Content Include="web_content\kongsberg\images\footer.jpg" />
     <Content Include="web_content\kongsberg\images\header-email.jpg" />
-    <Content Include="web_content\kongsberg\styles\branding.css">
-      <DependentUpon>branding.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\kongsberg\styles\branding.min.css">
-      <DependentUpon>branding.css</DependentUpon>
-    </Content>
+    <Content Include="web_content\kongsberg\scripts\kongsbergcommunication_service.js" />
     <EmbeddedResource Include="metadata\kongsberg\menu.mobile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -79,10 +74,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\kongsberg\deploy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

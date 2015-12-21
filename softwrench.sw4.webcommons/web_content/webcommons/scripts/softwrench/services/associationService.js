@@ -221,6 +221,8 @@
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
+                crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData);
+
                 var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
                 if (associationFieldMetadatas == null) {
                     //should never happen, playing safe here
@@ -383,7 +385,8 @@
 
             var key = schemaService.buildApplicationMetadataSchemaKey(schema);
             var parameters = {
-                key: key
+                key: key,
+                showmore: options.showmore || false
             };
 
             var fields = datamap;
@@ -415,7 +418,7 @@
         function updateAssociations(association, scope, options) {
             options = options || {};
 
-            var log = $log.getInstance('sw4.associationservice#updateAssociations');
+            var log = $log.getInstance('sw4.associationservice#updateAssociations',['association']);
 
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
@@ -505,21 +508,6 @@
         function buildLookupSearchDTO(fieldMetadata,lookupObj, searchObj, pageNumber,totalCount,pageSize) {
             var resultDTO = {};
 
-            if (lookupObj.schemaId == null) {
-                resultDTO.quickSearchData = lookupObj.quickSearchData;;
-                return resultDTO;
-            }
-//            var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-//            var searchValues = searchObj || {};
-//
-//            var searchOperators = {};
-//
-//            for (var field in searchValues) {
-//                if (searchValues.hasOwnProperty(field)) {
-//                    searchOperators[field] = defaultLookupSearchOperator;
-//                }
-//            }
-//            resultDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
             resultDTO.quickSearchData = lookupObj.quickSearchData;
 
             resultDTO.pageNumber = pageNumber;

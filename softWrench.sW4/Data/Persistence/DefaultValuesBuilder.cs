@@ -21,6 +21,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         public const string DBDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
+        [NotNull]
         public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues, [CanBeNull]Type mappingType) {
 
             var displayables = application.Schema.GetDisplayable<IDefaultValueApplicationDisplayable>(typeof(IDefaultValueApplicationDisplayable));

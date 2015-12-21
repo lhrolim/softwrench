@@ -15,13 +15,11 @@ using softWrench.sW4.Util;
 using softWrench.sW4.Web.SimpleInjector.WebApi;
 
 namespace softWrench.sW4.Web.SimpleInjector {
-    class SimpleInjectorScanner
-    {
+    class SimpleInjectorScanner {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (SimpleInjectorScanner));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SimpleInjectorScanner));
 
-        public static Container InitDIController()
-        {
+        public static Container InitDIController() {
             var before = Stopwatch.StartNew();
             // Create the container as usual.
             var container = new Container();
@@ -41,7 +39,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
             container.Verify();
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
-            Log.Debug(LoggingUtil.BaseDurationMessage("SimpleInjector context initialized in {0}",before));
+            Log.Debug(LoggingUtil.BaseDurationMessage("SimpleInjector context initialized in {0}", before));
             return container;
         }
 
@@ -55,6 +53,10 @@ namespace softWrench.sW4.Web.SimpleInjector {
                 var registrations = assembly.GetTypes().Where(type => typeof(IComponent).IsAssignableFrom(type));
                 foreach (var registration in registrations) {
                     if (registration.IsInterface || registration.IsAbstract) {
+                        continue;
+                    }
+                    var shouldIgnore = registration.GetCustomAttribute(typeof(IgnoreComponentAttribute));
+                    if (shouldIgnore != null) {
                         continue;
                     }
                     var attributes = registration.GetAllAttributes<ComponentAttribute>();

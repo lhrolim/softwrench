@@ -77,7 +77,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
 
         public override string RoleName { get { return RoleNameCnst; } }
         public override Role Eval(InMemoryUser user) {
-            if (user.IsSwAdmin() && ApplicationConfiguration.IsLocal()) {
+            if (user.IsSwAdmin() && ApplicationConfiguration.IsLocal() || !ApplicationConfiguration.IsClient("tva")) {
                 return null;
             }
 

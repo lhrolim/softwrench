@@ -72,7 +72,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 }
 
 .commandbar {
-    margin-top: 60px;
+    margin-top: 15px;
 
     .print {
         display: none;
@@ -216,12 +216,11 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 
 .legend-label {
     display: inline;
-    padding: 20px .6em .3em;
-    /*font-size: 75%;*/
-    /*line-height: 1;*/
+    padding-top: 20px;
+    margin: 0 15px 10px;
+    width: calc(100% - 30px);
     white-space: nowrap;
     vertical-align: baseline;
-    /*font: 12px/24px Arial, Helvetica, sans-serif;*/
     font-size: 12px;
     line-height: 24px;
 }

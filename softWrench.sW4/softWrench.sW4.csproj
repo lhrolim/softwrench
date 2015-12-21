@@ -160,6 +160,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WcfSamples.DynamicProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="XDesigner.RTF">
       <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>
@@ -167,17 +171,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\API\Association\DependentAssociationLoadResult.cs" />
+    <Compile Include="Data\API\Association\InlineCompositionAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Association\Lookup\LookupOptionsFetchRequestDTO.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\BaseAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\AssociationMainSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaLoading\CompositionSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SchemaAssociationPrefetcher.cs" />
+    <Compile Include="Data\API\Association\SchemaLoading\IAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
     <Compile Include="Data\API\Composition\PreFetchedCompositionFetchRequest.cs" />
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
+    <Compile Include="Data\CompositeDatamap.cs" />
     <Compile Include="Data\Entities\Commlog\EmailCounterHandler.cs" />
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
@@ -192,6 +199,7 @@
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
+    <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
@@ -373,13 +381,13 @@
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\CommandsXMLSourceInitializer.cs" />
-    <Compile Include="Metadata\Validator\MetadataMerger.cs" />
+    <Compile Include="Metadata\Merger\MetadataMerger.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlTargetInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
-    <Compile Include="Metadata\Validator\SchemaMerger.cs" />
+    <Compile Include="Metadata\Merger\SchemaMerger.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
@@ -609,11 +617,10 @@
     <Compile Include="SPF\RouteParameterManager.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
     <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
-    <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
-    <Compile Include="Util\CollectionExtensions.cs" />
+    <Compile Include="Util\IesiCollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
     <Compile Include="Util\CompressionUtil.cs" />
     <Compile Include="Util\ConversionUtil.cs" />
@@ -901,10 +908,6 @@
       <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
       <Name>cts.commons.persistence</Name>
     </ProjectReference>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757C5D7F-9E3C-4509-BAFE-29FFB35EBE46}</Project>
-      <Name>cts.commons.portable</Name>
-    </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
@@ -937,10 +940,6 @@
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WCFDynamicProxy\src\DynamicProxyLibrary.csproj">
-      <Project>{20fd2b93-bd84-48d7-a7fb-4231972d3e26}</Project>
-      <Name>DynamicProxyLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

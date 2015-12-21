@@ -110,10 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
   </ItemGroup>
@@ -121,10 +117,6 @@
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
       <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
       <Name>cts.commons.persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
-      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
-      <Name>cts.commons.portable</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
@@ -167,12 +159,6 @@
     <None Include="web_content\dashboard\styles\dashboards.scss" />
     <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
     <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\styles\dashboards.css">
-      <DependentUpon>dashboards.scss</DependentUpon>
-    </Content>
-    <Content Include="web_content\dashboard\styles\dashboards.min.css">
-      <DependentUpon>dashboards.css</DependentUpon>
-    </Content>
     <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
     <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
     <Content Include="web_content\dashboard\templates\dashboardgridpanel.html" />

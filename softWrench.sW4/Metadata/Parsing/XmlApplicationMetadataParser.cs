@@ -40,12 +40,15 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private readonly bool _isSWDB = false;
 
-        public XmlApplicationMetadataParser([NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars, bool isSWDB) {
+        private readonly bool _isTemplateParsing = false;
+
+        public XmlApplicationMetadataParser([NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars, bool isSWDB, bool isTemplateParsing) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
 
             _entityMetadata = entityMetadata;
             _commandBars = commandBars;
             _isSWDB = isSWDB;
+            _isTemplateParsing = isTemplateParsing;
         }
 
 

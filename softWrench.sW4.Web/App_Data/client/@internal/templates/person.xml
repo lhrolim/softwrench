@@ -25,7 +25,7 @@
         </schema>
         <schema id="compositiondetail" stereotype="compositiondetail">
           <field attribute="personid" hidden="true" />
-          <field attribute="displayname" label="Display Name:" requiredexpression="true" />
+          <field attribute="displayname" label="Display Name" requiredexpression="true" />
         </schema>
 
 
@@ -125,9 +125,6 @@
         </schema>
         
         <schema id="newPersonDetail" stereotype="detailnew" title="New User" mode="input">
-          <properties>
-            <property key="detail.hidetitle" value="true"/>
-          </properties>
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
           <field attribute="personuid" label="Person ID" showexpression="false" default="-1"/>
           <field attribute="#personid" label="Username" requiredexpression="@personuid == -1" showexpression="@personuid == -1">

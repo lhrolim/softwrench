@@ -1,7 +1,8 @@
 ﻿using System;
+using softwrench.sw4.Shared2.Metadata.Entity;
 
 namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
-    public class EntityAssociationAttribute {
+    public class EntityAssociationAttribute : IQueryHolder {
 
         public bool Primary { get; set; }
         public string To { get; set; }
@@ -38,7 +39,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             QuoteLiteral = quoteLiteral;
         }
 
-        public string GetQueryReplacingMarkers(String entityName) {
+        public string GetQueryReplacingMarkers(string entityName) {
             return Query.Replace("!@", entityName + ".");
         }
 

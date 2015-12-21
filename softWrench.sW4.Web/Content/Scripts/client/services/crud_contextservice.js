@@ -12,6 +12,7 @@
         // ReSharper disable once InconsistentNaming
         var _originalContext = {
             currentSchema: null,
+            rootDataMap:null,
             currentApplicationName: null,
 
             /*{
@@ -108,6 +109,10 @@
             return _crudContext.currentSchema;
         }
 
+        function rootDataMap() {
+            return _crudContext.rootDataMap;
+        }
+
         function getAffectedProfiles() {
             return _crudContext.affectedProfiles;
         }
@@ -152,11 +157,16 @@
         //#endregion
 
         //#region hooks
-        function updateCrudContext(schema) {
+        function updateCrudContext(schema,rootDataMap) {
             //            _crudContext = {};
             _crudContext.currentSchema = schema;
+            _crudContext.rootDataMap = rootDataMap;
             _crudContext.currentApplicationName = schema.applicationName;
             schemaCacheService.addSchemaToCache(schema);
+        }
+
+        function clearCrudContext() {
+            _crudContext = angular.copy(_originalContext);
         }
 
         function afterSave() {
@@ -173,12 +183,12 @@
 
         function gridLoaded(applicationListResult) {
             this.disposeDetail();
+            this.setActiveTab(null);
             _crudContext.affectedProfiles = applicationListResult.affectedProfiles;
             _crudContext.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
 
         function disposeDetail() {
-            this.setActiveTab(null);
             _crudContext.tabRecordCount = {};
             _crudContext._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};
@@ -236,7 +246,8 @@
             if (associationOptions == null) {
                 return null;
             }
-            return associationOptions[key.toLowerCase()];
+            var keyToUse = angular.isString(key) ? key.toLowerCase() : key;
+            return associationOptions[keyToUse];
         }
 
         function fetchEagerAssociationOptions(associationKey, contextData) {
@@ -328,7 +339,9 @@
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
-            needsServerRefresh: needsServerRefresh
+            clearCrudContext: clearCrudContext,
+            needsServerRefresh: needsServerRefresh,
+            rootDataMap: rootDataMap
         };
 
         var associationServices = {

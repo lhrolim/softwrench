@@ -3,11 +3,16 @@ using System;
 using System.Collections.Generic;
 
 namespace softwrench.sW4.Shared2.Data {
+
+
     public abstract class AttributeHolder {
         private const string NotFound = "attribute {0} not found in {1}. Please review your metadata configuration";
 
+        //TODO: make Attributes a generic type instead of object
         [JsonIgnore]
-        public IDictionary<string, object> Attributes { get; set; }
+        public IDictionary<string, object> Attributes {
+            get; set;
+        }
 
         protected AttributeHolder() {
 
@@ -33,7 +38,7 @@ namespace softwrench.sW4.Shared2.Data {
             if (remove && result != null) {
                 Attributes.Remove(attributeName);
             }
-            
+
 
             return result;
         }
@@ -49,8 +54,24 @@ namespace softwrench.sW4.Shared2.Data {
             return Attributes.ContainsKey(attributeName);
         }
 
-        protected abstract string HolderName();
+        public abstract string HolderName();
 
+        public static TestAttributeHolder TestInstance(IDictionary<string, object> attributes,string holderName="") {
+            return new TestAttributeHolder(attributes,holderName);
+        }
 
+        public class TestAttributeHolder : AttributeHolder {
+            private readonly string _holderName;
+
+            public TestAttributeHolder(IDictionary<string, object> attributes, string holderName) : base(attributes)
+            {
+                _holderName = holderName;
+            }
+
+            public override string HolderName()
+            {
+                return _holderName;
+            }
+        }
     }
 }
