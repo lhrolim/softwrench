@@ -269,7 +269,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsInRole(string role) {
-            if (IsSwAdmin() && ApplicationConfiguration.IsLocal()) {
+            if (IsSwAdmin()) {
                 return true;
             }
             if (String.IsNullOrEmpty(role)) {
