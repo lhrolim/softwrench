@@ -11,7 +11,9 @@ namespace softWrench.sW4.Security.Interfaces {
     /// An evaluator that should run immediately after the user login
     /// </summary>
     public abstract class AfterLoginRoleEvaluator : IRoleEvaluator, ISWEventListener<UserLoginEvent> {
-        public abstract string RoleName { get; }
+        public abstract string RoleName {
+            get;
+        }
         public abstract Role Eval(InMemoryUser user);
         public void HandleEvent(UserLoginEvent userLoginEvent) {
             var user = userLoginEvent.InMemoryUser;
@@ -22,8 +24,10 @@ namespace softWrench.sW4.Security.Interfaces {
             var roles = user.Roles;
             if (user.IsInRole(result.Name)) {
                 //the user already has this role for some crazy reason... let´s make sure to clean it and place the dynamic evaluator result.
-                var oldRole = roles.First(r => r.Name.EqualsIc(result.Name));
-                roles.Remove(oldRole);
+                var oldRole = roles.FirstOrDefault(r => r.Name.EqualsIc(result.Name));
+                if (oldRole != null) {
+                    roles.Remove(oldRole);
+                }
             }
             roles.Add(result);
         }
