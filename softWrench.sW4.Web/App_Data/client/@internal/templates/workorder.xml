@@ -332,7 +332,7 @@
                 <renderer type="default" />
               </field>
               <association label="GL Account" target="glaccount" labelfield="glcomponents_.comptext" >
-                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;cssclass=crud-lookup-modal" />
+                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;cssclass=crud-lookup-modal;title=Select GL Account" />
               </association>
 
               <association label ="On Behalf of" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
