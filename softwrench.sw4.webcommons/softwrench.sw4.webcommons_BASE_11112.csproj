@@ -78,12 +78,8 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\workflowService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\data\datamapSanitize_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\location_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\multiassetlocci_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\scannerCommons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\person\person_service.js" />

@@ -35,7 +35,9 @@ namespace softWrench.sW4.Data.Entities.Labor {
             if (results != null && results.Count == 1) {
                 var result = results[0];
                 var craft = result.GetAttribute("craft");
+                var rate = result.GetAttribute("rate");
                 user.Genericproperties.Add("defaultcraft", craft);
+                user.Genericproperties.Add("defaultcraftrate", rate);
             }
         }
     }

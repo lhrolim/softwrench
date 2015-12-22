@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="lochierarchy" title="Location Hierarchy" entity="lochierarchy" id="00000000-0000-0000-0000-000000000002">
+      <schemas>
+        <schema id="locationparentlist" title="Parent Location List" stereotype="compositionlist">
+          <field attribute="parent" label="Location"/>
+          <field attribute="parentlocation_.description" label="Description"/>
+          <field attribute="parentlocoper_.itemnum" label="Item"/>
+          <field attribute="systemid" label="System"/>
+        </schema>
+        <schema id="locationchildlist" title="Child Location List" stereotype="compositionlist">
+          <field attribute="location" label="Location"/>
+          <field attribute="childlocation_.description" label="Description"/>
+          <field attribute="childlocoper_.itemnum" label="Item"/>
+          <field attribute="systemid" label="System"/>
+        </schema>
+        <schema id="lochierarchydetail" title="Location Hierarchy Detail" stereotype="compositiondetail">
+          <field attribute="location" label="Location"/>
+          <field attribute="childlocation_.description" label="Location Description"/>
+          <field attribute="parent" label="Parnet Location"/>
+          <field attribute="parentlocation_.description" label="Parent Location Description"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

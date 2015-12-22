@@ -194,6 +194,7 @@
             _crudContext._lazyAssociationOptions = {};
             _crudContext.compositionLoadComplete = false;
             _crudContext.associationsResolved = false;
+            contextService.setActiveTab(null);
         }
 
         function compositionsLoaded(result) {

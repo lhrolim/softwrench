@@ -1,0 +1,44 @@
+@media print { #rootprintdiv .col-xs-1, #rootprintdiv .col-xs-2, #rootprintdiv .col-xs-3, #rootprintdiv .col-xs-4, #rootprintdiv .col-xs-5, #rootprintdiv .col-xs-6, #rootprintdiv .col-xs-7, #rootprintdiv .col-xs-8, #rootprintdiv .col-xs-9, #rootprintdiv .col-xs-10, #rootprintdiv .col-xs-11, #rootprintdiv .col-xs-12, #rootprintdiv .col-sm-1, #rootprintdiv .col-sm-2, #rootprintdiv .col-sm-3, #rootprintdiv .col-sm-4, #rootprintdiv .col-sm-5, #rootprintdiv .col-sm-6, #rootprintdiv .col-sm-7, #rootprintdiv .col-sm-8, #rootprintdiv .col-sm-9, #rootprintdiv .col-sm-10, #rootprintdiv .col-sm-11, #rootprintdiv .col-sm-12, #rootprintdiv .col-md-1, #rootprintdiv .col-md-2, #rootprintdiv .col-md-3, #rootprintdiv .col-md-4, #rootprintdiv .col-md-5, #rootprintdiv .col-md-6, #rootprintdiv .col-md-7, #rootprintdiv .col-md-8, #rootprintdiv .col-md-9, #rootprintdiv .col-md-10, #rootprintdiv .col-md-11, #rootprintdiv .col-md-12, #rootprintdiv .col-lg-1, #rootprintdiv .col-lg-2, #rootprintdiv .col-lg-3, #rootprintdiv .col-lg-4, #rootprintdiv .col-lg-5, #rootprintdiv .col-lg-6, #rootprintdiv .col-lg-7, #rootprintdiv .col-lg-8, #rootprintdiv .col-lg-9, #rootprintdiv .col-lg-10, #rootprintdiv .col-lg-11, #rootprintdiv .col-lg-12 { width: 100% !important; }
+  .hiddenonprint, .no-print, .col-lg-2, .affix, .filter-row, .glyphicon, notifications, #errorModal { display: none !important; }
+  #top-affix { display: none !important; border: none; }
+  .add-on { font-size: 11px; }
+  #listgrid { border: none; font-size: 10px; display: block; }
+  .hapag-topbar { text-shadow: none; box-shadow: none; }
+  #listgrid tbody > tr { border-top: none; border-bottom: none; }
+  .hapag-body-loaded { border: 0; margin: auto; }
+  .hapag-body { margin: 0; box-shadow: none; }
+  .listgrid-firefox { width: 700px !important; }
+  .pagebreak-before { display: block; page-break-before: always; }
+  .pagebreak-after { display: block; page-break-after: always; }
+  .container { margin-top: 0 !important; }
+  .container .content { margin-top: 0 !important; }
+  html, body { margin-top: 0 !important; overflow: visible !important; float: none !important; position: relative; }
+  .form-control { border: none; }
+  .no-records { width: 100%; text-align: center; padding-top: 20px; padding-bottom: 40px; }
+  #rootprintdiv h4 { margin: 40px 0 40px; }
+  #rootprintdiv .form-group { margin-bottom: 0; }
+  #rootprintdiv .form-group .legend-label { font-size: 14px; font-weight: bold; padding: 20px 0 0; border-bottom: 1px solid #999; display: none; }
+  #rootprintdiv .form-group .control-label { width: 30% !important; float: left; padding-right: 20px; text-align: right; font-size: 12px; padding-top: 5px; }
+  #rootprintdiv .form-group .form-control { font-weight: normal; border-bottom: 1px solid #ccc; border-radius: 0; padding: 0; height: auto; min-height: 18px; float: right; font-size: 12px; }
+  #rootprintdiv .form-group .field { width: 100%; }
+  #rootprintdiv .form-group .control-label + .field { width: 70% !important; float: right; margin-top: 5px; }
+  #rootprintdiv .form-group .richtextbox, #rootprintdiv .form-group .image-holder { min-height: initial; }
+  #rootprintdiv .form-group .richtext { margin-bottom: 5px; }
+  #rootprintdiv .form-group .richtext .ta-toolbar { display: none; }
+  #rootprintdiv .form-group .richtext .form-control { width: 100% !important; }
+  #rootprintdiv .form-group .richtext .ta-scroll-window p:last-child { margin-bottom: 0; }
+  #rootprintdiv .form-group .richtext .ta-scroll-window > .ta-bind { height: auto; min-height: initial; padding: 0; }
+  .container header { position: initial; }
+  .affix-pagination { position: initial; top: initial !important; }
+  .listgrid-thead, .container.desktop .listgrid-thead { position: initial; top: initial !important; }
+  .listgrid-table { margin-top: initial !important; }
+  .content { margin-top: initial !important; }
+  .tooltip { display: none; } }
+
+@page { margin: 36px; }
+
+@media screen { .hideRows { display: none; }
+  .pagebreak { display: none; }
+  .hiddenonscreen { display: none; } }
+
+/*# sourceMappingURL=media.css.map */

@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-
+  <templates>
+    <!--Location-->
+    <template path="@lochierarchy.xml"/>
+    <template path="@locationspec.xml"/>
+    <template path="@assettrans.xml"/>
+  </templates>
+  <entities>
+    <entity name="location" idAttribute="locationsid">
+      <attributes>
+        <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
+        <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
+      </attributes>
+    </entity>
+  </entities>
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
@@ -19,6 +32,86 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
+        <schema id="locationlist" title="Location Grid" stereotype="list">
+          <properties>
+            <property key="list.click.schema" value="locationdetail"/>
+            <property key="list.click.customparams" value="parentlocation_.systemid,parentlocation_.parent"/>
+          </properties>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="classstructure_.description" label="Class Structure"/>
+          <field attribute="parentlocation_.parent" label="Parent Location"/>
+          <field attribute="parentlocation_.systemid" label="System"/>
+          <field attribute="children" label="Child Locations"/>
+          <field attribute="assets" label="Assets"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="siteid" label="Site"/>
+          <field attribute="orgid" hidden="true"/>
+          <!--Child Locations-->
+          <!--Open Work Orders-->
+        </schema>
+        <schema id="locationdetail" title="Location Detail" stereotype="detail">
+          <field attribute="orgid" showexpression="false"/>
+          <section orientation="horizontal">
+            <field attribute="location" label="Location:" readonly="true"/>
+            <field attribute="description" label="Description:" readonly="true"/>
+            <field attribute="status" label="Status" readonly="true"/>
+            <field attribute="siteid" label="Site:" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="type" label="Type:" readonly="true"/>
+            <field attribute="locoper_.locpriority" label="Priority:" readonly="true"/>
+            <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
+            <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="locoper_.calnum" label="Calendar:" readonly="true"/>
+            <field attribute="locoper_.shiftnum" label="Shift:" readonly="true"/>
+            <field attribute="glaccount" label="GL Account:" readonly="true"/>
+            <field attribute="intlabrec" label="Internal Labor Account" readonly="true"/>
+          </section>
+          
+          <section id="systems" orientation="horizontal">
+            <!-- need to add some type of selectable association for systems -->
+          </section>
+          
+          <composition relationship="parentlocation" label="Parent" detailschema="" inline="true">
+            <collectionproperties listschema="locationparentlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
+          </composition>
+          <composition relationship="childlocation" label="Children" detailschema="" inline="true">
+            <collectionproperties listschema="locationchildlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
+          </composition>
+          <composition relationship="asset" label="Assets" detailschema="" rendermode="output">
+            <collectionproperties listschema="locationassets" allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          <composition relationship="workorder" label="Work Order History" detailschema="" rendermode="output">
+            <collectionproperties listschema="locationwolist" allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          <composition relationship="assettrans" label="History" detailschema="" rendermode="output">
+            <collectionproperties listschema="compositionlist" allowcreation="false" allowupdate="false" allowremoval="false" prefilterfunction="BuildAssettransWhereClause"/>
+          </composition>
+          <composition relationship="locationmeter" label="Meters" detailschema="locationdetail" rendermode="output">
+            <collectionproperties listschema="locationcomposition" allowcreation="false" allowupdate="false" allowremoval="false" orderbyfield="sequence"/>
+          </composition>
+          <composition relationship="locationspec" label="Specifications" detailschema="compositiondetail" rendermode="output">
+            <collectionproperties listschema="compositionlist"  allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
+                          parameters="schema,datamap" service="locationService" method="dispatchWO"/>
+              </container>
+            </commandgroup>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
       </schemas>
     </application>
   </applications>

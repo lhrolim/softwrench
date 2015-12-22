@@ -160,6 +160,25 @@
           <field attribute="siteid"/>
         </schema>
 
+        <schema id="locationwolist" title="Work Orders" stereotype="compositionlist">
+          <properties>
+            <property key="list.click.event" value="workorderService.goToDetail"/>
+          </properties>
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wonum" label="Work Order"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="schedstart" label="Scheduled Start"/>
+          <field attribute="wopriority" label="Priority"/>
+          <field attribute="siteid" label="Site"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
         <schema id="ahiddendetails" title="schemaForHoldingHiddensOnly" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
           <field attribute="estlabhrs"         hidden="true"/>
@@ -332,7 +351,7 @@
                 <renderer type="default" />
               </field>
               <association label="GL Account" target="glaccount" labelfield="glcomponents_.comptext" >
-                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;cssclass=crud-lookup-modal" />
+                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;cssclass=crud-lookup-modal;title=Select GL Account" />
               </association>
 
               <association label ="On Behalf of" target="onbehalfof" labelfield="onbehalfofperson_.displayname">

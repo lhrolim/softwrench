@@ -63,7 +63,7 @@ namespace softWrench.sW4.Metadata.Security {
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset) {
             DBUser = dbUser;
             _login = dbUser.UserName;
-            SiteId = dbUser.Person.SiteId?? dbUser.SiteId;
+            SiteId = dbUser.Person.SiteId ?? dbUser.SiteId;
             _firstName = dbUser.Person.FirstName ?? dbUser.FirstName;
             _lastName = dbUser.Person.LastName ?? dbUser.LastName;
             _email = dbUser.Person.Email ?? dbUser.Email;
@@ -134,58 +134,88 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public string Login {
-            get { return _login; }
-            set { _login = value; }
+            get {
+                return _login;
+            }
+            set {
+                _login = value;
+            }
         }
 
-        public string SiteId { get; set; }
+        public string SiteId {
+            get; set;
+        }
 
         public string FirstName {
-            get { return _firstName; }
+            get {
+                return _firstName;
+            }
         }
 
         public string LastName {
-            get { return _lastName; }
+            get {
+                return _lastName;
+            }
         }
 
         public string Email {
-            get { return _email; }
+            get {
+                return _email;
+            }
         }
 
         public string OrgId {
-            get { return _orgId; }
+            get {
+                return _orgId;
+            }
         }
 
         public Iesi.Collections.Generic.ISet<PersonGroupAssociation> PersonGroups {
-            get { return _personGroups; }
+            get {
+                return _personGroups;
+            }
         }
 
         public string Department {
-            get { return _department; }
+            get {
+                return _department;
+            }
         }
 
         public string Phone {
-            get { return _phone; }
+            get {
+                return _phone;
+            }
         }
 
         public string Language {
-            get { return _language; }
+            get {
+                return _language;
+            }
         }
 
         public string Storeloc {
-            get { return _storeloc; }
+            get {
+                return _storeloc;
+            }
         }
 
         public string MaximoPersonId {
-            get { return _maximoPersonId; }
+            get {
+                return _maximoPersonId;
+            }
         }
 
         public string Signature {
-            get { return _signature; }
+            get {
+                return _signature;
+            }
         }
 
         public GridPreferences GridPreferences {
-            get { return _gridPreferences; }
+            get {
+                return _gridPreferences;
+            }
         }
 
         public UserPreferences UserPreferences {
@@ -199,23 +229,33 @@ namespace softWrench.sW4.Metadata.Security {
         /// (UTCTime - ClientTime)
         /// </summary>
         public int? TimezoneOffset {
-            get { return _timezoneOffset; }
+            get {
+                return _timezoneOffset;
+            }
         }
 
         public IList<Role> Roles {
-            get { return _roles; }
+            get {
+                return _roles;
+            }
         }
 
         public int? DBId {
-            get { return _dbId; }
+            get {
+                return _dbId;
+            }
         }
 
         [JsonIgnore]
-        public User DBUser { get; set; }
+        public User DBUser {
+            get; set;
+        }
 
 
         public IList<DataConstraint> DataConstraints {
-            get { return _dataConstraints; }
+            get {
+                return _dataConstraints;
+            }
         }
 
         public MenuDefinition Menu(ClientPlatform platform, out Boolean fromCache) {
@@ -265,7 +305,9 @@ namespace softWrench.sW4.Metadata.Security {
 
         [NotNull]
         public ICollection<UserProfile> Profiles {
-            get { return _profiles; }
+            get {
+                return _profiles;
+            }
         }
 
         public bool IsInRole(string role) {
@@ -284,7 +326,9 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         [JsonIgnore]
-        public IIdentity Identity { get; private set; }
+        public IIdentity Identity {
+            get; private set;
+        }
 
         public bool IsInProfile(string profileName) {
             if (IsSwAdmin() && ApplicationConfiguration.IsLocal()) {
@@ -303,12 +347,18 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public int? UserId {
-            get { return DBId; }
+            get {
+                return DBId;
+            }
         }
 
         public IDictionary<string, object> Genericproperties {
-            get { return _genericproperties; }
-            set { _genericproperties = value; }
+            get {
+                return _genericproperties;
+            }
+            set {
+                _genericproperties = value;
+            }
         }
 
         public string GetPersonGroupsForQuery() {
@@ -320,7 +370,9 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public string FullName {
-            get { return FirstName + " " + LastName; }
+            get {
+                return FirstName + " " + LastName;
+            }
         }
 
         public bool IsSwAdmin() {
@@ -339,6 +391,14 @@ namespace softWrench.sW4.Metadata.Security {
         public void ClearMenu() {
             _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
             Genericproperties.Remove("menumanagerscached");
+        }
+
+        [CanBeNull]
+        public object GetProperty(string key) {
+            if (Genericproperties.ContainsKey(key)) {
+                return Genericproperties[key];
+            }
+            return null;
         }
     }
 }
