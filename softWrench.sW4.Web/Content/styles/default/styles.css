@@ -641,6 +641,10 @@ table .detaildata { display: table-cell !important; }
 
 #crudmodal { margin-left: auto; margin-right: auto; top: 50px; }
 
+.crud-lookup-modal { width: 500px !important; }
+
+@media (max-width: 500px) { .crud-lookup-modal { width: 350px !important; } }
+
 .conditionModal { position: absolute; top: 25%; margin-right: auto; margin-left: auto; padding: 20px; width: 650px; height: 850px; outline: none; }
 
 .modalLock { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; }
