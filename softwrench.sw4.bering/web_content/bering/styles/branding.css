@@ -1,9 +1,0 @@
-.page-signin { background: #e0f3f1 url(../images/signin.jpg) no-repeat center top fixed; }
-
-.container header { background: #e0f3f1 url(../images/header.jpg) no-repeat top left; }
-
-.container footer { background: #e0f3f1 url(../images/footer.jpg) no-repeat bottom left; }
-
-.page-signin, .container header, .container footer { background-size: cover; }
-
-/*# sourceMappingURL=branding.css.map */
