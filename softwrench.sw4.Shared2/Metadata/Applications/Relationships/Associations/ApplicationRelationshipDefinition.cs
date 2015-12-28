@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
@@ -8,11 +9,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
     public abstract class ApplicationRelationshipDefinition : BaseDefinition, IApplicationIndentifiedDisplayable {
 
         public string From { get; set; }
-        public string Label { get; set; }
+        [DefaultValue("")] public string Label { get; set; }
         public virtual string RendererType { get; set; }
         public string Type { get { return GetType().Name; } }
         public abstract string Role { get; }
-        public string ShowExpression { get; set; }
+        [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
         public bool? ReadOnly { get; set; }
 

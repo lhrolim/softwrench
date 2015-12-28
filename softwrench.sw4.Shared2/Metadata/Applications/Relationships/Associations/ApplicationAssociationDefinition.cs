@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -27,6 +27,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public string LabelPattern {
             get; set;
         }
+        [DefaultValue("true")]
         public string EnableExpression {
             get; set;
         }
@@ -45,9 +46,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public string RequiredExpression {
-            get; set;
-        }
+        [DefaultValue("false")]
+        public string RequiredExpression { get; set; }
 
         public string Qualifier {
             get; set;
@@ -219,7 +219,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                 return EntityAssociation.Reverse;
             }
         }
-
         public bool ForceDistinctOptions {
             get {
                 return _forceDistinctOptions;

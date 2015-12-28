@@ -3,21 +3,21 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public abstract class BaseApplicationFieldDefinition : BaseDefinition, IApplicationAttributeDisplayable, IDefaultValueApplicationDisplayable {
 
         public string ApplicationName { get; set; }
-        public string Label { get; set; }
+        [DefaultValue("")] public string Label { get; set; }
         public string Attribute { get; set; }
-        public string RequiredExpression { get; set; }
+        [DefaultValue("false" )] public string RequiredExpression { get; set; }
         public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
-
-        public string ShowExpression { get; set; }
-        public string EnableExpression { get; set; }
+        [DefaultValue("true")] public string ShowExpression { get; set; }
+        [DefaultValue("true")] public string EnableExpression { get; set; }
 
         public string ToolTip { get; set; }
         public bool? ReadOnly { get; set; }

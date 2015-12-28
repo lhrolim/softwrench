@@ -7,6 +7,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -28,9 +29,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly ISet<ApplicationEvent> _eventsSet;
         private readonly string _dependantFieldsString;
         public string EvalExpression { get; set; }
-
-        public String EnableExpression { get; set; }
-
 
         public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,

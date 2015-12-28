@@ -4,10 +4,11 @@ using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
-    public class ApplicationFieldDefinition : BaseApplicationFieldDefinition, IDefinition, IPCLCloneable {
+    public class ApplicationFieldDefinition : BaseApplicationFieldDefinition, IPCLCloneable {
 
         public const string AttributeQualifierSeparator = ".";
 
@@ -21,6 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string EvalExpression {
             get; set;
         }
+        [DefaultValue("true")]
         public string EnableDefault {
             get; set;
         }

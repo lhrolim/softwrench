@@ -1,4 +1,5 @@
-﻿using cts.commons.portable.Util;
+﻿using System.ComponentModel;
+using cts.commons.portable.Util;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
@@ -32,6 +33,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
+        [DefaultValue(true)]
         public bool Remove {
             get; set;
         }

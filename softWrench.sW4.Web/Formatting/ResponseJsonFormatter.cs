@@ -7,9 +7,10 @@ namespace softWrench.sW4.Web.Formatting {
     public class ResponseJsonFormatter : JsonMediaTypeFormatter, ISWJsonFormatter {
 
         public ResponseJsonFormatter() {
-            SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            SerializerSettings.ContractResolver = new LeanJsonContractResolver();
             SerializerSettings.Converters.Add(new JsonDateTimeConverter());
             SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
         }
     }
 }

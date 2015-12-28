@@ -10,6 +10,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
@@ -68,6 +69,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
+        [DefaultValue(SchemaStereotype.None)]
         public virtual SchemaStereotype Stereotype {
             get; set;
         }
@@ -152,7 +154,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private SchemaFilters _schemaFilters;
 
-
+        [DefaultValue(true)]
         public bool RedeclaringSchema {
             get {
                 return _redeclaringSchema;

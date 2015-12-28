@@ -310,6 +310,7 @@
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
+    <Compile Include="Formatting\LeanJsonContractResolver.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\IBaseLayoutModel.cs" />

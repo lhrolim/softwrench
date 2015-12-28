@@ -16,7 +16,7 @@ namespace softWrench.sW4.Metadata.Parsing {
     internal sealed class XmlFilterMetadataParser {
 
         [CanBeNull]
-        public static SchemaFilters ParseSchemaFilters(XElement schemaOrApplicationElement, [CanBeNull]SchemaStereotype? stereotype=null) {
+        public static SchemaFilters ParseSchemaFilters(XElement schemaOrApplicationElement, [CanBeNull]SchemaStereotype? stereotype = null) {
             var declaredFilters = schemaOrApplicationElement.Elements().FirstOrDefault(f => f.IsNamed(XmlFilterSchema.FiltersElement));
             if (declaredFilters == null) {
                 return null;
@@ -55,7 +55,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
                     var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(true);
-                    filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove,style));
+                    filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));
                 }
             }
             return new SchemaFilters(filters);

@@ -3,6 +3,7 @@ using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -12,12 +13,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
 
         private const string WrongRenderer = "displacement {0} not found. Possible options are ontop,sameline";
 
+        [DefaultValue("")]
         public string Label { get; set; }
         public IDictionary<string, object> Parameters { get; set; }
         public string Displacement { get { return DisplacementEnum.ToString().ToLower(); } }
         public DisplacementType DisplacementEnum { get; set; }
 
-        public String ShowExpression { get; set; }
+        [DefaultValue("true")]
+        public string ShowExpression { get; set; }
 
 
         public ApplicationHeader() {
