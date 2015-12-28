@@ -91,8 +91,8 @@ GitTfs/git2.*
 # SASS Files
 softWrench.sW4.Web/node_modules/
 softWrench.sW4.Web/.sass-cache/
-**/content/styles/**/*.css
-**/content/styles/**/*.css.map
+**/Content/styles/**/*.css
+**/Content/styles/**/*.css.map
 **/web_content/**/*.css
 **/web_content/**/*.css.map
 Build/node_modules/

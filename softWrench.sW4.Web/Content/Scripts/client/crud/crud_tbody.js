@@ -199,7 +199,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                             html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
                         } else if (column.rendererType === 'checkbox') {
                             var name = attribute;
-                            html += "<div>";
+                            html += "<div class='cell-wrapper'>";
                             if (column.rendererParameters["editable"] === "true") {
                                 html += "<input type='checkbox' class='check' name='{0}' ".format(name);
                                 html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst, name);

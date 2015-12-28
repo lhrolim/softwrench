@@ -329,6 +329,12 @@
         background: none;
         box-shadow: none;
     }
+
+    .radio, .checkbox {
+        display: table-cell;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 }
 
 .gridcolumnvalue {
@@ -447,11 +453,12 @@ table .detaildata {
                     background-color: #d6d6d6;
                 }
 
-                td {
+                td, td.radio, td.checkbox {
                     position: relative;
                     padding: 4px 4px 4px 50%;
                     white-space: normal;
                     text-align: left;
+                    display: block;
 
                     &.no-data {
                         display: none;
