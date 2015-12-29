@@ -14,8 +14,6 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                     "datamap='datamap' " +
                     "savefn='save(selecteditem)'" +
                     "is-dirty='false' " +
-                    "is-list='isList' " +
-                    "is-detail='true' " +
                     "original-datamap='OriginalDatamp' " +
                     "association-schemas='associationSchemas' " +
                     "blockedassociations='blockedassociations' " +
@@ -107,6 +105,11 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $scope.previousdata = modaldata.previousdata;
                 $scope.modaltitle = modaldata.title;
                 $scope.cssclass = modaldata.cssclass;
+                schema.stereotype = schema.stereotype || "detail";
+                $scope.isList = schema.stereotype.equalsAny("list", "compositionlist");
+                $scope.isDetail = schema.stereotype.equalsAny("detail", "compositionDetail");
+
+
                 $scope.datamap = {
                     fields: datamap
                 };
@@ -154,8 +157,6 @@ app.directive('crudBodyModalWrapper', function ($compile) {
             replace: true,
             templateUrl: url('/Content/Templates/crud/crud_body_modal.html'),
             scope: {
-                isList: '=',
-                isDetail: '=',
                 blockedassociations: '=',
                 associationSchemas: '=',
                 schema: '=',
@@ -176,6 +177,8 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 return {
                     post: function postLink(scope, iElement, iAttrs, controller) {
                         var modalData = $rootScope.modalTempData;
+                        //by default modals, should render as detail stereotype mode
+                        
                         modalService.show(modalData);
                         $rootScope.modalTempData = null;
                     }

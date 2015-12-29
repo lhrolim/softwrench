@@ -298,23 +298,11 @@
         <schema id="filter" stereotype="detail">
           <field attribute="a" label="aLabel" tooltip="aTooltip" attributeToServer="aAtt"/>
           <field attribute="b" label="bLabel" tooltip="bTooltip" attributeToServer="bAtt"/>
-
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="print"/>
             </commandgroup>
           </commandbars>
-          <properties>
-            <property key="associationstoprefetch" value="#none"/>
-            <property key="list.disablepagination" value="true"/>
-            <property key="list.disablefilter" value="true"/>
-            <property key="list.sortmode" value="true"/>
-            <property key="list.disabledetails" value="true"/>
-            <property key="show.printcommand" value="false"/>
-          </properties>
-          
-          
-          
         </schema>
       </schemas>
     </application>
