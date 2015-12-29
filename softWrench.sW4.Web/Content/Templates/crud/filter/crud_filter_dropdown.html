@@ -1,5 +1,6 @@
 ﻿<div class="filter-label-wrapper js_filter" ng-if="!!filter">
-    <div class="dropdown" ng-init="markDefaultOperator(filter)">
+
+    <div class="dropdown" ng-init="markDefaultOperator(filter); initModal(filter, schema)">
         <div class="wrap" ng-class="{'slim': layout.standalone}"
              rel="tooltip" data-original-title="{{getFilterText(filter)}}" 
              ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
@@ -10,10 +11,12 @@
                'fa-caret-down': !layout.standalone,
                'fa-filter': layout.standalone && !hasFilter(filter),
                'fa-check': layout.standalone && hasFilter(filter)
-               }">
+               }"
+               ng-click="showModal(filter, schema)">
             </i>
         </div>
         <div class="dropdown-menu js_filter_content {{filter.type}}"
+             ng-if="filter.type != 'MetadataModalFilter'"
              style="{{filter.style}}"
              data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
 
@@ -101,5 +104,4 @@
         </div>
 
     </div>
-
 </div>

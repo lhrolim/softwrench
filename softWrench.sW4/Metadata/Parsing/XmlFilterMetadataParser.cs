@@ -16,14 +16,14 @@ namespace softWrench.sW4.Metadata.Parsing {
     internal sealed class XmlFilterMetadataParser {
 
         [CanBeNull]
-        public static SchemaFilters ParseSchemaFilters(XElement schemaOrApplicationElement, [CanBeNull]SchemaStereotype? stereotype=null) {
+        public static SchemaFilters ParseSchemaFilters(XElement schemaOrApplicationElement, [CanBeNull]SchemaStereotype? stereotype = null) {
             var declaredFilters = schemaOrApplicationElement.Elements().FirstOrDefault(f => f.IsNamed(XmlFilterSchema.FiltersElement));
             if (declaredFilters == null) {
                 return null;
             }
             var els = declaredFilters.Elements();
             var xElements = els as XElement[] ?? els.ToArray();
-            if (stereotype !=null && xElements.Any() && stereotype != SchemaStereotype.List ) {
+            if (stereotype != null && xElements.Any() && stereotype != SchemaStereotype.List) {
                 throw new MetadataException("filters can only be declared in list schemas");
             }
 
@@ -39,7 +39,11 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var style = el.AttributeValue(XmlFilterSchema.StyleAttribute);
                 var whereclause = el.AttributeValue(XmlFilterSchema.WhereClauseAttribute);
 
-                if (el.IsNamed(XmlFilterSchema.OptionFilterElement)) {
+                if (el.IsNamed(XmlFilterSchema.ModalFilterElement))
+                {
+                    var targetSchema = el.AttributeValue(XmlFilterSchema.TargetSchemaAttribute);
+                    filters.AddLast(new MetadataModalFilter(attribute, label, icon, position, tooltip, whereclause, targetSchema));
+                } else if (el.IsNamed(XmlFilterSchema.OptionFilterElement)) {
                     var provider = el.AttributeValue(XmlFilterSchema.ProviderAttribute);
                     XNamespace xmlns = XmlFilterSchema.FilterNamespace;
                     if (string.IsNullOrEmpty(provider) && !el.Descendants(xmlns + XmlFilterSchema.OptionElement).Any()) {
@@ -49,13 +53,13 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var displayCode = el.Attribute(XmlFilterSchema.DisplayCodeAttribute).ValueOrDefault(false);
                     var eager = el.Attribute(XmlFilterSchema.EagerAttribute).ValueOrDefault(false);
                     var options = ParseDefaultOptions(el);
-                    filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider,displayCode, allowBlank, style, !eager, options));
+                    filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider, displayCode, allowBlank, style, !eager, options));
                 } else if (el.IsNamed(XmlFilterSchema.BooleanFilterElement)) {
                     var defaultValue = el.Attribute(XmlFilterSchema.DefaultSelectionAttribute).ValueOrDefault(true);
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
                     var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(true);
-                    filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove,style));
+                    filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));
                 }
             }
             return new SchemaFilters(filters);

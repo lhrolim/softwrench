@@ -59,7 +59,7 @@
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
 
       <filters>
-        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+        <modalfilter attribute="status" targetschema="filter"></modalfilter>
         <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
         </optionfilter>
@@ -293,6 +293,28 @@
                        showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
             </commandgroup>
           </commandbars>
+        </schema>
+
+        <schema id="filter" stereotype="detail">
+          <field attribute="a" label="aLabel" tooltip="aTooltip" attributeToServer="aAtt"/>
+          <field attribute="b" label="bLabel" tooltip="bTooltip" attributeToServer="bAtt"/>
+
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+            <property key="list.disablepagination" value="true"/>
+            <property key="list.disablefilter" value="true"/>
+            <property key="list.sortmode" value="true"/>
+            <property key="list.disabledetails" value="true"/>
+            <property key="show.printcommand" value="false"/>
+          </properties>
+          
+          
+          
         </schema>
       </schemas>
     </application>

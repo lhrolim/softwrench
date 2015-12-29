@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService) {
 
                         $scope.layout = {
                             standalone: false
@@ -194,6 +194,32 @@
                         $scope.setStandaloneMode = function (value) {
                             $scope.layout.standalone = value;
                         };
+
+                        $scope.initModal = function(filter, schema) {
+                            if (filter.type !== "MetadataModalFilter") return;
+
+                            var cachedSchema = schemaCacheService.getCachedSchema(schema.applicationName, filter.targetSchemaId);
+                            if (cachedSchema) return;
+
+                            var parameters = {
+                                applicationName: schema.applicationName,
+                                targetSchemaId: filter.targetSchemaId
+                            }
+                            restService.getPromise("FilterData", "GetSchemaDefinition", parameters).then(function (result) {
+                                schemaCacheService.addSchemaToCache(result.data);
+                            });
+                        }
+
+                        $scope.showModal = function (filter, schema) {
+                            if (filter.type !== "MetadataModalFilter") return;
+                            var properties = (function () {
+                                var props = {}
+                                props.title = filter.tooltip + " Filter";
+                                return props;
+                            })();
+                            var cachedSchema = schemaCacheService.getCachedSchema(schema.applicationName, filter.targetSchemaId);
+                            modalService.show(cachedSchema, {}, properties);
+                        }
 
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,

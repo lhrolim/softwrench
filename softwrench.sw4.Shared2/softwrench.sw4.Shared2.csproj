@@ -55,6 +55,7 @@
     <Compile Include="Metadata\Applications\Command\ICommandDisplayable.cs" />
     <Compile Include="Metadata\Applications\Command\RemoveCommandDefinition.cs" />
     <Compile Include="Metadata\Applications\Command\ResourceCommand.cs" />
+    <Compile Include="Metadata\Applications\Filter\MetadataModalFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\MetadataNumberFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\MetadataDateTimeFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\MetadataFilterOption.cs" />

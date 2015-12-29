@@ -85,7 +85,12 @@ namespace softWrench.sW4.Web.Controllers {
 
         }
 
-
+        [HttpGet]
+        public ApplicationSchemaDefinition GetSchemaDefinition([FromUri] string applicationName, string targetSchemaId) {
+            var app = MetadataProvider.Application(applicationName);
+            var schema = app.Schema(new ApplicationMetadataSchemaKey(targetSchemaId));
+            return schema;
+        }
 
 
         private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string filterProvider,
