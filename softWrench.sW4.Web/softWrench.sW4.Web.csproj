@@ -290,6 +290,7 @@
     <Compile Include="SimpleInjector\SimpleInjectorScanner.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
     <Compile Include="SPF\Filters\ContextFilter.cs" />
+    <Compile Include="SPF\Filters\CompressionFilter.cs" />
     <Compile Include="UserControls\RichTextBox.aspx.cs">
       <DependentUpon>RichTextBox.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

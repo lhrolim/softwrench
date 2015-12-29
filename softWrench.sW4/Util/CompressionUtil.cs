@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace softWrench.sW4.Util {
-    class CompressionUtil {
+    public class CompressionUtil {
 
         public static byte[] Compress(byte[] plainData) {
             byte[] compressesData = null;

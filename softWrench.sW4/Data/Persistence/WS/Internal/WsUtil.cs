@@ -23,9 +23,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (target == "maximo7.5" || target == "maximo7.1" || target == "maximo7.2.1") {
                 return Constants.WsProvider.MIF;
             }
-            if (ApplicationConfiguration.IsLocal() && ApplicationConfiguration.ClientName.Equals("hapag")) {
-                return Constants.WsProvider.MIF;
-            }
+//            if (ApplicationConfiguration.IsLocal() && ApplicationConfiguration.ClientName.Equals("hapag")) {
+//                return Constants.WsProvider.MIF;
+//            }
 
             if (target == "ism") {
                 return Constants.WsProvider.ISM;
