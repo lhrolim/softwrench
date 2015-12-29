@@ -27,6 +27,8 @@ namespace softWrench.sW4.Util {
             return compressesData;
         }
 
+
+
         public static byte[] Decompress(byte[] zippedData) {
             if (zippedData == null) {
                 return null;
