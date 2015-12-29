@@ -5,6 +5,7 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Security.Context;
 using System.Web.Http;
+using cts.commons.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Web.Util;
@@ -45,9 +46,10 @@ namespace softWrench.sW4.Web.Controllers {
             excelFile.SaveAs(stream);
             stream.Close();
             var fileName = GetFileName(application, key.SchemaId) + ".xls";
-            var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
+            var result = new FileContentResult(CompressionUtil.Compress(stream.ToArray()), System.Net.Mime.MediaTypeNames.Application.Octet) {
                 FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
             };
+            Response.AddHeader("Content-encoding", "gzip");
             return result;
         }
 
