@@ -44,6 +44,14 @@
   <ItemGroup>
     <EmbeddedResource Include="metadata\firstsolar\deploy.xml" />
     <EmbeddedResource Include="metadata\firstsolar\properties.xml" />
+    <EmbeddedResource Include="metadata\firstsolar\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="metadata\firstsolar\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="metadata\firstsolar\readme.txt" />
     <Content Include="web_content\firstsolar\images\footer.jpg" />
     <Content Include="web_content\firstsolar\images\header-email.jpg" />
