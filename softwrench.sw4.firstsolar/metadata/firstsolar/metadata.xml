@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@person.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@location.xml"/>
+  </templates>
+
+
+</metadata>
