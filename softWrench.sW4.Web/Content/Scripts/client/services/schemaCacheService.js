@@ -8,6 +8,7 @@
         var systemInitTimeKey = keyRoot + "systeminitMillis";
 
         function restore() {
+            delete localStorageService[url("") + ":schemaCache"]; // deleting previous version cache
             // lazy schema fetch strategy: only restore the systeminitmillis
             schemaCache.systeminitMillis = localStorage.getItem(systemInitTimeKey);
 
@@ -83,7 +84,9 @@
             var systeminitMillis = contextService.getFromContext("systeminittime");
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
-                
+
+                delete localStorageService[url("") + ":schemaCache"]; // deleting previous version cache
+
                 Object.keys(localStorage)
                     .filter(function(key) {
                         key.startsWith(keyRoot);
@@ -91,6 +94,7 @@
                     .forEach(function (schemakey) {
                         delete localStorage[schemakey];
                     });
+
 
                 schemaCache = { systeminitMillis: systeminitMillis };
             }
