@@ -10,7 +10,6 @@ using Newtonsoft.Json.Serialization;
 namespace softWrench.sW4.Web.Formatting.Rule {
     /// <summary>
     /// Prevents serialization of empty objects ("{}").
-    /// TODO: implement
     /// </summary>
     public class EmptyObjectSerializationRule : IPropertySerializationRule {
 

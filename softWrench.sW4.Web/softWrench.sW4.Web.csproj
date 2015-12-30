@@ -645,6 +645,7 @@
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
+    <Content Include="Content\Scripts\vendor\other\lz-string.js" />
     <Content Include="Content\Scripts\vendor\other\selectize\selectize.js" />
     <Content Include="Content\Scripts\vendor\other\selectize\angular-selectize.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
