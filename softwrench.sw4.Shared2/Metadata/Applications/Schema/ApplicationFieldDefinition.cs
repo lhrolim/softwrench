@@ -5,6 +5,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -16,6 +17,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private FieldFilter _filter;
 
         //TODO: remove this, since it´s Xamarin legacy code
+        [Obsolete("Only used by unsupported Xamarin client code")]
         private IWidgetDefinition _widgetDefinition;
 
         private readonly ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
@@ -109,7 +111,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 _filter = value;
             }
         }
-
+        
+        [Obsolete("Only used by unsupported Xamarin client code")]
+        [JsonIgnore]
         public IWidgetDefinition WidgetDefinition {
             get {
                 return _widgetDefinition;

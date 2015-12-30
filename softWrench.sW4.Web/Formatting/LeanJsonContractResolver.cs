@@ -1,9 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using softWrench.sW4.Web.Formatting.Rule;
 
 namespace softWrench.sW4.Web.Formatting {
     /// <summary>
@@ -12,9 +15,36 @@ namespace softWrench.sW4.Web.Formatting {
     /// </summary>
     public class LeanJsonContractResolver : CamelCasePropertyNamesContractResolver {
 
+        private static readonly IDictionary<Type, IList<JsonProperty>> PropertyCache = new Dictionary<Type, IList<JsonProperty>>();
+
+        private IList<IPropertySerializationRule> _rules;
+
+        private IList<IPropertySerializationRule> Rules {
+            get {
+                return _rules ?? (_rules = SimpleInjectorGenericFactory.Instance
+                    .GetObjectsOfType<IPropertySerializationRule>(typeof(IPropertySerializationRule))
+                    .ToList());
+            }
+        }
+
+        public IList<JsonProperty> PropertiesForType(Type type, MemberSerialization memberSerialization) {
+            IList<JsonProperty> properties;
+            if (!PropertyCache.TryGetValue(type, out properties)) {
+                properties = CreateProperties(type, memberSerialization);
+                PropertyCache[type] = properties;
+            }
+            return properties;
+        }
+
+        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization) {
+            var properties = base.CreateProperties(type, memberSerialization);
+            PropertyCache[type] = properties;
+            return properties;
+        }
+
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization) {
             var property = base.CreateProperty(member, memberSerialization);
-            var customRule = CustomSerializationRuleForProperty(property, member, memberSerialization);
+            var customRule = CombinedRules(property, member, memberSerialization);
             // property type does not require custom serialization rule
             if (customRule == null) return property;
             // apply custom serialization rule
@@ -25,29 +55,27 @@ namespace softWrench.sW4.Web.Formatting {
             return property;
         }
 
-        private static Predicate<object> CustomSerializationRuleForProperty(JsonProperty property, MemberInfo member, MemberSerialization memberSerialization) {
-            var isDefaultValueIgnored = ((property.DefaultValueHandling ?? DefaultValueHandling.Ignore) & DefaultValueHandling.Ignore) != 0;
-            var propertyType = property.PropertyType;
-            var isInterceptable = isDefaultValueIgnored && !typeof(string).IsAssignableFrom(propertyType);
-            if (!isInterceptable) return null;
-            
-            // skip serialization of all empty collections that ARE NOT IDictionary (all types implementing ICollection and having Count == 0), 
-            // unless DefaultValueHandling.Include is specified for the property or the field.
-            // source: http://stackoverflow.com/questions/18471864/how-to-define-in-json-net-a-default-value-to-an-empty-list-or-dictionary
-            // not ignoring empty dictionaries because that will lead to multiple null checks in the client-side
-            var isEnumerable = typeof(IEnumerable).IsAssignableFrom(propertyType) || (propertyType.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(propertyType.GetGenericTypeDefinition()));
-            var isDictionary = typeof(IDictionary).IsAssignableFrom(propertyType) || (propertyType.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(propertyType.GetGenericTypeDefinition()));
-            if (isEnumerable && !isDictionary) {
-                return obj => {
-                    var collection = property.ValueProvider.GetValue(obj) as ICollection;
-                    return collection == null || collection.Count > 0;
-                };
-            }
-            
-
-            // else if (<need some other custom serialization rule>) { ... return <rule as predicate> }
-             
-            return null;
+        /// <summary>
+        /// Combines the serialization rules that apply to the given context into a single predicate with the 'and' operator:
+        /// obj => rule1.should(obj, ...) && rule2.should(obj, ...) ... rulen.should(obj, ...);
+        /// If no rules apply will return a null predicate.
+        /// source: http://stackoverflow.com/questions/1248232/combine-multiple-predicates
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="member"></param>
+        /// <param name="memberSerialization"></param>
+        /// <returns></returns>
+        private Predicate<object> CombinedRules(JsonProperty property, MemberInfo member, MemberSerialization memberSerialization) {
+            var rulesToApply = Rules.Where(r => r.Matches(property, member, memberSerialization)).ToList();
+            if (rulesToApply.Count <= 0) return null;
+            return delegate (object obj) {
+                foreach (var rule in rulesToApply) {
+                    if (!rule.ShouldSerialize(obj, property, member, memberSerialization, this)) {
+                        return false;
+                    }
+                }
+                return true;
+            };
         }
     }
 }

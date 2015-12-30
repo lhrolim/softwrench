@@ -312,6 +312,9 @@
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\LeanJsonContractResolver.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
+    <Compile Include="Formatting\Rule\EmptyCollectionSerializationRule.cs" />
+    <Compile Include="Formatting\Rule\EmptyObjectSerializationRule.cs" />
+    <Compile Include="Formatting\Rule\IPropertySerializationRule.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\IBaseLayoutModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
