@@ -158,6 +158,9 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-     
+        /// <summary>
+        /// If true, the crud input will use the position 'filter'. So filter commands will be used on commands bar.
+        /// </summary>
+        public static string DetailIsFilter = "detail.isfilter";
     }
 }

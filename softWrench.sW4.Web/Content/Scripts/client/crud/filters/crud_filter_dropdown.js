@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService) {
 
                         $scope.layout = {
                             standalone: false
@@ -195,30 +195,64 @@
                             $scope.layout.standalone = value;
                         };
 
-                        $scope.initModal = function(filter, schema) {
-                            if (filter.type !== "MetadataModalFilter") return;
+                        $scope.isModal = function(filter) {
+                            return "MetadataModalFilter" === filter.type;
+                        }
 
-                            var cachedSchema = schemaCacheService.getCachedSchema(schema.applicationName, filter.targetSchemaId);
-                            if (cachedSchema) return;
+                        $scope.initModal = function () {
+                            $scope.modalDatamap = {};
+                            $scope.getModalSchema();
+                        }
+
+                        $scope.getModalSchema = function () {
+                            var appName = $scope.schema.applicationName;
+                            var modalSchemaId = $scope.filter.targetSchemaId;
+                            var cachedSchema = schemaCacheService.getCachedSchema(appName, modalSchemaId);
+                            if (cachedSchema) return cachedSchema;
 
                             var parameters = {
-                                applicationName: schema.applicationName,
-                                targetSchemaId: filter.targetSchemaId
+                                applicationName: appName,
+                                targetSchemaId: modalSchemaId
                             }
-                            restService.getPromise("FilterData", "GetSchemaDefinition", parameters).then(function (result) {
+                            restService.getPromise("Metadata", "GetSchemaDefinition", parameters).then(function (result) {
                                 schemaCacheService.addSchemaToCache(result.data);
                             });
                         }
 
                         $scope.showModal = function (filter, schema) {
                             if (filter.type !== "MetadataModalFilter") return;
-                            var properties = (function () {
-                                var props = {}
-                                props.title = filter.tooltip + " Filter";
-                                return props;
-                            })();
-                            var cachedSchema = schemaCacheService.getCachedSchema(schema.applicationName, filter.targetSchemaId);
-                            modalService.show(cachedSchema, {}, properties);
+                            var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
+                            datamap = datamap ? datamap : {};
+                            var filterI18N = $scope.i18N('_grid.filter.filter', 'Filter');
+                            var properties = { title: filter.tooltip + " " + filterI18N };
+                            var modalData = modalService.buildModalData($scope.getModalSchema(), datamap, properties, $scope.appyModal);
+                            modalData.clearfn = $scope.clearModal;
+                            modalService.showWithModalData(modalData);
+                        }
+
+                        $scope.appyModal = function (datamap) {
+                            var att = $scope.filter.attribute;
+                            $scope.modalDatamap[att] = datamap;
+                            $scope.searchData[att] = JSON.stringify(datamap);
+                            $scope.filterIsActive = true;
+                            modalService.hide();
+                            console.log(dispatcherService.loadServiceByString("dummyService.operate"));
+
+                            var operator = {
+                                id : "CUSTOM",
+                                begin : "",
+                                end: "",
+                                modalOperator: function (stringDatamap) {
+                                    var jsonDatamap = JSON.parse(stringDatamap);
+                                    var operatorParams = [jsonDatamap, $scope.getModalSchema(), $scope.filter];
+                                    return dispatcherService.invokeServiceByString($scope.filter.searchOperator, operatorParams);
+                                }
+                            };
+                            $scope.selectOperator(att, operator);
+                        }
+
+                        $scope.clearModal = function() {
+                            $scope.clearFilter($scope.filter.attribute);
                         }
 
                         $injector.invoke(BaseController, this, {

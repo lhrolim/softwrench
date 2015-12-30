@@ -1072,6 +1072,7 @@
           <enumeration value="detailform"></enumeration>
           <enumeration value="actions"></enumeration>
           <enumeration value="compositionbottom"></enumeration>
+          <enumeration value="filter"></enumeration>
         </restriction>
       </simpleType>
     </attribute>

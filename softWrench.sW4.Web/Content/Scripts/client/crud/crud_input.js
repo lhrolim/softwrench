@@ -13,6 +13,7 @@
             blockedassociations: '=',
             cancelfn: '&',
             savefn: '&',
+            clearfn: '&',
             previousschema: '=',
             previousdata: '=',
             parentdata: '=',
@@ -30,7 +31,8 @@
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
                   "datamap='datamap'  blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
-                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
+                  "savefn='save(selecteditem, parameters)' clearfn='clear()' " +
+                  "previousschema='previousschema' previousdata='previousdata' " +
                   "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}'/>"
                );
                 $compile(element.contents())(scope);
@@ -55,6 +57,10 @@
                 scope.cancelfn({ data: data, schema: schema });
                 scope.$emit('sw_cancelclicked');
             };
+
+            scope.clear = function () {
+                scope.clearfn();
+            };
         }
     }
 });
@@ -73,6 +79,7 @@ app.directive('crudInput', function (contextService, associationService) {
             blockedassociations: '=',
             cancelfn: '&',
             savefn: '&',
+            clearfn: '&',
             previousschema: '=',
             previousdata: '=',
             parentschema: '=',
@@ -97,6 +104,10 @@ app.directive('crudInput', function (contextService, associationService) {
                 $scope.savefn();
             };
 
+            this.clear = function () {
+                $scope.clearfn();
+            };
+
             this.shouldshowprint = function () {
                 return $scope.composition != "true";
             }
@@ -111,6 +122,9 @@ app.directive('crudInput', function (contextService, associationService) {
                 associationService.loadSchemaAssociations($scope.datamap, $scope.schema, { avoidspin: true });
             }
 
+            $scope.getPosition = function (schema) {
+                return !schema.properties || !schema.properties["detail.isfilter"] ? "detailform" : "filter";
+            }
 
             $injector.invoke(BaseController, this, {
                 $scope: $scope,

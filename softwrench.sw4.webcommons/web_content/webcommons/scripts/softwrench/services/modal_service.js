@@ -2,8 +2,7 @@
 
 app.factory('modalService', function ($rootScope, $timeout, i18NService) {
 
-    return {
-
+    var modalService = {
         hide: function (modalId) {
             /// <summary>
             /// 
@@ -12,8 +11,6 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 $rootScope.$broadcast('sw.modal.hide');
             }
         },
-
-
 
         /// <summary>
         /// method to be called for showing the modal a screen, 
@@ -43,16 +40,21 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 $rootScope.$broadcast("sw.modal.show", schemaorModalData);
                 return;
             }
+            var modaldata = modalService.buildModalData(schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema);
+            modalService.showWithModalData(modaldata);
+        },
 
+        buildModalData: function(schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema) {
             datamap = datamap || {};
             properties = properties || {};
 
+            if (!properties.cssclass) properties.cssclass = "crud-lookup-modal";
 
             if (schemaorModalData.mode.equalIc("none")) {
                 schemaorModalData.mode = "input";
             }
 
-            var modaldata = {
+            return {
                 schema: schemaorModalData,
                 datamap: datamap,
                 savefn: savefn,
@@ -63,13 +65,13 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 cssclass: properties.cssclass,
                 onloadfn: properties.onloadfn
             };
-
-            $rootScope.$broadcast("sw.modal.show", modaldata);
         },
 
-
+        showWithModalData: function(modaldata) {
+            $rootScope.$broadcast("sw.modal.show", modaldata);
+        }
     };
-
+    return modalService;
 });
 
 

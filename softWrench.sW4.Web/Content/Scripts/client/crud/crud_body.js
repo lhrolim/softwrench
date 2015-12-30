@@ -69,6 +69,7 @@ app.directive('crudBody', function (contextService) {
             isDirty: '=',
             savefn: '&',
             cancelfn: '&',
+            clearfn: '&',
             previousschema: '=',
             previousdata: '=',
             paginationdata: '=',
@@ -376,6 +377,10 @@ app.directive('crudBody', function (contextService) {
 
                 $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
             };
+
+            $scope.clear = function () {
+                $scope.clearfn();
+            }
 
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields, schemaToSave) {
                 var log = $log.getInstance('crudbody#validateSubmission');

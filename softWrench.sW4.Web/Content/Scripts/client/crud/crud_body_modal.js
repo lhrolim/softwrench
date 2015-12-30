@@ -90,6 +90,11 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 }
             }
 
+            $scope.clear = function () {
+                $scope.closeModal();
+                if ($scope.clearfn) $scope.clearfn();
+            }
+
             $scope.$on('sw.modal.show', function (event, modaldata) {
                 $scope.showModal(modaldata);
                 $scope.modalshown = true;
@@ -101,6 +106,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $scope.schema = schema;
                 $scope.originalsavefn = modaldata.savefn;
                 $scope.cancelfn = modaldata.cancelfn;
+                $scope.clearfn = modaldata.clearfn;
                 $scope.previousschema = modaldata.previousschema;
                 $scope.previousdata = modaldata.previousdata;
                 $scope.modaltitle = modaldata.title;

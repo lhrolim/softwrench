@@ -59,7 +59,7 @@
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
 
       <filters>
-        <modalfilter attribute="status" targetschema="filter"></modalfilter>
+        <modalfilter attribute="status" targetschema="filter" searchoperator="dummyService.operate"></modalfilter>
         <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
         </optionfilter>
@@ -298,11 +298,9 @@
         <schema id="filter" stereotype="detail">
           <field attribute="a" label="aLabel" tooltip="aTooltip" attributeToServer="aAtt"/>
           <field attribute="b" label="bLabel" tooltip="bTooltip" attributeToServer="bAtt"/>
-          <commandbars>
-            <commandgroup position="detailform">
-              <removecommand id="print"/>
-            </commandgroup>
-          </commandbars>
+          <properties>
+            <property key="detail.isfilter" value="true"/>
+          </properties>
         </schema>
       </schemas>
     </application>
