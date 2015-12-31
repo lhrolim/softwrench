@@ -90,11 +90,6 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 }
             }
 
-            $scope.clear = function () {
-                $scope.closeModal();
-                if ($scope.clearfn) $scope.clearfn();
-            }
-
             $scope.$on('sw.modal.show', function (event, modaldata) {
                 $scope.showModal(modaldata);
                 $scope.modalshown = true;
@@ -106,11 +101,11 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $scope.schema = schema;
                 $scope.originalsavefn = modaldata.savefn;
                 $scope.cancelfn = modaldata.cancelfn;
-                $scope.clearfn = modaldata.clearfn;
                 $scope.previousschema = modaldata.previousschema;
                 $scope.previousdata = modaldata.previousdata;
                 $scope.modaltitle = modaldata.title;
                 $scope.cssclass = modaldata.cssclass;
+                //by default modals, should render as detail stereotype mode
                 schema.stereotype = schema.stereotype || "detail";
                 $scope.isList = schema.stereotype.equalsAny("list", "compositionlist");
                 $scope.isDetail = schema.stereotype.equalsAny("detail", "compositionDetail");
@@ -183,8 +178,6 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 return {
                     post: function postLink(scope, iElement, iAttrs, controller) {
                         var modalData = $rootScope.modalTempData;
-                        //by default modals, should render as detail stereotype mode
-                        
                         modalService.show(modalData);
                         $rootScope.modalTempData = null;
                     }

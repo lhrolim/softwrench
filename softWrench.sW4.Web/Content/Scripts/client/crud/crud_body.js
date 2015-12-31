@@ -69,7 +69,6 @@ app.directive('crudBody', function (contextService) {
             isDirty: '=',
             savefn: '&',
             cancelfn: '&',
-            clearfn: '&',
             previousschema: '=',
             previousdata: '=',
             paginationdata: '=',
@@ -119,7 +118,7 @@ app.directive('crudBody', function (contextService) {
                 return crudContextHolderService.getTabRecordCount(tab);
             }
 
-            $scope.showTabRecordCount = function(tab) {
+            $scope.showTabRecordCount = function (tab) {
                 return crudContextHolderService.shouldShowRecordCount(tab);
             }
 
@@ -378,10 +377,6 @@ app.directive('crudBody', function (contextService) {
                 $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
             };
 
-            $scope.clear = function () {
-                $scope.clearfn();
-            }
-
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields, schemaToSave) {
                 var log = $log.getInstance('crudbody#validateSubmission');
                 //hook for updating doing custom logic before sending the data to the server
@@ -446,7 +441,7 @@ app.directive('crudBody', function (contextService) {
 
 
 
-                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id,parameters.dispatcherComposition);
+                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, parameters.dispatcherComposition);
 
                 var jsonWrapper = {
                     json: transformedFields,
@@ -478,7 +473,7 @@ app.directive('crudBody', function (contextService) {
 
                 command(urlToUse, jsonString).success(function (data) {
                     crudContextHolderService.afterSave();
-                    
+
 
                     if (data.type !== 'BlankApplicationResponse') {
                         $scope.datamap = data.resultObject;

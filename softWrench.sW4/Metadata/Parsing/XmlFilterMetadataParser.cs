@@ -42,8 +42,8 @@ namespace softWrench.sW4.Metadata.Parsing {
                 if (el.IsNamed(XmlFilterSchema.ModalFilterElement))
                 {
                     var targetSchema = el.AttributeValue(XmlFilterSchema.TargetSchemaAttribute);
-                    var searchOperator = el.AttributeValue(XmlFilterSchema.SearchOperatorAttribute);
-                    filters.AddLast(new MetadataModalFilter(attribute, label, icon, position, tooltip, whereclause, targetSchema, searchOperator));
+                    var service = el.AttributeValue(XmlFilterSchema.ServiceAttribute);
+                    filters.AddLast(new MetadataModalFilter(attribute, label, icon, position, tooltip, whereclause, targetSchema, service));
                 } else if (el.IsNamed(XmlFilterSchema.OptionFilterElement)) {
                     var provider = el.AttributeValue(XmlFilterSchema.ProviderAttribute);
                     XNamespace xmlns = XmlFilterSchema.FilterNamespace;

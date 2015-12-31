@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function dummyService() {
+    function locationFilterService() {
         //#region Utils
 
         //#endregion
@@ -10,11 +10,8 @@
         //#region Public methods
 
         function operate(datamap, schema, filter) {
-            console.log(schema);
-            console.log(filter);
-            var a = datamap.a || "";
-            var b = datamap.b || "";
-            return "%" + a + b + "%";
+            var location = datamap.location || "";
+            return "%" + location + "%";
         }
 
         //#endregion
@@ -29,7 +26,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("dummyService", dummyService);
+    angular.module("sw_layout").factory("locationFilterService", locationFilterService);
 
     //#endregion
 

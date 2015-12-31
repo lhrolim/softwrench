@@ -8,13 +8,13 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
-        public string SearchOperator {
+        public string Service {
             get; set;
         }
 
-        public MetadataModalFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string targetSchemaId, string searchOperator) : base(attribute, label, icon, position, tooltip, whereClause) {
+        public MetadataModalFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string targetSchemaId, string service) : base(attribute, label, icon, position, tooltip, whereClause) {
             TargetSchemaId = targetSchemaId;
-            SearchOperator = searchOperator;
+            Service = service;
         }
     }
 }

@@ -194,7 +194,7 @@
           <enumeration value="detailform"></enumeration>
           <enumeration value="actions"></enumeration>
           <enumeration value="compositionbottom"></enumeration>
-          <enumeration value="filter"></enumeration>
+          <enumeration value="applyfilter"></enumeration>
         </restriction>
       </simpleType>
     </attribute>

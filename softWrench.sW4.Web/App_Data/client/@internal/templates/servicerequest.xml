@@ -59,7 +59,7 @@
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
 
       <filters>
-        <modalfilter attribute="status" targetschema="filter" searchoperator="dummyService.operate"></modalfilter>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
         <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@username"/>
         </optionfilter>
@@ -166,30 +166,30 @@
 
 
 
-           
+
 
             <section orientation="horizontal">
 
               <section>
-              <section orientation="horizontal">
-                <header displacement="ontop" label="Work Details" params="fieldset=true" />
-                <renderer type="default" params="childinputsize=large" />
-                <!--<section id ="siteidsection"/>-->
-                <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-                  <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-                </association>
-                <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-                  <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-                  <dataprovider prefilterfunction="FilterAssets"/>
-                  <event type="afterchange" service="srService" method="afterChangeAsset"/>
-                </association>
-                <!--<section id="statussection"/>-->
-                <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
-                  <renderer type="autocompleteclient" />
-                </optionfield>
-                <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
-                  <renderer type="lookup" params="columnlabel=Name"/>
-                </association>
+                <section orientation="horizontal">
+                  <header displacement="ontop" label="Work Details" params="fieldset=true" />
+                  <renderer type="default" params="childinputsize=large" />
+                  <!--<section id ="siteidsection"/>-->
+                  <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+                    <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+                  </association>
+                  <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                    <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                    <dataprovider prefilterfunction="FilterAssets"/>
+                    <event type="afterchange" service="srService" method="afterChangeAsset"/>
+                  </association>
+                  <!--<section id="statussection"/>-->
+                  <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+                    <renderer type="autocompleteclient" />
+                  </optionfield>
+                  <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
+                    <renderer type="lookup" params="columnlabel=Name"/>
+                  </association>
                   <section id="attachmentsection" />
 
                   <!--COMSW 24 required field for population purposes-->
@@ -206,7 +206,7 @@
               </section>
               <section orientation="horizontal">
                 <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-  
+
                 <renderer type="default" params="childinputsize=large" />
                 <field attribute="targetstart" label="Target Start Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
@@ -229,10 +229,10 @@
               </section>
 
             </section>
-            
-       
 
-           
+
+
+
             <section id="compositions"/>
 
           </section>
@@ -293,14 +293,6 @@
                        showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
             </commandgroup>
           </commandbars>
-        </schema>
-
-        <schema id="filter" stereotype="detail">
-          <field attribute="a" label="aLabel" tooltip="aTooltip" attributeToServer="aAtt"/>
-          <field attribute="b" label="bLabel" tooltip="bTooltip" attributeToServer="bAtt"/>
-          <properties>
-            <property key="detail.isfilter" value="true"/>
-          </properties>
         </schema>
       </schemas>
     </application>

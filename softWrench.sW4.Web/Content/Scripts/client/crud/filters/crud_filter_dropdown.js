@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q) {
 
                         $scope.layout = {
                             standalone: false
@@ -205,17 +205,23 @@
                         }
 
                         $scope.getModalSchema = function () {
-                            var appName = $scope.schema.applicationName;
-                            var modalSchemaId = $scope.filter.targetSchemaId;
-                            var cachedSchema = schemaCacheService.getCachedSchema(appName, modalSchemaId);
-                            if (cachedSchema) return cachedSchema;
+                            var tokens = $scope.filter.targetSchemaId.split(".");
+                            var modalSchemaAppName = tokens.length > 1 ? tokens[0] : $scope.schema.applicationName;
+                            var modalSchemaId = tokens.length > 1 ? tokens[1] : tokens[0];
+
+                            var cachedSchema = schemaCacheService.getCachedSchema(modalSchemaAppName, modalSchemaId);
+                            if (cachedSchema) {
+                                return $q.when(cachedSchema);
+                            }
 
                             var parameters = {
-                                applicationName: appName,
+                                applicationName: modalSchemaAppName,
                                 targetSchemaId: modalSchemaId
                             }
-                            restService.getPromise("Metadata", "GetSchemaDefinition", parameters).then(function (result) {
+                            var promise = restService.getPromise("Metadata", "GetSchemaDefinition", parameters);
+                            return promise.then(function (result) {
                                 schemaCacheService.addSchemaToCache(result.data);
+                                return result.data;
                             });
                         }
 
@@ -223,37 +229,39 @@
                             if (filter.type !== "MetadataModalFilter") return;
                             var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
-                            var filterI18N = $scope.i18N('_grid.filter.filter', 'Filter');
+                            var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
                             var properties = { title: filter.tooltip + " " + filterI18N };
-                            var modalData = modalService.buildModalData($scope.getModalSchema(), datamap, properties, $scope.appyModal);
-                            modalData.clearfn = $scope.clearModal;
-                            modalService.showWithModalData(modalData);
+
+                            $scope.getModalSchema().then(function(modalSchema) {
+                                modalService.show(modalSchema, datamap, properties, $scope.appyModal);
+                            });
                         }
 
                         $scope.appyModal = function (datamap) {
                             var att = $scope.filter.attribute;
                             $scope.modalDatamap[att] = datamap;
-                            $scope.searchData[att] = JSON.stringify(datamap);
                             $scope.filterIsActive = true;
                             modalService.hide();
-                            console.log(dispatcherService.loadServiceByString("dummyService.operate"));
 
-                            var operator = {
-                                id : "CUSTOM",
-                                begin : "",
-                                end: "",
-                                modalOperator: function (stringDatamap) {
-                                    var jsonDatamap = JSON.parse(stringDatamap);
-                                    var operatorParams = [jsonDatamap, $scope.getModalSchema(), $scope.filter];
-                                    return dispatcherService.invokeServiceByString($scope.filter.searchOperator, operatorParams);
+                            $scope.getModalSchema().then(function (modalSchema) {
+                                var serviceParams = [datamap, modalSchema, $scope.filter];
+                                var searchData = dispatcherService.invokeServiceByString($scope.filter.service, serviceParams);
+                                $scope.searchData[att] = searchData;
+                                var searchOperator = searchService.getSearchOperator(searchData);
+                                $scope.selectOperator(att, searchOperator);
+                            });
+                        }
+
+                        $scope.$on("modal.clearfilter", function (event, args) {
+                            var schema = args.schema;
+                            $scope.getModalSchema().then(function (modalSchema) {
+                                if (modalSchema !== schema) {
+                                    return;
                                 }
-                            };
-                            $scope.selectOperator(att, operator);
-                        }
-
-                        $scope.clearModal = function() {
-                            $scope.clearFilter($scope.filter.attribute);
-                        }
+                                $scope.clearFilter($scope.filter.attribute);
+                                modalService.hide();
+                            });
+                        });
 
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,

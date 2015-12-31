@@ -13,7 +13,6 @@
             blockedassociations: '=',
             cancelfn: '&',
             savefn: '&',
-            clearfn: '&',
             previousschema: '=',
             previousdata: '=',
             parentdata: '=',
@@ -31,15 +30,14 @@
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
                   "datamap='datamap'  blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
-                  "savefn='save(selecteditem, parameters)' clearfn='clear()' " +
-                  "previousschema='previousschema' previousdata='previousdata' " +
+                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
                   "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}'/>"
                );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
             }
 
-            if (scope.schema.mode.equalsAny("input","none") && ("true" === scope.isMainTab)) {
+            if (scope.schema.mode.equalsAny("input", "none") && ("true" === scope.isMainTab)) {
                 doLoad();
             }
 
@@ -53,13 +51,9 @@
                 scope.savefn();
             };
 
-            scope.cancel = function (data,schema) {
+            scope.cancel = function (data, schema) {
                 scope.cancelfn({ data: data, schema: schema });
                 scope.$emit('sw_cancelclicked');
-            };
-
-            scope.clear = function () {
-                scope.clearfn();
             };
         }
     }
@@ -79,7 +73,6 @@ app.directive('crudInput', function (contextService, associationService) {
             blockedassociations: '=',
             cancelfn: '&',
             savefn: '&',
-            clearfn: '&',
             previousschema: '=',
             previousdata: '=',
             parentschema: '=',
@@ -104,9 +97,6 @@ app.directive('crudInput', function (contextService, associationService) {
                 $scope.savefn();
             };
 
-            this.clear = function () {
-                $scope.clearfn();
-            };
 
             this.shouldshowprint = function () {
                 return $scope.composition != "true";
@@ -123,7 +113,10 @@ app.directive('crudInput', function (contextService, associationService) {
             }
 
             $scope.getPosition = function (schema) {
-                return !schema.properties || !schema.properties["detail.isfilter"] ? "detailform" : "filter";
+                if (!schema.properties || !schema.properties["commandbar.bottom"]) {
+                    return "detailform";
+                }
+                return schema.properties["commandbar.bottom"];
             }
 
             $injector.invoke(BaseController, this, {

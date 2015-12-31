@@ -12,8 +12,8 @@
           class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
         <div ng-init="setForm(crudbodyform)" />
         <ng-switch on="hasTabs(schema)">
-           
-             <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
+
+            <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
                 <div class="ticketid_spacer"></div>
                 <div class="well well-sm ticketid">
                     <h5>{{getTitle()}}</h5>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="buttons">
-                        <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions"/>
+                        <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions" />
                     </div>
 
                 </div>
@@ -65,7 +65,6 @@
                                                     displayables="schema.displayables"
                                                     cancelfn="cancel(data,schema)"
                                                     savefn="save(selecteditem, parameters)"
-                                                    clearfn="clear()"
                                                     previousschema="previousschema" previousdata="previousdata"
                                                     is-main-tab='true' tabid="main" />
 
@@ -81,8 +80,7 @@
                     <div class="tab-pane" ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
                         <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
                             <div ng-switch-when="true" class="hiddenonprint">
-                                <composition-list-wrapper 
-                                                          parentschema="schema"
+                                <composition-list-wrapper parentschema="schema"
                                                           parentdata="datamap"
                                                           cancelfn="cancel(data,schema)"
                                                           previousschema="previousschema" previousdata="previousdata"
@@ -104,7 +102,6 @@
                                                     blockedassociations="blockedassociations"
                                                     cancelfn="cancel(data,schema)"
                                                     savefn="save(selecteditem, parameters)"
-                                                    clearfn="clear()"
                                                     previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                             </div>
                             <div ng-switch-when="false">
@@ -132,15 +129,14 @@
                                             cancelfn="cancel(data,schema)"
                                             displayables="schema.displayables"
                                             savefn="save(selecteditem, parameters)"
-                                            clearfn="clear()"
-                                            previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}"/>
+                                            previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
                     </div>
                     <div ng-switch-when="false">
                         <crud-output-wrapper schema="schema"
                                              extraparameters="extraparameters"
                                              datamap="datamap.fields"
                                              displayables="schema.displayables"
-                                             cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}"/>
+                                             cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
                     </div>
                     <div ng-switch-default>
                         {{i18N('general.modeundefined','Error, mode is undefined')}}!

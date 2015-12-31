@@ -82,7 +82,7 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
     <complexContent>
       <extension base="f:BaseFilterType">
         <attribute name="targetschema" type="string"></attribute>
-        <attribute name="searchoperator" type="string"></attribute>
+        <attribute name="service" type="string"></attribute>
       </extension>
     </complexContent>
   </complexType>

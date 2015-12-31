@@ -198,9 +198,6 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                         value = value + searchOperator[data].end;
                     }
                 }
-                if (searchOperator[data].modalOperator) {
-                    value = searchOperator[data].modalOperator(value);
-                }
                 if (searchOperator[data] != null && searchOperator[data].id == 'BLANK') {
                     value = '!@BLANK';
                 }

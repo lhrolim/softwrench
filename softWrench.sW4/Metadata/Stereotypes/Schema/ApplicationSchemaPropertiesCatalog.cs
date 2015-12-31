@@ -159,8 +159,8 @@
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
         /// <summary>
-        /// If true, the crud input will use the position 'filter'. So filter commands will be used on commands bar.
+        /// Type of the bottom command bar. For now only works for the detail stereotype.
         /// </summary>
-        public static string DetailIsFilter = "detail.isfilter";
+        public static string CommandBarBottom = "commandbar.bottom";
     }
 }
