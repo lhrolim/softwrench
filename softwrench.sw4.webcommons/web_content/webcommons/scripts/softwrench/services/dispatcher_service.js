@@ -80,8 +80,8 @@
             return deferred;
         },
 
-        dispatchevent : function(eventName, schema) {
-            $rootScope.$broadcast(eventName, { schema : schema });
+        dispatchevent: function (eventName) {
+            $rootScope.$broadcast(eventName, Array.prototype.slice.call(arguments, 1));
         }
     };
 

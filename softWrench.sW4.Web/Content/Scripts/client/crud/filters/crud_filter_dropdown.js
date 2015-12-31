@@ -225,7 +225,7 @@
                             });
                         }
 
-                        $scope.showModal = function (filter, schema) {
+                        $scope.showModal = function (filter) {
                             if (filter.type !== "MetadataModalFilter") return;
                             var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
@@ -237,23 +237,21 @@
                             });
                         }
 
-                        $scope.appyModal = function (datamap) {
+                        $scope.appyModal = function (datamap, modalSchema) {
                             var att = $scope.filter.attribute;
                             $scope.modalDatamap[att] = datamap;
                             $scope.filterIsActive = true;
                             modalService.hide();
-
-                            $scope.getModalSchema().then(function (modalSchema) {
-                                var serviceParams = [datamap, modalSchema, $scope.filter];
-                                var searchData = dispatcherService.invokeServiceByString($scope.filter.service, serviceParams);
-                                $scope.searchData[att] = searchData;
-                                var searchOperator = searchService.getSearchOperator(searchData);
-                                $scope.selectOperator(att, searchOperator);
-                            });
+                           
+                            var serviceParams = [datamap, modalSchema, $scope.filter];
+                            var searchData = dispatcherService.invokeServiceByString($scope.filter.service, serviceParams);
+                            $scope.searchData[att] = searchData;
+                            var searchOperator = searchService.getSearchOperator(searchData);
+                            $scope.selectOperator(att, searchOperator);
                         }
 
                         $scope.$on("modal.clearfilter", function (event, args) {
-                            var schema = args.schema;
+                            var schema = args[0];
                             $scope.getModalSchema().then(function (modalSchema) {
                                 if (modalSchema !== schema) {
                                     return;

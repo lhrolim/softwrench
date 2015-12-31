@@ -338,7 +338,7 @@ app.directive('crudBody', function (contextService) {
                             //interrupting here, can´t be done inside service
                             return;
                         }
-                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
+                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields, schemaToSave);
                         return;
                     }
 

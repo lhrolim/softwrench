@@ -12,7 +12,7 @@
                'fa-filter': layout.standalone && !hasFilter(filter),
                'fa-check': layout.standalone && hasFilter(filter)
                }"
-               ng-click="showModal(filter, schema)">
+               ng-click="showModal(filter)">
             </i>
         </div>
         <div ng-if="isModal(filter)" ng-init="initModal()">
