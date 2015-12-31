@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\firstsolar\scripts\location_filter.js" />
     <EmbeddedResource Include="metadata\firstsolar\deploy.xml" />
     <EmbeddedResource Include="metadata\firstsolar\properties.xml" />
     <EmbeddedResource Include="metadata\firstsolar\menu.web.xml">
@@ -76,7 +77,6 @@
     <Folder Include="classes\com\cts\firstsolar\dataset\" />
     <Folder Include="classes\com\cts\firstsolar\migration\" />
     <Folder Include="web_content\firstsolar\htmls\" />
-    <Folder Include="web_content\firstsolar\scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">

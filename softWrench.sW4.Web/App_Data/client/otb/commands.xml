@@ -44,7 +44,11 @@
     
   </commandgroup>
 
-
+  <commandgroup position="applyfilter" platform="web">
+    <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+  </commandgroup>
 
 
 </commands>

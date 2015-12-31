@@ -7,5 +7,27 @@
     <template path="@location.xml"/>
   </templates>
 
+  <applications>
+    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+      <schemas>
+        <list redeclaring="false">
+          <filters>
+            <modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>
+          </filters>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
+      <schemas>
+        <schema id="locationfilter" stereotype="detail">
+          <field attribute="location" label="Location"/>
+          <properties>
+            <property key="commandbar.bottom" value="applyfilter"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
 
 </metadata>

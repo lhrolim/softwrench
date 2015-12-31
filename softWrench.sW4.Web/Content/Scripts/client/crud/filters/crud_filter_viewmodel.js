@@ -13,6 +13,10 @@
             var searchText = searchData[attribute];
             var prefix = operator.title;
 
+            if (operator.id === 'CUSTOM') {
+                return "Custom";
+            }
+
             if (operator.id === 'Blank') {
                 return "Is Blank";
             }

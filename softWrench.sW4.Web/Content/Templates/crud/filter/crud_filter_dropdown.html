@@ -1,4 +1,5 @@
 ﻿<div class="filter-label-wrapper js_filter" ng-if="!!filter">
+
     <div class="dropdown" ng-init="markDefaultOperator(filter)">
         <div class="wrap" ng-class="{'slim': layout.standalone}"
              rel="tooltip" data-original-title="{{getFilterText(filter)}}" 
@@ -10,10 +11,14 @@
                'fa-caret-down': !layout.standalone,
                'fa-filter': layout.standalone && !hasFilter(filter),
                'fa-check': layout.standalone && hasFilter(filter)
-               }">
+               }"
+               ng-click="showModal(filter)">
             </i>
         </div>
+        <div ng-if="isModal(filter)" ng-init="initModal()">
+        </div>
         <div class="dropdown-menu js_filter_content {{filter.type}}"
+             ng-if="!isModal(filter)"
              style="{{filter.style}}"
              data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
 
@@ -99,7 +104,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>

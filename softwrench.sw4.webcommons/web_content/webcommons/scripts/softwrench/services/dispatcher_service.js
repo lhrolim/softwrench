@@ -1,7 +1,7 @@
 ﻿(function (modules) {
     "use strict";
 
-modules.webcommons.factory('dispatcherService', ["$injector", "$log", "$q", function ($injector, $log, $q) {
+    modules.webcommons.factory('dispatcherService', ["$injector", "$log", "$q", "$rootScope", function ($injector, $log, $q, $rootScope) {
     var loadService = function(service, method) {
         var log = $log.getInstance('dispatcherService#loadService');
 
@@ -78,6 +78,10 @@ modules.webcommons.factory('dispatcherService', ["$injector", "$log", "$q", func
                 return promise;
             }
             return deferred;
+        },
+
+        dispatchevent: function (eventName) {
+            $rootScope.$broadcast(eventName, Array.prototype.slice.call(arguments, 1));
         }
     };
 

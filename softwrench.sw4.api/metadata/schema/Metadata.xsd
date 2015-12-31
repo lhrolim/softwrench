@@ -370,6 +370,7 @@
       <element name="booleanfilter" type="f:BoolFilterType" minOccurs="0" maxOccurs="unbounded"></element>
       <element name="datefilter" type="f:DateFilterType" minOccurs="0" maxOccurs="unbounded"></element>
       <element name="numericfilter" type="f:NumberFilterType" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="modalfilter" type="f:ModalFilterType" minOccurs="0" maxOccurs="unbounded"></element>
       <element name="filter" type="f:BaseFilterType" minOccurs="0" maxOccurs="unbounded"></element>
     </choice>
     <attribute name="removeundeclared" type="boolean"></attribute>
@@ -1071,6 +1072,7 @@
           <enumeration value="detailform"></enumeration>
           <enumeration value="actions"></enumeration>
           <enumeration value="compositionbottom"></enumeration>
+          <enumeration value="filter"></enumeration>
         </restriction>
       </simpleType>
     </attribute>
