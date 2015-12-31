@@ -133,7 +133,7 @@
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(attribute, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
+                cmpAutocompleteClient.refreshFromAttribute(displayable, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
             } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType === 'combodropdown') {

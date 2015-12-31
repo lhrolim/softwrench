@@ -319,6 +319,7 @@
     <Compile Include="Models\USerSetup.cs" />
     <Compile Include="Models\UserSetup\DefinePasswordModel.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
+    <Compile Include="SPF\Filters\CompressionFilter.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
     <Compile Include="SPF\Filters\ContextFilter.cs" />
     <Compile Include="UserControls\RichTextBox.aspx.cs">

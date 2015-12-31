@@ -10,6 +10,9 @@ namespace softWrench.sW4.Web {
             config.Filters.Add(new LogFilter());
             config.Filters.Add(new ContextFilter());
             config.Filters.Add(new GenericExceptionFilter());
+            //TODO: enforce order of the filter the right way http://www.strathweb.com/2012/06/control-the-execution-order-of-your-filters-in-asp-net-web-api/
+            //right now, it works well enough tough
+            config.Filters.Add(new CompressionFilter());
             config.Filters.Add(new RedirectUrlFilter());
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
             // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
