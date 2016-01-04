@@ -10,7 +10,12 @@ namespace softWrench.sW4.Web.SPF.Filters {
     public class CompressionFilter : ActionFilterAttribute {
 
         public override void OnActionExecuted(HttpActionExecutedContext actContext) {
-            var content = actContext.Response.Content;
+            if (actContext.Response == null) {
+                //playing safe here, on case of exceptions
+                base.OnActionExecuted(actContext);
+                return;
+            }
+             var content = actContext.Response.Content;
             var bytes = content == null ? null : content.ReadAsByteArrayAsync().Result;
             var zlibbedContent = bytes == null ? new byte[0] :
             CompressionUtil.Compress(bytes);
