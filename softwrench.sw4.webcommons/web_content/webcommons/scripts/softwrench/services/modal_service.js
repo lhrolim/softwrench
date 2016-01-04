@@ -47,6 +47,7 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
             datamap = datamap || {};
             properties = properties || {};
 
+            if (!properties.cssclass) properties.cssclass = "crud-lookup-modal";
 
             if (schemaorModalData.mode.equalIc("none")) {
                 schemaorModalData.mode = "input";

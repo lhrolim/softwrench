@@ -118,7 +118,7 @@ app.directive('crudBody', function (contextService) {
                 return crudContextHolderService.getTabRecordCount(tab);
             }
 
-            $scope.showTabRecordCount = function(tab) {
+            $scope.showTabRecordCount = function (tab) {
                 return crudContextHolderService.shouldShowRecordCount(tab);
             }
 
@@ -338,7 +338,7 @@ app.directive('crudBody', function (contextService) {
                             //interrupting here, can´t be done inside service
                             return;
                         }
-                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
+                        $scope.$parent.$parent.originalsavefn($scope.datamap.fields, schemaToSave);
                         return;
                     }
 
@@ -441,7 +441,7 @@ app.directive('crudBody', function (contextService) {
 
 
 
-                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id,parameters.dispatcherComposition);
+                var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, parameters.dispatcherComposition);
 
                 var jsonWrapper = {
                     json: transformedFields,
@@ -473,7 +473,7 @@ app.directive('crudBody', function (contextService) {
 
                 command(urlToUse, jsonString).success(function (data) {
                     crudContextHolderService.afterSave();
-                    
+
 
                     if (data.type !== 'BlankApplicationResponse') {
                         $scope.datamap = data.resultObject;

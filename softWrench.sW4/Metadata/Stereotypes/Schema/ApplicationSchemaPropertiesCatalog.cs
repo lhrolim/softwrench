@@ -158,6 +158,9 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-     
+        /// <summary>
+        /// Type of the bottom command bar. For now only works for the detail stereotype.
+        /// </summary>
+        public static string CommandBarBottom = "commandbar.bottom";
     }
 }

@@ -78,10 +78,15 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
     </complexContent>
   </complexType>
 
-
-
-
-
+  <complexType name="ModalFilterType">
+    <complexContent>
+      <extension base="f:BaseFilterType">
+        <attribute name="targetschema" type="string"></attribute>
+        <attribute name="service" type="string"></attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  
   <complexType name="FilterOptionType">
     <attribute name="label" type="string"></attribute>
     <attribute name="value" type="string"></attribute>

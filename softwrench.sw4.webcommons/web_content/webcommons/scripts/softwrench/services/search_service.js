@@ -32,6 +32,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         filtertype.lt = i18NService.get18nValue(filterkeyaux + 'lt', 'Less Than');
         filtertype.gte = i18NService.get18nValue(filterkeyaux + 'gte', 'Greater Than Or Equal To');
         filtertype.lte = i18NService.get18nValue(filterkeyaux + 'lte', 'Less Than Or Equal To');
+        filtertype.custom = i18NService.get18nValue(filterkeyaux + 'custom', 'Custom');
 
         var searchOperations = [
         { id: "", symbol: "", title: filtertype.nofilter, tooltip: filtertype.filter, begin: "", end: "", renderType: ["combo", "default", "datetime"], },
@@ -46,7 +47,8 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         { id: "GT", symbol: ">", title: filtertype.gt, tooltip: filtertype.gt, begin: ">", end: "", renderType: ["default", "datetime"] },
         { id: "LT", symbol: "<", title: filtertype.lt, lt: filtertype.lt, begin: "<", end: "", renderType: ["default", "datetime"] },
         { id: "GTE", symbol: ">=", title: filtertype.gte, tooltip: filtertype.gte, begin: ">=", end: "", renderType: ["default", "datetime"] },
-        { id: "LTE", symbol: "<=", title: filtertype.lte, tooltip: filtertype.lte, begin: "<=", end: "", renderType: ["default", "datetime"] }
+        { id: "LTE", symbol: "<=", title: filtertype.lte, tooltip: filtertype.lte, begin: "<=", end: "", renderType: ["default", "datetime"] },
+        { id: "CUSTOM", symbol: "??", title: filtertype.custom, tooltip: filtertype.custom, begin: "", end: "" }
         ];
         return searchOperations;
     };
@@ -158,7 +160,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                 return this.getSearchOperationById('BLANK');
             }
 
-            return value;
+            return this.getSearchOperationById('CUSTOM');
         },
 
 
