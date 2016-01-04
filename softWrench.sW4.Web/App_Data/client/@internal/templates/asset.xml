@@ -14,7 +14,7 @@
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
         <detail>
-          <field attribute="assetid" label="ID"  requiredexpression="true" />
+          <field attribute="assetid" label="Asset#"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
           <field attribute="location" label="Location"  requiredexpression="true" />
           <field attribute="vendor" label="Vendor"  />
