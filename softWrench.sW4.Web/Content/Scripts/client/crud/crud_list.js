@@ -170,6 +170,16 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     $scope.searchSort = {};
                 });
 
+                $scope.initDefaultPaginationData = function() {
+                    $scope.paginationData = {
+                        pageNumber: 1,
+
+
+                };
+
+                }
+
+
                 $scope.gridRefreshed = function (data, panelId) {
                     if (!!$scope.panelid && $scope.panelid !== panelId) {
                         //none of my business --> another dashboard event
@@ -487,8 +497,12 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                         $scope.searchData = {};
                         $scope.searchOperator = {};
                         $scope.searchSort = {};
-
-                        searchService.refreshGrid({});
+                        //TODO: read from $scope.schema properties, to pick the right properties
+                        $scope.paginationData = {
+                            pageNumber: 1,
+                            pageSize: 10
+                        };
+                        searchService.refreshGrid(null,{ panelid: $scope.panelid });
                     }
 
                 }
