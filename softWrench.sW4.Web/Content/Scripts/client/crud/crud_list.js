@@ -282,10 +282,10 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 });
 
                 $scope.getGridCommandPosition = function (propertyName,defaultProperty) {
-                    if (!schema.properties || !schema.properties[propertyName]) {
+                    if (!$scope.schema.properties || !$scope.schema.properties[propertyName]) {
                         return defaultProperty;
                     }
-                    return schema.properties[propertyName];
+                    return $scope.schema.properties[propertyName];
                 }
 
                 $scope.quickSearch = function (filterdata) {
@@ -295,7 +295,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                         searchService.refreshGrid({});
                         return;
                     }
-                    searchService.quickSearch(filterdata);
+                    searchService.quickSearch(filterdata,$scope.panelid);
                 };
 
                 $scope.cursortype = function () {

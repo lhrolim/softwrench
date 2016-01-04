@@ -365,9 +365,9 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
-        quickSearch: function (quickSearchData) {
+        quickSearch: function (quickSearchData,panelId) {
             if (!quickSearchData) return;
-            this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false });
+            this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false, panelid: panelId });
         },
 
         /// <summary>
