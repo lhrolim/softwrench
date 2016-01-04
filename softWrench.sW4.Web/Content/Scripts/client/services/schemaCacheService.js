@@ -3,12 +3,14 @@
 
     function schemaCacheService($log, contextService, localStorageService) {
         //#region Utils
+        // schema's first-level cache
         var schemaCache = {};
+        
         var keyRoot = url("") + ":schemaCache:";
         var systemInitTimeKey = keyRoot + "systeminitMillis";
 
         function restore() {
-            delete localStorageService[url("") + ":schemaCache"]; // deleting previous version cache
+            delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
             // lazy schema fetch strategy: only restore the systeminitmillis
             schemaCache.systeminitMillis = localStorage.getItem(systemInitTimeKey);
 
@@ -23,7 +25,8 @@
         }
 
         function schemaStorageKey(applicationName, schemaId) {
-            return keyRoot + applicationName + "." + schemaId;
+            var username = contextService.getUserData().login;
+            return keyRoot + username + ":" + applicationName + "." + schemaId;
         }
         //#endregion
 
@@ -49,10 +52,12 @@
         }
 
         function getCachedSchema(applicationName, schemaId) {
-            var schema = schemaCache[applicationName + "." + schemaId];
+            var cacheKey = applicationName + "." + schemaId;
+            var schema = schemaCache[cacheKey];
             if (!schema) {
                 var storageKey = schemaStorageKey(applicationName, schemaId);
                 schema = localStorageService.get(storageKey);
+                schemaCache[cacheKey] = schema;
             }
             return schema;
         }
@@ -67,12 +72,14 @@
 
             log.info("adding schema {0} retrieved to cache".format(schemaKey));
             var systeminitMillis = contextService.getFromContext("systeminittime");
+            // in-memory first-level cache
             schemaCache[schemaKey] = schema;
             schemaCache.systeminitMillis = systeminitMillis;
 
             var storageKey = schemaStorageKey(schema.applicationName, schema.schemaId);
             try {
-                localStorage.setItem(systemInitTimeKey, systeminitMillis); // plain localStorage for performance
+                // localStorage as second-level cache
+                localStorage.setItem(systemInitTimeKey, systeminitMillis); // plain localStorage for performance and simpler data-structure
                 localStorageService.put(storageKey, schema, { compress: true });
                 log.info("finishing adding schema {0} retrieved to cache".format(schemaKey));
             } catch (e) {
@@ -85,7 +92,7 @@
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
 
-                delete localStorageService[url("") + ":schemaCache"]; // deleting previous version cache
+                delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
 
                 Object.keys(localStorage)
                     .filter(function(key) {
@@ -94,10 +101,9 @@
                     .forEach(function (schemakey) {
                         delete localStorage[schemakey];
                     });
-
-
-                schemaCache = { systeminitMillis: systeminitMillis };
             }
+            // always wipe first-level cache
+            schemaCache = { systeminitMillis: systeminitMillis };
         }
         //#endregion
 
