@@ -8,15 +8,37 @@
     <property key="list.paginationsize" value="30"/>
   </stereotype>
 
-  <stereotype id="list.composition">
-    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
-  </stereotype>
-
-
   <stereotype id="detail">
     <property key="popup.window.titlestrategy" value="nameandid"/>
     <property key="show.printcommand" value="editonly"/>
   </stereotype>
+
+
+  <!---TODO: refactor to the new namespace form-->
+  <stereotype id="compositionlist">
+    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
+  </stereotype>
+
+  <stereotype id="compositiondetail">
+    
+  </stereotype>
+
+  <stereotype id="detailnew">
+
+  </stereotype>
+
+  <stereotype id="detailoutput">
+    <property key="popup.window.titlestrategy" value="nameandid"/>
+    <property key="show.printcommand" value="editonly"/>
+  </stereotype>
+
+  <!---END TODO-->
+
+  
+  <stereotype id="list.composition">
+    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
+  </stereotype>
+ 
 
   <stereotype id="detail.new"/>
 

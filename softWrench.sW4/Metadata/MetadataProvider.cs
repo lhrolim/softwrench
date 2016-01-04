@@ -100,6 +100,9 @@ namespace softWrench.sW4.Metadata {
                 var commandsInitializer = new CommandsXmlSourceInitializer();
                 _commandBars = commandsInitializer.Validate();
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
+
+                _mergedStereotypes = StereotypeFactory.MergeStereotypes(_globalStereotypes,_metadataXmlInitializer.InitializeCustomerStereotypes());
+
                 _metadataXmlInitializer.Validate(_commandBars);
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
                 _swdbmetadataXmlInitializer.Validate(_commandBars);
@@ -110,8 +113,8 @@ namespace softWrench.sW4.Metadata {
                 FinishedParsing = true;
                 new MetadataXmlTargetInitializer().Validate();
                 BuildSlicedMetadataCache();
-            } catch (Exception e) {
-                Log.Error("error reading metadata", e);
+            } catch (Exception) {
+                Log.Error("error reading metadata");
                 throw;
             } finally {
                 _metadataXmlInitializer = null;
@@ -338,7 +341,7 @@ namespace softWrench.sW4.Metadata {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
 
-                _metadataXmlInitializer.Validate(_commandBars, data);
+                _metadataXmlInitializer.Validate(_commandBars,  data);
 
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
                 _swdbmetadataXmlInitializer.Validate(_commandBars);
@@ -387,6 +390,7 @@ namespace softWrench.sW4.Metadata {
 
 
         private static void FillFields() {
+
             _entityMetadata = _metadataXmlInitializer.Entities;
             _applicationMetadata = _metadataXmlInitializer.Applications;
             _entityQueries = _metadataXmlInitializer.Queries;
@@ -395,7 +399,6 @@ namespace softWrench.sW4.Metadata {
             _swdbapplicationMetadata = _swdbmetadataXmlInitializer.Applications;
             _swdbentityQueries = _swdbmetadataXmlInitializer.Queries;
 
-            _mergedStereotypes = StereotypeFactory.MergeStereotypes(_globalStereotypes, _metadataXmlInitializer.CustomerStereotypes);
         }
 
         #region Validate

@@ -18,7 +18,7 @@ namespace softWrench.sW4.Metadata.Validator {
         internal IDictionary<string,MetadataStereotype> Initialize(Stream streamValidator = null) {
 
             using (var stream = MetadataParsingUtils.GetStream(streamValidator, Stereotypes)) {
-                var stereotypes = new XmlStereotypeMetadataParser().Parse(stream);
+                var stereotypes = new XmlStereotypeMetadataParser().Parse(stream,false);
                 return stereotypes;
             }
         }

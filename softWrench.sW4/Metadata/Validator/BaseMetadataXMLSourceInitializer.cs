@@ -37,7 +37,6 @@ namespace softWrench.sW4.Metadata.Validator {
                 foreach (var entityMetadata in Entities.Where(e => e.HasParent)) {
                     entityMetadata.MergeWithParent();
                 }
-                CustomerStereotypes = InitializeCustomerStereotypes(data);
                 Applications = InitializeApplicationMetadata(Entities, commandBars, data);
             } catch (Exception e) {
                 Log.Error("error validating metadata", e);
@@ -45,10 +44,10 @@ namespace softWrench.sW4.Metadata.Validator {
             }
         }
 
-        private IDictionary<string, MetadataStereotype> InitializeCustomerStereotypes(Stream data) {
+        public IDictionary<string, MetadataStereotype> InitializeCustomerStereotypes(Stream data=null) {
             var parser = new XmlStereotypeMetadataParser();
             using (var stream = MetadataParsingUtils.GetStream(data, MetadataPath())) {
-                return parser.Parse(stream);
+                return parser.Parse(stream,true);
             }
         }
 

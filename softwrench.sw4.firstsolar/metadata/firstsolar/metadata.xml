@@ -8,6 +8,7 @@
   </templates>
 
 
+
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <schemas>
@@ -21,7 +22,7 @@
 
     <application name="location" title="Location" entity="location" >
       <schemas>
-        <schema id="locationfilter" ste>
+        <schema id="locationfilter" stereotype="">
           <field attribute="location" label="Location"/>
           <properties>
             <property key="commandbar.bottom" value="applyfilter"/>

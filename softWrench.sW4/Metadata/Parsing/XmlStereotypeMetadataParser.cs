@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Properties;
@@ -12,28 +13,50 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     stereotype metadata stored in the stereotype.xml file
     /// </summary>
     public sealed class XmlStereotypeMetadataParser {
-
         /// <summary>
         ///     Parses the XML document provided by the specified
         ///     stream and returns all entity metadata.
         /// </summary>
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
+        /// <param name="metadataParser">whether we are running the parser on stereotypes.xml or metadata.xml</param>
         [NotNull]
-        public IDictionary<string, MetadataStereotype> Parse([NotNull] TextReader stream) {
+        public IDictionary<string, MetadataStereotype> Parse([NotNull] TextReader stream, bool metadataParser) {
             if (stream == null) throw new ArgumentNullException("stream");
 
             var document = XDocument.Load(stream);
-            if (null == document.Root) {
+            if (document.Root == null) {
                 throw new InvalidDataException();
             }
             var stereotypes = new Dictionary<string, MetadataStereotype>();
-            foreach (var xElement in document.Root.Elements()) {
-                if (xElement.Name.LocalName == XmlMetadataSchema.SchemaStereotypeAttribute) {
+            var elementsToIterate = LocateStereotypesElement(document, metadataParser);
+            if (elementsToIterate == null) {
+                return stereotypes;
+
+            }
+            foreach (var xElement in elementsToIterate) {
+                if (xElement.IsNamed(XmlMetadataSchema.SchemaStereotypeAttribute)) {
                     var stereotype = ParseStereotype(xElement);
                     stereotypes.Add(stereotype.Id, stereotype);
                 }
             }
             return stereotypes;
+        }
+
+        [CanBeNull]
+        private static IEnumerable<XElement> LocateStereotypesElement(XDocument document, bool metadataParser) {
+            if (document.Root == null) {
+                return null;
+            }
+
+            if (metadataParser) {
+                var firstOrDefault = document.Root.Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.StereotypesAttribute));
+                if (firstOrDefault != null) {
+                    return firstOrDefault.Elements();
+                }
+                return null;
+            }
+
+            return document.Root.Elements();
         }
 
         private MetadataStereotype ParseStereotype(XElement stereotypeElement) {

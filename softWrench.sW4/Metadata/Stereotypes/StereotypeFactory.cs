@@ -12,22 +12,22 @@ namespace softWrench.sW4.Metadata.Stereotypes {
         private static IStereotype LookupStereotype(string stereotype, SchemaMode? mode) {
 
             if (stereotype.ToLower() == "detail" && SchemaMode.output.Equals(mode)) {
-                return MetadataProvider.Stereotype("detail.output");
+                return MetadataProvider.Stereotype("detailoutput");
             }
-            if (stereotype.EqualsIc("compositiondetail")) {
-                return MetadataProvider.Stereotype("detail.composition");
-            }
-
-            if (stereotype.EqualsIc("compositionlist")) {
-                return MetadataProvider.Stereotype("list.composition");
-            }
+            //            if (stereotype.EqualsIc("compositiondetail")) {
+            //                return MetadataProvider.Stereotype("detail.composition");
+            //            }
+            //
+            //            if (stereotype.EqualsIc("compositionlist")) {
+            //                return MetadataProvider.Stereotype("list.composition");
+            //            }
 
             return MetadataProvider.Stereotype(stereotype);
 
         }
 
         internal static IStereotype LookupStereotype(SchemaStereotype type, SchemaMode? mode) {
-            return LookupStereotype(type.ToString(), mode);
+            return LookupStereotype(type.ToString().ToLower(), mode);
         }
 
 
@@ -44,7 +44,31 @@ namespace softWrench.sW4.Metadata.Stereotypes {
                 }
             }
 
+
+
+            foreach (var gs in globalStereotypes) {
+                var stereotypeProperties = gs.Value.StereotypeProperties();
+                var keys = new List<string>(gs.Value.StereotypeProperties().Keys);
+                foreach (var key in keys) {
+                    var overridenValue = GetCustomClientValue(key);
+                    if (overridenValue != null) {
+                        stereotypeProperties[key] = overridenValue;
+                    }
+
+                }
+            }
+
             return globalStereotypes;
+        }
+
+
+        private static string GetCustomClientValue(string key) {
+            var globalProperties = MetadataProvider.GlobalProperties.Properties;
+            string globalValue;
+            if (globalProperties.TryGetValue(key, out globalValue)) {
+                return globalValue;
+            }
+            return null;
         }
     }
 }
