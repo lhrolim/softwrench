@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
+using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Validator {
@@ -17,8 +18,12 @@ namespace softWrench.sW4.Metadata.Validator {
 
         internal ICollection<EntityMetadata> Entities;
 
+        internal IDictionary<string, MetadataStereotype> CustomerStereotypes;
+
         internal IReadOnlyCollection<CompleteApplicationMetadataDefinition> Applications;
-        public EntityQueries Queries { get; set; }
+        public EntityQueries Queries {
+            get; set;
+        }
 
         protected abstract IEnumerable<EntityMetadata> InitializeEntityInternalMetadata();
 
@@ -26,14 +31,12 @@ namespace softWrench.sW4.Metadata.Validator {
 
         protected abstract bool IsSWDB();
 
-        public void Validate(IDictionary<string, CommandBarDefinition> commandBars, Stream data = null) {
+        public void Validate(IDictionary<string, CommandBarDefinition> commandBars,  Stream data = null) {
             try {
                 Entities = InitializeEntities(data);
                 foreach (var entityMetadata in Entities.Where(e => e.HasParent)) {
                     entityMetadata.MergeWithParent();
                 }
-
-
                 Applications = InitializeApplicationMetadata(Entities, commandBars, data);
             } catch (Exception e) {
                 Log.Error("error validating metadata", e);
@@ -41,6 +44,12 @@ namespace softWrench.sW4.Metadata.Validator {
             }
         }
 
+        public IDictionary<string, MetadataStereotype> InitializeCustomerStereotypes(Stream data=null) {
+            var parser = new XmlStereotypeMetadataParser();
+            using (var stream = MetadataParsingUtils.GetStream(data, MetadataPath())) {
+                return parser.Parse(stream,true);
+            }
+        }
 
 
         internal IReadOnlyCollection<CompleteApplicationMetadataDefinition> InitializeApplicationMetadata(
@@ -86,7 +95,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
             }
             var entityMetadatas = clientEntities as EntityMetadata[] ?? clientEntities.ToArray();
-            resultEntities.AddAll(MetadataMerger.MergeEntities(sourceEntities,entityMetadatas));
+            resultEntities.AddAll(MetadataMerger.MergeEntities(sourceEntities, entityMetadatas));
 
             foreach (var clientEntity in entityMetadatas) {
                 resultEntities.Add(clientEntity);

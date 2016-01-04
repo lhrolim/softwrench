@@ -5,8 +5,8 @@ namespace softWrench.sW4.Metadata.Stereotypes {
 
     abstract class ASchemaStereotype : IStereotype {
 
-        public const string NextSchemaId= ApplicationSchemaPropertiesCatalog.RoutingNextSchemaId;
-        public const string NextSchemaMode= "nextschema.schemamode";
+        public const string NextSchemaId = ApplicationSchemaPropertiesCatalog.RoutingNextSchemaId;
+        public const string NextSchemaMode = "nextschema.schemamode";
 
         protected abstract IDictionary<string, string> DefaultValues();
 
@@ -37,6 +37,10 @@ namespace softWrench.sW4.Metadata.Stereotypes {
 
         public IDictionary<string, string> StereotypeProperties() {
             return _values;
+        }
+
+        public void Merge(IStereotype stereotype) {
+
         }
     }
 }
