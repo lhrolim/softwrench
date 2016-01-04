@@ -461,7 +461,9 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
                 var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
 
-
+                if ($scope.ismodal === "true") {
+                    $scope.panelid = "#modal";
+                }
 
                 if (dataRefreshed) {
                     log.debug("data was already fetched from server... directive was compiled after the response");
@@ -475,6 +477,10 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 }
 
                 if (!dataRefreshed && !dataToRefresh) {
+                    $scope.searchData = {};
+                    $scope.searchOperator= {};
+                    $scope.searchSort = {};
+                    
                     searchService.refreshGrid({});
                 }
 
