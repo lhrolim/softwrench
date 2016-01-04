@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.controltechnologysolutions.com/stereotypes"
+	xmlns:s="http://www.controltechnologysolutions.com/stereotypes"
+	elementFormDefault="qualified">
+
+  <element name="stereotypes" type="s:stereotypes">
+    
+  </element>
+
+
+  <complexType name="stereotypes">
+    <sequence minOccurs="1" maxOccurs="unbounded">
+      <element name="stereotype" type="s:Stereotype" />
+    </sequence>
+  </complexType>
+
+
+  <complexType name="Stereotype">
+    <sequence>
+      <element name="property" type="s:Parameter" minOccurs="0"
+				maxOccurs="unbounded">
+      </element>
+    </sequence>
+    <attribute name="id" type="string" use="required"></attribute>
+    <attribute name="removeundeclared" type="boolean"></attribute>
+  </complexType>
+
+  <complexType name="Parameter">
+    <attribute name="key" type="string" use="required"></attribute>
+    <attribute name="value" type="string"></attribute>
+  </complexType>
+
+
+
+</schema>

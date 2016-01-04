@@ -28,6 +28,7 @@ using cts.commons.Util;
 using System.Net;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Metadata.Applications.Association;
+using softWrench.sW4.Metadata.Stereotypes;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -35,6 +36,8 @@ namespace softWrench.sW4.Metadata {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataProvider));
 
         private static MetadataProperties _globalProperties;
+        private static IDictionary<string, MetadataStereotype> _globalStereotypes;
+        private static IDictionary<string, MetadataStereotype> _mergedStereotypes;
 
         // SWDB entities and applications
         private static EntityQueries _swdbentityQueries;
@@ -92,6 +95,7 @@ namespace softWrench.sW4.Metadata {
                 //this is needed because we may access the API method inside the validation process
                 //                _metadataValidator = new MetadataValidator();
                 _globalProperties = new PropertiesXmlInitializer().Initialize();
+                _globalStereotypes = new StereotypesXmlInitializer().Initialize();
 
                 var commandsInitializer = new CommandsXmlSourceInitializer();
                 _commandBars = commandsInitializer.Validate();
@@ -391,6 +395,7 @@ namespace softWrench.sW4.Metadata {
             _swdbapplicationMetadata = _swdbmetadataXmlInitializer.Applications;
             _swdbentityQueries = _swdbmetadataXmlInitializer.Queries;
 
+            _mergedStereotypes = StereotypeFactory.MergeStereotypes(_globalStereotypes, _metadataXmlInitializer.CustomerStereotypes);
         }
 
         #region Validate
@@ -406,9 +411,32 @@ namespace softWrench.sW4.Metadata {
             DynamicProxyUtil.ClearCache();
         }
 
-        public static string GlobalProperty(string key, bool throwException = false, bool testRequired = false,bool fixedProfile = false) {
+        public static string GlobalProperty(string key, bool throwException = false, bool testRequired = false, bool fixedProfile = false) {
             return GlobalProperties.GlobalProperty(key, throwException, testRequired, fixedProfile);
         }
+
+        [NotNull]
+        public static IStereotype Stereotype(string id) {
+            if (_mergedStereotypes.ContainsKey(id)) {
+                return _mergedStereotypes[id];
+            }
+            return new BlankStereotype();
+        }
+
+        class BlankStereotype : IStereotype {
+
+            private IDictionary<string, string> _properties = new Dictionary<string, string>();
+
+            public void Merge(IStereotype stereotype) {
+                _properties = stereotype.StereotypeProperties();
+            }
+
+            public IDictionary<string, string> StereotypeProperties() {
+                return _properties;
+            }
+        }
+
+
 
         public static string EntityQuery(string key, bool throwException = true) {
             return _entityQueries.GetQuery(key, throwException);

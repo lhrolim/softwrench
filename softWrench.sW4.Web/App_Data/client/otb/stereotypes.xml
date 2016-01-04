@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stereotypes xmlns="http://www.controltechnologysolutions.com/stereotypes" >
+  
+  <stereotype id="list">
+    <property key="list.click.mode" value="input"/>
+    <property key="list.click.popup" value="none"/>
+    <property key="list.paginationoptions" value="10,30,100"/>
+    <property key="list.paginationsize" value="30"/>
+  </stereotype>
+
+  <stereotype id="list.composition">
+    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
+  </stereotype>
+
+
+  <stereotype id="detail">
+    <property key="popup.window.titlestrategy" value="nameandid"/>
+    <property key="show.printcommand" value="editonly"/>
+  </stereotype>
+
+  <stereotype id="detail.new"/>
+
+  <stereotype id="detail.output"/>
+
+  <stereotype id="detail.composition"/>
+
+
+  <stereotype id="filter">
+    
+  </stereotype>
+  
+  
+  
+</stereotypes>
