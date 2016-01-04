@@ -440,6 +440,9 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             }
 
             function initController() {
+
+                var log = $log.getInstance("crudlist#init", ["grid"]);
+
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
@@ -461,12 +464,18 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
 
                 if (dataRefreshed) {
+                    log.debug("data was already fetched from server... directive was compiled after the response");
                     $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
                 }
 
                 var dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
                 if (dataToRefresh) {
+                    log.debug("there was already a scheduled call to refresh data from the server");
                     $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.extraparameters);
+                }
+
+                if (!dataRefreshed && !dataToRefresh) {
+                    searchService.refreshGrid({});
                 }
 
             }

@@ -23,8 +23,8 @@
     <application name="location" title="Location" entity="location" >
       <schemas>
         <schema id="locationfilter" stereotype="list">
-          <field attribute="location" label="Location" readonly="true"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="description" label="Description"/>
           <properties>
             <property key="commandbar.bottom" value="applyfilter"/>
             <property key="list.selectionstyle" value="multiple"/>
