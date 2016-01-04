@@ -11,6 +11,12 @@
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
 
+
+  <commandgroup position="gridfiltertop" platform="web">
+    <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
+  </commandgroup>
+  
+
   <commandgroup position="gridbottom" platform="web">
    
   </commandgroup>

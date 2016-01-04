@@ -27,6 +27,7 @@
           <field attribute="description" label="Description"/>
           <properties>
             <property key="commandbar.bottom" value="applyfilter"/>
+            <property key="commandbar.top" value="gridfiltertop"/>
             <property key="list.selectionstyle" value="multiple"/>
           </properties>
         </schema>

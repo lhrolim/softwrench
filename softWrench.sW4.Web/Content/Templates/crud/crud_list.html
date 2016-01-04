@@ -1,11 +1,11 @@
 <form>
-    <div id="affixpagination" class="affix-pagination hiddenonprint grid-header">
+    <div id="affixpagination" class="hiddenonprint grid-header" ng-class="{'affix-pagination' : ismodal !== 'true' }">
 
         <div ng-hide="hidebars" ng-if="!panelid || panelid == '#modal'">
             <div class="context clearfix header-menu">
                 <!-- commands -->
                 <gridtoolbar advancedsearchdata="vm.quickSearchData"
-                             position="gridtop"
+                             position="getGridCommandPosition('commandbar.top','gridtop')"
                              datamap="datamap"
                              schema="schema"
                              pagination-data="paginationData"
@@ -14,7 +14,7 @@
                              search-operator="searchOperator"
                              search-template="searchTemplate"
                              class="gridtop"/>
-                
+
                 <!-- quick search input -->
                 <div class="quick-search col-xs-4">
                     <div class="input-group">
@@ -39,10 +39,11 @@
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
                             search-operator="searchOperator"
-                            pagination-simple-layout />
+                            pagination-simple-layout/>
             </div>
-        
+
         </div>
+
         
         <!--<div class="filter-container">
             <div class="context clearfix header-menu">
