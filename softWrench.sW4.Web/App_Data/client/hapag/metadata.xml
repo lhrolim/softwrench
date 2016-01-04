@@ -2232,6 +2232,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         <detail id="detail" mode="output" title="Request Details">
           <field attribute="asset_assetglaccount_.glaccount" hidden="true"/>
 
+          <field attribute="ticketuid" hidden="true"/>
           <field attribute="ticketid" label="IMAC #"/>
           <field attribute="hlagsummary" label="Description"/>
           <field attribute="description" hidden="true"/>
