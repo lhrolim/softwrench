@@ -89,5 +89,11 @@ String.format = function () {
     return s;
 };
 
-
-
+if (String.prototype.byteSize !== "function") {
+    /**
+     * @returns String's size in bytes
+     */
+    String.prototype.byteSize = function () {
+        return encodeURI(this).split(/%(?:u[0-9A-F]{2})?[0-9A-F]{2}|./).length - 1;
+    };
+}
