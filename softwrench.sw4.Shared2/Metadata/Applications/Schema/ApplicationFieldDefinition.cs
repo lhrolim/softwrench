@@ -4,10 +4,12 @@ using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
-    public class ApplicationFieldDefinition : BaseApplicationFieldDefinition, IDefinition, IPCLCloneable {
+    public class ApplicationFieldDefinition : BaseApplicationFieldDefinition, IPCLCloneable {
 
         public const string AttributeQualifierSeparator = ".";
 
@@ -15,12 +17,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private FieldFilter _filter;
 
         //TODO: remove this, since it´s Xamarin legacy code
+        [Obsolete("Only used by unsupported Xamarin client code")]
         private IWidgetDefinition _widgetDefinition;
 
         private readonly ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression {
             get; set;
         }
+        [DefaultValue("true")]
         public string EnableDefault {
             get; set;
         }
@@ -107,7 +111,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 _filter = value;
             }
         }
-
+        
+        [Obsolete("Only used by unsupported Xamarin client code")]
+        [JsonIgnore]
         public IWidgetDefinition WidgetDefinition {
             get {
                 return _widgetDefinition;

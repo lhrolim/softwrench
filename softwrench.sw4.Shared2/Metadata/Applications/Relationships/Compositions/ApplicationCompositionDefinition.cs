@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
-using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softwrench.sW4.Shared2.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 
@@ -11,9 +11,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
     public class ApplicationCompositionDefinition : ApplicationRelationshipDefinition, IDependableField {
 
 
-        private String _relationship;
+        private string _relationship;
         public bool isHidden { get; set; }
-        public bool isPrintEnabled { get; set; }
+        [DefaultValue(true)] public bool isPrintEnabled { get; set; }
         private ApplicationCompositionSchema _schema;
         public ApplicationHeader Header { get; set; }
 

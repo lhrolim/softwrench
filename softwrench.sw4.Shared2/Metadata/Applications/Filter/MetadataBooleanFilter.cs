@@ -1,7 +1,9 @@
-﻿namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
+﻿using System.ComponentModel;
+
+namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
     public class MetadataBooleanFilter : BaseMetadataFilter {
-
+        [DefaultValue(true)]
         public bool DefaultSelection {
             get; set;
         }

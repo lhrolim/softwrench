@@ -51,8 +51,9 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/other/angular-fileUpload.js",
                 "~/Content/Scripts/vendor/other/selectize/selectize.js",
                 "~/Content/Scripts/vendor/other/selectize/angular-selectize.js",
-                "~/Content/Scripts/vendor/other/angular-file-dnd.js")
-//                "~/Content/Scripts/vendor/other/angular-ui-select.js")
+                "~/Content/Scripts/vendor/other/angular-file-dnd.js",
+                "~/Content/Scripts/vendor/other/lz-string.js")
+                //"~/Content/Scripts/vendor/other/angular-ui-select.js")
                 );
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(

@@ -4,16 +4,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using System.Collections.Generic;
+using System.ComponentModel;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
     public class ApplicationCompositionSchema {
 
-        private String _detailSchema;
-        private Boolean _inline;
+        private string _detailSchema;
+        private bool _inline;
 
         protected HashSet<string> _dependantFields = new HashSet<string>();
 
+        [DefaultValue("detail")]
         public string PrintSchema { get; set; }
 
         public ApplicationCompositionSchema() { }
@@ -29,6 +31,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
         private ISet<ApplicationEvent> _eventsSet;
         [JsonConverter(typeof(StringEnumConverter))]
+        [DefaultValue(FetchType.Lazy)]
         public FetchType FetchType { get; set;}
 
         public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer, 
@@ -51,6 +54,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
+        [DefaultValue("detail")]
         public string DetailSchema {
             get { return _detailSchema; }
             set { _detailSchema = value; }
@@ -67,7 +71,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         public IDictionary<string, object> RendererParameters {
             get { return Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary(); }
         }
-
+        [DefaultValue(SchemaMode.None)]
         public SchemaMode RenderMode { get; set; }
 
 

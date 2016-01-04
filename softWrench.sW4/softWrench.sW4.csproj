@@ -878,11 +878,9 @@
     <Folder Include="Data\Persistence\WS\Manchester\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
-    <Folder Include="Metadata\API\" />
     <Folder Include="Metadata\Applications\DataSet\Compositions\" />
     <Folder Include="Metadata\Applications\Notification\" />
     <Folder Include="Metadata\Applications\Relationship\Composition\" />
-    <Folder Include="Metadata\Offline\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\mif_workorder2\configuration91.svcinfo" />

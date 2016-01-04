@@ -1,16 +1,17 @@
 using System;
+using System.ComponentModel;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
     public class CompositionCollectionProperties {
-        public string AllowRemoval { get; set; }
-        public string AllowInsertion { get; set; }
-        public string AllowUpdate { get; set; }
+        [DefaultValue("true")] public string AllowInsertion { get; set; }
+        [DefaultValue("false")] public string AllowUpdate { get; set; }
+        [DefaultValue("false")] public string AllowRemoval { get; set; }
 
         public string OrderByField { get; set; }
 
         private readonly bool _autoCommit;
         private readonly bool _hideExistingdata;
-        private readonly String _listSchema;
+        private readonly string _listSchema;
 
         public CompositionCollectionProperties() {
             AllowInsertion = "true";
@@ -35,11 +36,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public string PrefilterFunction { get; set; }
 
-
+        [DefaultValue("list")]
         public string ListSchema {
             get { return _listSchema; }
         }
-
+        [DefaultValue(true)]
         public bool AutoCommit {
             get { return _autoCommit; }
         }

@@ -311,7 +311,11 @@
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
+    <Compile Include="Formatting\LeanJsonContractResolver.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
+    <Compile Include="Formatting\Rule\EmptyCollectionSerializationRule.cs" />
+    <Compile Include="Formatting\Rule\EmptyObjectSerializationRule.cs" />
+    <Compile Include="Formatting\Rule\IPropertySerializationRule.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\IBaseLayoutModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
@@ -642,6 +646,7 @@
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
+    <Content Include="Content\Scripts\vendor\other\lz-string.js" />
     <Content Include="Content\Scripts\vendor\other\selectize\selectize.js" />
     <Content Include="Content\Scripts\vendor\other\selectize\angular-selectize.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
