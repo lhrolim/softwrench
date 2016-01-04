@@ -117,7 +117,7 @@
 
             <!-- the false == no tabs at all. like on a new screen-->
             <div ng-switch-when="false" class="hiddenonprint detail-body" tabsrendered>
-                <!--TODO: restructure this html using id to control whether it's a new entry or not, instead of no tabs -->
+                <!--TODO: SWWEB-1970 restructure this html using id to control whether it's a new entry or not, instead of no tabs -->
                 <ng-switch on="schema.mode.equalsAny('input','none') ">
                     <div ng-switch-when="true">
                         <crud-input-wrapper ismodal="{{ismodal}}"

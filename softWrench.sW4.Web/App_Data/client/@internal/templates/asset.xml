@@ -13,16 +13,19 @@
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
-        <detail>
-          <field attribute="assetid" label="ID"  requiredexpression="true" />
-          <field attribute="assetnum" label="Asset"  requiredexpression="true" />
-          <field attribute="location" label="Location"  requiredexpression="true" />
-          <field attribute="vendor" label="Vendor"  />
-          <field attribute="description" label="Description"  />
-          <field attribute="failurecode" label="Failure Class"  />
-          <field attribute="priority" label="Priority"  />
-          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-        </detail>
+        <schema id="detail" stereotype="detail">
+          <!-- wrapped in a tab as a work around SWWEB-1970 -->
+          <tab id="details" label="Details">
+            <field attribute="assetid" label="ID"  requiredexpression="true" />
+            <field attribute="assetnum" label="Asset"  requiredexpression="true" />
+            <field attribute="location" label="Location"  requiredexpression="true" />
+            <field attribute="vendor" label="Vendor"  />
+            <field attribute="description" label="Description"  />
+            <field attribute="failurecode" label="Failure Class"  />
+            <field attribute="priority" label="Priority"  />
+            <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
+          </tab>
+        </schema>
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
