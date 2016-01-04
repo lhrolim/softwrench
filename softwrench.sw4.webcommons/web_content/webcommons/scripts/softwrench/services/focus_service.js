@@ -15,7 +15,7 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
                 var displayable = displayables[i];
                 if (displayable.attribute) {
                     if (!fieldService.isFieldHidden(realdatamap, schema, displayable) && !fieldService.isFieldReadOnly(realdatamap, schema, displayable)) {
-                        if ("true" == displayable.rendererParameters['avoidautofocus']) {
+                        if (displayable.rendererParameters && "true" === displayable.rendererParameters['avoidautofocus']) {
                             continue;
                         }
 
