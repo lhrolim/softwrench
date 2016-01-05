@@ -30,8 +30,15 @@
             <property key="commandbar.top" value="gridfiltertop"/>
             <property key="list.selectionstyle" value="multiple"/>
             <property key="list.paginationsize" value="10"/>
+            <property key="list.disabledetails" value="true"/>
           </properties>
         </schema>
+        <!--<schema id="locationfilter" stereotype="detail">
+          <field attribute="location" label="Location"/>
+          <properties>
+            <property key="commandbar.bottom" value="applyfilter"/>
+          </properties>
+        </schema>-->
       </schemas>
     </application>
   </applications>

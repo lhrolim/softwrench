@@ -456,6 +456,10 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     });
                 }
 
+                $scope.selectAllChanged = function () {
+                    $scope.$broadcast("sw_selectallchanged", $scope.datamap, $scope.selectAllValue, $scope.panelid);
+                }
+
                 function initController() {
 
                     var log = $log.getInstance("crudlist#init", ["grid"]);
@@ -501,7 +505,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                             printMode: false,
                             metadataid: $scope.metadataid
                         });
-                        searchPromise.then(function (data) {
+                        searchPromise.success(function (data) {
                             // Set the scroll position to the top of the new page
                             contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                             $scope.gridRefreshed(data.data, $scope.panelid);
