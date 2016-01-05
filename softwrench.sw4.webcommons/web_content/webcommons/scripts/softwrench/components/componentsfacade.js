@@ -49,7 +49,7 @@
                 log.debug("updating list for component {0}".format(attribute));
                 if (rendererType === 'autocompleteclient') {
                     var value = scope.datamap[displayable.target];
-                    cmpAutocompleteClient.refreshFromAttribute(displayable, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                    cmpAutocompleteClient.refreshFromAttribute(scope,displayable, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
                 } else if (rendererType === 'combodropdown') {
                     cmpComboDropdown.refreshFromAttribute(attribute);
                 }
@@ -133,7 +133,7 @@
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(displayable, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
+                cmpAutocompleteClient.refreshFromAttribute(scope,displayable, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
             } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType === 'combodropdown') {

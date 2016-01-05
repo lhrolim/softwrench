@@ -127,22 +127,9 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
 
                                         //add a breadcrumb item for the unknown page
                                         var newPage = {};
-                                        newPage.title = current;
-
-                                        //determine the best icon to use
-                                        var icon = 'fa fa-circle-o';
-                                        if (current.indexOf("Detail") > -1) {
-                                            icon = 'fa fa-file-text-o';
-
-                                            var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
-                                            if (record) {
-                                                newPage.title = record;
-                                            }
-                                        }
-                                   
-                                        newPage.icon = icon;
+                                        newPage.title = $scope.getBreadcrumbTitle(current);
+                                        newPage.icon = $scope.getBreadcrumbIcon(current);
                                         newPage.type = 'UnknownMenuItemDefinition';
-
                                         page.push(newPage);
                                     }
                                 }
@@ -156,6 +143,16 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                 }
 
                 return page;
+            }
+
+            $scope.getBreadcrumbIcon = function (title) {
+                var icon = 'fa fa-circle-o';
+
+                if (title.indexOf("Detail") > -1) {
+                    icon = 'fa fa-file-text-o';
+                }
+
+                return icon;
             }
 
             $scope.getBreadcrumbItems = function (currentMenu) {
@@ -190,10 +187,33 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                 } else {
                     foundPages = [];
                     foundPages.push(newPage);
+
+                    //if no menu items where found, add the current schema to the breadcrumb
+                    var current = crudContextHolderService.currentSchema();
+                    if (current != null) {
+                        newPage = {};
+                        newPage.title = $scope.getBreadcrumbTitle(current.title);
+                        newPage.icon = $scope.getBreadcrumbIcon(current.title);
+                        newPage.type = 'UnknownMenuItemDefinition';
+                        foundPages.push(newPage);
+                    }
                 }
   
                 return foundPages;
             };
+
+            $scope.getBreadcrumbTitle = function (title) {
+                var string = title;
+
+                if (title.indexOf("Detail") > -1) {
+                    var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
+                    if (record) {
+                        string = record;
+                    }
+                }
+
+                return string;
+            }
 
             $scope.getCurrentMenu = function () {
                 var currentItem = $('.admin-area .admin-menu .modern .dropdown-menu a:contains("' + $scope.title + '")');
