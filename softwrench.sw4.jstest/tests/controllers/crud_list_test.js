@@ -12,7 +12,7 @@
     beforeEach(module("sw.templates"));
     beforeEach(module('ngMockE2E'));
     
-    beforeEach(angular.mock.inject(function ($injector, $rootScope, $compile, contextService,searchService) {
+    beforeEach(angular.mock.inject(function ($injector, $rootScope, $compile,$q, contextService,searchService) {
         $httpBackend = $injector.get('$httpBackend');
         mockScope = $rootScope.$new();
         mockScope.schema = {};
@@ -24,8 +24,10 @@
 
         _searchService = searchService;
 
-        spyOn(searchService, "refreshGrid").and.callFake(function () {
-            return null;
+        spyOn(searchService, "searchWithData").and.callFake(function () {
+            //rejecting here on the before, so that the test runs for real later...
+            //TODO: change this, this sucks
+            return $q.reject();
         });
 
         contextService.insertIntoContext("commandbars", {});

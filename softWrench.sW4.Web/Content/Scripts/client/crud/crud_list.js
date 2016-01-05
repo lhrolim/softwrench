@@ -499,7 +499,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                             printMode: false,
                             metadataid: $scope.metadataid
                         });
-                        searchPromise.success(function (data) {
+                        searchPromise.then(function (data) {
                             // Set the scroll position to the top of the new page
                             contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                             $scope.gridRefreshed(data, $scope.panelid);
