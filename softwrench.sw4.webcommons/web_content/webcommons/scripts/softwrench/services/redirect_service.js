@@ -185,6 +185,8 @@
                     var data = httpResponse.data;
                     if (popupMode !== "modal") {
                         $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                    } else {
+                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields);
                     }
                     return $q.when(data.resultObject);
                 });

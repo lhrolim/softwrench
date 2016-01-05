@@ -21,11 +21,14 @@
         }
 
         function openNewDetailModal(parentdatamap) {
+            var params = {
+                popupmode: "modal"
+            };
             var jsondata = {
                 assetnum: parentdatamap.fields["assetnum"],
                 location: parentdatamap.fields["location"]
             };
-            redirectService.goToApplication("workorder", "newdetail", null, jsondata);
+            redirectService.goToApplication("workorder", "newdetail", params, jsondata);
         }
     }
 })();
