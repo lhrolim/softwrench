@@ -7,7 +7,8 @@
     function workorderService($log, redirectService) {
 
         var service = {
-            goToDetail: goToDetail
+            goToDetail: goToDetail,
+            openNewDetailModal: openNewDetailModal
         };
 
         return service;
@@ -17,6 +18,14 @@
                 id: parameters["workorderid"]
             };
             redirectService.goToApplication("workorder", "editdetail", params, null);
+        }
+
+        function openNewDetailModal(parentdatamap) {
+            var jsondata = {
+                assetnum: parentdatamap.fields["assetnum"],
+                location: parentdatamap.fields["location"]
+            };
+            redirectService.goToApplication("workorder", "newdetail", null, jsondata);
         }
     }
 })();

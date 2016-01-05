@@ -46,6 +46,7 @@
     <application id="PC" icon="fa fa-table" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
     <application id="PD" icon="fa fa-table" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
     <application id="RM" icon="fa fa-table" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
+    <application id="AST" icon="fa fa-table" title="Asset Grid" ref="asset" schema="list"/>
   </container>
   <container title="Location" tooltip="Click here to access your lcoations" icon="fa fa-location-arrow" id="location" role="location">
     <application id="LOC" icon="fa fa-table" title="Location Grid" ref="location" schema="locationlist" tooltip="Click to view your Location Grid"/>

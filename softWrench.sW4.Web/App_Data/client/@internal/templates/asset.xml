@@ -9,6 +9,9 @@
       </properties>
       <schemas>
         <list>
+          <properties>
+            <property key="list.click.schema" value="assetdetail"/>
+          </properties>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
@@ -23,6 +26,19 @@
           <field attribute="priority" label="Priority"  />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
+        <schema id="assetdetail" title="Asset Detail" stereotype="detail">
+          <field attribute="siteid" readonly="true" hidden="true"/>
+          <field attribute="assetid" label="Asset#" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="vendor" label="Vendor" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="failurecode" label="Failure Class" readonly="true"/>
+          <field attribute="priority" label="Priority" readonly="true"/>
+          <composition relationship="workorder" label="Work Order History" detailschema="">
+            <collectionproperties listschema="assetwolist" allowcreation="true" allowupdate="false" allowremoval="false" printenabled="false"/>
+          </composition>
+        </schema>
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
