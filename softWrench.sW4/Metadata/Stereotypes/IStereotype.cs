@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace softWrench.sW4.Metadata.Stereotypes
 {
@@ -7,5 +8,10 @@ namespace softWrench.sW4.Metadata.Stereotypes
 //        string LookupValue(string key);
 
         IDictionary<string, string> StereotypeProperties();
+
+        void Merge(IStereotype stereotype);
+
+     
+
     }
 }
