@@ -108,7 +108,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 //by default modals, should render as detail stereotype mode
                 schema.stereotype = schema.stereotype || "detail";
                 $scope.isList = schema.stereotype.equalsAny("list", "compositionlist");
-                $scope.isDetail = schema.stereotype.equalsAny("detail", "compositionDetail");
+                $scope.isDetail = schema.stereotype.equalsAny("detail", "compositionDetail","detailnew");
 
 
                 $scope.datamap = {
