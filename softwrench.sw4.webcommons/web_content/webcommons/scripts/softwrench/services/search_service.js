@@ -1,9 +1,11 @@
-var app = angular.module('sw_layout');
+(function (angular) {
+    "use strict";
 
-app.factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
+angular.module('sw_layout')
+    .factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
+    "ngInject";
 
     var objCache = {};
-
 
     function getSearchValue(value) {
         value = replaceAll(value, '%', '');
@@ -52,8 +54,6 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         ];
         return searchOperations;
     };
-
-
 
     var buildSearchParamsString = function (searchData, searchOperator, useOrOperator) {
         var operatorToUse = useOrOperator ? "||" : "&&";
@@ -120,7 +120,6 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
     };
 
     return {
-
         //TODO: dictionary?
         getSearchOperator: function (value) {
             if (value.startsWith('>')) {
@@ -434,9 +433,8 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             $rootScope.$broadcast("sw_togglefiltermode", setToBasicMode);
         },
 
-
-
     };
 
-
 });
+
+})(angular);

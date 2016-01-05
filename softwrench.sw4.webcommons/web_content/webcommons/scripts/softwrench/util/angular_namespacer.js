@@ -1,6 +1,5 @@
 ﻿//took from https://raw.githubusercontent.com/callmehiphop/angular-namespacer/master/angular-namespacer.js
 (function (angular) {
-
     'use strict';
 
     var angularModule = angular.bind(angular, angular.module);
@@ -18,4 +17,4 @@
         return instance;
     };
 
-}(this.angular));
+}(angular));
