@@ -230,7 +230,7 @@
                             var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
                             var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
-                            var properties = { title: filter.tooltip + " " + filterI18N };
+                            var properties = { title: filter.label + " " + filterI18N };
 
                             $scope.getModalSchema().then(function(modalSchema) {
                                 modalService.show(modalSchema, datamap, properties, $scope.appyModal);

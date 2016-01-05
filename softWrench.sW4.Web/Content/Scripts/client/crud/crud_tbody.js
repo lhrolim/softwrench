@@ -149,6 +149,10 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 var needsWatchers = false;
                 var hasSection = false;
                 var hasMultipleSelector = schema.properties['list.selectionstyle'] == 'multiple';
+                if (hasMultipleSelector) {
+                    // inits with true and updated on next loop
+                    scope.selectAllValue = true;
+                }
 
                 var html = '';
 
@@ -168,7 +172,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     needsWatchers = hasMultipleSelector;
 
                     html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
-                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\">".format(rowst);
+                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0})\">".format(rowst);
                     html += "</td>";
 
                     html += '<td class="select-single" style="display:none">';
@@ -270,6 +274,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         html += "</div></td>";
                     }
                     html += "</tr>";
+
+                    if (hasMultipleSelector) {
+                        // updates if selector is selected than updates the select all selector
+                        var selected = scope.refreshSelected(datamap[i]);
+                        scope.selectAllValue = scope.selectAllValue && selected;
+                    }
                 }
                 element.html(html);
                 if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
@@ -288,9 +298,47 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 });
             }
 
+            scope.selectChanged = function (row) {
+                var selected = row.fields["_#selected"];
+                var rowId = row.fields[scope.schema.idFieldName];
+                if (!scope.selectedBuffer) {
+                    scope.selectedBuffer = {};
+                }
+                if (selected) {
+                    scope.selectedBuffer[rowId] = "todo";
+                } else {
+                    delete scope.selectedBuffer[rowId];
+                }
+            }
+
+            scope.refreshSelected = function (row) {
+                if(!scope.selectedBuffer) {
+                    return false;
+                }
+                var rowId = row.fields[scope.schema.idFieldName];
+                if (scope.selectedBuffer[rowId]) {
+                    row.fields["_#selected"] = true;
+                    return true;
+                }
+                return false;
+            }
+
+            scope.innerSelectAllChanged = function(datamap, selectedValue) {
+                for (var i = 0; i < datamap.length; i++) {
+                    datamap[i].fields["_#selected"] = selectedValue;
+                    scope.selectChanged(datamap[i]);
+                }
+            }
+
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                 if (panelid == scope.panelid) {
                     scope.refreshGrid(datamap, schema);
+                }
+            });
+
+            scope.$on('sw_selectallchanged', function (event, datamap, selectedValue, panelid) {
+                if (panelid === scope.panelid) {
+                    scope.innerSelectAllChanged(datamap, selectedValue);
                 }
             });
 

@@ -86,6 +86,7 @@
                 <tr class="header-row">
                     <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
                         <!--Multiselect-->
+                        <input type="checkbox" ng-model="selectAllValue" ng-change="selectAllChanged()"/>
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
@@ -128,7 +129,7 @@
         <br />
         <br />
         <div id="affixpagination1" class="hiddenonprint context clearfix hiddenonprint">
-            <gridtoolbar position="gridbottom"
+            <gridtoolbar position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"
                          schema="schema"
                          pagination-data="paginationData"
                          search-sort="searchSort"
