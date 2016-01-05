@@ -11,142 +11,109 @@
           name="crudbodyform"
           class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
         <div ng-init="setForm(crudbodyform)" />
-        <ng-switch on="hasTabs(schema)">
 
-            <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
-                <div class="ticketid_spacer"></div>
-                <div class="well well-sm ticketid">
-                    <h5>{{getTitle()}}</h5>
-                </div>
+        <div ng-if="isEditDetail(datamap,schema) && shouldShowTitle()">
+            <div class="ticketid_spacer"></div>
+            <div class="well well-sm ticketid">
+                <h5>{{getTitle()}}</h5>
             </div>
+        </div>
 
-            <div ng-switch-when="true" class="hiddenonprint detail-body">
-                <div class="detail-header clearfix">
-                    <ul class="nav nav-tabs compositiondetailtab hapag-composition">
-                        <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
-                            <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i>&ensp;{{getDetailTabTitle(schema, datamap)}}</a>
-                        </li>
-                        <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
-                            <a ng-switch-when="ApplicationCompositionDefinition"
-                               ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowComposition(tab)" ng-click="setActiveTab(tab.tabId)">
-                                <i class="{{getTabIcon(tab)}}"></i>&ensp;{{i18N(tab.tabId + '._title',tab.label)}}&ensp;<span ng-show="showTabRecordCount(tab)" class="tabRecordCount badge">{{getTabRecordCount(tab)}}</span>
-                            </a>
-                            <a ng-switch-when="ApplicationTabDefinition"
-                               ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
-                                <i class="fa {{tab.icon}} ">
-                                </i>
-                                {{i18NTabLabel(tab)}} <span ng-show="showTabRecordCount(tab)" class="tabRecordCount">{{getTabRecordCount(tab)}}</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="buttons" ng-show="showNavigationButtons(schema)">
-                        <button type="button" class="btn btn-primary" ng-click="toConfirmBack(previousdata,previousschema)" rel="tooltip" data-original-title="Back to Grid"><i class="fa fa-table"></i></button>
-                        <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" ng-disabled="!disableNavigationButton(0)" data-original-title="Previous"><i class="fa fa-arrow-down"></i></button>
-                        <button type="button" class="btn btn-primary" ng-click="crawl(1)" rel="tooltip" ng-disabled="!disableNavigationButton(1)" data-original-title="Next"><i class="fa fa-arrow-up"></i></button>
-                    </div>
-
-                    <div class="buttons">
-                        <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions" />
-                    </div>
-
+        <div class="hiddenonprint detail-body">
+            <div class="detail-header clearfix" ng-if="hasTabs(schema)">
+                <ul class="nav nav-tabs compositiondetailtab hapag-composition">
+                    <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
+                        <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i>&ensp;{{getDetailTabTitle(schema, datamap)}}</a>
+                    </li>
+                    <li ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
+                        <a ng-switch-when="ApplicationCompositionDefinition"
+                           ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowComposition(tab)" ng-click="setActiveTab(tab.tabId)">
+                            <i class="{{getTabIcon(tab)}}"></i>&ensp;{{i18N(tab.tabId + '._title',tab.label)}}&ensp;<span ng-show="showTabRecordCount(tab)" class="tabRecordCount badge">{{getTabRecordCount(tab)}}</span>
+                        </a>
+                        <a ng-switch-when="ApplicationTabDefinition"
+                           ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
+                            <i class="fa {{tab.icon}} ">
+                            </i>
+                            {{i18NTabLabel(tab)}} <span ng-show="showTabRecordCount(tab)" class="tabRecordCount">{{getTabRecordCount(tab)}}</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="buttons" ng-show="showNavigationButtons(schema)">
+                    <button type="button" class="btn btn-primary" ng-click="toConfirmBack(previousdata,previousschema)" rel="tooltip" data-original-title="Back to Grid"><i class="fa fa-table"></i></button>
+                    <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" ng-disabled="!disableNavigationButton(0)" data-original-title="Previous"><i class="fa fa-arrow-down"></i></button>
+                    <button type="button" class="btn btn-primary" ng-click="crawl(1)" rel="tooltip" ng-disabled="!disableNavigationButton(1)" data-original-title="Next"><i class="fa fa-arrow-up"></i></button>
                 </div>
-                <div class="tab-content">
-                    <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="main">
-                        <ng-switch on="schema.mode.equalsAny('input', 'none') ">
-                            <div ng-switch-when="true">
-                                <crud-input-wrapper ismodal="{{ismodal}}"
-                                                    extraparameters="extraparameters"
-                                                    elementid="crudInputMainComposition"
-                                                    schema="schema" datamap="datamap.fields"
-                                                    original-datamap="originalDatamap.fields"
-                                                    is-dirty="isDirty"
-                                                    association-schemas="associationSchemas"
-                                                    blockedassociations="blockedassociations"
-                                                    displayables="schema.displayables"
-                                                    cancelfn="cancel(data,schema)"
-                                                    savefn="save(selecteditem, parameters)"
-                                                    previousschema="previousschema" previousdata="previousdata"
-                                                    is-main-tab='true' tabid="main" />
 
-                            </div>
-                            <div ng-switch-when="false">
-                                <crud-output-wrapper extraparameters="extraparameters"
-                                                     schema="schema" datamap="datamap.fields"
-                                                     displayables="schema.displayables"
-                                                     cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main" />
-                            </div>
-                        </ng-switch>
-                    </div>
-                    <div class="tab-pane" ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
-                        <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
-                            <div ng-switch-when="true" class="hiddenonprint">
-                                <composition-list-wrapper parentschema="schema"
-                                                          parentdata="datamap"
-                                                          cancelfn="cancel(data,schema)"
-                                                          previousschema="previousschema" previousdata="previousdata"
-                                                          metadata="tab"
-                                                          tabid="{{tab.tabId}}"
-                                                          ismodal="{{ismodal}}" />
-                            </div>
-                            <div ng-switch-when="false">
-                            </div>
+                <div class="buttons">
+                    <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions" />
+                </div>
+
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="main">
+                    <ng-switch on="schema.mode.equalsAny('input', 'none') ">
+                        <div ng-switch-when="true">
+                            <crud-input-wrapper ismodal="{{ismodal}}"
+                                                extraparameters="extraparameters"
+                                                elementid="crudInputMainComposition"
+                                                schema="schema" datamap="datamap.fields"
+                                                original-datamap="originalDatamap.fields"
+                                                is-dirty="isDirty"
+                                                association-schemas="associationSchemas"
+                                                blockedassociations="blockedassociations"
+                                                displayables="schema.displayables"
+                                                cancelfn="cancel(data,schema)"
+                                                savefn="save(selecteditem, parameters)"
+                                                previousschema="previousschema" previousdata="previousdata"
+                                                is-main-tab='true' tabid="main" />
+
                         </div>
-                        <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode.equalsAny('input', 'none')">
-                            <div ng-switch-when="true">
-                                <crud-input-wrapper ismodal="{{ismodal}}"
-                                                    extraparameters="extraparameters"
-                                                    elementid="tab_{{tab.tabid}}"
-                                                    displayables="tab.displayables"
-                                                    schema="schema" datamap="datamap.fields"
-                                                    association-schemas="associationSchemas"
-                                                    blockedassociations="blockedassociations"
-                                                    cancelfn="cancel(data,schema)"
-                                                    savefn="save(selecteditem, parameters)"
-                                                    previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
-                            </div>
-                            <div ng-switch-when="false">
-                                <crud-output-wrapper extraparameters="extraparameters"
-                                                     schema="schema" datamap="datamap.fields"
-                                                     displayables="tab.displayables"
-                                                     cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
-                            </div>
+                        <div ng-switch-when="false">
+                            <crud-output-wrapper extraparameters="extraparameters"
+                                                 schema="schema" datamap="datamap.fields"
+                                                 displayables="schema.displayables"
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main" />
+                        </div>
+                    </ng-switch>
+                </div>
+                <div class="tab-pane" ng-class="{'active': !hasAnyFieldOnMainTab(schema) && $first}" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
+                    <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
+                        <div ng-switch-when="true" class="hiddenonprint">
+                            <composition-list-wrapper parentschema="schema"
+                                                      parentdata="datamap"
+                                                      cancelfn="cancel(data,schema)"
+                                                      previousschema="previousschema" previousdata="previousdata"
+                                                      metadata="tab"
+                                                      tabid="{{tab.tabId}}"
+                                                      ismodal="{{ismodal}}" />
+                        </div>
+                        <div ng-switch-when="false">
+                        </div>
+                    </div>
+                    <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode.equalsAny('input', 'none')">
+                        <div ng-switch-when="true">
+                            <crud-input-wrapper ismodal="{{ismodal}}"
+                                                extraparameters="extraparameters"
+                                                elementid="tab_{{tab.tabid}}"
+                                                displayables="tab.displayables"
+                                                schema="schema" datamap="datamap.fields"
+                                                association-schemas="associationSchemas"
+                                                blockedassociations="blockedassociations"
+                                                cancelfn="cancel(data,schema)"
+                                                savefn="save(selecteditem, parameters)"
+                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
+                        </div>
+                        <div ng-switch-when="false">
+                            <crud-output-wrapper extraparameters="extraparameters"
+                                                 schema="schema" datamap="datamap.fields"
+                                                 displayables="tab.displayables"
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- the false == no tabs at all. like on a new screen-->
-            <div ng-switch-when="false" class="hiddenonprint detail-body" tabsrendered>
-                <!--TODO: SWWEB-1970 restructure this html using id to control whether it's a new entry or not, instead of no tabs -->
-                <ng-switch on="schema.mode.equalsAny('input','none') ">
-                    <div ng-switch-when="true">
-                        <crud-input-wrapper ismodal="{{ismodal}}"
-                                            elementid="crudInputMain"
-                                            extraparameters="extraparameters"
-                                            schema="schema" datamap="datamap.fields"
-                                            blockedassociations="blockedassociations"
-                                            association-schemas="associationSchemas"
-                                            cancelfn="cancel(data,schema)"
-                                            displayables="schema.displayables"
-                                            savefn="save(selecteditem, parameters)"
-                                            previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
-                    </div>
-                    <div ng-switch-when="false">
-                        <crud-output-wrapper schema="schema"
-                                             extraparameters="extraparameters"
-                                             datamap="datamap.fields"
-                                             displayables="schema.displayables"
-                                             cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
-                    </div>
-                    <div ng-switch-default>
-                        {{i18N('general.modeundefined','Error, mode is undefined')}}!
-                    </div>
-                </ng-switch>
-
-
-
-            </div>
-        </ng-switch>
     </form>
 
     <!-- had to divide the 'print-modal' and 'print-seciton' in two diferent divs, otherwise the 'print-section' was totally ignored (really dont know why) -->
