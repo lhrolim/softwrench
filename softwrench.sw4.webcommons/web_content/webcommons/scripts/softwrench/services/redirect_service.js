@@ -5,7 +5,7 @@
     'use strict';
 
 
-    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, $timeout) {
+    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService,modalService,schemaCacheService, $timeout) {
 
 
         function getActionUrl(controller, action, parameters) {
@@ -37,7 +37,7 @@
             contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
             return $http.get(redirectUrl).success(
                 function (data) {
-                    if (data.type != "BlankApplicationResponse") {
+                    if (data.type !== "BlankApplicationResponse") {
                         $rootScope.$broadcast("sw_redirectactionsuccess", data);
                     }
                 }).error(
@@ -76,9 +76,6 @@
             return this.redirectToAction(null, controller, action, parameters, null);
         };
 
-        function goToApplication(applicationName, schemaId, parameters, jsonData) {
-            this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
-        };
 
         function redirectWithData(applicationName, schemaId, mode, searchData, extraParameters) {
             /// <summary>
@@ -120,30 +117,41 @@
                 });
         };
 
+        /**
+         * 
+         * @param {type} applicationName name of the application to redirect
+         * @param {type} schemaId id of the schema to redirect to
+         * @param {type} parameters: any parameters to be passed within the query string plus
+         *      popupmode -- modal, browser or null for redirecting the main page
+         * @param {type} jsonData a initial data that could be passed to open a schema filled with some values
+         */
+        function goToApplication(applicationName, schemaId, parameters, jsonData) {
+            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
+        };
+
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             var log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
-
-            if (parameters === undefined || parameters == null) {
-                parameters = {};
-            }
+            parameters = parameters || {};
+            
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
-            var redirectURL = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
+            var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
 
             var popupMode = parameters.popupmode;
 
             if (popupMode === "browser") {
                 if (contextService.isLocal()) {
                     //easier to debug on chrome like this
-                    var w = window.open(redirectURL);
+                    window.open(redirectUrl);
                     //                    w.moveto(0, 0);
                 } else {
                     var x = screen.width / 2 - 800 / 2;
                     var y = screen.height / 2 - 600 / 2;
-                    var w = window.open(redirectURL, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
+                    var w = window.open(redirectUrl, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
                     w.focus();
                 }
-                return;
+                //to keep promise consitent
+                return $q.when();
             }
 
             //this code will get called when the user is already on a crud page and tries to switch view only.
@@ -153,24 +161,32 @@
 
 
             if (jsonData == undefined) {
-
-
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
-                return $http.get(redirectURL).then(function (data) {
-                    contextService.insertIntoContext("swGlobalRedirectURL", redirectURL, false);
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data.data, mode, applicationName);
+                return $http.get(redirectUrl).then(function (httpResponse) {
+                    var data = httpResponse.data;
+
+                    contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
+                    if (popupMode !== "modal") {
+                        $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                    } else {
+                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields);
+                    }
                     if (afterRedirectHook != null) {
                         afterRedirectHook();
                     }
-                    return $q.when(data.data.resultObject);
+                    return $q.when(data.resultObject);
                 });
             } else {
                 var jsonString = angular.toJson(jsonData);
-                log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
-                return $http.post(redirectURL, jsonString).success(function (httpResponse) {
-                    httpResponse = httpResponse.data ? httpResponse.data : httpResponse;
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", httpResponse, mode, applicationName);
-                    return $q.when(httpResponse.resultObject);
+                if (log.isLevelEnabled("info")) {
+                    log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
+                }
+                return $http.post(redirectUrl, jsonString).then(function (httpResponse) {
+                    var data = httpResponse.data;
+                    if (popupMode !== "modal") {
+                        $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                    }
+                    return $q.when(data.resultObject);
                 });
             }
         };
@@ -227,7 +243,7 @@
 
     angular
     .module('sw_layout')
-    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', '$timeout', redirectService]);
+    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService','modalService','schemaCacheService', '$timeout', redirectService]);
 
 
 })(angular);
