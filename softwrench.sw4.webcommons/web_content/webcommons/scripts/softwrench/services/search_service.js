@@ -43,7 +43,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         { id: "ENDWITH", symbol: "END", title: filtertype.endwith, tooltip: filtertype.endwith, begin: "%", end: "", renderType: ["default"], datatype: ['varchar'] },
 //        { id: "BTW", symbol: "-", title: filtertype.btw, tooltip: filtertype.btw, begin: ">=", end: "<=", renderType: [] },
         { id: "NOTEQ", symbol: "!=", title: filtertype.noteq, tooltip: filtertype.noteq, begin: "!=", end: "", renderType: ["default", "datetime"] },
-        { id: "BLANK", symbol: "BLANK", title: filtertype.blank, tooltip: filtertype.blank, begin: "", end: "", renderType: ["default", "datetime","combo"] },
+        { id: "BLANK", symbol: "BLANK", title: filtertype.blank, tooltip: filtertype.blank, begin: "", end: "", renderType: ["default", "datetime", "combo"] },
         { id: "GT", symbol: ">", title: filtertype.gt, tooltip: filtertype.gt, begin: ">", end: "", renderType: ["default", "datetime"] },
         { id: "LT", symbol: "<", title: filtertype.lt, lt: filtertype.lt, begin: "<", end: "", renderType: ["default", "datetime"] },
         { id: "GTE", symbol: ">=", title: filtertype.gte, tooltip: filtertype.gte, begin: ">=", end: "", renderType: ["default", "datetime"] },
@@ -237,7 +237,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             //searchDto.searchTemplate = searchTemplate;
             searchDto.searchTemplate = searchTemplate;
             searchData.lastSearchedValues = searchDto.searchValues;
-            
+
             if (paginationData) {
                 searchDto.pageNumber = paginationData.pageNumber;
                 searchDto.pageSize = paginationData.pageSize;
@@ -365,7 +365,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
-        quickSearch: function (quickSearchData,panelId) {
+        quickSearch: function (quickSearchData, panelId) {
             if (!quickSearchData) return;
             this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false, panelid: panelId });
         },
@@ -395,15 +395,15 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             }
             extraParameters = extraParameters || {};
             searchData = searchData || {};
-            
+
             var log = $log.getInstance('searchService#searchWithData');
             var searchDTO = extraParameters.searchDTO;
             if (!searchDTO) {
                 searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
-            searchDTO.searchTemplate = extraParameters.searchTemplate;
-            searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+                searchDTO.searchTemplate = extraParameters.searchTemplate;
+                searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
+                searchDTO.totalCount = 0;
+                searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
             }
 
             var restParameters = {
@@ -426,7 +426,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                     }
                 });
             } else {
-                return $http.get(urlToUse); 
+                return $http.get(urlToUse);
             }
         },
 

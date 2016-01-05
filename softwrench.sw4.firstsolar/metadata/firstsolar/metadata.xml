@@ -29,6 +29,7 @@
             <property key="commandbar.bottom" value="applyfilter"/>
             <property key="commandbar.top" value="gridfiltertop"/>
             <property key="list.selectionstyle" value="multiple"/>
+            <property key="list.paginationsize" value="10"/>
           </properties>
         </schema>
       </schemas>

@@ -170,12 +170,12 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     $scope.searchSort = {};
                 });
 
-                $scope.initDefaultPaginationData = function() {
+                $scope.initDefaultPaginationData = function () {
                     $scope.paginationData = {
                         pageNumber: 1,
 
 
-                };
+                    };
 
                 }
 
@@ -291,7 +291,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     $scope.refreshGridRequested(searchData, extraparameters);
                 });
 
-                $scope.getGridCommandPosition = function (propertyName,defaultProperty) {
+                $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
                     if (!$scope.schema.properties || !$scope.schema.properties[propertyName]) {
                         return defaultProperty;
                     }
@@ -305,7 +305,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                         searchService.refreshGrid({});
                         return;
                     }
-                    searchService.quickSearch(filterdata,$scope.panelid);
+                    searchService.quickSearch(filterdata, $scope.panelid);
                 };
 
                 $scope.cursortype = function () {
@@ -494,15 +494,17 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     }
 
                     if (!dataRefreshed && !dataToRefresh) {
-                        $scope.searchData = {};
-                        $scope.searchOperator = {};
-                        $scope.searchSort = {};
-                        //TODO: read from $scope.schema properties, to pick the right properties
-                        $scope.paginationData = {
-                            pageNumber: 1,
-                            pageSize: 10
-                        };
-                        searchService.refreshGrid(null,{ panelid: $scope.panelid });
+                        var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
+                            searchDTO: {},
+                            printMode: false,
+                            metadataid: $scope.metadataid
+                        });
+                        searchPromise.success(function (data) {
+                            // Set the scroll position to the top of the new page
+                            contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
+                            $scope.gridRefreshed(data, $scope.panelid);
+                        });
+                        
                     }
 
                 }
