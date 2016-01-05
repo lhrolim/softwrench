@@ -14,7 +14,7 @@
 
         function goToDetail(parameters) {
             var params = {
-                id: parameters["assetid"]
+                id: parameters["assetid"],
             };
             redirectService.goToApplication("asset", "detail", params, null);
         }

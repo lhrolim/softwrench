@@ -305,7 +305,7 @@ function applicationController($scope, $http, $log, $timeout,
             }, msg, function () { return; });
         }
         else {
-            $scope.toListSchema(data, schema);
+            $scope.toSchema(data, schema);
         }
 
         //update the crud context to update the breadcrumbs 
@@ -316,7 +316,24 @@ function applicationController($scope, $http, $log, $timeout,
         $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
     };
 
+    $scope.toSchema = function (data, schema) {
+        if (schema.stereotype.equalsIc("list")) {
+            $scope.toListSchema(data, schema);
+        } else {
+            $scope.toDetailSchema(data, schema);
+        }
+    }
 
+    $scope.toDetailSchema = function (data, schema) {
+        var log = $log.getInstance('application#toDetailSchema');
+        var params = {};
+        params["resultObject"] = data[0];
+        params["schema"] = schema;
+        params["type"] = "ApplicationDetailResult";
+        // If the application has custom parameters get them from the datamap
+
+        $scope.renderViewWithData(schema.applicationName, schema.schemaId, schema.mode, schema.title, params);
+    }
 
     $scope.toListSchema = function (data, schema) {
         
