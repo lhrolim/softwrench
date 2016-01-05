@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('relatedrecordService', function (redirectService, searchService) {
+angular.module('sw_layout')
+    .factory('relatedrecordService', ["redirectService", "searchService", function (redirectService, searchService) {
     var getWorkOrderId = function (app, wonum, siteid) {
         var searchData = {
             wonum: wonum,
@@ -34,8 +36,8 @@ app.factory('relatedrecordService', function (redirectService, searchService) {
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
-
-
     };
 
-});
+}]);
+
+})(angular);

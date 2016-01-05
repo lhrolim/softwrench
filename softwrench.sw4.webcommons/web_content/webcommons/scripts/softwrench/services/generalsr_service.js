@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('generalsrService', function (alertService, contextService,associationService, fieldService) {
+angular.module('sw_layout')
+    .factory('generalsrService', ["alertService", "contextService", function (alertService, contextService) {
 
     return {
         beforeChangeLocation: function (event) {
@@ -13,7 +15,6 @@ app.factory('generalsrService', function (alertService, contextService,associati
                 //due to the AfterChangeAsset callback.
                 return true;
             }
-
 
             alertService.confirm(null, null, function () {
                 event.fields['assetnum'] = null;
@@ -48,7 +49,6 @@ app.factory('generalsrService', function (alertService, contextService,associati
             }
         },
 
-
         afterchangeowner: function (event) {
             if (event.fields['owner'] == null) {
                 return;
@@ -66,7 +66,6 @@ app.factory('generalsrService', function (alertService, contextService,associati
                 }
                 return;
             }
-            
         },
 
         afterchangeownergroup: function (event) {
@@ -87,15 +86,15 @@ app.factory('generalsrService', function (alertService, contextService,associati
                 }
                 return;
             }
-            
-            
         },
+
         beforechangeownergroup: function (event) {
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
         }
-
     };
 
-});
+}]);
+
+})(angular);

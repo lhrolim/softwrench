@@ -1,9 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('mockService', function (contextService) {
+angular.module('sw_layout')
+    .factory('mockService', ["contextService", function (contextService) {
 
     return {
-
         //avoids opening dashboard upon container click
         isMockedContainerDashBoard: function () {
             return contextService.isLocal() && sessionStorage.mockdash == "true";
@@ -12,10 +13,8 @@ app.factory('mockService', function (contextService) {
         isMockMaximo: function () {
             return contextService.isLocal() && sessionStorage.mockmaximo == "true";
         },
-
-
     };
 
-});
+}]);
 
-
+})(angular);
