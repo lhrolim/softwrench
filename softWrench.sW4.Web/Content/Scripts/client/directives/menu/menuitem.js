@@ -1,4 +1,9 @@
-﻿app.directive('menuWrapper', function ($compile) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('menuWrapper', function ($compile) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -19,6 +24,8 @@
 });
 
 app.directive('menu', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -102,6 +109,8 @@ app.directive('menu', function (contextService) {
 });
 
 app.directive('subMenu', function ($compile) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -123,6 +132,8 @@ app.directive('subMenu', function ($compile) {
 });
 
 app.directive('menuItem', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -160,9 +171,6 @@ app.directive('menuItem', function (contextService) {
                 return menuService.getI18nMenuIcon(menuItem);
 
             };
-                
-           
-
 
             $scope.goToApplication = function (leaf, $event) {
                 var target = $event.target;
@@ -220,7 +228,6 @@ app.directive('menuItem', function (contextService) {
                 return container.hasMainAction ? "dropdown" : "null";
             };
 
-
             $scope.handleContainerClick = function (container, $event) {
                 var target = $event.target;
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
@@ -244,3 +251,5 @@ app.directive('menuItem', function (contextService) {
         }
     };
 });
+
+})(app);

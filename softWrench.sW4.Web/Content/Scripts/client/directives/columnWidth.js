@@ -1,6 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('columnWidths', function ($log, $timeout) {
+angular.module('sw_layout').directive('columnWidths', function ($log, $timeout) {
+    "ngInject";
+
     var log = $log.getInstance('sw4.columnwidthcss');
 
     return {
@@ -180,6 +183,8 @@ function balanceColumns(widths, param) {
     }
 }
 
+window.balanceColumns = balanceColumns;
+
 function getViewRules(widths, param, viewWidth, media, schema) {
     var newCSS = '';
 
@@ -208,6 +213,8 @@ function getViewRules(widths, param, viewWidth, media, schema) {
     return newCSS;
 }
 
+window.getViewRules = getViewRules;
+
 function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
     var properties = '';
 
@@ -223,9 +230,13 @@ function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
     return buildCSSrule(columnIndex, columnClass, properties, schema);
 }
 
+window.getCSSrule = getCSSrule;
+
 function buildCSSrule(columnIndex, columnClass, properties, schema) {
     return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema) + '{' + properties + '}'
 }
+
+window.buildCSSrule = buildCSSrule;
 
 function buildCSSselector(columnIndex, columnClass, element, schema) {
     var gridtype;
@@ -243,6 +254,8 @@ function buildCSSselector(columnIndex, columnClass, element, schema) {
     }
 }
 
+window.buildCSSselector = buildCSSselector;
+
 function removePercent(value) {
     if (value) {
         var size = parseInt(value.replace('%', ''));
@@ -257,3 +270,7 @@ function removePercent(value) {
         return 0;
     }
 }
+
+window.removePercent = removePercent;
+
+})(angular);

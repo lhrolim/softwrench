@@ -1,4 +1,9 @@
-﻿app.directive('crudOutputWrapper', function (contextService, $compile, $rootScope) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('crudOutputWrapper', function (contextService, $compile) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -47,6 +52,8 @@
 });
 
 app.directive('crudOutput', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -103,8 +110,8 @@ app.directive('crudOutput', function (contextService) {
                 commandService: commandService,
                 formatService: formatService
             });
-
         }
-
     };
 });
+
+})(app);

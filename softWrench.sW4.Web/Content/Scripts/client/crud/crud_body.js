@@ -1,6 +1,11 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
+
+var app = angular.module('sw_layout');
 
 app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService) {
+    "ngInject";
+
     /// <summary>
     /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
     /// 
@@ -53,6 +58,8 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
 
 
 app.directive('crudBody', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -512,3 +519,4 @@ app.directive('crudBody', function (contextService) {
     };
 });
 
+})(angular);

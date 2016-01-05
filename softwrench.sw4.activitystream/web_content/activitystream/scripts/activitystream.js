@@ -1,4 +1,9 @@
+(function (angular) {
+    "use strict";
+
 angular.module('sw_layout').directive('activitystream', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
 
@@ -265,7 +270,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             };
 
             //set window height and reinitialize scroll pane if windows is resized
-            $(window).bind('resize', function () {
+            $(window).bind('resize', window.debounce(function () {
                 // IE fires multiple resize events while you are dragging the browser window which
                 // causes it to crash if you try to update the scrollpane on every one. So we need
                 // to throttle it to fire a maximum of once every 50 milliseconds...
@@ -279,7 +284,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         }, 50);
                     }
                 }
-            });
+            }, 300));
 
             //prevent window scrolling after reaching end of navigation pane 
             $(document).on('mousewheel', '#activitystream .scroll', function (e) {
@@ -345,7 +350,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
     }
 });
 
-$(window).resize(function () {
+$(window).resize(window.debounce(function () {
     var activityWidth = 0;
 
     //if pane is open get width
@@ -367,4 +372,6 @@ $(window).resize(function () {
 
     $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
     $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-});
+}, 300));
+
+})(angular);

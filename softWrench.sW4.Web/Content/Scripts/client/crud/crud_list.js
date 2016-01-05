@@ -1,15 +1,18 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('advancedFilterToogle', function (contextService) {
+var app = angular.module('sw_layout');
+
+app.directive('advancedFilterToogle', ["contextService", function (contextService) {
     return {
         restrict: 'E',
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/crud/advanced_filter_toogle.html')
     };
-});
-
+}]);
 
 app.directive('crudList', ["contextService", "$timeout", function (contextService, $timeout) {
+
     return {
         restrict: 'E',
         replace: true,
@@ -477,13 +480,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
         }],
 
         link: function (scope, element, attrs) {
-            scope.isDashboard = function (el, panelid) {
-                if (panelid != null) {
-                    return "width: 100%;";
-                } else {
-                    return "width: 97.5%; width: -moz-calc(100% - 40px); width: -webkit-calc(100% - 40px); width: calc(100% - 40px);";
-                }
-            }
+            scope.isDashboard = function(el, panelid) {
+                return panelid != null
+                    ? "width: 100%;"
+                    : "width: 97.5%; width: -moz-calc(100% - 40px); width: -webkit-calc(100% - 40px); width: calc(100% - 40px);";
+            };
         }
     };
 }]);
+
+})(angular);
