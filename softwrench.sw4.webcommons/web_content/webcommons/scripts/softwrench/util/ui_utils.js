@@ -44,10 +44,10 @@ $(function () {
         //adjust footer position
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
+        var footerHeight = $('.site-footer').height();
 
-        //console.log('fix footer', containerHeight, windowHeight);
-
-        if (containerHeight > windowHeight) {
+        //console.log('fix footer', containerHeight, footerHeight, windowHeight);
+        if (containerHeight + footerHeight > windowHeight) {
             $('.site-footer').css('position', 'initial');
         } else {
             $('.site-footer').css('position', 'absolute');
