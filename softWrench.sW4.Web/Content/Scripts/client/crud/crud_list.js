@@ -494,6 +494,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     }
 
                     if (!dataRefreshed && !dataToRefresh) {
+                        $scope.searchSort = $scope.searchOperator = $scope.searchData = {};
+
                         var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
                             searchDTO: {},
                             printMode: false,
@@ -502,7 +504,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                         searchPromise.then(function (data) {
                             // Set the scroll position to the top of the new page
                             contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
-                            $scope.gridRefreshed(data, $scope.panelid);
+                            $scope.gridRefreshed(data.data, $scope.panelid);
                         });
                         
                     }
