@@ -12,7 +12,7 @@
     <template path="@inventory.xml"/>   
   </templates>
 
-  <applications>
+  <!--<applications>
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
         <schema id="editdetail" platform="web" redeclaring="false">
@@ -94,5 +94,5 @@
         </schema>
       </schemas>
     </application>
-  </applications>
+  </applications>-->
 </metadata>
