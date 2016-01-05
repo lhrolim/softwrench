@@ -734,7 +734,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="asset" idAttribute="assetid">
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
       <attributes>
         <attribute name="assetnum" type="varchar" required="true" />
         <attribute name="parent" type="varchar" required="false" />
@@ -976,7 +976,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="location" idAttribute="locationsid">
+    <entity name="location" idAttribute="locationsid" useridAttribute="location">
       <attributes>
         <attribute name="locationsid"  type="int" required="true" />
         <attribute name="location" type="varchar"  required="true" />

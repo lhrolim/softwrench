@@ -13,8 +13,8 @@
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
-        <detail>
-          <field attribute="assetid" label="Asset#"  requiredexpression="true" />
+        <schema id="detail" stereotype="detail">
+          <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
           <field attribute="location" label="Location"  requiredexpression="true" />
           <field attribute="vendor" label="Vendor"  />
@@ -22,7 +22,7 @@
           <field attribute="failurecode" label="Failure Class"  />
           <field attribute="priority" label="Priority"  />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-        </detail>
+        </schema>
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">

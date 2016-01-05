@@ -21,10 +21,10 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list >
+        <schema id="locationlookup" title="Location List">
           <field attribute="location" label="Location" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
-        </list>
+        </schema>
         <detail>
           <field attribute="locationsid" label="ID"  requiredexpression="true" />
           <field attribute="location" label="Location"  requiredexpression="true" />
@@ -32,10 +32,10 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
-        <schema id="locationlist" title="Location Grid" stereotype="list">
+        <list>
           <properties>
             <property key="list.click.schema" value="locationdetail"/>
-            <property key="list.click.customparams" value="parentlocation_.systemid,parentlocation_.parent"/>
+            <property key="list.click.customparams" value="parentlocation_.systemid"/>
           </properties>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>
@@ -50,7 +50,7 @@
           <field attribute="orgid" hidden="true"/>
           <!--Child Locations-->
           <!--Open Work Orders-->
-        </schema>
+        </list>
         <schema id="locationdetail" title="Location Detail" stereotype="detail">
           <field attribute="orgid" showexpression="false"/>
           <section orientation="horizontal">
