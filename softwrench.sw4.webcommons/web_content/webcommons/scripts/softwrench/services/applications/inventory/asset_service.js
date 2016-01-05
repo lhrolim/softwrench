@@ -15,7 +15,6 @@
         function goToDetail(parameters) {
             var params = {
                 id: parameters["assetid"],
-                popupmode: "modal",
             };
             redirectService.goToApplication("asset", "detail", params, null);
         }
