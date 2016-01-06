@@ -49,6 +49,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 quickSearchData: null
             }
 
+            var scrollPosition = 0;
+
             fixHeaderService.activateResizeHandler();
 
             $scope.loadIcon = function (value, metadata) {

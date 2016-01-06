@@ -30,14 +30,15 @@ angular.module('sw_layout').directive('columnWidths', function ($log, $timeout) 
                     //log.debug('Raw Data', json);
 
                     var widths = {}
-
+                    var column;
                     //build object for columns and responsive widths
-                    for (id in json) {
+                    for (var id in json) {
+                        if(!json.hasOwnProperty(id)) continue;
                         //convert metadata to html columns (add 2 for select columns and 1 for index base)
                         if (scope.schema.stereotype === 'List') {
-                            var column = parseInt(id) + 3;
+                            column = parseInt(id) + 3;
                         } else {
-                            var column = parseInt(id) + 1;
+                            column = parseInt(id) + 1;
                         }
 
                         //log.debug(json[id]);
@@ -48,13 +49,13 @@ angular.module('sw_layout').directive('columnWidths', function ($log, $timeout) 
                         //if the column has rendererParameters, else default to 0 width
                         if (!json[id].isHidden && json[id].hasOwnProperty('attribute')) {
                             if (json[id].rendererParameters) {
-                                width = removePercent(json[id].rendererParameters.width);
+                                var width = removePercent(json[id].rendererParameters.width);
 
                                 //use provided width or default to 0
                                 if (width) {
                                     row.width = width;
                                 } else {
-                                    row.width = 0
+                                    row.width = 0;
                                 }
                             } else {
                                 row.width = 0;
@@ -148,15 +149,16 @@ function balanceColumns(widths, param) {
     var withWidth = 0;
 
     //total all the column widths
-    for (column in widths) {
-        if (widths[column][param] === -1) {
+    angular.forEach(widths, function (val) {
+        if (val[param] === -1) {
             withWidth++;
-        } else if (widths[column][param] > 0) {
-            totalWidth = totalWidth + widths[column][param];
+        } else if (val[param] > 0) {
+            totalWidth = totalWidth + val[param];
             withWidth++;
         }
-    }
-
+    });
+    
+    var remainingWidth, balanceWidth;
     //if there are columns without widths assigned
     if (withWidth < totalColumns) {
 
@@ -170,16 +172,16 @@ function balanceColumns(widths, param) {
         }
 
         //update the columns without widths
-        for (column in widths) {
+        angular.forEach(widths, function (val) {
             if (remainingWidth > 0) {
-                currentWidth = widths[column][param];
+                var currentWidth = val[param];
                 if (currentWidth === 0) {
-                    widths[column][param] = balanceWidth;
+                    val[param] = balanceWidth;
                 }
             } else {
-                widths[column][param] = balanceWidth;
+                val[param] = balanceWidth;
             }
-        }
+        });
     }
 }
 
@@ -189,9 +191,10 @@ function getViewRules(widths, param, viewWidth, media, schema) {
     var newCSS = '';
 
     //look for the viewWidth in each column
-    for (column in widths) {
+    for (var column in widths) {
+        if (!widths.hasOwnProperty(column)) continue;
         if (widths[column][param]) {
-            columnWidth = widths[column][param];
+            var columnWidth = widths[column][param];
 
             //get the css rule & add it other rules
             if (columnWidth) {

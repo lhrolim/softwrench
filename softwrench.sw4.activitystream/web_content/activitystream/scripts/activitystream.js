@@ -1,6 +1,30 @@
 (function (angular) {
     "use strict";
 
+function handleResize() {
+    var activityWidth = 0;
+
+    //if pane is open get width
+    if ($('#activitystream').hasClass('open')) {
+        activityWidth = $('#activitystream').width();
+    }
+
+    //var gridOffset = activityWidth + gridPadding;
+    //var headerOffset = activityWidth;
+
+    //update widths
+    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+
+    if ($('.site-header').css('position') == 'fixed') {
+        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+    } else {
+        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
+    }
+
+    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+    $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+}
+
 angular.module('sw_layout').directive('activitystream', function (contextService) {
     "ngInject";
 
@@ -24,6 +48,12 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
         link: function (scope) {
             scope.$name = 'crudbody';
+
+            var handler = window.debounce(handleResize, 300);
+            angular.element(window).on("resize", handler);
+            scope.$on("$destroy", function () {
+                angular.element(window).off("resize", handler);
+            });
         },
 
         controller: function ($scope, $http, $log, $interval, $timeout, redirectService,
@@ -43,20 +73,20 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
             if ($scope.activityStreamEnabled()) {
                 $('html').addClass('activitystream');
-            }
+            };
 
 
             $scope.hasmultipleprofiles = function () {
                 return this.getMultiplesProfiles().length > 1;
-            }
+            };
 
             $scope.getMultiplesProfiles = function () {
                 return $scope.availableProfiles || [];
-            }
+            };
 
             $scope.changeCurrentProfile = function () {
                 this.refreshStream();
-            }
+            };
 
             $scope.clearFilter = function () {
                 log.debug('clearFilter');
@@ -72,11 +102,11 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 }
 
                 return $scope.hiddenToggle;
-            }
+            };
 
             $scope.deciveType = function () {
                 return DeviceDetect.catagory.toLowerCase();
-            }
+            };
 
             $scope.formatDate = function (notificationDate) {
                 var currentDate = new Date();
@@ -99,7 +129,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 } else {
                     return false;
                 }
-            }
+            };
 
             $scope.markAllRead = function () {
                 log.debug('markAllRead');
@@ -117,7 +147,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $scope.refreshStream();
                     });
                 }, confirmationMessage);
-            }
+            };
 
             $scope.markRead = function (activity) {
                 log.debug('markRead', activity);
@@ -146,7 +176,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
                         alertService.notifyexception(errordata);
                     });
-            }
+            };
 
             $scope.buildActivityNotificationParam = function (activity, parent) {
                 var param = {
@@ -158,7 +188,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     param.applicationName = activity.parentApplication;
                 }
                 return param;
-            }
+            };
 
             $scope.disposeActivityStream = function (activity, parent) {
                 //if the header is not fixed (mobile), hide the actity pane
@@ -172,8 +202,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     }, 0, false);
                 }
                 $scope.refreshStream();
-            }
-
+            };
 
             $scope.openLink = function (activity, parent) {
                 log.debug('openLink');
@@ -193,7 +222,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $scope.disposeActivityStream(activity, parent);
                     });
 
-            }
+            };
 
             $scope.refreshStream = function (silent) {
                 log.debug('refreshStream');
@@ -225,7 +254,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         }
                         log.debug($scope.activities);
                     });
-            }
+            };
 
             $scope.setPaneHeight = function () {
                 log.debug('setPaneHeight');
@@ -235,14 +264,14 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 var panePaddingBottom = parseInt($('#activitystream .pane').css('padding-bottom'));
 
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
-            }
+            };
 
             $scope.toggleFilter = function () {
                 log.debug('toggleFilter');
 
                 $scope.enableFilter = !$scope.enableFilter;
                 $scope.clearFilter();
-            }
+            };
 
             $scope.toggleHidden = function () {
                 log.debug('toggleHidden');
@@ -255,7 +284,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         jScrollPaneAPI.reinitialise();
                     }, 0);
                 }
-            }
+            };
 
             $scope.toggleActivityStream = function () {
                 //open and close activity pane
@@ -349,29 +378,5 @@ angular.module('sw_layout').directive('activitystream', function (contextService
         }
     }
 });
-
-$(window).resize(window.debounce(function () {
-    var activityWidth = 0;
-
-    //if pane is open get width
-    if ($('#activitystream').hasClass('open')) {
-        activityWidth = $('#activitystream').width();
-    }
-
-    //var gridOffset = activityWidth + gridPadding;
-    //var headerOffset = activityWidth;
-
-    //update widths
-    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-
-    if ($('.site-header').css('position') == 'fixed') {
-        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-    } else {
-        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
-    }
-
-    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-    $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-}, 300));
 
 })(angular);
