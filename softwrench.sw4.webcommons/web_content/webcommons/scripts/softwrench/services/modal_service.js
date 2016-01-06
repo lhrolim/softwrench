@@ -62,7 +62,8 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 previousschema: parentschema,
                 title: properties.title,
                 cssclass: properties.cssclass,
-                onloadfn: properties.onloadfn
+                onloadfn: properties.onloadfn,
+                closeAfterSave: properties.closeAfterSave
             };
 
             $rootScope.$broadcast("sw.modal.show", modaldata);

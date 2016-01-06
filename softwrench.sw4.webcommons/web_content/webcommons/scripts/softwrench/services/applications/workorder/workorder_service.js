@@ -22,13 +22,14 @@
 
         function openNewDetailModal(parentdatamap) {
             var params = {
-                popupmode: "modal"
+                popupmode: "modal",
+                title: "Work Order"
             };
             var jsondata = {
                 assetnum: parentdatamap.fields["assetnum"],
                 location: parentdatamap.fields["location"]
             };
-            redirectService.goToApplication("workorder", "newdetail", params, jsondata);
+            redirectService.goToApplication("workorder", "assetdetail", params, jsondata);
         }
     }
 })();

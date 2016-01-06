@@ -27,8 +27,15 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </schema>
         <schema id="assetdetail" title="Asset Detail" stereotype="detail">
+          <commandbars>
+            <commandgroup position="actions">
+              <container id="actioncontainer" icon="fa-bolt" label="Actions">
+                <command id="createWO" service="workorderService" method="openNewDetailModal" parameters="datamap" label="Create Work Order" icon="fa-tachometer"/>
+              </container>
+            </commandgroup>
+          </commandbars>
           <field attribute="siteid" readonly="true" hidden="true"/>
-          <field attribute="assetid" label="Asset#" readonly="true"/>
+          <field attribute="assetid" label="Asset#" readonly="true" hidden="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="vendor" label="Vendor" readonly="true"/>
@@ -36,7 +43,7 @@
           <field attribute="failurecode" label="Failure Class" readonly="true"/>
           <field attribute="priority" label="Priority" readonly="true"/>
           <composition relationship="workorder" label="Work Order History" detailschema="">
-            <collectionproperties listschema="assetwolist" allowcreation="true" allowupdate="false" allowremoval="false" printenabled="false"/>
+            <collectionproperties listschema="assetwolist" allowcreation="false" allowupdate="false" allowremoval="false" printenabled="false"/>
           </composition>
         </schema>
         <schema id="assetLookupList" stereotype="list" >

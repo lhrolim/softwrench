@@ -65,12 +65,15 @@ app.directive('crudBodyModalWrapper', function ($compile) {
          associationService) {
 
             $scope.$name = "crudbodymodal";
-            $scope.save = function (selecteditem) {
-                $scope.savefn({ selecteditem: selecteditem });
-            }
 
             $scope.$on('sw.modal.hide', function (event) {
                 $scope.closeModal();
+            });
+
+            $scope.$on('sw.crud.savecompleted', function (event, modaldata) {
+                if ($scope.closeAfterSave) {
+                    $scope.closeModal();
+                }
             });
 
             $scope.closeModal = function () {
@@ -105,6 +108,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $scope.previousdata = modaldata.previousdata;
                 $scope.modaltitle = modaldata.title;
                 $scope.cssclass = modaldata.cssclass;
+                $scope.closeAfterSave = modaldata.closeAfterSave || true;
                 //by default modals, should render as detail stereotype mode
                 schema.stereotype = schema.stereotype || "detail";
                 $scope.isList = schema.stereotype.equalsAny("list", "compositionlist");
