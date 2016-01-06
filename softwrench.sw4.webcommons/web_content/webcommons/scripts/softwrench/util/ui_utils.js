@@ -41,13 +41,14 @@ $(function () {
             $('.listgrid-table').css('margin-top', 'auto');
         }
 
-        //adjust footer position
+        //make sure the height includes the footer
+        $('.site-footer').css('position', 'initial');
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
-        var footerHeight = $('.site-footer').height();
+        //console.log('fix footer', containerHeight, windowHeight);
 
-        //console.log('fix footer', containerHeight, footerHeight, windowHeight);
-        if (containerHeight + footerHeight > windowHeight) {
+        //adjust footer position
+        if (containerHeight > windowHeight) {
             $('.site-footer').css('position', 'initial');
         } else {
             $('.site-footer').css('position', 'absolute');
