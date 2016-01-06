@@ -14,7 +14,8 @@
       <schemas>
         <list redeclaring="false">
           <filters>
-            <modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>
+            <!--<modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>-->
+            <optionfilter attribute="location" displaycode="true" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
         </list>
       </schemas>
@@ -26,7 +27,7 @@
           <field attribute="location" label="Location"/>
           <field attribute="description" label="Description"/>
           <properties>
-            <property key="commandbar.bottom" value="applyfilter"/>
+            <property key="commandbar.bottom" value="gridfilterbottom"/>
             <property key="commandbar.top" value="gridfiltertop"/>
             <property key="list.selectionstyle" value="multiple"/>
             <property key="list.paginationsize" value="10"/>
@@ -36,7 +37,7 @@
         <!--<schema id="locationfilter" stereotype="detail">
           <field attribute="location" label="Location"/>
           <properties>
-            <property key="commandbar.bottom" value="applyfilter"/>
+            <property key="commandbar.bottom" value="detailfilter"/>
           </properties>
         </schema>-->
       </schemas>

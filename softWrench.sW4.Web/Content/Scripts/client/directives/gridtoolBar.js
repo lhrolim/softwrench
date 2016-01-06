@@ -106,7 +106,7 @@
     }
 
     $scope.buttonClasses = function () {
-        if ($scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
+        if ($scope.position.equalsAny('detailform', 'compositionbottom', 'detailfilter')) {
             return "btn btn-primary commandButton navbar-btn";
         }
         return "btn btn-default btn-sm";

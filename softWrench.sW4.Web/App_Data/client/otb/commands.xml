@@ -13,7 +13,14 @@
 
 
   <commandgroup position="gridfiltertop" platform="web">
+    <command id="toogleselected" icon="fa-check-square-o" service="dispatcherService" method="dispatchevent" label="Toogle Selected" parameters="modal.toogleselected,schema"/>
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
+  </commandgroup>
+
+  <commandgroup position="gridfilterbottom" platform="web">
+    <command id="apply" icon="fa-check" service="dispatcherService" method="dispatchevent" label="Apply" parameters="modal.applyfilter,schema"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="modal.cancelfilter,schema"/>
   </commandgroup>
   
 
@@ -50,7 +57,7 @@
     
   </commandgroup>
 
-  <commandgroup position="applyfilter" platform="web">
+  <commandgroup position="detailfilter" platform="web">
     <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>

@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService","schemaService", 
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", 
             function (contextService, restService, filterModelService,
-            cmpAutocompleteServer, $timeout, searchService,schemaService) {
+            cmpAutocompleteServer, $timeout, searchService, schemaService) {
 
             var directive = {
                 restrict: "E",
@@ -139,7 +139,7 @@
                     }
                 },
 
-                controller: ["$scope", function ($scope) {
+                controller: ["$scope", "$rootScope", function ($scope, $rootScope) {
 
 
                     var filter = $scope.filter;
@@ -223,6 +223,10 @@
                             filterModelService.deleteFromRecentlyUsed($scope.schema, $scope.filter.attribute, item);
                         }
 
+                    }
+
+                    $scope.lookup = function () {
+                        $rootScope.$broadcast("modal.showmodalfilter", filter);
                     }
 
                     //return call from the autocomplete server invocation

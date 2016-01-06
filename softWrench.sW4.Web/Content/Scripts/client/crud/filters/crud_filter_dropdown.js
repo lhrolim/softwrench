@@ -205,7 +205,11 @@
                         }
 
                         $scope.getModalSchema = function () {
-                            var tokens = $scope.filter.targetSchemaId.split(".");
+                            if (!$scope.filter || (!$scope.filter.targetSchemaId && !$scope.filter.advancedFilterSchemaId)) {
+                                return $q.when(null);
+                            }
+                            var schemaid = $scope.filter.targetSchemaId ? $scope.filter.targetSchemaId : $scope.filter.advancedFilterSchemaId;
+                            var tokens = schemaid.split(".");
                             var modalSchemaAppName = tokens.length > 1 ? tokens[0] : $scope.schema.applicationName;
                             var modalSchemaId = tokens.length > 1 ? tokens[1] : tokens[0];
 
@@ -225,14 +229,20 @@
                             });
                         }
 
-                        $scope.showModal = function (filter) {
-                            if (filter.type !== "MetadataModalFilter") return;
+                        $scope.showModal = function(filter) {
+                            if (filter.type !== "MetadataModalFilter") {
+                                return;
+                            }
+                            $scope.innerShowModal(filter);
+                        }
+
+                        $scope.innerShowModal = function(filter) {
                             var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
                             var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
                             var properties = { title: filter.label + " " + filterI18N };
 
-                            $scope.getModalSchema().then(function(modalSchema) {
+                            $scope.getModalSchema().then(function (modalSchema) {
                                 modalService.show(modalSchema, datamap, properties, $scope.appyModal);
                             });
                         }
@@ -251,14 +261,38 @@
                         }
 
                         $scope.$on("modal.clearfilter", function (event, args) {
-                            var schema = args[0];
                             $scope.getModalSchema().then(function (modalSchema) {
-                                if (modalSchema !== schema) {
+                                if (modalSchema !== args[0]) {
                                     return;
                                 }
                                 $scope.clearFilter($scope.filter.attribute);
                                 modalService.hide();
                             });
+                        });
+
+                        $scope.$on("modal.cancelfilter", function (event, args) {
+                            $scope.getModalSchema().then(function (modalSchema) {
+                                if (modalSchema !== args[0]) {
+                                    return;
+                                }
+                                modalService.hide();
+                            });
+                        });
+
+                        $scope.$on("modal.applyfilter", function (event, args) {
+                            $scope.getModalSchema().then(function (modalSchema) {
+                                if (modalSchema !== args[0]) {
+                                    return;
+                                }
+                                modalService.hide();
+                            });
+                        });
+
+                        $scope.$on("modal.showmodalfilter", function (event, filter) {
+                            if (filter !== $scope.filter) {
+                                return;
+                            }
+                            $scope.innerShowModal(filter);
                         });
 
                         $injector.invoke(BaseController, this, {

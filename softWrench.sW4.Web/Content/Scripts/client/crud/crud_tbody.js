@@ -5,7 +5,11 @@ function griditemclick(rowNumber, columnNumber, element) {
     //with this, we can generate the table without compiling it to angular, making it faster
     //first tests pointed a 100ms gain, but need to gather more data.
     var scope = angular.element(element).scope();
-    if (scope.showDetail) {
+    if (scope.schema.properties["list.selectionstyle"] === "multiple") {
+        // if it is selection multiple the click changes the state of the checkbox
+        $(element).parent().find("input").click();
+    }
+    else if (scope.showDetail) {
         scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
     }
 }
@@ -150,8 +154,8 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 var hasSection = false;
                 var hasMultipleSelector = schema.properties['list.selectionstyle'] == 'multiple';
                 if (hasMultipleSelector) {
-                    // inits with true and updated on next loop
-                    scope.selectAllValue = true;
+                    // inits selectall checkbox with true and updates on loop
+                    scope.$parent.selectAllValue = true;
                 }
 
                 var html = '';
@@ -172,7 +176,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     needsWatchers = hasMultipleSelector;
 
                     html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
-                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0})\">".format(rowst);
+                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
                     html += "</td>";
 
                     html += '<td class="select-single" style="display:none">';
@@ -233,7 +237,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                             if (!editable) {
 
                                 var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
-                                //console.log(text);
                                 
                                 if (column.rendererType === 'statuscolor') {
                                     var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
@@ -276,9 +279,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     html += "</tr>";
 
                     if (hasMultipleSelector) {
-                        // updates if selector is selected than updates the select all selector
-                        var selected = scope.refreshSelected(datamap[i]);
-                        scope.selectAllValue = scope.selectAllValue && selected;
+                        // updates selector checkbox than updates the select all checkbox
+                        var selected = scope.recoverSelected(datamap[i]);
+                        scope.$parent.selectAllValue = scope.$parent.selectAllValue && selected;
                     }
                 }
                 element.html(html);
@@ -298,7 +301,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 });
             }
 
-            scope.selectChanged = function (row) {
+            // called whenever a selector checkbox changes state
+            // updates the buffer and possibly the selectall state
+            scope.selectChanged = function (row, datamap) {
                 var selected = row.fields["_#selected"];
                 var rowId = row.fields[scope.schema.idFieldName];
                 if (!scope.selectedBuffer) {
@@ -306,12 +311,18 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 }
                 if (selected) {
                     scope.selectedBuffer[rowId] = "todo";
+                    if (datamap) {
+                        scope.refreshSelectAll(datamap);
+                    }
                 } else {
+                    scope.$parent.selectAllValue = false;
                     delete scope.selectedBuffer[rowId];
                 }
             }
 
-            scope.refreshSelected = function (row) {
+            // called during the table criation
+            // recover the state of a selector checkbox from buffer
+            scope.recoverSelected = function (row) {
                 if(!scope.selectedBuffer) {
                     return false;
                 }
@@ -323,6 +334,21 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 return false;
             }
 
+            // updates the state of selectall checkbox based on
+            // state of all selector checkboxes of the page
+            scope.refreshSelectAll = function(datamap) {
+                for (var i = 0; i < datamap.length; i++) {
+                    var row = datamap[i];
+                    if (!row.fields["_#selected"]) {
+                        scope.$parent.selectAllValue = false;
+                        return;
+                    }
+                }
+                scope.$parent.selectAllValue = true;
+            }
+
+            // called when the state of select all checkbox changes from user action
+            // updates the state of all selector checkboxes from page
             scope.innerSelectAllChanged = function(datamap, selectedValue) {
                 for (var i = 0; i < datamap.length; i++) {
                     datamap[i].fields["_#selected"] = selectedValue;
