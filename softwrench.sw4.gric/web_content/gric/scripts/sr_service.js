@@ -1,6 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('srService', function (alertService, associationService, fieldService) {
+angular.module('sw_layout')
+    .factory('srService', function (alertService) {
+    "ngInject";
 
     return {
         beforeChangeLocation: function (event) {
@@ -13,7 +16,6 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 //due to the AfterChangeAsset callback.
                 return true;
             }
-
 
             alertService.confirm(null, null, function () {
                 event.fields['assetnum'] = null;
@@ -38,7 +40,6 @@ app.factory('srService', function (alertService, associationService, fieldServic
             }, "Changing the status to new would imply in removing the owner of this Service Request. Proceeed?", function () {
                 event.interrupt();
             });
-
         },
 
         afterChangeAsset: function (event) {
@@ -47,7 +48,6 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 event.fields['location'] = location;
             }
         },
-
 
         afterchangeowner: function (event) {
             if (event.fields['owner'] == null) {
@@ -61,7 +61,6 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
             }
-
         },
 
         afterchangeownergroup: function (event) {
@@ -77,10 +76,10 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
             }
-
-
-        },
+        }
 
     };
 
 });
+
+})(angular);

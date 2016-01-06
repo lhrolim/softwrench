@@ -132,9 +132,6 @@
                .then(transformReplyAll)
                .then(dispatchEvent);
         };
-
-
-
     }
 
     module.controller('CommLogActionsController', ['$rootScope', '$scope', 'contextService', 'fieldService', 'applicationService', 'commlog_messagheader', commLogActionsController]);

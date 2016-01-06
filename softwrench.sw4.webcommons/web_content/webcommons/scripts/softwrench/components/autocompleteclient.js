@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldService) {
+angular.module('sw_layout')
+    .factory('cmpAutocompleteClient', ["$rootScope", "$log", "$timeout", "fieldService", function ($rootScope, $log, $timeout, fieldService) {
 
     return {
 
@@ -81,10 +83,8 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
             }
         }
 
+    };
 
+}]);
 
-    }
-
-});
-
-
+})(angular);

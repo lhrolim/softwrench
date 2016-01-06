@@ -1,4 +1,9 @@
-﻿app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService, adminMenuService) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService, adminMenuService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -68,3 +73,5 @@ app.directive('menuExpander', function () {
         }
     };
 });
+
+})(app);

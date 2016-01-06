@@ -1,4 +1,9 @@
-﻿function AboutController($scope, $http, $templateCache, i18NService, restService, contextService, alertService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("AboutController", AboutController);
+function AboutController($scope, $http, $templateCache, i18NService, restService, contextService, alertService) {
+    "ngInject";
 
     var data = $scope.resultData;
     if (data != null) {
@@ -79,3 +84,7 @@
         return DeviceDetect.os + ' (' + DeviceDetect.catagory + ')';
     }
 }
+
+window.AboutController = AboutController;
+
+})(angular);

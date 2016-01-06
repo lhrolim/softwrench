@@ -1,4 +1,6 @@
 ﻿app.directive('expandedItemOutput', function ($compile) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -24,6 +26,8 @@
 });
 
 app.directive('expandedItemInput', function ($compile) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -50,7 +54,8 @@ app.directive('expandedItemInput', function ($compile) {
     }
 });
 
-app.directive('newItemInput', function ($compile, fieldService, associationService) {
+app.directive('newItemInput', function ($compile, fieldService) {
+    "ngInject";
 
     return {
         restrict: "E",
@@ -94,6 +99,8 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
 });
 
 app.directive('compositionListWrapper', function ($compile, i18NService, $log, compositionService, spinService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -178,6 +185,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 });
 
 app.directive('compositionList', function (contextService, formatService, schemaService) {
+    "ngInject";
 
     return {
         restrict: 'E',

@@ -1,7 +1,13 @@
-﻿var app = angular.module('sw_layout');
-var CONDITIONMODAL_$_KEY = '[data-class="conditionModal"]';
+﻿(function (angular) {
+    "use strict";
+
+var CONDITIONMODAL_$_KEY = window.CONDITIONMODAL_$_KEY = '[data-class="conditionModal"]';
+
+var app = angular.module('sw_layout');
 
 app.directive('configrendered', function ($timeout) {
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -17,6 +23,8 @@ app.directive('configrendered', function ($timeout) {
 });
 
 app.directive('conditionmodal', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -74,9 +82,9 @@ app.directive('conditionmodal', function (contextService) {
     };
 });
 
-function ConfigController($scope, $http,$timeout, i18NService, alertService) {
-
-
+app.controller("ConfigController", configController);
+function configController($scope, $http, $timeout, i18NService, alertService) {
+    "ngInject";
 
     var noneProfile = {
         name: '-- Any --',
@@ -387,6 +395,6 @@ function ConfigController($scope, $http,$timeout, i18NService, alertService) {
             width: 250
         });
     });
-
-
 };
+
+})(angular);

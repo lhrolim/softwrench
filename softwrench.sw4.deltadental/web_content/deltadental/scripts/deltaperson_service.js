@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('deltadental_.personService', function ($http, $timeout) {
+angular.module('sw_layout')
+    .factory('deltadental_.personService', function () {
     return {
         afterChangeAltDisplayname: function (datamap) {
             if (datamap.fields['altdisplayname'] === null) {
@@ -16,6 +18,7 @@ app.factory('deltadental_.personService', function ($http, $timeout) {
                 datamap.fields['altemail'] = datamap.fields['altperson_.email_.emailaddress'];
             }
         },
-
-    }
+    };
 });
+
+})(angular);

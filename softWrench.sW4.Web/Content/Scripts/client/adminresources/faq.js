@@ -1,5 +1,10 @@
-﻿function FaqController($scope, i18NService, redirectService, $timeout) {
-    var isOpen = 0;
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("FaqController", FaqController);
+function FaqController($scope, i18NService, redirectService) {
+    "ngInject";
+
     $scope.showDefinitions = function (data) {
         if (data != null && data.solutionId != null) {
             redirectService.goToApplicationView("solution", "detail", "output", "FAQ", { id: data.solutionId, faqid: data.faqId, lang: data.lang, popupmode: 'browser' });
@@ -43,3 +48,7 @@
 
     $scope.doInit();
 };
+
+window.FaqController = FaqController;
+
+})(angular);

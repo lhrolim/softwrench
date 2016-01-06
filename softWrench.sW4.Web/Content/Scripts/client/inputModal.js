@@ -1,6 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('inputModal', function(contextService) {
+angular.module('sw_layout')
+    .directive('inputModal', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -33,5 +37,7 @@ app.directive('inputModal', function(contextService) {
             }
 
         }
-    }
+    };
 });
+
+})(angular);
