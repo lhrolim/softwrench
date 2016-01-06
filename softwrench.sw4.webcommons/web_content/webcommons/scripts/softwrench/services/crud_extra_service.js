@@ -1,9 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('crudextraService', function ($http, $rootScope, printService, alertService,submitService) {
+angular.module('sw_layout')
+    .factory('crudextraService', ["$http", "$rootScope", "printService", "alertService", "submitService", function ($http, $rootScope, printService, alertService, submitService) {
 
     return {
-
         deletefn: function (schema, datamap) {
             var idFieldName = schema.idFieldName;
             var applicationName = schema.applicationName;
@@ -22,9 +23,8 @@ app.factory('crudextraService', function ($http, $rootScope, printService, alert
         printDetail: function (schema, datamap) {
             printService.printDetail(schema, datamap[schema.idFieldName]);
         }
-
     };
 
-});
+}]);
 
-
+})(angular);

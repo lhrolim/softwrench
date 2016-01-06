@@ -1,10 +1,16 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
-app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
-    i18NService,
-    redirectService, searchService, contextService, fileService) {
+angular.module('sw_layout')
+.factory('excelService', [
+    "$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService",
+    "i18NService",
+    "redirectService", "searchService", "contextService", "fileService",
+    function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
+        i18NService,
+        redirectService, searchService, contextService, fileService) {
 
     return {
         showModalExportToExcel: function (parameters) {
@@ -89,8 +95,8 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             parameters.searchDTO = searchDTO;
             fileService.download(url("/Excel/Export" + "?" + $.param(parameters)));
         }
-    }
+    };
 
-});
+}]);
 
-
+})(angular);

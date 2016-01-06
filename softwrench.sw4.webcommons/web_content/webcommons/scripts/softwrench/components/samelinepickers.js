@@ -1,6 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
+angular.module("sw_layout").controller("SamelinePickersController", SamelinePickersController);
 function SamelinePickersController($scope, $rootScope, formatService, $filter) {
+    "ngInject";
 
     var getCurrentDateString = function () {
         var date = new Date();
@@ -98,7 +101,13 @@ function SamelinePickersController($scope, $rootScope, formatService, $filter) {
     };
 }
 
+window.SamelinePickersController = SamelinePickersController;
+
 var hideKeyboard = function () {
     document.activeElement.blur();
     $("input").blur();
 };
+
+window.hideKeyboard = hideKeyboard;
+
+})(angular);

@@ -1,4 +1,9 @@
-﻿app.directive('commandbar', function (contextService) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('commandbar', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -244,3 +249,4 @@
     };
 });
 
+})(app);

@@ -1,11 +1,11 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
+angular.module('sw_layout')
 /*
 /Just a holder for multiple inner services
 */
-app.factory('applicationFacade', function (i18NService,compositionService,printService,tabsService) {
-
-
+.factory('applicationFacade', ["compositionService", "printService", "tabsService", function (compositionService, printService, tabsService) {
 
     return {
         tabsService: function () {
@@ -21,6 +21,6 @@ app.factory('applicationFacade', function (i18NService,compositionService,printS
 
     };
 
-});
+}]);
 
-
+})(angular);

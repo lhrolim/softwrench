@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
+angular.module('sw_layout')
+    .factory('cmpComboDropdown', ["$rootScope", "$timeout", "i18NService", function ($rootScope, $timeout, i18NService) {
 
     return {
 
@@ -63,10 +65,8 @@ app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
                 }, 0, false);
         }
 
+    };
 
+}]);
 
-    }
-
-});
-
-
+})(angular);

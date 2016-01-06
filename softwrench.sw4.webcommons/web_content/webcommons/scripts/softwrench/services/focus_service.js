@@ -1,9 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('focusService', function ($rootScope, fieldService, schemaService, cmpfacade, $log) {
+angular.module('sw_layout')
+    .factory('focusService', ["$rootScope", "fieldService", "schemaService", "cmpfacade", "$log", function ($rootScope, fieldService, schemaService, cmpfacade, $log) {
 
     var currentFocusedIdx = 0;
-
 
     return {
 
@@ -13,23 +14,23 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
             var displayables = fieldService.getLinearDisplayables(schema);
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
-                if (displayable.attribute) {
-                    if (!fieldService.isFieldHidden(realdatamap, schema, displayable) && !fieldService.isFieldReadOnly(realdatamap, schema, displayable)) {
-                        if (displayable.rendererParameters && "true" === displayable.rendererParameters['avoidautofocus']) {
-                            continue;
-                        }
-
-                        if (!acceptFilled && realdatamap[displayable.attribute] == null) {
-                            return i;
-                        } else if (acceptFilled) {
-                            return i;
-                        }
-                    }
+                if (!displayable.attribute) {
+                    continue;
+                }
+                if (fieldService.isFieldHidden(realdatamap, schema, displayable) || fieldService.isFieldReadOnly(realdatamap, schema, displayable)) {
+                     continue;
+                }
+                if (displayable.rendererParameters && "true" === displayable.rendererParameters['avoidautofocus']) {
+                    continue;
+                }
+                if (!acceptFilled && realdatamap[displayable.attribute] == null) {
+                    return i;
+                } else if (acceptFilled) {
+                    return i;
                 }
             }
             return -1;
         },
-
 
         setFocusToFirstField: function (schema, datamap) {
             var log = $log.get("focusService#setFocusToFirstNonFilled");
@@ -78,7 +79,6 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
                 return;
             }
 
-
             var log = $log.get("focusService#moveFocus");
             log.debug("moving focus to item next to {0}".format(attribute));
 
@@ -88,11 +88,9 @@ app.factory('focusService', function ($rootScope, fieldService, schemaService, c
             }
 
             this.setFocusOnIdx(schema, datamap, nextFieldIdx, params);
-
         }
-
     };
 
-});
+}]);
 
-
+})(angular);

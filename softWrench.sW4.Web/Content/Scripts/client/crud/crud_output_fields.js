@@ -1,4 +1,9 @@
-﻿app.directive('sectionElementOutput', function ($compile) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('sectionElementOutput', function ($compile) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -27,6 +32,8 @@
 });
 
 app.directive('crudOutputFields', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -158,6 +165,7 @@ app.directive('crudOutputFields', function (contextService) {
                 //workaround to avoid treeview node to be selected
             };
         }
-
     };
 });
+
+})(app);
