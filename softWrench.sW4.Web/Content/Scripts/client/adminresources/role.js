@@ -1,4 +1,9 @@
-﻿function RoleController($scope, $http, $templateCache, i18NService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("RoleController", RoleController);
+function RoleController($scope, $http, $templateCache, i18NService) {
+    "ngInject";
 
     function bind(application) {
         $scope.application = application;
@@ -83,3 +88,7 @@
     init();
 
 }
+
+window.RoleController = RoleController;
+
+})(angular);

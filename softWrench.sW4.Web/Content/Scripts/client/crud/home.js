@@ -1,4 +1,7 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService) {
+﻿(function (angular) {
+    "use strict";
+
+function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService) {
 
     $scope.$name = 'HomeController';
 
@@ -66,3 +69,6 @@
 }
 
 app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", HomeController]);
+window.HomeController = HomeController;
+
+})(angular);

@@ -19,9 +19,9 @@ var app = window.app = angular.module('sw_layout',
      'omr.angularFileDnD']);
 
 //angular 1.3 migration reference
-app.config(['$controllerProvider', function ($controllerProvider) {
-    $controllerProvider.allowGlobals();
-}]);
+//app.config(['$controllerProvider', function ($controllerProvider) {
+//    $controllerProvider.allowGlobals();
+//}]);
 
 //app.config(function(uiSelectConfig) {
 //    uiSelectConfig.theme = "bootstrap";

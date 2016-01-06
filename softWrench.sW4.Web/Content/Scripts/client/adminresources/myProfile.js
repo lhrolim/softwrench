@@ -1,4 +1,9 @@
-﻿function MyProfileController($scope, $http, $templateCache, i18NService, $rootScope, redirectService, pwdenforceService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("MyProfileController", MyProfileController);
+function MyProfileController($scope, $http, $templateCache, i18NService, $rootScope, redirectService, pwdenforceService) {
+    "ngInject";
 
     init($scope.resultData);
 
@@ -95,3 +100,7 @@
         user.person.language = $scope.currentUser.person.language;
     }
 }
+
+window.AboutController = MyProfileController;
+
+})(angular);
