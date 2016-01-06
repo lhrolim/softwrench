@@ -566,7 +566,6 @@ app.directive('compositionList', function (contextService, formatService, schema
         }
         this.handleSingleSelectionClick(item, rowIndex);
 
-
         var log = $log.get("compositionlist#toggleDetails");
 
         if (column != null && column.attribute == null) {
@@ -580,12 +579,8 @@ app.directive('compositionList', function (contextService, formatService, schema
             return;
         }
 
-
         var compositionId = item[$scope.compositionlistschema.idFieldName];
-
         var updating = $scope.collectionproperties.allowUpdate;
-
-
         var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
         if (fullServiceName != null) {
             var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
@@ -605,6 +600,10 @@ app.directive('compositionList', function (contextService, formatService, schema
         // Need to disable all other rich text box for viewable real estate
         //                $scope.collapseAll();
 
+        //update header/footer layout
+        $timeout(function () {
+            $(window).trigger('resize');
+        }, false);
 
         var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
         if (!needServerFetching || this.isBatch()) {
@@ -641,7 +640,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                     $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                 }, 0, false);
             });
-
     };
 
 
