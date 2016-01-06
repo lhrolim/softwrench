@@ -90,7 +90,7 @@ namespace softwrench.sW4.test.Metadata {
         public void TestReplaceComposition() {
 
             var app = MetadataProvider.Application("incident");
-            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("editdetail"));
             var compositions = detailSchema.Compositions();
             var attachmentComposition = compositions.FirstOrDefault(c => c.AssociationKey == "attachment");
             Assert.IsNull(attachmentComposition);

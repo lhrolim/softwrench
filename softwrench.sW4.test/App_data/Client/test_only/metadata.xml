@@ -700,7 +700,7 @@
 
     <application name="incident" entity="incident" title="Incident">
       <schemas>
-        <detail redeclaring="false">
+        <schema id="editdetail" redeclaring="false" stereotype="detail">
           <customization position="attachment"/>
           <customization position="location"/>
           <customization position="classstructureid"/>
@@ -710,7 +710,7 @@
               <event type="afterchange" service="srService" method="afterchangeowner"/>
             </association>
           </customization>
-        </detail>
+        </schema>
       </schemas>
     </application>
 
