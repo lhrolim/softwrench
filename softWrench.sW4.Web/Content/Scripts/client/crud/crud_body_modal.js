@@ -35,7 +35,7 @@ angular.module('sw_layout')
     }
 });
 
-function crudBodyModal($rootScope, modalService, crudContextHolderService) {
+function crudBodyModal($rootScope, modalService, crudContextHolderService, schemaService) {
 
     var controller = function($scope, $http, $filter, $injector,
         formatService, fixHeaderService,
@@ -87,10 +87,8 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService) {
             $scope.modaltitle = modaldata.title;
             $scope.cssclass = modaldata.cssclass;
             //by default modals, should render as detail stereotype mode
-            schema.stereotype = schema.stereotype || "detail";
-            $scope.isList = schema.stereotype.equalsAny("list", "compositionlist");
-            $scope.isDetail = schema.stereotype.equalsAny("detail", "compositionDetail");
-
+            $scope.isDetail = schemaService.isDetail(schema, true);
+            $scope.isList = schemaService.isList(schema);
 
             $scope.datamap = {
                 fields: datamap
@@ -158,7 +156,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService) {
 
     return directive;
 }
-
-angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', crudBodyModal]);
+    
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', crudBodyModal]);
 
 })(angular);
