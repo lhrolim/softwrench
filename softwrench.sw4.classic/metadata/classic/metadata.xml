@@ -1,22 +1,20 @@
-    <!--ServiceRequest-->
-    <template path="@servicerequest.xml"/>
-    
-    <!--<template path="@person.xml"/>-->
-    <!--<template path="workorderbatch.xml"/>-->
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
-    <!--WorkOrder-->
-    <!--<template path="@workorder.xml"/>-->
-    
-    <!--Inventory-->
-    <!--<template path="@inventory.xml"/>-->  
-    <!--<template path="@purchasing.xml"/>-->
+  <templates>
+    <template path="@servicerequest.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@solution.xml"/>
+    <template path="@wochange.xml"/>
+    <template path="@purchasing.xml"/>
+    <template path="@receiving.xml"/>
+    <template path="@incident.xml"/>
+    <template path="@inventory.xml"/>   
   </templates>
 
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
-        <schema id="newdetail" platform="web" redeclaring="false">
-        </schema>
         <schema id="editdetail" platform="web" redeclaring="false">
           <properties>
             <property key="detail.showtitle" value="true"/>
@@ -24,18 +22,77 @@
         </schema>
       </schemas>
     </application>
-    <!--<application entity="workorder" name="workorder" title="Work Order">
+    <application entity="SR" name="quickservicerequest" title="Quick Requests">
       <schemas>
-        <schema id="newdetail" platform="web" redeclaring="false">
-          <customization position="classstructureid"></customization>
+        <schema id="quickeditdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
         </schema>
+      </schemas>
+    </application>
+    <application entity="workorder" name="workorder" title="Work Order">
+      <schemas>
         <schema id="editdetail" platform="web" redeclaring="false">
           <properties>
             <property key="detail.showtitle" value="true"/>
           </properties>
-          <customization position="classstructureid"></customization>
         </schema>
       </schemas>
-    </application>-->
+    </application>
+    <application entity="solution" name="solution" title="Solution">
+      <schemas>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="wochange" name="change" title="Change">
+      <schemas>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="pr" name ="pr" title="Purchase Requests">
+      <schemas>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="po" name="po" title="Puchase Orders">
+      <schemas>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="receiving" name="receiving" title="Receiving">
+      <schemas>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+    <application name="incident" title="Incident" entity="incident">
+      <schemas>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>
