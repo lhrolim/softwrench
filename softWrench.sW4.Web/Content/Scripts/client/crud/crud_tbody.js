@@ -78,7 +78,7 @@ function parseBooleanValue(attrValue) {
 }
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, crudContextHolderService) {
     return {
         restrict: 'A',
         replace: false,
@@ -306,32 +306,25 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             scope.selectChanged = function (row, datamap) {
                 var selected = row.fields["_#selected"];
                 var rowId = row.fields[scope.schema.idFieldName];
-                if (!scope.selectedBuffer) {
-                    scope.selectedBuffer = {};
-                }
                 if (selected) {
-                    scope.selectedBuffer[rowId] = "todo";
+                    crudContextHolderService.addSelectionToBuffer(rowId, row, scope.panelid);
                     if (datamap) {
                         scope.refreshSelectAll(datamap);
                     }
                 } else {
                     scope.$parent.selectAllValue = false;
-                    delete scope.selectedBuffer[rowId];
+                    crudContextHolderService.removeSelectionFromBuffer(rowId, scope.panelid);
                 }
             }
 
             // called during the table criation
             // recover the state of a selector checkbox from buffer
             scope.recoverSelected = function (row) {
-                if(!scope.selectedBuffer) {
-                    return false;
-                }
+                var buffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
                 var rowId = row.fields[scope.schema.idFieldName];
-                if (scope.selectedBuffer[rowId]) {
-                    row.fields["_#selected"] = true;
-                    return true;
-                }
-                return false;
+                var selected = Boolean(buffer[rowId]);
+                row.fields["_#selected"] = selected;
+                return selected;
             }
 
             // updates the state of selectall checkbox based on
@@ -366,6 +359,27 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 if (panelid === scope.panelid) {
                     scope.innerSelectAllChanged(datamap, selectedValue);
                 }
+            });
+
+            scope.$on('modal.toogleselected', function (event, args) {
+                var schema = args[0];
+                var currentSchema = crudContextHolderService.currentSchema(scope.panelid);
+                if (currentSchema.applicationName !== schema.applicationName || currentSchema.schemaId !== schema.schemaId) {
+                    return;
+                }
+
+                var showOnlySelected = crudContextHolderService.toogleShowOnlySelected(scope.panelid);
+                var newDatamap;
+                if (showOnlySelected) {
+                    var selectionBuffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
+                    newDatamap = [];
+                    for (var o in selectionBuffer) {
+                        newDatamap.push(selectionBuffer[o]);
+                    }
+                } else {
+                    newDatamap = crudContextHolderService.rootDataMap(scope.panelid);
+                }
+                scope.refreshGrid(newDatamap, currentSchema);
             });
 
             $injector.invoke(BaseList, this, {

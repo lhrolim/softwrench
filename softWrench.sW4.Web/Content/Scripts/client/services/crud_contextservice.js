@@ -77,11 +77,25 @@
             currentSelectedProfile: null,
             tabRecordCount: {},
             compositionLoadComplete: false,
+            selectionBuffer: {},
+            showOnlySelected: false
         };
 
         var _crudContext = angular.copy(_originalContext);
 
+        var _crudContexts = {};
 
+        var getContext = function(panelid) {
+            if (!panelid) {
+                return _crudContext;
+            }
+            var context = _crudContexts[panelid];
+            if (!context) {
+                _crudContexts[panelid] = angular.copy(_originalContext);
+                context = _crudContexts[panelid];
+            }
+            return context;
+        }
 
         //#endregion
 
@@ -101,109 +115,118 @@
             }, false);
         }
 
-        function currentApplicationName() {
-            return _crudContext.currentApplicationName;
+        function currentApplicationName(panelid) {
+            return getContext(panelid).currentApplicationName;
         }
 
-        function currentSchema() {
-            return _crudContext.currentSchema;
+        function currentSchema(panelid) {
+            return getContext(panelid).currentSchema;
         }
 
-        function rootDataMap() {
-            return _crudContext.rootDataMap;
+        function rootDataMap(panelid) {
+            return getContext(panelid).rootDataMap;
         }
 
-        function getAffectedProfiles() {
-            return _crudContext.affectedProfiles;
+        function getAffectedProfiles(panelid) {
+            return getContext(panelid).affectedProfiles;
         }
 
-        function getCurrentSelectedProfile() {
-            return _crudContext.currentSelectedProfile;
+        function getCurrentSelectedProfile(panelid) {
+            return getContext(panelid).currentSelectedProfile;
         }
 
-        function setCurrentSelectedProfile(currentProfile) {
-            return _crudContext.currentSelectedProfile = currentProfile;
+        function setCurrentSelectedProfile(currentProfile, panelid) {
+            return getContext(panelid).currentSelectedProfile = currentProfile;
         }
 
-        function setDirty() {
-            _crudContext.isDirty = true;
+        function setDirty(panelid) {
+            getContext(panelid).isDirty = true;
         };
 
-        function getDirty() {
-            return _crudContext.isDirty;
+        function getDirty(panelid) {
+            return getContext(panelid).isDirty;
         };
 
-        function clearDirty() {
-            _crudContext.isDirty = false;
+        function clearDirty(panelid) {
+            getContext(panelid).isDirty = false;
         }
 
-        function needsServerRefresh() {
-            return _crudContext.needsServerRefresh;
+        function needsServerRefresh(panelid) {
+            return getContext(panelid).needsServerRefresh;
         }
 
 
-        function getTabRecordCount(tab) {
-            if (_crudContext.tabRecordCount && _crudContext.tabRecordCount[tab.tabId]) {
-                return _crudContext.tabRecordCount[tab.tabId];
+        function getTabRecordCount(tab, panelid) {
+            var context = getContext(panelid);
+            if (context.tabRecordCount && context.tabRecordCount[tab.tabId]) {
+                return context.tabRecordCount[tab.tabId];
             }
             return 0;
         }
 
-        function shouldShowRecordCount(tab) {
-            return _crudContext.tabRecordCount && _crudContext.tabRecordCount[tab.tabId];
+        function shouldShowRecordCount(tab, panelid) {
+            var context = getContext(panelid);
+            return context.tabRecordCount && context.tabRecordCount[tab.tabId];
         }
 
 
         //#endregion
 
         //#region hooks
-        function updateCrudContext(schema,rootDataMap) {
-            //            _crudContext = {};
-            _crudContext.currentSchema = schema;
-            _crudContext.rootDataMap = rootDataMap;
-            _crudContext.currentApplicationName = schema.applicationName;
+        function updateCrudContext(schema, rootDataMap, panelid) {
+            var context = getContext(panelid);
+            context.currentSchema = schema;
+            context.rootDataMap = rootDataMap;
+            context.currentApplicationName = schema.applicationName;
             schemaCacheService.addSchemaToCache(schema);
         }
 
-        function clearCrudContext() {
-            _crudContext = angular.copy(_originalContext);
+        function clearCrudContext(panelid) {
+            if (!panelid) {
+                _crudContext = angular.copy(_originalContext);
+            } else {
+                _crudContexts[panelid] = angular.copy(_originalContext);
+            }
         }
 
-        function afterSave() {
-            this.clearDirty();
-            _crudContext.needsServerRefresh = true;
+        function afterSave(panelid) {
+            this.clearDirty(panelid);
+            getContext(panelid).needsServerRefresh = true;
         }
 
-        function detailLoaded() {
-            this.clearDirty();
-            this.disposeDetail();
-            _crudContext.needsServerRefresh = false;
+        function detailLoaded(panelid) {
+            this.clearDirty(panelid);
+            this.disposeDetail(panelid);
+            getContext(panelid).needsServerRefresh = false;
 
         }
 
-        function gridLoaded(applicationListResult) {
-            this.disposeDetail();
-            this.setActiveTab(null);
-            _crudContext.affectedProfiles = applicationListResult.affectedProfiles;
-            _crudContext.currentSelectedProfile = applicationListResult.currentSelectedProfile;
+        function gridLoaded(applicationListResult, panelid) {
+            this.disposeDetail(panelid);
+            this.setActiveTab(null, panelid);
+            var context = getContext(panelid);
+            context.affectedProfiles = applicationListResult.affectedProfiles;
+            context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
 
-        function disposeDetail() {
-            _crudContext.tabRecordCount = {};
-            _crudContext._eagerassociationOptions = { "#global": {} };
-            _crudContext._lazyAssociationOptions = {};
-            _crudContext.compositionLoadComplete = false;
-            _crudContext.associationsResolved = false;
+        function disposeDetail(panelid) {
+            var context = getContext(panelid);
+            context.tabRecordCount = {};
+            context._eagerassociationOptions = { "#global": {} };
+            context._lazyAssociationOptions = {};
+            context.compositionLoadComplete = false;
+            context.associationsResolved = false;
             contextService.setActiveTab(null);
         }
 
-        function compositionsLoaded(result) {
+        function compositionsLoaded(result, panelid) {
+            var context = getContext(panelid);
             for (var relationship in result) {
                 var tab = result[relationship];
-                _crudContext.tabRecordCount = _crudContext.tabRecordCount || {};
-                _crudContext.tabRecordCount[relationship] = tab.paginationData.totalCount;
+                context.tabRecordCount = context.tabRecordCount || {};
+                context.tabRecordCount[relationship] = tab.paginationData.totalCount;
             }
-            _crudContext.compositionLoadComplete = true;
+            context.compositionLoadComplete = true;
         }
 
 
@@ -217,9 +240,10 @@
          * @param {} associationKey 
          * @param {} options 
          * @param {} notIndexed  if true we need to transform the options object to an indexed version in advance ( {value:xxx, label:yyy} --> {xxx:{value:xxx, label:yyy}}
+         * @param {} panelid 
          * @returns {} 
          */
-        function updateLazyAssociationOption(associationKey, options, notIndexed) {
+        function updateLazyAssociationOption(associationKey, options, notIndexed, panelid) {
             var log = $log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
             if (!!notIndexed && options != null) {
                 var objIdxKey = options.value.toLowerCase();
@@ -232,18 +256,19 @@
                 length = options.length ? options.length : 1;
             }
 
-            var lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
+            var context = getContext(panelid);
+            var lazyAssociationOptions = context._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
                 log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
-                _crudContext._lazyAssociationOptions[associationKey] = options;
+                context._lazyAssociationOptions[associationKey] = options;
             } else {
                 log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey, length));
-                _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
+                context._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
         }
 
-        function fetchLazyAssociationOption(associationKey, key) {
-            var associationOptions = _crudContext._lazyAssociationOptions[associationKey];
+        function fetchLazyAssociationOption(associationKey, key, panelid) {
+            var associationOptions = getContext(panelid)._lazyAssociationOptions[associationKey];
             if (associationOptions == null) {
                 return null;
             }
@@ -251,24 +276,25 @@
             return associationOptions[keyToUse];
         }
 
-        function fetchEagerAssociationOptions(associationKey, contextData) {
-
+        function fetchEagerAssociationOptions(associationKey, contextData, panelid) {
+            var context = getContext(panelid);
             if (contextData == null) {
-                return _crudContext._eagerassociationOptions["#global"][associationKey];
+                return context._eagerassociationOptions["#global"][associationKey];
             }
 
             var schemaId = contextData.schemaId;
             var entryId = contextData.entryId || "#global";
 
-            _crudContext._eagerassociationOptions[schemaId] = _crudContext._eagerassociationOptions[schemaId] || {};
-            _crudContext._eagerassociationOptions[schemaId][entryId] = _crudContext._eagerassociationOptions[schemaId][entryId] || {};
+            context._eagerassociationOptions[schemaId] = context._eagerassociationOptions[schemaId] || {};
+            context._eagerassociationOptions[schemaId][entryId] = context._eagerassociationOptions[schemaId][entryId] || {};
 
-            return _crudContext._eagerassociationOptions[schemaId][entryId][associationKey];
+            return context._eagerassociationOptions[schemaId][entryId][associationKey];
         }
 
 
-        function updateEagerAssociationOptions(associationKey, options, contextData) {
-            if (_crudContext.showingModal) {
+        function updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
+            var context = getContext(panelid);
+            if (context.showingModal) {
                 contextData = { schemaId: "#modal" };
             }
             var log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
@@ -277,7 +303,7 @@
 
             if (contextData == null) {
                 log.info("update eager global list for {0}. Size: {1}".format(associationKey, options.length));
-                _crudContext._eagerassociationOptions["#global"][associationKey] = options;
+                context._eagerassociationOptions["#global"][associationKey] = options;
                 $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
                 return;
             }
@@ -285,10 +311,10 @@
             var schemaId = contextData.schemaId;
             var entryId = contextData.entryId || "#global";
 
-            _crudContext._eagerassociationOptions[schemaId] = _crudContext._eagerassociationOptions[schemaId] || {};
-            _crudContext._eagerassociationOptions[schemaId][entryId] = _crudContext._eagerassociationOptions[schemaId][entryId] || {};
+            context._eagerassociationOptions[schemaId] = context._eagerassociationOptions[schemaId] || {};
+            context._eagerassociationOptions[schemaId][entryId] = context._eagerassociationOptions[schemaId][entryId] || {};
 
-            _crudContext._eagerassociationOptions[schemaId][entryId][associationKey] = options;
+            context._eagerassociationOptions[schemaId][entryId][associationKey] = options;
 
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
 
@@ -297,13 +323,13 @@
 
         }
 
-        function markAssociationsResolved() {
-            _crudContext.associationsResolved = true;
+        function markAssociationsResolved(panelid) {
+            getContext(panelid).associationsResolved = true;
             $rootScope.$broadcast("sw_associationsresolved");
         }
 
-        function associationsResolved() {
-            return _crudContext.associationsResolved;
+        function associationsResolved(panelid) {
+            return getContext(panelid).associationsResolved;
         }
 
 
@@ -321,6 +347,31 @@
             _crudContext.showingModal = true;
         }
 
+        //#endregion
+
+        //#region modal
+
+        function addSelectionToBuffer(rowId, row, panelid) {
+            getContext(panelid).selectionBuffer[rowId] = row;
+        }
+
+        function removeSelectionFromBuffer(rowId, panelid) {
+            delete getContext(panelid).selectionBuffer[rowId];
+        }
+
+        function getSelectionBuffer(panelid) {
+            return getContext(panelid).selectionBuffer;
+        }
+
+        function getShowOnlySelected(panelid) {
+            return getContext(panelid).showOnlySelected;
+        }
+
+        function toogleShowOnlySelected(panelid) {
+            var context = getContext(panelid);
+            context.showOnlySelected = !context.showOnlySelected;
+            return context.showOnlySelected;
+        }
         //#endregion
 
 
@@ -368,8 +419,15 @@
             modalLoaded: modalLoaded
         }
 
+        var selectionService = {
+            addSelectionToBuffer: addSelectionToBuffer,
+            removeSelectionFromBuffer: removeSelectionFromBuffer,
+            getSelectionBuffer: getSelectionBuffer,
+            getShowOnlySelected: getShowOnlySelected,
+            toogleShowOnlySelected: toogleShowOnlySelected
+        }
 
-        return angular.extend({}, service, hookServices, associationServices, modalService);
+        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService);
 
 
         //#endregion

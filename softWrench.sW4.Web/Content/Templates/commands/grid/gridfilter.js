@@ -152,7 +152,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceServic
                 $scope.selectedfilter = null;
                 $scope.advancedsearchdata = null;
                 $scope.searchOperator = {};
-                searchService.refreshGrid({});
+                searchService.refreshGrid({}, { panelid: $scope.panelid});
             }
 
             $scope.$on("sw_redirectapplicationsuccess", function(event) {
