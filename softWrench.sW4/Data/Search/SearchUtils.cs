@@ -271,7 +271,7 @@ namespace softWrench.sW4.Data.Search {
                         //if GT let's add one minute since screen doesn't show seconds --> so GT > 16:36 becomes actually GT > 16:36:59.999
                         dt = dt.AddSeconds(59).AddMilliseconds(999);
                     }
-
+                    //if GTE: GTE>= 16:36 keep it as it is
                     resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
                 }
             } else if (parameter.IsLtOrLte()) {
@@ -282,8 +282,9 @@ namespace softWrench.sW4.Data.Search {
                     }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
                 } else {
+                    dt = dt.AddSeconds(59).AddMilliseconds(999);
                     if (parameter.SearchOperator == SearchOperator.LT) {
-                        //if GT let's subtract one minute since screen doesn't show seconds
+                        //if LT let's subtract one minute since screen doesn't show seconds --> LT < 16:36 becomes LT <16:35.59.999
                         dt = dt.AddMinutes(-1);
                     }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
