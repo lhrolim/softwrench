@@ -72,7 +72,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (WsProvider.MEA.Equals(provider)) {
                 return new MeaCrudConnector();
             }
-            if (WsProvider.MIF.Equals(provider) || (ApplicationConfiguration.IsLocal() && "hapag".Equals(ApplicationConfiguration.ClientName))) {
+            if (WsProvider.MIF.Equals(provider)) {
                 return new MifCrudConnector();
             }
             if (WsProvider.ISM.Equals(provider)) {

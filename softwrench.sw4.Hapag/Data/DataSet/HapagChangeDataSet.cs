@@ -55,7 +55,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 //non customer approvals
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
-                } else {
+                } else if (approvalGroup != null) {
                     var needsApproval = HandleCustomerApprovers(user, compositionData.OriginalCruddata, approvalGroup, worklogs, approval, wostatus);
                     if (needsApproval) {
                         numberOfActions++;

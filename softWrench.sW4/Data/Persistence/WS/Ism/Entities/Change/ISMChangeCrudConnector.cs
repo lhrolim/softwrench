@@ -15,7 +15,7 @@ using System.Linq;
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
     class IsmChangeCrudConnector : BaseISMDecorator {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(IsmChangeCrudConnector));
+        protected static readonly ILog Log = LogManager.GetLogger(typeof(IsmChangeCrudConnector));
         private readonly SWDBHibernateDAO _dao;
 
         public IsmChangeCrudConnector() {
