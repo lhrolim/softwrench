@@ -15,10 +15,11 @@ app.directive('pagination', ["contextService", function (contextService) {
             applicationName: '@',
             mode: '@',
             disablePrint: '@',
-            disableExport: '@'
+            disableExport: '@',
+            panelid: '='
         },
 
-        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService) {
+        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", "crudContextHolderService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService, crudContextHolderService) {
             $scope.showPagination = true;
 
             $scope.layout = {
@@ -87,19 +88,9 @@ app.directive('pagination', ["contextService", function (contextService) {
                 return $scope.schema.applicationName === schema.applicationName && $scope.schema.schemaId === schema.schemaId;
             }
 
-            $scope.$on("sw_hidegridnavigation", function (event, schema) {
-                if (!$scope.isSameSchema(schema)) {
-                    return;
-                }
-                $scope.showPagination = false;
-            });
-
-            $scope.$on("sw_showgridnavigation", function (event, schema) {
-                if (!$scope.isSameSchema(schema)) {
-                    return;
-                }
-                $scope.showPagination = true;
-            });
+            $scope.shouldShowPagination = function() {
+                return !crudContextHolderService.getShowOnlySelected($scope.panelid);
+            }
 
             //$scope.$on("sw_redirectapplicationsuccess", function (event) {
             //    // $scope.searchData = {};

@@ -378,7 +378,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     return;
                 }
 
-                var currentSchema = crudContextHolderService.currentSchema(scope.panelid);
                 var showOnlySelected = crudContextHolderService.toogleShowOnlySelected(scope.panelid);
                 var newDatamap;
                 if (showOnlySelected) {
@@ -389,13 +388,11 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     }
                     crudContextHolderService.setOriginalPaginationData(scope.$parent.paginationData, scope.panelid);
                     scope.$parent.paginationData.totalCount = newDatamap.length;
-                    $rootScope.$broadcast("sw_hidegridnavigation", currentSchema, scope.panelid);
                 } else {
                     newDatamap = crudContextHolderService.rootDataMap(scope.panelid);
                     scope.$parent.paginationData.totalCount = crudContextHolderService.getOriginalPaginationData(scope.panelid).totalCount;
-                    $rootScope.$broadcast("sw_showgridnavigation", currentSchema, scope.panelid);
                 }
-                scope.refreshGrid(newDatamap, currentSchema);
+                scope.refreshGrid(newDatamap, crudContextHolderService.currentSchema(scope.panelid));
             });
 
             $injector.invoke(BaseList, this, {

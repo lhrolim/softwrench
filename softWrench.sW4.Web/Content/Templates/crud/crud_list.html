@@ -17,7 +17,7 @@
                              class="gridtop"/>
                 
                 <!-- quick search input -->
-                <div ng-show="showQuickSearch" class="quick-search col-xs-4">
+                <div ng-show="shouldShowGridNavigation()" class="quick-search col-xs-4">
                     <div class="input-group">
                         <input type="text"
                                placeholder="Search"
@@ -40,6 +40,7 @@
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
                             search-operator="searchOperator"
+                            panelid="panelid"
                             pagination-simple-layout />
             </div>
         
@@ -59,6 +60,7 @@
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
+                        panelid="panelid"
                         search-operator="searchOperator"/>
         </div>
         
@@ -105,7 +107,7 @@
                             <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant">
                             </span>
-                            <div class="filter-label" ng-show="showFilters" filterrowrendered>
+                            <div class="filter-label" ng-show="shouldShowGridNavigation()" filterrowrendered>
                                 <crud-filter-dropdown filter="filterForColumn(column)"
                                                       schema="schema" datamap="datamap"
                                                       advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
