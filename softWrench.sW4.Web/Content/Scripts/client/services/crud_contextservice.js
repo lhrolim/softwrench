@@ -183,6 +183,11 @@
             schemaCacheService.addSchemaToCache(schema);
         }
 
+        function applicationChanged(schema, rootDataMap, panelid) {
+            this.clearCrudContext(panelid);
+            this.updateCrudContext(schema, rootDataMap, panelid);
+        }
+
         function clearCrudContext(panelid) {
             if (!panelid) {
                 _crudContext = angular.copy(_originalContext);
@@ -402,6 +407,7 @@
             currentSchema: currentSchema,
             currentApplicationName: currentApplicationName,
             updateCrudContext: updateCrudContext,
+            applicationChanged : applicationChanged,
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
