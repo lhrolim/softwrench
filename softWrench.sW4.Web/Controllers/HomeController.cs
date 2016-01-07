@@ -112,7 +112,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ActivityStreamFlag = ApplicationConfiguration.ActivityStreamFlag,
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
-                InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),
+                InitTimeMillis = ApplicationConfiguration.StartTimeMillis,
                 InvbalancesListScanOrder = invbalancesListScanOrder,
                 NewInvIssueDetailScanOrder = newInvIssueDetailScanOrder,
                 InvIssueListScanOrder = invIssueListScanOrder,
