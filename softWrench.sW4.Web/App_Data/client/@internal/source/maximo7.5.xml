@@ -893,11 +893,70 @@
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="condition">
+          <relationshipAttribute from="conditioncode" to="conditionnum" primary="true"/>
+        </relationship>
+        <relationship to="metergroup">
+          <relationshipAttribute from="groupname" to="groupname" primary="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="vendor">
+          <relationshipAttribute from="vendor" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="manufacturer">
+          <relationshipAttribute from="manufacturer" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="M" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="assetstatus">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="asset" />
         <connectorParameter key="integration_interface" value="SWASSET" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseAssetCrudConnector" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="assetstatus" idAttribute="assetnum">
+      <attributes>
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="wonum" type="varchar" required="false" />
+        <attribute name="isrunning" type="smallint" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="downtime" type="float" required="true" />
+        <attribute name="calnum" type="varchar" required="false" />
+        <attribute name="code" type="varchar" required="false" />
+        <attribute name="operational" type="smallint" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="assetstatusid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetstatus" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="condition" idAttribute="conditionid">
+      <attributes>
+        <attribute name="conditionid" type="bigint" required="true" />
+        <attribute name="conditionnum" type="varchar" required="true" />
+        <attribute name="type" type="varchar" required="true" />
+        <attribute name="expression" type="varchar" required="false" />
+        <attribute name="classname" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="nocaching" type="smallint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="condition" />
       </connectorParameters>
     </entity>
 
