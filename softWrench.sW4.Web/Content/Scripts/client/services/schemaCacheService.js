@@ -72,6 +72,8 @@
 
             log.info("adding schema {0} retrieved to cache".format(schemaKey));
             var systeminitMillis = contextService.getFromContext("systeminittime");
+            // let´s force a wipe before we update the systeminitMillis time
+            this.wipeSchemaCacheIfNeeded();
             // in-memory first-level cache
             schemaCache[schemaKey] = schema;
             schemaCache.systeminitMillis = systeminitMillis;
