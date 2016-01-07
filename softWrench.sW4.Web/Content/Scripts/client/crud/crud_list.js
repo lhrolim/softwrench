@@ -34,13 +34,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             "formatService", "fixHeaderService", "alertService",
             "searchService", "tabsService",
             "fieldService", "commandService", "i18NService",
-            "validationService", "submitService", "redirectService",
+            "validationService", "submitService", "redirectService", "crudContextHolderService",
             "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
             function ($scope, $http, $rootScope, $filter, $injector, $log,
                 formatService, fixHeaderService, alertService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
-                validationService, submitService, redirectService,
+                validationService, submitService, redirectService, crudContextHolderService,
                 associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
 
             $scope.$name = "crudlist";
@@ -92,6 +92,9 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 return !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
             };
 
+            this.shouldshowtoogleselected = function () {
+                return $scope.schema.properties["list.selectionstyle"] === "multiple";
+            }
 
             $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                 if ($scope.datamap && $scope.datamap.length <= 0) {
@@ -182,6 +185,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 }
                 $scope.schema = schemaCacheService.getSchemaFromResult(data);
                 $scope.datamap = data.resultObject;
+                crudContextHolderService.updateCrudContext($scope.schema, $scope.datamap, panelId);
+
                 $scope.selectAllChecked = false;
                 if ($rootScope.printRequested !== true) {
                     //if its a printing operation, then leave the pagination data intact
@@ -442,6 +447,10 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 return $scope.schema.schemaFilters.filters.find(function(filter) {
                     return filter.attribute === column.attribute;
                 });
+            }
+
+            $scope.selectAllChanged = function () {
+                $scope.$broadcast("sw_selectallchanged", $scope.datamap, $scope.selectAllValue, $scope.panelid);
             }
 
             function initController() {

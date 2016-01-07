@@ -87,7 +87,7 @@ function parseBooleanValue(attrValue) {
 window.parseBooleanValue = parseBooleanValue;
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, crudContextHolderService) {
     "ngInject";
 
     return {
@@ -163,6 +163,10 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 var needsWatchers = false;
                 var hasSection = false;
                 var hasMultipleSelector = schema.properties['list.selectionstyle'] == 'multiple';
+                if (hasMultipleSelector) {
+                    // inits selectall checkbox with true and updates on loop
+                    scope.$parent.selectAllValue = datamap.length > 0;
+                }
 
                 var html = '';
 
@@ -182,7 +186,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     needsWatchers = hasMultipleSelector;
 
                     html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
-                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\">".format(rowst);
+                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
                     html += "</td>";
 
                     html += '<td class="select-single" style="display:none">';
@@ -284,6 +288,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         html += "</div></td>";
                     }
                     html += "</tr>";
+
+                    if (hasMultipleSelector) {
+                        // updates selector checkbox than updates the select all checkbox
+                        var selected = scope.recoverSelected(datamap[i]);
+                        scope.$parent.selectAllValue = scope.$parent.selectAllValue && selected;
+                    }
                 }
                 element.html(html);
                 if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
@@ -302,10 +312,88 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 });
             }
 
+            // called whenever a selector checkbox changes state
+            // updates the buffer and possibly the selectall state
+            scope.selectChanged = function (row, datamap) {
+                var selected = row.fields["_#selected"];
+                var rowId = row.fields[scope.schema.idFieldName];
+                if (selected) {
+                    crudContextHolderService.addSelectionToBuffer(rowId, row, scope.panelid);
+                    if (datamap) {
+                        scope.refreshSelectAll(datamap);
+                    }
+                } else {
+                    scope.$parent.selectAllValue = false;
+                    crudContextHolderService.removeSelectionFromBuffer(rowId, scope.panelid);
+                }
+            }
+
+            // called during the table criation
+            // recover the state of a selector checkbox from buffer
+            scope.recoverSelected = function (row) {
+                var buffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
+                var rowId = row.fields[scope.schema.idFieldName];
+                var selected = Boolean(buffer[rowId]);
+                row.fields["_#selected"] = selected;
+                return selected;
+            }
+
+            // updates the state of selectall checkbox based on
+            // state of all selector checkboxes of the page
+            scope.refreshSelectAll = function (datamap) {
+                for (var i = 0; i < datamap.length; i++) {
+                    var row = datamap[i];
+                    if (!row.fields["_#selected"]) {
+                        scope.$parent.selectAllValue = false;
+                        return;
+                    }
+                }
+                scope.$parent.selectAllValue = true;
+            }
+
+            // called when the state of select all checkbox changes from user action
+            // updates the state of all selector checkboxes from page
+            scope.innerSelectAllChanged = function (datamap, selectedValue) {
+                for (var i = 0; i < datamap.length; i++) {
+                    datamap[i].fields["_#selected"] = selectedValue;
+                    scope.selectChanged(datamap[i]);
+                }
+            }
+
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                 if (panelid == scope.panelid) {
                     scope.refreshGrid(datamap, schema);
                 }
+            });
+
+            scope.$on('sw_selectallchanged', function (event, datamap, selectedValue, panelid) {
+                if (panelid === scope.panelid) {
+                    scope.innerSelectAllChanged(datamap, selectedValue);
+                }
+            });
+
+            scope.$on('sw_toogleselected', function (event, args) {
+                var schema = args[0];
+                var currentSchema = crudContextHolderService.currentSchema(scope.panelid);
+                if (currentSchema.applicationName !== schema.applicationName || currentSchema.schemaId !== schema.schemaId) {
+                    return;
+                }
+
+                var showOnlySelected = crudContextHolderService.toogleShowOnlySelected(scope.panelid);
+                var newDatamap;
+                if (showOnlySelected) {
+                    var selectionBuffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
+                    newDatamap = [];
+                    for (var o in selectionBuffer) {
+                        newDatamap.push(selectionBuffer[o]);
+                    }
+                    crudContextHolderService.setOriginalPaginationData(scope.$parent.paginationData, scope.panelid);
+                    scope.$parent.paginationData.totalCount = newDatamap.length;
+                } else {
+                    newDatamap = crudContextHolderService.rootDataMap(scope.panelid);
+                    scope.$parent.paginationData.totalCount = crudContextHolderService.getOriginalPaginationData(scope.panelid).totalCount;
+                }
+                scope.refreshGrid(newDatamap, currentSchema);
             });
 
             $injector.invoke(BaseList, this, {

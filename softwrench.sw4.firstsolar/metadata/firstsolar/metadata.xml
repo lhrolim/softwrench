@@ -28,6 +28,11 @@
             <property key="commandbar.bottom" value="applyfilter"/>
           </properties>
         </schema>
+        <list redeclaring="false">
+          <properties>
+            <property key="list.selectionstyle" value="multiple"/>
+          </properties>
+        </list>
       </schemas>
     </application>
   </applications>
