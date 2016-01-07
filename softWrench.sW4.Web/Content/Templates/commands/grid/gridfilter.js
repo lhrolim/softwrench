@@ -15,6 +15,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceServic
 
             init();
 
+            $scope.showRefreshButton = true;
 
             $scope.nonSharedFilters = function() {
                 return gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
@@ -164,5 +165,17 @@ app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceServic
                 $scope.selectedfilter = null;
             });
 
+            $scope.$on("sw_hidegridnavigation", function (event, schema, panelid) {
+                if ($scope.panelid === panelid) {
+                    $scope.showRefreshButton = false;
+                }
+                
+            });
+
+            $scope.$on("sw_showgridnavigation", function (event, schema, panelid) {
+                if ($scope.panelid === panelid) {
+                    $scope.showRefreshButton = true;
+                }
+            });
         }
     ]);
