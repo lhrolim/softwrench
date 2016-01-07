@@ -373,12 +373,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             });
 
             scope.$on('sw_toogleselected', function (event, args) {
-                var schema = args[0];
-                var currentSchema = crudContextHolderService.currentSchema(scope.panelid);
-                if (currentSchema.applicationName !== schema.applicationName || currentSchema.schemaId !== schema.schemaId) {
+                var panelid = args[0];
+                if (scope.panelid !== panelid) {
                     return;
                 }
 
+                var currentSchema = crudContextHolderService.currentSchema(scope.panelid);
                 var showOnlySelected = crudContextHolderService.toogleShowOnlySelected(scope.panelid);
                 var newDatamap;
                 if (showOnlySelected) {
