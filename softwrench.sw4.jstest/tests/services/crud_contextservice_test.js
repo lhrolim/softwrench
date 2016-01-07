@@ -71,7 +71,8 @@
 
     it('should remove record counts on detailLoaded', function () {
         // Call the detailLoaded function
-        crudContextService.detailLoaded({});
+        debugger;
+        crudContextService.detailLoaded();
         // Get the record counts for the compositions
         var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
         var commlogLength = crudContextService.getTabRecordCount(commlogTab);

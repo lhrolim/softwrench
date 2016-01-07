@@ -119,6 +119,11 @@
                 return false;
             },
             getUserData: function () {
+                if (angular.mock) {
+                    //for unit tests let´s return a mocked user
+                    return {login: "testuser"};
+                }
+
                 if ($rootScope.user != null) {
                     //caching
                     return $rootScope.user;
