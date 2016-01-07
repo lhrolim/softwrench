@@ -5,7 +5,7 @@
         //#region Utils
         // schema's first-level cache
         var schemaCache = {};
-        
+
         var keyRoot = url("") + ":schemaCache:";
         var systemInitTimeKey = keyRoot + "systeminitMillis";
 
@@ -13,6 +13,9 @@
             delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
             // lazy schema fetch strategy: only restore the systeminitmillis
             schemaCache.systeminitMillis = localStorage.getItem(systemInitTimeKey);
+
+            //wipe first-level cache
+            schemaCache = { systeminitMillis: systeminitMillis };
 
             //var log = $log.get("schemaCacheService#restore", ["performance"]);
             //log.debug("starting schema restore process");
@@ -42,7 +45,7 @@
 
         function getSchemaFromResult(result) {
             if (result.cachedSchemaId) {
-                var log = $log.get("schemaCacheService#getSchemaFromResult",["performance"]);
+                var log = $log.get("schemaCacheService#getSchemaFromResult", ["performance"]);
                 log.info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
                 var cachedSchema = getCachedSchema(result.applicationName, result.cachedSchemaId);
                 log.info("finish retrieving from cache".format(result.applicationName, result.cachedSchemaId));
@@ -97,15 +100,16 @@
                 delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
 
                 Object.keys(localStorage)
-                    .filter(function(key) {
+                    .filter(function (key) {
                         key.startsWith(keyRoot);
                     })
                     .forEach(function (schemakey) {
                         delete localStorage[schemakey];
                     });
+                //wipe first-level cache
+                schemaCache = { systeminitMillis: systeminitMillis };
             }
-            // always wipe first-level cache
-            schemaCache = { systeminitMillis: systeminitMillis };
+
         }
         //#endregion
 
