@@ -131,6 +131,7 @@ app.directive('gridtoolbar', ["contextService", function (contextService) {
             mode: '@',
             position: '@',
             datamap: '=',
+            panelid: '='
         },
 
         link: function (scope, element, attrs, ctrl) {

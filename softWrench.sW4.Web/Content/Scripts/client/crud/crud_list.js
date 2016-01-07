@@ -31,13 +31,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             "formatService", "fixHeaderService", "alertService",
             "searchService", "tabsService",
             "fieldService", "commandService", "i18NService",
-            "validationService", "submitService", "redirectService",
+            "validationService", "submitService", "redirectService", "crudContextHolderService",
             "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
             function ($scope, $http, $rootScope, $filter, $injector, $log,
                 formatService, fixHeaderService, alertService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
-                validationService, submitService, redirectService,
+                validationService, submitService, redirectService, crudContextHolderService,
                 associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService, schemaCacheService) {
 
                 $scope.$name = "crudlist";
@@ -187,6 +187,8 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     }
                     $scope.schema = schemaCacheService.getSchemaFromResult(data);
                     $scope.datamap = data.resultObject;
+                    crudContextHolderService.updateCrudContext($scope.schema, $scope.datamap, panelId);
+
                     $scope.selectAllChecked = false;
                     if ($rootScope.printRequested !== true) {
                         //if its a printing operation, then leave the pagination data intact
@@ -288,6 +290,9 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 };
 
                 $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
+                    if ($scope.panelid !== extraparameters.panelid) {
+                        return;
+                    }
                     $scope.refreshGridRequested(searchData, extraparameters);
                 });
 
