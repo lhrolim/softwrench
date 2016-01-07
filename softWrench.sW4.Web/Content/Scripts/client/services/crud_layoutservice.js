@@ -231,5 +231,3 @@
       .factory('layoutservice', ['$log', "fieldService", layoutservice]);
 
 })(angular);
-
-

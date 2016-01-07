@@ -1,5 +1,9 @@
-﻿
+﻿(function (app) {
+    "use strict";
+
 app.directive('dashboardsdone', function ($timeout) {
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -11,6 +15,8 @@ app.directive('dashboardsdone', function ($timeout) {
         }
     };
 });
+
+app.controller("DashboardController", dashboardController);
 
 /**
  * This is legacy code for Hapag
@@ -25,7 +31,8 @@ app.directive('dashboardsdone', function ($timeout) {
  * @param {type} schemaService
  * @param {type} fixHeaderService
  */
-function DashboardController($scope, $http, $templateCache, $rootScope, formatService, i18NService, contextService, schemaService,fixHeaderService) {
+function dashboardController($scope, $http, $templateCache, $rootScope, formatService, i18NService, contextService, schemaService) {
+    "ngInject";
 
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -34,7 +41,6 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
     $scope.i18NLabel = function (fieldMetadata) {
         return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
     };
-
 
     $scope.renderDashboard = function (index, fetchData) {
 
@@ -72,7 +78,6 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
                 $scope.loaded = true;
                 $scope.dashboards[index].totalCount = result.totalCount;
             });
-
     };
 
     $scope.format = function (value, column) {
@@ -100,11 +105,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
         $scope.goToApplicationView(applicationToUse, schemaId, dashboard.mode, dashboard.title, { SearchDTO: searchDTO });
     };
 
-
-
     $scope.showDetail = function (datamap) {
-
-
         var dashboard = $scope.dashboards[$scope.currentDashboardIndex];
         var schemaObj = schemaService.parseAppAndSchema(dashboard.detailSchema);
         var applicationToUse = schemaObj.app == null ? dashboard.applicationName : schemaObj.app;
@@ -163,9 +164,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
 
     }
 
-
     initDashboard();
-
-
-
 }
+
+})(app);

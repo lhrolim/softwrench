@@ -9,10 +9,17 @@
       <Shortcut>fnstrict</Shortcut>
     </Header>
     <Snippet>
-      <Code Language="JavaScript"><![CDATA[(function () {
+    	<Declarations>
+        <Literal>
+          <ID>param</ID>
+          <ToolTip>Replace with a parameter.</ToolTip>
+          <Default>window</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="JavaScript"><![CDATA[(function ($param$) {
     "use strict";
         
-})();]]>
+})($param$);]]>
       </Code>
     </Snippet>
   </CodeSnippet>

@@ -1,9 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
+angular.module('sw_layout')
+    .directive('swlabel', function (i18NService, contextService) {
+    "ngInject";
 
-
-
-app.directive('swlabel', function (i18NService, contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -33,8 +34,8 @@ app.directive('swlabel', function (i18NService, contextService) {
             }
 
         }
-
-
-    }
+    };
 
 });
+
+})(angular);

@@ -509,7 +509,7 @@
       </schemas>
     </application>
 
-    <application name="invbalances" title="Inventory" entity="invbalances">
+    <application entity="invbalances" name="invbalances" title="Inventory">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
@@ -559,9 +559,7 @@
           </properties>
         </schema>
 
-        <schema id="invbalancesDetail" stereotype="detail" title="Inventory Balance Details">
-          
-          
+        <schema id="invbalancesdetail" stereotype="detail" title="Inventory Balance Details">
           <properties>
             <property key="nextschema.schemaid" value="invbalancesList"/>
           </properties>

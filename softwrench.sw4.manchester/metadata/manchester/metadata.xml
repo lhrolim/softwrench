@@ -201,6 +201,10 @@
 
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <reference id="srhiddens"/>
 
           <section orientation="horizontal">
@@ -383,7 +387,10 @@
 
       <schemas>
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
-
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+          
           <reference id="wohiddens"/>
 
           <!-- WO no Site ID Division Status  -->

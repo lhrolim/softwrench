@@ -1,4 +1,9 @@
-﻿function SchedulerSetupController($scope, $http, $templateCache, i18NService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("SchedulerSetupController", SchedulerSetupController);
+function SchedulerSetupController($scope, $http, $templateCache, i18NService) {
+    "ngInject";
 
     function toList(data) {
         if (data != null) {
@@ -6,8 +11,6 @@
         }
         switchMode(false);
     };
-
-
 
     function toDetail() {
         switchMode(true);
@@ -80,3 +83,7 @@
 
     initSchedulerSetup();
 };
+
+window.SchedulerSetupController = SchedulerSetupController;
+
+})(angular);

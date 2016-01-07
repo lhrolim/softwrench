@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('poreceivingService', function ($http, redirectService, restService, searchService, alertService) {
+angular.module('sw_layout')
+    .factory('poreceivingService', ["$http", "redirectService", "restService", "searchService", "alertService", function ($http, redirectService, restService, searchService, alertService) {
 
     var getReceiptData = function(ponum) {
         var searchData = {
@@ -73,4 +75,6 @@ app.factory('poreceivingService', function ($http, redirectService, restService,
 
         },
     };
-});
+}]);
+
+})(angular);

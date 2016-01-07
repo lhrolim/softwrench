@@ -1,6 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('gridPreferenceService', function (contextService, restService, $log, $rootScope) {
+angular.module('sw_layout')
+    .factory('gridPreferenceService', function (contextService, restService, $log) {
+    "ngInject";
 
     function doLoadFilter(shared, application, schema) {
         var user = contextService.getUserData();
@@ -110,10 +113,8 @@ app.factory('gridPreferenceService', function (contextService, restService, $log
                 cbk();
             });
         }
-
-
     };
 
 });
 
-
+})(angular);

@@ -1,11 +1,14 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeout, restService, searchService, redirectService,
-                                                 contextService, alertService, associationService, modalService,
-                                                 fieldService, submitService, validationService, commandService, scanningCommonsService) {
-
-
- 
+angular.module('sw_layout')
+    .factory('scannerdetectionService', [
+    "$log", "$http", "$rootScope", "$timeout", "restService", "searchService", "redirectService",
+    "contextService", "alertService", "associationService", "modalService",
+    "fieldService", "submitService", "validationService", "commandService", "scanningCommonsService",
+    function ($log, $http, $rootScope, $timeout, restService, searchService, redirectService,
+            contextService, alertService, associationService, modalService,
+            fieldService, submitService, validationService, commandService, scanningCommonsService) {
 
     var validateAssocationLookupFn = function (result, searchObj) {
         if (Object.keys(result).length != 1 ||
@@ -18,15 +21,7 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
         return true;
     };
 
-   
-
-  
-
     return {
-
-
-       
-
 
         initInventoryGridListener: function (scope, schema, datamap, parameters) {
             var searchData = parameters.searchData;
@@ -154,8 +149,6 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
             });
         },
 
-
-
         initInvuseTransferDetailListener: function (schema, datamap) {
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
@@ -220,8 +213,6 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
                 }
             });
         },
-
-      
 
         initSouthernPhysicalCountGridListener: function (scope, schema, datamap, parameters) {
             var searchData = parameters.searchData;
@@ -314,6 +305,8 @@ app.factory('scannerdetectionService', function ($log, $http, $rootScope, $timeo
                 }
             });
 
-        },
+        }
     };
-});
+}]);
+
+})(angular);

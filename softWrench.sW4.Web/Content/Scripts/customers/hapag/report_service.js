@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('reportservice', function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService) {
+angular.module('sw_layout')
+    .factory('reportservice', ["$http", "alertService", "fieldService", "searchService", "redirectService", "printService", "contextService", "validationService", function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService) {
 
     var getDefaultFilterValue = function (displayable) {
         var defaultValue = null;
@@ -194,4 +196,6 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
             printService.printDetailedList(schema, datamap);
         }
     };
-});
+}]);
+
+})(angular);

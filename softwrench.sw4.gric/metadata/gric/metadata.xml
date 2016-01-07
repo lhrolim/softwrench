@@ -119,6 +119,9 @@
          </list>
 
         <schema id ="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
           <customization position="classstructureid"/>
           <customization position="saddresscode"/>
           <customization position="reportedby">
@@ -144,6 +147,9 @@
       <schemas>
         
         <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
          <customization position="classstructureid"></customization>
          <customization position="glaccount" />
           <customization position="owner">

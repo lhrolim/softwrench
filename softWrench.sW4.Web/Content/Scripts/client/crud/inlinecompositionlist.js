@@ -1,7 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
+var app = angular.module('sw_layout');
 
 app.directive('inlineCompositionListWrapper', function ($compile) {
+    "ngInject";
 
     return {
         restrict: 'E',
@@ -41,8 +44,8 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
     };
 });
 
-
 app.directive('inlineCompositionList', function (contextService) {
+    "ngInject";
 
     return {
         restrict: 'E',
@@ -58,11 +61,12 @@ app.directive('inlineCompositionList', function (contextService) {
             mode: '@'
         },
 
-        controller: function ($scope, $filter, $http, $element, $rootScope, tabsService) {
-
+        controller: function ($scope) {
             $scope.contextPath = function (path) {
                 return url(path);
             };
         }
     };
 });
+
+})(angular);

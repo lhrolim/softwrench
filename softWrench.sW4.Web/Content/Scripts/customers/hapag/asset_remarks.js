@@ -1,8 +1,9 @@
-﻿function AssetRemarksController($scope, $http, i18NService, fieldService) {
+﻿(function (angular) {
+    "use strict";
 
-    function init() {
-
-    }
+angular.module("sw_layout").controller("AssetRemarksController", AssetRemarksController);
+function AssetRemarksController($scope, $http, i18NService, fieldService) {
+    "ngInect";
 
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -22,7 +23,8 @@
             var a;
         });
     }
-
-    init();
-
 }
+
+window.AssetRemarksController = AssetRemarksController;
+
+})(angular);

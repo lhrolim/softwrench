@@ -1,4 +1,7 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
+
+var app = angular.module('sw_layout');
 
 function griditemclick(rowNumber, columnNumber, element) {
     //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
@@ -9,6 +12,8 @@ function griditemclick(rowNumber, columnNumber, element) {
         scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
     }
 }
+
+window.griditemclick = griditemclick;
 
 function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
     var st = "";
@@ -33,6 +38,8 @@ function defaultAppending(formattedText, updatable, rowst, column, background, f
     return st;
 }
 
+window.defaultAppending = defaultAppending;
+
 function buildStyle(minWidth, maxWidth, width, isdiv) {
     if (minWidth == undefined && maxWidth == undefined && width == undefined) {
         return "";
@@ -50,6 +57,8 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
     }
     return style + " \"";
 };
+
+window.buildStyle = buildStyle;
 
 /// <summary>
 /// create a class based on column value
@@ -69,12 +78,18 @@ function hasDataClass(column, formattedText) {
     return classString;
 }
 
+window.hasDataClass = hasDataClass;
+
 function parseBooleanValue(attrValue) {
     return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
 }
 
+window.parseBooleanValue = parseBooleanValue;
+
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
     fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService) {
+    "ngInject";
+
     return {
         restrict: 'A',
         replace: false,
@@ -85,7 +100,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
         },
         template: "",
         link: function (scope, element, attrs) {
-
 
             scope.cursortype = function () {
                 var editDisabled = scope.schema.properties['list.disabledetails'];
@@ -307,11 +321,8 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             if (scope.schema.displayables) {
                 scope.refreshGrid(scope.datamap, scope.schema);
             }
-
         }
     }
-
-
 });
 
-
+})(angular);

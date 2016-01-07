@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('srservice', function ($http, alertService, fieldService, searchService) {
+angular.module('sw_layout')
+    .factory('srservice', ["$http", "alertService", "fieldService", function ($http, alertService, fieldService) {
 
     return {
         //This service is to add the new field ACTION in Service Request details for resolved tickets
@@ -42,4 +44,6 @@ app.factory('srservice', function ($http, alertService, fieldService, searchServ
             //event.fields['itcassetnum'] = null;
         }
     }; 
-});
+}]);
+
+})(angular);

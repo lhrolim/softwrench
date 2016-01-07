@@ -1,4 +1,9 @@
+(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("AceController", AceController);
 function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
+    "ngInject";
 
     $scope.save = function () {
 
@@ -143,3 +148,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
         }
     });
 }
+
+window.AceController = AceController;
+
+})(angular);

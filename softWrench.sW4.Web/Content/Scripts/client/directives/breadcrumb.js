@@ -1,6 +1,11 @@
+(function (angular) {
+    "use strict";
+
 var app = angular.module('sw_layout');
 
 app.directive('breadcrumb', function (contextService, $log, $timeout, recursionHelper, crudContextHolderService, i18NService) {
+    "ngInject";
+
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
@@ -293,11 +298,11 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                 $scope.processBreadcrumb();
             });
         }
-    }
+    };
 });
 
 app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper) {
-    var log = $log.getInstance('sw4.breadcrumb Dropdown');
+    "ngInject";
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbDropdown.html'),
@@ -325,11 +330,11 @@ app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper)
                 // a 'pre'- and 'post'-link function.
             });
         }
-    }
+    };
 });
 
 app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
-    var log = $log.getInstance('sw4.breadcrumb Menu Item');
+    "ngInject";
 
     return {
         controller: function ($scope, alertService, validationService, crudContextHolderService) {
@@ -340,8 +345,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                         menuService.goToApplication(leaf, null);
                         $scope.$digest();
                     }, msg, function () { return; });
-                }
-                else {
+                } else {
                     menuService.goToApplication(leaf, null);
                 }
 
@@ -358,8 +362,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                         menuService.doAction(leaf, null);
                         $scope.$digest();
                     }, msg, function () { return; });
-                }
-                else {
+                } else {
                     menuService.doAction(leaf, null);
                 }
 
@@ -395,5 +398,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 $('.breadcrumb .open').removeClass('open');
             };
         }
-    }
+    };
 });
+
+})(angular);

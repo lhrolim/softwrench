@@ -1,9 +1,7 @@
-﻿var app = angular.module('sw_layout');
+﻿angular.module('sw_layout')
+    .directive('dashboard', function ($timeout, $log, $rootScope, $http, contextService, dashboardAuxService) {
+    "ngInject";
 
-
-
-
-app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextService, dashboardAuxService) {
     return {
         restrict: 'E',
         replace: true,
@@ -25,7 +23,7 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
                     arr.push(i);
                 }
                 return arr;
-            }
+            };
 
             scope.getColumnsOfRow = function (row) {
                 if (!scope.dashboard || !scope.dashboard.layout) {
@@ -53,18 +51,17 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
 
                 var suffix = 12 / visibleColumns;
                 return "col-sm-" + suffix;
-
-            }
+            };
 
             scope.getPanelDataFromMatrix = function (row, column) {
                 return dashboardAuxService.locatePanelFromMatrix(scope.dashboard, row, column);
-            }
+            };
 
             scope.isPanelVisible = function (panelDataSource) {
                 return !!panelDataSource && !!panelDataSource.panel && !!panelDataSource.panel.visible;
-            }
+            };
 
         },
-    }
+    };
 
 });

@@ -1,8 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('commandService', function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService) {
-
-
+angular.module('sw_layout')
+    .factory('commandService', [
+        "$q", "i18NService", "$injector", "expressionService", "contextService", "schemaService", "modalService", "applicationService", "$log", "alertService", 
+        function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService) {
 
     return {
         commandLabel: function (schema, id, defaultValue) {
@@ -81,7 +83,6 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
             return $q.when(method.apply(this, args));
         },
 
-
         doCommand: function (scope, command) {
             var log = $log.getInstance("commandService#doCommand");
             var clientFunction = command.method;
@@ -132,11 +133,8 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                 return;
             }
 
-
             this.doExecuteService(scope, clientFunction, command);
         },
-
-
 
         //TODO: make it generic
         executeClickCustomCommand: function (fullServiceName, rowdm, column, schema) {
@@ -194,9 +192,8 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
             return commands;
         }
 
-
     };
 
-});
+}]);
 
-
+})(angular);
