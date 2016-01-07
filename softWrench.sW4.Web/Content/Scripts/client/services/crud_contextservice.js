@@ -365,7 +365,7 @@
             return getContext(panelid).selectionBuffer;
         }
 
-        function clearSelectionNuffer(panelid) {
+        function clearSelectionBuffer(panelid) {
             getContext(panelid).selectionBuffer = {};
         }
 
@@ -437,7 +437,7 @@
             addSelectionToBuffer: addSelectionToBuffer,
             removeSelectionFromBuffer: removeSelectionFromBuffer,
             getSelectionBuffer: getSelectionBuffer,
-            clearSelectionNuffer: clearSelectionNuffer,
+            clearSelectionBuffer: clearSelectionBuffer,
             getShowOnlySelected: getShowOnlySelected,
             toogleShowOnlySelected: toogleShowOnlySelected,
             getOriginalPaginationData: getOriginalPaginationData,
