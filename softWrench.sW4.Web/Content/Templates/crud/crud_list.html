@@ -13,10 +13,11 @@
                              search-sort="searchSort"
                              search-operator="searchOperator"
                              search-template="searchTemplate"
+                             panelid="panelid"
                              class="gridtop"/>
                 
                 <!-- quick search input -->
-                <div class="quick-search col-xs-4">
+                <div ng-show="showQuickSearch" class="quick-search col-xs-4">
                     <div class="input-group">
                         <input type="text"
                                placeholder="Search"
@@ -94,7 +95,7 @@
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
+                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
                                 {{i18NLabel(column)}}
                             </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
@@ -104,7 +105,7 @@
                             <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant">
                             </span>
-                            <div class="filter-label" filterrowrendered>
+                            <div class="filter-label" ng-show="showFilters" filterrowrendered>
                                 <crud-filter-dropdown filter="filterForColumn(column)"
                                                       schema="schema" datamap="datamap"
                                                       advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"

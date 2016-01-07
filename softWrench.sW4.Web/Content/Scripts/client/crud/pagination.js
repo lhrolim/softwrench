@@ -19,6 +19,8 @@ app.directive('pagination', ["contextService", function (contextService) {
         },
 
         controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService) {
+            $scope.showPagination = true;
+
             $scope.layout = {
                 simple: false
             };
@@ -80,6 +82,24 @@ app.directive('pagination', ["contextService", function (contextService) {
                 }
                 $('.pagination-pager').css({ 'margin-left': marginLeft });
             }
+
+            $scope.isSameSchema = function(schema) {
+                return $scope.schema.applicationName === schema.applicationName && $scope.schema.schemaId === schema.schemaId;
+            }
+
+            $scope.$on("sw_hidegridnavigation", function (event, schema) {
+                if (!$scope.isSameSchema(schema)) {
+                    return;
+                }
+                $scope.showPagination = false;
+            });
+
+            $scope.$on("sw_showgridnavigation", function (event, schema) {
+                if (!$scope.isSameSchema(schema)) {
+                    return;
+                }
+                $scope.showPagination = true;
+            });
 
             //$scope.$on("sw_redirectapplicationsuccess", function (event) {
             //    // $scope.searchData = {};
