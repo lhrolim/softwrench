@@ -1,4 +1,5 @@
-﻿@using softWrench.sW4.Web.Util
+﻿@using softWrench.sW4.Util
+@using softWrench.sW4.Web.Util
 @using Styles = System.Web.Optimization.Styles
 @model softWrench.sW4.Web.Models.LoginHandler.LoginHandlerModel
 
@@ -15,11 +16,14 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @RowStampScriptHelper.RenderCss("~/Content/bootstrap/css/twitter-bootstrap")
-    @RowStampScriptHelper.RenderCss("~/Content/styles/thirdparty")
-    @RowStampScriptHelper.RenderCss("~/Content/fonts")
-    @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")
-
+    @if (ApplicationConfiguration.IsLocal()) {
+        @RowStampScriptHelper.RenderCss("~/Content/vendor/css")
+        @RowStampScriptHelper.RenderCss("~/Content/customVendor/css")
+        @RowStampScriptHelper.RenderCss("~/Content/fonts")
+        @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")
+    } else {
+        @RowStampScriptHelper.RenderCss("~/Content/dist/css")
+    }
 </head>
 <body class="page-signin">
     <div class="page-overlay"></div>

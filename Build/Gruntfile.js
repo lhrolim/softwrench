@@ -1,10 +1,11 @@
 /// <binding AfterBuild='sass' ProjectOpened='default' />
 module.exports = function (grunt) {
 
+    var webProjectRelPath = "../softWrench.sW4.Web/";
     var path = grunt.option("path") || "";
-    var fullPath = !!path ? path + "/" : "../softWrench.sW4.Web/";
+    var fullPath = !!path ? path + "/" : webProjectRelPath;
 
-    var filesToCompile = [
+    var scssFilesToCompile = [
         {
             expand: true,
             cwd: "Content/Customers/",
@@ -33,24 +34,73 @@ module.exports = function (grunt) {
     });
 
     grunt.initConfig({
+
+        app: {
+            vendor: webProjectRelPath + "Content/vendor"  
+        },
+
         sass: {
-            config: {
-                files: filesToCompile
-            },
             prod: {
                 options: {
                     sourceMap: false,
-                    outputStyle: "compressed",
+                    outputStyle: "compressed"
                 },
-                files: "<%= sass.config.files %>"
+                files: scssFilesToCompile
             }
+        },
 
+        bowercopy: {
+            css: {
+                options: {
+                    destPrefix: "<%= app.vendor %>" + "/css"
+                },
+                files: {
+                    "bootstrap.css": "bootstrap/dist/css/bootstrap.min.css",
+                    "bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.min.css",
+                    "bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
+                    "font-awesome.css": "font-awesome/css/font-awesome.min.css",
+                    "fonts": ["font-awesome/fonts/*", "bootstrap/dist/fonts/*"],
+                    "angular-ui-select.css": "ui-select/dist/select.min.css",
+                    "selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
+                }
+            },
+            fonts: {
+                options: {
+                    destPrefix: "<%= app.vendor %>" + "/fonts"
+                },
+                files: {
+                    ".": [
+                        "font-awesome/fonts/*",
+                        "bootstrap/dist/fonts/*"
+                    ],
+                }
+            },
+            dev: {
+                options: {
+                    destPrefix: "<%= app.vendor %>" + "/scripts"
+                },
+                files: {
+                }
+            },
+            prod: {
+                options: {
+                    clean: true,
+                    destPrefix: "<%= app.vendor %>" + "/scripts"
+                },
+                files: {
+                }
+            }
         }
     });
 
     // load npm tasks
     grunt.loadNpmTasks("grunt-sass");
+    grunt.loadNpmTasks("grunt-bowercopy");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-karma");
 
-    // define default task
+    // define default tasks
     grunt.registerTask("default", ["sass"]);
 };

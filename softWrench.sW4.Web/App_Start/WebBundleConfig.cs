@@ -2,38 +2,37 @@
 using cts.commons.web;
 
 namespace softWrench.sW4.Web {
-    public class WebBundleConfig :IBundleConfigProvider{
+    public class WebBundleConfig :IBundleConfigProvider {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
 
         public void PopulateStyleBundles(BundleCollection bundles) {
-            bundles.Add(new StyleBundle("~/Content/bootstrap/css/twitter-bootstrap").Include(
-               "~/Content/bootstrap/css/bootstrap-min.css",
-               "~/Content/bootstrap/css/bootstrap-theme-min.css",
-               "~/Content/bootstrap/css/bootstrap-combobox.css",
-               "~/Content/bootstrap/css/bootstrap-select.css",
-               "~/Content/bootstrap/css/bootstrap-datetimepicker.css",
-               "~/Content/bootstrap/css/submenu.css",
-               "~/Content/bootstrap/css/typeahead.js-bootstrap.css",
-               "~/Content/bootstrap/css/bootstrap-multiselect.css",
-               "~/Content/bootstrap/css/textAngular-min.css"
-               ));
 
-            bundles.Add(new StyleBundle("~/Content/styles/thirdparty").Include(
-                "~/Content/font-awesome/css/font-awesome.css",
-                "~/Content/angular-ui-select/angular-ui-select.css",
-                "~/Content/angular-ui-select/selectize.css"
-                ));
+            // from bower styles
+            bundles.Add(new StyleBundle("~/Content/vendor/css").Include(
+                    "~/Content/vendor/css/*.css"
+            ));
+          
+            // customized vendor styles
+            bundles.Add(new StyleBundle("~/Content/customVendor/css").Include(
+               "~/Content/customVendor/css/bootstrap-combobox.css",
+               "~/Content/customVendor/css/bootstrap-select.css",
+               "~/Content/customVendor/css/submenu.css",
+               "~/Content/customVendor/css/typeahead.js-bootstrap.css",
+               "~/Content/customVendor/css/bootstrap-multiselect.css"
+               ));
 
             bundles.Add(new StyleBundle("~/Content/fonts").Include(
                 "~/Content/fonts/font.css"
                 ));
-
-            bundles.Add(new StyleBundle("~/Content/ie9").Include(
-                "~/Content/ie/ie9.css"
-                ));
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
+
+            // from bower
+            bundles.Add(new ScriptBundle("~/Content/vendor/scripts").Include(
+                "~/Content/vendor/scripts/*.js"
+            ));
+
             bundles.Add(new ScriptBundle("~/Content/Scripts/jquery/jquery").Include(
                  "~/Content/Scripts/vendor/jquery/jquery-2.0.3-max.js",
                  "~/Content/Scripts/vendor/jquery/jquery-ui-1.10.3.js",

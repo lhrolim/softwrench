@@ -485,23 +485,16 @@
     <Content Include="App_Data\Client\tva\workorderbatch.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\angular-ui-select\selectize.css" />
-    <Content Include="Content\angular-ui-select\angular-ui-select.css" />
-    <Content Include="Content\bootstrap\css\bootstrap-combobox.css" />
+    <Content Include="Content\customVendor\css\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker.css" />
-    <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
-    <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
+    <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
+    <Content Include="Content\customVendor\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
-    <Content Include="Content\Customers\readme.txt" />
-    <Content Include="Content\font-awesome\css\font-awesome.css" />
-    <Content Include="Content\font-awesome\css\font-awesome.min.css" />
-    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\font.css" />
-    <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
@@ -636,8 +629,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
-    <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-select.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme-min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-min.css" />
@@ -663,14 +654,10 @@
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
     <Content Include="Content\styles\default\vendor\vendor.scss" />
-    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff2" />
-    <Content Include="Content\font-awesome\fonts\FontAwesome.otf" />
     <Content Include="Content\styles\default\_define-password.scss" />
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
+    <Content Include="bower.json" />
     <None Include="Content\styles\default\_button.scss" />
     <None Include="Content\styles\default\vendor\_xeditable.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
@@ -736,7 +723,7 @@
     <None Include="Content\styles\default\_search.scss" />
     <Content Include="Content\Controller\Configuration.html" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\bootstrap\css\submenu.css" />
+    <Content Include="Content\customVendor\css\submenu.css" />
     <Content Include="Content\Images\softwrench-logo-small.gif" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\Scripts\client\crud\crud_output.js" />
@@ -1352,7 +1339,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
+    <Folder Include="Content\customVendor\scripts\" />
     <Folder Include="Content\Scripts\softwrench\" />
+    <Folder Include="Content\vendor\css\" />
+    <Folder Include="Content\vendor\fonts\" />
+    <Folder Include="Content\vendor\scripts\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />

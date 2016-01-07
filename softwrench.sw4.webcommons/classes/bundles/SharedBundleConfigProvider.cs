@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Web.Optimization;
-using cts.commons.simpleinjector;
-using cts.commons.simpleinjector.Events;
 using cts.commons.web;
 using softWrench.sW4.Util;
 

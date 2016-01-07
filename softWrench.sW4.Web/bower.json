@@ -1,0 +1,27 @@
+{
+  "name": "softwrench.sW4.Web",
+  "description": "",
+  "main": "",
+  "authors": [
+    "rodrigobotti <rodrigo.botti@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/controltechnologysolutions/softwrench",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "jquery": "~2.1.4",
+    "eonasdan-bootstrap-datetimepicker": "4.15.35",
+    "font-awesome": "~4.5.0",
+    "ui-select": "angular-ui-select#0.12.1"
+  },
+  "devDependencies": {}
+}
