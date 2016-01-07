@@ -11,11 +11,14 @@
 
         function restore() {
             delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
+
+
+            //wipe first-level cache
+            schemaCache = {};
             // lazy schema fetch strategy: only restore the systeminitmillis
             schemaCache.systeminitMillis = localStorage.getItem(systemInitTimeKey);
 
-            //wipe first-level cache
-            schemaCache = { systeminitMillis: systeminitMillis };
+            
 
             //var log = $log.get("schemaCacheService#restore", ["performance"]);
             //log.debug("starting schema restore process");
@@ -101,7 +104,7 @@
 
                 Object.keys(localStorage)
                     .filter(function (key) {
-                        key.startsWith(keyRoot);
+                        return key.startsWith(keyRoot);
                     })
                     .forEach(function (schemakey) {
                         delete localStorage[schemakey];
