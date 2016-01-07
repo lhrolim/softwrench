@@ -36,7 +36,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
 
         app: {
-            vendor: webProjectRelPath + "Content/vendor"  
+            vendor: webProjectRelPath + "Content/vendor",
+            tmp: webProjectRelPath + "Content/tmp",
+            dist: webProjectRelPath + "Content/dist"
         },
 
         sass: {
@@ -49,6 +51,19 @@ module.exports = function (grunt) {
             }
         },
 
+        clean: {
+            options: {
+                force: true
+            },
+            vendor: [
+                "<%= app.vendor %>" + "/css/*",
+                "<%= app.vendor %>" + "/scripts/*",
+                "<%= app.vendor %>" + "/fonts/*"
+            ],
+            tmp: ["<%= app.tmp %>"],
+            dist: ["<%= app.dist %>"]
+        },
+
         bowercopy: {
             css: {
                 options: {
@@ -59,7 +74,6 @@ module.exports = function (grunt) {
                     "bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.min.css",
                     "bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
                     "font-awesome.css": "font-awesome/css/font-awesome.min.css",
-                    "fonts": ["font-awesome/fonts/*", "bootstrap/dist/fonts/*"],
                     "angular-ui-select.css": "ui-select/dist/select.min.css",
                     "selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
                 }

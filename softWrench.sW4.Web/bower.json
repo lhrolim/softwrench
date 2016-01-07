@@ -21,7 +21,8 @@
     "jquery": "~2.1.4",
     "eonasdan-bootstrap-datetimepicker": "4.15.35",
     "font-awesome": "~4.5.0",
-    "ui-select": "angular-ui-select#0.12.1"
+    "ui-select": "angular-ui-select#0.12.1",
+    "selectize": "~0.12.1"
   },
   "devDependencies": {}
 }
