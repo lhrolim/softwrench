@@ -107,7 +107,7 @@
          */
 		function toggleSelection(row, datamap, schema, panelid) {
 			row.fields["_#selected"] = !row.fields["_#selected"];
-			selectionChanged(row, datamap, schema, panelid);
+			selectionChanged(row, datamap, schema, true, panelid);
 		}
 
 	    //#endregion

@@ -233,7 +233,7 @@
             var context = getContext(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
-            context._lazyAssociationOptions = {};
+            _crudContext._lazyAssociationOptions = {};
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
             contextService.setActiveTab(null);
@@ -276,19 +276,18 @@
                 length = options.length ? options.length : 1;
             }
 
-            var context = getContext(panelid);
-            var lazyAssociationOptions = context._lazyAssociationOptions[associationKey];
+            var lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
                 log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
-                context._lazyAssociationOptions[associationKey] = options;
+                _crudContext._lazyAssociationOptions[associationKey] = options;
             } else {
                 log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey, length));
-                context._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
+                _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
         }
 
         function fetchLazyAssociationOption(associationKey, key, panelid) {
-            var associationOptions = getContext(panelid)._lazyAssociationOptions[associationKey];
+            var associationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (associationOptions == null) {
                 return null;
             }
