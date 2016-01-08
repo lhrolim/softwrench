@@ -2,7 +2,7 @@
     <div class="btn-group">
         <button type="button"
                 ng-click="refreshGrid()"
-                ng-show="showRefreshButton"
+                ng-show="shouldShowRefreshButton()"
                 class="btn btn-sm"
                 ng-class="{'btn-default':command.parameters['allowsave']=='false','btn-default':command.parameters['allowsave']==null}"
                 data-original-title="{{ !selectedfilter.alias ? 'Refresh grid' : selectedfilter.alias }}" rel="tooltip" data-container="body">

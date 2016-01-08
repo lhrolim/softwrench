@@ -149,7 +149,27 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 return iconService.loadIcon(value, metadata);
             };
 
-            scope.refreshGrid = function (datamap, schema) {
+            scope.refreshGrid = function (newDatamap, schema) {
+                // if show only selected recovers the selected buffer to show
+                // also update the total count of pagination
+                var datamap;
+                var showOnlySelected = crudContextHolderService.getShowOnlySelected(scope.panelid);
+                if (!showOnlySelected) {
+                    datamap = newDatamap;
+                    var paginationData = crudContextHolderService.getOriginalPaginationData(scope.panelid);
+                    if (paginationData) {
+                        scope.$parent.paginationData.totalCount = paginationData.totalCount;
+                    }
+                } else {
+                    var selectionBuffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
+                    datamap = [];
+                    for (var o in selectionBuffer) {
+                        datamap.push(selectionBuffer[o]);
+                    }
+                    crudContextHolderService.setOriginalPaginationData(scope.$parent.paginationData, scope.panelid);
+                    scope.$parent.paginationData.totalCount = datamap.length;
+                }
+
                 scope.datamap = datamap;
                 scope.schema = schema;
                 var t0 = new Date().getTime();;
@@ -373,29 +393,14 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             });
 
             scope.$on('sw_toogleselected', function (event, args) {
-                var schema = args[0];
-                var currentSchema = crudContextHolderService.currentSchema(scope.panelid);
-                if (currentSchema.applicationName !== schema.applicationName || currentSchema.schemaId !== schema.schemaId) {
+                var panelid = args[0];
+                if (scope.panelid !== panelid) {
                     return;
                 }
 
                 var showOnlySelected = crudContextHolderService.toogleShowOnlySelected(scope.panelid);
-                var newDatamap;
-                if (showOnlySelected) {
-                    var selectionBuffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
-                    newDatamap = [];
-                    for (var o in selectionBuffer) {
-                        newDatamap.push(selectionBuffer[o]);
-                    }
-                    crudContextHolderService.setOriginalPaginationData(scope.$parent.paginationData, scope.panelid);
-                    scope.$parent.paginationData.totalCount = newDatamap.length;
-                    $rootScope.$broadcast("sw_hidegridnavigation", currentSchema, scope.panelid);
-                } else {
-                    newDatamap = crudContextHolderService.rootDataMap(scope.panelid);
-                    scope.$parent.paginationData.totalCount = crudContextHolderService.getOriginalPaginationData(scope.panelid).totalCount;
-                    $rootScope.$broadcast("sw_showgridnavigation", currentSchema, scope.panelid);
-                }
-                scope.refreshGrid(newDatamap, currentSchema);
+                var newDatamap = showOnlySelected ? [] : crudContextHolderService.rootDataMap(scope.panelid);
+                scope.refreshGrid(newDatamap, crudContextHolderService.currentSchema(scope.panelid));
             });
 
             $injector.invoke(BaseList, this, {

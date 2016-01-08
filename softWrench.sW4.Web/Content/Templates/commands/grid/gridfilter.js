@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
-app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceService', 'searchService', 'i18NService', 'alertService', 'contextService',
-        function($scope, $http, gridPreferenceService, searchService, i18NService, alertService, contextService) {
+app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceService', 'searchService', 'i18NService', 'alertService', 'contextService', 'crudContextHolderService',
+        function($scope, $http, gridPreferenceService, searchService, i18NService, alertService, contextService, crudContextHolderService) {
 
             function init() {
                 //since this is inside a ng-include this controller is getting reevaluated every time we refresh the page
@@ -165,17 +165,8 @@ app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceServic
                 $scope.selectedfilter = null;
             });
 
-            $scope.$on("sw_hidegridnavigation", function (event, schema, panelid) {
-                if ($scope.panelid === panelid) {
-                    $scope.showRefreshButton = false;
-                }
-                
-            });
-
-            $scope.$on("sw_showgridnavigation", function (event, schema, panelid) {
-                if ($scope.panelid === panelid) {
-                    $scope.showRefreshButton = true;
-                }
-            });
+            $scope.shouldShowRefreshButton = function() {
+                return !crudContextHolderService.getShowOnlySelected($scope.panelid);
+            }
         }
     ]);

@@ -45,11 +45,6 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
             $scope.$name = "crudlist";
 
-            $scope.showFilters = true;
-            $scope.showQuickSearch = true;
-            $scope.showSortAtt = true;
-            $scope.shouldSort = true;
-
             $scope.vm = {
                 quickSearchData: null
             }
@@ -95,11 +90,16 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
             $scope.shouldShowSort = function (column, orientation) {
                 var defaultCondition = !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
-                return $scope.showSortAtt && defaultCondition;
+                return $scope.shouldShowGridNavigation() && defaultCondition;
             };
 
             this.shouldshowtoogleselected = function () {
                 return $scope.schema.properties["list.selectionstyle"] === "multiple";
+            }
+
+            this.toogleSelectedIcon = function() {
+                var showOnlySelected = crudContextHolderService.getShowOnlySelected($scope.panelid);
+                return showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
             }
 
             $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
@@ -427,7 +427,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
 
 
             $scope.sort = function (column) {
-                if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"] || !$scope.shouldSort) {
+                if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"] || !$scope.shouldShowGridNavigation()) {
                     return;
                 }
                 var columnName = column.attribute;
@@ -443,7 +443,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             };
 
             $scope.sortLabel = function() {
-                if (!$scope.shouldSort) {
+                if (!$scope.shouldShowGridNavigation()) {
                     return "";
                 }
                 return $scope.i18N("_grid.filter.clicksort", "Click here to sort");
@@ -477,25 +477,9 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 return $scope.schema.applicationName === schema.applicationName && $scope.schema.schemaId === schema.schemaId;
             }
 
-            $scope.$on("sw_hidegridnavigation", function (event, schema) {
-                if (!$scope.isSameSchema(schema)) {
-                    return;
-                }
-                $scope.showFilters = false;
-                $scope.showQuickSearch = false;
-                $scope.showSortAtt = false;
-                $scope.shouldSort = false;
-            });
-
-            $scope.$on("sw_showgridnavigation", function (event, schema) {
-                if (!$scope.isSameSchema(schema)) {
-                    return;
-                }
-                $scope.showFilters = true;
-                $scope.showQuickSearch = true;
-                $scope.showSortAtt = true;
-                $scope.shouldSort = true;
-            });
+            $scope.shouldShowGridNavigation = function() {
+                return !crudContextHolderService.getShowOnlySelected($scope.panelid);
+            }
 
             function initController() {
                 $injector.invoke(BaseController, this, {

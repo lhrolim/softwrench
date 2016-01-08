@@ -264,7 +264,12 @@ function applicationController($scope, $http, $log, $timeout,
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
-            crudContextHolderService.updateCrudContext(scope.schema,scope.datamap);
+
+            if (scope.schema.stereotype.toLowerCase().contains("detail")) {
+                crudContextHolderService.updateCrudContext(scope.schema, scope.datamap);
+            } else {
+                crudContextHolderService.applicationChanged(scope.schema, scope.datamap);
+            }
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
