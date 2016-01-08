@@ -1,12 +1,14 @@
-﻿app.directive("fileread", function ($log, alertService, attachmentService) {
+﻿(function (app) {
+    "use strict";
+
+app.directive("fileread", function ($log, alertService, attachmentService) {
+    "ngInject";
+
     return {
         scope: {
             fileread: "=",
             path: "="
         },
-
-
-
 
         link: function (scope, element, attributes) {
 
@@ -76,3 +78,5 @@
         }
     };
 });
+
+})(app);

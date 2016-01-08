@@ -16,6 +16,7 @@
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
+  
   <!--
       maximoutc property set to the full name of the timezone the maximo 
       server is set to, refer to the maximoutc.txt in the doc folder for 

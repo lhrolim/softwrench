@@ -1,4 +1,9 @@
-﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("JobPlanCompleteActionController", JobPlanCompleteActionController);
+function JobPlanCompleteActionController($scope, $http, i18NService, contextService) {
+    "ngInject";
 
     function isMemberOfOwnerGroup(ownerGroup) {
         if (ownerGroup == null && contextService.isLocal()) {
@@ -91,3 +96,7 @@
     }
 
 }
+
+window.JobPlanCompleteActionController = JobPlanCompleteActionController;
+
+})(angular);

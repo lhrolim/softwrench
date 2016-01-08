@@ -1,5 +1,7 @@
-﻿
+﻿(function (window) {
+    "use strict";
 
+angular.module("sw_layout").controller("UserProfileController", UserProfileController);
 function UserProfileController($scope, $http, $templateCache, i18NService) {
 
     var app = angular.module('plunker', ['ui.multiselect']);
@@ -127,3 +129,7 @@ function UserProfileController($scope, $http, $templateCache, i18NService) {
     init();
 
 }
+
+window.UserProfileController = UserProfileController;
+
+})(window);

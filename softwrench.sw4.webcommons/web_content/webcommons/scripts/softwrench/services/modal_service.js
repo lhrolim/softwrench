@@ -1,19 +1,16 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('modalService', function ($rootScope, $timeout, i18NService) {
+angular.module('sw_layout')
+    .factory('modalService', ["$rootScope", function ($rootScope) {
 
     return {
 
         hide: function (modalId) {
-            /// <summary>
-            /// 
-            /// </summary>
             if ($rootScope.showingModal) {
                 $rootScope.$broadcast('sw.modal.hide');
             }
         },
-
-
 
         /// <summary>
         /// method to be called for showing the modal a screen, 
@@ -62,7 +59,8 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 previousschema: parentschema,
                 title: properties.title,
                 cssclass: properties.cssclass,
-                onloadfn: properties.onloadfn
+                onloadfn: properties.onloadfn,
+                closeAfterSave: properties.closeAfterSave
             };
 
             $rootScope.$broadcast("sw.modal.show", modaldata);
@@ -71,6 +69,6 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
 
     };
 
-});
+}]);
 
-
+})(angular);

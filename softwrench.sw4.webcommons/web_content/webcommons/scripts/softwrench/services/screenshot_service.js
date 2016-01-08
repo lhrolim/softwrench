@@ -1,9 +1,11 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $log) {
+angular.module('sw_layout')
+    .factory('screenshotService', function ($rootScope, $timeout, i18NService, $log) {
+    "ngInject";
 
     return {
-
         init: function (bodyElement, datamap) {
             $log.getInstance('sw4.screenshotservice').debug('init screenshot service');
             var fn = this;
@@ -67,7 +69,6 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 }
             });
         },
-
 
         handleImgHolderBlur: function (imgHolder, datamap, attributeName, isRichTextBox) {
             if (isRichTextBox) {
@@ -136,9 +137,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             pastedImage.src = source;
             $(pastedImage).attr('class', 'pastedimage');
         }
-
-
     };
 });
 
-
+})(angular);

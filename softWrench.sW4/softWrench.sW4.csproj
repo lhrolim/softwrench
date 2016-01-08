@@ -372,13 +372,13 @@
     <Compile Include="Metadata\Parsing\XMLCommandSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
+    <Compile Include="Metadata\Parsing\XmlStereotypeMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />
     <Compile Include="Metadata\Stereotypes\Component\EmailComponentStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
+    <Compile Include="Metadata\Stereotypes\MetadataStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\CommandsXMLSourceInitializer.cs" />
@@ -387,6 +387,7 @@
     <Compile Include="Metadata\Validator\MetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
+    <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
     <Compile Include="Metadata\Merger\SchemaMerger.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
@@ -571,11 +572,7 @@
     <Compile Include="Data\Persistence\WS\Mif\MifMethodNameUtils.cs" />
     <Compile Include="Data\Persistence\WS\Mif\MifUtils.cs" />
     <Compile Include="Metadata\Stereotypes\ASchemaStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\CompositionDetailStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\CompositionListStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\DetailSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\IStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\ListSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\StereotypeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

@@ -50,6 +50,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string SchemaRedeclaringSchemaAttribute = "redeclaring";
         public const string SchemaPlatformAttribute = "platform";
         public const string SchemaStereotypeAttribute = "stereotype";
+        public const string StereotypesAttribute = "stereotypes";
         public const string SchemaAbstractAttribute = "abstract";
         public const string SchemaParentSchemaAttribute = "parentschema";
         public const string SchemaUnionSchemaAttribute = "unionschema";

@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('genericTicketService', function (alertService, searchService) {
+angular.module('sw_layout')
+    .factory('genericTicketService', ["alertService", "searchService", function (alertService, searchService) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -163,4 +165,6 @@ app.factory('genericTicketService', function (alertService, searchService) {
 
     };
 
-});
+}]);
+
+})(angular);

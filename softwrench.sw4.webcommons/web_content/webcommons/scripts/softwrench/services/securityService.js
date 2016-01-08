@@ -1,6 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('securityService', function (contextService,alertService) {
+angular.module('sw_layout')
+    .factory('securityService', function (contextService,alertService) {
+    "ngInject";
 
     return {
         /// <summary>
@@ -30,11 +33,10 @@ app.factory('securityService', function (contextService,alertService) {
 
             alertService.alert(foundRole.unauthorizedMessage);
             return false;
-
         }
 
     };
 
 });
 
-
+})(angular);

@@ -96,6 +96,7 @@
         function setActiveTab(tabId) {
             contextService.setActiveTab(tabId);
 
+            //update header/footer layout
             $timeout(function () {
                 $(window).trigger('resize');
             }, false);

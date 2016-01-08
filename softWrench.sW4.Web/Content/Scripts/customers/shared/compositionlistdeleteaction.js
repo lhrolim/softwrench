@@ -1,4 +1,9 @@
+(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("CompositionListDeleteActionController", CompositionListDeleteActionController);
 function CompositionListDeleteActionController($scope) {
+    "ngInject";
 
     $scope.deleteCompositionItem = function (clonedCompositionData, compositionItem, compositionItemId) {
         if (compositionItemId == null) {
@@ -15,3 +20,6 @@ function CompositionListDeleteActionController($scope) {
 
 }
 
+window.CompositionListDeleteActionController = CompositionListDeleteActionController;
+
+})(angular);

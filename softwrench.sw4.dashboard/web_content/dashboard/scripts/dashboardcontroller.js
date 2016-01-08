@@ -1,8 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-
+var app = angular.module('sw_layout');
 app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventService) {
-
+    "ngInject";
     return {
         //TODO: extract directive
         restrict: 'A',
@@ -10,18 +11,12 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
             if (scope.$last === false) {
                 return;
             }
-
             var log = $log.getInstance('dashboardrendered');
             log.debug("finished rendering dashboards");
             $rootScope.$broadcast('dash_finishloading');
-
-
-
         }
     };
 });
-
-
 
 app.controller('DashboardController', [
     '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService', 'crudContextHolderService',
@@ -58,7 +53,7 @@ app.controller('DashboardController', [
                     //                scope.$digest();
                 }
             });
-        }
+        };
 
         $scope.getCurrentDashboardById = function (id) {
             var dashboards = $scope.dashboards;
@@ -69,7 +64,7 @@ app.controller('DashboardController', [
             }
 
             return dashboards[0];
-        }
+        };
 
         $scope.getCurrentIndexById = function (id) {
             var dashboards = $scope.dashboards;
@@ -80,13 +75,11 @@ app.controller('DashboardController', [
             }
 
             return -1;
-        }
-
-
+        };
 
         $scope.cancelDashboard = function () {
             $scope.creatingDashboard = false;
-        }
+        };
 
         $scope.addpanel = function () {
             var dm = {};
@@ -98,7 +91,7 @@ app.controller('DashboardController', [
 //                    scope.$digest();
                 }
             });
-        }
+        };
 
         $scope.createNewPanel = function () {
             var schema = $scope.panelschemas[$scope.paneltype];
@@ -109,12 +102,11 @@ app.controller('DashboardController', [
                     //                scope.$digest();
                 }
             });
-        }
+        };
 
         $scope.getActiveClass = function (tabid) {
             return tabid == $scope.currentdashboardid ? "active" : null;
-        }
-
+        };
 
         $scope.doInit();
 
@@ -199,8 +191,8 @@ app.controller('DashboardController', [
             //    buttonClass = 'btn-primary';
             //}
 
-            return buttonClass
-        }
+            return buttonClass;
+        };
 
         //**************************************************************************************creation***********************************************************
         $scope.viewDashboard = function (event, id) {
@@ -214,7 +206,7 @@ app.controller('DashboardController', [
 
             var log = $log.getInstance('dashboardrendered');
             log.trace('lazy loading dashboard {0}'.format(id));
-        }
+        };
 
         $scope.createNewDashboard = function () {
             if ($scope.isEditingAnyDashboard) {
@@ -234,11 +226,11 @@ app.controller('DashboardController', [
                 //                    scope.associationOptions['applications'] = ;
                 //                }
             });
-        }
+        };
 
         $scope.isNewDashboard = function () {
             return $scope.newDashboard;
-        }
+        };
 
         $scope.finishCreatingDashboard = function () {
             var log = $log.getInstance("dashboardController#saveDashboard");
@@ -257,36 +249,34 @@ app.controller('DashboardController', [
                     scope.associationOptions['profiles'] = $scope.profiles;
                 }
             });
-        }
+        };
 
         //**************************************************************************************edition***********************************************************
 
         $scope.isEditing = function (dashboardid) {
             return $scope.currentdashboardid == dashboardid && $scope.isEditingAnyDashboard;
-        }
-
+        };
 
         $scope.cancelEditing = function () {
             $scope.isEditingAnyDashboard = false;
-        }
+        };
 
         $scope.editDashboard = function (dashboardId) {
             $scope.isEditingAnyDashboard = true;
-        }
+        };
 
         $scope.finishEditingDashboard = function (dashboardId) {
             $scope.dashboard.policy = "personal";
             dashboardAuxService.saveDashboard($scope.dashboard);
 
-        }
+        };
 
         $scope.canEditDashboard = function (dashboard) {
             if ($scope.canCreateBoth) {
                 return true;
             }
             return dashboard.createdby == $scope.userid;
-        }
-
+        };
 
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
             if (oldValue != newValue && $scope.resultObject.crudSubTemplate != null &&
@@ -297,17 +287,14 @@ app.controller('DashboardController', [
     }
 ]);
 
-
 app.controller('DashboardController2', [
     '$scope', '$rootScope',
     function ($scope, $rootScope) {
-
         $scope.createNewPanel = function () {
             //this is a inner controller for the button section
             $rootScope.$broadcast("dash_createpanel", $scope.datamap.paneltype);
-
         }
-
     }
 ]);
 
+})(angular);

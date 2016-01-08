@@ -7,6 +7,8 @@
     <template path="@location.xml"/>
   </templates>
 
+
+
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <schemas>
@@ -18,13 +20,16 @@
       </schemas>
     </application>
 
-    <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
+    <application name="location" title="Location" entity="location" >
       <schemas>
-        <schema id="locationfilter" stereotype="detail">
+        <schema id="locationfilter" stereotype="">
           <field attribute="location" label="Location"/>
           <properties>
             <property key="commandbar.bottom" value="applyfilter"/>
           </properties>
+        </schema>
+        <schema id="list"  redeclaring="false" stereotype="list.selection">
+          
         </schema>
       </schemas>
     </application>

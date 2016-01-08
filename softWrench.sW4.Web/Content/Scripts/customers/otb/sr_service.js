@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('srService', function (alertService, associationService, fieldService) {
+angular.module('sw_layout')
+    .factory('srService', ["alertService", function (alertService) {
 
     return {
         beforeChangeLocation: function (event) {
@@ -88,4 +90,6 @@ app.factory('srService', function (alertService, associationService, fieldServic
         },
     };
 
-});
+}]);
+
+})(angular);

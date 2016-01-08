@@ -1,4 +1,7 @@
-﻿var app = angular.module('sw_layout',
+﻿(function (angular) {
+    "use strict";
+
+var app = window.app = angular.module('sw_layout',
     ['pasvaz.bindonce',
      'angularTreeview',
      'ngSanitize',
@@ -16,9 +19,9 @@
      'omr.angularFileDnD']);
 
 //angular 1.3 migration reference
-app.config(['$controllerProvider', function ($controllerProvider) {
-    $controllerProvider.allowGlobals();
-}]);
+//app.config(['$controllerProvider', function ($controllerProvider) {
+//    $controllerProvider.allowGlobals();
+//}]);
 
 //app.config(function(uiSelectConfig) {
 //    uiSelectConfig.theme = "bootstrap";
@@ -29,6 +32,7 @@ app.run(function (editableOptions) {
 });
 
 app.directive("dynamicName", function ($compile) {
+    "ngInject";
     /// <summary>
     /// workaround for having dynamic named forms to work with angular 1.2
     /// took from http://jsfiddle.net/YAZmz/2/
@@ -83,6 +87,8 @@ app.directive('swcontenteditable', function () {
 });
 
 app.directive('onFinishRender', function ($timeout) {
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -94,8 +100,6 @@ app.directive('onFinishRender', function ($timeout) {
         }
     };
 });
-
-
 
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {
@@ -330,3 +334,5 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 }
 
 app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService",  "crudContextHolderService", LayoutController]);
+
+})(angular);

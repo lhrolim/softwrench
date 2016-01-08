@@ -1,8 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
 
-
-app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contextService, searchService) {
+angular.module('sw_layout')
+   .directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contextService, searchService) {
+    "ngInject";
 
     function doInit(scope) {
         scope.schema = {
@@ -30,8 +32,6 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
             dashboardid:'='
         },
 
-       
-
         controller: function ($scope, $http) {
             doInit($scope);
             searchService.refreshGrid({}, {
@@ -47,5 +47,7 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
             //building a schema object representation to propagate to crud_list.html
             doInit(scope);
         }
-    }
+    };
 });
+
+})(angular);

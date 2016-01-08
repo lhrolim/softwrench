@@ -1,6 +1,9 @@
-﻿
+﻿(function (angular) {
+    "use strict";
 
+angular.module("sw_layout").controller("UserController", UserController);
 function UserController($scope, $http, $templateCache, pwdenforceService, i18NService, redirectService) {
+    "ngInject";
 
     $scope.addSelectedProfiles = function (availableprofilesselected) {
         $scope.user.profiles = $scope.user.profiles.concat(availableprofilesselected);
@@ -133,4 +136,6 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
     initUser();
 }
 
+window.UserController = UserController;
 
+})(angular);
