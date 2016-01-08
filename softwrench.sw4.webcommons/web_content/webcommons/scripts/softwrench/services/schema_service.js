@@ -214,7 +214,7 @@
             if (!stereotype || stereotype === "None") return emptyAsTrue || false;
             if (!angular.isArray(values)) return stereotype.contains(values);
             return values.some(function(value) {
-                stereotype.contains(value);
+                return stereotype.contains(value);
             });
         }
 
