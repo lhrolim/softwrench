@@ -35,14 +35,14 @@ namespace softWrench.sW4.Web {
             ));
 
             // customized vendor scripts
-            bundles.Add(new ScriptBundle("~/Content/vendor/scripts").Include(
+            bundles.Add(new ScriptBundle("~/Content/customVendor/scripts").Include(
                 "~/Content/customVendor/scripts/*.js"
             ));
 
+            // app scripts
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin").Include(
                 "~/Content/Scripts/client/signin/signin.js"
                 ));
-
             // app scripts
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application")
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
