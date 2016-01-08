@@ -86,9 +86,9 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-all-header">
                         <!--Multiselect-->
-                        <input type="checkbox" ng-model="selectAllBuffer.selectAllValue" ng-change="selectAllChanged()" />
+                        <input type="checkbox" ng-model="selectionModel.selectAllValue" ng-change="selectAllChanged()" />
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->

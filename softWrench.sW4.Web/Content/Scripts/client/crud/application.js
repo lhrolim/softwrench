@@ -265,7 +265,8 @@ function applicationController($scope, $http, $log, $timeout,
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
 
-            if (scope.schema.stereotype.toLowerCase().contains("detail")) {
+            var currentSchema = crudContextHolderService.currentSchema();
+            if (!currentSchema || scope.schema.applicationName === currentSchema.applicationName) {
                 crudContextHolderService.updateCrudContext(scope.schema, scope.datamap);
             } else {
                 crudContextHolderService.applicationChanged(scope.schema, scope.datamap);

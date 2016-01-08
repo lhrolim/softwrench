@@ -1,4 +1,4 @@
-﻿
+
 (function (angular) {
     "use strict";
 
@@ -77,10 +77,14 @@
             currentSelectedProfile: null,
             tabRecordCount: {},
             compositionLoadComplete: false,
-            selectionBuffer: {},
-            selectAllBuffer: { selectAllValue: false },
-            showOnlySelected: false,
-            // pagination data before the toogle selected
+            gridSelectionModel: {
+                selectionBuffer: {}, // buffer of all selected row
+                onPageSelectedCount: 0, // number of selected rows on current page
+                pageSize: 0, // number of rows of page (no same of pagination on show only selected)
+                selectAllValue : false, // whether or not select all checkbox is selected
+                showOnlySelected: false
+            },
+            // pagination data before the toggle selected
             originalPaginationData: null
         };
 
@@ -88,6 +92,14 @@
 
         var _crudContexts = {};
 
+        /**
+         * Returns (or create an returns) a context for the given paneilId.
+         * Isolates the crud context of distinct panels.
+         * All API methods are based on panelId and only affects the specific context.
+         * 
+         * @param {} panelid 
+         * @returns {} 
+         */
         var getContext = function (panelid) {
             if (!panelid) {
                 return _crudContext;
@@ -343,7 +355,6 @@
 
 
         //#endregion
-        //#endregion
 
         //#region modal
 
@@ -358,40 +369,28 @@
 
         //#endregion
 
-        //#region modal
+        //#region selectionService
 
-        function toggleSelectionBuffer(rowId, row, panelid) {
-            
+        function getSelectionModel(panelid) {
+            return getContext(panelid).gridSelectionModel;
         }
 
         function addSelectionToBuffer(rowId, row, panelid) {
-            getContext(panelid).selectionBuffer[rowId] = row;
+            getContext(panelid).gridSelectionModel.selectionBuffer[rowId] = row;
         }
 
         function removeSelectionFromBuffer(rowId, panelid) {
-            delete getContext(panelid).selectionBuffer[rowId];
-        }
-
-        function getSelectionBuffer(panelid) {
-            return getContext(panelid).selectionBuffer;
+            delete getContext(panelid).gridSelectionModel.selectionBuffer[rowId];
         }
 
         function clearSelectionBuffer(panelid) {
-            getContext(panelid).selectionBuffer = {};
+            getContext(panelid).gridSelectionModel.selectionBuffer = {};
         }
 
-        function getSelectAllBuffer(panelid) {
-            return getContext(panelid).selectAllBuffer;
-        }
-
-        function getShowOnlySelected(panelid) {
-            return getContext(panelid).showOnlySelected;
-        }
-
-        function toogleShowOnlySelected(panelid) {
+        function toggleShowOnlySelected(panelid) {
             var context = getContext(panelid);
-            context.showOnlySelected = !context.showOnlySelected;
-            return context.showOnlySelected;
+            context.gridSelectionModel.showOnlySelected = !context.gridSelectionModel.showOnlySelected;
+            return context.gridSelectionModel.showOnlySelected;
         }
 
 
@@ -473,16 +472,14 @@
         }
 
         var selectionService = {
+            getSelectionModel: getSelectionModel,
             addSelectionToBuffer: addSelectionToBuffer,
             removeSelectionFromBuffer: removeSelectionFromBuffer,
-            getSelectionBuffer: getSelectionBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
-            getSelectAllBuffer: getSelectAllBuffer,
-            getShowOnlySelected: getShowOnlySelected,
-            toogleShowOnlySelected: toogleShowOnlySelected,
             toggleSelectionMode: toggleSelectionMode,
-            toggleSelectionBuffer: toggleSelectionBuffer,
+            toggleSelectionBuffer: toggleSelectionBu      toggleSelectionBuffer: toggleSelectionBuffer,
             getSelectionModel: getSelectionModel,
+            toggleShowOnlySelected: toggleShowOnlySelected,
             getOriginalPaginationData: getOriginalPaginationData,
             setOriginalPaginationData: setOriginalPaginationData,
             resetSelectionModel: resetSelectionModel

@@ -236,6 +236,15 @@
             return isStereotype(schema, ["list", "List"], emptyAsTrue);
         }
 
+        /**
+         * @param {} schemaA
+         * @param {} schemaB
+         * @returns Boolean whether or not the schemas have same applicationName and schemaId
+         */
+        function isSameSchema(schemaA, schemaB) {
+            return schemaA.applicationName === schemaB.applicationName && schemaA.schemaId === schemaB.schemaId;
+        }
+
         return {
             buildApplicationKey: buildApplicationKey,
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
@@ -251,7 +260,8 @@
             parseAppAndSchema: parseAppAndSchema,
             isStereotype: isStereotype,
             isDetail: isDetail,
-            isList: isList
+            isList: isList,
+            isSameSchema: isSameSchema
         };
 
     }]);

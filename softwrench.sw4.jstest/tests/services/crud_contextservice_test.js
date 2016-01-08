@@ -91,7 +91,16 @@
         crudContextService.addSelectionToBuffer("2", row2);
 
         // verify buffer
-        var buffer = crudContextService.getSelectionBuffer();
+        var buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+
+        // updates context
+        crudContextService.updateCrudContext({}, {});
+
+        // verify buffer
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
         expect(Object.keys(buffer).length).toBe(2);
         expect(buffer["1"].fields.a).toBe("1");
         expect(buffer["2"].fields.a).toBe("2");
@@ -100,11 +109,11 @@
         crudContextService.applicationChanged({}, {});
 
         // verify buffer
-        buffer = crudContextService.getSelectionBuffer();
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
         expect(Object.keys(buffer).length).toBe(0);
     });
 
-    it("independent selected buffer from diffrent panels", function () {
+    it("independent selected buffer from different panels", function () {
         var row1 = { fields: { a: "1" } };
         var row2 = { fields: { a: "2" } };
         var row3 = { fields: { a: "3" } };
@@ -115,11 +124,11 @@
         crudContextService.addSelectionToBuffer("3", row3, "#modal");
 
         // verify buffers
-        var buffer = crudContextService.getSelectionBuffer();
+        var buffer = crudContextService.getSelectionModel().selectionBuffer;
         expect(Object.keys(buffer).length).toBe(2);
         expect(buffer["1"].fields.a).toBe("1");
         expect(buffer["2"].fields.a).toBe("2");
-        buffer = crudContextService.getSelectionBuffer("#modal");
+        buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
         expect(Object.keys(buffer).length).toBe(1);
         expect(buffer["3"].fields.a).toBe("3");
 
@@ -127,11 +136,11 @@
         crudContextService.clearCrudContext("#modal");
 
         // verify buffers
-        buffer = crudContextService.getSelectionBuffer();
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
         expect(Object.keys(buffer).length).toBe(2);
         expect(buffer["1"].fields.a).toBe("1");
         expect(buffer["2"].fields.a).toBe("2");
-        buffer = crudContextService.getSelectionBuffer("#modal");
+        buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
         expect(Object.keys(buffer).length).toBe(0);
     });
 });
