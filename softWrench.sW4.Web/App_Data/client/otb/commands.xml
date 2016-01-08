@@ -12,11 +12,11 @@
   </commandgroup>
 
   <commandgroup position="gridtop.selection" platform="web">
-    <command id="toggleselectionmode" icon="$scope:toogleSelectedIcon" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.crud.grid.toggleselectionmode,panelid"
+    <command id="toggleselectionmode" icon="$scope:toogleSelectedIcon" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.crud.list.toggleselectionmode,panelid"
                   position="+profiles"/>
     
     <command id="toogleselected" icon="$scope:toogleSelectedIcon" service="dispatcherService" method="dispatchevent"
-                 tooltip="Toogle selected" parameters="sw_toogleselected,panelid" position="+profiles"/>
+                 tooltip="Toogle selected" parameters="sw.crud.list.toggleselected,panelid" position="+profiles"/>
   </commandgroup>
 
   <commandgroup position="gridbottom" platform="web">

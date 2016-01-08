@@ -504,6 +504,14 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 $scope.gridDataChanged(crudContextHolderService.rootDataMap($scope.panelid));
             });
 
+            $scope.$on('sw.crud.grid.toggleselectionmode', function (event, args) {
+                var panelid = args[0];
+                if ($scope.panelid !== panelid) {
+                    return;
+                }
+                crudContextHolderService.toggleSelectionMode($scope.panelid);
+            });
+
             $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
                 $scope.refreshGridRequested(searchData, extraparameters);
             });
