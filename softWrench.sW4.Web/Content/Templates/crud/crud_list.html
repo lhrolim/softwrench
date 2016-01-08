@@ -5,7 +5,7 @@
             <div class="context clearfix header-menu">
                 <!-- commands -->
                 <gridtoolbar advancedsearchdata="vm.quickSearchData"
-                             position="gridtop"
+                             position="{{getGridCommandPosition('commandbar.top','gridtop')}}"
                              datamap="datamap"
                              schema="schema"
                              pagination-data="paginationData"
@@ -13,7 +13,7 @@
                              search-sort="searchSort"
                              search-operator="searchOperator"
                              search-template="searchTemplate"
-                             class="gridtop"/>
+                             class="gridtop" />
                 
                 <!-- quick search input -->
                 <div class="quick-search col-xs-4">
@@ -58,7 +58,7 @@
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
-                        search-operator="searchOperator"/>
+                        search-operator="searchOperator" />
         </div>
         
         <!--<div class="filter-container">
@@ -127,7 +127,8 @@
         <br />
         <br />
         <div id="affixpagination1" class="hiddenonprint context clearfix hiddenonprint">
-            <gridtoolbar position="gridbottom"
+            <gridtoolbar
+                         position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"
                          schema="schema"
                          pagination-data="paginationData"
                          search-sort="searchSort"

@@ -286,6 +286,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 $scope.refreshGridRequested(searchData, extraparameters);
             });
 
+            $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
+                if (!$scope.schema.properties || !$scope.schema.properties[propertyName]) {
+                    return defaultProperty;
+                }
+                return $scope.schema.properties[propertyName];
+            }
+
             $scope.quickSearch = function (filterdata) {
                 $scope.searchData = {};
                 $scope.searchSort = {};

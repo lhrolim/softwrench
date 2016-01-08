@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-
+using DotLiquid.Tags;
+using log4net;
 using cnst = softWrench.sW4.Metadata.Parsing.XmlCommandSchema;
 
 
@@ -17,6 +18,12 @@ namespace softWrench.sW4.Metadata.Parsing {
     /// </summary>
     internal sealed class XmlCommandBarMetadataParser {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(XmlCommandBarMetadataParser));
+
+
+        public XmlCommandBarMetadataParser() {
+            Log.Debug("init Command logger");
+        }
 
         /// <summary>
         ///     Parses the XML document provided by the specified
@@ -40,13 +47,25 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (null == commandBarsDefinitions) {
                 return new Dictionary<string, CommandBarDefinition>();
             }
-            var result = new Dictionary<string, CommandBarDefinition>();
+            var result = new SortedDictionary<string, CommandBarDefinition>();
             var commandBars = commandBarsDefinitions.Elements().Where(e => e.IsNamed(cnst.CommandsElement));
-            foreach (var commandBar in commandBars) {
-                var bar = ParseCommandBar(commandBar);
+
+
+            foreach (var bar in commandBars.Select(ParseCommandBar)) {
                 result[bar.Id] = bar;
             }
 
+            var composedCommands = new List<CommandBarDefinition>(result.Values.Where(r => r.Id.Contains(".")));
+
+            foreach (var composedCommand in composedCommands) {
+                var originalCommand =
+                    result.Values.LastOrDefault(
+                        f => composedCommand.Id.StartsWith(f.Id) && !composedCommand.Id.Equals(f.Id));
+                if (originalCommand != null) {
+                    Log.DebugFormat("merging command {0} from base definition {1} ", composedCommand.Id, originalCommand.Id);
+                    result[composedCommand.Id] = ApplicationCommandMerger.DoMergeBars(composedCommand, originalCommand);
+                }
+            }
             return result;
         }
 
@@ -54,7 +73,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var id = commandbar.AttributeValue(XmlBaseSchemaConstants.IdAttribute);
             var position = commandbar.AttributeValue(cnst.PositionAttribute);
             var excludeUndeclared = commandbar.Attribute(cnst.RemoveUndeclared).ValueOrDefault(false);
-            return new CommandBarDefinition(id, position,excludeUndeclared, ParseCommandDisplayables(commandbar.Elements()));
+            return new CommandBarDefinition(id, position, excludeUndeclared, ParseCommandDisplayables(commandbar.Elements()));
         }
 
         private static IEnumerable<ICommandDisplayable> ParseCommandDisplayables(IEnumerable<XElement> elements) {
@@ -69,7 +88,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (xElement.IsNamed(cnst.ResourceCommand)) {
                 var path = xElement.AttributeValue(cnst.ResourceCommandPath);
                 var parameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
-                return new ResourceCommand(id, path, role,position,parameters);
+                return new ResourceCommand(id, path, role, position, parameters);
             }
             if (xElement.IsNamed(cnst.CommandElement)) {
                 return GetApplicationCommand(xElement, id, role, position);
@@ -80,7 +99,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
                 var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
                 var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
-                return new ContainerCommand(id, label, tooltip, role, position,icon,service,method, ParseCommandDisplayables(xElement.Elements()));
+                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, ParseCommandDisplayables(xElement.Elements()));
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);
@@ -106,7 +125,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
             var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
             var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
-            
+
             var stereotype = xElement.AttributeValue(XmlBaseSchemaConstants.StereotypeAttribute);
             var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute);
             var enableExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute);
@@ -114,9 +133,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             var nextSchemaId = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandNextSchemaId);
             var scopeParameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
             var properties = xElement.AttributeValue(XmlBaseSchemaConstants.BasePropertiesAttribute);
-            
-            var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression,enableExpression,
-                successMessage, nextSchemaId, scopeParameters,properties, position, icon, tooltip);
+
+            var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
+                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip);
             return applicationCommand;
         }
     }

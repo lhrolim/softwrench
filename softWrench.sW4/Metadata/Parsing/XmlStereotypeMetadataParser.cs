@@ -27,7 +27,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (document.Root == null) {
                 throw new InvalidDataException();
             }
-            var stereotypes = new Dictionary<string, MetadataStereotype>();
+            var stereotypes = new SortedDictionary<string, MetadataStereotype>();
             var elementsToIterate = LocateStereotypesElement(document, metadataParser);
             if (elementsToIterate == null) {
                 return stereotypes;
@@ -39,6 +39,19 @@ namespace softWrench.sW4.Metadata.Parsing {
                     stereotypes.Add(stereotype.Id, stereotype);
                 }
             }
+
+            var composedStereotypes = new List<MetadataStereotype>(stereotypes.Values.Where(r => r.Id.Contains(".")));
+
+            foreach (var composedStereotype in composedStereotypes) {
+                var originalStereotype =
+                    stereotypes.Values.LastOrDefault(f => composedStereotype.Id.StartsWith(f.Id) && !composedStereotype.Id.Equals(f.Id));
+                if (originalStereotype != null) {
+                    stereotypes[composedStereotype.Id] = (MetadataStereotype)originalStereotype.Merge(composedStereotype);
+                }
+            }
+
+
+
             return stereotypes;
         }
 
