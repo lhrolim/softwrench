@@ -55,7 +55,7 @@
 	    var selectionModel = crudContextService.getSelectionModel();
 
 	    selectionService.gridDataChanged(datamap, schema);
-	    selectionService.toggleSelection(row1, datamap, schema);
+	    selectionService.toggleSelection(row1, schema);
 
 	    var buffer = selectionModel.selectionBuffer;
 	    expect(Object.keys(buffer).length).toBe(1);
@@ -70,8 +70,8 @@
 		var selectionModel = crudContextService.getSelectionModel();
 
 		selectionService.gridDataChanged(datamap, schema);
-	    selectionService.toggleSelection(row1, datamap, schema);
-		selectionService.toggleSelection(row2, datamap, schema);
+	    selectionService.toggleSelection(row1, schema);
+		selectionService.toggleSelection(row2, schema);
 
 		var buffer = selectionModel.selectionBuffer;
 		expect(Object.keys(buffer).length).toBe(2);
@@ -79,7 +79,7 @@
 		expect(buffer["2"].fields.id).toBe(2);
 	    expect(selectionModel.selectAllValue).toBe(true);
 
-	    selectionService.toggleSelection(row2, datamap, schema);
+	    selectionService.toggleSelection(row2, schema);
 
 	    buffer = selectionModel.selectionBuffer;
 	    expect(Object.keys(buffer).length).toBe(1);
@@ -94,7 +94,7 @@
 		var selectionModel = crudContextService.getSelectionModel();
 
 		selectionService.gridDataChanged(datamap, schema);
-		selectionService.toggleSelection(row1, datamap, schema);
+		selectionService.toggleSelection(row1, schema);
 
 		var buffer = selectionModel.selectionBuffer;
 		expect(Object.keys(buffer).length).toBe(1);
@@ -110,8 +110,10 @@
 		var datamap = [row1, row2];
 		var selectionModel = crudContextService.getSelectionModel();
 
+		debugger;
 	    selectionModel.selectAllValue = true;
 	    selectionService.selectAllChanged(datamap, schema);
+	    
 
 		var buffer = selectionModel.selectionBuffer;
 		expect(Object.keys(buffer).length).toBe(2);
