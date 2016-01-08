@@ -303,8 +303,8 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
             // called whenever a selector checkbox changes state
             // updates the buffer and possibly the selectall state
-            scope.selectChanged = function (row, datamap) {
-                gridSelectionService.selectionChanged(row, datamap, scope.schema, true, scope.panelid);
+            scope.selectChanged = function (row) {
+                gridSelectionService.selectionChanged(row, scope.schema, true, scope.panelid);
             }
 
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
