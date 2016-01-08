@@ -9,7 +9,11 @@ namespace softWrench.sW4.Metadata.Stereotypes {
 
     class StereotypeFactory {
 
-        private static IStereotype LookupStereotype(string stereotype, SchemaMode? mode) {
+        public static IStereotype LookupStereotype([CanBeNull]string stereotype, SchemaMode? mode) {
+            if (stereotype == null)
+            {
+                return MetadataProvider.Stereotype(null);
+            }
 
             if (stereotype.ToLower() == "detail" && SchemaMode.output.Equals(mode)) {
                 return MetadataProvider.Stereotype("detailoutput");
@@ -26,9 +30,6 @@ namespace softWrench.sW4.Metadata.Stereotypes {
 
         }
 
-        internal static IStereotype LookupStereotype(SchemaStereotype type, SchemaMode? mode) {
-            return LookupStereotype(type.ToString().ToLower(), mode);
-        }
 
 
         [NotNull]
@@ -38,7 +39,7 @@ namespace softWrench.sW4.Metadata.Stereotypes {
             foreach (var cs in customerStereotypes) {
                 var id = cs.Key;
                 if (globalStereotypes.ContainsKey(id)) {
-                    globalStereotypes[id].Merge(cs.Value);
+                    globalStereotypes[id] = (MetadataStereotype)globalStereotypes[id].Merge(cs.Value);
                 } else {
                     globalStereotypes.Add(cs);
                 }

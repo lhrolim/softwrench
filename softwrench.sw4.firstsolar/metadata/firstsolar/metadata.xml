@@ -28,6 +28,9 @@
             <property key="commandbar.bottom" value="applyfilter"/>
           </properties>
         </schema>
+        <schema id="list"  redeclaring="false" stereotype="list.selection">
+          
+        </schema>
       </schemas>
     </application>
   </applications>

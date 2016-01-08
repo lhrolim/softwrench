@@ -38,7 +38,7 @@ angular.module('sw_layout')
             if (expression == undefined || expression == "") {
                 return false;
             }
-            var expressionToEval = expressionService.getExpression(expression, datamap);
+            var expressionToEval = expressionService.evaluate(expression, datamap, { schema: schema }, null);
             return !eval(expressionToEval);
         },
 
