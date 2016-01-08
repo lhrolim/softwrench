@@ -1,25 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
     public class CommandBarDefinition : BaseDefinition {
-        public string Id { get; set; }
+        public string Id {
+            get; set;
+        }
 
-        public string Position { get; set; }
+        public string Position {
+            get; set;
+        }
 
-        public Boolean? Dynamic { get; set; }
+        public bool? Dynamic {
+            get; set;
+        }
 
-        public Boolean ExcludeUndeclared { get; set; }
+        public bool ExcludeUndeclared {
+            get; set;
+        }
+        [NotNull]
+        public List<ICommandDisplayable> Commands {
+            get; set;
+        }
 
-        public List<ICommandDisplayable> Commands { get; set; }
+        public ClientPlatform? Platform {
+            get; set;
+        }
 
-        public ClientPlatform? Platform { get; set; }
 
-
-        public CommandBarDefinition(string id, string position,Boolean excludeUndeclared, IEnumerable<ICommandDisplayable> commands) {
+        public CommandBarDefinition(string id, string position, Boolean excludeUndeclared, IEnumerable<ICommandDisplayable> commands) {
             Id = id;
             Position = position;
             Commands = new List<ICommandDisplayable>(commands);
@@ -67,7 +80,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             return null;
         }
 
-
-
+        public override string ToString() {
+            return string.Format("Id: {0} Number of Commands: {1}", Id,Commands.Count);
+        }
     }
 }

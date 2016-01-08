@@ -1,6 +1,10 @@
-var app = angular.module('sw_layout');
+(function (angular) {
+    "use strict";
 
-app.factory('matusetranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService, validationService) {
+angular.module('sw_layout')
+    .factory('matusetranService', [
+        "$http", "contextService", "redirectService", "modalService", "restService", "searchService", "alertService", 
+        function ($http, contextService, redirectService, modalService, restService, searchService, alertService) {
 
     var doCommodityGroupAssociation = function (parameters) {
         var searchData = {
@@ -134,5 +138,7 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
         afterchange: function (event) {
             doItemAssociation(event);
         }
-    }
-});
+    };
+}]);
+
+})(angular);

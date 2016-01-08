@@ -1,4 +1,10 @@
-﻿function DownloadController($scope, i18NService, fieldService, alertService) {
+﻿(function (angular) {
+    "use strict";
+
+
+angular.module("sw_layout").controller("DownloadController", DownloadController);
+function DownloadController($scope, i18NService, fieldService, alertService) {
+    "ngInject";
 
     $scope.download = function (controller, action, id, mode) {
         var controllerToUse = controller == undefined ? "Attachment" : controller;
@@ -20,5 +26,8 @@
             }
         });
     };
-
 }
+
+window.DownloadController = DownloadController;
+
+})(angular);

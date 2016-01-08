@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('imacservice', function ($http, alertService, fieldService, redirectService, i18NService) {
+angular.module('sw_layout')
+    .factory('imacservice', ["$http", "alertService", "fieldService", "redirectService", "i18NService", function ($http, alertService, fieldService, redirectService, i18NService) {
     /*
     * The location could point either to a building only, or to the entire building+floor+room, but never straight 
     * to the floor alone as it does not exist as an entry on hapag database.
@@ -53,5 +55,6 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
 
     };
 
+}]);
 
-});
+})(angular);

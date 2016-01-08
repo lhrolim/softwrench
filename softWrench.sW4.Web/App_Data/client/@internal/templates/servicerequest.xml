@@ -6,6 +6,7 @@
     <template path="@attachments.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@commlogs.xml"/>
+    <template path="@failurecode.xml"/>
   </templates>
 
   <entities>
@@ -97,6 +98,9 @@
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <!--<properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>-->
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketid" label="SR#:" hidden="true"/>

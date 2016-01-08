@@ -20,7 +20,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
             ApplicationConfiguration.TestclientName = "otb";
             MetadataProvider.StubReset();
             var schemas = MetadataProvider.Application("incident").Schemas();
-            _schema = schemas[new ApplicationMetadataSchemaKey("detail", "input", "web")];
+            _schema = schemas[new ApplicationMetadataSchemaKey("editdetail", "input", "web")];
         }
 
         [TestMethod]

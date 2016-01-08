@@ -41,12 +41,13 @@ $(function () {
             $('.listgrid-table').css('margin-top', 'auto');
         }
 
-        //adjust footer position
+        //make sure the height includes the footer
+        $('.site-footer').css('position', 'initial');
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
-
         //console.log('fix footer', containerHeight, windowHeight);
 
+        //adjust footer position
         if (containerHeight > windowHeight) {
             $('.site-footer').css('position', 'initial');
         } else {

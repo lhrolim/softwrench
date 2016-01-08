@@ -1,7 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('notifications', function (contextService, notificationViewModel, $log) {
-    var log = $log.getInstance('sw4.notifications');
+angular.module('sw_layout')
+    .directive('notifications', function (contextService, notificationViewModel) {
+    "ngInject";
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/notifications.html'),
@@ -88,3 +90,5 @@ app.directive('notifications', function (contextService, notificationViewModel, 
         }
     }
 });
+
+})(angular);

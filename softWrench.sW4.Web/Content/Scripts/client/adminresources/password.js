@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function(angular) {
+    "use strict";
 
-app.factory('pwdenforceService', function($rootScope, $timeout, i18NService, alertService) {
+angular.module('sw_layout')
+    .factory('pwdenforceService', ["$rootScope", "$timeout", "i18NService", "alertService", function ($rootScope, $timeout, i18NService, alertService) {
 
     return {
         checker: function(password, retype) {
@@ -20,4 +22,6 @@ app.factory('pwdenforceService', function($rootScope, $timeout, i18NService, ale
             return true;
         }
     };
-});
+}]);
+
+})(angular);

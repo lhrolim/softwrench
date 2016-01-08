@@ -1,6 +1,10 @@
-﻿var app = angular.module('sw_lookup');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('lookupModalWrapper', function ($compile,$timeout) {
+angular.module('sw_lookup')
+    .directive('lookupModalWrapper', function ($compile, $timeout) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -15,7 +19,6 @@ app.directive('lookupModalWrapper', function ($compile,$timeout) {
                 scope.datamap = {};
             }
 
-//
             element.append(
             "<lookup-modal lookup-obj='lookupObj'" +
                 "schema='schema' datamap='datamap'>" +
@@ -29,10 +32,11 @@ app.directive('lookupModalWrapper', function ($compile,$timeout) {
             }, 0, false);
         },
 
-    }
-}),
+    };
+})
+.directive('lookupModal', function (contextService) {
+    "ngInject";
 
-app.directive('lookupModal', function (contextService) {
     return {
         restrict: 'E',
         replace: true,
@@ -129,3 +133,5 @@ app.directive('lookupModal', function (contextService) {
         }
     };
 });
+
+})(angular);

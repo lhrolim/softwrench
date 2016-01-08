@@ -1,6 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('crudBodyModalWrapper', function ($compile) {
+angular.module('sw_layout')
+    .directive('crudBodyModalWrapper', function ($compile) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -24,170 +28,137 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 );
                 $compile(element.contents())(scope);
             }
-
-
         },
-
-        controller: function ($injector, $scope, $rootScope, fieldService, $element) {
+        controller: function ($scope) {
             $scope.$name = "crudbodymodalwrapper";
-
-
-
-
-
-
-            function doInit() {
-
-
-            }
-
-            doInit();
-
         }
     }
-
 });
 
+function crudBodyModal($rootScope, modalService, crudContextHolderService, schemaService) {
 
+    var controller = function($scope, $http, $filter, $injector,
+        formatService, fixHeaderService,
+        searchService, tabsService,
+        fieldService, commandService, i18NService,
+        submitService, redirectService,
+        associationService) {
+        "ngInject";
 
-(function () {
-    'use strict';
+        $scope.$name = "crudbodymodal";
+        $scope.save = function(selecteditem) {
+            $scope.savefn({ selecteditem: selecteditem });
+        };
 
+        $scope.$on('sw.modal.hide', function(event) {
+            $scope.closeModal();
+        });
 
+        $scope.closeModal = function() {
+            $scope.modalshown = false;
+            $('#crudmodal').modal('hide');
+            $rootScope.showingModal = false;
 
-    function crudBodyModal($rootScope, modalService, crudContextHolderService) {
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
+            $('.no-touch [rel=tooltip]').tooltip('hide');
+            crudContextHolderService.disposeModal();
+        };
 
-        var controller = function ($scope, $http, $filter, $injector,
-         formatService, fixHeaderService,
-         searchService, tabsService,
-         fieldService, commandService, i18NService,
-         submitService, redirectService,
-         associationService) {
+        $scope.cancel = function() {
+            $scope.closeModal();
+            if ($scope.cancelfn) {
+                $scope.cancelfn();
+            }
+        };
 
-            $scope.$name = "crudbodymodal";
+        $scope.$on('sw.modal.show', function(event, modaldata) {
+            $scope.showModal(modaldata);
+            $scope.modalshown = true;
+        });
 
-            $scope.$on('sw.modal.hide', function (event) {
-                $scope.closeModal();
-            });
+        $scope.showModal = function(modaldata) {
+            var schema = modaldata.schema;
+            var datamap = modaldata.datamap;
+            $scope.schema = schema;
+            $scope.originalsavefn = modaldata.savefn;
+            $scope.cancelfn = modaldata.cancelfn;
+            $scope.previousschema = modaldata.previousschema;
+            $scope.previousdata = modaldata.previousdata;
+            $scope.modaltitle = modaldata.title;
+            $scope.cssclass = modaldata.cssclass;
+            //by default modals, should render as detail stereotype mode
+            $scope.isDetail = schemaService.isDetail(schema, true);
+            $scope.isList = schemaService.isList(schema);
 
-            $scope.$on('sw.crud.detail.savecompleted', function (event, modaldata) {
-                if ($scope.closeAfterSave) {
-                    $scope.closeModal();
+            $scope.datamap = {
+                fields: datamap
+            };
+            var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
+            $scope.originalDatamap = angular.copy(datamapToUse);
+            fieldService.fillDefaultValues(schema.displayables, datamap);
+            $('#crudmodal').modal('show');
+            $("#crudmodal").draggable();
+            $rootScope.showingModal = true;
+            //TODO: review this decision here it might not be suitable for all the scenarios
+            crudContextHolderService.modalLoaded();
+
+            associationService.loadSchemaAssociations(datamapToUse, schema).then(function() {
+                if (modaldata.onloadfn) {
+                    modaldata.onloadfn($scope);
                 }
             });
+        };
 
-            $scope.closeModal = function () {
-                $scope.modalshown = false;
-                $('#crudmodal').modal('hide');
-                $rootScope.showingModal = false;
+        $scope.save = function(selecteditem) {
+            $scope.savefn({ selecteditem: selecteditem });
+        };
 
-                $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
-                $('.no-touch [rel=tooltip]').tooltip('hide');
-                crudContextHolderService.disposeModal();
-            }
-
-            $scope.cancel = function () {
+        $scope.$on('sw.crud.detail.savecompleted', function (event, modaldata) {
+            if ($scope.closeAfterSave) {
                 $scope.closeModal();
-                if ($scope.cancelfn) {
-                    $scope.cancelfn();
-                }
             }
+        });
 
-            $scope.$on('sw.modal.show', function (event, modaldata) {
-                $scope.showModal(modaldata);
-                $scope.modalshown = true;
+        function doInit() {
+            $injector.invoke(BaseController, this, {
+                $scope: $scope,
+                i18NService: i18NService,
+                fieldService: fieldService,
+                commandService: commandService,
+                formatService: formatService
             });
-
-            $scope.showModal = function (modaldata) {
-                var schema = modaldata.schema;
-                var datamap = modaldata.datamap;
-                $scope.schema = schema;
-                $scope.originalsavefn = modaldata.savefn;
-                $scope.cancelfn = modaldata.cancelfn;
-                $scope.previousschema = modaldata.previousschema;
-                $scope.previousdata = modaldata.previousdata;
-                $scope.modaltitle = modaldata.title;
-                $scope.cssclass = modaldata.cssclass;
-                $scope.closeAfterSave = modaldata.closeAfterSave || true;
-                //by default modals, should render as detail stereotype mode
-                schema.stereotype = schema.stereotype || "detail";
-                $scope.isList = schema.stereotype.equalsAny("list", "compositionlist");
-                $scope.isDetail = schema.stereotype.equalsAny("detail", "compositionDetail","detailnew");
-
-
-                $scope.datamap = {
-                    fields: datamap
-                };
-                var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
-                $scope.originalDatamap = angular.copy(datamapToUse);
-                fieldService.fillDefaultValues(schema.displayables, datamap);
-                $('#crudmodal').modal('show');
-                $("#crudmodal").draggable();
-                $rootScope.showingModal = true;
-                //TODO: review this decision here it might not be suitable for all the scenarios
-                crudContextHolderService.modalLoaded();
-
-                associationService.loadSchemaAssociations(datamapToUse, schema).then(function () {
-                    if (modaldata.onloadfn) {
-                        modaldata.onloadfn($scope);
-                    }
-                });
-
-            }
-
-
-            $scope.save = function (selecteditem) {
-                $scope.savefn({ selecteditem: selecteditem });
-            }
-
-            function doInit() {
-
-
-                $injector.invoke(BaseController, this, {
-                    $scope: $scope,
-                    i18NService: i18NService,
-                    fieldService: fieldService,
-                    commandService: commandService,
-                    formatService: formatService
-                });
-            }
-
-            doInit();
-
-
         }
 
-        var directive = {
-            restrict: 'E',
-            replace: true,
-            templateUrl: url('/Content/Templates/crud/crud_body_modal.html'),
-            scope: {
-                blockedassociations: '=',
-                associationSchemas: '=',
-                schema: '=',
-                datamap: '=',
-                isDirty: '=',
-                originalDatamap: '=',
-                cancelfn: '&',
-                savefn: '&',
-                paginationdata: '=',
-                searchData: '=',
-                searchOperator: '=',
-                searchSort: '=',
-                ismodal: '@',
-                checked: '='
-            },
+        doInit();
+    };
 
-            compile: function compile(tElement, tAttrs, transclude) {
-                return {
-                    post: function postLink(scope, iElement, iAttrs, controller) {
-                        var modalData = $rootScope.modalTempData;
-                        modalService.show(modalData);
-                        $rootScope.modalTempData = null;
-                    }
-                }
-            },
-            controller: controller
+    var directive = {
+        restrict: 'E',
+        replace: true,
+        templateUrl: url('/Content/Templates/crud/crud_body_modal.html'),
+        scope: {
+            blockedassociations: '=',
+            associationSchemas: '=',
+            schema: '=',
+            datamap: '=',
+            isDirty: '=',
+            originalDatamap: '=',
+            cancelfn: '&',
+            savefn: '&',
+            paginationdata: '=',
+            searchData: '=',
+            searchOperator: '=',
+            searchSort: '=',
+            ismodal: '@',
+            checked: '='
+        },
+        link: function (scope, element, attrs) {
+            var modalData = $rootScope.modalTempData;
+            modalService.show(modalData);
+            $rootScope.modalTempData = null;
+        },
+        controller: controller
+    };
 
         };
 

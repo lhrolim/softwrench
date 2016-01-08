@@ -519,7 +519,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
 
             resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
-                ApplicationSchemaFactory.GetInstance(entityName,applicationName, title, id, redeclaring, stereotype, mode, platform,
+                ApplicationSchemaFactory.GetInstance(entityName,applicationName, title, id, redeclaring,stereotypeAttr, stereotype, mode, platform,
                     isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                     userIdFieldName, unionSchema, ParseEvents(xElement)));
         }

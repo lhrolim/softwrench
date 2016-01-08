@@ -1,8 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('glcomponentService', function ($http, modalService, validationService) {
+angular.module('sw_layout')
+    .factory('glcomponentService', ["$http", "modalService", "validationService", function ($http, modalService, validationService) {
     return {
-
         // A new getGLAccount() is needed for the client profile to get their customization.
         // Have the metadata.xml redirect to that service and function.
         getGLAccount: function (datamap, schema, selecteditem, attribute) {
@@ -42,4 +43,6 @@ app.factory('glcomponentService', function ($http, modalService, validationServi
             return newdatamap; 
         }
     };
-});
+}]);
+    
+})(angular);

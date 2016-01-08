@@ -1,4 +1,9 @@
-﻿app.directive('crudInputWrapper', function (contextService, $compile, $rootScope) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('crudInputWrapper', function (contextService, $compile) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -60,6 +65,8 @@
 });
 
 app.directive('crudInput', function (contextService, associationService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -82,7 +89,6 @@ app.directive('crudInput', function (contextService, associationService) {
             composition: '@',
             ismodal: '@'
         },
-
 
         controller: function ($scope, $http, $injector, $element, alertService, printService, compositionService, commandService, fieldService, i18NService, formatService) {
 
@@ -126,8 +132,8 @@ app.directive('crudInput', function (contextService, associationService) {
                 commandService: commandService,
                 formatService: formatService
             });
-
-
         }
     };
 });
+
+})(app);
