@@ -179,6 +179,22 @@
           </commandbars>
         </schema>
 
+        <schema id="assetwolist" title="Work Orders" stereotype="compositionlist">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wonum" label="Work Order"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="schedstart" label="Scheduled Start"/>
+          <field attribute="wopriority" label="Priority"/>
+          <field attribute="siteid" label="Site"/>
+          <!--<commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>-->
+        </schema>
+
         <schema id="ahiddendetails" title="schemaForHoldingHiddensOnly" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
           <field attribute="estlabhrs"         hidden="true"/>
@@ -559,6 +575,15 @@
             <renderer type="richtext"/>
           </field>
         </detail>
+
+        <schema id="assetdetail" title="Work Order" stereotype="detail">
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="ld_.ldtext" label="Details:" requiredexpression="false"/>
+          <field attribute="assetnum" label="Asset" readonly="true" hidden="true"/>
+          <field attribute="location" label="Location" readonly="true" hidden="true"/>
+          <field attribute="reportedby" label="Reported by" default="@username" readonly="true" hidden="true"/>
+          <field attribute="reportdate" label="Reported date" default="@now" readonly="true" hidden="true"/>
+        </schema>
       </schemas>
 
     </application>
