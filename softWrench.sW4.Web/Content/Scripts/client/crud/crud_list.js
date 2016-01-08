@@ -97,6 +97,11 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 return $scope.schema.properties["list.selectionstyle"] === "multiple";
             }
 
+            this.toogleSelectedIcon = function() {
+                var showOnlySelected = crudContextHolderService.getShowOnlySelected($scope.panelid);
+                return showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
+            }
+
             $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                 if ($scope.datamap && $scope.datamap.length <= 0) {
                     // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
