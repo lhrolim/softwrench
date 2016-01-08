@@ -51,13 +51,17 @@
 		    var selectionModel = crudContextHolderService.getSelectionModel(panelid);
 			if (selected) {
 				crudContextHolderService.addSelectionToBuffer(rowId, row, panelid);
-				selectionModel.onPageSelectedCount++;
-				if (updatesSelectAll && selectionModel.onPageSelectedCount === selectionModel.pageSize) {
+			    if (selectionModel.onPageSelectedCount < selectionModel.pageSize) {
+			        selectionModel.onPageSelectedCount++;
+			    }
+			    if (updatesSelectAll && selectionModel.onPageSelectedCount === selectionModel.pageSize) {
 			    	selectionModel.selectAllValue = true;
 				}
 			} else {
-				selectionModel.onPageSelectedCount--;
-				selectionModel.selectAllValue = false;
+			    if (selectionModel.onPageSelectedCount > 0) {
+			        selectionModel.onPageSelectedCount--;
+			    }
+			    selectionModel.selectAllValue = false;
 				crudContextHolderService.removeSelectionFromBuffer(rowId, panelid);
 			}
 		}
