@@ -5,14 +5,20 @@
         //#region Utils
         // schema's first-level cache
         var schemaCache = {};
-        
+
         var keyRoot = url("") + ":schemaCache:";
         var systemInitTimeKey = keyRoot + "systeminitMillis";
 
         function restore() {
             delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
+
+
+            //wipe first-level cache
+            schemaCache = {};
             // lazy schema fetch strategy: only restore the systeminitmillis
             schemaCache.systeminitMillis = localStorage.getItem(systemInitTimeKey);
+
+
 
             //var log = $log.get("schemaCacheService#restore", ["performance"]);
             //log.debug("starting schema restore process");
@@ -42,7 +48,7 @@
 
         function getSchemaFromResult(result) {
             if (result.cachedSchemaId) {
-                var log = $log.get("schemaCacheService#getSchemaFromResult",["performance"]);
+                var log = $log.get("schemaCacheService#getSchemaFromResult", ["performance"]);
                 log.info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
                 var cachedSchema = getCachedSchema(result.applicationName, result.cachedSchemaId);
                 log.info("finish retrieving from cache".format(result.applicationName, result.cachedSchemaId));
@@ -72,6 +78,8 @@
 
             log.info("adding schema {0} retrieved to cache".format(schemaKey));
             var systeminitMillis = contextService.getFromContext("systeminittime");
+            // let´s force a wipe before we update the systeminitMillis time
+            this.wipeSchemaCacheIfNeeded();
             // in-memory first-level cache
             schemaCache[schemaKey] = schema;
             schemaCache.systeminitMillis = systeminitMillis;
@@ -95,15 +103,16 @@
                 delete localStorage[url("") + ":schemaCache"]; // deleting 'deprecated' cache model
 
                 Object.keys(localStorage)
-                    .filter(function(key) {
-                        key.startsWith(keyRoot);
+                    .filter(function (key) {
+                        return key.startsWith(keyRoot);
                     })
                     .forEach(function (schemakey) {
                         delete localStorage[schemakey];
                     });
+                //wipe first-level cache
+                schemaCache = { systeminitMillis: systeminitMillis };
             }
-            // always wipe first-level cache
-            schemaCache = { systeminitMillis: systeminitMillis };
+
         }
         //#endregion
 
