@@ -12,11 +12,11 @@
   </commandgroup>
 
   <commandgroup position="gridtop.selection" platform="web">
-    <command id="toggleselectionmode" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.grid.toggleeditmode,schema"
-                  position="+profiles"/>
-    
-    <command id="toogleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"
-                 tooltip="Toogle selected" parameters="sw_toogleselected,schema" position="+profiles"/>
+<!--    <command id="toggleselectionmode" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.grid.toggleeditmode,schema"-->
+<!--                  position="+profiles"/>-->
+<!--    -->
+<!--    <command id="toogleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"-->
+<!--                 tooltip="Toogle selected" parameters="sw_toogleselected,schema" position="+profiles"/>-->
   </commandgroup>
 
   <commandgroup position="gridbottom" platform="web">
