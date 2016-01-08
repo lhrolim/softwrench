@@ -35,16 +35,15 @@ angular.module('sw_layout')
                 return true;
             }
             var expression = command.showExpression;
-            if (expression == undefined || expression == "") {
+            if (expression == undefined || expression === "") {
                 return false;
             }
-            var expressionToEval = expressionService.getExpression(expression, datamap);
-            return !eval(expressionToEval);
+            return !expressionService.evaluate(expression, datamap, { schema: schema }, null);
         },
 
         isCommandEnabled: function (datamap, schema, command, tabId) {
             var expression = command.showExpression;
-            if (expression == undefined || expression == "") {
+            if (expression == undefined || expression === "") {
                 return false;
             }
             var expressionToEval = expressionService.getExpression(expression, datamap);
