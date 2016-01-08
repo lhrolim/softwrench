@@ -29,8 +29,8 @@ namespace softWrench.sW4.Metadata.Stereotypes {
                 return new Dictionary<string, string>();
             }
 
-            public void Merge(IStereotype stereotype) {
-
+            public IStereotype Merge(IStereotype stereotype) {
+                return this;
             }
         }
 

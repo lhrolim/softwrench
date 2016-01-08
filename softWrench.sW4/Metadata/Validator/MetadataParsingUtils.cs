@@ -7,7 +7,7 @@ using softWrench.sW4.Metadata.Properties;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Validator {
-    class MetadataParsingUtils {
+    public class MetadataParsingUtils {
 
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";

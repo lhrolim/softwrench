@@ -108,12 +108,11 @@
             },
 
             fillDefaultValues: function (displayables, datamap, scope) {
-                var fn = this.fillDefaultValues;
                 $.each(displayables, function (key, value) {
                     var target = value.attribute;
                     if (value.displayables && value.displayables.length > 0) {
                         //section
-                        fn.call(this, value.displayables, datamap, scope);
+                        api.fillDefaultValues(value.displayables, datamap, scope);
                     }
 
                     //Only continues if datmap for the current attribute is null

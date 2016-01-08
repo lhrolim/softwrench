@@ -1,4 +1,4 @@
-﻿(function (angular) {
+(function (angular) {
     "use strict";
 
 var app = angular.module('sw_layout');
@@ -98,11 +98,11 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     return false;
                 }
                 return "multiple" === $scope.schema.properties["list.selectionstyle"];
-            }
+                }
 
             this.toggleSelectedIcon = function() {
                 return $scope.selectionModel.showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
-            }
+                    }
 
             $scope.gridRefreshed = function (data, panelId) {
                 if (!!$scope.panelid && $scope.panelid !== panelId) {
@@ -237,6 +237,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 }
                 $scope.selectPage(pagetogo, pageSize, printmode);
             };
+
+            $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
+                if (!$scope.schema.properties || !$scope.schema.properties[propertyName]) {
+                    return defaultProperty;
+                }
+                return $scope.schema.properties[propertyName];
+            }
 
             $scope.quickSearch = function (filterdata) {
                 $scope.searchData = {};

@@ -101,7 +101,7 @@ namespace softWrench.sW4.Metadata {
                 _commandBars = commandsInitializer.Validate();
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
 
-                _mergedStereotypes = StereotypeFactory.MergeStereotypes(_globalStereotypes,_metadataXmlInitializer.InitializeCustomerStereotypes());
+                _mergedStereotypes = StereotypeFactory.MergeStereotypes(_globalStereotypes, _metadataXmlInitializer.InitializeCustomerStereotypes());
 
                 _metadataXmlInitializer.Validate(_commandBars);
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
@@ -341,7 +341,7 @@ namespace softWrench.sW4.Metadata {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
 
-                _metadataXmlInitializer.Validate(_commandBars,  data);
+                _metadataXmlInitializer.Validate(_commandBars, data);
 
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
                 _swdbmetadataXmlInitializer.Validate(_commandBars);
@@ -419,8 +419,8 @@ namespace softWrench.sW4.Metadata {
         }
 
         [NotNull]
-        public static IStereotype Stereotype(string id) {
-            if (_mergedStereotypes.ContainsKey(id)) {
+        public static IStereotype Stereotype([CanBeNull]string id) {
+            if (id != null &&_mergedStereotypes.ContainsKey(id)) {
                 return _mergedStereotypes[id];
             }
             return new BlankStereotype();
@@ -430,8 +430,9 @@ namespace softWrench.sW4.Metadata {
 
             private IDictionary<string, string> _properties = new Dictionary<string, string>();
 
-            public void Merge(IStereotype stereotype) {
+            public IStereotype Merge(IStereotype stereotype) {
                 _properties = stereotype.StereotypeProperties();
+                return this;
             }
 
             public IDictionary<string, string> StereotypeProperties() {

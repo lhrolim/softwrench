@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <stereotypes xmlns="http://www.controltechnologysolutions.com/stereotypes" >
-  
+
   <stereotype id="list">
     <property key="list.click.mode" value="input"/>
     <property key="list.click.popup" value="none"/>
@@ -12,6 +12,11 @@
   <stereotype id="list.selection">
     <property key="list.selectionstyle" value="multiple"/>
     <property key="commandbar.top" value="gridtop.selection"/>
+  </stereotype>
+
+
+  <stereotype id="list.composition">
+    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
   </stereotype>
 
   <stereotype id="detail">
@@ -26,7 +31,7 @@
   </stereotype>
 
   <stereotype id="compositiondetail">
-    
+
   </stereotype>
 
   <stereotype id="detailnew">
@@ -40,11 +45,8 @@
 
   <!---END TODO-->
 
-  
-  <stereotype id="list.composition">
-    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
-  </stereotype>
- 
+
+
 
   <stereotype id="detail.new"/>
 
@@ -54,9 +56,9 @@
 
 
   <stereotype id="filter">
-    
+
   </stereotype>
-  
-  
-  
+
+
+
 </stereotypes>
