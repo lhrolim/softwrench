@@ -43,6 +43,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/client/signin/signin.js"
                 ));
 
+            // app scripts
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application")
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
                 .Include(
