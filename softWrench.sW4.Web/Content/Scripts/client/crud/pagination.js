@@ -84,12 +84,8 @@ app.directive('pagination', ["contextService", function (contextService) {
                 $('.pagination-pager').css({ 'margin-left': marginLeft });
             }
 
-            $scope.isSameSchema = function(schema) {
-                return $scope.schema.applicationName === schema.applicationName && $scope.schema.schemaId === schema.schemaId;
-            }
-
             $scope.shouldShowPagination = function() {
-                return !crudContextHolderService.getShowOnlySelected($scope.panelid);
+                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
             }
 
             //$scope.$on("sw_redirectapplicationsuccess", function (event) {

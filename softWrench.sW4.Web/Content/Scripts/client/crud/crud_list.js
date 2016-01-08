@@ -34,13 +34,13 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             "formatService", "fixHeaderService", "alertService",
             "searchService", "tabsService",
             "fieldService", "commandService", "i18NService",
-            "validationService", "submitService", "redirectService", "crudContextHolderService",
+            "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
             "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
             function ($scope, $http, $rootScope, $filter, $injector, $log,
                 formatService, fixHeaderService, alertService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
-                validationService, submitService, redirectService, crudContextHolderService,
+                validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                 associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService,  schemaCacheService) {
 
             $scope.$name = "crudlist";
@@ -93,96 +93,16 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 return $scope.shouldShowGridNavigation() && defaultCondition;
             };
 
-            this.shouldshowtoogleselected = function () {
-                return $scope.schema.properties["list.selectionstyle"] === "multiple";
+            this.shouldshowtoggleselected = function () {
+                if (!$scope.schema || !$scope.schema.properties) {
+                    return false;
+                }
+                return "multiple" === $scope.schema.properties["list.selectionstyle"];
             }
 
-            this.toogleSelectedIcon = function() {
-                var showOnlySelected = crudContextHolderService.getShowOnlySelected($scope.panelid);
-                return showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
+            this.toggleSelectedIcon = function() {
+                return $scope.selectionModel.showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
             }
-
-            $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
-                if ($scope.datamap && $scope.datamap.length <= 0) {
-                    // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
-                    fixHeaderService.updateFilterZeroOrOneEntries();
-                    // update table heigth (for ie9)
-                }
-            });
-
-            $scope.$on("listTableRenderedEvent", function (listTableRenderedEvent) {
-                var log = $log.getInstance("sw4.crud_list_dir#on#listTableRenderedEvent");
-                log.debug("init table rendered listener");
-
-                var parameters = {
-                    fullKey: $scope.schema.properties["config.fullKey"],
-                    searchData: $scope.searchData
-                };
-                eventService.onload($scope, $scope.schema, $scope.datamap, parameters);
-
-                if ($scope.ismodal === "true" && !(true === $scope.$parent.showingModal)) {
-                    return;
-                }
-
-                var params = {};
-                fixHeaderService.fixThead($scope.schema, params);
-                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
-                if (onLoadMessage) {
-                    alertService.notifymessage("success", onLoadMessage);
-                }
-
-                // fix status column height
-                $(".statuscolumncolor").each(function (key, value) {
-                    if (contextService.isClient("hapag")) {
-                        $(value).height($(value).parent().parent().parent().parent().parent().height());
-                    }
-                });
-
-                //restore the last scroll position, else scroll to the top of the page
-                var scrollObject = contextService.fetchFromContext("scrollto", true);
-
-                if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
-                    scrollPosition = scrollObject.scrollTop;
-                } else {
-                    scrollPosition = 0;
-                }
-
-                $timeout(
-                    function () {
-                        window.scrollTo(0, scrollPosition);
-                        log.info("Scroll To", scrollPosition, scrollObject);
-                    }, 100, false);
-
-                $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
-                log.debug("finish table rendered listener");
-            });
-
-
-            $scope.$on("sw_togglefiltermode", function (event, setToBasicMode) {
-                $scope.vm.quickSearchData = "";
-                $scope.searchData = {};
-                $scope.$broadcast("sw_clearAdvancedFilter");
-                $scope.advancedfiltermode = !setToBasicMode;
-                fixHeaderService.callWindowResize();
-
-                angular.forEach($scope.searchData, function(data, key) {
-                    $scope.searchData[key] = "";
-                });
-
-                var operator = searchService.getSearchOperationBySymbol("");
-                angular.forEach($scope.searchOperator, function(op, key) {
-                    $scope.searchOperator[key] = operator;
-                });
-            });
-
-            $scope.$on("sw_gridrefreshed", function (event, data, panelId) {
-                $scope.gridRefreshed(data, panelId);
-            });
-
-            // When changing grids the search sort should be cleared
-            $scope.$on("sw_gridchanged", function(event) {
-                $scope.searchSort = {};
-            });
 
             $scope.gridRefreshed = function (data, panelId) {
                 if (!!$scope.panelid && $scope.panelid !== panelId) {
@@ -254,48 +174,29 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             }
 
             $scope.gridDataChanged = function(datamap) {
-                // if show only selected recovers the selected buffer to show
-                // also update the total count of pagination
-                var newDatamap;
-                var showOnlySelected = crudContextHolderService.getShowOnlySelected($scope.panelid);
-                if (!showOnlySelected) {
-                    newDatamap = datamap;
-                    var paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
-                    if (paginationData) {
-                        $scope.paginationData.totalCount = paginationData.totalCount;
+                if ($scope.schema.properties["list.selectionstyle"] === "multiple") {
+                    // if show only selected recovers the selected buffer to show
+                    // also update the total count of pagination
+                    if (!$scope.selectionModel.showOnlySelected) {
+                        var paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
+                        if (paginationData) {
+                            $scope.paginationData.totalCount = paginationData.totalCount;
+                        }
+                    } else {
+                        var selectionBuffer = $scope.selectionModel.selectionBuffer;
+                        datamap = [];
+                        for (var o in selectionBuffer) {
+                            datamap.push(selectionBuffer[o]);
+                        }
+                        crudContextHolderService.setOriginalPaginationData($scope.paginationData, $scope.panelid);
+                        $scope.paginationData.totalCount = datamap.length;
                     }
-                } else {
-                    var selectionBuffer = crudContextHolderService.getSelectionBuffer($scope.panelid);
-                    newDatamap = [];
-                    for (var o in selectionBuffer) {
-                        newDatamap.push(selectionBuffer[o]);
-                    }
-                    crudContextHolderService.setOriginalPaginationData($scope.paginationData, $scope.panelid);
-                    $scope.paginationData.totalCount = newDatamap.length;
+
+                    gridSelectionService.gridDataChanged(datamap, $scope.schema, $scope.panelid);
                 }
 
-                var hasMultipleSelector = $scope.schema.properties["list.selectionstyle"] === "multiple";
-                if (hasMultipleSelector) {
-                    // inits selectall checkbox with true and updates on loop
-                    $scope.selectAllBuffer.selectAllValue = newDatamap.length > 0;
-
-                    for (var i = 0; i < newDatamap.length; i++) {
-                        // updates selector checkbox than updates the select all checkbox
-                        var selected = $scope.recoverSelected(datamap[i]);
-                        $scope.selectAllBuffer.selectAllValue = $scope.selectAllBuffer.selectAllValue && selected;
-                    }
-                }
-
-                $scope.$broadcast("sw_griddatachanged", newDatamap, $scope.schema, $scope.panelid);
-            }
-
-            // recover the state of a selector checkbox from buffer
-            $scope.recoverSelected = function (row) {
-                var buffer = crudContextHolderService.getSelectionBuffer($scope.panelid);
-                var rowId = row.fields[$scope.schema.idFieldName];
-                var selected = Boolean(buffer[rowId]);
-                row.fields["_#selected"] = selected;
-                return selected;
+                // dispatching event for crud_tbody.js render the grid
+                $scope.$broadcast("sw_griddatachanged", datamap, $scope.schema, $scope.panelid);
             }
 
             $scope.refreshGridRequested = function (searchData, extraparameters) {
@@ -336,10 +237,6 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 }
                 $scope.selectPage(pagetogo, pageSize, printmode);
             };
-
-            $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
-                $scope.refreshGridRequested(searchData, extraparameters);
-            });
 
             $scope.quickSearch = function (filterdata) {
                 $scope.searchData = {};
@@ -506,22 +403,111 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 });
             }
 
+            // called when the state of select all checkbox changes from user action
             $scope.selectAllChanged = function () {
-                $scope.$broadcast("sw_selectallchanged", $scope.datamap, $scope.selectAllBuffer.selectAllValue, $scope.panelid);
+                gridSelectionService.selectAllChanged($scope.datamap, $scope.schema, $scope.panelid);
             }
 
             $scope.shouldShowGridNavigation = function() {
-                return !crudContextHolderService.getShowOnlySelected($scope.panelid);
+                return !$scope.selectionModel.showOnlySelected;
             }
 
-            $scope.$on('sw_toogleselected', function (event, args) {
+            //#region eventlisteners
+            $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
+                if ($scope.datamap && $scope.datamap.length <= 0) {
+                    // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
+                    fixHeaderService.updateFilterZeroOrOneEntries();
+                    // update table heigth (for ie9)
+                }
+            });
+
+            $scope.$on("listTableRenderedEvent", function (listTableRenderedEvent) {
+                var log = $log.getInstance("sw4.crud_list_dir#on#listTableRenderedEvent");
+                log.debug("init table rendered listener");
+
+                var parameters = {
+                    fullKey: $scope.schema.properties["config.fullKey"],
+                    searchData: $scope.searchData
+                };
+                eventService.onload($scope, $scope.schema, $scope.datamap, parameters);
+
+                if ($scope.ismodal === "true" && !(true === $scope.$parent.showingModal)) {
+                    return;
+                }
+
+                var params = {};
+                fixHeaderService.fixThead($scope.schema, params);
+                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
+                if (onLoadMessage) {
+                    alertService.notifymessage("success", onLoadMessage);
+                }
+
+                // fix status column height
+                $(".statuscolumncolor").each(function (key, value) {
+                    if (contextService.isClient("hapag")) {
+                        $(value).height($(value).parent().parent().parent().parent().parent().height());
+                    }
+                });
+
+                //restore the last scroll position, else scroll to the top of the page
+                var scrollObject = contextService.fetchFromContext("scrollto", true);
+
+                if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
+                    scrollPosition = scrollObject.scrollTop;
+                } else {
+                    scrollPosition = 0;
+                }
+
+                $timeout(
+                    function () {
+                        window.scrollTo(0, scrollPosition);
+                        log.info("Scroll To", scrollPosition, scrollObject);
+                    }, 100, false);
+
+                $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
+                log.debug("finish table rendered listener");
+            });
+
+
+            $scope.$on("sw_togglefiltermode", function (event, setToBasicMode) {
+                $scope.vm.quickSearchData = "";
+                $scope.searchData = {};
+                $scope.$broadcast("sw_clearAdvancedFilter");
+                $scope.advancedfiltermode = !setToBasicMode;
+                fixHeaderService.callWindowResize();
+
+                angular.forEach($scope.searchData, function (data, key) {
+                    $scope.searchData[key] = "";
+                });
+
+                var operator = searchService.getSearchOperationBySymbol("");
+                angular.forEach($scope.searchOperator, function (op, key) {
+                    $scope.searchOperator[key] = operator;
+                });
+            });
+
+            $scope.$on("sw_gridrefreshed", function (event, data, panelId) {
+                $scope.gridRefreshed(data, panelId);
+            });
+
+            // When changing grids the search sort should be cleared
+            $scope.$on("sw_gridchanged", function (event) {
+                $scope.searchSort = {};
+            });
+
+            $scope.$on('sw.crud.list.toggleselected', function (event, args) {
                 var panelid = args[0];
                 if ($scope.panelid !== panelid) {
                     return;
                 }
-                crudContextHolderService.toogleShowOnlySelected($scope.panelid);
+                crudContextHolderService.toggleShowOnlySelected($scope.panelid);
                 $scope.gridDataChanged(crudContextHolderService.rootDataMap($scope.panelid));
             });
+
+            $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
+                $scope.refreshGridRequested(searchData, extraparameters);
+            });
+            //#endregion
 
             function initController() {
                 $injector.invoke(BaseController, this, {
@@ -540,7 +526,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     commandService: commandService
                 });
 
-                $scope.selectAllBuffer = crudContextHolderService.getSelectAllBuffer();
+                $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
                 var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
                 if (dataRefreshed) {

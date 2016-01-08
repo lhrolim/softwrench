@@ -166,7 +166,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceServic
             });
 
             $scope.shouldShowRefreshButton = function() {
-                return !crudContextHolderService.getShowOnlySelected($scope.panelid);
+                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
             }
         }
     ]);

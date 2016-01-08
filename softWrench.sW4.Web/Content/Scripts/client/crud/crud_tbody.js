@@ -87,7 +87,7 @@ function parseBooleanValue(attrValue) {
 window.parseBooleanValue = parseBooleanValue;
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, crudContextHolderService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService) {
     "ngInject";
 
     return {
@@ -304,48 +304,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             // called whenever a selector checkbox changes state
             // updates the buffer and possibly the selectall state
             scope.selectChanged = function (row, datamap) {
-                var selected = row.fields["_#selected"];
-                var rowId = row.fields[scope.schema.idFieldName];
-                if (selected) {
-                    crudContextHolderService.addSelectionToBuffer(rowId, row, scope.panelid);
-                    if (datamap) {
-                        scope.refreshSelectAll(datamap);
-                    }
-                } else {
-                    crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
-                    crudContextHolderService.removeSelectionFromBuffer(rowId, scope.panelid);
-                }
-            }
-
-            // updates the state of selectall checkbox based on
-            // state of all selector checkboxes of the page
-            scope.refreshSelectAll = function (datamap) {
-                for (var i = 0; i < datamap.length; i++) {
-                    var row = datamap[i];
-                    if (!row.fields["_#selected"]) {
-                        crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
-                        return;
-                    }
-                }
-                crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = true;
+                gridSelectionService.selectionChanged(row, datamap, scope.schema, true, scope.panelid);
             }
 
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                 if (panelid == scope.panelid) {
                     scope.refreshGrid(datamap, schema);
-                }
-            });
-
-            // called when the state of select all checkbox changes from user action
-            // updates the state of all selector checkboxes from page
-            scope.$on('sw_selectallchanged', function (event, datamap, selectedValue, panelid) {
-                if (panelid !== scope.panelid) {
-                    return;
-                }
-
-                for (var i = 0; i < datamap.length; i++) {
-                    datamap[i].fields["_#selected"] = selectedValue;
-                    scope.selectChanged(datamap[i]);
                 }
             });
 
