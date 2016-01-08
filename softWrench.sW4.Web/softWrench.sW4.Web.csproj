@@ -550,8 +550,6 @@
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
-    <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
-    <Content Include="Content\Scripts\vendor\angular\angular.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-clipboard.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
@@ -636,21 +634,21 @@
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
-    <Content Include="Content\Scripts\vendor\other\angular-file-dnd.js" />
+    <Content Include="Content\customVendor\scripts\angular-file-dnd.js" />
     <Content Include="Content\Scripts\vendor\other\angular-ui-select.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-datetimepicker.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\de.js" />
     <Content Include="Content\Scripts\vendor\moment\locales\es.js" />
     <Content Include="Content\Scripts\vendor\other\lz-string.js" />
-    <Content Include="Content\Scripts\vendor\other\selectize\selectize.js" />
-    <Content Include="Content\Scripts\vendor\other\selectize\angular-selectize.js" />
-    <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
+    <Content Include="Content\customVendor\scripts\selectize.js" />
+    <Content Include="Content\customVendor\scripts\angular-selectize.js" />
+    <Content Include="Content\customVendor\scripts\textAngular-setup.js" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latin.woff2" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latinext.woff2" />
     <Content Include="Content\fonts\gstatic-varela-ff.woff" />
     <Content Include="Content\fonts\gstatic-varela-ie9.eot" />
     <Content Include="Content\fonts\gstatic-varela-ie9local.eot" />
-    <Content Include="Content\Scripts\vendor\other\tableau\tableau-2.0.0-min.js" />
+    <Content Include="Content\customVendor\scripts\tableau-2.0.0-min.js" />
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
     <Content Include="Content\styles\default\vendor\vendor.scss" />
@@ -661,7 +659,6 @@
     <None Include="Content\styles\default\_button.scss" />
     <None Include="Content\styles\default\vendor\_xeditable.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.min.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-multiselect.js" />
@@ -701,13 +698,10 @@
     <Content Include="Content\Scripts\customers\shared\relatedrecord_service.js" />
     <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
     <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-filedownload-1.2.0.js" />
-    <Content Include="Content\Scripts\vendor\jquery\z_jquery-fileupload-5.40.1.js" />
-    <Content Include="Content\Scripts\vendor\other\angular-fileUpload.js" />
-    <Content Include="Content\Scripts\vendor\other\jquery.scannerdetection.js" />
+    <Content Include="Content\customVendor\scripts\jquery.scannerdetection.js" />
     <Content Include="Content\Scripts\vendor\other\moment.js" />
-    <Content Include="Content\Scripts\vendor\other\textAngular-min.js" />
-    <Content Include="Content\Scripts\vendor\other\textAngular-sanitize.js" />
+    <Content Include="Content\customVendor\scripts\textAngular.js" />
+    <Content Include="Content\customVendor\scripts\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />
@@ -734,7 +728,6 @@
     <Content Include="Content\Scripts\client\crud\home.js" />
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
-    <Content Include="Content\Scripts\vendor\other\spin-min.js" />
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
     <Content Include="Content\styles\default\_sw-colors.scss" />
     <None Include="Content\styles\default\_tooltips.scss" />
@@ -1281,10 +1274,6 @@
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_zh.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_zu-za.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_zu.js" />
-    <None Include="Content\Scripts\vendor\jquery\jquery-2.0.3.intellisense.jsa" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-2.0.3-max.js" />
-    <None Include="Content\Scripts\vendor\jquery\jquery-2.0.3.min.jsa" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-file-style.js" />
     <Content Include="Content\Scripts\vendor\other\knockout-2.2.0.debug.js" />
     <Content Include="Content\Scripts\vendor\other\knockout-2.2.0.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\modal.js" />
@@ -1339,7 +1328,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
-    <Folder Include="Content\customVendor\scripts\" />
     <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Content\vendor\css\" />
     <Folder Include="Content\vendor\fonts\" />
