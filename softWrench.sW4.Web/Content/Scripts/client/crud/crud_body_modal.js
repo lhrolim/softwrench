@@ -70,7 +70,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $scope.closeModal();
             });
 
-            $scope.$on('sw.crud.savecompleted', function (event, modaldata) {
+            $scope.$on('sw.crud.detail.savecompleted', function (event, modaldata) {
                 if ($scope.closeAfterSave) {
                     $scope.closeModal();
                 }

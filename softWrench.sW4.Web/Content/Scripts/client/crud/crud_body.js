@@ -490,7 +490,7 @@ app.directive('crudBody', function (contextService) {
                         successCbk(data);
                     }
 
-                    $scope.$emit('sw.crud.savecompleted', data);
+                    $scope.$emit('sw.crud.detail.savecompleted', data);
                 }).error(function (data) {
                     if (failureCbk != null) {
                         failureCbk(data);
