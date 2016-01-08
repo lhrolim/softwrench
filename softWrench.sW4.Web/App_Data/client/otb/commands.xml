@@ -12,7 +12,7 @@
   </commandgroup>
 
   <commandgroup position="gridtop.selection" platform="web">
-    <command id="toggleselectionmode" icon="$scope:toogleSelectedIcon" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.grid.toggleeditmode,panelid"
+    <command id="toggleselectionmode" icon="$scope:toogleSelectedIcon" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.crud.grid.toggleselectionmode,panelid"
                   position="+profiles"/>
     
     <command id="toogleselected" icon="$scope:toogleSelectedIcon" service="dispatcherService" method="dispatchevent"

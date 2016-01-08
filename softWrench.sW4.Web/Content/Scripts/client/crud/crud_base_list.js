@@ -127,7 +127,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
     };
 
-    $scope.showDetail = function (rowdm, column) {
+    $scope.showDetail = function (rowdm, column, forceEdition) {
 
         var mode = $scope.schema.properties['list.click.mode'];
         var popupmode = $scope.schema.properties['list.click.popupmode'];
@@ -135,7 +135,15 @@ function BaseList($scope, formatService, expressionService, searchService, field
         var fullServiceName = $scope.schema.properties['list.click.service'];
         var editDisabled = $scope.schema.properties['list.disabledetails'];
 
-        if (popupmode == "report") {
+        var selectionModel = crudContextHolderService.getSelectionModel();
+
+        if (selectionModel.selectionMode && !forceEdition) {
+            rowdm.fields["_#selected"] = !rowdm.fields["_#selected"];
+            return;
+        }
+
+
+        if (popupmode === "report") {
             return;
         }
 
@@ -143,7 +151,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
             mode = expressionService.evaluate(mode, rowdm);
         }
 
-        if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
+        if ("true" === editDisabled && nullOrUndef(fullServiceName)) {
             return;
         }
 

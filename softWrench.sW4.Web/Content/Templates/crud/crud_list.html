@@ -15,7 +15,7 @@
                              search-template="searchTemplate"
                              panelid="panelid"
                              class="gridtop" />
-                
+
                 <!-- quick search input -->
                 <div ng-show="shouldShowGridNavigation()" class="quick-search col-xs-4">
                     <div class="input-group">
@@ -43,9 +43,9 @@
                             panelid="panelid"
                             pagination-simple-layout />
             </div>
-        
+
         </div>
-        
+
         <!--<div class="filter-container">
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
@@ -61,9 +61,9 @@
                         schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
                         panelid="panelid"
-                        search-operator="searchOperator"/>
+                        search-operator="searchOperator" />
         </div>
-        
+
         <!--<div class="filter-container">
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
@@ -72,7 +72,7 @@
                 </crud-filter-bar>
             </div>
         </div>-->
-    
+
     </div>
 
     <!-- search filters: dettached from the entity table -->
@@ -93,6 +93,7 @@
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
                     </th>
+
                     <th class="{{safeCSSselector(column.attribute)}}"
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)">
@@ -117,6 +118,10 @@
                         </div>
                     </th>
                     <th class="clear"><!--SWWEB-841--></th>
+
+                    <th ng-show="selectionModel.selectionMode">
+                        <!--Selection mode active... should render an extra icon to open up the details-->
+                    </th>
                 </tr>
 
             </thead>
@@ -131,8 +136,7 @@
         <br />
         <br />
         <div id="affixpagination1" class="hiddenonprint context clearfix hiddenonprint">
-            <gridtoolbar
-                         position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"
+            <gridtoolbar position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"
                          schema="schema"
                          pagination-data="paginationData"
                          search-sort="searchSort"

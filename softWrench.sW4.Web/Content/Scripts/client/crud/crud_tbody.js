@@ -1,364 +1,384 @@
 ﻿(function (angular) {
     "use strict";
 
-var app = angular.module('sw_layout');
+    var app = angular.module('sw_layout');
 
-function griditemclick(rowNumber, columnNumber, element) {
-    //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
-    //with this, we can generate the table without compiling it to angular, making it faster
-    //first tests pointed a 100ms gain, but need to gather more data.
-    var scope = angular.element(element).scope();
-    if (scope.showDetail) {
-        scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
-    }
-}
-
-window.griditemclick = griditemclick;
-
-function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
-    var st = "";
-    if (updatable) {
-        st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
-    } else {
-        st += '<div class="cell-wrapper"';
-
-        if (background) {
-            st += 'style="background:' + background + ';color:' + foreground + '"';
+    function griditemclick(rowNumber, columnNumber, element,forceEdition) {
+        //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
+        //with this, we can generate the table without compiling it to angular, making it faster
+        //first tests pointed a 100ms gain, but need to gather more data.
+        var scope = angular.element(element).scope();
+        if (scope.showDetail) {
+            scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber], forceEdition);
         }
+        scope.$digest();
+    }
 
-        st += '>';
+    window.griditemclick = griditemclick;
 
-        if (formattedText != null) {
-            st += formattedText;
+    function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
+        var st = "";
+        if (updatable) {
+            st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
         } else {
-            st += '&nbsp';
+            st += '<div class="cell-wrapper"';
+
+            if (background) {
+                st += 'style="background:' + background + ';color:' + foreground + '"';
+            }
+
+            st += '>';
+
+            if (formattedText != null) {
+                st += formattedText;
+            } else {
+                st += '&nbsp';
+            }
         }
+
+        return st;
     }
 
-    return st;
-}
+    window.defaultAppending = defaultAppending;
 
-window.defaultAppending = defaultAppending;
+    function buildStyle(minWidth, maxWidth, width, isdiv) {
+        if (minWidth == undefined && maxWidth == undefined && width == undefined) {
+            return "";
+        }
+        var style = "style=\"";
+        if (minWidth != undefined) {
+            style += 'min-width:' + minWidth + ";";
+        }
+        if (isdiv && maxWidth != undefined) {
+            //we cannot set max-widths for the tds
+            style += 'max-width:' + maxWidth + ";";
+        }
+        if (width != undefined) {
+            style += 'width:' + width + ";";
+        }
+        return style + " \"";
+    };
 
-function buildStyle(minWidth, maxWidth, width, isdiv) {
-    if (minWidth == undefined && maxWidth == undefined && width == undefined) {
-        return "";
+    window.buildStyle = buildStyle;
+
+    /// <summary>
+    /// create a class based on column value
+    /// </summary>
+    /// <param name="column"></param>
+    /// <param name="formattedText"></param>
+    /// <returns type="string">html class</returns>
+    function hasDataClass(column, formattedText) {
+        var classString = '';
+
+        if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
+            classString = 'has-data';
+        } else {
+            classString = 'no-data';
+        }
+
+        return classString;
     }
-    var style = "style=\"";
-    if (minWidth != undefined) {
-        style += 'min-width:' + minWidth + ";";
-    }
-    if (isdiv && maxWidth != undefined) {
-        //we cannot set max-widths for the tds
-        style += 'max-width:' + maxWidth + ";";
-    }
-    if (width != undefined) {
-        style += 'width:' + width + ";";
-    }
-    return style + " \"";
-};
 
-window.buildStyle = buildStyle;
+    window.hasDataClass = hasDataClass;
 
-/// <summary>
-/// create a class based on column value
-/// </summary>
-/// <param name="column"></param>
-/// <param name="formattedText"></param>
-/// <returns type="string">html class</returns>
-function hasDataClass(column, formattedText) {
-    var classString = '';
-
-    if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
-        classString = 'has-data';
-    } else {
-        classString = 'no-data';
+    function parseBooleanValue(attrValue) {
+        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
     }
 
-    return classString;
-}
+    window.parseBooleanValue = parseBooleanValue;
 
-window.hasDataClass = hasDataClass;
+    app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
+        fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, crudContextHolderService) {
+        "ngInject";
 
-function parseBooleanValue(attrValue) {
-    return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
-}
+        return {
+            restrict: 'A',
+            replace: false,
+            scope: {
+                datamap: '=',
+                schema: '=',
+                panelid: '='
+            },
+            template: "",
+            link: function (scope, element, attrs) {
 
-window.parseBooleanValue = parseBooleanValue;
+                scope.selectionModel = crudContextHolderService.getSelectionModel();
 
-app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, crudContextHolderService) {
-    "ngInject";
+                scope.cursortype = function () {
+                    var editDisabled = scope.schema.properties['list.disabledetails'];
+                    return "true" !== editDisabled ? "pointer" : "default";
+                };
 
-    return {
-        restrict: 'A',
-        replace: false,
-        scope: {
-            datamap: '=',
-            schema: '=',
-            panelid: '='
-        },
-        template: "",
-        link: function (scope, element, attrs) {
+                scope.statusColor = function (status, gridname) {
+                    return statuscolorService.getColor(status, scope.schema.applicationName);
+                };
 
-            scope.cursortype = function () {
-                var editDisabled = scope.schema.properties['list.disabledetails'];
-                return "true" != editDisabled ? "pointer" : "default";
-            };
+                scope.getGridColumnStyle = function (column, propertyName, highResolution) {
+                    if (column.rendererParameters != null) {
+                        //sections for instance dont have it
+                        var property = column.rendererParameters[propertyName];
 
-            scope.statusColor = function (status, gridname) {
-                return statuscolorService.getColor(status, scope.schema.applicationName);
-            };
-
-            scope.getGridColumnStyle = function (column, propertyName, highResolution) {
-                if (column.rendererParameters != null) {
-                    //sections for instance dont have it
-                    var property = column.rendererParameters[propertyName];
-
-                    if (property != null) {
-                        return property;
+                        if (property != null) {
+                            return property;
+                        }
                     }
-                }
 
-                if (propertyName == 'maxwidth') {
-                    if (highResolution) {
-                        return '135px';
+                    if (propertyName == 'maxwidth') {
+                        if (highResolution) {
+                            return '135px';
+                        }
+                        return '100px';
                     }
-                    return '100px';
+                    return null;
                 }
-                return null;
-            }
 
 
-            scope.appendDateTimeComponent = function (columnSt, rendererParameters, attribute, openCalendarTooltip) {
+                scope.appendDateTimeComponent = function (columnSt, rendererParameters, attribute, openCalendarTooltip) {
 
-                var st = "<input type=\"text\" ng-model=\"{0}.fields[{1}]\" data-date-time  class=\"form-control\" ".format(columnSt, attribute);
-                st += " data-show-time=\"{0}\" ".format(parseBooleanValue(rendererParameters['showtime']));
-                st += " data-show-date=\"{0}\"".format(parseBooleanValue(rendererParameters['showdate']));
-                st += " data-date-format=\"{0}\"".format(rendererParameters['format']);
-                st += " data-show-meridian=\"{0}\"".format(parseBooleanValue(rendererParameters['showmeridian']));
-                st += " data-allow-past=\"{0}\"".format(parseBooleanValue(rendererParameters['allowpast']));
-                st += " data-allow-future=\"{0}\" >".format(parseBooleanValue(rendererParameters['allowfuture']));
-                st += "<span class=\"input-group-addon\" data-calendericon=\"true\" rel=\"tooltip\" ";
-                st += " data-original-title=\"{0}\" style=\"cursor: pointer;\">".format(openCalendarTooltip);
-                st += "<i class=\"datetime-class\"></i></span>";
-                return st;
-            }
-
-            scope.loadIcon = function (value, metadata) {
-                return iconService.loadIcon(value, metadata);
-            };
-
-            scope.refreshGrid = function (datamap, schema) {
-                scope.datamap = datamap;
-                scope.schema = schema;
-                var t0 = new Date().getTime();;
-                var columnarray = scope.columnarray = [];
-                var hiddencolumnArray = [];
-                for (var j = 0; j < schema.displayables.length; j++) {
-                    var column = schema.displayables[j];
-                    columnarray.push(column);
-                    hiddencolumnArray.push(scope.isFieldHidden(schema, column));
+                    var st = "<input type=\"text\" ng-model=\"{0}.fields[{1}]\" data-date-time  class=\"form-control\" ".format(columnSt, attribute);
+                    st += " data-show-time=\"{0}\" ".format(parseBooleanValue(rendererParameters['showtime']));
+                    st += " data-show-date=\"{0}\"".format(parseBooleanValue(rendererParameters['showdate']));
+                    st += " data-date-format=\"{0}\"".format(rendererParameters['format']);
+                    st += " data-show-meridian=\"{0}\"".format(parseBooleanValue(rendererParameters['showmeridian']));
+                    st += " data-allow-past=\"{0}\"".format(parseBooleanValue(rendererParameters['allowpast']));
+                    st += " data-allow-future=\"{0}\" >".format(parseBooleanValue(rendererParameters['allowfuture']));
+                    st += "<span class=\"input-group-addon\" data-calendericon=\"true\" rel=\"tooltip\" ";
+                    st += " data-original-title=\"{0}\" style=\"cursor: pointer;\">".format(openCalendarTooltip);
+                    st += "<i class=\"datetime-class\"></i></span>";
+                    return st;
                 }
-                var needsWatchers = false;
-                var hasSection = false;
-                var hasMultipleSelector = schema.properties['list.selectionstyle'] == 'multiple';
-                var html = '';
 
-                var highResolution = $(window).width() > 1199;
-                var cursortype = scope.cursortype();
-                var openCalendarTooltip = i18NService.get18nValue('calendar.date_tooltip', 'Open the calendar popup');
+                scope.loadIcon = function (value, metadata) {
+                    return iconService.loadIcon(value, metadata);
+                };
 
-                for (var i = 0; i < datamap.length; i++) {
-                    var rowst = "datamap[{0}]".format(i);
+                scope.refreshGrid = function (datamap, schema) {
+                    scope.datamap = datamap;
+                    scope.schema = schema;
+                    var t0 = new Date().getTime();;
+                    var columnarray = scope.columnarray = [];
+                    var hiddencolumnArray = [];
+                    for (var j = 0; j < schema.displayables.length; j++) {
+                        var column = schema.displayables[j];
+                        columnarray.push(column);
+                        hiddencolumnArray.push(scope.isFieldHidden(schema, column));
+                    }
+                    var needsWatchers = false;
+                    var hasSection = false;
+                    var hasMultipleSelector = schema.properties['list.selectionstyle'] === 'multiple';
 
-                    var rowClass = 'odd';
-                    if (i % 2 == 0) {
-                        rowClass = 'even';
-                    } 
+                    var selectionMode = scope.selectionModel.selectionMode;
 
-                    html += "<tr class='{0}' style='cursor: {1}' listtablerendered rel='hideRow'>".format(rowClass, cursortype);
-                    needsWatchers = hasMultipleSelector;
+                    var html = '';
 
-                    html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
-                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
-                    html += "</td>";
+                    var highResolution = $(window).width() > 1199;
+                    var cursortype = scope.cursortype();
+                    var openCalendarTooltip = i18NService.get18nValue('calendar.date_tooltip', 'Open the calendar popup');
 
-                    html += '<td class="select-single" style="display:none">';
-                    //TODO: to be implemented
-                    html += '</td>';
+                    for (var i = 0; i < datamap.length; i++) {
+                        var rowst = "datamap[{0}]".format(i);
 
-                    var dm = datamap[i];
-                    for (j = 0; j < schema.displayables.length; j++) {
-                        var columnst = "columnarray[{0}]".format(j);
-                        column = schema.displayables[j];
-                        var attribute = column.attribute;
-                        var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap[i]);
-
-                        if (!column.rendererParameters) {
-                            column.rendererParameters = {};
+                        var rowClass = 'odd';
+                        if (i % 2 == 0) {
+                            rowClass = 'even';
                         }
 
-                        var editable = scope.isColumnEditable(column);
-                        var updatable = scope.isColumnUpdatable(column);
+                        html += "<tr class='{0}' style='cursor: {1}' listtablerendered rel='hideRow'>".format(rowClass, cursortype);
+                        needsWatchers = hasMultipleSelector;
 
-                        var isHidden = hiddencolumnArray[j];
+                        html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
+                        html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
+                        html += "</td>";
 
-                        html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4} {5}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
-                        html += "data-title='{0}'".format(column.label);
-                        html += ">";
-                        if (column.rendererType === 'color') {
-                            var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
-                            html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
-                        } else if (column.rendererType === 'checkbox') {
-                            var name = attribute;
-                            html += "<div class='cell-wrapper'>";
-                            if (column.rendererParameters["editable"] === "true") {
-                                html += "<input type='checkbox' class='check' name='{0}' ".format(name);
-                                html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst, name);
-                            } else {
-                                var field = dm.fields[attribute];
-                                var icon = field === true || field === "true" || field === 1 ? "fa-check-square-o" : "fa-square-o";
-                                html += "<i class=\"fa {0}\" />".format(icon);
+                    
+                        html += '<td class="select-single" style="display:none">';
+                        //TODO: to be implemented
+                        html += '</td>';
+
+                        var dm = datamap[i];
+                        for (j = 0; j < schema.displayables.length; j++) {
+                            var columnst = "columnarray[{0}]".format(j);
+                            column = schema.displayables[j];
+                            var attribute = column.attribute;
+                            var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap[i]);
+
+                            if (!column.rendererParameters) {
+                                column.rendererParameters = {};
                             }
-                            
-                            needsWatchers = true;
-                        } else if (column.rendererType === "datetime") {
-                            if (editable) {
+
+                            var editable = scope.isColumnEditable(column);
+                            var updatable = scope.isColumnUpdatable(column);
+
+                            var isHidden = hiddencolumnArray[j];
+
+                            html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4} {5}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
+                            html += "data-title='{0}'".format(column.label);
+                            html += ">";
+                            if (column.rendererType === 'color') {
+                                var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
+                            }
+                            else if (column.rendererType === 'checkbox') {
+                                var name = attribute;
+                                html += "<div class='cell-wrapper'>";
+                                if (column.rendererParameters["editable"] === "true") {
+                                    html += "<input type='checkbox' class='check' name='{0}' ".format(name);
+                                    html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst, name);
+                                } else {
+                                    var field = dm.fields[attribute];
+                                    var icon = field === true || field === "true" || field === 1 ? "fa-check-square-o" : "fa-square-o";
+                                    html += "<i class=\"fa {0}\" />".format(icon);
+                                }
+
                                 needsWatchers = true;
-                                html += "<div class=\"input-group\" data-datepicker=\"true\">";
-                                html += scope.appendDateTimeComponent(columnst, column.rendererParameters, attribute, openCalendarTooltip);
-                            } else {
-                                html += defaultAppending(formattedText, updatable, rowst, column, null, null);
                             }
-                        } else if (column.rendererType === "icon") {
-                            var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
-                            html += "<div>";
-                            html += " <i class=\"{0}\"".format(classtoLoad);
-                            html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
-                        }
-
-                        else if (column.type === 'ApplicationFieldDefinition') {
-                            if (!editable) {
-
-                                var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
-                                //console.log(text);
-                                
-                                if (column.rendererType === 'statuscolor') {
-                                    var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
-                                    var foreground = statuscolorService.foregroundColor(background);
-
-                                    html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);
+                            else if (column.rendererType === "datetime") {
+                                if (editable) {
+                                    needsWatchers = true;
+                                    html += "<div class=\"input-group\" data-datepicker=\"true\">";
+                                    html += scope.appendDateTimeComponent(columnst, column.rendererParameters, attribute, openCalendarTooltip);
                                 } else {
                                     html += defaultAppending(formattedText, updatable, rowst, column, null, null);
-                                }                               
-                            } else {
-                                needsWatchers = true;
-                                var maxlength = column.rendererParameters['maxlength'];
-                                html += "<div class=\"input-group\" data-datepicker=\"true\">";
-                                html += "<input type=\"text\" ng-model=\"{0}['{1}']\" class=\"hidden-phone form-control\" ".format(columnst,column.attribute);
-                                html += "data-ng-maxlength=\"{0}\" />".format(maxlength);
-                            }
-                        }
-
-                        else if (column.type == "OptionField") {
-                            if (column.rendererParameters['filteronly'] == 'true') {
-                                html += defaultAppending(formattedText, updatable, rowst, column, null, null);
-                            } else {
-                                if (column.rendererType == "combo") {
-                                    needsWatchers = true;
-                                    html += "<div class=\"sw-combobox-container\">";
-                                    html += "<select class=\"hidden-phone form-control combobox\"";
-                                    html += "ng-model=\"{0}.fields['{1}']\" ".format(rowst, column.target);
-                                    html += " ng-options=\"option.value as i18NOptionField(option,{0},schema) for option in GetAssociationOptions({0})\" ".format(columnst);
                                 }
                             }
-                        } else if (column.type == "ApplicationSection") {
-                            var contextPath = scope.contextPath(column.resourcepath);
-                            hasSection = true;
-                            html += "<div>";
-                            //ng-if= true is needed to create a new scope here
-                            html += "<div ng-include=\"'{0}'\" href=\"#\" style=\"width: 100%\" ng-init=\"dm={1}\"  ng-if=\"'true'\">".format(contextPath, rowst);
+                            else if (column.rendererType === "icon") {
+                                var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
+                                html += "<div>";
+                                html += " <i class=\"{0}\"".format(classtoLoad);
+                                html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
+                            }
+
+                            else if (column.type === 'ApplicationFieldDefinition') {
+                                if (!editable) {
+
+                                    var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
+                                    //console.log(text);
+
+                                    if (column.rendererType === 'statuscolor') {
+                                        var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                        var foreground = statuscolorService.foregroundColor(background);
+
+                                        html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);
+                                    } else {
+                                        html += defaultAppending(formattedText, updatable, rowst, column, null, null);
+                                    }
+                                } else {
+                                    needsWatchers = true;
+                                    var maxlength = column.rendererParameters['maxlength'];
+                                    html += "<div class=\"input-group\" data-datepicker=\"true\">";
+                                    html += "<input type=\"text\" ng-model=\"{0}['{1}']\" class=\"hidden-phone form-control\" ".format(columnst, column.attribute);
+                                    html += "data-ng-maxlength=\"{0}\" />".format(maxlength);
+                                }
+                            }
+
+                            else if (column.type == "OptionField") {
+                                if (column.rendererParameters['filteronly'] == 'true') {
+                                    html += defaultAppending(formattedText, updatable, rowst, column, null, null);
+                                } else {
+                                    if (column.rendererType == "combo") {
+                                        needsWatchers = true;
+                                        html += "<div class=\"sw-combobox-container\">";
+                                        html += "<select class=\"hidden-phone form-control combobox\"";
+                                        html += "ng-model=\"{0}.fields['{1}']\" ".format(rowst, column.target);
+                                        html += " ng-options=\"option.value as i18NOptionField(option,{0},schema) for option in GetAssociationOptions({0})\" ".format(columnst);
+                                    }
+                                }
+                            }
+                            else if (column.type == "ApplicationSection") {
+                                var contextPath = scope.contextPath(column.resourcepath);
+                                hasSection = true;
+                                html += "<div>";
+                                //ng-if= true is needed to create a new scope here
+                                html += "<div ng-include=\"'{0}'\" href=\"#\" style=\"width: 100%\" ng-init=\"dm={1}\"  ng-if=\"'true'\">".format(contextPath, rowst);
+                            }
+                            html += "</div></td>";
+
+                    
+
+
+
                         }
-                        html += "</div></td>";
+                        html += "<td ng-show=\"selectionModel.selectionMode\">";
+                        html += "<i class=\"fa fa-edit\" onclick='griditemclick({0},null,this,true)'></i>".format(i, j);
+                        html += "</td>";
+
+                        html += "</tr>";
                     }
-                    html += "</tr>";
+                    element.html(html);
+                    if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
+                        $compile(element.contents())(scope);
+                    }
+                    if ($rootScope.printRequested != null && $rootScope.printRequested) {
+                        printService.doPrint();
+                    }
+                    var t1 = new Date().getTime();
+                    $log.getInstance('crudtbody#link').debug('grid compilation took {0} ms'.format(t1 - t0));
+                    $timeout(function (key, value) {
+                        scope.$emit('listTableRenderedEvent');
+                        if (!$rootScope.printRequested && !needsWatchers) {
+                            scope.$$watchers = null;
+                        }
+                    });
                 }
-                element.html(html);
-                if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
-                    $compile(element.contents())(scope);
+
+                // called whenever a selector checkbox changes state
+                // updates the buffer and possibly the selectall state
+                scope.selectChanged = function (row, datamap) {
+                    var selected = row.fields["_#selected"];
+                    var rowId = row.fields[scope.schema.idFieldName];
+                    if (selected) {
+                        crudContextHolderService.addSelectionToBuffer(rowId, row, scope.panelid);
+                        if (datamap) {
+                            scope.refreshSelectAll(datamap);
+                        }
+                    } else {
+                        crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
+                        crudContextHolderService.removeSelectionFromBuffer(rowId, scope.panelid);
+                    }
                 }
-                if ($rootScope.printRequested != null && $rootScope.printRequested) {
-                    printService.doPrint();
+
+                // updates the state of selectall checkbox based on
+                // state of all selector checkboxes of the page
+                scope.refreshSelectAll = function (datamap) {
+                    for (var i = 0; i < datamap.length; i++) {
+                        var row = datamap[i];
+                        if (!row.fields["_#selected"]) {
+                            crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
+                            return;
+                        }
+                    }
+                    crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = true;
                 }
-                var t1 = new Date().getTime();
-                $log.getInstance('crudtbody#link').debug('grid compilation took {0} ms'.format(t1 - t0));
-                $timeout(function (key, value) {
-                    scope.$emit('listTableRenderedEvent');
-                    if (!$rootScope.printRequested && !needsWatchers) {
-                        scope.$$watchers = null;
+
+                scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
+                    if (panelid === scope.panelid) {
+                        scope.refreshGrid(datamap, schema);
                     }
                 });
-            }
 
-            // called whenever a selector checkbox changes state
-            // updates the buffer and possibly the selectall state
-            scope.selectChanged = function (row, datamap) {
-                var selected = row.fields["_#selected"];
-                var rowId = row.fields[scope.schema.idFieldName];
-                if (selected) {
-                    crudContextHolderService.addSelectionToBuffer(rowId, row, scope.panelid);
-                    if (datamap) {
-                        scope.refreshSelectAll(datamap);
-                    }
-                } else {
-                    crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
-                    crudContextHolderService.removeSelectionFromBuffer(rowId, scope.panelid);
-                }
-            }
-
-            // updates the state of selectall checkbox based on
-            // state of all selector checkboxes of the page
-            scope.refreshSelectAll = function (datamap) {
-                for (var i = 0; i < datamap.length; i++) {
-                    var row = datamap[i];
-                    if (!row.fields["_#selected"]) {
-                        crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
+                // called when the state of select all checkbox changes from user action
+                // updates the state of all selector checkboxes from page
+                scope.$on('sw_selectallchanged', function (event, datamap, selectedValue, panelid) {
+                    if (panelid !== scope.panelid) {
                         return;
                     }
-                }
-                crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = true;
+
+                    for (var i = 0; i < datamap.length; i++) {
+                        datamap[i].fields["_#selected"] = selectedValue;
+                        scope.selectChanged(datamap[i]);
+                    }
+                });
+
+                $injector.invoke(BaseList, this, {
+                    $scope: scope,
+                    i18NService: i18NService,
+                    fieldService: fieldService,
+                    commandService: commandService,
+                    searchService: searchService,
+                    formatService: formatService
+                });
             }
-
-            scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
-                if (panelid == scope.panelid) {
-                    scope.refreshGrid(datamap, schema);
-                }
-            });
-
-            // called when the state of select all checkbox changes from user action
-            // updates the state of all selector checkboxes from page
-            scope.$on('sw_selectallchanged', function (event, datamap, selectedValue, panelid) {
-                if (panelid !== scope.panelid) {
-                    return;
-                }
-
-                for (var i = 0; i < datamap.length; i++) {
-                    datamap[i].fields["_#selected"] = selectedValue;
-                    scope.selectChanged(datamap[i]);
-                }
-            });
-
-            $injector.invoke(BaseList, this, {
-                $scope: scope,
-                i18NService: i18NService,
-                fieldService: fieldService,
-                commandService: commandService,
-                searchService: searchService,
-                formatService:formatService
-            });
         }
-    }
-});
+    });
 
 })(angular);
