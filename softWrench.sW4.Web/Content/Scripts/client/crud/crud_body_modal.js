@@ -86,6 +86,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             $scope.previousdata = modaldata.previousdata;
             $scope.modaltitle = modaldata.title;
             $scope.cssclass = modaldata.cssclass;
+            $scope.closeAfterSave = modaldata.closeAfterSave || true;
             //by default modals, should render as detail stereotype mode
             $scope.isDetail = schemaService.isDetail(schema, true);
             $scope.isList = schemaService.isList(schema);
@@ -163,6 +164,6 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
     return directive;
 }
 
-angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', crudBodyModal]);
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', crudBodyModal]);
 
 })(angular);
