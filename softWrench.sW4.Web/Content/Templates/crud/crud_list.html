@@ -88,7 +88,7 @@
                 <tr class="header-row">
                     <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
                         <!--Multiselect-->
-                        <input type="checkbox" ng-model="selectAllValue" ng-change="selectAllChanged()" />
+                        <input type="checkbox" ng-model="selectAllBuffer.selectAllValue" ng-change="selectAllChanged()" />
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->

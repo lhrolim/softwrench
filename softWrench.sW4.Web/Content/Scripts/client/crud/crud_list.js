@@ -237,7 +237,7 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 fixHeaderService.FixHeader();
                 //usually this next call won´t do anything, but for lists with optionfields, this is needed
                 associationService.updateFromServerSchemaLoadResult(data.associationOptions);
-                $scope.$broadcast("sw_griddatachanged", $scope.datamap, $scope.schema, $scope.panelid);
+                $scope.gridDataChanged($scope.datamap);
 
                 var elements = [];
                 for (var i = 0; i < $scope.datamap.length; i++) {
@@ -253,6 +253,50 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 contextService.insertIntoContext("crud_context", crudContext);
             }
 
+            $scope.gridDataChanged = function(datamap) {
+                // if show only selected recovers the selected buffer to show
+                // also update the total count of pagination
+                var newDatamap;
+                var showOnlySelected = crudContextHolderService.getShowOnlySelected($scope.panelid);
+                if (!showOnlySelected) {
+                    newDatamap = datamap;
+                    var paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
+                    if (paginationData) {
+                        $scope.paginationData.totalCount = paginationData.totalCount;
+                    }
+                } else {
+                    var selectionBuffer = crudContextHolderService.getSelectionBuffer($scope.panelid);
+                    newDatamap = [];
+                    for (var o in selectionBuffer) {
+                        newDatamap.push(selectionBuffer[o]);
+                    }
+                    crudContextHolderService.setOriginalPaginationData($scope.paginationData, $scope.panelid);
+                    $scope.paginationData.totalCount = newDatamap.length;
+                }
+
+                var hasMultipleSelector = $scope.schema.properties["list.selectionstyle"] === "multiple";
+                if (hasMultipleSelector) {
+                    // inits selectall checkbox with true and updates on loop
+                    $scope.selectAllBuffer.selectAllValue = newDatamap.length > 0;
+
+                    for (var i = 0; i < newDatamap.length; i++) {
+                        // updates selector checkbox than updates the select all checkbox
+                        var selected = $scope.recoverSelected(datamap[i]);
+                        $scope.selectAllBuffer.selectAllValue = $scope.selectAllBuffer.selectAllValue && selected;
+                    }
+                }
+
+                $scope.$broadcast("sw_griddatachanged", newDatamap, $scope.schema, $scope.panelid);
+            }
+
+            // recover the state of a selector checkbox from buffer
+            $scope.recoverSelected = function (row) {
+                var buffer = crudContextHolderService.getSelectionBuffer($scope.panelid);
+                var rowId = row.fields[$scope.schema.idFieldName];
+                var selected = Boolean(buffer[rowId]);
+                row.fields["_#selected"] = selected;
+                return selected;
+            }
 
             $scope.refreshGridRequested = function (searchData, extraparameters) {
                 /// <summary>
@@ -470,16 +514,21 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
             }
 
             $scope.selectAllChanged = function () {
-                $scope.$broadcast("sw_selectallchanged", $scope.datamap, $scope.selectAllValue, $scope.panelid);
-            }
-
-            $scope.isSameSchema = function (schema) {
-                return $scope.schema.applicationName === schema.applicationName && $scope.schema.schemaId === schema.schemaId;
+                $scope.$broadcast("sw_selectallchanged", $scope.datamap, $scope.selectAllBuffer.selectAllValue, $scope.panelid);
             }
 
             $scope.shouldShowGridNavigation = function() {
                 return !crudContextHolderService.getShowOnlySelected($scope.panelid);
             }
+
+            $scope.$on('sw_toogleselected', function (event, args) {
+                var panelid = args[0];
+                if ($scope.panelid !== panelid) {
+                    return;
+                }
+                crudContextHolderService.toogleShowOnlySelected($scope.panelid);
+                $scope.gridDataChanged(crudContextHolderService.rootDataMap($scope.panelid));
+            });
 
             function initController() {
                 $injector.invoke(BaseController, this, {
@@ -498,10 +547,9 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     commandService: commandService
                 });
 
+                $scope.selectAllBuffer = crudContextHolderService.getSelectAllBuffer();
+
                 var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
-
-
-
                 if (dataRefreshed) {
                     $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
                 }
@@ -510,7 +558,6 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                 if (dataToRefresh) {
                     $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.extraparameters);
                 }
-
             }
 
             //by the end of the controller, so that all the scope functions are already declared
@@ -524,6 +571,11 @@ app.directive('crudList', ["contextService", "$timeout", function (contextServic
                     ? "width: 100%;"
                     : "width: 97.5%; width: -moz-calc(100% - 40px); width: -webkit-calc(100% - 40px); width: calc(100% - 40px);";
             };
+
+            //first call when the directive is linked (listener was not yet in place)
+            if (scope.schema.displayables) {
+                scope.gridDataChanged(scope.datamap);
+            }
         }
     };
 }]);

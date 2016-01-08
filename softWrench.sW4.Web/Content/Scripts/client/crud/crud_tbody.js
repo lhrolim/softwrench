@@ -149,27 +149,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 return iconService.loadIcon(value, metadata);
             };
 
-            scope.refreshGrid = function (newDatamap, schema) {
-                // if show only selected recovers the selected buffer to show
-                // also update the total count of pagination
-                var datamap;
-                var showOnlySelected = crudContextHolderService.getShowOnlySelected(scope.panelid);
-                if (!showOnlySelected) {
-                    datamap = newDatamap;
-                    var paginationData = crudContextHolderService.getOriginalPaginationData(scope.panelid);
-                    if (paginationData) {
-                        scope.$parent.paginationData.totalCount = paginationData.totalCount;
-                    }
-                } else {
-                    var selectionBuffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
-                    datamap = [];
-                    for (var o in selectionBuffer) {
-                        datamap.push(selectionBuffer[o]);
-                    }
-                    crudContextHolderService.setOriginalPaginationData(scope.$parent.paginationData, scope.panelid);
-                    scope.$parent.paginationData.totalCount = datamap.length;
-                }
-
+            scope.refreshGrid = function (datamap, schema) {
                 scope.datamap = datamap;
                 scope.schema = schema;
                 var t0 = new Date().getTime();;
@@ -183,11 +163,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 var needsWatchers = false;
                 var hasSection = false;
                 var hasMultipleSelector = schema.properties['list.selectionstyle'] == 'multiple';
-                if (hasMultipleSelector) {
-                    // inits selectall checkbox with true and updates on loop
-                    scope.$parent.selectAllValue = datamap.length > 0;
-                }
-
                 var html = '';
 
                 var highResolution = $(window).width() > 1199;
@@ -308,12 +283,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         html += "</div></td>";
                     }
                     html += "</tr>";
-
-                    if (hasMultipleSelector) {
-                        // updates selector checkbox than updates the select all checkbox
-                        var selected = scope.recoverSelected(datamap[i]);
-                        scope.$parent.selectAllValue = scope.$parent.selectAllValue && selected;
-                    }
                 }
                 element.html(html);
                 if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
@@ -343,19 +312,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         scope.refreshSelectAll(datamap);
                     }
                 } else {
-                    scope.$parent.selectAllValue = false;
+                    crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
                     crudContextHolderService.removeSelectionFromBuffer(rowId, scope.panelid);
                 }
-            }
-
-            // called during the table criation
-            // recover the state of a selector checkbox from buffer
-            scope.recoverSelected = function (row) {
-                var buffer = crudContextHolderService.getSelectionBuffer(scope.panelid);
-                var rowId = row.fields[scope.schema.idFieldName];
-                var selected = Boolean(buffer[rowId]);
-                row.fields["_#selected"] = selected;
-                return selected;
             }
 
             // updates the state of selectall checkbox based on
@@ -364,20 +323,11 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 for (var i = 0; i < datamap.length; i++) {
                     var row = datamap[i];
                     if (!row.fields["_#selected"]) {
-                        scope.$parent.selectAllValue = false;
+                        crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = false;
                         return;
                     }
                 }
-                scope.$parent.selectAllValue = true;
-            }
-
-            // called when the state of select all checkbox changes from user action
-            // updates the state of all selector checkboxes from page
-            scope.innerSelectAllChanged = function (datamap, selectedValue) {
-                for (var i = 0; i < datamap.length; i++) {
-                    datamap[i].fields["_#selected"] = selectedValue;
-                    scope.selectChanged(datamap[i]);
-                }
+                crudContextHolderService.getSelectAllBuffer(scope.panelid).selectAllValue = true;
             }
 
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
@@ -386,21 +336,17 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 }
             });
 
+            // called when the state of select all checkbox changes from user action
+            // updates the state of all selector checkboxes from page
             scope.$on('sw_selectallchanged', function (event, datamap, selectedValue, panelid) {
-                if (panelid === scope.panelid) {
-                    scope.innerSelectAllChanged(datamap, selectedValue);
-                }
-            });
-
-            scope.$on('sw_toogleselected', function (event, args) {
-                var panelid = args[0];
-                if (scope.panelid !== panelid) {
+                if (panelid !== scope.panelid) {
                     return;
                 }
 
-                var showOnlySelected = crudContextHolderService.toogleShowOnlySelected(scope.panelid);
-                var newDatamap = showOnlySelected ? [] : crudContextHolderService.rootDataMap(scope.panelid);
-                scope.refreshGrid(newDatamap, crudContextHolderService.currentSchema(scope.panelid));
+                for (var i = 0; i < datamap.length; i++) {
+                    datamap[i].fields["_#selected"] = selectedValue;
+                    scope.selectChanged(datamap[i]);
+                }
             });
 
             $injector.invoke(BaseList, this, {
@@ -411,11 +357,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 searchService: searchService,
                 formatService:formatService
             });
-
-            //first call when the directive is linked (listener was not yet in place)
-            if (scope.schema.displayables) {
-                scope.refreshGrid(scope.datamap, scope.schema);
-            }
         }
     }
 });

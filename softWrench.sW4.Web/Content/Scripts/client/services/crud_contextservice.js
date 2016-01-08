@@ -78,6 +78,7 @@
             tabRecordCount: {},
             compositionLoadComplete: false,
             selectionBuffer: {},
+            selectAllBuffer: { selectAllValue : false},
             showOnlySelected: false,
             // pagination data before the toogle selected
             originalPaginationData: null
@@ -374,6 +375,10 @@
             getContext(panelid).selectionBuffer = {};
         }
 
+        function getSelectAllBuffer(panelid) {
+            return getContext(panelid).selectAllBuffer;
+        }
+
         function getShowOnlySelected(panelid) {
             return getContext(panelid).showOnlySelected;
         }
@@ -444,6 +449,7 @@
             removeSelectionFromBuffer: removeSelectionFromBuffer,
             getSelectionBuffer: getSelectionBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
+            getSelectAllBuffer: getSelectAllBuffer,
             getShowOnlySelected: getShowOnlySelected,
             toogleShowOnlySelected: toogleShowOnlySelected,
             getOriginalPaginationData: getOriginalPaginationData,
