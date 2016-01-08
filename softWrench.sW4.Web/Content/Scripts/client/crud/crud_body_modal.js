@@ -160,11 +160,9 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
         controller: controller
     };
 
-        };
+    return directive;
+}
 
-        return directive;
-    }
-
-    angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', crudBodyModal]);
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', crudBodyModal]);
 
 })(angular);
