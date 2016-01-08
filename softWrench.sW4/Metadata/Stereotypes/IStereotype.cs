@@ -9,7 +9,7 @@ namespace softWrench.sW4.Metadata.Stereotypes
 
         IDictionary<string, string> StereotypeProperties();
 
-        void Merge(IStereotype stereotype);
+        IStereotype Merge(IStereotype stereotype);
 
      
 

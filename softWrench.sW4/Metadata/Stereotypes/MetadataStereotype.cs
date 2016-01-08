@@ -29,16 +29,25 @@ namespace softWrench.sW4.Metadata.Stereotypes {
             return Properties;
         }
 
-        public void Merge(IStereotype stereotype) {
+        public IStereotype Merge(IStereotype stereotype) {
+            var clonedProperties = new Dictionary<string, string>(Properties);
+
             foreach (var property in stereotype.StereotypeProperties()) {
-                if (Properties.ContainsKey(property.Key)) {
+                if (clonedProperties.ContainsKey(property.Key)) {
                     //overriding
-                    Properties[property.Key] = property.Value;
+                    clonedProperties[property.Key] = property.Value;
                 } else {
                     //adding value that was not present
-                    Properties.Add(property);
+                    clonedProperties.Add(property.Key, property.Value);
                 }
             }
+            return new MetadataStereotype(((MetadataStereotype)stereotype).Id, clonedProperties);
         }
+
+
+        public override string ToString() {
+            return string.Format("Id: {0} Number of Commands: {1}", Id, Properties.Count);
+        }
+
     }
 }
