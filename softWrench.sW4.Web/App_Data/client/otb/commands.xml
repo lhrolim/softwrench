@@ -13,7 +13,7 @@
 
   <commandgroup position="gridtop.selection" platform="web">
     
-    <command id="toggleselectionmode" icon="$scope:toggleSelectedIcon" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.crud.list.toggleselectionmode,panelid"
+    <command id="toggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.crud.list.toggleselectionmode,panelid"
                   position="+profiles"/>
     
     <command id="toggleselected" icon="$scope:toggleSelectedIcon" service="dispatcherService" method="dispatchevent"

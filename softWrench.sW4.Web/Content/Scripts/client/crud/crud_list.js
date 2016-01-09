@@ -424,12 +424,7 @@
 
                     //#region eventlisteners
 
-                    $scope.$on("sw.crud.applicationchanged", function (event, datamap, schema, panelid) {
-                        if ($scope.panelid === panelid) {
-                            //need to re fetch the selection model since the context whenever the application changes
-                            $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
-                        }
-                    });
+                 
 
                     $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                         if ($scope.datamap && $scope.datamap.length <= 0) {
@@ -520,6 +515,14 @@
                         }
                         crudContextHolderService.toggleShowOnlySelected($scope.panelid);
                         $scope.gridDataChanged(crudContextHolderService.rootDataMap($scope.panelid));
+                    });
+
+
+                    $scope.$on('sw.crud.list.toggleselectionmode', function (event, args) {
+                        var panelid = args[0];
+                        if ($scope.panelid === panelid) {
+                            crudContextHolderService.toggleSelectionMode($scope.panelid);
+                        }
                     });
 
                     $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {

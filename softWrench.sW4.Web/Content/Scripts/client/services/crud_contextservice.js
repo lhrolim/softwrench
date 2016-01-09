@@ -82,7 +82,8 @@
                 onPageSelectedCount: 0, // number of selected rows on current page
                 pageSize: 0, // number of rows of page (no same of pagination on show only selected)
                 selectAllValue: false, // whether or not select all checkbox is selected
-                showOnlySelected: false
+                showOnlySelected: false,
+                selectionMode:false
             },
             // pagination data before the toggle selected
             originalPaginationData: null

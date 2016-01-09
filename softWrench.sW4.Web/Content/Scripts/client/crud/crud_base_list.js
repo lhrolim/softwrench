@@ -195,4 +195,15 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return customParams;
     }
 
+
+    //#region listeners
+    $scope.$on("sw.crud.applicationchanged", function (event, datamap, schema, panelid) {
+        if ($scope.panelid === panelid) {
+            //need to re fetch the selection model since the context whenever the application changes
+            $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
+        }
+    });
+
+    //#endregion listeners
+
 }
