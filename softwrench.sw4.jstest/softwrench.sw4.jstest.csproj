@@ -1447,6 +1447,7 @@
     <Content Include="tests\services\dashboardaux_service_test.js" />
     <Content Include="tests\services\expression_service_test.js" />
     <Content Include="tests\services\richtext_test.js" />
+    <Content Include="tests\services\gridSelection_service_test.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="node_modules\jasmine-core\.gitmodules" />

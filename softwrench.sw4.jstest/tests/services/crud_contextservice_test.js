@@ -100,6 +100,7 @@
         crudContextService.updateCrudContext({}, {});
 
         // verify buffer
+
         buffer = crudContextService.getSelectionModel().selectionBuffer;
         expect(Object.keys(buffer).length).toBe(2);
         expect(buffer["1"].fields.a).toBe("1");

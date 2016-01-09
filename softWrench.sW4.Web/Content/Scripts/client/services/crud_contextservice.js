@@ -81,7 +81,7 @@
                 selectionBuffer: {}, // buffer of all selected row
                 onPageSelectedCount: 0, // number of selected rows on current page
                 pageSize: 0, // number of rows of page (no same of pagination on show only selected)
-                selectAllValue : false, // whether or not select all checkbox is selected
+                selectAllValue: false, // whether or not select all checkbox is selected
                 showOnlySelected: false
             },
             // pagination data before the toggle selected
@@ -190,24 +190,27 @@
         //#region hooks
         function updateCrudContext(schema, rootDataMap, panelid) {
             var context = getContext(panelid);
+            schema.properties = schema.properties || {};
             context.currentSchema = schema;
             context.rootDataMap = rootDataMap;
             context.currentApplicationName = schema.applicationName;
+            context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
             schemaCacheService.addSchemaToCache(schema);
         }
 
         function applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
-            this.resetSelectionModel(panelid, schema);
+            $rootScope.$broadcast("sw.crud.applicationchanged", schema, rootDataMap, panelid);
         }
 
         function clearCrudContext(panelid) {
             if (!panelid) {
                 _crudContext = angular.copy(_originalContext);
-            } else {
-                _crudContexts[panelid] = angular.copy(_originalContext);
+                return _crudContext;
             }
+            _crudContexts[panelid] = angular.copy(_originalContext);
+            return _crudContext[panelid];
         }
 
         function afterSave(panelid) {
@@ -234,7 +237,7 @@
             var context = getContext(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
-            context._lazyAssociationOptions = {};
+            _crudContext._lazyAssociationOptions = {};
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
             contextService.setActiveTab(null);
@@ -277,19 +280,18 @@
                 length = options.length ? options.length : 1;
             }
 
-            var context = getContext(panelid);
-            var lazyAssociationOptions = context._lazyAssociationOptions[associationKey];
+            var lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
                 log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
-                context._lazyAssociationOptions[associationKey] = options;
+                _crudContext._lazyAssociationOptions[associationKey] = options;
             } else {
                 log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey, length));
-                context._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
+                _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
         }
 
         function fetchLazyAssociationOption(associationKey, key, panelid) {
-            var associationOptions = getContext(panelid)._lazyAssociationOptions[associationKey];
+            var associationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (associationOptions == null) {
                 return null;
             }
@@ -371,9 +373,7 @@
 
         //#region selectionService
 
-        function getSelectionModel(panelid) {
-            return getContext(panelid).gridSelectionModel;
-        }
+
 
         function addSelectionToBuffer(rowId, row, panelid) {
             getContext(panelid).gridSelectionModel.selectionBuffer[rowId] = row;
@@ -394,26 +394,15 @@
         }
 
 
-        function resetSelectionModel(panelid, schema) {
-            var context = getContext(panelid);
-
-            var selectionMode ="true" === schema.properties["list.selectionmodebydefault"];
-            context.selectionModel = {
-                selectionMode: selectionMode,
-                showOnlySelected: false,
-                selectionBuffer : []
-            }
-        }
-
         function getSelectionModel(panelid) {
             var context = getContext(panelid);
-            return context.selectionModel;
+            return context.gridSelectionModel;
         }
 
         function toggleSelectionMode(panelid) {
             var context = getContext(panelid);
-            context.selectionModel.selectionMode = !context.selectionModel.selectionMode;
-            return context.selectionModel.selectionMode;
+            context.gridSelectionModel.selectionMode = !context.gridSelectionModel.selectionMode;
+            return context.gridSelectionModel.selectionMode;
         }
 
         function getOriginalPaginationData(panelid) {
@@ -472,17 +461,14 @@
         }
 
         var selectionService = {
-            getSelectionModel: getSelectionModel,
             addSelectionToBuffer: addSelectionToBuffer,
             removeSelectionFromBuffer: removeSelectionFromBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
             toggleSelectionMode: toggleSelectionMode,
-            toggleSelectionBuffer: toggleSelectionBu      toggleSelectionBuffer: toggleSelectionBuffer,
             getSelectionModel: getSelectionModel,
             toggleShowOnlySelected: toggleShowOnlySelected,
             getOriginalPaginationData: getOriginalPaginationData,
             setOriginalPaginationData: setOriginalPaginationData,
-            resetSelectionModel: resetSelectionModel
         }
 
         return angular.extend({}, service, hookServices, associationServices, modalService, selectionService);

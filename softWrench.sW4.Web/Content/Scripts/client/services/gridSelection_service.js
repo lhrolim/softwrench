@@ -12,22 +12,22 @@
 		/**
 		* Starts the selection buffer and select all states.
 		* 
-		* @param {} datamap
+		* @param {} datamap the list of all datamaps 
 		* @param {} schema 
 		* @param {} panelid
 		*/
-		function gridDataChanged(datamap, schema, panelid) {
+		function gridDataChanged(datamaps, schema, panelid) {
 			if (schema.properties["list.selectionstyle"] !== "multiple") {
 			    return;
 			}
 
 			var selectionModel = crudContextHolderService.getSelectionModel(panelid);
 			selectionModel.onPageSelectedCount = 0;
-			selectionModel.selectAllValue = datamap.length > 0;
-			selectionModel.pageSize = datamap.length;
+			selectionModel.selectAllValue = datamaps.length > 0;
+			selectionModel.pageSize = datamaps.length;
 
-			for (var i = 0; i < datamap.length; i++) {
-				var row = datamap[i];
+			for (var i = 0; i < datamaps.length; i++) {
+			    var row = datamaps[i];
 				var rowSelected = updateRowState(row, schema, panelid);
 				if (rowSelected) {
 					selectionModel.onPageSelectedCount++;
@@ -45,12 +45,12 @@
          * @param {} updatesSelectAll Whether or not updates select all value
          * @param {} panelid
          */
-		function selectionChanged(row, datamap, schema, updatesSelectAll, panelid) {
-			var selected = row.fields["_#selected"];
-			var rowId = row.fields[schema.idFieldName];
+		function selectionChanged(datamap, schema, updatesSelectAll, panelid) {
+		    var selected = datamap.fields["_#selected"];
+		    var rowId = datamap.fields[schema.idFieldName];
 		    var selectionModel = crudContextHolderService.getSelectionModel(panelid);
 			if (selected) {
-				crudContextHolderService.addSelectionToBuffer(rowId, row, panelid);
+			    crudContextHolderService.addSelectionToBuffer(rowId, datamap, panelid);
 			    if (selectionModel.onPageSelectedCount < selectionModel.pageSize) {
 			        selectionModel.onPageSelectedCount++;
 			    }
@@ -93,7 +93,7 @@
 			var selectedValue = crudContextHolderService.getSelectionModel(panelid).selectAllValue;
 			for (var i = 0; i < datamap.length; i++) {
 				datamap[i].fields["_#selected"] = selectedValue;
-				selectionChanged(datamap[i], datamap, schema, false, panelid);
+				selectionChanged(datamap[i],  schema, false, panelid);
 			}
 		}
 
@@ -105,9 +105,9 @@
          * @param {} schema 
          * @param {} panelid
          */
-		function toggleSelection(row, datamap, schema, panelid) {
-			row.fields["_#selected"] = !row.fields["_#selected"];
-			selectionChanged(row, datamap, schema, panelid);
+		function toggleSelection(datamap, schema, panelid) {
+		    datamap.fields["_#selected"] = !datamap.fields["_#selected"];
+			selectionChanged(datamap, schema, true, panelid);
 		}
 
 	    //#endregion

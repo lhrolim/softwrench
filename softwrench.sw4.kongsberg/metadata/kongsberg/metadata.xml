@@ -1526,7 +1526,7 @@
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
             </composition>
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="attachment" label="Attachments">
@@ -1901,7 +1901,7 @@
               <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" allowupdate="true" />
             </composition>
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag" />
             </composition>
             <composition relationship="attachment" label="Attachments">

@@ -31,7 +31,7 @@ namespace softWrench.sW4.Security.Init {
                             user = _dao.FindSingleByQuery<User>(User.UserByUserName, "swadmin");
                             if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
                                 var adminUser = User.CreateAdminUser("swadmin", "admin", "admin", ApplicationConfiguration.DefaultSiteId ?? ApplicationConfiguration.DefaultOrgId,
-                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n", ApplicationConfiguration.DefaultStoreloc);
+                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n", ApplicationConfiguration.DefaultStoreloc, "swadmin@controltechnologysolutions.com");
                                 _dao.Save(adminUser);
                                 CreateUserRoles(adminUser, UserType.Admin);
                             }
@@ -40,7 +40,7 @@ namespace softWrench.sW4.Security.Init {
                             user = _dao.FindSingleByQuery<User>(User.UserByUserName, JobManager.JobUser);
                             if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
                                 var jobUser = User.CreateAdminUser(JobManager.JobUser, "jobuser", "jobuser", ApplicationConfiguration.DefaultSiteId ?? "bla",
-                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", null, ApplicationConfiguration.DefaultStoreloc);
+                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", null, ApplicationConfiguration.DefaultStoreloc, "swadmin@controltechnologysolutions.com");
                                 _dao.Save(jobUser);
                                 CreateUserRoles(jobUser, UserType.Job);
                             }

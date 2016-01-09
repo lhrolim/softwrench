@@ -45,6 +45,11 @@
         public const string ListClickMode = "list.click.mode";
 
         /// <summary>
+        /// Property to specify the schema navigated to on list click
+        /// </summary>
+        public const string ListClickSchema = "list.click.schema";
+
+        /// <summary>
         /// Specify a different order by field to be applied by default to the grid, instead of the entity id
         /// </summary>
         public const string ListSchemaOrderBy = "list.defaultorderby";
