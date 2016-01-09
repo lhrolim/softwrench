@@ -60,7 +60,7 @@
                            name="compositionlistschema.properties['list.selectionstyle']"
                            value="{{option.value}}"
                            ng-checked="isCheckboxSelected(option,column.associationKey)"
-                           ng-click="toogleCheckboxSelection(option,column.associationKey)"
+                           ng-click="toggleCheckboxSelection(option,column.associationKey)"
                            ng-true-value="1" ng-false-value="0">
                 </td>
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
