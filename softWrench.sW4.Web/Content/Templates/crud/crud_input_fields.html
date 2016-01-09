@@ -62,7 +62,7 @@
                                        name="datamap[fieldMetadata.attribute]"
                                        value="{{option.value}}"
                                        ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                                       ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                                       ng-click="toggleCheckboxSelection(option,fieldMetadata.associationKey)">
                             </td>
                             <td ng-if="!isPositionLeft(fieldMetadata)">
                                 {{i18NOptionField(option,fieldMetadata,schema)}}
@@ -122,7 +122,7 @@
                                        name="datamap[fieldMetadata.attribute]"
                                        value="{{option.value}}"
                                        ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                                       ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                                       ng-click="toggleCheckboxSelection(option,fieldMetadata.associationKey)">
                             </td>
                             <td ng-if="!isPositionLeft(fieldMetadata)">
                                 {{i18NOptionField(option,fieldMetadata,schema)}}

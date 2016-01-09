@@ -13,10 +13,11 @@
                              search-sort="searchSort"
                              search-operator="searchOperator"
                              search-template="searchTemplate"
-                             class="gridtop" />
+                             panelid="panelid"
+                             class="gridtop"/>
                 
                 <!-- quick search input -->
-                <div class="quick-search col-xs-4">
+                <div ng-show="shouldShowGridNavigation()" class="quick-search col-xs-4">
                     <div class="input-group">
                         <input type="text"
                                placeholder="Search"
@@ -39,6 +40,7 @@
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
                             search-operator="searchOperator"
+                            panelid="panelid"
                             pagination-simple-layout />
             </div>
         
@@ -58,7 +60,8 @@
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
-                        search-operator="searchOperator" />
+                        panelid="panelid"
+                        search-operator="searchOperator"/>
         </div>
         
         <!--<div class="filter-container">
@@ -83,8 +86,9 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-all-header">
                         <!--Multiselect-->
+                        <input type="checkbox" ng-model="selectionModel.selectAllValue" ng-change="selectAllChanged()" />
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
@@ -93,7 +97,7 @@
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
+                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
                                 {{i18NLabel(column)}}
                             </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
@@ -103,7 +107,7 @@
                             <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant">
                             </span>
-                            <div class="filter-label" filterrowrendered>
+                            <div class="filter-label" ng-show="shouldShowGridNavigation()" filterrowrendered>
                                 <crud-filter-dropdown filter="filterForColumn(column)"
                                                       schema="schema" datamap="datamap"
                                                       advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"

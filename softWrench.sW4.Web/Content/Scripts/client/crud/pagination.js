@@ -15,10 +15,13 @@ app.directive('pagination', ["contextService", function (contextService) {
             applicationName: '@',
             mode: '@',
             disablePrint: '@',
-            disableExport: '@'
+            disableExport: '@',
+            panelid: '='
         },
 
-        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService) {
+        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", "crudContextHolderService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService, crudContextHolderService) {
+            $scope.showPagination = true;
+
             $scope.layout = {
                 simple: false
             };
@@ -79,6 +82,10 @@ app.directive('pagination', ["contextService", function (contextService) {
                     marginLeft = '60px';
                 }
                 $('.pagination-pager').css({ 'margin-left': marginLeft });
+            }
+
+            $scope.shouldShowPagination = function() {
+                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
             }
 
             //$scope.$on("sw_redirectapplicationsuccess", function (event) {

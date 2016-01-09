@@ -87,7 +87,7 @@ function parseBooleanValue(attrValue) {
 window.parseBooleanValue = parseBooleanValue;
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService) {
     "ngInject";
 
     return {
@@ -163,7 +163,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 var needsWatchers = false;
                 var hasSection = false;
                 var hasMultipleSelector = schema.properties['list.selectionstyle'] == 'multiple';
-
                 var html = '';
 
                 var highResolution = $(window).width() > 1199;
@@ -182,7 +181,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     needsWatchers = hasMultipleSelector;
 
                     html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
-                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\">".format(rowst);
+                    html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
                     html += "</td>";
 
                     html += '<td class="select-single" style="display:none">';
@@ -302,6 +301,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 });
             }
 
+            // called whenever a selector checkbox changes state
+            // updates the buffer and possibly the selectall state
+            scope.selectChanged = function (row) {
+                gridSelectionService.selectionChanged(row, scope.schema, true, scope.panelid);
+            }
+
             scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                 if (panelid == scope.panelid) {
                     scope.refreshGrid(datamap, schema);
@@ -316,11 +321,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 searchService: searchService,
                 formatService:formatService
             });
-
-            //first call when the directive is linked (listener was not yet in place)
-            if (scope.schema.displayables) {
-                scope.refreshGrid(scope.datamap, scope.schema);
-            }
         }
     }
 });
