@@ -199,6 +199,7 @@
         function applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
+            $rootScope.$broadcast("sw.crud.applicationchanged",schema,rootDataMap,panelid);
         }
 
         function clearCrudContext(panelid) {

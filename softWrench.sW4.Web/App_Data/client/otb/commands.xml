@@ -4,7 +4,6 @@
   <commandgroup position="gridtop" platform="web">
     <!--    <command id="new" icon="fa-plus" service="applicationService" method="newitem" label="$scope." tooltip="New Item"/>-->
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
-    <command id="toggleselected" icon="$scope:toggleSelectedIcon" service="dispatcherService" method="dispatchevent" label="Toggle Selected" parameters="sw.crud.list.toggleselected,panelid" showexpression="$scope:shouldshowtoogleselected"/>
     <command id="print" icon="fa-print" service="printService" method="printList" parameters="paginationData,schema" label="Print" tooltip="Print" showexpression=""/>
     <command id="export" icon="fa-file-text-o" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData"
              label="Export"
@@ -16,8 +15,8 @@
 <!--    <command id="toggleselectionmode" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent" tooltip="toggle selection mode" parameters="sw.grid.toggleeditmode,schema"-->
 <!--                  position="+profiles"/>-->
 <!--    -->
-<!--    <command id="toogleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"-->
-<!--                 tooltip="Toogle selected" parameters="sw_toogleselected,schema" position="+profiles"/>-->
+    <command id="toogleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"
+                 tooltip="Toggle selected" parameters="sw.crud.list.toggleselected,panelid" position="+profiles"/>
   </commandgroup>
 
   <commandgroup position="gridbottom" platform="web">
