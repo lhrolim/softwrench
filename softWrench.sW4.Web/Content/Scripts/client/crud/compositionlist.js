@@ -209,7 +209,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
         controller: function ($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
-            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService) {
+            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService) {
 
             $scope.lookupObj = {};
 
@@ -278,7 +278,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                     i18NService: i18NService,
                     fieldService: fieldService,
                     commandService: commandService,
-                    formatService: formatService
+                    formatService: formatService,
+                    gridSelectionService: gridSelectionService
                 });
 
 

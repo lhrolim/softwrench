@@ -20,6 +20,11 @@
         public const string ListSelectionStyle = "list.selectionstyle";
 
         /// <summary>
+        /// if true the selection mode will be enabled when the grid is rendered by default
+        /// </summary>
+        public const string ListSelectionModeByDefault = "list.selectionmodebydefault";
+
+        /// <summary>
         /// property to specify what´s the next schema that should be routed from the current schema
         /// </summary>
         public const string RoutingNextSchemaId = "nextschema.schemaid";
@@ -95,6 +100,8 @@
         ///  property for specifying the options of the pagination
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";
+
+
 
         /// <summary>
         ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazyness nature.

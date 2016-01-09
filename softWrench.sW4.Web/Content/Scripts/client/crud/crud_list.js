@@ -3,11 +3,11 @@
 
     var app = angular.module('sw_layout');
 
-    app.directive('advancedFilterToogle', ["contextService", function (contextService) {
+    app.directive('advancedFiltertoggle', ["contextService", function (contextService) {
         return {
             restrict: 'E',
             replace: true,
-            templateUrl: contextService.getResourceUrl('/Content/Templates/crud/advanced_filter_toogle.html')
+            templateUrl: contextService.getResourceUrl('/Content/Templates/crud/advanced_filter_toggle.html')
         };
     }]);
 
@@ -424,12 +424,7 @@
 
                     //#region eventlisteners
 
-                    $scope.$on("sw.crud.applicationchanged", function (event, datamap, schema, panelid) {
-                        if ($scope.panelid === panelid) {
-                            //need to re fetch the selection model since the context whenever the application changes
-                            $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
-                        }
-                    });
+                 
 
                     $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                         if ($scope.datamap && $scope.datamap.length <= 0) {
@@ -522,6 +517,14 @@
                         $scope.gridDataChanged(crudContextHolderService.rootDataMap($scope.panelid));
                     });
 
+
+                    $scope.$on('sw.crud.list.toggleselectionmode', function (event, args) {
+                        var panelid = args[0];
+                        if ($scope.panelid === panelid) {
+                            crudContextHolderService.toggleSelectionMode($scope.panelid);
+                        }
+                    });
+
                     $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
                         $scope.refreshGridRequested(searchData, extraparameters);
                     });
@@ -541,7 +544,8 @@
                             formatService: formatService,
                             expressionService: expressionService,
                             searchService: searchService,
-                            commandService: commandService
+                            commandService: commandService,
+                            gridSelectionService: gridSelectionService
                         });
 
                         $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);

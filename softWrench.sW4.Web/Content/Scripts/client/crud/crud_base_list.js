@@ -1,5 +1,5 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService,crudContextHolderService) {
+function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
@@ -127,7 +127,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
     };
 
-    $scope.showDetail = function (rowdm, column) {
+    $scope.showDetail = function (rowdm, column, forceEdition) {
 
         var mode = $scope.schema.properties['list.click.mode'];
         var popupmode = $scope.schema.properties['list.click.popupmode'];
@@ -135,7 +135,16 @@ function BaseList($scope, formatService, expressionService, searchService, field
         var fullServiceName = $scope.schema.properties['list.click.service'];
         var editDisabled = $scope.schema.properties['list.disabledetails'];
 
-        if (popupmode == "report") {
+        var selectionModel = crudContextHolderService.getSelectionModel();
+
+        if (selectionModel.selectionMode && !forceEdition) {
+            //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
+            gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
+            return;
+        }
+
+
+        if (popupmode === "report") {
             return;
         }
 
@@ -143,7 +152,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
             mode = expressionService.evaluate(mode, rowdm);
         }
 
-        if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
+        if ("true" === editDisabled && nullOrUndef(fullServiceName)) {
             return;
         }
 
@@ -185,5 +194,16 @@ function BaseList($scope, formatService, expressionService, searchService, field
         }
         return customParams;
     }
+
+
+    //#region listeners
+    $scope.$on("sw.crud.applicationchanged", function (event, datamap, schema, panelid) {
+        if ($scope.panelid === panelid) {
+            //need to re fetch the selection model since the context whenever the application changes
+            $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
+        }
+    });
+
+    //#endregion listeners
 
 }

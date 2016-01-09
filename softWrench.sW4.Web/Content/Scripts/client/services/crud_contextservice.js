@@ -1,4 +1,4 @@
-﻿
+
 (function (angular) {
     "use strict";
 
@@ -81,8 +81,9 @@
                 selectionBuffer: {}, // buffer of all selected row
                 onPageSelectedCount: 0, // number of selected rows on current page
                 pageSize: 0, // number of rows of page (no same of pagination on show only selected)
-                selectAllValue : false, // whether or not select all checkbox is selected
-                showOnlySelected: false
+                selectAllValue: false, // whether or not select all checkbox is selected
+                showOnlySelected: false,
+                selectionMode:false
             },
             // pagination data before the toggle selected
             originalPaginationData: null
@@ -190,24 +191,27 @@
         //#region hooks
         function updateCrudContext(schema, rootDataMap, panelid) {
             var context = getContext(panelid);
+            schema.properties = schema.properties || {};
             context.currentSchema = schema;
             context.rootDataMap = rootDataMap;
             context.currentApplicationName = schema.applicationName;
+            context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
             schemaCacheService.addSchemaToCache(schema);
         }
 
         function applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
-            $rootScope.$broadcast("sw.crud.applicationchanged",schema,rootDataMap,panelid);
+            $rootScope.$broadcast("sw.crud.applicationchanged", schema, rootDataMap, panelid);
         }
 
         function clearCrudContext(panelid) {
             if (!panelid) {
                 _crudContext = angular.copy(_originalContext);
-            } else {
-                _crudContexts[panelid] = angular.copy(_originalContext);
+                return _crudContext;
             }
+            _crudContexts[panelid] = angular.copy(_originalContext);
+            return _crudContext[panelid];
         }
 
         function afterSave(panelid) {
@@ -370,9 +374,7 @@
 
         //#region selectionService
 
-        function getSelectionModel(panelid) {
-            return getContext(panelid).gridSelectionModel;
-        }
+
 
         function addSelectionToBuffer(rowId, row, panelid) {
             getContext(panelid).gridSelectionModel.selectionBuffer[rowId] = row;
@@ -390,6 +392,18 @@
             var context = getContext(panelid);
             context.gridSelectionModel.showOnlySelected = !context.gridSelectionModel.showOnlySelected;
             return context.gridSelectionModel.showOnlySelected;
+        }
+
+
+        function getSelectionModel(panelid) {
+            var context = getContext(panelid);
+            return context.gridSelectionModel;
+        }
+
+        function toggleSelectionMode(panelid) {
+            var context = getContext(panelid);
+            context.gridSelectionModel.selectionMode = !context.gridSelectionModel.selectionMode;
+            return context.gridSelectionModel.selectionMode;
         }
 
         function getOriginalPaginationData(panelid) {
@@ -415,7 +429,7 @@
             currentSchema: currentSchema,
             currentApplicationName: currentApplicationName,
             updateCrudContext: updateCrudContext,
-            applicationChanged : applicationChanged,
+            applicationChanged: applicationChanged,
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
@@ -448,13 +462,14 @@
         }
 
         var selectionService = {
-            getSelectionModel: getSelectionModel,
             addSelectionToBuffer: addSelectionToBuffer,
-            removeSelectionFromBuffer: removeSelectionFromBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
-            toggleShowOnlySelected: toggleShowOnlySelected,
             getOriginalPaginationData: getOriginalPaginationData,
-            setOriginalPaginationData: setOriginalPaginationData
+            getSelectionModel: getSelectionModel,
+            removeSelectionFromBuffer: removeSelectionFromBuffer,
+            setOriginalPaginationData: setOriginalPaginationData,
+            toggleSelectionMode: toggleSelectionMode,
+            toggleShowOnlySelected: toggleShowOnlySelected,
         }
 
         return angular.extend({}, service, hookServices, associationServices, modalService, selectionService);
