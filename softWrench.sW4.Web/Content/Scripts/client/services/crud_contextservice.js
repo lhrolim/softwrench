@@ -463,13 +463,13 @@
 
         var selectionService = {
             addSelectionToBuffer: addSelectionToBuffer,
-            removeSelectionFromBuffer: removeSelectionFromBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
-            toggleSelectionMode: toggleSelectionMode,
-            getSelectionModel: getSelectionModel,
-            toggleShowOnlySelected: toggleShowOnlySelected,
             getOriginalPaginationData: getOriginalPaginationData,
+            getSelectionModel: getSelectionModel,
+            removeSelectionFromBuffer: removeSelectionFromBuffer,
             setOriginalPaginationData: setOriginalPaginationData,
+            toggleSelectionMode: toggleSelectionMode,
+            toggleShowOnlySelected: toggleShowOnlySelected,
         }
 
         return angular.extend({}, service, hookServices, associationServices, modalService, selectionService);
