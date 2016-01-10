@@ -35,13 +35,29 @@
                     </div>
                 </div>
 
+
+            
+
                 <!-- simple pagination -->
                 <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
                             search-operator="searchOperator"
                             panelid="panelid"
-                            pagination-simple-layout />
+                            pagination-simple-layout/>
+
+                <gridtoolbar advancedsearchdata="vm.quickSearchData"
+                             position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
+                             datamap="datamap"
+                             schema="schema"
+                             pagination-data="paginationData"
+                             search-data="searchData"
+                             search-sort="searchSort"
+                             search-operator="searchOperator"
+                             search-template="searchTemplate"
+                             panelid="panelid"
+                             class="gridtop right"
+                             style="float:right" />
             </div>
 
         </div>
