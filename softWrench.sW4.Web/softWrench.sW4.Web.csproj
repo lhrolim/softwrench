@@ -1408,6 +1408,10 @@
       <Project>{a267fe4b-887c-47a5-b09d-f29e5c55a868}</Project>
       <Name>softwrench.sw4.bering</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
+      <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
+      <Name>softwrench.sw4.chicago</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.classic\softwrench.sw4.classic.csproj">
       <Project>{a8d521d4-5a04-4764-8fcb-204bdd4a29d9}</Project>
       <Name>softwrench.sw4.classic</Name>
