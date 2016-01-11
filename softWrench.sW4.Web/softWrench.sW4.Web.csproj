@@ -528,6 +528,7 @@
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
+    <Content Include="Content\Scripts\client\services\gridSelection_service.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
     <Content Include="Content\Scripts\client\noMenuLayoutController.js" />

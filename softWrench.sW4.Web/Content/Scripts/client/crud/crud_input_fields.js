@@ -328,7 +328,7 @@ app.directive('configAssociationListInputDatamap', function () {
                 }
                 return model.indexOf(option.value) > -1;
             };
-            $scope.toogleCheckboxSelection = function (option, datamapKey) {
+            $scope.toggleCheckboxSelection = function (option, datamapKey) {
                 var model = $scope.datamap[datamapKey];
                 if (model == undefined) {
                     model = [];

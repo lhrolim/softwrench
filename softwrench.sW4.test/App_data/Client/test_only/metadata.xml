@@ -8,6 +8,7 @@
     <template path="@inventory.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@servicerequest.xml"/>
+    <template path="@location.xml"/>
     
   </templates>
 
@@ -570,17 +571,15 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list >
-          <field attribute="location" label="Location" qualifier="title"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
+        <list redeclaring="false">
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow"/>
+              </container>
+            </commandgroup>
+          </commandbars>
         </list>
-        <detail>
-          <field attribute="locationsid" label="ID"  requiredexpression="true" />
-          <field attribute="location" label="Location"  requiredexpression="true" />
-          <field attribute="description" label="Description"  requiredexpression="true" />
-          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-          <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
-        </detail>
       </schemas>
     </application>
 
@@ -876,6 +875,14 @@
             <property key="detail.showtitle" value="true"/>
           </properties>
           <customization position="classstructureid"></customization>
+
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="customizationtest" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="right"/>
+            </commandgroup>
+          </commandbars>
+          
         </schema>
       </schemas>
     </application>

@@ -1,4 +1,4 @@
-﻿(function (angular) {
+(function (angular) {
     "use strict";
 
 angular.module('sw_layout')
@@ -70,7 +70,7 @@ angular.module('sw_layout')
                     if (parameterName == "datamap" && overridenDatamap) {
                         arg = overridenDatamap;
                     }
-                    if (arg) {
+                    if (arg || parameterName in scope) {
                         args.push(arg);
                     } else {
                         args.push(parameterName);

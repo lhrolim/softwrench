@@ -7,6 +7,24 @@ using softwrench.sw4.Shared2.Metadata.Exception;
 namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandMerger {
 
+        public static IDictionary<string, CommandBarDefinition> MergeCommandsWithCustomizedSchema(
+            IDictionary<string, CommandBarDefinition> schemaCommands, IDictionary<string, CommandBarDefinition> originalCommandBars) {
+            if (schemaCommands == null) {
+                return originalCommandBars;
+            }
+            foreach (var barKey in schemaCommands.Keys) {
+                if (!originalCommandBars.ContainsKey(barKey)) {
+                    //non need to merge here
+                    originalCommandBars[barKey] = schemaCommands[barKey];
+                    continue;
+                }
+                var commandBar = originalCommandBars[barKey];
+                var schemaBar = schemaCommands[barKey];
+                originalCommandBars[barKey] = DoMergeBars(schemaBar, commandBar);
+            }
+            return originalCommandBars;
+        }
+
 
         public static IDictionary<string, CommandBarDefinition> MergeCommands(
             IDictionary<string, CommandBarDefinition> schemaCommands, IDictionary<string, CommandBarDefinition> commandBars) {
@@ -16,7 +34,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             }
             foreach (var barKey in schemaCommands.Keys) {
                 if (!commandBars.ContainsKey(barKey)) {
-                    throw new MetadataException(String.Format("Command bar {0} not found, review your metadata configuration", barKey));
+                    throw new MetadataException(
+                        String.Format("Command bar {0} not found, review your metadata configuration", barKey));
                 }
                 var commandBar = commandBars[barKey];
                 var schemaBar = schemaCommands[barKey];

@@ -71,7 +71,7 @@
 
     it('should remove record counts on detailLoaded', function () {
         // Call the detailLoaded function
-        crudContextService.detailLoaded({});
+        crudContextService.detailLoaded();
         // Get the record counts for the compositions
         var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
         var commlogLength = crudContextService.getTabRecordCount(commlogTab);
@@ -82,4 +82,66 @@
         expect(worklogLength).toBe(0);
     });
 
+    it("clears selected buffer on app change", function () {
+        var row1 = { fields: { a: "1" } };
+        var row2 = { fields: { a: "2" } };
+
+        // add rows
+        crudContextService.addSelectionToBuffer("1", row1);
+        crudContextService.addSelectionToBuffer("2", row2);
+
+        // verify buffer
+        var buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+
+        // updates context
+        crudContextService.updateCrudContext({}, {});
+
+        // verify buffer
+
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+
+        // chage application
+        crudContextService.applicationChanged({}, {});
+
+        // verify buffer
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(0);
+    });
+
+    it("independent selected buffer from different panels", function () {
+        var row1 = { fields: { a: "1" } };
+        var row2 = { fields: { a: "2" } };
+        var row3 = { fields: { a: "3" } };
+
+        // add rows
+        crudContextService.addSelectionToBuffer("1", row1);
+        crudContextService.addSelectionToBuffer("2", row2);
+        crudContextService.addSelectionToBuffer("3", row3, "#modal");
+
+        // verify buffers
+        var buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+        buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(1);
+        expect(buffer["3"].fields.a).toBe("3");
+
+        // clear modal context
+        crudContextService.clearCrudContext("#modal");
+
+        // verify buffers
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+        buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(0);
+    });
 });
