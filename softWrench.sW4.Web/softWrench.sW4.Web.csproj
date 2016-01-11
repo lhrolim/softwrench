@@ -1508,6 +1508,10 @@
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
       <Name>softwrench.sw4.webcommons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
+      <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
+      <Name>softwrench.sw4.xerox</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.yavapai\softwrench.sw4.yavapai.csproj">
       <Project>{3c826d52-6795-4243-8d0e-cf8cbcb47891}</Project>
       <Name>softwrench.sw4.yavapai</Name>
