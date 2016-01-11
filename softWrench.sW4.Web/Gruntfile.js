@@ -1,10 +1,12 @@
 /// <binding BeforeBuild='copyAll' AfterBuild='sass:dev' ProjectOpened='watch' />
 module.exports = function (grunt) {
     grunt.initConfig({
+        //#region global app config 
         app: {
             content: "Content",
             vendor:  "Content/vendor"
         },
+        //#endregion
 
         //#region sass
         watch: {
@@ -72,7 +74,7 @@ module.exports = function (grunt) {
                     ]
                 }
             },
-            dev: {
+            scripts: {
                 options: {
                     destPrefix: "<%= app.vendor %>/scripts"
                 },
@@ -117,7 +119,7 @@ module.exports = function (grunt) {
     //#endregion
 
     //#region cutom tasks
-    grunt.registerTask("copyAll", ["clean:vendor", "bowercopy:css", "bowercopy:fonts", "bowercopy:dev"]);
+    grunt.registerTask("copyAll", ["clean:vendor", "bowercopy:css", "bowercopy:fonts", "bowercopy:scripts"]);
     grunt.registerTask("default", ["copyAll", "sass:dev"]);
     //#endregion
 };

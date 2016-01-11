@@ -99,7 +99,8 @@ softWrench.sW4.Web/bower_components
 softWrench.sW4.Web/Content/vendor/*
 !softWrench.sW4.Web/Content/vendor/css/
 softWrench.sW4.Web/Content/vendor/css/*
-!softWrench.sW4.Web/Content/vendor/fonts/
+!softWrench.sW4.Web/Content/vendor/css/fonts/
+softWrench.sW4.Web/Content/vendor/css/fonts/*
 softWrench.sW4.Web/Content/vendor/fonts/*
 !softWrench.sW4.Web/Content/vendor/scripts/
 softWrench.sW4.Web/Content/vendor/scripts/*

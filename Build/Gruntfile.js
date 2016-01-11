@@ -33,13 +33,15 @@ module.exports = function (grunt) {
     });
 
     grunt.initConfig({
-
+        //#region global app config
         app: {
             vendor: webProjectRelPath + "Content/vendor",
             tmp: webProjectRelPath + "Content/tmp",
             dist: webProjectRelPath + "Content/dist"
         },
+        //#endregion
 
+        //#region sass
         sass: {
             prod: {
                 options: {
@@ -49,7 +51,9 @@ module.exports = function (grunt) {
                 files: scssFilesToCompile
             }
         },
+        //#endregion
 
+        //#region clean
         clean: {
             options: {
                 force: true // required to clean outside current folder
@@ -66,7 +70,9 @@ module.exports = function (grunt) {
                 "<%= app.dist %>"
             ]
         },
+        //#endregion
 
+        //#region bowercopy
         bowercopy: {
             css: {
                 options: {
@@ -165,6 +171,7 @@ module.exports = function (grunt) {
                 }
             }
         }
+        //#endregion
     });
 
     // load npm tasks
