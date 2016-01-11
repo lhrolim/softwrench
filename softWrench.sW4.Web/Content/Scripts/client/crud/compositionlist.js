@@ -133,21 +133,25 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 
                 scope.compositionschemadefinition = metadata.schema;
                 scope.relationship = metadata.relationship;
-                //element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
-                //    "compositionschemadefinition='compositionschemadefinition' " +
-                //    "relationship='{{relationship}}' " +
-                //    "compositiondata='compositiondata' " +
-                //    "metadatadeclaration='metadata' " +
-                //    "parentschema='parentschema' " +
-                //    "parentdata='parentdata' " +
-                //    "cancelfn='cancel(data,schema)' " +
-                //    "previousschema='previousschema' " +
-                //    "previousdata='previousdata' />");
 
-                //TODO: Used for layout testing only
-                //Should we made a generic or stand-alone wrapper component?
-                element.append("<composition-master-details data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' />");
+                //display the list composition by default
+                if (!scope.compositionschemadefinition.schemas.list.properties.masterdetail) {
+                    element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
+                        "compositionschemadefinition='compositionschemadefinition' " +
+                        "relationship='{{relationship}}' " +
+                        "compositiondata='compositiondata' " +
+                        "metadatadeclaration='metadata' " +
+                        "parentschema='parentschema' " +
+                        "parentdata='parentdata' " +
+                        "cancelfn='cancel(data,schema)' " +
+                        "previousschema='previousschema' " +
+                        "previousdata='previousdata' />");
+                } else {
+                    element.append("<composition-master-details data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' />");
+                }
+
                 $compile(element.contents())(scope);
+
                 //controls tab lazy loading
                 scope.loaded = true;
             }

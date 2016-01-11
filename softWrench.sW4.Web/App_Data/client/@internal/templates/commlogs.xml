@@ -75,6 +75,7 @@
         <schema id="list" stereotype="compositionlist">
           <properties>
             <property key="expansible" value="false"/>
+            <property key="masterdetail" value="true"/>
           </properties>
           <field attribute="read">
             <renderer type="icon" params="expression={'#default':'fa-circle','true':''};width=3%"/>
