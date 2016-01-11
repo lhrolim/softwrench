@@ -573,7 +573,7 @@
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id ="dispatchwo" icon="fa-tachometer" label="Dispatch Work Order"
-                          parameters="schema,datamap" service="dispatchService" method="dispatch"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
               </container>
             </commandgroup>
             <commandgroup position="detailform">
