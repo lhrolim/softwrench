@@ -17,6 +17,16 @@
             <modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>
           </filters>
         </list>
+        <schema id="batchshared" title="Workoder Common Fields" stereotype="detail.modal">
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea"/>
+          </field>
+          <association label="Site" target="siteid" labelfield="site_.description"
+                       requiredexpression="true" hideDescription="true" defaultexpression="@user.site">
+            <renderer type="lookup" />
+          </association>
+        </schema>
       </schemas>
     </application>
 
@@ -32,6 +42,15 @@
           <properties>
             <property key="list.selectionmodebydefault" value="true" />
           </properties>
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                         service="locationService" method="initBatchWorkorder"
+                         parameters="schema,datamap" />
+              </container>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>

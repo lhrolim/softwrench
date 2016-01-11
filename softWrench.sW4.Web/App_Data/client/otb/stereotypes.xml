@@ -19,6 +19,11 @@
     <property key="show.printcommand" value="editonly"/>
   </stereotype>
 
+  <stereotype id="detail.modal">
+    <property key="show.printcommand" value="editonly"/>
+    <property key="commandbar.bottom" value="detailform_modal"/>
+  </stereotype>
+
 
   <!---TODO: refactor to the new namespace form-->
   <stereotype id="compositionlist">

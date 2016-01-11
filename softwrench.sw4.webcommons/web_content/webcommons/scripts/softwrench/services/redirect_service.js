@@ -34,7 +34,11 @@
 
             redirectUrl = restService.getActionUrl(controller, action, parameters);
 
-            contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
+            if (!parameters || !parameters.popupmode) {
+                //let´s disregard popupmode here, otherwise F5 would refresh popup 
+                contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
+            }
+            
             return $http.get(redirectUrl).success(
                 function (data) {
                     if (data.type !== "BlankApplicationResponse") {
@@ -122,7 +126,8 @@
          * @param {type} applicationName name of the application to redirect
          * @param {type} schemaId id of the schema to redirect to
          * @param {type} parameters: any parameters to be passed within the query string plus
-         *      popupmode -- modal, browser or null for redirecting the main page
+         *      popupmode -- modal, browser or null for redirecting the main page;
+         *      savefn -- a savefn to be executed on popupmode;
          * @param {type} jsonData a initial data that could be passed to open a schema filled with some values
          */
         function goToApplication(applicationName, schemaId, parameters, jsonData) {
@@ -135,7 +140,12 @@
             
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
+            //let´s exclude savefn from possible parameters, otherwise it would be evaluated by $.param
+            var savefn = parameters.savefn;
+            parameters.savefn = null;
             var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
+            //including back savefn param
+            parameters.savefn = savefn;
 
             var popupMode = parameters.popupmode;
 
@@ -165,11 +175,11 @@
                 return $http.get(redirectUrl).then(function (httpResponse) {
                     var data = httpResponse.data;
 
-                    contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
                     if (popupMode !== "modal") {
+                        contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
                         $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                     } else {
-                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields);
+                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields,parameters);
                     }
                     if (afterRedirectHook != null) {
                         afterRedirectHook();

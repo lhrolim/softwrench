@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('webcommons_services')
-    .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", function ($rootScope, $timeout, i18NService, notificationViewModel, $log) {
+    .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", function ($rootScope, $timeout, i18NService, notificationViewModel, $log, $q) {
 
     return {
         confirmMsg: function(msg, callbackFunction, cancelcallback) {
@@ -55,13 +55,19 @@ angular.module('webcommons_services')
             });
         },
 
-        alert: function(msg) {
+        alert: function (msg) {
+            var deferred =$q.defer();
+
             bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
             bootbox.alert({
                 message: msg,
                 title: i18NService.get18nValue('general.defaultcommands._alert', 'Alert'),
                 className: 'smallmodal',
+                callback: function() {
+                    deferred.resolve();
+                }
             });
+            return deferred.promise;
         },
 
         notifymessage: function (type, body, title, exceptionType, exceptionOutline, exceptionStack) {
