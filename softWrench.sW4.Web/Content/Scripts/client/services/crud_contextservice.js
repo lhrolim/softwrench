@@ -144,7 +144,7 @@
         }
 
         function getAffectedProfiles(panelid) {
-            return getContext(panelid).affectedProfiles;
+            return getContext(panelid).affectedProfiles || [];
         }
 
         function getCurrentSelectedProfile(panelid) {

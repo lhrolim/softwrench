@@ -134,6 +134,10 @@
             return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
         };
 
+        function goToApplicationWithData(datamap,schema) {
+            $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+        };
+
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             var log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
             parameters = parameters || {};
@@ -242,6 +246,7 @@
             getApplicationUrl: getApplicationUrl,
             goToAction: goToAction,
             goToApplication: goToApplication,
+            goToApplicationWithData: goToApplicationWithData,
             goToApplicationView: goToApplicationView,
             redirectNewWindow: redirectNewWindow,
             redirectToAction: redirectToAction,

@@ -20,7 +20,12 @@
                  tooltip="Toggle selected" parameters="sw.crud.list.toggleselected,panelid" position="+profiles"/>
   </commandgroup>
 
-  <commandgroup position="gridbottom" platform="web">
+  <commandgroup position="spreadsheet" platform="web">
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" />
+  </commandgroup>
+
+
+    <commandgroup position="gridbottom" platform="web">
 
   </commandgroup>
 

@@ -14,6 +14,15 @@
     <property key="commandbar.top" value="gridtop.selection"/>
   </stereotype>
 
+  <stereotype id="list.selection.spreadsheet">
+    <property key="list.selectionstyle" value="multiple"/>
+    <property key="commandbar.top" value="spreadsheet"/>
+    <property key="list.disablepagination" value="true"/>
+    <property key="list.disablefilter" value="true"/>
+    <property key="list.disabledetails" value="true"/>
+    <property key="list.sortmode" value="none"/>
+  </stereotype>
+
   <stereotype id="detail">
     <property key="popup.window.titlestrategy" value="nameandid"/>
     <property key="show.printcommand" value="editonly"/>

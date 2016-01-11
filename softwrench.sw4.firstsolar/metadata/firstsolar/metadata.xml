@@ -18,7 +18,7 @@
           </filters>
         </list>
         <schema id="batchshared" title="Workoder Common Fields" stereotype="detail.modal">
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true"/>
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea"/>
           </field>
@@ -27,6 +27,24 @@
             <renderer type="lookup" />
           </association>
         </schema>
+
+        <schema id="batchLocationSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+          <field attribute="location" hidden="true"/>
+          <field attribute="location_label" label="Location"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="limit=14;width=12%;updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <association label="Site" target="siteid" labelfield="site_.description"
+                       requiredexpression="true" hideDescription="true" defaultexpression="@user.site">
+            <renderer type="lookup" />
+          </association>
+          
+        </schema>
+        
+        
       </schemas>
     </application>
 
