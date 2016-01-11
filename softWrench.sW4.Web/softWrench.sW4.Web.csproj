@@ -337,8 +337,10 @@
     <Compile Include="Util\I18NUtil.cs" />
     <Compile Include="Util\RequestUtil.cs" />
     <Compile Include="Util\RestUtil.cs" />
-    <Compile Include="Util\RowStampScriptHelper.cs" />
-    <Compile Include="Util\StaticFileTagRenderer.cs" />
+    <Compile Include="Util\StaticFileLoad\Bundles.cs" />
+    <Compile Include="Util\StaticFileLoad\PassthroughBundleOrderer.cs" />
+    <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
+    <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\assettrans.xml" />
     <Content Include="App_Data\Client\%40internal\templates\locationspec.xml">
@@ -494,6 +496,7 @@
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
+    <Content Include="Content\customVendor\scripts\modernizr.js" />
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />

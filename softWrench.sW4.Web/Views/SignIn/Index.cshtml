@@ -1,7 +1,8 @@
 ﻿@using softWrench.sW4.Util
 @using softWrench.sW4.Web.Util
+@using softWrench.sW4.Web.Util.StaticFileLoad
 @using Styles = System.Web.Optimization.Styles
-@model softWrench.sW4.Web.Models.LoginHandler.LoginHandlerModel
+@*@Model softWrench.sW4.Web.Models.LoginHandler.LoginHandlerModel*@
 
 @{
     ViewBag.Title = "Sign In | softWrench";
@@ -13,194 +14,211 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
     <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="icon" sizes="196x196" href="apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- styles -->
     @foreach (var tag in StaticFileTagRenderer.RenderStyles()) {
         @tag;
     }
 </head>
 <body class="page-signin">
     <div class="page-overlay"></div>
+    
+
+    <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
+
+<div class="container" ng-app="sw_prelogin" ng-controller="SignInController">
+    <div class="shadow">
+        <div class="form-signin">
+            <div class="row logo main">
+                <div class="col-sm-offset-1 col-sm-10">
+                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
+                    {
+                        <img src="~/Content/Images/@Model.ClientName/logo-main.png">
+                    }
+                    else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
+                    {
+                        <img src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/logo-main.png">
+                    }
+                </div>
+            </div>
+            <div class="row branding"></div>
+            <div class="row divider top"></div>
+            @if (!Model.IsLoginEnabled)
+            {
+                <div class="row index-form-row">
+                    <div class="serviceItLoginWarning" style="margin-bottom: 2em">
+                        @Model.LoginMessage
+                    </div>
+                </div>
+            }
+
+            @if (Model.IsLoginEnabled)
+            {
+                <div class="row form">
+                    <form class="col-sm-offset-1 col-sm-10" role="form" action="@Request.RawUrl" method="post" name="value" ng-show="!showforgotPasswordForm">
+
+                        <div class="row">
+                            <div id="diverrormessagelist" class="alert alert-success" ng-show="successMessage!=null">
+                                <a class="close" ng-click="successMessage=null" style="color: black"><i class="fa fa-times"></i></a>
+                                <span class="">
+                                        {{successMessage}}.
+                                    </span>
+                            </div>
+                        </div>
+
+                        @if (Model.IncorrectLogin)
+                        {
+                            if (string.IsNullOrEmpty(Model.LoginMessage))
+                            {
+                                <div class="text-danger" style="margin-bottom: 2em">
+                                    Your <strong>User Name</strong> or <strong>Password</strong> was entered incorrectly.
+                                </div>
+                            }
+                            else
+                            {
+                                var message = Model.LoginMessage.Split('\n');
+                                var count = Convert.ToInt32(message.Count());
+                                var i = 1;
+                                foreach (var m in message)
+                                {
+                                    var styleMessage = i == count ? "margin-bottom: 2em" : string.Empty;
+
+                                    <div class="text-danger" style="@styleMessage; margin-right: 250px;">@m</div>
+                                    i++;
+                                }
+                            }
+                        }
+                        else if (Model.Forbidden)
+                        {
+                            <script>
+                                $(document).ready(function() {
+                                    alert("You do not have permission to use this application. Please contact your System Administrator.");
+                                });
+                            </script>
+                        }
+                        <div class="row login">
+
+                            @if (@Model.ClientName != "demo")
+                            {
+                                    @*<div class="col-sm-6">
+                                            <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
+                                            <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                                Username is required<br />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                                            <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                                Password is required<br />
+                                            </div>
+                                            <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
+                                        </div>*@
+                                <div class="col-sm-offset-3 col-sm-6">
+                                    <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
+                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Username is required<br/>
+                                    </div>
+                                    <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Password is required<br/>
+                                    </div>
+                                    <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset"/>
+                                </div>
+                            }
+                            @if (@Model.ClientName == "demo")
+                            {
+                                <div class="col-sm-6">
+                                    <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
+                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Username is required<br/>
+                                    </div>
+                                    <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Password is required<br/>
+                                    </div>
+                                    <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset"/>
+                                </div>
+                                <div class="user-links col-sm-6">
+                                    <div>
+                                        Use the following credentials to login:<br>
+                                        <i class="fa fa-user"></i>&ensp;End User: <b>enduser</b> \\ <b>password</b><br>
+                                        <i class="fa fa-user"></i>&ensp;Supervisor: <b>supervisor</b> \\ <b>password</b><br>
+                                        <i class="fa fa-user"></i>&ensp;Administrator: <b>administrator</b> \\ <b>password</b>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (@Model.ClientName != "demo")
+                        {
+                            <div class="buttons submit-button col-sm-offset-3 col-sm-6">
+                                <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
+                                <a class="btn forgot-password col-xs-4 col-sm-5" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                            </div>
+                        }
+                        @if (@Model.ClientName == "demo")
+                        {
+                            <div class="row buttons submit-button">
+                                <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
+                                <a class="btn forgot-password col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                            </div>
+                        }
+                    </form>
+
+                    <form class="forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm">
+                        <div class="row">
+                            <div id="diverrormessagelist" class="alert alert-danger" ng-show="errorMessage!=null">
+                                <a class="close" ng-click="errorMessage=null" style="color: black"><i class="fa fa-times"></i></a>
+                                <span class="">
+                                        {{errorMessage}}.
+                                    </span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="userNameOrEmail" placeholder="Enter your email or username"/>
+                            </div>
+                        </div>
+                        <div class="row buttons">
+                            <button class="btn col-xs-4 col-sm-2" type="submit" ng-click="forgotPassword()"><span class="glyphicon glyphicon-ok"></span>&emsp;Submit</button>
+                            <button class="btn password-cancel col-xs-4 col-sm-2" type="submit" ng-click="showforgotPasswordForm=false"><span class="glyphicon glyphicon-remove"></span>&emsp;Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="row divider bottom"></div>
+                <div class="row logo byline">
+                    <div class="col-sm-offset-1 col-sm-10">
+                        @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png")))
+                        {
+                            <img src="~/Content/Images/@Model.ClientName/logo-byline.png">
+                        }
+                        else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png")))
+                        {
+                            <img src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/logo-byline.png">
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+    <!-- scripts-->
     @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
         @tag;
     }
     @RowStampScriptHelper.Render("~/Content/Scripts/client/signin")
 
-    <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
-
-    <div class="container" ng-app="sw_prelogin" ng-controller="SignInController">
-        <div class="shadow">
-            <div class="form-signin">
-                <div class="row logo main">
-                    <div class="col-sm-offset-1 col-sm-10">
-                        @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png"))) {
-                            <img src="~/Content/Images/@Model.ClientName/logo-main.png">
-                        } else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png"))) {
-                            <img src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
-                        } else {
-                            <img src="~/Content/Images/logo-main.png">
-                        }
-                    </div>
-                </div>
-                <div class="row branding"></div>
-                <div class="row divider top"></div>
-                @if (!Model.IsLoginEnabled) {
-                    <div class="row index-form-row">
-                        <div class="serviceItLoginWarning" style="margin-bottom: 2em">
-                            @Model.LoginMessage
-                        </div>
-                    </div>
-                }
-
-                @if (Model.IsLoginEnabled) {
-                    <div class="row form">
-                        <form class="col-sm-offset-1 col-sm-10" role="form" action="@Request.RawUrl" method="post" name="value" ng-show="!showforgotPasswordForm">
-
-                            <div class="row">
-                                <div id="diverrormessagelist" class="alert alert-success" ng-show="successMessage!=null">
-                                    <a class="close" ng-click="successMessage=null" style="color:black"><i class="fa fa-times"></i></a>
-                                    <span class="">
-                                        {{successMessage}}.
-                                    </span>
-                                </div>
-                            </div>
-
-                            @if (Model.IncorrectLogin)
-                            {
-                                if (string.IsNullOrEmpty(Model.LoginMessage))
-                                {
-                                    <div class="text-danger" style="margin-bottom: 2em">
-                                        Your <strong>User Name</strong> or <strong>Password</strong> was entered incorrectly.
-                                    </div>
-                                }
-                                else
-                                {
-                                    var message = Model.LoginMessage.Split('\n');
-                                    var count = Convert.ToInt32(message.Count());
-                                    var i = 1;
-                                    foreach (var m in message)
-                                    {
-                                        var styleMessage = i == count ? "margin-bottom: 2em" : string.Empty;
-
-                                        <div class="text-danger" style="@styleMessage; margin-right: 250px;">@m</div>
-                                        i++;
-                                    }
-                                }
-                            }
-                            else if (Model.Forbidden)
-                            {
-                                <script>
-                                    $(document).ready(function() {
-                                        alert("You do not have permission to use this application. Please contact your System Administrator.");
-                                    });
-                                </script>
-                            }
-                            <div class="row login">
-
-                                @if (@Model.ClientName != "demo")
-                                {
-                                    @*<div class="col-sm-6">
-                                        <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                        <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                            Username is required<br />
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                        <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                            Password is required<br />
-                                        </div>
-                                        <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
-                                    </div>*@
-                                    <div class="col-sm-offset-3 col-sm-6">
-                                        <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                        <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                            Username is required<br />
-                                        </div>
-                                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                        <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                            Password is required<br />
-                                        </div>
-                                        <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
-                                    </div>
-                                }
-                                @if (@Model.ClientName == "demo")
-                                {
-                                    <div class="col-sm-6">
-                                        <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                        <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                            Username is required<br />
-                                        </div>
-                                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                        <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                            Password is required<br />
-                                        </div>
-                                        <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
-                                    </div>
-                                    <div class="user-links col-sm-6">
-                                        <div>
-                                            Use the following credentials to login:<br>
-                                            <i class="fa fa-user"></i>&ensp;End User: <b>enduser</b> \\ <b>password</b><br>
-                                            <i class="fa fa-user"></i>&ensp;Supervisor: <b>supervisor</b> \\ <b>password</b><br>
-                                            <i class="fa fa-user"></i>&ensp;Administrator: <b>administrator</b> \\ <b>password</b>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                            @if (@Model.ClientName != "demo")
-                            {
-                                <div class="buttons submit-button col-sm-offset-3 col-sm-6">
-                                    <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
-                                    <a class="btn forgot-password col-xs-4 col-sm-5" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                                </div>
-                            }
-                            @if (@Model.ClientName == "demo")
-                            {
-                                <div class="row buttons submit-button">
-                                    <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
-                                    <a class="btn forgot-password col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                                </div>
-                            }
-                        </form>
-
-                        <form class="forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm">
-                            <div class="row">
-                                <div id="diverrormessagelist" class="alert alert-danger" ng-show="errorMessage!=null">
-                                    <a class="close" ng-click="errorMessage=null" style="color:black"><i class="fa fa-times"></i></a>
-                                    <span class="">
-                                        {{errorMessage}}.
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" ng-model="userNameOrEmail" placeholder="Enter your email or username" />
-                                </div>
-                            </div>
-                            <div class="row buttons">
-                                <button class="btn col-xs-4 col-sm-2" type="submit" ng-click="forgotPassword()"><span class="glyphicon glyphicon-ok"></span>&emsp;Submit</button>
-                                <button class="btn password-cancel col-xs-4 col-sm-2" type="submit" ng-click="showforgotPasswordForm=false"><span class="glyphicon glyphicon-remove"></span>&emsp;Cancel</button>
-                            </div>
-                        </form>
-
-                    </div>
-                    <div class="row divider bottom"></div>
-                    <div class="row logo byline">
-                        <div class="col-sm-offset-1 col-sm-10">
-                            @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png"))) {
-                                <img src="~/Content/Images/@Model.ClientName/logo-byline.png">
-                            } else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png"))) {
-                                <img src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
-                            } else {
-                                <img src="~/Content/Images/logo-byline.png">
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
 </body>
 </html>

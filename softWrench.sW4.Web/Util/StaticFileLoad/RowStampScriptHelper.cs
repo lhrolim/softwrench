@@ -2,19 +2,15 @@
 using System.Web.Optimization;
 using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Web.Util {
+namespace softWrench.sW4.Web.Util.StaticFileLoad {
     public static class RowStampScriptHelper {
 
         public static IHtmlString Render(params string[] paths) {
-
-
             var defaultValue = Scripts.Render(paths);
             if (ApplicationConfiguration.IsLocal()) {
                 return defaultValue;
             }
-
             var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
-
             return new HtmlString(defaultValue.ToHtmlString().Replace(".js", ".js?" + totalMillis));
         }
 
@@ -24,7 +20,6 @@ namespace softWrench.sW4.Web.Util {
                 return defaultValue;
             }
             var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
-
             return new HtmlString(defaultValue.ToHtmlString().Replace(".css", ".css?" + totalMillis));
         }
     }
