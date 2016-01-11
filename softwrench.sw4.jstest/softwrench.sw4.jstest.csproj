@@ -1443,11 +1443,12 @@
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
     <Content Include="tests\services\crud_contextservice_test.js" />
+    <Content Include="tests\services\gridSelection_service_test.js" />
     <Content Include="tests\services\menu_service_test.js" />
     <Content Include="tests\services\dashboardaux_service_test.js" />
     <Content Include="tests\services\expression_service_test.js" />
     <Content Include="tests\services\richtext_test.js" />
-    <Content Include="tests\services\gridSelection_service_test.js" />
+    <Content Include="tests\services\schemaservice_test.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="node_modules\jasmine-core\.gitmodules" />
