@@ -4,7 +4,7 @@
 
     function dispatchService($rootScope, applicationService, alertService,contextService) {
 
-        function dispatch(schema, datamap) {
+        function dispatchWO(schema, datamap) {
             var localDatamap = datamap;
             if (datamap.fields) {
                 localDatamap = datamap.fields;
@@ -19,8 +19,21 @@
             return applicationService.invokeOperation("servicerequest", "editdetail", "DispatchWO", crudData, extraParameters);
         }
 
+        function dispatchIncident(schema, datamap) {
+            var localDatamap = datamap.fields ? datamap.fields : datamap;
+
+            var crudData = {
+                crud: localDatamap
+            };
+            var extraParameters = {
+                id: localDatamap.wonum
+            };
+            return applicationService.invokeOperation("servicerequest", "editdetail", "DispatchIncident", crudData, extraParameters);
+        }
+
         var service = {
-            dispatch: dispatch
+            dispatchWO: dispatchWO,
+            dispatchIncident: dispatchIncident
         };
 
         return service;

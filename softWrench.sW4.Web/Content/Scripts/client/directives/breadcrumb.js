@@ -30,7 +30,7 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
 
                                 if (icon != null) {
                                     if (icon.className != undefined) {
-                                        for (i = 0; i < icon.classList.length; i++) {
+                                        for (var i = 0; i < icon.classList.length; i++) {
                                             if (icon.classList[i] != 'fa-fw') {
                                                 iconClass += icon.classList[i] + ' ';
                                             }
