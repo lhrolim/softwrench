@@ -47,45 +47,46 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return new ApplicationListResult(batchData.Locations.Count, null, resultData, schema, null);
 
 
+
+    }
+
+    private DataMap GetDataMap(IAssociationOption location, BatchData batchData, ICollection<string> warningIds) {
+        var selected = !warningIds.Contains(location.Value);
+        var fields = new Dictionary<string, object>();
+        fields["_#selected"] = selected;
+        fields["summary"] = batchData.Summary;
+        fields["siteid"] = batchData.SiteId;
+        fields["details"] = batchData.Details;
+        fields["location_label"] = location.Label;
+        fields["location"] = location.Value;
+        return new DataMap("workorder", fields);
+    }
+
+    [NotNull]
+    public List<string> ValidateIdsThatHaveWorkorders(List<AssociationOption> originalIds, bool location) {
+        return new List<string>();
+    }
+
+
+    public class BatchData {
+
+        public string Summary {
+            get; set;
         }
-
-        private DataMap GetDataMap(IAssociationOption location, BatchData batchData, ICollection<string> warningIds) {
-            var selected = !warningIds.Contains(location.Value);
-            var fields = new Dictionary<string, object>();
-            fields["_#selected"] = selected;
-            fields["summary"] = batchData.Summary;
-            fields["siteid"] = batchData.SiteId;
-            fields["details"] = batchData.Details;
-            fields["location_label"] = location.Label;
-            fields["location"] = location.Value;
-            return new DataMap("workorder",fields);
+        public string Details {
+            get; set;
         }
-
-        [NotNull]
-        public List<string> ValidateIdsThatHaveWorkorders(List<AssociationOption> originalIds, bool location) {
-            return new List<string>();
+        public string SiteId {
+            get; set;
         }
-
-
-        public class BatchData {
-
-            public string Summary {
-                get; set;
-            }
-            public string Details {
-                get; set;
-            }
-            public string SiteId {
-                get; set;
-            }
-            public List<AssociationOption> Locations {
-                get; set;
-            }
-            public List<AssociationOption> Assets {
-                get; set;
-            }
-
+        public List<AssociationOption> Locations {
+            get; set;
+        }
+        public List<AssociationOption> Assets {
+            get; set;
         }
 
     }
+
+}
 }

@@ -7,6 +7,14 @@
         }
     };
 
+    var schemaWithServerLoading = {
+        idFieldName: "id",
+        properties: {
+            "list.selectionstyle": "multiple",
+            "list.loadwithselection": "true"
+        }
+    };
+
     var selectionService;
     var crudContextService;
     beforeEach(module("sw_layout"));
@@ -46,6 +54,22 @@
     	expect(selectionModel.selectAllValue).toBe(true);
     	expect(row1.fields["_#selected"]).toBe(true);
     	expect(row2.fields["_#selected"]).toBe(true);
+    });
+
+    it("grid data changed with server loading", function () {
+        var row1 = { fields: { "_#selected": true, id: 1 } };
+        var row2 = { fields: { "_#selected": false, id: 2 } };
+        var datamap = [row1, row2];
+        crudContextService.addSelectionToBuffer("2", row1);
+
+        selectionService.gridDataChanged(datamap, schemaWithServerLoading);
+
+        var selectionModel = crudContextService.getSelectionModel();
+        expect(selectionModel.pageSize).toBe(2);
+        expect(selectionModel.onPageSelectedCount).toBe(2);
+        expect(selectionModel.selectAllValue).toBe(true);
+        expect(row1.fields["_#selected"]).toBe(true);
+        expect(row2.fields["_#selected"]).toBe(true);
     });
 
 	it("toggle selection", function () {

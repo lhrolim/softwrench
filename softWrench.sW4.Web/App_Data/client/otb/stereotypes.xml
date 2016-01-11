@@ -21,6 +21,8 @@
     <property key="list.disablefilter" value="true"/>
     <property key="list.disabledetails" value="true"/>
     <property key="list.sortmode" value="none"/>
+    <property key="list.selectionmodebydefault" value="true" />
+    <property key="list.loadwithselection" value="true" />
   </stereotype>
 
   <stereotype id="detail">
