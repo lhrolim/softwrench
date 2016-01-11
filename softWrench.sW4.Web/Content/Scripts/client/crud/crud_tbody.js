@@ -11,7 +11,8 @@
         if (scope.showDetail) {
             scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber], forceEdition);
         }
-        scope.$digest();
+        // to process the checkbox values and select-all state from parent (crud_list) too
+        scope.$root.$digest(); 
     }
 
     window.griditemclick = griditemclick;
