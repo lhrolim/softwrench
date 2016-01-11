@@ -39,7 +39,9 @@
     "moment": "~2.11.0",
     "textAngular": "~1.4.6",
     "bootstrap-combobox": "1.1.5",
-    "bootbox.js": "~4.4.0"
+    "bootbox.js": "~4.4.0",
+    "lz-string": "~1.4.4",
+    "bootstrap-multiselect": "~0.9.13"
   },
   "devDependencies": {},
   "resolutions": {
