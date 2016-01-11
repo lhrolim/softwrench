@@ -146,7 +146,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 
                 //TODO: Used for layout testing only
                 //Should we made a generic or stand-alone wrapper component?
-                element.append("<composition-master-details/>");
+                element.append("<composition-master-details data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' />");
                 $compile(element.contents())(scope);
                 //controls tab lazy loading
                 scope.loaded = true;

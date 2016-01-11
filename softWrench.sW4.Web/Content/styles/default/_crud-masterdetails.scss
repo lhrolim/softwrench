@@ -2,7 +2,7 @@
     &.master-details {
         /*.entries {*/
         .master {
-            margin-top: 21px;
+            margin: 21px 0 40px;
 
             .quick-search {
                 padding-left: 0;
@@ -15,18 +15,27 @@
                 .entry {
                     padding: 15px;
                     background-color: #ebebeb;
+                    cursor: pointer;
+                    word-wrap: break-word;
 
-                    .email, .date, .title {
-                        margin-bottom: 5px;
+                    .read {
+                        width: 20px;
+                        color: #428bca;
+                        font-size: 8px;
+                        margin-top: 3px;
                     }
 
-                    .email {
-                        float: left;
-                        font-weight: bold;
+                    .author, .date, .title {
+                        margin-bottom: 5px;
                     }
 
                     .date {
                         float: right;
+                    }
+
+                    .author {
+                        float: left;
+                        font-weight: bold;
                     }
 
                     .title {
@@ -36,11 +45,17 @@
                     .message {
                         color: #999;
                     }
+
+                    &.odd {
+                        background-color: #fff;
+                    }
                 }
             }
         }
 
         .details {
+            margin-bottom: 40px;
+
             .fields {
                 .field {
                     margin-bottom: 20px;
