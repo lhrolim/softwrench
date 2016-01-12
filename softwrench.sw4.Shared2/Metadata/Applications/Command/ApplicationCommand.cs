@@ -11,18 +11,45 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         private readonly string _id;
         private readonly string _label;
 
-        public string Service { get; set; }
-        public string Icon { get; set; }
-        public string Tooltip { get; set; }
-        public string Method { get; set; }
+        public string Service {
+            get; set;
+        }
+        public string Icon {
+            get; set;
+        }
+        public string Tooltip {
+            get; set;
+        }
+        public string Method {
+            get; set;
+        }
 
-        public string Position { get; set; }
-        public string Type { get { return typeof(ApplicationCommand).Name; } }
+        public string CssClasses {
+            get; set;
+        }
+        public bool Primary {
+            get; set;
+        }
 
-        public List<string> ScopeParameters { get; set; }
+        public string Position {
+            get; set;
+        }
+        public string Type {
+            get {
+                return typeof(ApplicationCommand).Name;
+            }
+        }
 
-        public IDictionary<string, object> Parameters { get; set; }
-        public IDictionary<string, object> Properties { get; set; }
+        public List<string> ScopeParameters {
+            get; set;
+        }
+
+        public IDictionary<string, object> Parameters {
+            get; set;
+        }
+        public IDictionary<string, object> Properties {
+            get; set;
+        }
 
         private readonly string _role;
         private readonly string _showExpression;
@@ -34,7 +61,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         private readonly ApplicationCommandStereotype _stereotype;
 
         public ApplicationCommand(string id, string label, string service, string method, string role, string stereotype, string showExpression, string enableExpression, string successMessage,
-            string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon, string tooltip) {
+            string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon, string tooltip, string cssClasses, bool primary) {
             _id = id;
             _label = label;
             Service = service;
@@ -57,14 +84,20 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             Position = defaultPosition;
             Icon = icon;
             Tooltip = tooltip;
+            CssClasses = cssClasses;
+            Primary = primary;
         }
 
         public string Id {
-            get { return _id; }
+            get {
+                return _id;
+            }
         }
 
         public string Label {
-            get { return _label; }
+            get {
+                return _label;
+            }
         }
 
 
@@ -72,28 +105,40 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
 
 
         public string Role {
-            get { return _role; }
+            get {
+                return _role;
+            }
         }
 
         public string ShowExpression {
-            get { return _showExpression; }
+            get {
+                return _showExpression;
+            }
         }
 
         public string EnableExpression {
-            get { return _enableExpression; }
+            get {
+                return _enableExpression;
+            }
         }
 
         public string SuccessMessage {
-            get { return _successMessage; }
+            get {
+                return _successMessage;
+            }
         }
 
         public string NextSchemaId {
-            get { return _nextSchemaId; }
+            get {
+                return _nextSchemaId;
+            }
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public ApplicationCommandStereotype Stereotype {
-            get { return _stereotype; }
+            get {
+                return _stereotype;
+            }
         }
 
         public override string ToString() {
@@ -116,7 +161,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
         public static ApplicationCommand TestInstance(String id, string position = "", string label = "") {
-            return new ApplicationCommand(id, label, null, null, null, null, null, null,null, null, null, null, position, null, null);
+            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, null, position, null, null, null,false);
         }
     }
 }

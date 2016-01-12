@@ -1,12 +1,11 @@
 <div class="group">
     <span ng-repeat="command in getGridToolbar()">
         <ng-switch on="command.type">
-            <button ng-switch-when="ApplicationCommand" type="button" ng-class="buttonClasses()"
+            <button ng-switch-when="ApplicationCommand" type="button" ng-class="buttonClasses(command)"
                     ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
                     ng-enabled="isCommandEnabled(command)"
                     data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body" class="applicationcommand">
-                    <!--TODO: review that schema.stereotype !== 'List-->
-                <i class="fa" ng-class="commandIcon(command)"></i><span ng-show="schema.stereotype !== 'List'">&ensp;{{commandLabel(command)}}</span>
+                <i class="fa" ng-class="commandIcon(command)"></i><span>&ensp;{{commandLabel(command)}}</span>
             </button>
             <span ng-switch-when="ResourceCommand" ng-click="validateRole(command)">
                 <ng-include src="url(command.path)" />

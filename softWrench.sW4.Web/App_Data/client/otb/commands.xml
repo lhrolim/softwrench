@@ -4,9 +4,8 @@
   <commandgroup position="gridtop" platform="web">
     <!--    <command id="new" icon="fa-plus" service="applicationService" method="newitem" label="$scope." tooltip="New Item"/>-->
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
-    <command id="print" icon="fa-print" service="printService" method="printList" parameters="paginationData,schema" label="Print" tooltip="Print" showexpression=""/>
+    <command id="print" icon="fa-print" service="printService" method="printList" parameters="paginationData,schema" tooltip="Print" showexpression=""/>
     <command id="export" icon="fa-file-text-o" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData"
-             label="Export"
              tooltip="Export to Excel" showexpression=""/>
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
@@ -21,7 +20,8 @@
   </commandgroup>
 
   <commandgroup position="spreadsheet" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" />
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" primary="true"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
 
@@ -44,7 +44,7 @@
   </commandgroup>
 
   <commandgroup position="detailform_modal" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave" primary="true"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
