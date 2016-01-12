@@ -33,7 +33,7 @@
         <div class="details col-xs-8">
             <div class="fields">
                 <div class="field" ng-repeat="fieldMetadata in getDetailSchema().displayables" ng-show="showDetailField(fieldMetadata)">
-                    <label class="control-label">{{fieldMetadata.label}}</label>
+                    <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
                     <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-﻿app.directive('compositionMasterDetails', function (contextService, formatService, schemaService, iconService, eventService, $log) {
+﻿app.directive('compositionMasterDetails', function (contextService, formatService, schemaService, iconService, eventService, i18NService, $log) {
     return {
         restrict: 'E',
         replace: true,
@@ -13,6 +13,10 @@
 
         controller: function ($scope) {
             var log = $log.getInstance('sw4.composition.master/detail');
+
+            $scope.i18NInputLabel = function (fieldMetadata) {
+                return i18NService.getI18nInputLabel(fieldMetadata, $scope.getDetailSchema());
+            };
 
             $scope.mapMaster = function (compositiondata, schema) {
 
