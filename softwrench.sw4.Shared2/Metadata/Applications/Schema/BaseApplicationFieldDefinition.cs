@@ -16,6 +16,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
+        public bool FromSubquery { get; set; }
         [DefaultValue("true")] public string ShowExpression { get; set; }
         [DefaultValue("true")] public string EnableExpression { get; set; }
 
@@ -40,7 +41,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             string attribute, string requiredExpression, bool isReadOnly,
             string defaultValue, string qualifier, string showExpression, string toolTip,
             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression,
-            string defaultExpression) {
+            string defaultExpression, bool fromSubqeury) {
             if (attribute == null) {
                 throw new ArgumentNullException("attribute", String.Format("check {0} metadata config", applicationName));
             }
@@ -60,8 +61,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 _events = events.ToDictionary(f => f.Type, f => f);
             }
             EnableExpression = enableExpression;
-
-        }
+            FromSubquery = fromSubqeury;
+            }
 
         public IDictionary<String, ApplicationEvent> Events {
             get { return _events; }
