@@ -63,7 +63,7 @@ namespace softWrench.sW4.Web {
 
             // customized vendor scripts
             bundles.Add(new ScriptBundle("~/Content/customVendor/scripts")
-                .IncludeDirectory("~/Content/customVendor/scripts/", "*.js")
+                .IncludeDirectory("~/Content/customVendor/scripts/", "*.js", true)
                 );
 
             // app scripts

@@ -105,9 +105,9 @@ softWrench.sW4.Web/Content/vendor/fonts/*
 !softWrench.sW4.Web/Content/vendor/scripts/
 softWrench.sW4.Web/Content/vendor/scripts/*
 # temporary folder
-softWrench.sW4.Web/Content/vendor/tmp
+softWrench.sW4.Web/Content/temp
 # final distribution directory
-softWrench.sW4.Web/Content/vendor/dist
+softWrench.sW4.Web/Content/dist
 # sass/scss specific
 softWrench.sW4.Web/.sass-cache/
 **/Content/styles/**/*.css

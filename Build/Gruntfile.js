@@ -3,6 +3,7 @@ module.exports = function (grunt) {
     var webProjectRelPath = "../softWrench.sW4.Web/";
     var path = grunt.option("path") || "";
     var fullPath = !!path ? path + "/" : webProjectRelPath;
+    var customer = grunt.option("customer");
 
     var scssFilesToCompile = [
         {
@@ -35,9 +36,13 @@ module.exports = function (grunt) {
     grunt.initConfig({
         //#region global app config
         app: {
-            vendor: webProjectRelPath + "Content/vendor",
-            tmp: webProjectRelPath + "Content/tmp",
-            dist: webProjectRelPath + "Content/dist"
+            content: fullPath + "Content",
+            vendor: fullPath + "Content/vendor",
+            customVendor: fullPath + "Content/customVendor",
+            customers: fullPath + "Content/Customers",
+
+            tmp: fullPath + "Content/temp",
+            dist: fullPath + "Content/dist"
         },
         //#endregion
 
@@ -91,9 +96,9 @@ module.exports = function (grunt) {
                     "angular/angular-ui-select.css": "ui-select/dist/select.min.css",
                 }
             },
-            fontsdev: {
+            fonts: {
                 options: {
-                    destPrefix: "<%= app.vendor %>/css"
+                    destPrefix: "<%= app.dist %>"
                 },
                 files: {
                     "fonts": [
@@ -102,42 +107,9 @@ module.exports = function (grunt) {
                     ]
                 }
             },
-            dev: {
+            scripts: {
                 options: {
-                    destPrefix: "<%= app.vendor %>/scripts"
-                },
-                files: {
-                    // jquery
-                    "jquery/jquery.js": "jquery/dist/jquery.js",
-                    "jquery/jquery-ui.js": "jquery-ui/ui/jquery-ui.js",
-                    "jquery/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
-                    "jquery/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
-                    "jquery/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
-                    // bootstrap
-                    "bootstrap/bootstrap.js": "bootstrap/dist/js/bootstrap.js",
-                    "bootstrap/bootstrap-combobox.js": "bootstrap-combobox/js/bootstrap-combobox.js",
-                    "bootstrap/bootstrap-datetimepicker.js": "eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js",
-                    "bootstrap/bootstrap-multiselect.js": "bootstrap-multiselect/dist/js/bootstrap-multiselect.js",
-                    "bootstrap/bootbox.js": "bootbox.js/bootbox.js",
-                    // angular
-                    "angular/angular.js": "angular/angular.js",
-                    "angular/angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
-                    "angular/angular-strap.js": "angular-strap/dist/angular-strap.js",
-                    "angular/angular-animate.js": "angular-animate/angular-animate.js",
-                    "angular/angular-xeditable.js": "angular-xeditable/dist/js/xeditable.js",
-                    "angular/angular-file-upload.js": "angular-file-upload/angular-file-upload.js",
-                    "angular/angular-bindonce.js": "angular-bindonce/bindonce.js",
-                    // utils
-                    "utils/a-moment.js": "moment/min/moment.min.js",
-                    "utils/moment-locale-de.js": "moment/locale/de.js",
-                    "utils/moment-locale-es.js": "moment/locale/es.js",
-                    "utils/spin.js": "spin.js/spin.js",
-                    "utils/lz-string.js": "lz-string/libs/lz-string.js",
-                }
-            },
-            prod: {
-                options: {
-                    clean: true,
+                    // clean: true,
                     destPrefix: "<%= app.vendor %>/scripts"
                 },
                 files: {
@@ -170,20 +142,146 @@ module.exports = function (grunt) {
                     "raw/moment-locale-es.js": "moment/locale/es.js",
                 }
             }
-        }
+        },
         //#endregion
+
+        //#region concat
+        concat: {
+            vendorStyles: {
+                src: [
+                    "<%= bowercopy.css.options.destPrefix %>/*.css",
+                    // TODO: have customVendor be a part of the app's css instead of the vendor's css
+                    "<%= app.tmp %>/css/customVendor.min.css"
+                ],
+                dest: "<%= app.dist %>/css/vendor.css"
+            },
+            vendorScripts: {
+                options: {
+                    separator: ";\n",
+                    stripBanners: {
+                        block: true,
+                        line: true
+                    }
+                },
+                src: [
+                     // utils
+                    "<%= bowercopy.scripts.options.destPrefix %>/moment.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/spin.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/lz-string.js",
+                    // jquery
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
+                    // bootstrap
+                    "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/bootstrap-datetimepicker.js",
+                    // angular
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-sanitize.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-strap.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-bindonce.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-animate.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js"
+
+                ],
+                dest: "<%= app.dist %>/scripts/vendor.js"
+            },
+            appScripts: {
+                options: {
+                    separator: ";\n",
+                    stripBanners: {
+                        block: true,
+                        line: true
+                    }
+                },
+                src: [
+                    // unminified 
+                    // TODO: have unminified vendors be a part of vendor's instead of app's script
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawmoment-locale-de.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawmoment-locale-es.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawjquery-file-style.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawjquery-file-download.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawjquery-file-upload.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawbootstrap-combobox.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawbootstrap-multiselect.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/rawbootbox.js",
+                    // customVendors
+                    "<%= app.customVendor %>/scripts/**/*.js",
+                    // actual app
+                    "<%= app.content %>/Scripts/client/crud/**/*.js",
+                    "<%= app.content %>/Scripts/client/services/*.js",
+                    "<%= app.content %>/Scripts/client/client/*.js",
+                    "<%= app.content %>/Scripts/client/client/adminresources/*.js",
+                    "<%= app.content %>/Scripts/client/client/directives/*.js",
+                    "<%= app.content %>/Scripts/client/client/directives/menu/*.js",
+                    "<%= app.content %>/Templates/commands/**/*.js",
+                    "<%= app.content %>/modules/**/*.js"
+                    // customer
+                ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]),
+
+                dest: "<%= app.tmp %>/scripts/app.concat.js"
+            }
+        },
+        //#endregion
+
+        //#region minify css
+        cssmin: {
+            customVendor: {
+                files: [{
+                    //expand: false,
+                    //cwd: "<%= app.customVendor %>/css",
+                    src: ["<%= app.customVendor %>/css/*.css"],
+                    dest: "<%= app.tmp %>/css/customVendor.min.css",
+                    ext: ".min.css"
+                }]
+            }
+        },
+        //#endregion
+
+        //#region uglify js
+        uglify: {
+            options: {
+                mangle: {
+                    except: ["jQuery", "angular", "tableau"]
+                },
+                screwIE8: true
+            },
+            app: {
+                files: [{
+                    //expand: false,
+                    //cwd: "<%= app.tmp %>/scripts",
+                    src: ["<%= concat.appScripts.dest %>"],
+                    dest: "<%= app.dist %>/scripts/app.js"
+                }]
+            }
+        },
+        //#endregion
+
     });
 
-    // load npm tasks
+    //#region load npm tasks
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-bowercopy");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
-    grunt.loadNpmTasks("grunt-karma"); 
+    grunt.loadNpmTasks("grunt-karma");
+    //#endregion
 
-    // define default tasks
-    grunt.registerTask("copyAll", ["clean:vendor", "bowercopy:css", "bowercopy:fontsdev", "bowercopy:dev"]);
-    grunt.registerTask("default", ["copyAll"]);
+    //#region customTasks
+    grunt.registerTask("cleanAll", ["clean:vendor", "clean:tmp", "clean:dist"]);
+    grunt.registerTask("copyAll", ["bowercopy:css", "bowercopy:fonts", "bowercopy:scripts"]);
+    grunt.registerTask("default", [
+        "cleanAll", // clean folders: preparing for copy
+        "copyAll", // copying bower files
+        "cssmin:customVendor", // minify and concat 'customized from vendor' css
+        "concat:vendorStyles", // concat vendors's css + minified 'customized from vendor' and distribute as 'css/vendor.css'
+        "concat:vendorScripts", // concat minified vendors's scripts and distribute as 'scripts/vendor.js' 
+        "concat:appScripts", // concat app's scripts (unminified vendors's + customized from vendor's + actual app's + customer's)
+        "uglify:app", // minify app script and distribute and distribute as 'scripts/app.js'
+        "clean:vendor" , "clean:tmp" // clean temporary folders
+    ]);
+    //#endregion
+   
 };
