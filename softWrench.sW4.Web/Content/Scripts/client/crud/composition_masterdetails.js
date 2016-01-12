@@ -1,4 +1,4 @@
-﻿app.directive('compositionMasterDetails', function (contextService, formatService, schemaService, iconService, $log) {
+﻿app.directive('compositionMasterDetails', function (contextService, formatService, schemaService, iconService, eventService, $log) {
     return {
         restrict: 'E',
         replace: true,
@@ -72,7 +72,27 @@
             };
             
             $scope.displayDetails = function (entry) {
+                //display the selected details
                 $scope.getDetailDatamap = entry;
+
+                if (!entry.read) {
+                    //remove the read icon
+                    for (i = 0; i < entry.master.icons.length; i++) {
+                        if (entry.master.icons[i].indexOf('read') >= 0) {
+                            entry.master.icons[i] = '';
+                        }
+                    }
+
+                    //update the read flag on the server
+                    var parameters = {};
+                    parameters.compositionItemId = entry.commloguid;
+                    parameters.compositionItemData = entry;
+                    parameters.parentData = $scope.parentdata;
+                    parameters.parentSchema = $scope.parentschema;
+                    eventService.onviewdetail($scope.compositionschemadefinition, parameters);
+
+                    entry.read = true;
+                }
             };
 
             $scope.getDetailDisplayables = function () {
