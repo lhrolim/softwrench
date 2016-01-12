@@ -5,34 +5,6 @@ module.exports = function (grunt) {
     var fullPath = !!path ? path + "/" : webProjectRelPath;
     var customer = grunt.option("customer");
 
-    var scssFilesToCompile = [
-        {
-            expand: true,
-            cwd: "Content/Customers/",
-            dest: "Content/Customers/",
-            src: ["**/*.scss"],
-            ext: ".css"
-        },
-        {
-            expand: true,
-            cwd: "Content/Shared/",
-            dest: "Content/Shared/",
-            src: ["**/*.scss"],
-            ext: ".css"
-        },
-        {
-            expand: true,
-            cwd: "Content/styles/",
-            dest: "Content/styles/",
-            src: ["**/*.scss"],
-            ext: ".css"
-        }
-    ].map(function (file) {
-        file.cwd = (fullPath) + file.cwd;
-        file.dest = (fullPath) + file.dest;
-        return file;
-    });
-
     grunt.initConfig({
         //#region global app config
         app: {
@@ -53,7 +25,29 @@ module.exports = function (grunt) {
                     sourceMap: false,
                     outputStyle: "compressed"
                 },
-                files: scssFilesToCompile
+                files: [
+                    {
+                        expand: true,
+                        cwd: fullPath + "Content/Customers/",
+                        dest: fullPath + "Content/Customers/",
+                        src: ["**/*.scss"],
+                        ext: ".css"
+                    },
+                    {
+                        expand: true,
+                        cwd: fullPath + "Content/Shared/",
+                        dest: fullPath + "Content/Shared/",
+                        src: ["**/*.scss"],
+                        ext: ".css"
+                    },
+                    {
+                        expand: true,
+                        cwd: fullPath + "Content/styles/",
+                        dest: fullPath + "Content/styles/",
+                        src: ["**/*.scss"],
+                        ext: ".css"
+                    }
+                ]
             }
         },
         //#endregion
@@ -145,6 +139,37 @@ module.exports = function (grunt) {
         },
         //#endregion
 
+        //#region ng-annotate
+        ngAnnotate: {
+            options: {
+                separator: ";\n"
+            },
+            app: {
+                files: [{
+                    src: [
+                        // app
+                        "<%= app.content %>/Scripts/client/crud/**/*.js",
+                        "<%= app.content %>/Scripts/client/services/*.js",
+                        "<%= app.content %>/Scripts/client/client/*.js",
+                        "<%= app.content %>/Scripts/client/client/adminresources/*.js",
+                        "<%= app.content %>/Scripts/client/client/directives/*.js",
+                        "<%= app.content %>/Scripts/client/client/directives/menu/*.js",
+                        "<%= app.content %>/Templates/commands/**/*.js",
+                        "<%= app.content %>/modules/**/*.js",
+                        // Shared
+                        "<%= app.content %>/Shared/**/*.js",
+                        // base otb
+                        "<%= app.content %>/Scripts/customers/otb/*.js",
+                        // customers shared
+                        "<%= app.content %>/Scripts/customers/shared/*.js"
+                    ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]),
+
+                    dest: "<%= app.tmp %>/scripts/app.annotated.js"
+                }]
+            }
+        },
+        //#endregion
+
         //#region concat
         concat: {
             vendorStyles: {
@@ -181,8 +206,9 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-bindonce.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-animate.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js"
-
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
+                    // minified raw vendors
+                    "<%= app.tmp %>/scripts/rawVendor.min.js"
                 ],
                 dest: "<%= app.dist %>/scripts/vendor.js"
             },
@@ -195,27 +221,10 @@ module.exports = function (grunt) {
                     }
                 },
                 src: [
-                    // unminified 
-                    // TODO: have unminified vendors be a part of vendor's instead of app's script
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawmoment-locale-de.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawmoment-locale-es.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawjquery-file-style.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawjquery-file-download.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawjquery-file-upload.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawbootstrap-combobox.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawbootstrap-multiselect.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/rawbootbox.js",
                     // customVendors
                     "<%= app.customVendor %>/scripts/**/*.js",
-                    // actual app
-                    "<%= app.content %>/Scripts/client/crud/**/*.js",
-                    "<%= app.content %>/Scripts/client/services/*.js",
-                    "<%= app.content %>/Scripts/client/client/*.js",
-                    "<%= app.content %>/Scripts/client/client/adminresources/*.js",
-                    "<%= app.content %>/Scripts/client/client/directives/*.js",
-                    "<%= app.content %>/Scripts/client/client/directives/menu/*.js",
-                    "<%= app.content %>/Templates/commands/**/*.js",
-                    "<%= app.content %>/modules/**/*.js"
+                    // actual app: ng-annotated source
+                    "<%= app.tmp %>/scripts/app.annotated.js"
                     // customer
                 ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]),
 
@@ -246,10 +255,23 @@ module.exports = function (grunt) {
                 },
                 screwIE8: true
             },
+            rawVendors: {
+                files: [{
+                    src: [
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/moment-locale-de.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/moment-locale-es.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-style.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-download.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-upload.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/bootstrap-combobox.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/bootstrap-multiselect.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/bootbox.js"
+                    ],
+                    dest: "<%= app.tmp %>/scripts/rawVendor.min.js"
+                }]
+            },
             app: {
                 files: [{
-                    //expand: false,
-                    //cwd: "<%= app.tmp %>/scripts",
                     src: ["<%= concat.appScripts.dest %>"],
                     dest: "<%= app.dist %>/scripts/app.js"
                 }]
@@ -263,6 +285,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-bowercopy");
+    grunt.loadNpmTasks("grunt-ng-annotate");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
@@ -277,9 +300,11 @@ module.exports = function (grunt) {
         "copyAll", // copying bower files
         "cssmin:customVendor", // minify and concat 'customized from vendor' css
         "concat:vendorStyles", // concat vendors's css + minified 'customized from vendor' and distribute as 'css/vendor.css'
-        "concat:vendorScripts", // concat minified vendors's scripts and distribute as 'scripts/vendor.js' 
-        "concat:appScripts", // concat app's scripts (unminified vendors's + customized from vendor's + actual app's + customer's)
-        "uglify:app", // minify app script and distribute and distribute as 'scripts/app.js'
+        "uglify:rawVendors", // minifies unminified vendors
+        "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
+        "ngAnnotate:app", // ng-annotates app's scripts
+        "concat:appScripts", // concat app's customized from vendor's + ng-annotated + customer's)
+        "uglify:app", // minify app script and distribute as 'scripts/app.js'
         "clean:vendor" , "clean:tmp" // clean temporary folders
     ]);
     //#endregion

@@ -11,13 +11,15 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- styles -->
     @foreach (var tag in StaticFileTagRenderer.RenderStyles()) {
         @tag;
     }
     @*<base href="@Request.ApplicationPath" />*@
 </head>
 <body>
-    @*@model softWrench.sW4.Web.Models.Home.HomeModel*@
+@*@model softWrench.sW4.Web.Models.Home.HomeModel*@
+    <!-- scripts -->
     @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
         @tag;
     }

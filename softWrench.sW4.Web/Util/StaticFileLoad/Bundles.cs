@@ -3,29 +3,49 @@
 
         public static class Local {
 
+            public static readonly string VendorStyles = "~/Content/vendor/css";
+            public static readonly string CustomVendorStyles = "~/Content/customVendor/css";
+            public static readonly string FontsStyles = "~/Content/fonts";
+            public static readonly string AppStyles = "~/Content/styles/client/client-css";
+            public static readonly string SharedAppStyles = "~/Content/styles/shared";
+
             public static readonly string[] Styles = {
-                "~/Content/vendor/css",
-                "~/Content/customVendor/css",
-                "~/Content/fonts",
-                "~/Content/styles/client/client-css",
-                "~/Content/styles/shared"
+                VendorStyles,
+                CustomVendorStyles,
+                FontsStyles,
+                AppStyles,
+                SharedAppStyles
             };
 
+            public static readonly string AppScripts = "~/Content/Scripts/client/application";
+            public static readonly string VendorScripts = "~/Content/vendor/scripts";
+            public static readonly string CustomVendorScripts = "~/Content/customVendor/scripts";
+            public static readonly string SharedAppScripts = "~/Content/Scripts/client/application";
+
             public static readonly string[] Scripts = {
-                "~/Content/vendor/scripts",
-                "~/Content/customVendor/scripts",
-                "~/Content/Scripts/client/application",
-                "~/Content/Scripts/client/application/shared"
+                VendorScripts,
+                CustomVendorScripts,
+                AppScripts,
+                SharedAppScripts
             };
+
         }
 
         public static class Distribution {
+
+            public static readonly string VendorStyles = "~/Content/dist/css";
+
             public static readonly string[] Styles = {
-                "~/Content/dist/css"
+                VendorStyles,
+                Local.FontsStyles,
+                Local.AppStyles,
+                Local.SharedAppStyles
             };
 
+            public static readonly string AllScripts = "~/Content/dist/scripts";
+
             public static readonly string[] Scripts = {
-                "~/Content/dist/scripts"
+                AllScripts
             };
         }
     }

@@ -23,10 +23,16 @@
     }
 </head>
 <body class="page-signin">
-    <div class="page-overlay"></div>
-    
+    <!-- scripts-->
+    @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
+        @tag;
+    }
+    @RowStampScriptHelper.Render("~/Content/Scripts/client/signin")
 
-    <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
+<div class="page-overlay"></div>
+
+
+<input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath"/>
 
 <div class="container" ng-app="sw_prelogin" ng-controller="SignInController">
     <div class="shadow">
@@ -214,11 +220,7 @@
     </div>
 </div>
 
-    <!-- scripts-->
-    @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
-        @tag;
-    }
-    @RowStampScriptHelper.Render("~/Content/Scripts/client/signin")
+
 
 </body>
 </html>

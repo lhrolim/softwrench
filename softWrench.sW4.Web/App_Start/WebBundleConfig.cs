@@ -1,35 +1,60 @@
 ﻿using System.Web.Optimization;
 using cts.commons.web;
+using softWrench.sW4.Util;
 using softWrench.sW4.Web.Util.StaticFileLoad;
 
 namespace softWrench.sW4.Web {
-    public class WebBundleConfig :IBundleConfigProvider {
+    public class WebBundleConfig : IBundleConfigProvider {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
 
         public void PopulateStyleBundles(BundleCollection bundles) {
+            if (ApplicationConfiguration.IsLocal()) {
+                PopulateLocalStyleBundles(bundles);
+            } else {
+                PopulateDistributionStyleBundles(bundles);
+            }
+        }
 
+        private void PopulateLocalStyleBundles(BundleCollection bundles) {
             // from bower styles
-            bundles.Add(new StyleBundle("~/Content/vendor/css")
+            bundles.Add(new StyleBundle(Bundles.Local.VendorStyles)
                 .IncludeDirectory("~/Content/vendor/css/bootstrap/", "*.css")
                 .IncludeDirectory("~/Content/vendor/css/font-awesome/", "*.css")
                 .IncludeDirectory("~/Content/vendor/css/angular/", "*.css")
                 );
-          
+
             // customized vendor styles
-            bundles.Add(new StyleBundle("~/Content/customVendor/css")
+            bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
                 .IncludeDirectory("~/Content/customVendor/css/", "*.css")
                 );
 
             // from bower fonts
-            bundles.Add(new StyleBundle("~/Content/fonts")
-                .Include( "~/Content/fonts/font.css")
+            bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
+                .Include("~/Content/fonts/font.css")
                 );
         }
 
-        public void PopulateScriptBundles(BundleCollection bundles) {
+        private void PopulateDistributionStyleBundles(BundleCollection bundles) {
+            // sass compiled and fonts already being distributed
+            bundles.Add(new StyleBundle(Bundles.Distribution.VendorStyles)
+                .IncludeDirectory("~/Content/dist/css", "*.css"));
+        }
 
+        public void PopulateScriptBundles(BundleCollection bundles) {
+            if (ApplicationConfiguration.IsLocal()) {
+                PopulateLocalScriptBundles(bundles);
+            } else {
+                PopulateDistributionScriptBundles(bundles);
+            }
+
+            // login script
+            bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin")
+                .Include("~/Content/Scripts/client/signin/signin.js"));
+        }
+
+        private void PopulateLocalScriptBundles(BundleCollection bundles) {
             // from bower scripts
-            var vendorBundle = new ScriptBundle("~/Content/vendor/scripts")
+            var vendorBundle = new ScriptBundle(Bundles.Local.VendorScripts)
                 // utils
                 .IncludeDirectory("~/Content/vendor/scripts/utils/", "*.js")
                 // jquery
@@ -62,17 +87,12 @@ namespace softWrench.sW4.Web {
             bundles.Add(vendorBundle);
 
             // customized vendor scripts
-            bundles.Add(new ScriptBundle("~/Content/customVendor/scripts")
+            bundles.Add(new ScriptBundle(Bundles.Local.CustomVendorScripts)
                 .IncludeDirectory("~/Content/customVendor/scripts/", "*.js", true)
                 );
 
             // app scripts
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin").Include(
-                "~/Content/Scripts/client/signin/signin.js"
-                ));
-
-            // app scripts
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/application")
+            bundles.Add(new ScriptBundle(Bundles.Local.AppScripts)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/services/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/", "*.js")
@@ -81,7 +101,14 @@ namespace softWrench.sW4.Web {
                 .IncludeDirectory("~/Content/Scripts/client/directives/menu/", "*.js")
                 .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
                 .IncludeDirectory("~/Content/modules", "*.js", true));
+        }
 
+        private void PopulateDistributionScriptBundles(BundleCollection bundles) {
+            var scriptBundle = new ScriptBundle(Bundles.Distribution.AllScripts)
+                .Include("~/Content/dist/scripts/vendor.js")
+                .Include("~/Content/dist/scripts/app.js");
+            scriptBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(scriptBundle);
         }
 
         public static void ClearBundles() {

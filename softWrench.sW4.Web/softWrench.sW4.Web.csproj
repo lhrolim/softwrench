@@ -496,7 +496,7 @@
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
-    <Content Include="Content\customVendor\scripts\modernizr.js" />
+    <Content Include="Content\customVendor\scripts\misc\modernizr.js" />
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
@@ -554,8 +554,8 @@
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\shared\wotaskchangestatus.js" />
-    <Content Include="Content\customVendor\scripts\angular-clipboard.js" />
-    <Content Include="Content\customVendor\scripts\angulartreeview.js" />
+    <Content Include="Content\customVendor\scripts\angular\angular-clipboard.js" />
+    <Content Include="Content\customVendor\scripts\angular\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
     <Compile Include="Controllers\Configuration\ConfigurationController.cs" />
@@ -630,16 +630,16 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\customVendor\scripts\angular-file-dnd.js" />
-    <Content Include="Content\customVendor\scripts\selectize.js" />
-    <Content Include="Content\customVendor\scripts\angular-selectize.js" />
-    <Content Include="Content\customVendor\scripts\textAngular-setup.js" />
+    <Content Include="Content\customVendor\scripts\angular\angular-file-dnd.js" />
+    <Content Include="Content\customVendor\scripts\jquery\selectize.js" />
+    <Content Include="Content\customVendor\scripts\angular\angular-selectize.js" />
+    <Content Include="Content\customVendor\scripts\angular\textAngular-setup.js" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latin.woff2" />
     <Content Include="Content\fonts\gstatic-varela-chrome-latinext.woff2" />
     <Content Include="Content\fonts\gstatic-varela-ff.woff" />
     <Content Include="Content\fonts\gstatic-varela-ie9.eot" />
     <Content Include="Content\fonts\gstatic-varela-ie9local.eot" />
-    <Content Include="Content\customVendor\scripts\tableau-2.0.0-min.js" />
+    <Content Include="Content\customVendor\scripts\misc\tableau-2.0.0-min.js" />
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
     <Content Include="Content\styles\default\vendor\vendor.scss" />
@@ -684,9 +684,9 @@
     <Content Include="Content\Scripts\customers\shared\relatedrecord_service.js" />
     <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
     <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
-    <Content Include="Content\customVendor\scripts\jquery.scannerdetection.js" />
-    <Content Include="Content\customVendor\scripts\textAngular.js" />
-    <Content Include="Content\customVendor\scripts\textAngular-sanitize.js" />
+    <Content Include="Content\customVendor\scripts\jquery\jquery.scannerdetection.js" />
+    <Content Include="Content\customVendor\scripts\angular\textAngular.js" />
+    <Content Include="Content\customVendor\scripts\angular\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />
@@ -712,7 +712,7 @@
     <Content Include="Content\Scripts\client\crud\home.js" />
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
     <Content Include="Content\Scripts\client\adminresources\faq.js" />
-    <Content Include="Content\customVendor\scripts\typeahead.js" />
+    <Content Include="Content\customVendor\scripts\misc\typeahead.js" />
     <Content Include="Content\styles\default\_sw-colors.scss" />
     <None Include="Content\styles\default\_tooltips.scss" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
@@ -818,13 +818,13 @@
     <None Include="Properties\PublishProfiles\softWrench QA.pubxml" />
     <Content Include="Content\Images\softWrench.gif" />
     <Content Include="Content\Images\update_24.png" />
-    <Content Include="Content\customVendor\scripts\ace.js" />
+    <Content Include="Content\customVendor\scripts\misc\ace.js" />
     <Content Include="Content\Scripts\client\crud\aaa_layout.js" />
     <Content Include="Content\Scripts\client\adminresources\dashboard.js" />
     <Content Include="Content\Scripts\client\adminresources\user.js" />
     <Content Include="Content\Scripts\client\adminresources\userprofile.js" />
     <Content Include="Content\Scripts\client\adminresources\role.js" />
-    <Content Include="Content\customVendor\scripts\bootstrap-modal.js" />
+    <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-modal.js" />
     <Content Include="Content\Scripts\client\settings.js" />
     <Content Include="Content\Scripts\client\crud\application.js" />
     <Content Include="Content\Templates\hapag\statuscolorpicker.html" />
@@ -875,8 +875,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
-    <Folder Include="Content\vendor\css\" />
-    <Folder Include="Content\vendor\fonts\" />
+    <Folder Include="Content\vendor\css\fonts\" />
     <Folder Include="Content\vendor\scripts\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />
@@ -1027,10 +1026,6 @@
     <ProjectReference Include="..\softwrench.sw4.tva\softwrench.sw4.tva.csproj">
       <Project>{c987e2c2-a2d3-4d7b-b2ff-a5f1667b159a}</Project>
       <Name>softwrench.sw4.tva</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
-      <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
-      <Name>softwrench.sw4.umc</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>

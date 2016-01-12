@@ -12,6 +12,7 @@
     <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- styles -->
     @foreach (var tag in StaticFileTagRenderer.RenderStyles()) {
         @tag;
     }
@@ -19,6 +20,7 @@
 </head>
 <body>
     @*@model softWrench.sW4.Web.Models.IBaseLayoutModel*@
+    <!-- scripts-->
     @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
         @tag;
     }
