@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using softWrench.sW4.Metadata.Stereotypes;
 
 
 namespace softWrench.sW4.Metadata.Parsing {
@@ -66,13 +67,13 @@ namespace softWrench.sW4.Metadata.Parsing {
                     case FieldRendererType.OPTION:
                     return new OptionFieldRenderer();
                     default:
-                        if (entity != null) {
-                            var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
-                            if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
-                                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
-                            }
+                    if (entity != null) {
+                        var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
+                        if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
+                            return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
                         }
-                        return new FieldRenderer();
+                    }
+                    return new FieldRenderer();
                 }
             }
             var type = renderer.Attribute(XmlMetadataSchema.RendererAttributeType).Value;
@@ -232,7 +233,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                 throw new InvalidOperationException("<section> cannot contains inner elements AND resourcePath attribute");
             }*/
             return new ApplicationSection(id, applicationName, @abstract, label, attribute, resourcePath, parameters,
-                displayables, showExpression, toolTip, orientation, header, renderer, role) { SecondaryContent = secondarycontent };
+                displayables, showExpression, toolTip, orientation, header, renderer, role) {
+                SecondaryContent = secondarycontent
+            };
         }
 
         private static int ValidateSingleSecondarySection(IEnumerable<IApplicationDisplayable> displayables) {
@@ -477,7 +480,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             ClientPlatform? platform = null;
             if (stereotypeAttr != null) {
-                Enum.TryParse(stereotypeAttr, true, out stereotype);
+                stereotype = StereotypeFactory.ParseStereotype(stereotypeAttr);
             }
             var mode = SchemaMode.None;
             if (modeAttr != null) {
@@ -519,14 +522,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
 
             resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
-                ApplicationSchemaFactory.GetInstance(entityName,applicationName, title, id, redeclaring,stereotypeAttr, stereotype, mode, platform,
+                ApplicationSchemaFactory.GetInstance(entityName, applicationName, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
                     isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                     userIdFieldName, unionSchema, ParseEvents(xElement)));
         }
-
-     
-
-
 
 
 

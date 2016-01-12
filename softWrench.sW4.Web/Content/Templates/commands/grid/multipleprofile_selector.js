@@ -6,7 +6,7 @@ app.controller('GridMultipleProfileController', ['$scope', 'crudContextHolderSer
             $scope.currentSelectedProfile = crudContextHolderService.getCurrentSelectedProfile();
 
             $scope.hasMultiplesProfiles = function () {
-                return crudContextHolderService.getAffectedProfiles().length > 1;
+                return this.getMultiplesProfiles().length > 1;
             }
 
             $scope.getMultiplesProfiles = function () {

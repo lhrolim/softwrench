@@ -417,7 +417,7 @@
                     }
 
                     $scope.shouldShowGridNavigation = function () {
-                        return !$scope.selectionModel.showOnlySelected;
+                        return !$scope.selectionModel.showOnlySelected && "true"!==$scope.schema.properties["list.disablepagination"];
                     }
 
 
