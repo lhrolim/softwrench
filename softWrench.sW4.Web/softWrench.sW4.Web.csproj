@@ -1028,6 +1028,10 @@
       <Project>{c987e2c2-a2d3-4d7b-b2ff-a5f1667b159a}</Project>
       <Name>softwrench.sw4.tva</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
+      <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
+      <Name>softwrench.sw4.umc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
