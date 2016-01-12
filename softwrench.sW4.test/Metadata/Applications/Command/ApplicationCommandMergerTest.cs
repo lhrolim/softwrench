@@ -9,7 +9,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
     public class ApplicationCommandMergerTest {
         private readonly CommandBarDefinition _commandBarDefinition = new CommandBarDefinition(null, "detail", false, new List<ApplicationCommand>
             {
-                ApplicationCommand.TestInstance("c1","label"),
+                ApplicationCommand.TestInstance("c1","","label","icon"),
                 ApplicationCommand.TestInstance("c2"),
                 ApplicationCommand.TestInstance("c3"),
             });
@@ -81,7 +81,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
         }
 
         [TestMethod]
-        public void TestReplaceCommand() {
+        public void TestReplaceCommandKeepingOriginals() {
             var bars = new Dictionary<string, CommandBarDefinition>();
             bars["detail"] = _commandBarDefinition;
             var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
@@ -97,6 +97,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var commandDisplayable = (ApplicationCommand)commandBarDefinition.Commands[0];
             Assert.AreEqual("c1", commandDisplayable.Id);
             Assert.AreEqual("testchangelabel", commandDisplayable.Label);
+            Assert.AreEqual("icon", commandDisplayable.Icon);
             Assert.AreEqual("c2", commandBarDefinition.Commands[1].Id);
             Assert.AreEqual("c3", commandBarDefinition.Commands[2].Id);
         }

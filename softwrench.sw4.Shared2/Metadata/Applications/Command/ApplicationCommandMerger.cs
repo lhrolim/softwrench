@@ -66,7 +66,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                     }
                 } else if (!(overridenCommand is RemoveCommand)) {
                     //replaces command unless marked to excluded; in that case we wont do nothing
-                    listOfCommands.Add(overridenCommand);
+                    listOfCommands.Add(overridenCommand.KeepingOriginalData(originalCommand));
                 }
                 foreach (var rightCommand in overridingBar.Commands.Where(s => IsRightOfCommand(s, command))) {
                     listOfCommands.Add(rightCommand);

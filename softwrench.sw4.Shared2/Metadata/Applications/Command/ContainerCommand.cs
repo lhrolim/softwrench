@@ -11,23 +11,48 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
 
 
 
-        public string Id { get; set; }
-        public string Role { get; set; }
-        public string Position { get; set; }
+        public string Id {
+            get; set;
+        }
+        public string Role {
+            get; set;
+        }
+        public string Position {
+            get; set;
+        }
 
-        public string Label { get; set; }
-        public string Tooltip { get; set; }
-        public string Icon { get; set; }
-        public string Service { get; set; }
-        public string Method { get; set; }
+        public string Label {
+            get; set;
+        }
+        public string Tooltip {
+            get; set;
+        }
+        public string Icon {
+            get; set;
+        }
+        public string Service {
+            get; set;
+        }
+        public string Method {
+            get; set;
+        }
 
 
 
-        public IEnumerable<ICommandDisplayable> Displayables { get; set; }
+        public IEnumerable<ICommandDisplayable> Displayables {
+            get; set;
+        }
 
-        public string Type { get { return typeof(ContainerCommand).Name; } }
+        public string Type {
+            get {
+                return typeof(ContainerCommand).Name;
+            }
+        }
+        public ICommandDisplayable KeepingOriginalData(ICommandDisplayable originalCommand) {
+            return this;
+        }
 
-        public ContainerCommand(string id, string label, string tooltip, string role, string position,string icon,string service,string method, IEnumerable<ICommandDisplayable> displayables) {
+        public ContainerCommand(string id, string label, string tooltip, string role, string position, string icon, string service, string method, IEnumerable<ICommandDisplayable> displayables) {
             Id = id;
             Label = label;
             Tooltip = tooltip;

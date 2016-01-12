@@ -2,12 +2,22 @@
     'use strict';
 
 
-    function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService,$rootScope) {
+    function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService, $rootScope) {
 
 
         function proceedToBatchSelection(httpResponse) {
             var resultObject = httpResponse.data;
-            return $rootScope.$broadcast("sw_redirectapplicationsuccess",resultObject, "input", "workorder");
+            if (resultObject.extraParameters && true === resultObject.extraParameters["allworkorders"]) {
+                return alertService.confirm2("All the selected locations already have corresponding workorders.Do you want to proceed anyway?")
+                    .then(function () {
+                        return $rootScope.$broadcast("sw_redirectapplicationsuccess", resultObject, "input", "workorder");
+                    }).catch(function () {
+                        //catching exception in order to close the modal on the outer promise handler
+                        return;
+                    });
+            }
+
+            return $rootScope.$broadcast("sw_redirectapplicationsuccess", resultObject, "input", "workorder");
         }
 
         function initBatchWorkorder(schema, datamap) {
@@ -26,12 +36,12 @@
                     siteid: modalData["siteid"],
                     locations: Object.keys(selectionBuffer).map(function (key) {
                         var value = selectionBuffer[key];
-                        return { value: value.fields.locatiosnid, label: value.fields.description };
+                        return { value: value.fields.locationsid, label: value.fields.description };
                     })
                 }
 
                 return restService.postPromise("FirstSolarWorkorderBatch", "InitLocationBatch", null, batchData).then(proceedToBatchSelection);
-                    
+
             };
 
             var params = {

@@ -9,7 +9,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommand : ICommandDisplayable {
 
         private readonly string _id;
-        private readonly string _label;
 
         public string Service {
             get; set;
@@ -27,7 +26,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         public string CssClasses {
             get; set;
         }
-        public bool Primary {
+        public bool? Primary {
             get; set;
         }
 
@@ -38,6 +37,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             get {
                 return typeof(ApplicationCommand).Name;
             }
+        }
+
+        public ICommandDisplayable KeepingOriginalData(ICommandDisplayable originalCommand)
+        {
+            var originalCommandCasted =(ApplicationCommand) originalCommand;
+            Icon = Icon ?? originalCommandCasted.Icon;
+            Label = Label ?? originalCommandCasted.Label;
+            Tooltip = Tooltip ?? originalCommandCasted.Tooltip;
+            Primary = Primary ?? originalCommandCasted.Primary;
+            ShowExpression = ShowExpression ?? originalCommandCasted.ShowExpression;
+            EnableExpression = EnableExpression ?? originalCommandCasted.EnableExpression;
+            return this;
         }
 
         public List<string> ScopeParameters {
@@ -52,8 +63,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
         private readonly string _role;
-        private readonly string _showExpression;
-        private readonly string _enableExpression;
         private readonly string _successMessage;
         private readonly string _nextSchemaId;
 
@@ -63,15 +72,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         public ApplicationCommand(string id, string label, string service, string method, string role, string stereotype, string showExpression, string enableExpression, string successMessage,
             string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon, string tooltip, string cssClasses, bool primary) {
             _id = id;
-            _label = label;
+            Label = label;
             Service = service;
             _role = role;
             Method = method;
             if (!String.IsNullOrEmpty(stereotype)) {
                 Enum.TryParse(stereotype, true, out _stereotype);
             }
-            _showExpression = showExpression;
-            _enableExpression = enableExpression ?? "true";
+            ShowExpression = showExpression;
+            EnableExpression = enableExpression ?? "true";
             _successMessage = successMessage;
             _nextSchemaId = nextSchemaId;
             if (scopeParameters != null) {
@@ -94,11 +103,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             }
         }
 
-        public string Label {
-            get {
-                return _label;
-            }
-        }
+        public string Label { get; set; }
 
 
 
@@ -110,16 +115,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             }
         }
 
-        public string ShowExpression {
-            get {
-                return _showExpression;
-            }
-        }
+        public string ShowExpression { get; set; }
 
         public string EnableExpression {
-            get {
-                return _enableExpression;
-            }
+            get; set;
         }
 
         public string SuccessMessage {
@@ -142,7 +141,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
         public override string ToString() {
-            return string.Format("Id: {0}, Label: {1}, Stereotype: {2}, Service: {3},Method: {4} ", _id, _label, _stereotype, Service, Method);
+            return string.Format("Id: {0}, Label: {1}, Stereotype: {2}, Service: {3},Method: {4} ", _id, Label, _stereotype, Service, Method);
         }
 
         protected bool Equals(ApplicationCommand other) {
@@ -160,8 +159,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             return (_id != null ? _id.GetHashCode() : 0);
         }
 
-        public static ApplicationCommand TestInstance(String id, string position = "", string label = "") {
-            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, null, position, null, null, null,false);
+        public static ApplicationCommand TestInstance(String id, string position = "", string label = null, string icon = null) {
+            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, null, position, icon, null, null,false);
         }
     }
 }

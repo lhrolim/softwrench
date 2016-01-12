@@ -64,6 +64,11 @@ function applicationController($scope, $http, $log, $timeout,
     $scope.$name = 'applicationController';
     var currentFocusedIdx = 0;
 
+
+    //#region listeners
+
+    
+
     $rootScope.$on("sw_resetFocusToCurrent", function (event, schema, field) {
         focusService.resetFocusToCurrent(schema, field);
     });
@@ -73,6 +78,59 @@ function applicationController($scope, $http, $log, $timeout,
             focusService.moveFocus(datamap, schema, attribute);
         }
     });
+
+    $scope.$on('sw_canceldetail', function (event, data, schema, msg) {
+        $scope.doConfirmCancel(data, schema, "Are you sure you want to go back?");
+    });
+
+
+    $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
+        var msg = "Are you sure you want to leave the page?";
+        if (crudContextHolderService.getDirty()) {
+            alertService.confirmCancel(null, null, function () {
+                $scope.renderView(applicationName, schemaId, mode, title, parameters);
+                $scope.$digest();
+            }, msg, function () { return; });
+        }
+        else {
+            $scope.renderView(applicationName, schemaId, mode, title, parameters);
+        }
+    });
+
+    $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
+        // this is to prevent application.js from recv'ing dashboard rendering
+        if (dashboardpanelid == null) {
+            $scope.renderView(applicationName, schemaId, mode, title, parameters);
+        }
+    });
+
+    $scope.$on('sw.modal.show', function (event, modaldata) {
+        if (!$scope.modalincluded) {
+            $scope.modalincluded = true;
+            //required because we need to store somewhere while the directive is not yet compiled, and retrieve on postcompile...
+            $rootScope.modalTempData = modaldata;
+        }
+    });
+
+    $scope.$on('sw_applicationredirected', function (event, parameters) {
+        if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
+            return;
+        }
+
+        $scope.multipleSchema = false;
+        $scope.schemas = null;
+        $scope.isDetail = false;
+        crudContextHolderService.setActiveTab(null);
+        //            fixHeaderService.unfix();
+
+    });
+
+    $scope.$on('sw_applicationrenderviewwithdata', function (event, data) {
+        var nextSchema = data.schema;
+        $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
+    });
+
+    //#endregion
 
     function switchMode(mode, scope) {
         if (scope == null) {
@@ -210,9 +268,9 @@ function applicationController($scope, $http, $log, $timeout,
             window.document.title = String.format(overridenTitle, id);
             return;
         }
-        if (strategy == "idonly") {
+        if (strategy === "idonly") {
             window.document.title = id;
-        } else if (strategy == "nameandid") {
+        } else if (strategy === "nameandid") {
             window.document.title = scope.schema.applicationName + " " + id;
         }
     }
@@ -274,7 +332,7 @@ function applicationController($scope, $http, $log, $timeout,
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
-            if (GetPopUpMode() == 'browser') {
+            if (GetPopUpMode() === 'browser') {
                 setWindowTitle(scope);
             }
         }
@@ -298,9 +356,7 @@ function applicationController($scope, $http, $log, $timeout,
         $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
     };
 
-    $scope.$on('sw_canceldetail', function (event, data, schema, msg) {
-        $scope.doConfirmCancel(data, schema, "Are you sure you want to go back?");
-    });
+
 
     $scope.doConfirmCancel = function (data, schema, msg) {
         $('.no-touch [rel=tooltip]').tooltip('hide');
@@ -422,63 +478,7 @@ function applicationController($scope, $http, $log, $timeout,
 
 
 
-    //called first time a crud is registered
-    function initApplication() {
-
-        $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
-            var msg = "Are you sure you want to leave the page?";
-            if (crudContextHolderService.getDirty()) {
-                alertService.confirmCancel(null, null, function () {
-                    $scope.renderView(applicationName, schemaId, mode, title, parameters);
-                    $scope.$digest();
-                }, msg, function () { return; });
-            }
-            else {
-                $scope.renderView(applicationName, schemaId, mode, title, parameters);
-            }
-        });
-
-        $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
-            // this is to prevent application.js from recv'ing dashboard rendering
-            if (dashboardpanelid == null) {
-                $scope.renderView(applicationName, schemaId, mode, title, parameters);
-            }
-        });
-        $scope.$on('sw.modal.show', function (event, modaldata) {
-            if (!$scope.modalincluded) {
-                $scope.modalincluded = true;
-                //required because we need to store somewhere while the directive is not yet compiled, and retrieve on postcompile...
-                $rootScope.modalTempData = modaldata;
-            }
-        });
-        $scope.$on('sw_applicationredirected', function (event, parameters) {
-            if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
-                return;
-            }
-
-            $scope.multipleSchema = false;
-            $scope.schemas = null;
-            $scope.isDetail = false;
-            crudContextHolderService.setActiveTab(null);
-            //            fixHeaderService.unfix();
-
-        });
-
-        $scope.$on('sw_applicationrenderviewwithdata', function (event, data) {
-            var nextSchema = data.schema;
-            $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
-        });
-
-
-        doInit();
-        $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
-            if (oldValue != newValue) {
-                $log.getInstance("applicationcontroller#initAplication").info("redirect detected");
-                doInit();
-            }
-        });
-
-    }
+  
 
     function doInit() {
         if ($scope.resultObject.redirectURL.indexOf("Application.html") == -1) {
@@ -509,6 +509,21 @@ function applicationController($scope, $http, $log, $timeout,
             return;
         }
         $scope.multipleSchemaHandling(dataObject);
+
+    }
+
+
+    //called first time a crud is registered
+    function initApplication() {
+
+
+        doInit();
+        $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
+            if (oldValue != newValue) {
+                $log.getInstance("applicationcontroller#initAplication").info("redirect detected");
+                doInit();
+            }
+        });
 
     }
 

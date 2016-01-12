@@ -79,7 +79,7 @@ angular.module('sw_layout')
                 });
             }
 
-            return $q.when(method.apply(this, args));
+            return $q.when(method.apply(service, args));
         },
 
         doCommand: function (scope, command) {
