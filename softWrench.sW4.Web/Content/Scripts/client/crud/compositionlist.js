@@ -135,7 +135,9 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
                 scope.relationship = metadata.relationship;
 
                 //display the list composition by default
-                if (!scope.compositionschemadefinition.schemas.list.properties.masterdetail) {
+                if (scope.compositionschemadefinition.schemas.list.properties.masterdetail == 'true') {
+                    element.append("<composition-master-details data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' />");
+                } else {
                     element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
                         "compositionschemadefinition='compositionschemadefinition' " +
                         "relationship='{{relationship}}' " +
@@ -146,8 +148,6 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
                         "cancelfn='cancel(data,schema)' " +
                         "previousschema='previousschema' " +
                         "previousdata='previousdata' />");
-                } else {
-                    element.append("<composition-master-details data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' />");
                 }
 
                 $compile(element.contents())(scope);
