@@ -147,7 +147,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.chicago", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.umc", "softwrench.sw4.umc\softwrench.sw4.umc.csproj", "{6E187557-8460-4992-9687-84373C5F3ED2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.acs", "softwrench.sw4.acs\softwrench.sw4.acs.csproj", "{D704FC33-6B04-44A1-B12F-A8C196127A08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.xerox", "softwrench.sw4.xerox\softwrench.sw4.xerox.csproj", "{D704FC33-6B04-44A1-B12F-A8C196127A08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

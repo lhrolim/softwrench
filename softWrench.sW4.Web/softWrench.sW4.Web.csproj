@@ -1380,7 +1380,7 @@
       <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
       <Name>cts.commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.acs\softwrench.sw4.acs.csproj">
+    <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
       <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
       <Name>softwrench.sw4.acs</Name>
     </ProjectReference>
