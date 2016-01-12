@@ -7,8 +7,8 @@
     <ProjectGuid>{D704FC33-6B04-44A1-B12F-A8C196127A08}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.xerox</RootNamespace>
-    <AssemblyName>softwrench.sw4.xerox</AssemblyName>
+    <RootNamespace>softwrench.sw4.acs</RootNamespace>
+    <AssemblyName>softwrench.sw4.acs</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,31 +42,31 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="metadata\xerox\readme.txt" />
-    <Content Include="web_content\xerox\images\footer.jpg" />
-    <Content Include="web_content\xerox\images\header-email.jpg" />
-    <Content Include="web_content\xerox\images\header.jpg" />
-    <Content Include="web_content\xerox\images\logo-byline.png" />
-    <Content Include="web_content\xerox\images\logo-main.png" />
-    <Content Include="web_content\xerox\images\signin-lg.jpg" />
-    <Content Include="web_content\xerox\images\signin-md.jpg" />
-    <Content Include="web_content\xerox\images\signin-sm.jpg" />
-    <Content Include="web_content\xerox\images\signin-xs.jpg" />
-    <Content Include="web_content\xerox\images\signin-xxs.jpg" />
+    <Content Include="metadata\acs\readme.txt" />
+    <Content Include="web_content\acs\images\footer.jpg" />
+    <Content Include="web_content\acs\images\header-email.jpg" />
+    <Content Include="web_content\acs\images\header.jpg" />
+    <Content Include="web_content\acs\images\logo-byline.png" />
+    <Content Include="web_content\acs\images\logo-main.png" />
+    <Content Include="web_content\acs\images\signin-lg.jpg" />
+    <Content Include="web_content\acs\images\signin-md.jpg" />
+    <Content Include="web_content\acs\images\signin-sm.jpg" />
+    <Content Include="web_content\acs\images\signin-xs.jpg" />
+    <Content Include="web_content\acs\images\signin-xxs.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
-    <None Include="web_content\xerox\styles\branding.scss" />
+    <None Include="web_content\acs\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\xerox\configuration\" />
-    <Folder Include="classes\com\cts\xerox\connector\" />
-    <Folder Include="classes\com\cts\xerox\dataset\" />
-    <Folder Include="classes\com\cts\xerox\migration\" />
-    <Folder Include="web_content\xerox\htmls\" />
-    <Folder Include="web_content\xerox\scripts\" />
+    <Folder Include="classes\com\cts\acs\configuration\" />
+    <Folder Include="classes\com\cts\acs\connector\" />
+    <Folder Include="classes\com\cts\acs\dataset\" />
+    <Folder Include="classes\com\cts\acs\migration\" />
+    <Folder Include="web_content\acs\htmls\" />
+    <Folder Include="web_content\acs\scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
