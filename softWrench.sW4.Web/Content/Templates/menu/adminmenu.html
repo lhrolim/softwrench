@@ -1,5 +1,5 @@
 ﻿<div>
-    <div class="admin-area" ng-if="popupmode == 'none'">
+    <div class="admin-area" ng-if="popupmode != 'browser'">
         <div class="breadcrumb" breadcrumb data-menu="menu" data-title="title" ng-if="menu.displacement == 'breadcrumb'"></div>
         <div class="text userinfo" ng-if="menu.displacement != 'breadcrumb'"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}
         </div>

@@ -11,6 +11,7 @@ namespace softWrench.sW4.Data.API.Response {
         public string Title { get; set; }
         public string CrudSubTemplate { get; set; }
         public string SuccessMessage { get; set; }
+        public string ErrorMessage { get; set; }
 
         public DateTime TimeStamp { get; set; }
         public string Type { get { return typeof (BlankApplicationResponse).Name; } }
