@@ -24,29 +24,35 @@
                     //loop thru the schema fields
                     schema.displayables.forEach(function (field) {
 
-                        //TODO: for testing only, load mapping from metadata
-                        switch (field.attribute) {
-                            case 'createdate':
-                                master.date = $scope.getFormattedValue(entry.createdate, field, entry);
-                                break;
+                       //map fields to master info
+                        var string = entry[field.attribute];
+                        var qualifier = field.qualifier;
+
+                        switch (qualifier) {
                             case 'message':
                                 //remove html tags
-                                var string = $('<p>' + entry.message + '</p>').text();
+                                string = $('<p>' + string + '</p>').text();
 
                                 //reduce string length
                                 if (string.length > 200) {
                                     string = string.substring(0, 200) + '...';
                                 }
-
-                                master.message = $scope.getFormattedValue(string, field, entry);
                                 break;
-                            case 'sendto':
-                                master.author = $scope.getFormattedValue(entry.sendto, field, entry);
+                            case 'personTo':
+                                //for comm logs, use if outbound
+                                if (!entry.inbound) {
+                                    qualifier = 'person';
+                                }
                                 break;
-                            case 'subject':
-                                master.title = $scope.getFormattedValue(entry.subject, field, entry);
+                            case 'personFrom':
+                                //for comm logs, use if inbound
+                                if (entry.inbound) {
+                                    qualifier = 'person';
+                                }
                                 break;
                         }
+
+                        master[qualifier] = $scope.getFormattedValue(string, field, entry);
 
                         //process the icon fields
                         switch (field.rendererType) {

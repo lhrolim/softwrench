@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="info">
-                        <div class="author">{{entry.master.author}}</div>
+                        <div class="author">{{entry.master.person}}</div>
                         <div class="date">{{entry.master.date}}</div>
                         <div class="title">{{entry.master.title}}</div>
                         <div class="message">{{entry.master.message}}</div>
@@ -34,7 +34,7 @@
             <div class="fields">
                 <div class="field" ng-repeat="fieldMetadata in getDetailSchema().displayables" ng-show="showDetailField(fieldMetadata)">
                     <label class="control-label">{{fieldMetadata.label}}</label>
-                    <label class="form-control">{{getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)}}</label>
+                    <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                 </div>
             </div>
             <div class="commands">

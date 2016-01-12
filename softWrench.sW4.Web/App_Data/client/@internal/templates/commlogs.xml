@@ -78,21 +78,24 @@
             <property key="masterdetail" value="true"/>
           </properties>
           <field attribute="read">
-            <renderer type="icon" params="expression={'#default':'fa-circle','true':''};width=3%"/>
+            <renderer type="icon" params="expression={'#default':'fa-circle','true':''}"/>
           </field>
           <field attribute="inbound">
-            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'};width=3%"/>
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-right green','0':'fa-long-arrow-left orange'}"/>
           </field>
-          <field attribute="createdate" label="Created Date/Time">
+          <field attribute="createdate" label="Created Date/Time" qualifier="date">
             <renderer type="datetime" params="format=MM/dd/yyyy"/>
           </field>
-          <field attribute="sendto" label="To">
+          <field attribute="sendto" label="To" qualifier="personTo">
             <renderer type="default" params="formatter=lower"/>
           </field>
-          <field attribute="subject" label="Subject">
+          <field attribute="sendfrom" label="From" qualifier="personFrom">
+            <renderer type="default" params="formatter=lower"/>
+          </field>
+          <field attribute="subject" label="Subject" qualifier="title">
             <renderer type="default"/>
           </field>
-          <field attribute="message" label="Message">
+          <field attribute="message" label="Message" qualifier="message">
             <renderer type="default"/>
           </field>          
         </schema>
