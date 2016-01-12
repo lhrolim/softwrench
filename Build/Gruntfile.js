@@ -12,7 +12,8 @@ module.exports = function (grunt) {
             vendor: fullPath + "Content/vendor",
             customVendor: fullPath + "Content/customVendor",
             customers: fullPath + "Content/Customers",
-
+            tests: fullPath + "../softwrench.sw4.jstest",
+            webcommons: fullPath + "../softwrench.sw4.webcommons",
             tmp: fullPath + "Content/temp",
             dist: fullPath + "Content/dist"
         },
@@ -79,15 +80,15 @@ module.exports = function (grunt) {
                 },
                 files: {
                     // bootstrap
-                    "bootstrap/bootstrap.css": "bootstrap/dist/css/bootstrap.min.css",
-                    "bootstrap/bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.min.css",
-                    "bootstrap/bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
-                    "bootstrap/selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
+                    "bootstrap.css": "bootstrap/dist/css/bootstrap.min.css",
+                    "bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.min.css",
+                    "bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
+                    "selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
                     // font-awesome
-                    "font-awesome/font-awesome.css": "font-awesome/css/font-awesome.min.css",
+                    "font-awesome.css": "font-awesome/css/font-awesome.min.css",
                     // angular
-                    "angular/textAngular.css": "textAngular/dist/textAngular.css",
-                    "angular/angular-ui-select.css": "ui-select/dist/select.min.css",
+                    "textAngular.css": "textAngular/dist/textAngular.css",
+                    "angular-ui-select.css": "ui-select/dist/select.min.css",
                 }
             },
             fonts: {
@@ -147,13 +148,18 @@ module.exports = function (grunt) {
             app: {
                 files: [{
                     src: [
+                        // modules
+                        "<%= app.webcommons %>/web_content/webcommons/scripts/softwrench/sharedservices_module.js", // webcommons
+                        "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
+                        // webcommons
+                        "<%= app.webcommons %>/web_content/webcommons/scripts/**/*!(sharedservices_module).js",
                         // app
-                        "<%= app.content %>/Scripts/client/crud/**/*.js",
+                        "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
                         "<%= app.content %>/Scripts/client/services/*.js",
-                        "<%= app.content %>/Scripts/client/client/*.js",
-                        "<%= app.content %>/Scripts/client/client/adminresources/*.js",
-                        "<%= app.content %>/Scripts/client/client/directives/*.js",
-                        "<%= app.content %>/Scripts/client/client/directives/menu/*.js",
+                        "<%= app.content %>/Scripts/client/*.js",
+                        "<%= app.content %>/Scripts/client/adminresources/*.js",
+                        "<%= app.content %>/Scripts/client/directives/*.js",
+                        "<%= app.content %>/Scripts/client/directives/menu/*.js",
                         "<%= app.content %>/Templates/commands/**/*.js",
                         "<%= app.content %>/modules/**/*.js",
                         // Shared
@@ -183,10 +189,6 @@ module.exports = function (grunt) {
             vendorScripts: {
                 options: {
                     separator: ";\n",
-                    stripBanners: {
-                        block: true,
-                        line: true
-                    }
                 },
                 src: [
                      // utils
@@ -215,18 +217,14 @@ module.exports = function (grunt) {
             appScripts: {
                 options: {
                     separator: ";\n",
-                    stripBanners: {
-                        block: true,
-                        line: true
-                    }
+                    
                 },
                 src: [
                     // customVendors
                     "<%= app.customVendor %>/scripts/**/*.js",
                     // actual app: ng-annotated source
                     "<%= app.tmp %>/scripts/app.annotated.js"
-                    // customer
-                ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]),
+                ],
 
                 dest: "<%= app.tmp %>/scripts/app.concat.js"
             }
@@ -251,9 +249,11 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 mangle: {
-                    except: ["jQuery", "angular", "tableau"]
-                },
-                screwIE8: true
+                    except: [
+                        "jQuery", "angular", "tableau", "LZString", "moment", "Moment", "Modernizr",
+                        "app", "modules"
+                    ]
+                }
             },
             rawVendors: {
                 files: [{
@@ -277,6 +277,24 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        //#endregion
+
+        //#region karma
+        karma: {
+            options: {
+                configFile: "<%= app.tests %>/karma.conf.js",
+                logLevel: "INFO",
+                browsers: ["PhantomJS"],
+                singleRun: true,
+                files: [
+                    "<%= app.dist %>/scripts/vendor.js",
+                    "<%= app.dist %>/scripts/app.js",
+                    "<%= app.tests %>/angular_mock.js",
+                    "<%= app.tests %>/tests/**/*.js"
+                ]
+            },
+            target: {}
+        }
         //#endregion
 
     });
@@ -305,7 +323,8 @@ module.exports = function (grunt) {
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's customized from vendor's + ng-annotated + customer's)
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
-        "clean:vendor" , "clean:tmp" // clean temporary folders
+        //"karma:target", // run tests on minified scripts
+        //"clean:vendor" , "clean:tmp" // clean temporary folders
     ]);
     //#endregion
    

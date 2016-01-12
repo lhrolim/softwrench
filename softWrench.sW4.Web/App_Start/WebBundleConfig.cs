@@ -13,6 +13,11 @@ namespace softWrench.sW4.Web {
             } else {
                 PopulateDistributionStyleBundles(bundles);
             }
+
+            // from bower fonts
+            bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
+                .Include("~/Content/fonts/font.css")
+                );
         }
 
         private void PopulateLocalStyleBundles(BundleCollection bundles) {
@@ -26,11 +31,6 @@ namespace softWrench.sW4.Web {
             // customized vendor styles
             bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
                 .IncludeDirectory("~/Content/customVendor/css/", "*.css")
-                );
-
-            // from bower fonts
-            bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
-                .Include("~/Content/fonts/font.css")
                 );
         }
 

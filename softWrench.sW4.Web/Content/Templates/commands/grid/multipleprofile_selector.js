@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.controller('GridMultipleProfileController', ['$scope', 'crudContextHolderService','searchService',
+angular.module('sw_layout')
+.controller('GridMultipleProfileController', ['$scope', 'crudContextHolderService','searchService',
         function ($scope, crudContextHolderService, searchService) {
 
             $scope.currentSelectedProfile = crudContextHolderService.getCurrentSelectedProfile();
@@ -16,9 +18,8 @@ app.controller('GridMultipleProfileController', ['$scope', 'crudContextHolderSer
             $scope.changeCurrentProfile = function() {
                 crudContextHolderService.setCurrentSelectedProfile($scope.currentSelectedProfile);
                 searchService.refreshGrid({});
-
             }
-
-
         }
 ]);
+
+})(angular);

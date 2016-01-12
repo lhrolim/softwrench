@@ -545,8 +545,8 @@
     <Content Include="Content\Scripts\client\directives\breadcrumb.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\inputModal.js" />
-    <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
-    <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
+    <Content Include="Content\customVendor\scripts\jquery\jquery-jscrollpane.js" />
+    <Content Include="Content\customVendor\scripts\jquery\jquery-mousewheel.js" />
     <Content Include="Content\Scripts\client\services\adminmenu_service.js" />
     <Content Include="Content\Scripts\client\services\schemaCacheService.js" />
     <Content Include="Content\Scripts\client\services\crud_contextservice.js" />
@@ -701,7 +701,6 @@
     <None Include="Content\styles\default\media\_print.scss" />
     <None Include="Content\styles\default\_search.scss" />
     <Content Include="Content\Controller\Configuration.html" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\customVendor\css\submenu.css" />
     <Content Include="Content\Images\softwrench-logo-small.gif" />
     <Content Include="Content\Scripts\client\crud\crud_output.js" />
@@ -792,9 +791,6 @@
     <None Include="Content\styles\default\_site.scss" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />
     <Content Include="Content\Controller\Application.html" />

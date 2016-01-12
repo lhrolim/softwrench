@@ -1,6 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
+angular.module('sw_prelogin', []);
 var app = window.app = angular.module('sw_layout',
     ['pasvaz.bindonce',
      'angularTreeview',

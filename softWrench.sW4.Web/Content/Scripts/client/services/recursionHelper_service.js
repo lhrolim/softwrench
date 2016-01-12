@@ -1,11 +1,12 @@
-﻿var app = angular.module('sw_layout');
-
+﻿(function (angular) {
+    "use strict";
 /* 
  * An Angular service which helps with creating recursive directives.
  * @author Mark Lagendijk
  * @license MIT
  */
-app.factory('recursionHelper', ['$compile', function ($compile) {
+angular.module('sw_layout')
+.factory('recursionHelper', ['$compile', function ($compile) {
     return {
         /**
 		 * Manually compiles the element, fixing the recursion loop.
@@ -46,3 +47,5 @@ app.factory('recursionHelper', ['$compile', function ($compile) {
         }
     };
 }]);
+
+})(angular);
