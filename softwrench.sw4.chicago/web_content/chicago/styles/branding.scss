@@ -1,5 +1,5 @@
 ﻿$background_color: #e9e9e9;
-$form_background: rgba(#d41d27, 0.85);
+$form_background: rgba(#029386, 0.74);
 $asset_path: "../images";
 
 .page-signin {
@@ -29,7 +29,8 @@ $asset_path: "../images";
         }
 
         .branding {
-            min-height: 100px;
+            background: url(#{$asset_path}/branding.png) no-repeat top left;
+            min-height: 110px;
 
             .logo img {
                 height: 70px;
@@ -90,7 +91,6 @@ $asset_path: "../images";
 @media all and (min-width: 850px) {
     .page-signin {
         .form-signin {
-            border: 2px solid #d34e55;
             background-color: $form_background;
         }
     }
