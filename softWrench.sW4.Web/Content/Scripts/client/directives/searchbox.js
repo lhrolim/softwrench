@@ -10,8 +10,6 @@ app.directive('searchBox', function (contextService, $log) {
             placeholder: '='
         },
         controller: function ($scope) {
-            log.debug($scope);
-
             $scope.clearSearch = function () {
                 //reset the seach text
                 $scope.ngModel = '';
@@ -20,16 +18,10 @@ app.directive('searchBox', function (contextService, $log) {
                 $(window).trigger('resize');
             };
 
-            $scope.getPlaceholder = function () {
-                var string = 'Search';
-
-                //if a placeholder has been passed
-                if ($scope.placeholder) {
-                    string = $scope.placeholder;
-                }
-
-                return string;
-            };
+            //set the default input placeholder
+            if (!$scope.placeholder) {
+                $scope.placeholder = 'Search';
+            }
         }
     }
 });
