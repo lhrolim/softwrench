@@ -51,6 +51,7 @@
                     summary: modalData["summary"],
                     details: modalData["details"],
                     siteid: modalData["siteid"],
+                    classification: modalData["classstructureid"],
                     locations: Object.keys(selectionBuffer).map(function (key) {
                         var value = selectionBuffer[key];
                         return { value: value.fields.location, label: value.fields.description };
