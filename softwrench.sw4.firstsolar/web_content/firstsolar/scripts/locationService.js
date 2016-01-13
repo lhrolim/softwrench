@@ -20,6 +20,23 @@
             return $rootScope.$broadcast("sw_redirectapplicationsuccess", resultObject, "input", "workorder");
         }
 
+        function loadRelatedWorkorders(rowDm, column) {
+            if (column.attribute === "#warning") {
+                var wonums = rowDm["#wonums"];
+
+                var params ={
+                    searchDTO: {
+                        searchParams : "wonum",
+                        searchValues : wonums
+                    }
+                }
+                redirectService.openAsModal("workorder", "readonlyfixedlist", params);
+                return false;
+            }
+            return true;
+        }
+
+
         function initBatchWorkorder(schema, datamap) {
 
             var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
@@ -36,7 +53,7 @@
                     siteid: modalData["siteid"],
                     locations: Object.keys(selectionBuffer).map(function (key) {
                         var value = selectionBuffer[key];
-                        return { value: value.fields.locationsid, label: value.fields.description };
+                        return { value: value.fields.location, label: value.fields.description };
                     })
                 }
 
@@ -55,7 +72,8 @@
         };
 
         var service = {
-            initBatchWorkorder: initBatchWorkorder
+            initBatchWorkorder: initBatchWorkorder,
+            loadRelatedWorkorders: loadRelatedWorkorders
         };
 
         return service;
