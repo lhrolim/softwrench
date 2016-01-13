@@ -554,13 +554,13 @@
                             gridSelectionService: gridSelectionService
                         });
 
-                        $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
-
                         var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
 
                         if ($scope.ismodal === "true") {
                             $scope.panelid = "#modal";
                         }
+
+                        $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
                         if (dataRefreshed) {
                             log.debug("data was already fetched from server... directive was compiled after the response");

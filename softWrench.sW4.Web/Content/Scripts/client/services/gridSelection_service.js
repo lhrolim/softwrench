@@ -79,6 +79,9 @@
 			var rowId = row.fields[schema.idFieldName];
 			var selected = Boolean(buffer[rowId]);
 			row.fields["_#selected"] = selected;
+			if (selected) {
+				buffer[rowId] = row;
+			}
 			return selected;
 		}
 

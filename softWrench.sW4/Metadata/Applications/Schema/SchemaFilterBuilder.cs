@@ -116,6 +116,8 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     }
 
                     var generatedFilter = BaseMetadataFilter.FromField(field.Attribute, field.Label, field.ToolTip, attr.Type);
+                    AddAssociationData(field, generatedFilter, entity);
+
                     positionBuffer.Add(field.Attribute, resultSchemaFilters.AddLast(generatedFilter));
                 } else if (!overridenFilter.Remove) {
                     //merging existing filter
@@ -124,6 +126,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     if (overridenFilter is MetadataOptionFilter) {
                         ValidateOptionFilter(schema, (MetadataOptionFilter)overridenFilter, entity);
                     }
+                    AddAssociationData(field, overridenFilter, entity);
 
                     positionBuffer.Add(overridenFilter.Attribute, resultSchemaFilters.AddLast(overridenFilter));
                 }
@@ -244,6 +247,33 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 overridenFilter.Lazy = false;
             }
 
+        }
+
+        private static void AddAssociationData(ApplicationFieldDefinition field, BaseMetadataFilter filter, EntityMetadata entity)
+        {
+            if (!(filter is MetadataOptionFilter) || !entity.Associations.Any())
+            {
+                return;
+            }
+
+            var optionsFilter = (MetadataOptionFilter) filter;
+            if (string.IsNullOrEmpty(optionsFilter.AdvancedFilterSchemaId))
+            {
+                return;
+            }
+
+            var association = entity.Associations.FirstOrDefault(assoc => assoc.Attributes.Any(att => field.Attribute.Equals(att.From) && att.Primary));
+            if (association == null)
+            {
+                return;
+            }
+
+            var attribute = association.Attributes.FirstOrDefault(att => field.Attribute.Equals(att.From) && att.Primary);
+            if (attribute == null)
+            {
+                return;
+            }
+            optionsFilter.AdvancedFilterAttribute = attribute.To;
         }
     }
 }

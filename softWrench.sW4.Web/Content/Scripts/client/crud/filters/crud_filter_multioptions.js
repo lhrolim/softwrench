@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", 
+        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", "modalFilterService", "modalService", "crudContextHolderService", 
             function (contextService, restService, filterModelService,
-            cmpAutocompleteServer, $timeout, searchService, schemaService) {
+            cmpAutocompleteServer, $timeout, searchService, schemaService, modalFilterService, modalService, crudContextHolderService) {
 
             var directive = {
                 restrict: "E",
@@ -36,6 +36,7 @@
                     scope.filteroptions = [];
                     scope.suggestedoptions = [];
                     scope.vm.recentlyOptions = [];
+                    scope.lookupModalBuffer = {};
 
 
                     if (filter.allowBlank) {
@@ -83,7 +84,9 @@
                         //for lazy filters we will start the recently used from local storage and init the autocompleteservers
                         scope.vm.recentlyOptions = scope.vm.recentlyOptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
                         $timeout(function () {
-                            cmpAutocompleteServer.init(element, null, scope.schema, scope);
+                            if (!scope.filter.advancedFilterSchemaId) {
+                                cmpAutocompleteServer.init(element, null, scope.schema, scope);
+                            }
 
                             $('input.typeahead', element).each(function (index, element) {
                                 var jelement = $(element);
@@ -171,6 +174,7 @@
                         if (filterAttribute === $scope.filter.attribute) {
                             $scope.vm.allSelected = 0;
                             $scope.toggleSelectAll();
+                            $scope.lookupModalBuffer = {};
                             $timeout(function() {
                                 $scope.jelement.typeahead('val', '');
                             },0,false)
@@ -182,7 +186,7 @@
                         return $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
                     }
 
-                    $scope.modifySearchData = function () {
+                    $scope.modifySearchData = function (changedOption) {
                         var searchData = $scope.searchData;
                         var searchOperator = $scope.searchOperator;
                         searchData[filter.attribute] = null;
@@ -190,12 +194,36 @@
 
                         var selectedItems = filterModelService.buildSelectedItemsArray($scope.getAllAvailableOptions(), $scope.selectedOptions);
                         var result = filterModelService.buildSearchValueFromOptions(selectedItems);
-                        $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
+
+                        if (!$scope.filter.advancedFilterSchemaId) {
+                            $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
+                        }
+
                         if (result) {
                             searchData[filter.attribute] = result;
                             searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
                         }
                         $scope.applyFilter({ keepitOpen: true });
+
+                        // updates the lookup modal grid buffer
+                        if (!changedOption || !changedOption.lookupId || !$scope.filter.advancedFilterSchemaId) {
+                            return;
+                        }
+
+                        var selected = false;
+                        selectedItems.forEach(function (item) {
+                            if (changedOption.lookupId === item.lookupId) {
+                                selected = true;
+                                return;
+                            }
+                        });
+
+                        var datamap = $scope.lookupModalBuffer[changedOption.lookupId] || {};
+                        if (selected) {
+                            $scope.lookupModalBuffer[changedOption.lookupId] = datamap;
+                        } else {
+                            delete $scope.lookupModalBuffer[changedOption.lookupId];
+                        }
                     }
 
                     $scope.toggleSelectAll = function () {
@@ -226,6 +254,8 @@
                     }
 
                     $scope.lookup = function () {
+                        // sets the modal grid buffer from the local buffer
+                        crudContextHolderService.getSelectionModel("#modal").selectionBuffer = $scope.lookupModalBuffer;
                         $rootScope.$broadcast("modal.showmodalfilter", filter);
                     }
 
@@ -250,7 +280,71 @@
                         $scope.$digest();
                     });
 
+                    function addFromModalOption(value, lookupId) {
+                        // searchs for itens with same lookupId on recently options
+                        var existingItens = $scope.filteroptions.filter(function (existingItem) {
+                            return lookupId === existingItem.lookupId;
+                        });
+                        // if there is not one adds a new item
+                        if (existingItens.length === 0) {
+                            var item = {
+                                label: value,
+                                value: value,
+                                lookupId: lookupId
+                            }
+                            $scope.filteroptions.push(item);
+                        }
 
+                        // masks the option with the given value as selected
+                        $scope.selectedOptions[value] = 1;
+                    }
+
+                    function applyModal(modalSchema) {
+                        // resets the selected options
+                        Object.keys($scope.selectedOptions).forEach(function (key) {
+                            $scope.selectedOptions[key] = false;
+                        });
+
+                        // adds an option for each row on modal's grid buffer
+                        var buffer = crudContextHolderService.getSelectionModel("#modal").selectionBuffer;
+                        var idFieldName = modalSchema.idFieldName;
+                        var attFieldName = $scope.filter.advancedFilterAttribute || idFieldName;
+                        for (var id in buffer) {
+                            if (!buffer.hasOwnProperty(id)) {
+                                continue;
+                            }
+                            var datamap = buffer[id];
+                            var value = datamap.fields[attFieldName];
+                            var lookupId = datamap.fields[idFieldName];
+                            addFromModalOption(value, lookupId);
+                        }
+
+                        // updates the local buffer
+                        // used when the lookup modal opens again
+                        // originaly the modal loses the grid buffer on hide
+                        if (Object.keys(buffer).length > 0) {
+                            $scope.lookupModalBuffer = angular.copy(buffer);
+                        } else {
+                            $scope.lookupModalBuffer = {};
+                        }
+
+                        // redo the search
+                        $scope.modifySearchData();
+                        modalService.hide();
+                    }
+
+                    $scope.$on("sw.crud.list.filter.modal.apply", function (event, args) {
+                        if (!filter || filter.type !== "MetadataOptionFilter") {
+                            return;
+                        }
+                        var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                        promise.then(function (modalSchema) {
+                            if (modalSchema !== args[0]) {
+                                return;
+                            }
+                            applyModal(modalSchema);
+                        });
+                    });
                 }]
 
 

@@ -31,6 +31,10 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
+        public string AdvancedFilterAttribute {
+            get; set;
+        }
+
         public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool displayCode, bool allowBlank, string style, bool lazy, string advancedFilterSchemaId, IEnumerable<MetadataFilterOption> options)
             : base(attribute, label, icon, position, tooltip, whereClause, false, style) {
             Provider = provider;

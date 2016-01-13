@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q, modalFilterService) {
 
                         $scope.layout = {
                             standalone: false
@@ -196,53 +196,28 @@
                         };
 
                         $scope.isModal = function(filter) {
-                            return "MetadataModalFilter" === filter.type;
+                            return !filter || "MetadataModalFilter" === filter.type;
                         }
 
                         $scope.initModal = function () {
                             $scope.modalDatamap = {};
-                            $scope.getModalSchema();
-                        }
-
-                        $scope.getModalSchema = function () {
-                            if (!$scope.filter || (!$scope.filter.targetSchemaId && !$scope.filter.advancedFilterSchemaId)) {
-                                return $q.when(null);
-                            }
-                            var schemaid = $scope.filter.targetSchemaId ? $scope.filter.targetSchemaId : $scope.filter.advancedFilterSchemaId;
-                            var tokens = schemaid.split(".");
-                            var modalSchemaAppName = tokens.length > 1 ? tokens[0] : $scope.schema.applicationName;
-                            var modalSchemaId = tokens.length > 1 ? tokens[1] : tokens[0];
-
-                            var cachedSchema = schemaCacheService.getCachedSchema(modalSchemaAppName, modalSchemaId);
-                            if (cachedSchema) {
-                                return $q.when(cachedSchema);
-                            }
-
-                            var parameters = {
-                                applicationName: modalSchemaAppName,
-                                targetSchemaId: modalSchemaId
-                            }
-                            var promise = restService.getPromise("Metadata", "GetSchemaDefinition", parameters);
-                            return promise.then(function (result) {
-                                schemaCacheService.addSchemaToCache(result.data);
-                                return result.data;
-                            });
+                            modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                         }
 
                         $scope.showModal = function(filter) {
-                            if (filter.type !== "MetadataModalFilter") {
+                            if (!$scope.isModal(filter)) {
                                 return;
                             }
                             $scope.innerShowModal(filter);
                         }
 
                         $scope.innerShowModal = function(filter) {
-                            var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
+                            var datamap = $scope.hasFilter(filter) && $scope.modalDatamap ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
                             var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
                             var properties = { title: filter.label + " " + filterI18N };
 
-                            $scope.getModalSchema().then(function (modalSchema) {
+                            modalFilterService.getModalFilterSchema(filter, $scope.schema).then(function (modalSchema) {
                                 modalService.show(modalSchema, datamap, properties, $scope.appyModal);
                             });
                         }
@@ -261,7 +236,8 @@
                         }
 
                         $scope.$on("modal.clearfilter", function (event, args) {
-                            $scope.getModalSchema().then(function (modalSchema) {
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
                                 if (modalSchema !== args[0]) {
                                     return;
                                 }
@@ -271,16 +247,8 @@
                         });
 
                         $scope.$on("modal.cancelfilter", function (event, args) {
-                            $scope.getModalSchema().then(function (modalSchema) {
-                                if (modalSchema !== args[0]) {
-                                    return;
-                                }
-                                modalService.hide();
-                            });
-                        });
-
-                        $scope.$on("modal.applyfilter", function (event, args) {
-                            $scope.getModalSchema().then(function (modalSchema) {
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
                                 if (modalSchema !== args[0]) {
                                     return;
                                 }

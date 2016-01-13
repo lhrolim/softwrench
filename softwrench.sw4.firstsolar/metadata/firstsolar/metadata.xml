@@ -15,7 +15,7 @@
         <list redeclaring="false">
           <filters>
             <!--<modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>-->
-            <optionfilter attribute="location" displaycode="true" advancedfilterschema="location.locationfilter" allowblank="true"/>
+            <optionfilter attribute="location" displaycode="false" eager="true" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
         </list>
       </schemas>
@@ -26,6 +26,9 @@
         <schema id="locationfilter" stereotype="list">
           <field attribute="location" label="Location"/>
           <field attribute="description" label="Description"/>
+          <field attribute="classstructure_.description" label="Class Structure"/>
+          <field attribute="parentlocation_.parent" label="Parent Location"/>
+          <field attribute="siteid" label="Site"/>
           <properties>
             <property key="commandbar.bottom" value="gridfilterbottom"/>
             <property key="commandbar.top" value="gridfiltertop"/>

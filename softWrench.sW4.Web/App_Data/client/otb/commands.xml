@@ -22,12 +22,13 @@
 
 
   <commandgroup position="gridfiltertop" platform="web">
-    <command id="toogleselected" icon="fa-check-square-o" service="dispatcherService" method="dispatchevent" label="Toogle Selected" parameters="modal.toogleselected,schema"/>
+    <command id="toggleselected" icon="$scope:toggleSelectedIcon" service="dispatcherService" method="dispatchevent"
+                 tooltip="Toggle selected" parameters="sw.crud.list.toggleselected,panelid" position="+profiles"/>
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
 
   <commandgroup position="gridfilterbottom" platform="web">
-    <command id="apply" icon="fa-check" service="dispatcherService" method="dispatchevent" label="Apply" parameters="modal.applyfilter,schema"/>
+    <command id="apply" icon="fa-check" service="dispatcherService" method="dispatchevent" label="Apply" parameters="sw.crud.list.filter.modal.apply,schema"/>
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="modal.cancelfilter,schema"/>
   </commandgroup>
