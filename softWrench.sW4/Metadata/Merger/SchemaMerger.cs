@@ -4,6 +4,7 @@ using System.Linq;
 using cts.commons.portable.Util;
 using DocumentFormat.OpenXml.Drawing;
 using log4net;
+using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softWrench.sW4.Exceptions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -38,6 +39,9 @@ namespace softWrench.sW4.Metadata.Validator {
             var customizations = GetCustomizations(overridenSchema);
             var fieldsThatShouldBeCustomized = customizations.Count();
             var customizationsActuallyApplied = new HashSet<int>();
+            original.Stereotype = overridenSchema.Stereotype;
+            original.CommandSchema.Merge(overridenSchema.CommandSchema);
+
 
 
             DoApplyCustomizations(original, overridenSchema, components, customizations, customizationsActuallyApplied, fieldsThatShouldBeCustomized);

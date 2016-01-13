@@ -1,4 +1,9 @@
-﻿function MakeSWAdminController($scope, $http, $timeout, redirectService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("MakeSWAdminController", MakeSWAdminController);
+function MakeSWAdminController($scope, $http, $timeout, redirectService) {
+    "ngInject";
 
     $scope.submit = function () {
         var parameters = {
@@ -35,3 +40,7 @@
 
     init();
 }
+
+window.MakeSWAdminController = MakeSWAdminController;
+
+})(angular);

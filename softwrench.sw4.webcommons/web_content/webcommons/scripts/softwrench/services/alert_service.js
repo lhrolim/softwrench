@@ -1,7 +1,8 @@
-﻿var app = angular.module('webcommons_services');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('alertService', function ($rootScope, $timeout, i18NService, notificationViewModel, $log) {
-    var log = $log.getInstance('sw4.alertService');
+angular.module('webcommons_services')
+    .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", function ($rootScope, $timeout, i18NService, notificationViewModel, $log) {
 
     return {
         confirmMsg: function(msg, callbackFunction, cancelcallback) {
@@ -108,6 +109,6 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService, notific
             }
         }
     };
-});
+}]);
 
-
+})(angular);

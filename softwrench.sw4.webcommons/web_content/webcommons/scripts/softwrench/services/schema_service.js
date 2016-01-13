@@ -1,4 +1,4 @@
-﻿(function (modules) {
+﻿(function (modules, angular) {
     "use strict";
 
     modules.webcommons.factory('schemaService', ["fieldService", "expressionService", function (fieldService, expressionService) {
@@ -203,6 +203,47 @@
             return false;
         }
 
+        /**
+         * @param {} schema 
+         * @param Array<String>|String values 
+         * @param {} emptyAsTrue (optional: defaults to false) whether or not a null/undefined/empty/"None" stereotype should be considered as the one being evaluated
+         * @returns Boolean whether or not the schema is any of the values stereotype
+         */
+        function isStereotype(schema, values, emptyAsTrue) {
+            var stereotype = schema.stereotype;
+            if (!stereotype || stereotype === "None") return emptyAsTrue || false;
+            if (!angular.isArray(values)) return stereotype.contains(values);
+            return values.some(function(value) {
+                return stereotype.contains(value);
+            });
+        }
+
+        /**
+         * @param {} schema 
+         * @param Boolean emptyAsTrue (optional: defaults to false) whether or not a null/undefined/empty/"None" stereotype should be considered as detail
+         * @returns Boolean whether or not the schema is of detail stereotype
+         */
+        function isDetail(schema, emptyAsTrue) {
+            return isStereotype(schema, ["detail", "Detail"], emptyAsTrue);
+        }
+
+        /**
+         * @param {} schema 
+         * @param Boolean emptyAsTrue (optional: defaults to false) whether or not a null/undefined/empty/"None" stereotype should be considered as list
+         * @returns Boolean whether or not the schema is of list stereotype
+         */
+        function isList(schema, emptyAsTrue) {
+            return isStereotype(schema, ["list", "List"], emptyAsTrue);
+        }
+
+        /**
+         * @param {} schemaA
+         * @param {} schemaB
+         * @returns Boolean whether or not the schemas have same applicationName and schemaId
+         */
+        function isSameSchema(schemaA, schemaB) {
+            return schemaA.applicationName === schemaB.applicationName && schemaA.schemaId === schemaB.schemaId;
+        }
 
         return {
             buildApplicationKey: buildApplicationKey,
@@ -216,9 +257,13 @@
             locateDisplayableByQualifier: locateDisplayableByQualifier,
             locateJquerySectionElementByApp:locateJquerySectionElementByApp,
             nonTabFields: nonTabFields,
-            parseAppAndSchema: parseAppAndSchema
+            parseAppAndSchema: parseAppAndSchema,
+            isStereotype: isStereotype,
+            isDetail: isDetail,
+            isList: isList,
+            isSameSchema: isSameSchema
         };
 
     }]);
 
-})(modules);
+})(modules, angular);

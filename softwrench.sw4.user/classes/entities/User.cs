@@ -150,7 +150,7 @@ namespace softwrench.sw4.user.classes.entities {
             Profiles = new HashedSet<UserProfile>();
         }
 
-        public static User CreateAdminUser(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc) {
+        public static User CreateAdminUser(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc, string email) {
             return new User() {
                 UserName = userName,
                 Person = new Person(),
@@ -159,7 +159,8 @@ namespace softwrench.sw4.user.classes.entities {
                 SiteId = siteId,
                 OrgId = orgId,
                 IsActive = true,
-                Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null
+                Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null,
+                Email = email
             };
         }
 

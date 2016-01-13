@@ -8,6 +8,12 @@
     <property key="list.paginationsize" value="30"/>
   </stereotype>
 
+
+  <stereotype id="list.selection">
+    <property key="list.selectionstyle" value="multiple"/>
+    <property key="commandbar.top" value="gridtop.selection"/>
+  </stereotype>
+
   <stereotype id="detail">
     <property key="popup.window.titlestrategy" value="nameandid"/>
     <property key="show.printcommand" value="editonly"/>

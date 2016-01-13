@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
+angular.module('sw_layout')
+    .factory('fixHeaderService', ["$rootScope", "$log", "$timeout", "contextService", function ($rootScope, $log, $timeout, contextService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         var affixpaginationid = $("#affixpagination");
@@ -268,5 +270,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         }
     };
 
-});
+}]);
 
+})(angular);

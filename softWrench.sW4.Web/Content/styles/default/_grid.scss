@@ -1,6 +1,6 @@
 ﻿$hover_background: #ddd;
 
-.advanced-filter-toogle {
+.advanced-filter-toggle {
     cursor: pointer;
     text-align: center;
 }
@@ -290,8 +290,14 @@
     }
 }
 
-#listgrid th {
-    word-break: break-word;
+#listgrid {
+    th {
+        word-break: break-word;
+    }
+
+    th.select-all-header {
+        padding-right: 3px;
+    }
 }
 
 #listgrid {
@@ -304,6 +310,7 @@
         &.select-multiple {
             text-align: center;
             padding-left: 1px;
+            padding-right: 3px;
         }
     }
 }

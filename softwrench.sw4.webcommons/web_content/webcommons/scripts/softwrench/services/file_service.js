@@ -1,9 +1,12 @@
-/*Used to download files via a child class of FileDownloadController instead of the wondow.local reload. 
- *This gives us access to the callbacks for success and failure.
- */
-var app = angular.module('sw_layout');
+(function (angular) {
+    "use strict";
 
-app.factory('fileService', function ($rootScope, contextService) {
+/*
+ * Used to download files via a child class of FileDownloadController instead of the wondow.local reload. 
+ * This gives us access to the callbacks for success and failure.
+ */
+angular.module('sw_layout')
+    .factory('fileService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
     return {
         download: function (url, successCallback, failCallback) {
@@ -33,14 +36,14 @@ app.factory('fileService', function ($rootScope, contextService) {
                             //Since we´re using an inner iframe the contents of the signin might not be show. Let´s redirect manually, and there´s no way to override that.
                             window.location.reload();
                         } else {
-                        failCallback(html, url);
-                    }
+                            failCallback(html, url);
+                        }
                         
                     }
                 }
             });
         }
-    }
-});
-
-
+    };
+}]);
+ 
+})(angular);

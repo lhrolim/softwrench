@@ -7,8 +7,8 @@
   <reference id="solution"/>
   <reference id="change"/>
   <reference id="purchase"/>
-  <reference id="Incident"/>
-  <reference id="Inventory"/>
+  <reference id="incident"/>
+  <reference id="inventory"/>
 
 </Menu>
 

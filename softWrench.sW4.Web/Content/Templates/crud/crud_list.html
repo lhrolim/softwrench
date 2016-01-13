@@ -14,10 +14,10 @@
                              search-operator="searchOperator"
                              search-template="searchTemplate"
                              panelid="panelid"
-                             class="gridtop"/>
+                             class="gridtop" />
 
                 <!-- quick search input -->
-                <div class="quick-search col-xs-4">
+                <div ng-show="shouldShowGridNavigation()" class="quick-search col-xs-4">
                     <div class="input-group">
                         <input type="text"
                                placeholder="Search"
@@ -35,17 +35,33 @@
                     </div>
                 </div>
 
+
+            
+
                 <!-- simple pagination -->
                 <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                             schema="schema" application-name="{{schema.applicationName}}"
                             search-data="searchData"
                             search-operator="searchOperator"
+                            panelid="panelid"
                             pagination-simple-layout/>
+
+                <gridtoolbar advancedsearchdata="vm.quickSearchData"
+                             position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
+                             datamap="datamap"
+                             schema="schema"
+                             pagination-data="paginationData"
+                             search-data="searchData"
+                             search-sort="searchSort"
+                             search-operator="searchOperator"
+                             search-template="searchTemplate"
+                             panelid="panelid"
+                             class="gridtop right"
+                             style="float:right" />
             </div>
 
         </div>
 
-        
         <!--<div class="filter-container">
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
@@ -60,9 +76,10 @@
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
-                        search-operator="searchOperator"/>
+                        panelid="panelid"
+                        search-operator="searchOperator" />
         </div>
-        
+
         <!--<div class="filter-container">
             <div class="context clearfix header-menu">
                 <crud-filter-bar schema="schema" datamap="datamap"
@@ -71,7 +88,7 @@
                 </crud-filter-bar>
             </div>
         </div>-->
-    
+
     </div>
 
     <!-- search filters: dettached from the entity table -->
@@ -85,18 +102,19 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-all-header">
                         <!--Multiselect-->
-                        <input type="checkbox" ng-model="selectAllValue" ng-change="selectAllChanged()"/>
+                        <input type="checkbox" ng-model="selectionModel.selectAllValue" ng-change="selectAllChanged()" />
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
                     </th>
+
                     <th class="{{safeCSSselector(column.attribute)}}"
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
+                            <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
                                 {{i18NLabel(column)}}
                             </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
@@ -106,7 +124,7 @@
                             <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant">
                             </span>
-                            <div class="filter-label" filterrowrendered>
+                            <div class="filter-label" ng-show="shouldShowGridNavigation()" filterrowrendered>
                                 <crud-filter-dropdown filter="filterForColumn(column)"
                                                       schema="schema" datamap="datamap"
                                                       advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
@@ -116,6 +134,10 @@
                         </div>
                     </th>
                     <th class="clear"><!--SWWEB-841--></th>
+
+                    <th ng-show="selectionModel.selectionMode">
+                        <!--Selection mode active... should render an extra icon to open up the details-->
+                    </th>
                 </tr>
 
             </thead>

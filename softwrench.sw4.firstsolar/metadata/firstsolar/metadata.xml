@@ -40,6 +40,11 @@
             <property key="commandbar.bottom" value="detailfilter"/>
           </properties>
         </schema>-->
+        <schema id="list"  redeclaring="false" stereotype="list.selection">
+          <properties>
+            <property key="list.selectionmodebydefault" value="true" />
+          </properties>
+        </schema>
       </schemas>
     </application>
   </applications>

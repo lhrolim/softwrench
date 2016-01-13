@@ -1,5 +1,11 @@
-﻿function ReceivingController($scope,contextService,alertService,searchService) {
-    $scope.receive = function(compositionitem){
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("ReceivingController", ReceivingController);
+function ReceivingController($scope, contextService, alertService, searchService) {
+    "ngInject";
+
+    $scope.receive = function (compositionitem) {
         if (compositionitem['orderqty'] <= compositionitem['receivedqty']) {
             alertService.alert("Cannot receive more than you ordered !! Receipts Completed");
             return;
@@ -33,3 +39,7 @@
         return;
     };
 }
+
+window.ReceivingController = ReceivingController;
+
+})(angular);

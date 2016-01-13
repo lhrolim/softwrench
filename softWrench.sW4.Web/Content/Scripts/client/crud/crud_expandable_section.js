@@ -84,9 +84,10 @@
                         }, 0, false);
                     }
 
+                    //update header/footer layout
                     $timeout(function () {
-                        $(window).trigger("resize");
-                    }, 0, false);
+                        $(window).trigger('resize');
+                    }, false);
                 };
 
                 var showTemplateLoading = function() {

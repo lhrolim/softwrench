@@ -1,4 +1,9 @@
-﻿function LogAdminController($scope, $http, i18NService, redirectService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("LogAdminController", LogAdminController);
+function LogAdminController($scope, $http, i18NService, redirectService) {
+    "ngInject";
 
     $scope.filter = function (data) {
         var logname = data.logname;
@@ -88,3 +93,7 @@
 
     init($scope.resultData);
 }
+
+window.LogAdminController = LogAdminController;
+
+})(angular);

@@ -1,8 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService",
-        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout",
+        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -69,13 +69,20 @@
         $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
         $('.no-touch [rel=tooltip]').tooltip('hide');
 
+        //update header/footer layout
+        $timeout(function () {
+            $(window).trigger('resize');
+        }, false);
+
         if (command.service === "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {
                 fn();
             }
+
             return;
         }
+
         commandService.doCommand($scope, command);
     }
 

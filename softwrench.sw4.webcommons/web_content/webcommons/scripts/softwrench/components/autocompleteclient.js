@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldService) {
+angular.module('sw_layout')
+    .factory('cmpAutocompleteClient', ["$rootScope", "$log", "$timeout", "fieldService", function ($rootScope, $log, $timeout, fieldService) {
 
     return {
 
@@ -28,7 +30,7 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
             }
         },
 
-        refreshFromAttribute: function (displayable, value, availableoptions) {
+        refreshFromAttribute: function (scope,displayable, value, availableoptions) {
             var attribute = displayable.attribute;
 
             var log =$log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
@@ -40,8 +42,9 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
                         labelValue = availableoptions[i].label;
                     }
                 }
-            } else if ("true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions && availableoptions.length === 1) {
+            } else if (displayable.rendererParameters && "true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions && availableoptions.length === 1) {
                 labelValue = availableoptions[0].label;
+                scope.datamap[displayable.target] = availableoptions[0].value;
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
             log.debug("setting autocompleteclient {0} to value {1}".format(attribute,labelValue));
@@ -80,10 +83,8 @@ app.factory('cmpAutocompleteClient', function ($rootScope,$log, $timeout, fieldS
             }
         }
 
+    };
 
+}]);
 
-    }
-
-});
-
-
+})(angular);

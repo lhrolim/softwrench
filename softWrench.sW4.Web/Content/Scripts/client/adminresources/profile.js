@@ -1,6 +1,9 @@
-﻿
+﻿(function (angular) {
+    "use strict";
 
+angular.module("sw_layout").controller("ProfileController", ProfileController);
 function ProfileController($scope) {
+    "ngInject";
 
     var app = angular.module('plunker', ['ui.multiselect']);
 
@@ -35,4 +38,6 @@ function ProfileController($scope) {
     initUser();
 }
 
+window.ProfileController = ProfileController;
 
+})(angular);

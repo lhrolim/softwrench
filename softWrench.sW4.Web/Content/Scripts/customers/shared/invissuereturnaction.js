@@ -1,4 +1,9 @@
-function InvIssueReturnActionController($scope, contextService, alertService, modalService, restService, redirectService) {
+(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("InvIssueReturnActionController", InvIssueReturnActionController);
+function InvIssueReturnActionController($scope) {
+    "ngInject";
 
     $scope.hasBeenReturned = function (matusetransitem) {
         var data = matusetransitem['fields'];
@@ -10,6 +15,8 @@ function InvIssueReturnActionController($scope, contextService, alertService, mo
         var data = matusetransitem['fields'];
         return data['issuetype'] != 'RETURN';
     };
-
 }
 
+window.InvIssueReturnActionController = InvIssueReturnActionController;
+
+})(angular);

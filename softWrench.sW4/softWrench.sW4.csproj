@@ -372,7 +372,6 @@
     <Compile Include="Metadata\Parsing\XMLCommandSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
-    <Compile Include="Metadata\Parsing\XmlStereotypeMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
@@ -387,10 +386,11 @@
     <Compile Include="Metadata\Validator\MetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
-    <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
     <Compile Include="Metadata\Merger\SchemaMerger.cs" />
+    <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
+    <Compile Include="Metadata\Validator\XmlStereotypeMetadataParser.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
     <Compile Include="Preferences\GridFilterController.cs" />

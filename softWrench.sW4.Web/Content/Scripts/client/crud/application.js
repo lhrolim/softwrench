@@ -1,8 +1,10 @@
-//var app = angular.module('sw_layout');
+(function (angular) {
+    "use strict";
 
 var app = angular.module('sw_layout');
 
 app.directive('bodyrendered', function ($timeout, $log, menuService) {
+    "ngInject";
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -21,7 +23,8 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     };
 });
 
-app.directive('listtablerendered', function ($timeout, $log, menuService) {
+app.directive('listtablerendered', function ($timeout, $log) {
+    "ngInject";
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -38,6 +41,7 @@ app.directive('listtablerendered', function ($timeout, $log, menuService) {
 });
 
 app.directive('filterrowrendered', function ($timeout) {
+    "ngInject";
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -50,10 +54,12 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $timeout,
+app.controller("ApplicationController", applicationController);
+function applicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
     contextService, searchService, alertService, schemaService,
     checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
+    "ngInject";
 
     $scope.$name = 'applicationController';
     var currentFocusedIdx = 0;
@@ -258,7 +264,13 @@ function ApplicationController($scope, $http, $log, $timeout,
         if (scope.schema != null) {
             // for crud results, otherwise schema might be null
             scope.schema.mode = scope.mode;
-            crudContextHolderService.updateCrudContext(scope.schema,scope.datamap);
+
+            var currentSchema = crudContextHolderService.currentSchema();
+            if (!currentSchema || scope.schema.applicationName === currentSchema.applicationName) {
+                crudContextHolderService.updateCrudContext(scope.schema, scope.datamap);
+            } else {
+                crudContextHolderService.applicationChanged(scope.schema, scope.datamap);
+            }
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
@@ -299,7 +311,7 @@ function ApplicationController($scope, $http, $log, $timeout,
             }, msg, function () { return; });
         }
         else {
-            $scope.toListSchema(data, schema);
+            $scope.toSchema(data, schema);
         }
 
         //update the crud context to update the breadcrumbs 
@@ -310,7 +322,24 @@ function ApplicationController($scope, $http, $log, $timeout,
         $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
     };
 
+    $scope.toSchema = function (data, schema) {
+        if (schema.stereotype.equalsIc("list")) {
+            $scope.toListSchema(data, schema);
+        } else {
+            $scope.toDetailSchema(data, schema);
+        }
+    }
 
+    $scope.toDetailSchema = function (data, schema) {
+        var log = $log.getInstance('application#toDetailSchema');
+        var params = {};
+        params["resultObject"] = data[0];
+        params["schema"] = schema;
+        params["type"] = "ApplicationDetailResult";
+        // If the application has custom parameters get them from the datamap
+
+        $scope.renderViewWithData(schema.applicationName, schema.schemaId, schema.mode, schema.title, params);
+    }
 
     $scope.toListSchema = function (data, schema) {
         
@@ -508,3 +537,5 @@ function ApplicationController($scope, $http, $log, $timeout,
     initApplication();
 
 }
+
+})(angular);

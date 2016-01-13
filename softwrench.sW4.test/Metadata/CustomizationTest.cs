@@ -90,7 +90,7 @@ namespace softwrench.sW4.test.Metadata {
         public void TestReplaceComposition() {
 
             var app = MetadataProvider.Application("incident");
-            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("editdetail"));
             var compositions = detailSchema.Compositions();
             var attachmentComposition = compositions.FirstOrDefault(c => c.AssociationKey == "attachment");
             Assert.IsNull(attachmentComposition);
@@ -159,6 +159,34 @@ namespace softwrench.sW4.test.Metadata {
             Assert.AreEqual("sparepart_.description", associations[0].OriginalLabelField);
             Assert.AreEqual("item_.description", associations[1].OriginalLabelField);
         }
+
+        [TestMethod]
+        public void TestCommandsCustomization() {
+
+            var app = MetadataProvider.Application("location");
+            var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
+            var commandSchema = listSchema.CommandSchema;
+            Assert.IsTrue(commandSchema.HasDeclaration);
+            Assert.AreEqual(1,commandSchema.ApplicationCommands.Count);
+            Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#actions"));
+            Assert.AreEqual(1,commandSchema.ApplicationCommands["#actions"].Commands.Count);
+
+
+            var srApp = MetadataProvider.Application("servicerequest");
+            var editSchema = srApp.Schema(new ApplicationMetadataSchemaKey("editdetail"));
+
+            commandSchema = editSchema.CommandSchema;
+            Assert.IsTrue(commandSchema.HasDeclaration);
+            Assert.AreEqual(2, commandSchema.ApplicationCommands.Count);
+            Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#actions"));
+            Assert.AreEqual(1, commandSchema.ApplicationCommands["#actions"].Commands.Count);
+
+            Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#detailform"));
+            Assert.IsTrue(commandSchema.ApplicationCommands["#detailform"].Commands.Any(c => c.Id.Equals("customizationtest")));
+
+
+        }
+
 
     }
 }

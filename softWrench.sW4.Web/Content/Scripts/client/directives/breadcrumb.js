@@ -1,6 +1,11 @@
+(function (angular) {
+    "use strict";
+
 var app = angular.module('sw_layout');
 
 app.directive('breadcrumb', function (contextService, $log, $timeout, recursionHelper, crudContextHolderService, i18NService) {
+    "ngInject";
+
     var log = $log.getInstance('sw4.breadcrumb');
 
     return {
@@ -127,22 +132,9 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
 
                                         //add a breadcrumb item for the unknown page
                                         var newPage = {};
-                                        newPage.title = current;
-
-                                        //determine the best icon to use
-                                        var icon = 'fa fa-circle-o';
-                                        if (current.indexOf("Detail") > -1) {
-                                            icon = 'fa fa-file-text-o';
-
-                                            var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
-                                            if (record) {
-                                                newPage.title = record;
-                                            }
-                                        }
-                                   
-                                        newPage.icon = icon;
+                                        newPage.title = $scope.getBreadcrumbTitle(current);
+                                        newPage.icon = $scope.getBreadcrumbIcon(current);
                                         newPage.type = 'UnknownMenuItemDefinition';
-
                                         page.push(newPage);
                                     }
                                 }
@@ -156,6 +148,16 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                 }
 
                 return page;
+            }
+
+            $scope.getBreadcrumbIcon = function (title) {
+                var icon = 'fa fa-circle-o';
+
+                if (title.indexOf("Detail") > -1) {
+                    icon = 'fa fa-file-text-o';
+                }
+
+                return icon;
             }
 
             $scope.getBreadcrumbItems = function (currentMenu) {
@@ -190,10 +192,33 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                 } else {
                     foundPages = [];
                     foundPages.push(newPage);
+
+                    //if no menu items where found, add the current schema to the breadcrumb
+                    var current = crudContextHolderService.currentSchema();
+                    if (current != null) {
+                        newPage = {};
+                        newPage.title = $scope.getBreadcrumbTitle(current.title);
+                        newPage.icon = $scope.getBreadcrumbIcon(current.title);
+                        newPage.type = 'UnknownMenuItemDefinition';
+                        foundPages.push(newPage);
+                    }
                 }
   
                 return foundPages;
             };
+
+            $scope.getBreadcrumbTitle = function (title) {
+                var string = title;
+
+                if (title.indexOf("Detail") > -1) {
+                    var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
+                    if (record) {
+                        string = record;
+                    }
+                }
+
+                return string;
+            }
 
             $scope.getCurrentMenu = function () {
                 var currentItem = $('.admin-area .admin-menu .modern .dropdown-menu a:contains("' + $scope.title + '")');
@@ -273,11 +298,11 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
                 $scope.processBreadcrumb();
             });
         }
-    }
+    };
 });
 
 app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper) {
-    var log = $log.getInstance('sw4.breadcrumb Dropdown');
+    "ngInject";
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/breadcrumbDropdown.html'),
@@ -305,11 +330,11 @@ app.directive('bcMenuDropdown', function ($log, contextService, recursionHelper)
                 // a 'pre'- and 'post'-link function.
             });
         }
-    }
+    };
 });
 
 app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
-    var log = $log.getInstance('sw4.breadcrumb Menu Item');
+    "ngInject";
 
     return {
         controller: function ($scope, alertService, validationService, crudContextHolderService) {
@@ -320,8 +345,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                         menuService.goToApplication(leaf, null);
                         $scope.$digest();
                     }, msg, function () { return; });
-                }
-                else {
+                } else {
                     menuService.goToApplication(leaf, null);
                 }
 
@@ -338,8 +362,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                         menuService.doAction(leaf, null);
                         $scope.$digest();
                     }, msg, function () { return; });
-                }
-                else {
+                } else {
                     menuService.doAction(leaf, null);
                 }
 
@@ -375,5 +398,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 $('.breadcrumb .open').removeClass('open');
             };
         }
-    }
+    };
 });
+
+})(angular);

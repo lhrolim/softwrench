@@ -8,13 +8,15 @@ using softwrench.sw4.Shared2.Metadata.Exception;
 namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandSchema {
 
-        private readonly Boolean _hasDeclaration;
+        private bool _hasDeclaration;
         private readonly ISet<string> _toExclude = new HashSet<string>();
         private readonly ISet<string> _toInclude = new HashSet<string>();
 
-        private IDictionary<string, CommandBarDefinition> _applicationCommands = new Dictionary<string, CommandBarDefinition>();
+        private IDictionary<string, CommandBarDefinition> _applicationCommands =
+            new Dictionary<string, CommandBarDefinition>();
 
-        public ApplicationCommandSchema(IDictionary<string, CommandBarDefinition> applicationCommands, IDictionary<string, CommandBarDefinition> commandBars) {
+        public ApplicationCommandSchema(IDictionary<string, CommandBarDefinition> applicationCommands,
+            IDictionary<string, CommandBarDefinition> commandBars) {
             if (!applicationCommands.Any()) {
                 _hasDeclaration = false;
                 return;
@@ -25,25 +27,40 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
 
 
         public ISet<string> ToExclude {
-            get { return _toExclude; }
+            get {
+                return _toExclude;
+            }
         }
 
         public ISet<string> ToInclude {
-            get { return _toInclude; }
+            get {
+                return _toInclude;
+            }
         }
 
         [JsonIgnore]
         public IDictionary<string, CommandBarDefinition> ApplicationCommands {
-            get { return _applicationCommands; }
-            set { _applicationCommands = value; }
+            get {
+                return _applicationCommands;
+            }
+            set {
+                _applicationCommands = value;
+            }
         }
 
         public bool HasDeclaration {
-            get { return _hasDeclaration; }
+            get {
+                return _hasDeclaration;
+            }
         }
 
         public override string ToString() {
             return string.Format("Commands: {0}", _applicationCommands.Values);
+        }
+
+        public void Merge(ApplicationCommandSchema commandSchema) {
+            _applicationCommands = ApplicationCommandMerger.MergeCommandsWithCustomizedSchema(commandSchema.ApplicationCommands,_applicationCommands);
+            _hasDeclaration = _applicationCommands.Any();
         }
     }
 }
