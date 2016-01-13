@@ -61,6 +61,7 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
          * @param Object queryParameters dictionary of parameters to be passed as query string
          * @param Object json request's payload
          * @param Object config request's config
+         * 
          * @returns HttpPromise
          */
         postPromise: function (controller, action, queryParameters, json, config) {

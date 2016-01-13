@@ -167,6 +167,7 @@
                     var needsWatchers = false;
                     var hasSection = false;
                     var hasMultipleSelector = schema.properties['list.selectionstyle'] === 'multiple';
+                    var disableddetails = "true" === schema.properties['list.disabledetails'];
 
                     var selectionMode = scope.selectionModel.selectionMode;
 
@@ -299,7 +300,7 @@
 
 
                         }
-                        if (hasMultipleSelector) {
+                        if (hasMultipleSelector && !disableddetails) {
                             html += "<td ng-show=\"selectionModel.selectionMode\">";
                             html += "<i class=\"fa fa-edit\" onclick='griditemclick({0},null,this,true)' rel=\"tooltip\" data-original-title=\"View Details\" ></i>".format(i, j);
                             html += "</td>";

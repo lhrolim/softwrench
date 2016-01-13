@@ -21,6 +21,8 @@
         public const string BasePropertiesAttribute = "properties";
         public const string IconAttribute = "icon";
         public const string BaseDisplayableQueryAttribute = "query";
+        public const string CssClassesAttribute = "cssclasses";
+        public const string PrimaryAttribute = "primary";
 
         public const string LabelAttribute = "label";
         public const string ValueAttribute = "value";

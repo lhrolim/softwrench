@@ -51,7 +51,7 @@ angular.module('sw_layout')
         },
 
         doExecuteService: function (scope, clientFunction, command,overridenDatamap) {
-            var service = $injector.get(command.service);
+            var service = $injector.getInstance(command.service);
             if (service == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return $q.when();
@@ -59,7 +59,7 @@ angular.module('sw_layout')
 
             var method = service[clientFunction];
             if (method == null) {
-                log.warn('method {0} not found on service {1}'.format(clientFunction, command.service));
+                $log.get("commandService#doExecuteService").warn('method {0} not found on service {1}'.format(clientFunction, command.service));
                 return $q.when();
             }
 
@@ -79,7 +79,7 @@ angular.module('sw_layout')
                 });
             }
 
-            return $q.when(method.apply(this, args));
+            return $q.when(method.apply(service, args));
         },
 
         doCommand: function (scope, command) {
