@@ -652,7 +652,7 @@
     <Content Include="Content\styles\default\_define-password.scss" />
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
-    <Content Include="Content\styles\default\searchbox.scss" />
+    <Content Include="Content\styles\default\_searchbox.scss" />
     <None Include="Content\styles\default\_button.scss" />
     <None Include="Content\styles\default\vendor\_xeditable.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
