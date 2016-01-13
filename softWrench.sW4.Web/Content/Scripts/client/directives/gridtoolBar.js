@@ -112,12 +112,13 @@
         return eval(expressionToEval);
     }
 
-    $scope.buttonClasses = function () {
-        if ($scope.position.equalsAny('detailform', 'compositionbottom', 'detailfilter')) {
-            return "btn btn-primary commandButton navbar-btn";
+    $scope.buttonClasses = function (command) {
+        if (command.primary || $scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
+            return "btn btn-primary commandButton navbar-btn" + command.cssClasses;
         }
-        return "btn btn-default btn-sm";
+        return "btn btn-default btn-sm" + command.cssClasses;
     }
+
 
 }];
 

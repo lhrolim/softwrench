@@ -168,7 +168,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
         }
 
         var applicationname = $scope.schema.applicationName;
-        if (schemaid == '') {
+        if (schemaid === '') {
             return;
         }
         if (schemaid == null) {

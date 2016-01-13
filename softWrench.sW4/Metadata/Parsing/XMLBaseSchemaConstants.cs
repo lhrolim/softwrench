@@ -20,6 +20,8 @@
         public const string BaseParametersAttribute = "parameters";
         public const string BasePropertiesAttribute = "properties";
         public const string IconAttribute = "icon";
+        public const string CssClassesAttribute = "cssclasses";
+        public const string PrimaryAttribute = "primary";
 
 
         public const string LabelAttribute = "label";

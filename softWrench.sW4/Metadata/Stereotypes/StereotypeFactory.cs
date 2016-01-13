@@ -1,4 +1,5 @@
-﻿using cts.commons.portable.Util;
+﻿using System;
+using cts.commons.portable.Util;
 using softWrench.sW4.Security.Init;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
@@ -8,6 +9,24 @@ using JetBrains.Annotations;
 namespace softWrench.sW4.Metadata.Stereotypes {
 
     class StereotypeFactory {
+
+
+        public static SchemaStereotype ParseStereotype(string stereotypeAttr) {
+            SchemaStereotype stereotype = SchemaStereotype.None;
+            var result = Enum.TryParse(stereotypeAttr, true, out stereotype);
+            if (!result) {
+                if (stereotypeAttr.Contains("detail")) {
+                    if (stereotypeAttr.Contains("new")) {
+                        return SchemaStereotype.DetailNew;
+                    }
+                    return SchemaStereotype.Detail;
+                }
+                if (stereotypeAttr.Contains("list")) {
+                    return SchemaStereotype.List;
+                }
+            }
+            return stereotype;
+        }
 
         public static IStereotype LookupStereotype([CanBeNull]string stereotype, SchemaMode? mode) {
             if (stereotype == null)

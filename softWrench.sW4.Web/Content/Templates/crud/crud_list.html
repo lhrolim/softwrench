@@ -135,7 +135,7 @@
                     </th>
                     <th class="clear"><!--SWWEB-841--></th>
 
-                    <th ng-show="selectionModel.selectionMode">
+                    <th ng-show="selectionModel.selectionMode && 'true' !==schema.properties['list.disableddetails']">
                         <!--Selection mode active... should render an extra icon to open up the details-->
                     </th>
                 </tr>

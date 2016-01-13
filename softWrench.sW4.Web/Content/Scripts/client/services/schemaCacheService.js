@@ -18,7 +18,7 @@
             // lazy schema fetch strategy: only restore the systeminitmillis
             schemaCache.systeminitMillis = localStorage.getItem(systemInitTimeKey);
 
-            
+
 
             //var log = $log.get("schemaCacheService#restore", ["performance"]);
             //log.debug("starting schema restore process");

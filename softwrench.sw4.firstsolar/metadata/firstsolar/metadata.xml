@@ -18,6 +18,45 @@
             <optionfilter attribute="location" displaycode="false" eager="true" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
         </list>
+        <schema id="batchshared" title="Workoder Common Fields" stereotype="detail.modal">
+          <field attribute="summary" label="Summary:" requiredexpression="true"/>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea"/>
+          </field>
+          <association label="Site" target="siteid" labelfield="site_.description"
+                       requiredexpression="true" hideDescription="true" defaultexpression="@user.site">
+            <renderer type="lookup" />
+          </association>
+        </schema>
+
+        <schema id="batchLocationSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+          <field attribute="location" hidden="true"/>
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="#warning" tooltip="This location already contains a workorder">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
+          </field>
+          <field attribute="location_label" label="Location"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <association label="Site" target="siteid" labelfield="site_.description"
+                       requiredexpression="true" hideDescription="true" defaultexpression="@user.site">
+            <renderer type="lookup" />
+          </association>
+
+          <commandbars>
+            <commandgroup id="#spreadsheet">
+              <!--TODO: review framework to eventually avoid the need for these commands later-->
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
+            </commandgroup>
+          </commandbars>
+
+        </schema>
+
+
       </schemas>
     </application>
 
@@ -47,6 +86,20 @@
           <properties>
             <property key="list.selectionmodebydefault" value="true" />
           </properties>
+        </schema>
+        <schema id="list"  redeclaring="false" stereotype="list.selection">
+          <properties>
+            <property key="list.selectionmodebydefault" value="true" />
+          </properties>
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                         service="locationService" method="initBatchWorkorder"
+                         parameters="schema,datamap" />
+              </container>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
