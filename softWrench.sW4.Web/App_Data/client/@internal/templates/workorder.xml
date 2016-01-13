@@ -291,7 +291,9 @@
               </section>
 
               <section orientation="horizontal">
-                <reference id="classification"/>
+                <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
+                  <renderer type="autocompleteclient" params="inputsize=large" />
+                </optionfield>
 
                 <field hidden="true" attribute="failurelist_.failurelist"/>
 
