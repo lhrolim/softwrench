@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -8,6 +9,7 @@ using cts.commons.web.Attributes;
 using JetBrains.Annotations;
 using log4net;
 using log4net.Core;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
@@ -27,19 +29,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarWorkorderBatchController));
 
-        private MaximoHibernateDAO _maxDAO;
+        private readonly FirstSolarWoValidationHelper _validationHelper;
 
-        public FirstSolarWorkorderBatchController(MaximoHibernateDAO maxDAO) {
-            _maxDAO = maxDAO;
+        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper) {
+            _validationHelper = validationHelper;
             Log.Debug("init log...");
         }
 
 
         [HttpPost]
-        public IApplicationResponse InitLocationBatch(BatchData batchData) {
+        public IApplicationResponse InitLocationBatch(LocationBatchData batchData) {
 
             Log.Debug("receiving batch data");
-            var warningIds = ValidateIdsThatHaveWorkorders(batchData.Locations, true);
+            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForLocation(batchData.Locations, batchData.Classification);
 
             var i = 0;
             var resultData = batchData.Locations.Select(location => GetDataMap(location, batchData, warningIds, i++)).ToList();
@@ -49,18 +51,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchLocationSpreadSheet")).Schema;
 
             return new ApplicationListResult(batchData.Locations.Count, null, resultData, schema, null) {
-                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Locations.Count} }
+                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Locations.Count } }
             };
 
 
 
         }
 
-        private DataMap GetDataMap(IAssociationOption location, BatchData batchData, ICollection<string> warningIds, int transientId) {
-            var selected = !warningIds.Contains(location.Value);
+        private DataMap GetDataMap(IAssociationOption location, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
+            var selected = !warningIds.ContainsKey(location.Value);
             var fields = new Dictionary<string, object>();
             fields["_#selected"] = selected;
-
+            if (!selected) {
+                fields["#wonums"] = string.Join(",",warningIds[location.Value]);
+            }
             //if not selected, let´s put a warning for the user
             fields["#warning"] = !selected;
 
@@ -75,11 +79,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return new DataMap("workorder", fields);
         }
 
-        [NotNull]
-        public List<string> ValidateIdsThatHaveWorkorders(List<AssociationOption> originalIds, bool location) {
-            //mocking
-            return new List<string>() { originalIds.First().Value };
-        }
 
         private class SelectedComparer : IComparer<DataMap> {
             public int Compare(DataMap x, DataMap y) {
@@ -110,13 +109,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             public string SiteId {
                 get; set;
             }
-            public List<AssociationOption> Locations {
-                get; set;
-            }
-            public List<AssociationOption> Assets {
+
+            public string Classification {
                 get; set;
             }
 
+
+        }
+
+        public class LocationBatchData : BatchData {
+            public List<AssociationOption> Locations {
+                get; set;
+            }
+        }
+
+        public class AssetBatchData : BatchData {
+            public List<AssociationOption> Assets {
+                get; set;
+            }
         }
 
     }
