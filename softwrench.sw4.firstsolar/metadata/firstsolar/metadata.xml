@@ -62,19 +62,12 @@
 
     <application name="location" title="Location" entity="location" >
       <schemas>
-        <schema id="locationfilter" stereotype="list">
+        <schema id="locationfilter" stereotype="list.selection.modal.filter">
           <field attribute="location" label="Location"/>
           <field attribute="description" label="Description"/>
           <field attribute="classstructure_.description" label="Class Structure"/>
           <field attribute="parentlocation_.parent" label="Parent Location"/>
           <field attribute="siteid" label="Site"/>
-          <properties>
-            <property key="commandbar.bottom" value="gridfilterbottom"/>
-            <property key="commandbar.top" value="gridfiltertop"/>
-            <property key="list.selectionstyle" value="multiple"/>
-            <property key="list.paginationsize" value="10"/>
-            <property key="list.disabledetails" value="true"/>
-          </properties>
         </schema>
         <!--<schema id="locationfilter" stereotype="detail">
           <field attribute="location" label="Location"/>
@@ -82,11 +75,6 @@
             <property key="commandbar.bottom" value="detailfilter"/>
           </properties>
         </schema>-->
-        <schema id="list"  redeclaring="false" stereotype="list.selection">
-          <properties>
-            <property key="list.selectionmodebydefault" value="true" />
-          </properties>
-        </schema>
         <schema id="list"  redeclaring="false" stereotype="list.selection">
           <properties>
             <property key="list.selectionmodebydefault" value="true" />

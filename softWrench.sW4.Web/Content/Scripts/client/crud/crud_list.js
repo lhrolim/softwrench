@@ -180,7 +180,7 @@
                             // also update the total count of pagination
                             if (!$scope.selectionModel.showOnlySelected) {
                                 var paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
-                                if (paginationData) {
+                                if (paginationData && $scope.paginationData) {
                                     $scope.paginationData.totalCount = paginationData.totalCount;
                                 }
                             } else {
