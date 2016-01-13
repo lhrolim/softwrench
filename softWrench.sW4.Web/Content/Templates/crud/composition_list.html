@@ -33,7 +33,7 @@
                 <th class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
-                    <span ng-show="isFieldRequired(compositionitem,column.requiredExpression)" class="requiredfieldmark">* </span>
+                    <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
                 <th ng-if="isBatch()">
