@@ -98,6 +98,26 @@
         </schema>
       </schemas>
     </application>
+
+
+    <application name="asset" title="Location" entity="asset" >
+      <schemas>
+        <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
+          <properties>
+            <property key="list.selectionmodebydefault" value="true" />
+          </properties>
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                         service="assetService" method="initBatchWorkorder"
+                         parameters="schema,datamap" />
+              </container>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 
 </metadata>

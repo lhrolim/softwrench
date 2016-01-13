@@ -51,4 +51,8 @@
   <container title="Location" tooltip="Click here to access your lcoations" icon="fa fa-location-arrow" id="location" role="location">
     <application id="LOC" icon="fa fa-table" title="Location Grid" ref="location" schema="list" tooltip="Click to view your Location Grid"/>
   </container>
+
+  <container title="Assets" tooltip="Click here to access your Assets" icon="fa fa-location-arrow" id="asset" role="asset">
+    <application id="AST" icon="fa fa-table" title="Asset Grid" ref="asset" role="asset" schema="assetlist" tooltip="Click to view your Assets"/>
+  </container>
 </TemplateCatalog>
