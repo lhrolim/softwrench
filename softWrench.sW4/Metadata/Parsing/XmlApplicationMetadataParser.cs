@@ -133,13 +133,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             // Flag for fields coming from attributes that use subqueries
             var fieldAttributeMetadata = entityMetadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(attribute));
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
-            var fromSubquery = !fieldEntityQuery.NullOrEmpty() && fieldEntityQuery.Length > 0;
+            var declaredAsQueryOnEntity = !fieldEntityQuery.NullOrEmpty() && fieldEntityQuery.Length > 0;
 
             var datatype = ParseDataType(entityMetadata, attribute);
 
 
             return new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, fromSubquery);
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, declaredAsQueryOnEntity);
         }
 
         private static string ParseDataType(EntityMetadata entityMetadata, string attribute) {

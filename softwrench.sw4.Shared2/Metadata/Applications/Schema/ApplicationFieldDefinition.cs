@@ -53,8 +53,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string datatype, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
-             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool fromSubquery)
-            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression, fromSubquery) {
+             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool declaredAsQueryOnEntity)
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression, declaredAsQueryOnEntity) {
             if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
             _widgetDefinition = widgetDefinition;
             _renderer = renderer;
@@ -168,7 +168,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             return new ApplicationFieldDefinition(ApplicationName, Attribute, DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, FromSubquery);
+                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
