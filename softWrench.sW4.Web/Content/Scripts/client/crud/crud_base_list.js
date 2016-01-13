@@ -142,7 +142,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
             if (fullServiceName != null) {
                 commandResult =commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
             };
-            if (!!!commandResult) {
+            if (commandResult == undefined || commandResult !== false) {
                 //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
                 gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
             }

@@ -154,9 +154,7 @@ angular.module('sw_layout')
             args.push(column);
             args.push(schema);
 
-            method.apply(service, args);
-            return;
-
+            return method.apply(service, args);
         },
 
         getBarCommands: function (schema, position) {
