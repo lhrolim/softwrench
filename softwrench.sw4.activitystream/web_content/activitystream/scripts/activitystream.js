@@ -53,13 +53,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 this.refreshStream();
             }
 
-            $scope.clearFilter = function () {
-                log.debug('clearFilter');
-
-                $scope.filterText = '';
-                $(window).trigger('resize');
-            }
-
             $scope.displayHidden = function (activity) {
                 //always show unhidden
                 if (!activity.isRead) {
@@ -236,7 +229,8 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 log.debug('toggleFilter');
 
                 $scope.enableFilter = !$scope.enableFilter;
-                $scope.clearFilter();
+                $scope.filterText = '';
+                $(window).trigger('resize');
             }
 
             $scope.toggleHidden = function () {

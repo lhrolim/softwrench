@@ -3,17 +3,10 @@
         <!--TODO: add scroll pane-->
         <div class="master col-xs-4">
             <div class="quick-search">
-                <div class="input-group">
-                    <input type="text" placeholder="Search..." class="form-control">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                </div>
+                <search-box ng-model="searchText" />
             </div>
             <div class="entries">
-                <div ng-repeat="entry in compositiondata" ng-class="$odd ? 'odd' : 'even'" ng-click="displayDetails(entry)" class="entry">
+                <div ng-repeat="entry in compositiondata | filter:searchText" ng-class="$odd ? 'odd' : 'even'" ng-click="displayDetails(entry)" class="entry">
                     <div class="icons">
                         <div ng-repeat="icon in entry.master.icons" ng-show="icon" class="icon">
                             <i class="fa {{icon}}"></i>
@@ -31,13 +24,13 @@
         </div>
         <!--TODO: add scroll pane-->
         <div class="details col-xs-8">
-            <div class="fields">
+            <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
                 <div class="field" ng-repeat="fieldMetadata in getDetailSchema().displayables" ng-show="showDetailField(fieldMetadata)">
                     <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
                     <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                 </div>
             </div>
-            <div class="commands">
+            <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="commands">
                 <div class="buttons">
                     <!--TODO: make buttons function-->
                     <button class="btn btn-default fa fa-mail-reply" title="Reply"></button>
@@ -45,9 +38,13 @@
                     <button class="btn btn-default fa fa-mail-forward" title="Forward"></button>
                 </div>
             </div>
+            <div ng-if="compositiondata.length && !(compositiondata | filter:searchText).length" class="no-records">
+                <i class="fa fa-info-circle"></i>&ensp;No records match your search.
+            </div>
         </div>
     </div>
     <div ng-hide="hasRecords()" class="no-records col-xs-12">
         <i class="fa fa-info-circle"></i>&ensp;No records to display.
     </div>
+    <!--TODO: add command buttons-->
 </div>
