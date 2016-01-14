@@ -160,7 +160,8 @@
             $timeout(function () {
                 //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
                 //it has enough to time to render itself on screen
-                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit,scope.datamap);
+                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit, scope.datamap);
+                log.debug("configuring (after timeout) angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
                 configureJqueryHooks(scope, element, engine);
 
                 if (crudContextHolderService.associationsResolved()) {
