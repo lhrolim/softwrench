@@ -4,6 +4,9 @@
 
     function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService, $rootScope) {
 
+        function submitBatch() {
+            
+        }
 
         function proceedToBatchSelection(httpResponse) {
             var resultObject = httpResponse.data;
@@ -84,7 +87,8 @@
 
         var service = {
             initBatchWorkorder: initBatchWorkorder,
-            loadRelatedWorkorders: loadRelatedWorkorders
+            loadRelatedWorkorders: loadRelatedWorkorders,
+            submitBatch:submitBatch
         };
 
         return service;
