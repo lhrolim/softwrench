@@ -14,6 +14,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -36,6 +37,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             Log.Debug("init log...");
         }
 
+
+        [HttpGet]
+        public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
+            var listResult = _validationHelper.GetRelatedLocationWorkorders(location, classification);
+            if (!listResult.ResultObject.Any()) {
+                return new BlankApplicationResponse();
+            }
+            return listResult;
+        }
 
         [HttpPost]
         public IApplicationResponse InitLocationBatch(LocationBatchData batchData) {
@@ -63,7 +73,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             var fields = new Dictionary<string, object>();
             fields["_#selected"] = selected;
             if (!selected) {
-                fields["#wonums"] = string.Join(",",warningIds[location.Value]);
+                fields["#wonums"] = string.Join(",", warningIds[location.Value]);
             }
             //if not selected, let´s put a warning for the user
             fields["#warning"] = !selected;

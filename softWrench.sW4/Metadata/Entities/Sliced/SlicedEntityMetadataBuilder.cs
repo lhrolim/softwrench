@@ -16,8 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace softWrench.sW4.Metadata.Entities.Sliced {
-
-    internal class SlicedEntityMetadataBuilder {
+    public class SlicedEntityMetadataBuilder {
         private const string MissingAssociation = "couldn´t find association {0} on entity {1}. Please, review metadata.xml";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SlicedEntityMetadataBuilder));

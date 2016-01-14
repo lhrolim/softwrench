@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService, $rootScope) {
+    function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService,contextService, modalService, $rootScope) {
 
 
         function proceedToBatchSelection(httpResponse) {
@@ -82,9 +82,36 @@
             redirectService.goToApplication("workorder", "batchshared", params);
         };
 
+
+        function dispatchWO(schema, datamap) {
+
+            var queryParams = {
+                location: datamap.fields["location"],
+                classification: datamap.fields["classstructureid"]
+            };
+
+            return restService.getPromise("FirstSolarWorkorderBatch", "GetListOfRelatedWorkorders", queryParams).then(function (httpResponse) {
+                var appResponse = httpResponse.data;
+                if (appResponse.type === "BlankApplicationResponse") {
+                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
+                }
+
+                contextService.insertIntoContext("grid_refreshdata", { data: appResponse, panelid: "#modal" }, true);
+                crudContextHolderService.setFixedWhereClause("#modal", appResponse.pageResultDto.filterFixedWhereClause);
+                return modalService.show(appResponse.schema, appResponse.resultObject, { title: "There are already related workorders. Proceed?" }, function () {
+                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
+                });
+
+            });
+
+
+        }
+
+
         var service = {
             initBatchWorkorder: initBatchWorkorder,
-            loadRelatedWorkorders: loadRelatedWorkorders
+            loadRelatedWorkorders: loadRelatedWorkorders,
+            dispatchWO: dispatchWO
         };
 
         return service;
@@ -92,7 +119,7 @@
 
     angular
     .module('firstsolar')
-    .clientfactory('locationService', ['redirectService', 'crudContextHolderService', 'alertService', 'restService', '$rootScope', firstSolarLocationService]);
+    .clientfactory('locationService', ['redirectService', 'crudContextHolderService', 'alertService', 'restService', 'contextService', 'modalService', '$rootScope', firstSolarLocationService]);
 
 
 })(angular);

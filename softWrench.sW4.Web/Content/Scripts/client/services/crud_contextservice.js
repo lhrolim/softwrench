@@ -91,7 +91,9 @@
             gridModel: {
                 //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
                 fixedWhereClause: null
-            }
+            },
+            customSaveFn:null
+
         };
 
         var _crudContext = angular.copy(_originalContext);
@@ -377,6 +379,21 @@
             _crudContext.showingModal = true;
         }
 
+        function isShowingModal() {
+            return _crudContext.showingModal;
+        }
+
+        function registerSaveFn(saveFn) {
+            getContext("#modal").customSaveFn = saveFn;
+        };
+
+        function getSaveFn() {
+            return getContext("#modal").customSaveFn;
+        };
+        
+
+
+
         //#endregion
 
         //#region selectionService
@@ -479,7 +496,10 @@
 
         var modalService = {
             disposeModal: disposeModal,
-            modalLoaded: modalLoaded
+            getSaveFn: getSaveFn,
+            isShowingModal: isShowingModal,
+            modalLoaded: modalLoaded,
+            registerSaveFn: registerSaveFn
         }
 
         var gridServices = {

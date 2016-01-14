@@ -27,7 +27,7 @@
                 hidebars: '@',
                 checked: '=',
                 timestamp: '@',
-                panelid: "@"
+                panelid: "@",
             },
 
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
@@ -103,6 +103,19 @@
                     this.toggleSelectedIcon = function () {
                         return $scope.selectionModel.showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
                     }
+
+                    this.save = function () {
+                        var saveFn = modalService.getSaveFn();
+                        if (saveFn) {
+                            var result = saveFn($scope.datamap.fields, $scope.schema);
+                            if (result && result.then) {
+                                result.then(function () {
+                                    modalService.hide();
+                                });
+                            }
+                        }
+
+                    };
 
                     this.cancel = function () {
                         //TODO: improve this solution, using this as a workaround for cancell calls from modals with list schemas
@@ -301,7 +314,7 @@
                             listSchema = $scope.schema.schemaId;
                         }
 
-                        $log.getInstance("crudlist#renderListView",["list","search"]).debug("calling search with data on the server")
+                        $log.getInstance("crudlist#renderListView", ["list", "search"]).debug("calling search with data on the server")
 
                         searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema, {
                             searchDTO: parameters.search,
@@ -425,14 +438,14 @@
                     }
 
                     $scope.shouldShowGridNavigation = function () {
-                        return !$scope.selectionModel.showOnlySelected && "true"!==$scope.schema.properties["list.disablepagination"];
+                        return !$scope.selectionModel.showOnlySelected && "true" !== $scope.schema.properties["list.disablepagination"];
                     }
 
 
 
                     //#region eventlisteners
 
-                 
+
 
                     $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                         if ($scope.datamap && $scope.datamap.length <= 0) {

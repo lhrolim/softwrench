@@ -18,7 +18,7 @@
           </filters>
         </list>
 
-        <schema id="readonlyfixedlist" stereotype="list.readonly">
+        <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
           <field attribute="wonum" label="WO#" >
             <renderer type="default" params="width=10%" />
           </field>
@@ -30,7 +30,13 @@
           </field>
         </schema>
 
-        <schema id="batchshared" title="Workoder Common Fields" stereotype="detail.modal">
+        <schema id="relatedwoconfirmationlist" parentschema="readonlyfixedlist" stereotype="list.modal.confirm">
+          <properties>
+            <property key="commandbar.bottom" value="bottom.confirmation"/>
+          </properties>
+        </schema>
+
+        <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal">
           <field attribute="summary" label="Summary:" requiredexpression="true"/>
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea"/>

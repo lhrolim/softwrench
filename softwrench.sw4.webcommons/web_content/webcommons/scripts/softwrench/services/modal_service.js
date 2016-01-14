@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('modalService', ["$rootScope", function ($rootScope) {
+    .factory('modalService', ["$rootScope", "crudContextHolderService", function ($rootScope, crudContextHolderService) {
 
     return {
 
@@ -77,9 +77,19 @@ angular.module('sw_layout')
                 onloadfn: properties.onloadfn,
                 closeAfterSave: properties.closeAfterSave
             };
+            if (savefn) {
+                crudContextHolderService.registerSaveFn(savefn);
+            }
 
             $rootScope.$broadcast("sw.modal.show", modaldata);
         },
+
+        getSaveFn: function () {
+            if (crudContextHolderService.isShowingModal()) {
+                return crudContextHolderService.getSaveFn();
+            }
+        },
+
 
         panelid : "#modal"
     };
