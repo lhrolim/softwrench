@@ -1,12 +1,18 @@
 <div class="sw-combobox-container">
     <div ng-if="filter.lazy" class="input-group lazy-search">
-        <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}" />
+        <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}"/>
         <span class="input-group-addon last" ng-click="executeAsFreeText()">
             <i class="fa fa-search"></i>
         </span>
         <div></div><!--stop addon from moving on hover-->
     </div>
     <div class="input-group">
+
+        <div class="lookup" ng-if="filter.advancedFilterSchemaId" ng-click="lookup()">
+            <i class="fa fa-binoculars">
+            </i>
+            <span class="text">{{filter.label}} Lookup</span>
+        </div>
 
         <div class="select-all" ng-if="getAllAvailableOptions().length > 1">
             <input type="checkbox"
@@ -26,7 +32,7 @@
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
-                           ng-change="modifySearchData()"
+                           ng-change="modifySearchData(option)"
                            ng-true-value="1" ng-false-value="0" />
                     {{labelValue(option)}}
                 </li>
@@ -49,7 +55,7 @@
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
-                           ng-change="modifySearchData()"
+                           ng-change="modifySearchData(option)"
                            ng-true-value="1" ng-false-value="0"/>
                     {{labelValue(option)}}
                     <span class="fa fa-trash removable" ng-if="option.removable" ng-click="removeItem(option)"></span>
@@ -64,7 +70,7 @@
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
-                           ng-change="modifySearchData()"
+                           ng-change="modifySearchData(option)"
                            ng-true-value="1" ng-false-value="0"/>
                     {{labelValue(option)}}
                 </li>

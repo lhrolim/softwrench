@@ -1,7 +1,7 @@
 <form>
-    <div id="affixpagination" class="affix-pagination hiddenonprint grid-header">
+    <div id="affixpagination" class="hiddenonprint grid-header" ng-class="{'affix-pagination' : ismodal !== 'true' }">
 
-        <div ng-hide="hidebars" ng-if="!panelid">
+        <div ng-hide="hidebars" ng-if="!panelid || panelid == '#modal'">
             <div class="context clearfix header-menu">
                 <!-- commands -->
                 <gridtoolbar advancedsearchdata="vm.quickSearchData"
@@ -160,6 +160,7 @@
                          search-operator="searchOperator"></gridtoolbar>
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
+                        panelid="panelid"
                         search-data="searchData"
                         search-operator="searchOperator" />
         </div>

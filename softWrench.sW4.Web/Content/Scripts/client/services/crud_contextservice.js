@@ -79,6 +79,7 @@
             compositionLoadComplete: false,
             gridSelectionModel: {
                 selectionBuffer: {}, // buffer of all selected row
+                selectionBufferIdCollumn: null, // preset of columns name to be used as buffer key
                 onPageSelectedCount: 0, // number of selected rows on current page
                 pageSize: 0, // number of rows of page (no same of pagination on show only selected)
                 selectAllValue: false, // whether or not select all checkbox is selected
@@ -196,6 +197,7 @@
             context.rootDataMap = rootDataMap;
             context.currentApplicationName = schema.applicationName;
             context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
+            context.gridSelectionModel.selectionBufferIdCollumn = context.gridSelectionModel.selectionBufferIdCollumn || schema.idFieldName;
             schemaCacheService.addSchemaToCache(schema);
         }
 

@@ -33,13 +33,13 @@
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService",
                 "searchService", "tabsService",
-                "fieldService", "commandService", "i18NService",
+                "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService,
                     searchService, tabsService,
-                    fieldService, commandService, i18NService,
+                    fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService, schemaCacheService) {
 
@@ -180,7 +180,7 @@
                             // also update the total count of pagination
                             if (!$scope.selectionModel.showOnlySelected) {
                                 var paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
-                                if (paginationData) {
+                                if (paginationData && $scope.paginationData) {
                                     $scope.paginationData.totalCount = paginationData.totalCount;
                                 }
                             } else {
@@ -253,7 +253,7 @@
                             searchService.refreshGrid({});
                             return;
                         }
-                        searchService.quickSearch(filterdata);
+                        searchService.quickSearch(filterdata, $scope.panelid);
                     };
 
                     $scope.cursortype = function () {
@@ -525,12 +525,24 @@
                         }
                     });
 
+                    $scope.$on("sw.crud.list.clearQuickSearch", function (event, args) {
+                        if ($scope.panelid === args[0]) {
+                            $scope.vm.quickSearchData = "";
+                        }
+                    });
+
                     $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
+                        if ($scope.panelid !== extraparameters.panelid) {
+                            return;
+                        }
                         $scope.refreshGridRequested(searchData, extraparameters);
                     });
                     //#endregion
 
                     function initController() {
+
+                        var log = $log.getInstance("crudlist#init", ["grid"]);
+
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,
                             i18NService: i18NService,
@@ -548,16 +560,38 @@
                             gridSelectionService: gridSelectionService
                         });
 
+                        var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
+
+                        if ($scope.ismodal === "true") {
+                            $scope.panelid = modalService.panelid;
+                        }
+
                         $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
-                        var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
                         if (dataRefreshed) {
+                            log.debug("data was already fetched from server... directive was compiled after the response");
                             $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
                         }
 
                         var dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
                         if (dataToRefresh) {
+                            log.debug("there was already a scheduled call to refresh data from the server");
                             $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.extraparameters);
+                        }
+
+                        if (!dataRefreshed && !dataToRefresh) {
+                            $scope.searchSort = $scope.searchOperator = $scope.searchData = {};
+
+                            var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
+                                searchDTO: {},
+                                printMode: false,
+                                metadataid: $scope.metadataid
+                            });
+                            searchPromise.then(function (data) {
+                                // Set the scroll position to the top of the new page
+                                contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
+                                $scope.gridRefreshed(data.data, $scope.panelid);
+                            });
                         }
                     }
 
