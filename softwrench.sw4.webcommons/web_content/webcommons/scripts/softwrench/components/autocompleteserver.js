@@ -36,7 +36,7 @@
                     var filterProvider = element.getAttribute('data-filterprovider');
                     var filterMode = filterProvider != null;
 
-                    $log.getInstance("cmpAutocompleteServer#init").debug("init autocomplete {0}".format(associationKey));
+                    $log.getInstance("cmpAutocompleteServer#init",["lookup"]).debug("init autocomplete {0}".format(associationKey));
 
                     var applicationName = schema.applicationName;
                     var parameters = {
