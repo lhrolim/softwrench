@@ -101,68 +101,6 @@
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
 
-          <!--                    <section orientation="horizontal">-->
-          <!--                      <renderer type="default" params="childinputsize=medium" />-->
-          <!--                      <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description"-->
-          <!--                                   extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">-->
-          <!--                        <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>-->
-          <!--                        <event type="afterchange" service="invtransferService" method="afterChangeItem"/>-->
-          <!--                      </association>-->
-          <!--                      <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type">-->
-          <!--                        <renderer type="default" />-->
-          <!--                      </field>-->
-          <!--                    </section>-->
-          <!--          -->
-          <!--                    <section orientation="horizontal">-->
-          <!--                      <header displacement="ontop" label="Location" params="fieldset=true" />-->
-          <!--                      <renderer type="default" params="childinputsize=medium" />-->
-          <!--          -->
-          <!--                      <field label="Lot" attribute="invuseline_.fromlot" readonly="true">-->
-          <!--                        <renderer type="default"  params="inputsize=small" />-->
-          <!--                      </field>-->
-          <!--                      <association target="fromstoreloc" label="From Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid" hideDescription="true">-->
-          <!--                        <renderer type="lookup" />-->
-          <!--                        <dataprovider prefilterfunction="FilterFromStoreLoc"/>-->
-          <!--                        <event type="afterchange" service="invtrasnferService" method="afterChangeFromStoreLoc"/>-->
-          <!--                      </association>-->
-          <!--                      <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">-->
-          <!--                        <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>-->
-          <!--                        <event type="afterchange" service="inventorytransferService" method="afterChangeFromBin"/>-->
-          <!--                        <dataprovider prefilterfunction="FilterFromBin"/>-->
-          <!--                      </association>-->
-          <!--                      <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">-->
-          <!--                        <dataprovider prefilterfunction="FilterToStoreLoc"/>-->
-          <!--                        <event type="afterchange" service="inventoryService" method="invUse_afterChangeToStoreroom"/>-->
-          <!--                        <renderer type="lookup" params="inputsize=small" />-->
-          <!--                      </association>-->
-          <!--                      <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" forcedistinctoptions="false" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">-->
-          <!--                        <dataprovider prefilterfunction="FilterToBin" />-->
-          <!--                        <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;allowFreeText=true;inputsize=small"/>-->
-          <!--                      </association>-->
-          <!--                    </section>-->
-
-          <!--                    <section orientation="horizontal">-->
-          <!--                      <header displacement="ontop" label="Issuing" params="fieldset=true" />-->
-          <!--                      <renderer type="default" params="childinputsize=medium" />-->
-          <!--                      <field attribute="invuseline_.siteid" default="@usersite" hidden="true"/>-->
-          <!--                      <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="false" 
-                                        extraprojectionvalues="binnum,lotnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">-->
-          <!--                        <renderer type="lookup" />-->
-          <!--                      </association>-->
-          <!--                      <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true">-->
-          <!--                        <renderer type="default"  params="inputsize=small" />-->
-          <!--                      </field>-->
-          <!--                      <field attribute="#curbal" label="Current Balance" readonly="true">-->
-          <!--                        <renderer type="default"  params="inputsize=small" />-->
-          <!--                      </field>-->
-          <!--                      <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true">-->
-          <!--                        <event type="afterchange" service="invtransferService" method="afterChangeTransferQuantity"/>-->
-          <!--                        <renderer type="numericinput" params="min=1;inputsize=small"/>-->
-          <!--                      </field>-->
-          <!--                      <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>-->
-          <!--                      <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>-->
-          <!--                      <field attribute="lotnum" hidden="true"/>-->
-          <!--                    </section>-->
 
           <commandbars>
             <commandgroup position="detailform" removeundeclared="false">

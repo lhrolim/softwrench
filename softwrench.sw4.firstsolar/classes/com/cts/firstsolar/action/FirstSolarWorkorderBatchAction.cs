@@ -36,6 +36,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             Log.Debug("init log...");
         }
 
+        [HttpPost]
+        public IApplicationResponse SubmitBatch(LocationBatchSubmissionData batchData) {
+            return null;
+        }
+
 
         [HttpPost]
         public IApplicationResponse InitLocationBatch(LocationBatchData batchData) {
@@ -82,7 +87,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             var fields = new Dictionary<string, object>();
             fields["_#selected"] = selected;
             if (!selected) {
-                fields["#wonums"] = string.Join(",",warningIds[location.Value]);
+                fields["#wonums"] = string.Join(",", warningIds[location.Value]);
             }
             //if not selected, let´s put a warning for the user
             fields["#warning"] = !selected;
@@ -162,6 +167,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             public List<AssociationOption> Locations {
                 get; set;
             }
+        }
+
+        public class LocationBatchSubmissionData {
+
+            public BatchData SharedData {
+                get; set;
+            }
+
+            public IDictionary<string, BatchData> LocationSpecificData {
+                get; set;
+            }
+
+
         }
 
         public class AssetBatchData : BatchData {
