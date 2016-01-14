@@ -6,15 +6,19 @@
 
 
     function angularTypeahead(restService, $timeout, $log,
-        contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService) {
+        contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService,compositionService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
         /// <returns type=""></returns>
 
-        function beforeSendPostJsonDatamap(jqXhr, settings, datamap) {
+        function beforeSendPostJsonDatamap(jqXhr, settings, datamap, isComposition) {
             if (datamap) {
-                var jsonString = angular.toJson(datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap));
+                var datamapToSend = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap);
+                if (isComposition) {
+                    datamapToSend = compositionService.buildMergedDatamap(datamapToSend, crudContextHolderService.rootDataMap());
+                }
+                var jsonString = angular.toJson(datamapToSend);
                 settings.type = 'POST';
                 settings.data = jsonString;
                 settings.hasContent = true;
@@ -23,7 +27,7 @@
             return true;
         }
 
-        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit,datamap) {
+        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit,datamap,mode) {
 
             var applicationName = schema.applicationName;
 
@@ -37,7 +41,7 @@
 
             var urlToUse = restService.getActionUrl("Association", "GetFilteredOptions", parameters);
             urlToUse = replaceAll(urlToUse, '%25', "%");
-
+            var isComposition = "composition" === mode;
 
             var engine = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -56,7 +60,8 @@
                     },
                     ajax: {
                         beforeSend: function (jqXhr, settings) {
-                            beforeSendPostJsonDatamap(jqXhr, settings, datamap);
+
+                            beforeSendPostJsonDatamap(jqXhr, settings, datamap, isComposition);
                         }
                     }
                 }
@@ -160,7 +165,7 @@
             $timeout(function () {
                 //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
                 //it has enough to time to render itself on screen
-                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit, scope.datamap);
+                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit, scope.datamap,scope.mode);
                 log.debug("configuring (after timeout) angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
                 configureJqueryHooks(scope, element, engine);
 
@@ -212,6 +217,7 @@
                 searchText: '=',
 
                 hideDescription: '@',
+                mode: '@',
 
                 //min number of characters to start searching. Depending on the size of the dataset might be wise to put a higher number here.
                 minLength: '@',
@@ -246,7 +252,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', angularTypeahead]);
 
 })(angular, Bloodhound);
 
