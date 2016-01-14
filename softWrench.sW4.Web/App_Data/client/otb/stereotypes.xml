@@ -15,7 +15,6 @@
   </stereotype>
 
   <stereotype id="list.readonly">
-    <property key="list.disablepagination" value="true"/>
     <property key="list.disablefilter" value="true"/>
     <property key="list.disabledetails" value="true"/>
     <property key="list.sortmode" value="none"/>

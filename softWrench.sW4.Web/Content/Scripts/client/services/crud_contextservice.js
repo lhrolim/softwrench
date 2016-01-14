@@ -87,7 +87,11 @@
                 selectionMode:false
             },
             // pagination data before the toggle selected
-            originalPaginationData: null
+            originalPaginationData: null,
+            gridModel: {
+                //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
+                fixedWhereClause: null
+            }
         };
 
         var _crudContext = angular.copy(_originalContext);
@@ -366,6 +370,7 @@
         function disposeModal() {
             _crudContext.showingModal = false;
             _crudContext._eagerassociationOptions["#modal"] = { "#global": {} };
+            clearCrudContext("#modal");
         };
 
         function modalLoaded() {
@@ -417,6 +422,20 @@
         }
         //#endregion
 
+        //#region gridServices
+
+        function setFixedWhereClause(panelId,fixedWhereClause) {
+            var context = getContext(panelId);
+            context.gridModel.fixedWhereClause = fixedWhereClause;
+        }
+
+        function getFixedWhereClause(panelId) {
+            var context = getContext(panelId);
+            return context.gridModel.fixedWhereClause;
+        }
+
+        //#endregion
+
 
         //#region Service Instance
 
@@ -463,6 +482,11 @@
             modalLoaded: modalLoaded
         }
 
+        var gridServices = {
+            setFixedWhereClause: setFixedWhereClause,
+            getFixedWhereClause: getFixedWhereClause,
+        }
+
         var selectionService = {
             addSelectionToBuffer: addSelectionToBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
@@ -474,7 +498,7 @@
             toggleShowOnlySelected: toggleShowOnlySelected,
         }
 
-        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService);
+        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService, gridServices);
 
 
         //#endregion

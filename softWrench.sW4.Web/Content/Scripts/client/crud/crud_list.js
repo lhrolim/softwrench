@@ -301,6 +301,8 @@
                             listSchema = $scope.schema.schemaId;
                         }
 
+                        $log.getInstance("crudlist#renderListView",["list","search"]).debug("calling search with data on the server")
+
                         searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema, {
                             searchDTO: parameters.search,
                             metadataid: $scope.metadataid
@@ -588,8 +590,14 @@
                         if (!dataRefreshed && !dataToRefresh) {
                             $scope.searchSort = $scope.searchOperator = $scope.searchData = {};
 
+                            var fixedWhereClause = crudContextHolderService.getFixedWhereClause($scope.panelid);
+                            var searchDTO = {};
+                            if (fixedWhereClause) {
+                                searchDTO.filterFixedWhereClause = fixedWhereClause;
+                            }
+
                             var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
-                                searchDTO: {},
+                                searchDTO: searchDTO,
                                 printMode: false,
                                 metadataid: $scope.metadataid
                             });

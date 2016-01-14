@@ -24,13 +24,23 @@
             if (column.attribute === "#warning") {
                 var wonums = rowDm["#wonums"];
 
-                var params ={
+                var commaSeparattedQuotedIds =
+                    wonums.split(',')
+                    .map(function (item) {
+                        return "'" + item + "'";
+                    }).join(",");
+
+                var fixedWhereClause = "wonum in ({0})".format(commaSeparattedQuotedIds);
+
+                var params = {
                     searchDTO: {
-                        searchParams : "wonum",
-                        searchValues : wonums
+                        filterFixedWhereClause: fixedWhereClause
                     }
                 }
-                redirectService.openAsModal("workorder", "readonlyfixedlist", params);
+
+                redirectService.openAsModal("workorder", "readonlyfixedlist", params).then(function () {
+                    crudContextHolderService.setFixedWhereClause("#modal", fixedWhereClause);
+                });
                 return false;
             }
             return true;
