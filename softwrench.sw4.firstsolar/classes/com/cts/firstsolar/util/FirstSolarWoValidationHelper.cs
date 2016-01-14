@@ -18,6 +18,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         private const string BaseLocationQuery =
             "select location,wonum,description from workorder where status not in('CLOSED','COMPLETED') and location in ({0})";
 
+        private const string BaseAssetQuery =
+            "select assetnum,wonum,description from workorder where status not in('CLOSED','COMPLETED') and assetnum in ({0})";
+
         public FirstSolarWoValidationHelper(MaximoHibernateDAO dao) {
             _dao = dao;
         }
@@ -49,7 +52,30 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
 
         }
 
-      
+        [NotNull]
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForAsset(ICollection<AssociationOption> items, string classification)
+        {
+            var sb = new StringBuilder();
+            sb.AppendFormat(BaseAssetQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
+            if (classification != null) {
+                sb.AppendFormat("and classstructureid = {0}", classification);
+            }
+            var queryResult = _dao.FindByNativeQuery(sb.ToString());
+
+            var result = new Dictionary<string, List<string>>();
+
+            foreach (var row in queryResult) {
+                var asset = row["assetnum"];
+                var wonum = row["wonum"];
+                if (!result.ContainsKey(asset)) {
+                    result.Add(asset, new List<string> { wonum });
+                }
+                else {
+                    result[asset].Add(wonum);
+                }
+            }
+            return result;
+        }
 
     }
 }

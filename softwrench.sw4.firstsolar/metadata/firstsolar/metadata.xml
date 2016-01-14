@@ -69,7 +69,35 @@
           </commandbars>
 
         </schema>
+        
+        <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="#warning" tooltip="There already one or more workorders associated to this asset click here to view them">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
+          </field>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="asset_label" label="Location"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <reference id="siteid"/>
+          <reference id="classification"/>
 
+          <properties>
+            <property key="list.click.service" value="assetService.loadRelatedWorkorders"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup id="#spreadsheet">
+              <!--TODO: review framework to eventually avoid the need for these commands later-->
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
+            </commandgroup>
+          </commandbars>
+
+        </schema>
 
       </schemas>
     </application>
@@ -98,7 +126,7 @@
     </application>
 
 
-    <application name="asset" title="Location" entity="asset" >
+    <application name="asset" title="Asset" entity="asset" >
       <schemas>
         <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
           <properties>
