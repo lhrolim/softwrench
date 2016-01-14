@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function gridSelectionService(crudContextHolderService) {
+    function gridSelectionService(crudContextHolderService, dispatcherService) {
         //#region Utils
 
         //#endregion
@@ -141,6 +141,23 @@
             selectionChanged(datamap, schema, true, panelid);
         }
 
+        /**
+         * Clear all selected, the buffer and only selected state.
+         * 
+         * @param {} datamap
+         * @param {} schema 
+         * @param {} panelid
+         */
+        function clearSelection(datamap, schema, panelid) {
+            var selectionModel = crudContextHolderService.getSelectionModel(panelid);
+            selectionModel.selectAllValue = false;
+            crudContextHolderService.clearSelectionBuffer(panelid);
+            selectAllChanged(datamap, schema, panelid);
+            if (selectionModel.showOnlySelected) {
+                dispatcherService.dispatchevent("sw.crud.list.toggleselected", panelid);
+            }
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -151,6 +168,7 @@
             selectionChanged: selectionChanged,
             toggleSelection: toggleSelection,
             updateRowState: updateRowState,
+            clearSelection: clearSelection
         };
         return service;
         //#endregion
@@ -158,7 +176,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("gridSelectionService", ["crudContextHolderService", gridSelectionService]);
+    angular.module("sw_layout").factory("gridSelectionService", ["crudContextHolderService", "dispatcherService", gridSelectionService]);
 
     //#endregion
 

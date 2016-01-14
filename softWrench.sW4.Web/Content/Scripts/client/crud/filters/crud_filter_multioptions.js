@@ -188,18 +188,31 @@
                     // if a option is unselected or selected by user the lookup modal grid buffer has
                     // to be updated to reflect the options selection state
                     function updateLookupModalGridBuffer(changedOption, selectedItems) {
+                        var value = changedOption.value;
+
                         // if the option was selected or unselected
                         var selected = selectedItems.some(function (item) {
-                            return changedOption.value === item.value;
+                            return value === item.value;
                         });
 
                         // add or removes an indication of option state on lookup modal grid buffer
-                        var datamap = $scope.lookupModalBuffer[changedOption.value] || {};
-                        if (selected) {
-                            $scope.lookupModalBuffer[changedOption.value] = datamap;
-                        } else {
-                            delete $scope.lookupModalBuffer[changedOption.value];
+
+                        // if unselected removes entry from lookup modal grid buffer
+                        if (!selected) {
+                            delete $scope.lookupModalBuffer[value];
+                            return;
                         }
+
+                        // if selected add an entry to lookup modal grid buffer
+                        // when lookup modal is opened the lookup modal grid buffer is passed
+                        // and any selected option will be selected on modal too
+                        var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                        promise.then(function (modalSchema) {
+                            var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
+                            var datamap = { fields: {} };
+                            datamap.fields[attFieldName] = value;
+                            $scope.lookupModalBuffer[value] = datamap;
+                        });
                     }
 
                     // changed option is sent in case of user action on changing the state of option checkbox

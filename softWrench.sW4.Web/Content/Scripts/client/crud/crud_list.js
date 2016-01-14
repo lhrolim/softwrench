@@ -525,6 +525,12 @@
                         }
                     });
 
+                    $scope.$on("sw.crud.list.clearQuickSearch", function (event, args) {
+                        if ($scope.panelid === args[0]) {
+                            $scope.vm.quickSearchData = "";
+                        }
+                    });
+
                     $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
                         if ($scope.panelid !== extraparameters.panelid) {
                             return;
