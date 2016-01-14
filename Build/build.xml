@@ -176,13 +176,13 @@
         <arg line="/resultsfile:TestResults.trx" />
       </exec>
     </ifnot>
-
-    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
+    
+    <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
+    <!--<exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
-      <arg value="--browsers=PhantomJS"/>
-      <arg value="--single-run"/>
-      <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
-    </exec>
+      <arg value="- -browsers=PhantomJS"/>
+      <arg value="- -single-run"/>
+    </exec>-->
 
   </target>
 
