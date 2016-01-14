@@ -100,15 +100,16 @@
                         return "multiple" === $scope.schema.properties["list.selectionstyle"];
                     }
 
-                    this.toggleSelectedIcon = function () {
-                        return $scope.selectionModel.showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
-                    }
-
                     this.cancel = function () {
                         //TODO: improve this solution, using this as a workaround for cancell calls from modals with list schemas
                         modalService.hide();
                     }
 
+                    // Initial state of selection mode toggle button
+                    // depends on "list.selectionmodebydefault" schema property
+                    this.selectionModeToggleInitState = function() {
+                        return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
+                    }
 
                     $scope.gridRefreshed = function (data, panelId) {
                         if (!!$scope.panelid && $scope.panelid !== panelId) {

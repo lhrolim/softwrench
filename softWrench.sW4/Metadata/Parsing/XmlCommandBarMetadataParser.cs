@@ -91,7 +91,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 return new ResourceCommand(id, path, role, position, parameters);
             }
             if (xElement.IsNamed(cnst.CommandElement)) {
-                return GetApplicationCommand(xElement, id, role, position);
+                return GetApplicationCommand(xElement, id, role, position, false, false);
             }
             if (xElement.IsNamed(cnst.ContainerCommand)) {
                 var label = xElement.AttributeValue(XmlBaseSchemaConstants.LabelAttribute);
@@ -104,6 +104,20 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);
             }
+            if (xElement.IsNamed(cnst.OnCommandElement)) {
+                return GetApplicationCommand(xElement, id, role, position, true, true);
+            }
+            if (xElement.IsNamed(cnst.OffCommandElement)) {
+                return GetApplicationCommand(xElement, id, role, position, true, false);
+            }
+            if (xElement.IsNamed(cnst.ToggleCommandElement)) {
+                var initialStateExpression = xElement.AttributeValue(XmlBaseSchemaConstants.ToggleButtonInitialStateExpressionAttribute);
+                var onCommandEl = xElement.Elements().First(el => cnst.OnCommandElement.Equals(el.Name.LocalName));
+                var offCommandEl = xElement.Elements().First(el => cnst.OffCommandElement.Equals(el.Name.LocalName));
+                var onCommand = (ToggleChildCommand)GetCommandDisplayable(onCommandEl);
+                var offCommand = (ToggleChildCommand)GetCommandDisplayable(offCommandEl);
+                return new ToggleCommand(id, position, initialStateExpression, onCommand, offCommand);
+            }
 
             throw new InvalidOperationException("Invalid command option");
         }
@@ -112,10 +126,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var id = xElement.AttributeValue(XmlBaseSchemaConstants.IdAttribute, true);
             var role = xElement.AttributeValue(cnst.RemoveAttribute);
             var position = xElement.AttributeValue(cnst.PositionAttribute);
-            return GetApplicationCommand(xElement, id, role, position);
+            return GetApplicationCommand(xElement, id, role, position, false, false);
         }
 
-        private static ApplicationCommand GetApplicationCommand(XElement xElement, string id, string role, string position) {
+        private static ApplicationCommand GetApplicationCommand(XElement xElement, string id, string role, string position, bool toggleChild, bool togglePressed) {
             var label = xElement.AttributeValue(XmlBaseSchemaConstants.LabelAttribute);
             var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute);
             if (tooltip == null) {
@@ -136,9 +150,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             var cssClasses = xElement.AttributeValue(XmlBaseSchemaConstants.CssClassesAttribute);
             var primary = xElement.Attribute(XmlBaseSchemaConstants.PrimaryAttribute).ValueOrDefault(false);
 
-            var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
-                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses,primary);
-            return applicationCommand;
+            if (toggleChild) {
+                return new ToggleChildCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
+                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary, togglePressed);
+            }
+
+            return new ApplicationCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
+            successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary);
         }
     }
 }
