@@ -11,8 +11,11 @@
         public const string CommandElement = "command";
         public const string RemoveUndeclared = "removeundeclared";
         public const string RemoveCommand = "removecommand";
-        
-        
+
+        public const string ToggleCommandElement = "togglecommand";
+        public const string OnCommandElement = "oncommand";
+        public const string OffCommandElement = "offcommand";
+
         public const string PositionAttribute = "position";
         public const string ResourceAttribute = "clientresourcepath";
         

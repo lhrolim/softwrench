@@ -51,6 +51,7 @@
     <Compile Include="Data\AttributeHolder.cs" />
     <Compile Include="Data\DataMapDefinition.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandMerger.cs" />
+    <Compile Include="Metadata\Applications\Command\ToggleCommand.cs" />
     <Compile Include="Metadata\Applications\Command\ContainerCommand.cs" />
     <Compile Include="Metadata\Applications\Command\ICommandDisplayable.cs" />
     <Compile Include="Metadata\Applications\Command\RemoveCommandDefinition.cs" />

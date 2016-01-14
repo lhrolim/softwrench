@@ -90,7 +90,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var parameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
                 return new ResourceCommand(id, path, role, position, parameters);
             }
-            if (xElement.IsNamed(cnst.CommandElement)) {
+            if (xElement.IsNamed(cnst.CommandElement) || xElement.IsNamed(cnst.OnCommandElement) || xElement.IsNamed(cnst.OffCommandElement)) {
                 return GetApplicationCommand(xElement, id, role, position);
             }
             if (xElement.IsNamed(cnst.ContainerCommand)) {
@@ -103,6 +103,15 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);
+            }
+            if (xElement.IsNamed(cnst.ToggleCommandElement)) {
+                var initialStateExpression = xElement.AttributeValue(XmlBaseSchemaConstants.ToggleButtonInitialStateExpressionAttribute);
+                var onCommandEl = xElement.Elements().First(el => cnst.OnCommandElement.Equals(el.Name.LocalName));
+                var offCommandEl = xElement.Elements().First(el => cnst.OffCommandElement.Equals(el.Name.LocalName));
+                var onCommand = (ApplicationCommand)GetCommandDisplayable(onCommandEl);
+                onCommand.Pressed = true;
+                var offCommand = GetCommandDisplayable(offCommandEl);
+                return new ToggleCommand(id, position, initialStateExpression, onCommand, offCommand);
             }
 
             throw new InvalidOperationException("Invalid command option");
@@ -137,7 +146,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var primary = xElement.Attribute(XmlBaseSchemaConstants.PrimaryAttribute).ValueOrDefault(false);
 
             var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
-                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses,primary);
+                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary);
             return applicationCommand;
         }
     }

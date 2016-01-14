@@ -105,7 +105,7 @@
   		default="data successfully saved">
     </attribute>
     <attribute name="cssclasses" type="string"></attribute>
-    <attribute name="primary" type="bool"></attribute>
+    <attribute name="primary" type="boolean"></attribute>
 
     <attribute name="nextSchemaId" type="string"></attribute>
 
@@ -141,6 +141,58 @@
 
   </complexType>
 
+  <complexType name="ToggleCommand">
+    <annotation>
+      <documentation>
+        A command with two states on and off. Needs two children commands: <br/>
+        &lt;oncommand&gt; the command when the toggle is in on state. <br/>
+        &lt;offcommand&gt; the command when the toggle is in off state.
+    </documentation>
+    </annotation>
+    <choice minOccurs="2" maxOccurs="2">
+      <element minOccurs="1" maxOccurs="1" name="oncommand" type="tns:Command"/>
+      <element minOccurs="1" maxOccurs="1" name="offcommand" type="tns:Command"/>
+    </choice>
+    <attribute name="id" type="string"></attribute>
+    <attribute name="initialstateexpression" type="string">
+      <annotation>
+        <documentation>
+          Expression to decide the initial state of the toggle button. 
+          A result of "true" for on state, anything else for off state.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="position" type="string">
+      <annotation>
+        <documentation>
+          The position will inform where to place the command,
+          relative to another command present on the default
+          command bar.
+
+          It should have the syntax:
+
+          * C1 --&gt; gruop this command with existing command
+          C1 * &gt;C1--&gt; place this command right to the
+          command C1 * &amp;lt;C1 --&gt; place this command left
+          to the command C1
+
+          If none provided, the command will be placed at the
+          end of the bar.
+
+          Note, inside a &quot;commands&quot; declaration the
+          order should be set declaratively, by the order of the
+          children
+
+
+
+          besides, as a legacy mode, it accepts values left or
+          right to place the command relatively to the default
+          commands on screen
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
   <simpleType name="NewSimpleType">
     <restriction base="string">
       <enumeration value="input"></enumeration>
@@ -154,6 +206,9 @@
 
   <complexType name="commandsComplexType">
     <choice minOccurs="0" maxOccurs="unbounded">
+      <element minOccurs="0" maxOccurs="unbounded" name="togglecommand"
+    		type="tns:ToggleCommand">
+      </element>
       <element minOccurs="0" maxOccurs="unbounded" name="command"
     		type="tns:Command">
       </element>

@@ -63,8 +63,13 @@
         securityService.validateRoleWithErrorMessage(command.role);
     }
 
-    $scope.executeService = function (command) {
+    $scope.executeService = function (command, toggleParentCommand) {
         var log = $log.get("gridtoolBar#executeService");
+
+        // if toggle parent command is passed toggles it state
+        if (toggleParentCommand) {
+            toggleParentCommand.state = !toggleParentCommand.state;
+        }
 
         $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
         $('.no-touch [rel=tooltip]').tooltip('hide');
@@ -98,6 +103,18 @@
         return !commandService.isCommandHidden($scope.datamap, $scope.schema, command);
     }
 
+    $scope.calcToggleInitialState = function (command) {
+        if ("ToggleCommand" !== command.type || !command.initialStateExpression) {
+            return;
+        }
+        var initialStateExpression = command.initialStateExpression;
+        if (initialStateExpression && initialStateExpression.startsWith("$scope:")) {
+            command.state = true === $scope.invokeOuterScopeFn(initialStateExpression);
+        } else {
+            command.state = true === commandService.getInitialToggleState($scope.datamap, command);
+        }
+    }
+
     $scope.isCommandEnabled = function (command) {
         var enableExpression = command.enableExpression;
         if (enableExpression && enableExpression.startsWith("$scope:")) {
@@ -113,12 +130,28 @@
     }
 
     $scope.buttonClasses = function (command) {
-        if (command.primary || $scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
-            return "btn btn-primary commandButton navbar-btn" + command.cssClasses;
+        var classes = "btn ";
+        if (command.pressed) {
+            classes += "active ";
         }
-        return "btn btn-default btn-sm" + command.cssClasses;
+        if (command.primary || $scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
+            return classes + "btn-primary commandButton navbar-btn" + command.cssClasses;
+        }
+        return classes + "btn-default btn-sm" + command.cssClasses;
     }
 
+    // verifies if it is a toggle command and returns the correct child command
+    $scope.getCommand = function(command) {
+        if ("ToggleCommand" === command.type) {
+            // it's a toggle command
+            return command.state ? command.onCommand : command.offCommand;
+        }
+        return command;
+    }
+
+    $scope.toggleCommandOrNull = function(command) {
+        return "ToggleCommand" === command.type ? command : null;
+    }
 
 }];
 
