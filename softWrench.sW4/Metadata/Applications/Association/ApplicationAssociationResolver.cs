@@ -138,7 +138,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var appMetadata = GetAssociationApplicationMetadata(association);
 
             IEnumerable<string> listOfFields = appMetadata != null
-                ? appMetadata.Schema.NonHiddenFields.Select(f => f.Attribute)
+                ? appMetadata.Schema.NonHiddenFields.Where(i => !i.DeclaredAsQueryOnEntity).Select(f => f.Attribute)
                 : new List<string> {
                     association.EntityAssociation.PrimaryAttribute().To,
                     association.LabelFields.FirstOrDefault(),

@@ -36,9 +36,6 @@
     <application name="invissue" title="Issue Inventory" entity="invissue">
 
       <components>
-
-
-
         <componentdisplayable id="issueitem">
           <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating"
                        dependantfields="siteid" requiredexpression="true" enableexpression="(@mode=='batch' &amp;&amp; @siteid!=null) || (@mode!='batch' &amp;&amp; @siteid!=null &amp;&amp; @storeloc!=null)">
@@ -60,7 +57,6 @@
             </details>
           </association>
         </componentdisplayable>
-
 
         <componentdisplayable id="issuestoreloc">
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" requiredexpression="true"

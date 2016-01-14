@@ -30,11 +30,11 @@ function BaseList($scope, formatService, expressionService, searchService, field
     };
 
     $scope.isColumnEditable = function (column) {
-        return column.rendererParameters['editable'] == "true";
+        return column.rendererParameters['editable'] === "true";
     };
 
     $scope.isColumnUpdatable = function (column) {
-        return this.isColumnEditable(column) || column.rendererParameters['updatable'] == "true";
+        return this.isColumnEditable(column) || column.rendererParameters['updatable'] === "true";
     };
 
     $scope.contextPath = function (path) {
@@ -144,8 +144,14 @@ function BaseList($scope, formatService, expressionService, searchService, field
         var selectionModel = crudContextHolderService.getSelectionModel();
 
         if (selectionModel.selectionMode && !forceEdition) {
-            //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
-            gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
+            var commandResult = null;
+            if (fullServiceName != null) {
+                commandResult =commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
+            };
+            if (commandResult == undefined || commandResult !== false) {
+                //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
+                gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
+            }
             return;
         }
 

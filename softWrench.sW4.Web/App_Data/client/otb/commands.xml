@@ -36,6 +36,11 @@
   <!--TODO: finish bars-->
 
 
+  <commandgroup position="none" platform="web"/>
+
+  <commandgroup position="bottom.cancelonly" platform="web">
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+  </commandgroup>
 
   <commandgroup position="detailform" platform="web">
     <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>

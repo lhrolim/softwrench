@@ -119,6 +119,20 @@
         };
 
         /**
+         * Shortcut method
+         * @param {type} applicationName
+         * @param {type} schemaId
+         * @param {type} parameters
+         * @param {type} jsonData
+         * @returns {type} 
+         */
+        function openAsModal(applicationName, schemaId, parameters, jsonData) {
+            parameters = parameters || {};
+            parameters.popupmode = "modal";
+            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
+        };
+
+        /**
          * 
          * @param {type} applicationName name of the application to redirect
          * @param {type} schemaId id of the schema to redirect to
@@ -245,6 +259,7 @@
             goToApplication: goToApplication,
             goToApplicationWithData: goToApplicationWithData,
             goToApplicationView: goToApplicationView,
+            openAsModal:openAsModal,
             redirectNewWindow: redirectNewWindow,
             redirectToAction: redirectToAction,
             redirectToHome: redirectToHome,
