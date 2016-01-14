@@ -22,10 +22,6 @@
         function afterChangeFromStoreLoc(parameters) {
             var fields = parameters['fields'];
             fields['invuseline_.fromstoreloc'] = fields['fromstoreloc'];
-            if (fields['#datamaptype'] == "compositionitem") {
-                //let´s put a negative id so that it gets ignored on maximo side
-                fields['invuseid'] = -1 * (fields["#datamapidx"] - 1);
-            }
         };
 
         function afterChangeSite(parameters) {
