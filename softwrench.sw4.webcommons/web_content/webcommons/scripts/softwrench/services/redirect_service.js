@@ -132,7 +132,9 @@
         function openAsModal(applicationName, schemaId, parameters, jsonData) {
             parameters = parameters || {};
             parameters.popupmode = "modal";
-            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
+            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData).then(function(resultObject) {
+                return contextService.insertIntoContext("grid_refreshdata", { data: resultObject, panelid: "#modal" }, true);
+            });
         };
 
         /**
@@ -197,12 +199,13 @@
                         contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
                         $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                     } else {
+                        contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
                         modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields,parameters);
                     }
                     if (afterRedirectHook != null) {
                         afterRedirectHook();
                     }
-                    return $q.when(data.resultObject);
+                    return $q.when(data);
                 });
             } else {
                 var jsonString = angular.toJson(jsonData);
@@ -214,9 +217,10 @@
                     if (popupMode !== "modal") {
                         $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                     } else {
+                        contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
                         modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields, parameters);
                     }
-                    return $q.when(data.resultObject);
+                    return $q.when(data);
                 });
             }
         };

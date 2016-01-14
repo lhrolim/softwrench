@@ -25,7 +25,21 @@
   </commandgroup>
 
 
-    <commandgroup position="gridbottom" platform="web">
+  <commandgroup position="gridfiltertop" platform="web">
+    <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
+    <command id="toggleselected" icon="$scope:toggleSelectedIcon" service="dispatcherService" method="dispatchevent"
+                 tooltip="Toggle selected" parameters="sw.crud.list.toggleselected,panelid" position="+profiles"/>
+    <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
+  </commandgroup>
+
+  <commandgroup position="gridfilterbottom" platform="web">
+    <command id="apply" icon="fa-check" service="dispatcherService" method="dispatchevent" label="Apply" parameters="sw.crud.list.filter.modal.apply,schema"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.crud.list.filter.modal.cancel,schema"/>
+  </commandgroup>
+  
+
+  <commandgroup position="gridbottom" platform="web">
 
   </commandgroup>
 
@@ -68,9 +82,9 @@
 
   </commandgroup>
 
-  <commandgroup position="applyfilter" platform="web">
+  <commandgroup position="detailfilter" platform="web">
     <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
-    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 

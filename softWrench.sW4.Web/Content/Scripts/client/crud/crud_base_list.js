@@ -135,7 +135,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
         var fullServiceName = $scope.schema.properties['list.click.service'];
         var editDisabled = $scope.schema.properties['list.disabledetails'];
 
-        var selectionModel = crudContextHolderService.getSelectionModel();
+        var selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
         if (selectionModel.selectionMode && !forceEdition) {
             var commandResult = null;
@@ -203,7 +203,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
 
 
     //#region listeners
-    $scope.$on("sw.crud.applicationchanged", function (event, schema,datamap, panelid) {
+    $scope.$on("sw.crud.applicationchanged", function (event, schema, datamap, panelid) {
         if ($scope.panelid === panelid) {
             //need to re fetch the selection model since the context whenever the application changes
             $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);

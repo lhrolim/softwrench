@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function gridSelectionService(crudContextHolderService) {
+    function gridSelectionService(crudContextHolderService, dispatcherService) {
         //#region Utils
 
         //#endregion
@@ -51,8 +51,8 @@
          */
         function selectionChanged(datamap, schema, updatesSelectAll, panelid) {
             var selected = datamap.fields["_#selected"];
-            var rowId = datamap.fields[schema.idFieldName];
             var selectionModel = crudContextHolderService.getSelectionModel(panelid);
+            var rowId = datamap.fields[selectionModel.selectionBufferIdCollumn];
             if (selected) {
                 crudContextHolderService.addSelectionToBuffer(rowId, datamap, panelid);
                 if (selectionModel.onPageSelectedCount < selectionModel.pageSize) {
@@ -92,8 +92,9 @@
 		 * @returns Boolean The new selection state of the row.
          */
         function updateRowState(row, schema, panelid, loadServerSelection) {
-            var buffer = crudContextHolderService.getSelectionModel(panelid).selectionBuffer;
-            var rowId = row.fields[schema.idFieldName];
+            var selectionModel = crudContextHolderService.getSelectionModel(panelid);
+            var buffer = selectionModel.selectionBuffer;
+            var rowId = row.fields[selectionModel.selectionBufferIdCollumn];
 
             if (loadServerSelection) {
                 var serverValue = Boolean(row.fields["_#selected"]);
@@ -103,7 +104,9 @@
             }
             var selected = Boolean(buffer[rowId]);
             row.fields["_#selected"] = selected;
-
+            if (selected) {
+                buffer[rowId] = row;
+            }
 
             return selected;
         }
@@ -117,9 +120,11 @@
          */
         function selectAllChanged(datamap, schema, panelid) {
             var selectedValue = crudContextHolderService.getSelectionModel(panelid).selectAllValue;
-            for (var i = 0; i < datamap.length; i++) {
-                datamap[i].fields["_#selected"] = selectedValue;
-                selectionChanged(datamap[i], schema, false, panelid);
+            var datamapToUse = datamap || crudContextHolderService.rootDataMap(panelid);
+            var schemaToUse = schema || crudContextHolderService.currentSchema(panelid);
+            for (var i = 0; i < datamapToUse.length; i++) {
+                datamapToUse[i].fields["_#selected"] = selectedValue;
+                selectionChanged(datamapToUse[i], schemaToUse, false, panelid);
             }
         }
 
@@ -136,6 +141,23 @@
             selectionChanged(datamap, schema, true, panelid);
         }
 
+        /**
+         * Clear all selected, the buffer and only selected state.
+         * 
+         * @param {} datamap
+         * @param {} schema 
+         * @param {} panelid
+         */
+        function clearSelection(datamap, schema, panelid) {
+            var selectionModel = crudContextHolderService.getSelectionModel(panelid);
+            selectionModel.selectAllValue = false;
+            crudContextHolderService.clearSelectionBuffer(panelid);
+            selectAllChanged(datamap, schema, panelid);
+            if (selectionModel.showOnlySelected) {
+                dispatcherService.dispatchevent("sw.crud.list.toggleselected", panelid);
+            }
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -146,6 +168,7 @@
             selectionChanged: selectionChanged,
             toggleSelection: toggleSelection,
             updateRowState: updateRowState,
+            clearSelection: clearSelection
         };
         return service;
         //#endregion
@@ -153,7 +176,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("gridSelectionService", ["crudContextHolderService", gridSelectionService]);
+    angular.module("sw_layout").factory("gridSelectionService", ["crudContextHolderService", "dispatcherService", gridSelectionService]);
 
     //#endregion
 

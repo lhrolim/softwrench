@@ -81,7 +81,7 @@ angular.module('sw_layout')
             $rootScope.$broadcast("sw.modal.show", modaldata);
         },
 
-
+        panelid : "#modal"
     };
 
 }]);

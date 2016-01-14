@@ -79,6 +79,7 @@
             compositionLoadComplete: false,
             gridSelectionModel: {
                 selectionBuffer: {}, // buffer of all selected row
+                selectionBufferIdCollumn: null, // preset of columns name to be used as buffer key
                 onPageSelectedCount: 0, // number of selected rows on current page
                 pageSize: 0, // number of rows of page (no same of pagination on show only selected)
                 selectAllValue: false, // whether or not select all checkbox is selected
@@ -86,7 +87,11 @@
                 selectionMode:false
             },
             // pagination data before the toggle selected
-            originalPaginationData: null
+            originalPaginationData: null,
+            gridModel: {
+                //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
+                fixedWhereClause: null
+            }
         };
 
         var _crudContext = angular.copy(_originalContext);
@@ -196,6 +201,7 @@
             context.rootDataMap = rootDataMap;
             context.currentApplicationName = schema.applicationName;
             context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
+            context.gridSelectionModel.selectionBufferIdCollumn = context.gridSelectionModel.selectionBufferIdCollumn || schema.idFieldName;
             schemaCacheService.addSchemaToCache(schema);
         }
 
@@ -364,6 +370,7 @@
         function disposeModal() {
             _crudContext.showingModal = false;
             _crudContext._eagerassociationOptions["#modal"] = { "#global": {} };
+            clearCrudContext("#modal");
         };
 
         function modalLoaded() {
@@ -415,6 +422,20 @@
         }
         //#endregion
 
+        //#region gridServices
+
+        function setFixedWhereClause(panelId,fixedWhereClause) {
+            var context = getContext(panelId);
+            context.gridModel.fixedWhereClause = fixedWhereClause;
+        }
+
+        function getFixedWhereClause(panelId) {
+            var context = getContext(panelId);
+            return context.gridModel.fixedWhereClause;
+        }
+
+        //#endregion
+
 
         //#region Service Instance
 
@@ -461,6 +482,11 @@
             modalLoaded: modalLoaded
         }
 
+        var gridServices = {
+            setFixedWhereClause: setFixedWhereClause,
+            getFixedWhereClause: getFixedWhereClause,
+        }
+
         var selectionService = {
             addSelectionToBuffer: addSelectionToBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
@@ -472,7 +498,7 @@
             toggleShowOnlySelected: toggleShowOnlySelected,
         }
 
-        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService);
+        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService, gridServices);
 
 
         //#endregion

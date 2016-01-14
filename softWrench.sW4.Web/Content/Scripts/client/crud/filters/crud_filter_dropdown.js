@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService", "crudContextHolderService", "gridSelectionService",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q, modalFilterService, crudContextHolderService, gridSelectionService) {
 
                         $scope.layout = {
                             standalone: false
@@ -196,43 +196,31 @@
                         };
 
                         $scope.isModal = function(filter) {
-                            return "MetadataModalFilter" === filter.type;
+                            return !filter || "MetadataModalFilter" === filter.type;
                         }
 
                         $scope.initModal = function () {
                             $scope.modalDatamap = {};
-                            $scope.getModalSchema();
+                            modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                         }
 
-                        $scope.getModalSchema = function () {
-                            var tokens = $scope.filter.targetSchemaId.split(".");
-                            var modalSchemaAppName = tokens.length > 1 ? tokens[0] : $scope.schema.applicationName;
-                            var modalSchemaId = tokens.length > 1 ? tokens[1] : tokens[0];
-
-                            var cachedSchema = schemaCacheService.getCachedSchema(modalSchemaAppName, modalSchemaId);
-                            if (cachedSchema) {
-                                return $q.when(cachedSchema);
+                        $scope.showModal = function(filter) {
+                            if (!$scope.isModal(filter)) {
+                                return;
                             }
-
-                            var parameters = {
-                                applicationName: modalSchemaAppName,
-                                targetSchemaId: modalSchemaId
-                            }
-                            var promise = restService.getPromise("Metadata", "GetSchemaDefinition", parameters);
-                            return promise.then(function (result) {
-                                schemaCacheService.addSchemaToCache(result.data);
-                                return result.data;
-                            });
+                            $scope.innerShowModal(filter);
                         }
 
-                        $scope.showModal = function (filter) {
-                            if (filter.type !== "MetadataModalFilter") return;
-                            var datamap = $scope.hasFilter(filter) ? $scope.modalDatamap[filter.attribute] : {};
+                        $scope.innerShowModal = function(filter) {
+                            var datamap = $scope.hasFilter(filter) && $scope.modalDatamap ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
                             var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
-                            var properties = { title: filter.tooltip + " " + filterI18N };
+                            var properties = {
+                                title: filter.label + " " + filterI18N,
+                                cssclass: "crud-grid-modal"
+                            };
 
-                            $scope.getModalSchema().then(function(modalSchema) {
+                            modalFilterService.getModalFilterSchema(filter, $scope.schema).then(function (modalSchema) {
                                 modalService.show(modalSchema, datamap, properties, $scope.appyModal);
                             });
                         }
@@ -250,15 +238,44 @@
                             $scope.selectOperator(att, searchOperator);
                         }
 
-                        $scope.$on("modal.clearfilter", function (event, args) {
-                            var schema = args[0];
-                            $scope.getModalSchema().then(function (modalSchema) {
-                                if (modalSchema !== schema) {
+                        $scope.$on("sw.crud.list.filter.modal.clear", function (event, args) {
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
+                                if (modalSchema !== args[0]) {
                                     return;
                                 }
+
+                                // if the modal is a grid clears the selection and refreshs the grid
+                                if (modalSchema.stereotype.toLocaleLowerCase().startsWith("list")) {
+                                    gridSelectionService.clearSelection(null, null, modalService.panelid);
+                                    dispatcherService.dispatchevent("sw.crud.list.clearQuickSearch", modalService.panelid);
+                                    searchService.refreshGrid({}, { panelid: modalService.panelid });
+                                }
+
                                 $scope.clearFilter($scope.filter.attribute);
+                                
+                                // only hides the modal if the filter is a modalFilter
+                                if ($scope.isModal($scope.filter)) {
+                                    modalService.hide();
+                                }
+                            });
+                        });
+
+                        $scope.$on("sw.crud.list.filter.modal.cancel", function (event, args) {
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
+                                if (modalSchema !== args[0]) {
+                                    return;
+                                }
                                 modalService.hide();
                             });
+                        });
+
+                        $scope.$on("sw.crud.list.filter.modal.show", function (event, filter) {
+                            if (filter !== $scope.filter) {
+                                return;
+                            }
+                            $scope.innerShowModal(filter);
                         });
 
                         $injector.invoke(BaseController, this, {

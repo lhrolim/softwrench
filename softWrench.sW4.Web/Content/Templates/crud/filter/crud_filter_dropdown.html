@@ -3,7 +3,8 @@
     <div class="dropdown" ng-init="markDefaultOperator(filter)">
         <div class="wrap" ng-class="{'slim': layout.standalone}"
              rel="tooltip" data-original-title="{{getFilterText(filter)}}" 
-             ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
+             ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
+             ng-click="showModal(filter)">
             <span ng-hide="layout.standalone">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}:</span> 
             <span ng-hide="layout.standalone" class="filter-text">{{getFilterText(filter)}}</span>
             <i class="fa grid-filter-button"
@@ -11,8 +12,7 @@
                'fa-caret-down': !layout.standalone,
                'fa-filter': layout.standalone && !hasFilter(filter),
                'fa-check': layout.standalone && hasFilter(filter)
-               }"
-               ng-click="showModal(filter)">
+               }">
             </i>
         </div>
         <div ng-if="isModal(filter)" ng-init="initModal()">
