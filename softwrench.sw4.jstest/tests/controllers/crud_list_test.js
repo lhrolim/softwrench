@@ -2,6 +2,7 @@
 
     var mockScope;
     var _contextService;
+    var _searchService;
     var $httpBackend;
 
     beforeEach(module('sw_layout'));
@@ -12,7 +13,7 @@
         module('ngMockE2E');
     });
     
-    beforeEach(inject(function ($injector, $rootScope, $compile, contextService) {
+    beforeEach(inject(function ($injector, $rootScope, $compile,$q, contextService,searchService) {
         $httpBackend = $injector.get('$httpBackend');
         mockScope = $rootScope.$new();
         mockScope.schema = {};
@@ -21,6 +22,15 @@
         
         mockScope.datamap = {};
         _contextService = contextService;
+
+        _searchService = searchService;
+
+        spyOn(searchService, "searchWithData").and.callFake(function () {
+            //rejecting here on the before, so that the test runs for real later...
+            //TODO: change this, this sucks
+            return $q.reject();
+        });
+
         contextService.insertIntoContext("commandbars", {});
         var el = angular.element("<crud-list datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />");
         $compile(el)(mockScope);

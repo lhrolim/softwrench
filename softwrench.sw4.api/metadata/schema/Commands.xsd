@@ -190,12 +190,14 @@
         <restriction base="string">
           <enumeration value="gridtop"></enumeration>
           <enumeration value="gridbottom"></enumeration>
+          <enumeration value="gridfiltertop"></enumeration>
+          <enumeration value="gridfilterbottom"></enumeration>
           <enumeration value="gridrows"></enumeration>
           <enumeration value="compositiontop"></enumeration>
           <enumeration value="detailform"></enumeration>
           <enumeration value="actions"></enumeration>
           <enumeration value="compositionbottom"></enumeration>
-          <enumeration value="applyfilter"></enumeration>
+          <enumeration value="detailfilter"></enumeration>
         </restriction>
       </simpleType>
     </attribute>
