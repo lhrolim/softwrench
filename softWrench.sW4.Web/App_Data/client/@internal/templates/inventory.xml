@@ -233,8 +233,6 @@
           <field attribute="costtype"/>
           <field attribute="itemtype"/>
           <field attribute="issueunit"/>
-          <field attribute="costtype"/>
-          <field attribute="binnum"/>
         </list>
 
         <schema id="inventoryLookupList" stereotype="list" mode="output">

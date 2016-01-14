@@ -33,8 +33,15 @@ namespace softWrench.sW4.Data.Search {
         /// <param name="attributes"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static string BuildOrWhereClause(IEnumerable<string> attributes, string context = null) {
-            var attributesForStatement = context == null ? attributes : attributes.Select(a => context + "." + a);
+        public static string BuildOrWhereClause(IEnumerable<string> attributes, string context = null)
+        {
+            var attrs = attributes.ToList();
+            var attributesForStatement = context == null ? attrs : attrs.Where(atr => !atr.Contains("_.")).Select(a => context + "." + a).ToList();
+            if (context != null)
+            {
+                attributesForStatement = attributesForStatement.Concat(attrs.Where(atr => atr.Contains("_.")).ToList()).ToList();
+            }
+            
             // iterate filters and 'OR' the attributes
             return "(" + string.Join("OR", attributesForStatement.Select(QuickSearchStatement)) + ")";
         }

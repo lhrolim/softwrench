@@ -119,6 +119,24 @@
 
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+
+      <components>
+        <componentdisplayable id="classification">
+          <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
+            <renderer type="autocompleteclient" params="inputsize=large" />
+          </optionfield>
+        </componentdisplayable>
+
+        <componentdisplayable id="siteid">
+          <association label="Site" target="siteid" labelfield="site_.description"
+                   requiredexpression="true" hideDescription="true" defaultexpression="@user.site">
+            <renderer type="lookup" />
+          </association>
+        </componentdisplayable>
+        
+
+      </components>
+
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
@@ -153,6 +171,8 @@
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
+
+      
 
         <schema id="wonumlookup" title="item" stereotype="list">
           <field attribute="wonum"/>
@@ -245,12 +265,12 @@
           </section>
 
           <field label="Details" attribute="ld_.ldtext">
-              <renderer type="richtext"/>
-            </field>
+            <renderer type="richtext"/>
+          </field>
 
 
-          
-          
+
+
           <section orientation="horizontal">
 
             <section orientation="vertical">
@@ -258,24 +278,25 @@
               <renderer type="default"/>
 
               <section orientation="horizontal">
-              <renderer type="default" params="childinputsize=large" />
-              <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
-                <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-                <renderer type="lookup" />
-              </association>
-              <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-                <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-                <dataprovider prefilterfunction="FilterAssets"/>
-                <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-              </association>
+                <renderer type="default" params="childinputsize=large" />
+                <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
+                  <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+                  <renderer type="lookup" />
+                </association>
+                <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                  <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                  <dataprovider prefilterfunction="FilterAssets"/>
+                  <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+                </association>
               </section>
 
               <section orientation="horizontal">
                 <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
                   <renderer type="autocompleteclient" params="inputsize=large" />
                 </optionfield>
+
                 <field hidden="true" attribute="failurelist_.failurelist"/>
-                
+
 
                 <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
                   <renderer type="lookup" params="inputsize=small"/>
@@ -319,7 +340,7 @@
 
             <section orientation="horizontal">
               <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-              
+
               <!-- target -->
               <section orientation="vertical">
                 <field attribute="targstartdate" label="Target Start Date">
@@ -339,7 +360,7 @@
                   <renderer type="datetime" params="format=MM/dd/yyyy;"/>
                 </field>
               </section>
-              
+
               <!-- actual -->
               <section orientation="vertical">
                 <field attribute="actstart" label="Actual Start Date">
@@ -377,11 +398,11 @@
               <section id="attachmentsection"/>
             </section>
 
-            
+
 
           </section>
 
-            <section id="compositions"/>
+          <section id="compositions"/>
 
 
         </schema>
@@ -416,13 +437,13 @@
               <renderer type="default" />
             </field>
           </section>
-          
+
           <section id="siteidsection">
             <field label="Site" attribute="siteid" readonly="true" requiredexpression="true">
               <renderer type="default" />
             </field>
           </section>
-          
+
           <section id="statussection">
             <field attribute="wonum" label="WO#" readonly="true" hidden="true">
               <renderer type="default" />
@@ -466,7 +487,7 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
-        
+
           </section>
           <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->
@@ -590,6 +611,9 @@
           <field attribute="reportedby" label="Reported by" default="@username" readonly="true" hidden="true"/>
           <field attribute="reportdate" label="Reported date" default="@now" readonly="true" hidden="true"/>
         </schema>
+
+
+
       </schemas>
 
     </application>

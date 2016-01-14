@@ -141,7 +141,7 @@ angular.module('sw_layout')
             var serviceName = fullServiceName.substring(0, idx);
             var methodName = fullServiceName.substring(idx + 1);
 
-            var service = $injector.get(serviceName);
+            var service = $injector.getInstance(serviceName);
             if (service == undefined) {
                 var errost = "missing clicking service".format(serviceName);
                 throw new Error(errost);
@@ -154,9 +154,7 @@ angular.module('sw_layout')
             args.push(column);
             args.push(schema);
 
-            method.apply(this, args);
-            return;
-
+            return method.apply(service, args);
         },
 
         getBarCommands: function (schema, position) {
