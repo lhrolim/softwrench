@@ -84,9 +84,7 @@
                         //for lazy filters we will start the recently used from local storage and init the autocompleteservers
                         scope.vm.recentlyOptions = scope.vm.recentlyOptions.concat(filterModelService.lookupRecentlyUsed(schema.applicationName, schema.schemaId, filter.attribute));
                         $timeout(function () {
-                            if (!scope.filter.advancedFilterSchemaId) {
-                                cmpAutocompleteServer.init(element, null, scope.schema, scope);
-                            }
+                            cmpAutocompleteServer.init(element, null, scope.schema, scope);
 
                             $('input.typeahead', element).each(function (index, element) {
                                 var jelement = $(element);
@@ -186,6 +184,25 @@
                         return $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
                     }
 
+                    // updates the lookup modal grid buffer
+                    // if a option is unselected or selected by user the lookup modal grid buffer has
+                    // to be updated to reflect the options selection state
+                    function updateLookupModalGridBuffer(changedOption, selectedItems) {
+                        // if the option was selected or unselected
+                        var selected = selectedItems.some(function (item) {
+                            return changedOption.value === item.value;
+                        });
+
+                        // add or removes an indication of option state on lookup modal grid buffer
+                        var datamap = $scope.lookupModalBuffer[changedOption.value] || {};
+                        if (selected) {
+                            $scope.lookupModalBuffer[changedOption.value] = datamap;
+                        } else {
+                            delete $scope.lookupModalBuffer[changedOption.value];
+                        }
+                    }
+
+                    // changed option is sent in case of user action on changing the state of option checkbox
                     $scope.modifySearchData = function (changedOption) {
                         var searchData = $scope.searchData;
                         var searchOperator = $scope.searchOperator;
@@ -195,9 +212,7 @@
                         var selectedItems = filterModelService.buildSelectedItemsArray($scope.getAllAvailableOptions(), $scope.selectedOptions);
                         var result = filterModelService.buildSearchValueFromOptions(selectedItems);
 
-                        if (!$scope.filter.advancedFilterSchemaId) {
-                            $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
-                        }
+                        $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
 
                         if (result) {
                             searchData[filter.attribute] = result;
@@ -205,24 +220,9 @@
                         }
                         $scope.applyFilter({ keepitOpen: true });
 
-                        // updates the lookup modal grid buffer
-                        if (!changedOption || !changedOption.lookupId || !$scope.filter.advancedFilterSchemaId) {
-                            return;
-                        }
-
-                        var selected = false;
-                        selectedItems.forEach(function (item) {
-                            if (changedOption.lookupId === item.lookupId) {
-                                selected = true;
-                                return;
-                            }
-                        });
-
-                        var datamap = $scope.lookupModalBuffer[changedOption.lookupId] || {};
-                        if (selected) {
-                            $scope.lookupModalBuffer[changedOption.lookupId] = datamap;
-                        } else {
-                            delete $scope.lookupModalBuffer[changedOption.lookupId];
+                        // if has lookup for options
+                        if (changedOption && $scope.filter.advancedFilterSchemaId) {
+                            updateLookupModalGridBuffer(changedOption, selectedItems);
                         }
                     }
 
@@ -255,8 +255,13 @@
 
                     $scope.lookup = function () {
                         // sets the modal grid buffer from the local buffer
-                        crudContextHolderService.getSelectionModel("#modal").selectionBuffer = $scope.lookupModalBuffer;
-                        $rootScope.$broadcast("modal.showmodalfilter", filter);
+                        var selectionModel = crudContextHolderService.getSelectionModel(modalService.panelid);
+                        selectionModel.selectionBuffer = $scope.lookupModalBuffer;
+                        $rootScope.$broadcast("sw.crud.list.filter.modal.show", filter);
+                        // sets the id column to use on buffer in case the filter value is not the id column
+                        if ($scope.filter.advancedFilterAttribute) {
+                            selectionModel.selectionBufferIdCollumn = $scope.filter.advancedFilterAttribute;
+                        }
                     }
 
                     //return call from the autocomplete server invocation
@@ -280,19 +285,29 @@
                         $scope.$digest();
                     });
 
-                    function addFromModalOption(value, lookupId) {
-                        // searchs for itens with same lookupId on recently options
-                        var existingItens = $scope.filteroptions.filter(function (existingItem) {
-                            return lookupId === existingItem.lookupId;
+                    function isOptionFilter() {
+                        return !filter || filter.type !== "MetadataOptionFilter";
+                    }
+
+                    /**
+                    * Add one filter option (if there is not one with same value)
+                    * and makes it selected.
+                    * 
+                    * @param {} value The option value.
+                    */
+                    function addLookupOption(value) {
+                        // searchs for itens with same value on filter options
+                        var alreadyExists = $scope.vm.recentlyOptions.some(function (existingItem) {
+                            return value === existingItem.value;
                         });
                         // if there is not one adds a new item
-                        if (existingItens.length === 0) {
+                        if (!alreadyExists) {
                             var item = {
                                 label: value,
                                 value: value,
-                                lookupId: lookupId
+                                nonstoreable: false
                             }
-                            $scope.filteroptions.push(item);
+                            $scope.vm.recentlyOptions.push(item);
                         }
 
                         // masks the option with the given value as selected
@@ -301,22 +316,18 @@
 
                     function applyModal(modalSchema) {
                         // resets the selected options
-                        Object.keys($scope.selectedOptions).forEach(function (key) {
-                            $scope.selectedOptions[key] = false;
-                        });
+                        $scope.selectedOptions = [];
 
                         // adds an option for each row on modal's grid buffer
-                        var buffer = crudContextHolderService.getSelectionModel("#modal").selectionBuffer;
-                        var idFieldName = modalSchema.idFieldName;
-                        var attFieldName = $scope.filter.advancedFilterAttribute || idFieldName;
+                        var buffer = crudContextHolderService.getSelectionModel(modalService.panelid).selectionBuffer;
+                        var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
                         for (var id in buffer) {
                             if (!buffer.hasOwnProperty(id)) {
                                 continue;
                             }
                             var datamap = buffer[id];
                             var value = datamap.fields[attFieldName];
-                            var lookupId = datamap.fields[idFieldName];
-                            addFromModalOption(value, lookupId);
+                            addLookupOption(value);
                         }
 
                         // updates the local buffer
@@ -334,7 +345,7 @@
                     }
 
                     $scope.$on("sw.crud.list.filter.modal.apply", function (event, args) {
-                        if (!filter || filter.type !== "MetadataOptionFilter") {
+                        if (!isOptionFilter) {
                             return;
                         }
                         var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);

@@ -34,8 +34,8 @@
 
   <commandgroup position="gridfilterbottom" platform="web">
     <command id="apply" icon="fa-check" service="dispatcherService" method="dispatchevent" label="Apply" parameters="sw.crud.list.filter.modal.apply,schema"/>
-    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
-    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="modal.cancelfilter,schema"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.crud.list.filter.modal.cancel,schema"/>
   </commandgroup>
   
 
@@ -79,7 +79,7 @@
 
   <commandgroup position="detailfilter" platform="web">
     <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
-    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="modal.clearfilter,schema"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 

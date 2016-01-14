@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         public static SchemaFilters ApplyFilterCustomizations(SchemaFilters originalSchemaFilters, SchemaFilters overridenSchemaFilters) {
             var overridenFilters = overridenSchemaFilters;
             if (overridenFilters.IsEmpty()) {
-                return originalSchemaFilters; 
+                return originalSchemaFilters;
             }
             foreach (var overridenFilter in overridenFilters.Filters) {
                 var position = overridenFilter.Position;
@@ -95,7 +95,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             IDictionary<string, LinkedListNode<BaseMetadataFilter>> positionBuffer = new Dictionary<string, LinkedListNode<BaseMetadataFilter>>();
             foreach (var field in applicationFieldDefinitions) {
-                
+
                 if (field.IsTransient()) {
                     //transient fields won´t become a filter by default                
                     continue;
@@ -249,28 +249,23 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
         }
 
-        private static void AddAssociationData(ApplicationFieldDefinition field, BaseMetadataFilter filter, EntityMetadata entity)
-        {
-            if (!(filter is MetadataOptionFilter) || !entity.Associations.Any())
-            {
+        private static void AddAssociationData(ApplicationFieldDefinition field, BaseMetadataFilter filter, EntityMetadata entity) {
+            if (!(filter is MetadataOptionFilter) || !entity.Associations.Any()) {
                 return;
             }
 
-            var optionsFilter = (MetadataOptionFilter) filter;
-            if (string.IsNullOrEmpty(optionsFilter.AdvancedFilterSchemaId))
-            {
+            var optionsFilter = (MetadataOptionFilter)filter;
+            if (string.IsNullOrEmpty(optionsFilter.AdvancedFilterSchemaId)) {
                 return;
             }
 
             var association = entity.Associations.FirstOrDefault(assoc => assoc.Attributes.Any(att => field.Attribute.Equals(att.From) && att.Primary));
-            if (association == null)
-            {
+            if (association == null) {
                 return;
             }
 
             var attribute = association.Attributes.FirstOrDefault(att => field.Attribute.Equals(att.From) && att.Primary);
-            if (attribute == null)
-            {
+            if (attribute == null) {
                 return;
             }
             optionsFilter.AdvancedFilterAttribute = attribute.To;

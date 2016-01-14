@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q, modalFilterService) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService", "crudContextHolderService", "gridSelectionService",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q, modalFilterService, crudContextHolderService, gridSelectionService) {
 
                         $scope.layout = {
                             standalone: false
@@ -215,7 +215,10 @@
                             var datamap = $scope.hasFilter(filter) && $scope.modalDatamap ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
                             var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
-                            var properties = { title: filter.label + " " + filterI18N };
+                            var properties = {
+                                title: filter.label + " " + filterI18N,
+                                cssclass: "crud-grid-modal"
+                            };
 
                             modalFilterService.getModalFilterSchema(filter, $scope.schema).then(function (modalSchema) {
                                 modalService.show(modalSchema, datamap, properties, $scope.appyModal);
@@ -235,18 +238,31 @@
                             $scope.selectOperator(att, searchOperator);
                         }
 
-                        $scope.$on("modal.clearfilter", function (event, args) {
+                        $scope.$on("sw.crud.list.filter.modal.clear", function (event, args) {
                             var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
                                 if (modalSchema !== args[0]) {
                                     return;
                                 }
+
+                                // if the modal is a grid clear the selection and buffer
+                                if (modalSchema.stereotype.toLocaleLowerCase().startsWith("list")) {
+                                    var slectionModel = crudContextHolderService.getSelectionModel(modalService.panelid);
+                                    slectionModel.selectAllValue = false;
+                                    crudContextHolderService.clearSelectionBuffer(modalService.panelid);
+                                    gridSelectionService.selectAllChanged(null, null, modalService.panelid);
+                                }
+
                                 $scope.clearFilter($scope.filter.attribute);
-                                modalService.hide();
+                                
+                                // only hides the modal if the filter is a modalFilter
+                                if ($scope.isModal($scope.filter)) {
+                                    modalService.hide();
+                                }
                             });
                         });
 
-                        $scope.$on("modal.cancelfilter", function (event, args) {
+                        $scope.$on("sw.crud.list.filter.modal.cancel", function (event, args) {
                             var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
                                 if (modalSchema !== args[0]) {
@@ -256,7 +272,7 @@
                             });
                         });
 
-                        $scope.$on("modal.showmodalfilter", function (event, filter) {
+                        $scope.$on("sw.crud.list.filter.modal.show", function (event, filter) {
                             if (filter !== $scope.filter) {
                                 return;
                             }

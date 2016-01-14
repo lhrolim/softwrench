@@ -26,6 +26,7 @@
 
   <stereotype id="list.selection.modal">
     <property key="list.disabledetails" value="true"/>
+    <property key="list.selectionmodebydefault" value="true" />
     <property key="list.paginationsize" value="10"/>
   </stereotype>
 

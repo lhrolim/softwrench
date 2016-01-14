@@ -135,7 +135,7 @@ function BaseList($scope, formatService, expressionService, searchService, field
         var fullServiceName = $scope.schema.properties['list.click.service'];
         var editDisabled = $scope.schema.properties['list.disabledetails'];
 
-        var selectionModel = crudContextHolderService.getSelectionModel();
+        var selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
         if (selectionModel.selectionMode && !forceEdition) {
             //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details

@@ -14,8 +14,7 @@
       <schemas>
         <list redeclaring="false">
           <filters>
-            <!--<modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>-->
-            <optionfilter attribute="location" displaycode="false" eager="true" advancedfilterschema="location.locationfilter" allowblank="true"/>
+            <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
         </list>
         <schema id="batchshared" title="Workoder Common Fields" stereotype="detail.modal">
@@ -69,12 +68,6 @@
           <field attribute="parentlocation_.parent" label="Parent Location"/>
           <field attribute="siteid" label="Site"/>
         </schema>
-        <!--<schema id="locationfilter" stereotype="detail">
-          <field attribute="location" label="Location"/>
-          <properties>
-            <property key="commandbar.bottom" value="detailfilter"/>
-          </properties>
-        </schema>-->
         <schema id="list"  redeclaring="false" stereotype="list.selection">
           <properties>
             <property key="list.selectionmodebydefault" value="true" />

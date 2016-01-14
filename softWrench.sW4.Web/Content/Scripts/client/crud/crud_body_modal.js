@@ -51,7 +51,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
         };
 
         $scope.$on('sw.modal.hide', function(event) {
-            crudContextHolderService.clearCrudContext("#modal");
+            crudContextHolderService.clearCrudContext(modalService.panelid);
             $scope.closeModal();
         });
 

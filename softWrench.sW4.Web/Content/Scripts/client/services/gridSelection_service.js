@@ -51,8 +51,8 @@
          */
         function selectionChanged(datamap, schema, updatesSelectAll, panelid) {
             var selected = datamap.fields["_#selected"];
-            var rowId = datamap.fields[schema.idFieldName];
             var selectionModel = crudContextHolderService.getSelectionModel(panelid);
+            var rowId = datamap.fields[selectionModel.selectionBufferIdCollumn];
             if (selected) {
                 crudContextHolderService.addSelectionToBuffer(rowId, datamap, panelid);
                 if (selectionModel.onPageSelectedCount < selectionModel.pageSize) {
@@ -92,8 +92,9 @@
 		 * @returns Boolean The new selection state of the row.
          */
         function updateRowState(row, schema, panelid, loadServerSelection) {
-            var buffer = crudContextHolderService.getSelectionModel(panelid).selectionBuffer;
-            var rowId = row.fields[schema.idFieldName];
+            var selectionModel = crudContextHolderService.getSelectionModel(panelid);
+            var buffer = selectionModel.selectionBuffer;
+            var rowId = row.fields[selectionModel.selectionBufferIdCollumn];
 
             if (loadServerSelection) {
                 var serverValue = Boolean(row.fields["_#selected"]);
@@ -119,9 +120,11 @@
          */
         function selectAllChanged(datamap, schema, panelid) {
             var selectedValue = crudContextHolderService.getSelectionModel(panelid).selectAllValue;
-            for (var i = 0; i < datamap.length; i++) {
-                datamap[i].fields["_#selected"] = selectedValue;
-                selectionChanged(datamap[i], schema, false, panelid);
+            var datamapToUse = datamap || crudContextHolderService.rootDataMap(panelid);
+            var schemaToUse = schema || crudContextHolderService.currentSchema(panelid);
+            for (var i = 0; i < datamapToUse.length; i++) {
+                datamapToUse[i].fields["_#selected"] = selectedValue;
+                selectionChanged(datamapToUse[i], schemaToUse, false, panelid);
             }
         }
 

@@ -33,13 +33,13 @@
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService",
                 "searchService", "tabsService",
-                "fieldService", "commandService", "i18NService",
+                "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService,
                     searchService, tabsService,
-                    fieldService, commandService, i18NService,
+                    fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService, schemaCacheService) {
 
@@ -557,7 +557,7 @@
                         var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
 
                         if ($scope.ismodal === "true") {
-                            $scope.panelid = "#modal";
+                            $scope.panelid = modalService.panelid;
                         }
 
                         $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
