@@ -104,6 +104,12 @@
                         return $scope.selectionModel.showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
                     }
 
+                    this.cancel = function () {
+                        //TODO: improve this solution, using this as a workaround for cancell calls from modals with list schemas
+                        modalService.hide();
+                    }
+
+
                     $scope.gridRefreshed = function (data, panelId) {
                         if (!!$scope.panelid && $scope.panelid !== panelId) {
                             //none of my business --> another dashboard event
