@@ -118,6 +118,18 @@
       <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
       <Name>cts.commons.web</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
+      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
+      <Name>softwrench.sW4.batches</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>
       <Name>softwrench.sw4.Shared2</Name>

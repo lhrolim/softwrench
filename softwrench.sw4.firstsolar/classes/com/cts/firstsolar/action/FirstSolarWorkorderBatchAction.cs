@@ -10,6 +10,8 @@ using JetBrains.Annotations;
 using log4net;
 using log4net.Core;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
@@ -18,6 +20,7 @@ using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.SPF;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
@@ -30,14 +33,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarWorkorderBatchController));
 
         private readonly FirstSolarWoValidationHelper _validationHelper;
+        private readonly MultiItemBatchSubmissionService _submissionService;
 
-        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper) {
+        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper, MultiItemBatchSubmissionService submissionService) {
             _validationHelper = validationHelper;
+            _submissionService = submissionService;
             Log.Debug("init log...");
         }
 
         [HttpPost]
-        public IApplicationResponse SubmitBatch(LocationBatchSubmissionData batchData) {
+        public IApplicationResponse SubmitLocationBatch(LocationBatchData batchData) {
+            
             return null;
         }
 
@@ -70,7 +76,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForAsset(batchData.Assets, batchData.Classification);
 
             var i = 0;
-            var resultData = batchData.Assets.Select(location => GetAssetDataMap(location, batchData, warningIds, i++)).ToList();
+            var resultData = batchData.Assets.Select(asset => GetAssetDataMap(asset, batchData, warningIds, i++)).ToList();
             //assuring selected come first
             resultData.Sort(new SelectedComparer());
 
@@ -169,21 +175,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             }
         }
 
-        public class LocationBatchSubmissionData {
-
-            public BatchData SharedData {
-                get; set;
-            }
-
-            public IDictionary<string, BatchData> LocationSpecificData {
-                get; set;
-            }
-
-
-        }
-
         public class AssetBatchData : BatchData {
             public List<AssociationOption> Assets {
+                get; set;
+            }
+        }
+
+        public class AssetBatchSubmissionData
+        {
+
+            public BatchData SharedData
+            {
+                get; set;
+            }
+
+            public IDictionary<string, BatchData> LocationSpecificData
+            {
                 get; set;
             }
         }
