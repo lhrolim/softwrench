@@ -159,10 +159,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             return (_id != null ? _id.GetHashCode() : 0);
         }
 
-        public bool Pressed {
-            get; set;
-        }
-
         public static ApplicationCommand TestInstance(String id, string position = "", string label = null, string icon = null) {
             return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, null, position, icon, null, null,false);
         }

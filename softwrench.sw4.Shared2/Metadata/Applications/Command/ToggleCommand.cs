@@ -1,6 +1,6 @@
 ﻿namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
     public class ToggleCommand : ICommandDisplayable {
-        public ToggleCommand(string id, string position, string initialStateExpression, ICommandDisplayable onCommand, ICommandDisplayable offCommand) {
+        public ToggleCommand(string id, string position, string initialStateExpression, ToggleChildCommand onCommand, ToggleChildCommand offCommand) {
             Id = id;
             OnCommand = onCommand;
             OffCommand = offCommand;
@@ -11,11 +11,11 @@
 
         public bool State { get; set; }
 
-        public ICommandDisplayable OnCommand {
+        public ToggleChildCommand OnCommand {
             get; set;
         }
 
-        public ICommandDisplayable OffCommand {
+        public ToggleChildCommand OffCommand {
             get; set;
         }
 
