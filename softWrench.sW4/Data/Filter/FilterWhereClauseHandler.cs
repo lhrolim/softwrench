@@ -90,7 +90,8 @@ namespace softWrench.sW4.Data.Filter {
                 return "({0} like '{1}' or {2} like '{1}')".Fmt(filterProvider.Provider, labelSearchString,
                     attributeToUse);
             }
-            return "({0} like '{1}')".Fmt(attributeToUse, labelSearchString);
+            
+            return "({0}.{1} like '{2}')".Fmt(schema.EntityName,attributeToUse, labelSearchString);
 
         }
 

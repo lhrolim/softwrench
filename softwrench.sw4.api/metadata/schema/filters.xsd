@@ -47,6 +47,11 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
             <documentation>if true the value will be displayed on screen --> the result form will be (code) - label </documentation>
           </annotation>  
         </attribute>
+        <attribute name="advancedfilterschema" type="string">
+          <annotation>
+            <documentation>schema of the lookup modal</documentation>
+          </annotation>
+        </attribute>
         
       </extension>
     </complexContent>

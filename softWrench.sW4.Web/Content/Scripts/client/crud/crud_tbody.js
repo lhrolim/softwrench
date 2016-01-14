@@ -254,7 +254,6 @@
                                 if (!editable) {
 
                                     var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
-                                    //console.log(text);
 
                                     if (column.rendererType === 'statuscolor') {
                                         var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);

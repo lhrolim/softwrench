@@ -14,7 +14,7 @@
       <schemas>
         <list redeclaring="false">
           <filters>
-            <modalfilter attribute="location" targetschema="location.locationfilter" service="locationFilterService.operate"></modalfilter>
+            <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
         </list>
 
@@ -76,16 +76,14 @@
 
     <application name="location" title="Location" entity="location" >
       <schemas>
-        <schema id="locationfilter" stereotype="">
+        <schema id="locationfilter" stereotype="list.selection.modal.filter">
           <field attribute="location" label="Location"/>
-          <properties>
-            <property key="commandbar.bottom" value="applyfilter"/>
-          </properties>
+          <field attribute="description" label="Description"/>
+          <field attribute="classstructure_.description" label="Class Structure"/>
+          <field attribute="parentlocation_.parent" label="Parent Location"/>
+          <field attribute="siteid" label="Site"/>
         </schema>
         <schema id="list"  redeclaring="false" stereotype="list.selection">
-          <properties>
-            <property key="list.selectionmodebydefault" value="true" />
-          </properties>
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">

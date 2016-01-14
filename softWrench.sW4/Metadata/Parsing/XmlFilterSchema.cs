@@ -25,6 +25,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RemoveAttribute = "remove";
         public const string TargetSchemaAttribute = "targetschema";
         public const string ServiceAttribute = "service";
+        public const string AdvancedFilterSchemaAttribute = "advancedfilterschema";
 
         public const string FilterNamespace = "http://www.controltechnologysolutions.com/filters";
     }

@@ -205,6 +205,16 @@ input.ng-dirty.ng-invalid, .not-found:focus {
         .listgrid-thead {
             position: fixed;
         }
+
+        .modal {
+            .affix-pagination {
+                position: relative;
+            }
+
+            .listgrid-thead {
+                position: relative;
+            }
+        }
     }
 }
 
