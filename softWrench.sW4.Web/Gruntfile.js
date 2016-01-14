@@ -52,8 +52,8 @@ module.exports = function (grunt) {
                 },
                 files: {
                     // bootstrap
-                    "bootstrap/bootstrap.css": "bootstrap/dist/css/bootstrap.min.css",
-                    "bootstrap/bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.min.css",
+                    "bootstrap/bootstrap.css": "bootstrap/dist/css/bootstrap.css",
+                    "bootstrap/bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.css",
                     "bootstrap/bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
                     "bootstrap/selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
                     // font-awesome
@@ -87,7 +87,6 @@ module.exports = function (grunt) {
                     "jquery/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
                     // bootstrap
                     "bootstrap/bootstrap.js": "bootstrap/dist/js/bootstrap.js",
-                    "bootstrap/bootstrap-combobox.js": "bootstrap-combobox/js/bootstrap-combobox.js",
                     "bootstrap/bootstrap-datetimepicker.js": "eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js",
                     "bootstrap/bootstrap-multiselect.js": "bootstrap-multiselect/dist/js/bootstrap-multiselect.js",
                     "bootstrap/bootbox.js": "bootbox.js/bootbox.js",

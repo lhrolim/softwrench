@@ -20,7 +20,7 @@
             public static readonly string AppScripts = "~/Content/Scripts/client/application";
             public static readonly string VendorScripts = "~/Content/vendor/scripts";
             public static readonly string CustomVendorScripts = "~/Content/customVendor/scripts";
-            public static readonly string SharedAppScripts = "~/Content/Scripts/client/application";
+            public static readonly string SharedAppScripts = "~/Content/Scripts/client/application/shared";
 
             public static readonly string[] Scripts = {
                 VendorScripts,

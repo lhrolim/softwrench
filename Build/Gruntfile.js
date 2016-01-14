@@ -129,7 +129,6 @@ module.exports = function (grunt) {
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
                     "raw/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
-                    "raw/bootstrap-combobox.js": "bootstrap-combobox/js/bootstrap-combobox.js",
                     "raw/bootstrap-multiselect.js": "bootstrap-multiselect/dist/js/bootstrap-multiselect.js",
                     "raw/bootbox.js": "bootbox.js/bootbox.js",
                     "raw/moment-locale-de.js": "moment/locale/de.js",
@@ -261,7 +260,6 @@ module.exports = function (grunt) {
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-style.js",
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-download.js",
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-upload.js",
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/bootstrap-combobox.js",
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/bootstrap-multiselect.js",
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/bootbox.js"
                     ],

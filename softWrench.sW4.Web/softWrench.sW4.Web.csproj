@@ -490,12 +490,14 @@
     </Content>
     <Content Include="Content\customVendor\css\bootstrap-combobox.css" />
     <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
+    <Content Include="Content\customVendor\css\bootstrap-select.css" />
     <Content Include="Content\customVendor\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
+    <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\customVendor\scripts\misc\modernizr.js" />
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\Images\branding.png" />

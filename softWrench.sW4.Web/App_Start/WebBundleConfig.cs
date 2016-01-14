@@ -77,7 +77,6 @@ namespace softWrench.sW4.Web {
                 // bootstrap
                 .Include(
                     "~/Content/vendor/scripts/bootstrap/bootstrap.js",
-                    "~/Content/vendor/scripts/bootstrap/bootstrap-combobox.js",
                     "~/Content/vendor/scripts/bootstrap/bootstrap-datetimepicker.js",
                     "~/Content/vendor/scripts/bootstrap/bootstrap-multiselect.js",
                     "~/Content/vendor/scripts/bootstrap/bootbox.js"
@@ -104,6 +103,7 @@ namespace softWrench.sW4.Web {
             var appBundle = new ScriptBundle(Bundles.Local.AppScripts)
                 .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
                 .Include("~/Content/Scripts/client/crud/aaa_layout.js")
+                .IncludeDirectory("~/Content/Shared/webcommons/scripts/softwrench/util", "*.js")
                 .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/services/", "*.js")
