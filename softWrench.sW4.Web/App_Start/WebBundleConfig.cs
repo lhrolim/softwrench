@@ -22,11 +22,20 @@ namespace softWrench.sW4.Web {
 
         private void PopulateLocalStyleBundles(BundleCollection bundles) {
             // from bower styles
-            bundles.Add(new StyleBundle(Bundles.Local.VendorStyles)
-                .IncludeDirectory("~/Content/vendor/css/bootstrap/", "*.css")
+            var vendorBundle = new StyleBundle(Bundles.Local.VendorStyles)
+                // bootstrap
+                .Include("~/Content/vendor/css/bootstrap/bootstrap.css")
+                .Include("~/Content/vendor/css/bootstrap/bootstrap-theme.css")
+                .Include("~/Content/vendor/css/bootstrap/bootstrap-datetimepicker.css")
+                .Include("~/Content/vendor/css/bootstrap/selectize.css")
+                // font-awesome
                 .IncludeDirectory("~/Content/vendor/css/font-awesome/", "*.css")
+                // angular
                 .IncludeDirectory("~/Content/vendor/css/angular/", "*.css")
-                );
+                .Include("~/Content/vendor/css/angular/angular-ui-select.css")
+                .Include("~/Content/vendor/css/angular/textAngular.css");
+            vendorBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(vendorBundle);
 
             // customized vendor styles
             bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
@@ -92,7 +101,10 @@ namespace softWrench.sW4.Web {
                 );
 
             // app scripts
-            bundles.Add(new ScriptBundle(Bundles.Local.AppScripts)
+            var appBundle = new ScriptBundle(Bundles.Local.AppScripts)
+                .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
+                .Include("~/Content/Scripts/client/crud/aaa_layout.js")
+                .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/services/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/", "*.js")
@@ -100,7 +112,9 @@ namespace softWrench.sW4.Web {
                 .IncludeDirectory("~/Content/Scripts/client/directives/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/directives/menu/", "*.js")
                 .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
-                .IncludeDirectory("~/Content/modules", "*.js", true));
+                .IncludeDirectory("~/Content/modules", "*.js", true);
+            appBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(appBundle);
         }
 
         private void PopulateDistributionScriptBundles(BundleCollection bundles) {
