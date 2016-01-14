@@ -84,9 +84,6 @@
           <field attribute="siteid" label="Site"/>
         </schema>
         <schema id="list"  redeclaring="false" stereotype="list.selection">
-          <properties>
-            <property key="list.selectionmodebydefault" value="true" />
-          </properties>
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
