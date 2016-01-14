@@ -1,8 +1,10 @@
 ﻿(function (angular) {
     "use strict";
 
-angular.module("sw_layout").controller("BaseList", ["$scope", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", BaseList]);
+angular.module("sw_layout").controller("BaseList", BaseList);
+
 //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
+BaseList.$inject = ["$scope", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService"];
 function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {

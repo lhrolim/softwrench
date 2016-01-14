@@ -2,16 +2,17 @@
 
     var mockScope;
     var _contextService;
-    var controller;
     var $httpBackend;
 
-    beforeEach(angular.mock.module('sw_layout'));
+    beforeEach(module('sw_layout'));
 
     //init app --> first action usually
-    beforeEach(module("sw.templates"));
-    beforeEach(module('ngMockE2E'));
+    beforeEach(function() {
+        module("sw.templates");
+        module('ngMockE2E');
+    });
     
-    beforeEach(angular.mock.inject(function ($injector, $rootScope, $compile, contextService) {
+    beforeEach(inject(function ($injector, $rootScope, $compile, contextService) {
         $httpBackend = $injector.get('$httpBackend');
         mockScope = $rootScope.$new();
         mockScope.schema = {};
@@ -21,10 +22,10 @@
         mockScope.datamap = {};
         _contextService = contextService;
         contextService.insertIntoContext("commandbars", {});
-        var el = angular.element("<crud-list datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />")
-        var fn = $compile(el)(mockScope);
+        var el = angular.element("<crud-list datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />");
+        $compile(el)(mockScope);
         mockScope.$digest();
-        mockScope = el.isolateScope() || el.scope()
+        mockScope = el.isolateScope() || el.scope();
 
     }));
 

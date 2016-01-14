@@ -12,8 +12,8 @@ module.exports = function (grunt) {
             vendor: fullPath + "Content/vendor",
             customVendor: fullPath + "Content/customVendor",
             customers: fullPath + "Content/Customers",
-            tests: fullPath + "../softwrench.sw4.jstest",
-            webcommons: fullPath + "../softwrench.sw4.webcommons",
+            tests: /*fullPath +*/ "../softwrench.sw4.jstest",
+            webcommons: fullPath + "Content/Shared/webcommons",
             tmp: fullPath + "Content/temp",
             dist: fullPath + "Content/dist"
         },
@@ -104,7 +104,6 @@ module.exports = function (grunt) {
             },
             scripts: {
                 options: {
-                    // clean: true,
                     destPrefix: "<%= app.vendor %>/scripts"
                 },
                 files: {
@@ -148,11 +147,13 @@ module.exports = function (grunt) {
             app: {
                 files: [{
                     src: [
+                        // customized angular vendor modules
+                        "<%= app.customVendor %>/scripts/angular/**/*.js",
                         // modules
-                        "<%= app.webcommons %>/web_content/webcommons/scripts/softwrench/sharedservices_module.js", // webcommons
+                        "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
                         "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
                         // webcommons
-                        "<%= app.webcommons %>/web_content/webcommons/scripts/**/*!(sharedservices_module).js",
+                        "<%= app.webcommons %>/scripts/**/*!(sharedservices_module).js",
                         // app
                         "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
                         "<%= app.content %>/Scripts/client/services/*.js",
@@ -163,12 +164,12 @@ module.exports = function (grunt) {
                         "<%= app.content %>/Templates/commands/**/*.js",
                         "<%= app.content %>/modules/**/*.js",
                         // Shared
-                        "<%= app.content %>/Shared/**/*.js",
+                        "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
                         // base otb
                         "<%= app.content %>/Scripts/customers/otb/*.js",
                         // customers shared
                         "<%= app.content %>/Scripts/customers/shared/*.js"
-                    ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]),
+                    ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]), // scpecific customer
 
                     dest: "<%= app.tmp %>/scripts/app.annotated.js"
                 }]
@@ -216,12 +217,11 @@ module.exports = function (grunt) {
             },
             appScripts: {
                 options: {
-                    separator: ";\n",
-                    
+                    separator: ";\n"
                 },
                 src: [
-                    // customVendors
-                    "<%= app.customVendor %>/scripts/**/*.js",
+                    // customVendors (except angular)
+                    "<%= app.customVendor %>/scripts/{**/*.js, !(angular)/**/*.js}",
                     // actual app: ng-annotated source
                     "<%= app.tmp %>/scripts/app.annotated.js"
                 ],
@@ -235,8 +235,6 @@ module.exports = function (grunt) {
         cssmin: {
             customVendor: {
                 files: [{
-                    //expand: false,
-                    //cwd: "<%= app.customVendor %>/css",
                     src: ["<%= app.customVendor %>/css/*.css"],
                     dest: "<%= app.tmp %>/css/customVendor.min.css",
                     ext: ".min.css"
@@ -283,12 +281,26 @@ module.exports = function (grunt) {
         karma: {
             options: {
                 configFile: "<%= app.tests %>/karma.conf.js",
-                logLevel: "INFO",
+                logLevel: "WARN",
                 browsers: ["PhantomJS"],
                 singleRun: true,
+                basePath: "",
+                // preprocess matching files before serving them to the browser
+                // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+                preprocessors: {
+                    '../softWrench.sW4.Web/Content/Templates/**/*.html': ["ng-html2js"]
+                },
+                ngHtml2JsPreprocessor: {
+                    // If your build process changes the path to your TEMPLATES,
+                    // use stripPrefix and prependPrefix to adjust it.
+                    stripPrefix: "(.*)softWrench.sW4.Web",
+                    // the name of the Angular module to create
+                    moduleName: "sw.templates"
+                },
                 files: [
                     "<%= app.dist %>/scripts/vendor.js",
                     "<%= app.dist %>/scripts/app.js",
+                    "../softWrench.sW4.Web/Content/Templates/**/*.html",
                     "<%= app.tests %>/angular_mock.js",
                     "<%= app.tests %>/tests/**/*.js"
                 ]
@@ -314,6 +326,7 @@ module.exports = function (grunt) {
     grunt.registerTask("cleanAll", ["clean:vendor", "clean:tmp", "clean:dist"]);
     grunt.registerTask("copyAll", ["bowercopy:css", "bowercopy:fonts", "bowercopy:scripts"]);
     grunt.registerTask("default", [
+        "sass:prod", // compile scss sources
         "cleanAll", // clean folders: preparing for copy
         "copyAll", // copying bower files
         "cssmin:customVendor", // minify and concat 'customized from vendor' css
@@ -323,9 +336,9 @@ module.exports = function (grunt) {
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's customized from vendor's + ng-annotated + customer's)
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
-        //"karma:target", // run tests on minified scripts
-        //"clean:vendor" , "clean:tmp" // clean temporary folders
+        "karma:target", // run tests on minified scripts
+        "clean:vendor", "clean:tmp" // clean temporary folders
     ]);
     //#endregion
-   
+
 };

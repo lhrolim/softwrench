@@ -102,11 +102,11 @@
       <arg value="/c"></arg>
       <arg value="npm install"></arg>
     </exec>
-    <!-- compile sass -->
+    <!-- grunt toolchain -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value='grunt sass:prod --path="${deploypath}" --verbose'></arg>
+      <arg value='grunt --path="${deploypath}" --customer="${client}"'></arg>
     </exec>
   </target>
 

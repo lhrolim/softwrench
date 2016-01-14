@@ -1,5 +1,5 @@
 ﻿(function (angular) {
-    angular.module("angularTreeview", []).directive("treeModel", function($compile) {
+    angular.module("angularTreeview", []).directive("treeModel", ["$compile", function($compile) {
         return {
             restrict: "A",
             link: function(scope, element, attr) {
@@ -49,5 +49,5 @@
                     : element.html($compile(template)(scope)));
             }
         }
-    });
+    }]);
 })(angular);
