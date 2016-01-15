@@ -940,13 +940,6 @@
         </documentation>
       </annotation>
     </attribute>
-    <attribute name="autotoggle" type="boolean">
-      <annotation>
-        <documentation>
-          If the toggle button changes it states automatically. Default true.
-        </documentation>
-      </annotation>
-    </attribute>
     <attribute name="position" type="string">
       <annotation>
         <documentation>

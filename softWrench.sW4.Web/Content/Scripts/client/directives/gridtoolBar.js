@@ -66,8 +66,8 @@
     $scope.executeService = function (command, toggleParentCommand) {
         var log = $log.get("gridtoolBar#executeService");
 
-        // if toggle parent command and it have auto toggle
-        if (toggleParentCommand && toggleParentCommand.autoToggle) {
+        // if toggle parent command is passed toggles it state
+        if (toggleParentCommand) {
             toggleParentCommand.state = !toggleParentCommand.state;
         }
 

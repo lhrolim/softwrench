@@ -29,6 +29,5 @@
         public const string RoleAttribute = "role";
 
         public const string ToggleButtonInitialStateExpressionAttribute = "initialstateexpression";
-        public const string ToggleButtonAutoToggleAttribute = "autotoggle";
     }
 }
