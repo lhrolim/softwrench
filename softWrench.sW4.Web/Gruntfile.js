@@ -89,7 +89,6 @@ module.exports = function (grunt) {
                     "bootstrap/bootstrap.js": "bootstrap/dist/js/bootstrap.js",
                     "bootstrap/bootstrap-datetimepicker.js": "eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js",
                     "bootstrap/bootstrap-multiselect.js": "bootstrap-multiselect/dist/js/bootstrap-multiselect.js",
-                    "bootstrap/bootbox.js": "bootbox.js/bootbox.js",
                     // angular
                     "angular/angular.js": "angular/angular.js",
                     "angular/angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
