@@ -19,7 +19,7 @@ module.exports = function (config) {
         reporters: ["progress", "dots", "junit"],
 
         junitReporter: {
-            outputFile: "jenkinstest-results.xml"
+            outputFile: "./jenkinstest-results.xml"
         },
 
         // web server port
