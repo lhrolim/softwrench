@@ -24,19 +24,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             var sharedData = submissionData.SharedData;
 
             var fields = new Dictionary<string, object>();
-            fields["summary"] = sharedData.Summary;
+            fields["DESCRIPTION"] = sharedData.Summary;
             fields["siteid"] = sharedData.SiteId;
             fields["classstructureid"] = sharedData.Classification;
-            fields["details"] = sharedData.Details;
+            fields["ld_.ldtext"] = sharedData.Details;
             fields["location"] = location.Key;
             item.Fields = fields;
 
             var specificData = location.Value;
             if (specificData != null) {
                 //if there´s specific data being passed, let´s use it
-                fields["summary"] = specificData.Summary ?? sharedData.Summary;
+                fields["DESCRIPTION"] = specificData.Summary ?? sharedData.Summary;
                 fields["siteid"] = specificData.SiteId ?? sharedData.SiteId;
-                fields["details"] = specificData.Details ?? sharedData.Details;
+                fields["DESCRIPTION_LONGDESCRIPTION"] = specificData.Details ?? sharedData.Details;
                 fields["classstructureid"] = specificData.Classification ?? sharedData.Classification;
             }
 
