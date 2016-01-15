@@ -2,38 +2,59 @@
     'use strict';
 
 
-    function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService,contextService, modalService, $rootScope) {
+    function firstSolarLocationService($rootScope, redirectService, crudContextHolderService, alertService, restService, contextService, modalService) {
+
+        //        $rootScope.$on("sw.crud.applicationchanged", function() {
+        //            //playing safe here
+        //            contextService.deleteFromContext("batchshareddata");
+        //        });
+
 
         function submitBatch(datamap) {
-            var locations = datamap.map(function (datamap) {
-                var value = datamap.fields["location"];
-                var label = datamap.fields["location_label"];
-                return { label: label, value: value };
-            });
-            var LocationBatchData = {
-                Summary: datamap[0].fields["summary"],
-                Details: datamap[0].fields["details"],
-                SiteId: datamap[0].fields["siteid"],
-                Classification: datamap[0].fields["classification"],
-                Locations: locations
-            }
 
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(LocationBatchData));
+            var sharedData = contextService.get("batchshareddata", false, true);
+            var specificData = {};
+
+            var submissionData = {
+                sharedData: sharedData,
+                specificData: specificData
+            };
+
+            datamap.forEach(function (datamap) {
+                var fields = datamap.fields;
+
+                var customizedValues = Object.keys(fields).filter(function (prop) {
+                    return prop !== "location" && fields[prop] !== sharedData[prop];
+                });
+
+                if (customizedValues.length !== 0) {
+                    specificData[fields.location] = {};
+                    customizedValues.forEach(function (prop) {
+                        specificData[fields.location][prop] = fields[prop];
+                    });
+                } else {
+                    specificData[fields.location] = null;
+                }
+
+            });
+            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(submissionData));
         }
 
         function proceedToBatchSelection(httpResponse) {
-            var resultObject = httpResponse.data;
-            if (resultObject.extraParameters && true === resultObject.extraParameters["allworkorders"]) {
+            var applicationResponse = httpResponse.data;
+            if (applicationResponse.extraParameters && true === applicationResponse.extraParameters["allworkorders"]) {
                 return alertService.confirm2("All the selected locations already have corresponding workorders.Do you want to proceed anyway?")
                     .then(function () {
-                        return $rootScope.$broadcast("sw_redirectapplicationsuccess", resultObject, "input", "workorder");
+                        //storing untouched first line to serve as shared data later
+                        contextService.set("batchshareddata", applicationResponse.resultObject[0].fields);
+                        return $rootScope.$broadcast("sw_redirectapplicationsuccess", applicationResponse, "input", "workorder");
                     }).catch(function () {
                         //catching exception in order to close the modal on the outer promise handler
                         return;
                     });
             }
-
-            return $rootScope.$broadcast("sw_redirectapplicationsuccess", resultObject, "input", "workorder");
+            contextService.set("batchshareddata", applicationResponse.resultObject[0].fields, true);
+            return $rootScope.$broadcast("sw_redirectapplicationsuccess", applicationResponse, "input", "workorder");
         }
 
         function loadRelatedWorkorders(rowDm, column) {
@@ -128,7 +149,7 @@
             initBatchWorkorder: initBatchWorkorder,
             loadRelatedWorkorders: loadRelatedWorkorders,
             dispatchWO: dispatchWO,
-            submitBatch:submitBatch
+            submitBatch: submitBatch
         };
 
         return service;
@@ -136,7 +157,7 @@
 
     angular
     .module('firstsolar')
-    .clientfactory('locationService', ['redirectService', 'crudContextHolderService', 'alertService', 'restService', 'contextService', 'modalService', '$rootScope', firstSolarLocationService]);
+    .clientfactory('locationService', ['$rootScope', 'redirectService', 'crudContextHolderService', 'alertService', 'restService', 'contextService', 'modalService', firstSolarLocationService]);
 
 
 })(angular);

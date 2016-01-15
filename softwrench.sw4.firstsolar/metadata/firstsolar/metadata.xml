@@ -83,7 +83,7 @@
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
           </field>
           <field attribute="assetnum" label="Asset" readonly="true"/>
-          <field attribute="asset_label" label="Location"/>
+          <field attribute="asset_label" label="Asset"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
@@ -101,6 +101,7 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
+              <command id="save" service="assetService" method="submitBatch" parameters="datamap"/>
             </commandgroup>
           </commandbars>
 

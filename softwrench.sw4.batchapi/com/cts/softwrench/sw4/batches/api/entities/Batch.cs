@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
+using softwrench.sw4.api.classes.user;
 using softwrench.sw4.problem.classes;
 
 namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
@@ -18,31 +20,47 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public int? Id { get; set; }
+        public int? Id {
+            get; set;
+        }
 
         [Property]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate {
+            get; set;
+        }
         [Property]
-        public DateTime? UpdateDate { get; set; }
+        public DateTime? UpdateDate {
+            get; set;
+        }
         [Property]
-        public int? CreatedBy { get; set; }
+        public int? CreatedBy {
+            get; set;
+        }
 
         [JsonConverter(typeof(StringEnumConverter))]
         [Property(TypeType = typeof(BatchStatusType))]
-        public BatchStatus Status { get; set; }
-        
-        [Property]
-        public String RemoteId { get; set; }
+        public BatchStatus Status {
+            get; set;
+        }
 
         [Property]
-        public String Application { get; set; }
+        public String RemoteId {
+            get; set;
+        }
+
+        [Property]
+        public String Application {
+            get; set;
+        }
 
 
         [JsonIgnore]
         [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "batch_id", NotNull = true)]
         [OneToMany(2, ClassType = typeof(BatchItem))]
-        public virtual Iesi.Collections.Generic.ISet<BatchItem> Items { get; set; }
+        public virtual Iesi.Collections.Generic.ISet<BatchItem> Items {
+            get; set;
+        }
 
 
         /// <summary>
@@ -58,7 +76,22 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
         /// </summary>
         public IDictionary<string, Problem> Problems = new Dictionary<string, Problem>();
 
-        public int NumberOfItems { get { return Items.Count; } }
+        public int NumberOfItems {
+            get {
+                return Items.Count;
+            }
+        }
+
+        public static Batch TransientInstance(string application, ISWUser user) {
+            return new Batch() {
+                CreationDate = DateTime.Now,
+                CreatedBy = user.UserId,
+                Status = BatchStatus.SUBMITTING,
+                Application = application
+            };
+
+        }
+
     }
 
 

@@ -64,7 +64,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                     batch.SuccessItems.Add(originalItem.RemoteId);
 
                     auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result, originalItem.AdditionalData));
-                
+
                 } catch (Exception e) {
                     if (options.GenerateProblems) {
                         var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
@@ -96,7 +96,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 var applicationMetadata = user.CachedSchema(item.Application, new ApplicationMetadataSchemaKey(item.Schema, SchemaMode.None, ClientPlatform.Mobile));
                 var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
 
-                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, item.ItemId);
+                CrudOperationData crudOperationData;
+
+                if (item.Fields != null) {
+                    crudOperationData = new CrudOperationData(item.ItemId, item.Fields, new Dictionary<string, object>(), entityMetadata, applicationMetadata);
+                } else {
+                    crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, item.ItemId);
+                }
+
+
                 var wrapper = new OperationWrapper(crudOperationData, item.Operation);
 
                 submissionData.AddItem(new BatchSubmissionItem {
