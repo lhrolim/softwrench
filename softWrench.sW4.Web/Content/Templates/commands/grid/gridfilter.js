@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceService', 'searchService', 'i18NService', 'alertService', 'contextService', 'crudContextHolderService',
+angular.module('sw_layout')
+.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceService', 'searchService', 'i18NService', 'alertService', 'contextService', 'crudContextHolderService',
         function($scope, $http, gridPreferenceService, searchService, i18NService, alertService, contextService, crudContextHolderService) {
 
             function init() {
@@ -169,4 +171,6 @@ app.controller('GridFilterController', ['$scope', '$http', 'gridPreferenceServic
                 return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
             }
         }
-    ]);
+]);
+
+})(angular);

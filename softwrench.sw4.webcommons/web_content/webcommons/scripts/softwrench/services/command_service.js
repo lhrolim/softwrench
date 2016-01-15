@@ -187,6 +187,15 @@ angular.module('sw_layout')
             schema.jscache.commandbars[position] = commands;
 
             return commands;
+        },
+
+        getInitialToggleState: function (datamap, command) {
+            var expression = command.initialStateExpression;
+            if (expression == undefined || expression === "") {
+                return false;
+            }
+            var expressionToEval = expressionService.getExpression(expression, datamap);
+            return eval(expressionToEval);
         }
 
     };

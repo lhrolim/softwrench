@@ -1,7 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-
-(function (angular) {
+﻿(function (angular) {
     'use strict';
 
 
@@ -280,7 +277,6 @@
     angular
     .module('sw_layout')
     .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService','modalService','schemaCacheService', '$timeout', redirectService]);
-
 
 })(angular);
 

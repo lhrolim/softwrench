@@ -1,7 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.controller('WoTaskController', ['$scope', '$http', 'modalService', 'applicationService', function ($scope, $http, modalService, applicationService) {
-
+angular.module('sw_layout')
+.controller('WoTaskController', ['$scope', '$http', 'modalService', 'applicationService', function ($scope, $http, modalService, applicationService) {
 
     $scope.openstatusmodal = function (item, event) {
         if (event) {
@@ -14,11 +15,8 @@ app.controller('WoTaskController', ['$scope', '$http', 'modalService', 'applicat
                 modalService.hide();
             });
         });
-
     }
-
 }
 ]);
 
-
-
+})(angular);
