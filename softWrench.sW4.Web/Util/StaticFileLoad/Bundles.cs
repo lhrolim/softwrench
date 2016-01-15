@@ -22,11 +22,14 @@
             public static readonly string CustomVendorScripts = "~/Content/customVendor/scripts";
             public static readonly string SharedAppScripts = "~/Content/Scripts/client/application/shared";
 
+            public static readonly string ClientJsScripts = "~/Content/Scripts/client/client-js";
+
             public static readonly string[] Scripts = {
                 VendorScripts,
                 CustomVendorScripts,
                 AppScripts,
-                SharedAppScripts
+                SharedAppScripts,
+                ClientJsScripts
             };
 
         }

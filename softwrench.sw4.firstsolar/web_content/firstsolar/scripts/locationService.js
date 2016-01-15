@@ -125,7 +125,7 @@
         var service = {
             initBatchWorkorder: initBatchWorkorder,
             loadRelatedWorkorders: loadRelatedWorkorders,
-            dispatchWO: dispatchWO
+            dispatchWO: dispatchWO,
             submitBatch:submitBatch
         };
 
