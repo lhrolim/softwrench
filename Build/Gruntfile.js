@@ -166,8 +166,10 @@ module.exports = function (grunt) {
                         // base otb
                         "<%= app.content %>/Scripts/customers/otb/*.js",
                         // customers shared
-                        "<%= app.content %>/Scripts/customers/shared/*.js"
-                    ].concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]), // scpecific customer
+                        "<%= app.content %>/Scripts/customers/shared/*.js",
+                        // customers: outer build process guarantees there's only the selected customer in the path
+                        "<%= app.customers %>/**/scripts/**/*.js"
+                    ],//.concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]), // scpecific customer
 
                     dest: "<%= app.tmp %>/scripts/app.annotated.js"
                 }]
@@ -281,6 +283,18 @@ module.exports = function (grunt) {
                 browsers: ["PhantomJS"],
                 singleRun: true,
                 basePath: "",
+                // test results reporter to use
+                // possible values: "dots", "progress"
+                // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+                reporters: ["progress", "dots", "junit"],
+
+                junitReporter: {
+                    // don't know why but using:
+                    // - <%= app.tests %>/jenkinstest-results.xml: creates softwrench.sw4.jstest/softwrench.sw4.jstest/jenkinstest-results.xml
+                    // - jenkinstest-results.xml: creates the 'PhantomJS' folder with the report in it
+                    // - <%= app.tests %>/../jenkinstest-results.xml: [WORKS] creates softwrench.sw4.jstest/jenkinstest-results.xml
+                    outputFile: "<%= app.tests %>/../jenkinstest-results.xml"
+                },
                 // preprocess matching files before serving them to the browser
                 // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
                 preprocessors: {

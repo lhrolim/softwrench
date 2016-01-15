@@ -103,10 +103,10 @@
       <arg value="npm install"></arg>
     </exec>
     <!-- grunt toolchain -->
-    <echo message="installing npm dependencies"></echo>
+    <echo message="running grunt"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value='grunt --path="${deploypath}" --customer="${client}"'></arg>
+      <arg value='grunt --path="${deploypath}"'></arg>
     </exec>
   </target>
 

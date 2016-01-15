@@ -13,14 +13,7 @@ module.exports = function (config) {
         exclude: [
         ],
 
-        // test results reporter to use
-        // possible values: "dots", "progress"
-        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ["progress", "dots", "junit"],
-
-        junitReporter: {
-            outputFile: "jenkinstest-results.xml"
-        },
+        
 
         // web server port
         port: 9876,
