@@ -38,7 +38,7 @@
 
         <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal">
           <field attribute="summary" label="Summary:" requiredexpression="true"/>
-          <field attribute="details" label="Details:" requiredexpression="true">
+          <field attribute="details" label="Details:">
             <renderer type="textarea"/>
           </field>
           <reference id="siteid"/>
@@ -71,12 +71,41 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
-              <command id="save" service="locationService" method="submitBatch" parameters=""/>
+              <command id="save" service="locationService" method="submitBatch" parameters="datamap"/>
             </commandgroup>
           </commandbars>
 
         </schema>
+        
+        <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="#warning" tooltip="There already one or more workorders associated to this asset click here to view them">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
+          </field>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="asset_label" label="Asset"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <reference id="siteid"/>
+          <reference id="classification"/>
 
+          <properties>
+            <property key="list.click.service" value="assetService.loadRelatedWorkorders"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup id="#spreadsheet">
+              <!--TODO: review framework to eventually avoid the need for these commands later-->
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
+              <command id="save" service="assetService" method="submitBatch" parameters="datamap"/>
+            </commandgroup>
+          </commandbars>
+
+        </schema>
 
       </schemas>
     </application>
@@ -96,6 +125,26 @@
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id="Create" icon="fa-tachometer" label="Create Workorders"
                          service="locationService" method="initBatchWorkorder"
+                         parameters="schema,datamap" />
+              </container>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+
+    <application name="asset" title="Asset" entity="asset" >
+      <schemas>
+        <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
+          <properties>
+            <property key="list.selectionmodebydefault" value="true" />
+          </properties>
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                         service="assetService" method="initBatchWorkorder"
                          parameters="schema,datamap" />
               </container>
             </commandgroup>

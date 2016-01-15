@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=8.0.5.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
@@ -65,12 +69,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchData.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarWorkorderBatchAction.cs" />
-    <Compile Include="classes\com\cts\firstsolar\util\FirstSolarWoValidationHelper.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarDatamapConverterUtil.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
+    <Content Include="web_content\firstsolar\scripts\assetService.js" />
     <Content Include="web_content\firstsolar\scripts\locationService.js" />
     <Content Include="web_content\firstsolar\scripts\location_filter.js" />
     <EmbeddedResource Include="metadata\firstsolar\deploy.xml" />
@@ -120,6 +127,18 @@
     <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
       <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
       <Name>cts.commons.web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
+      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
+      <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>

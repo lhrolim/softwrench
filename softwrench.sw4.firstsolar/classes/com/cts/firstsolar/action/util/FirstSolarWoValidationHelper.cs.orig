@@ -28,22 +28,31 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
 
         private const string BaseBatchLocationQuery = "select location,wonum from workorder where status not in('CLOSED','COMPLETED') and location in ({0})";
 
+<<<<<<< HEAD
+        private const string BaseAssetQuery =
+            "select assetnum,wonum,description from workorder where status not in('CLOSED','COMPLETED') and assetnum in ({0})";
+
+        public FirstSolarWoValidationHelper(MaximoHibernateDAO dao) {
+=======
         private const string BaseSingleLocationProjectionQuery = "select wonum,description,status from workorder where ";
 
         //this is needed to return to the client side the fixedwhereclause for the modal
         private const string BaseSingleLocationWhereQuery = "status not in('CLOSED','COMPLETED') and location = '{0}'";
 
         public FirstSolarWoValidationHelper(MaximoHibernateDAO dao, EntityRepository entityRepository) {
+>>>>>>> develop
             _dao = dao;
             _entityRepository = entityRepository;
         }
 
 
-        [NotNull]
-        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForLocation(ICollection<AssociationOption> items, string classification) {
-
+        public IDictionary<string, List<string>> DoValidateIdsThatHaveWorkorders(string baseQuery, string itemid, ICollection<AssociationOption> items, string classification) {
             var sb = new StringBuilder();
+<<<<<<< HEAD
+            sb.AppendFormat(baseQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
+=======
             sb.AppendFormat(BaseBatchLocationQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
+>>>>>>> develop
             if (classification != null) {
                 sb.AppendFormat(" and classstructureid = '{0}'", classification);
             }
@@ -52,18 +61,30 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             var result = new Dictionary<string, List<string>>();
 
             foreach (var row in queryResult) {
-                var location = row["location"];
+                var itemId = row[itemid];
                 var wonum = row["wonum"];
-                if (!result.ContainsKey(location)) {
-                    result.Add(location, new List<string> { wonum });
+                var summary = row["description"];
+                if (!result.ContainsKey(itemId)) {
+                    result.Add(itemId, new List<string> { wonum });
                 } else {
-                    result[location].Add(wonum);
+                    result[itemId].Add(wonum);
                 }
             }
             return result;
-
         }
 
+
+        [NotNull]
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForLocation(ICollection<AssociationOption> items, string classification) {
+            return DoValidateIdsThatHaveWorkorders(BaseLocationQuery, "location", items, classification);
+        }
+
+<<<<<<< HEAD
+        [NotNull]
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForAsset(ICollection<AssociationOption> items, string classification) {
+            return DoValidateIdsThatHaveWorkorders(BaseAssetQuery, "assetnum", items, classification);
+        }
+=======
         public ApplicationListResult GetRelatedLocationWorkorders(string location, string classification) {
             var sb = new StringBuilder();
             sb.AppendFormat(BaseSingleLocationWhereQuery, location);
@@ -81,6 +102,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         }
 
 
+>>>>>>> develop
 
     }
 }

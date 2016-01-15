@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
-using JetBrains.Annotations;
+using Iesi.Collections.Generic;
 using log4net;
-using log4net.Core;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
+using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
@@ -31,17 +31,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarWorkorderBatchController));
 
         private readonly FirstSolarWoValidationHelper _validationHelper;
+        private readonly BatchItemSubmissionService _submissionService;
 
-        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper) {
+        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper, BatchItemSubmissionService submissionService) {
             _validationHelper = validationHelper;
+            _submissionService = submissionService;
             Log.Debug("init log...");
         }
 
         [HttpPost]
-        public IApplicationResponse SubmitBatch(LocationBatchSubmissionData batchData) {
+        public IApplicationResponse SubmitLocationBatch(LocationBatchSubmissionData batchData) {
+
+            var batch = Batch.TransientInstance("workorder", SecurityFacade.CurrentUser());
+            batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(l => FirstSolarDatamapConverterUtil.BuildBatchItem(l, batchData)).ToList());
+            _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
             return null;
         }
-
 
         [HttpGet]
         public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
@@ -69,30 +74,34 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Locations.Count } }
             };
 
+        }
 
+        [HttpPost]
+        public IApplicationResponse InitAssetBatch(AssetBatchData batchData) {
+            Log.Debug("receiving batch data");
+            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForAsset(batchData.Assets, batchData.Classification);
 
+            var i = 0;
+            var resultData = batchData.Assets.Select(asset => GetAssetDataMap(asset, batchData, warningIds, i++)).ToList();
+            //assuring selected come first
+            resultData.Sort(new SelectedComparer());
+
+            var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchAssetSpreadSheet")).Schema;
+
+            return new ApplicationListResult(batchData.Assets.Count, null, resultData, schema, null) {
+                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Assets.Count } }
+            };
         }
 
         private DataMap GetDataMap(IAssociationOption location, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
-            var selected = !warningIds.ContainsKey(location.Value);
-            var fields = new Dictionary<string, object>();
-            fields["_#selected"] = selected;
-            if (!selected) {
-                fields["#wonums"] = string.Join(",", warningIds[location.Value]);
-            }
-            //if not selected, let´s put a warning for the user
-            fields["#warning"] = !selected;
-
-            //this id is needed in order for the buffer to work properly
-            fields["workorderid"] = transientId;
-
-            fields["summary"] = batchData.Summary;
-            fields["siteid"] = batchData.SiteId;
-            fields["details"] = batchData.Details;
-            fields["location_label"] = location.Label;
-            fields["location"] = location.Value;
-            return new DataMap("workorder", fields);
+            return FirstSolarDatamapConverterUtil.DoGetDataMap(location, batchData, warningIds, transientId, new Tuple<string, string>("location", "location_label"));
         }
+
+        private DataMap GetAssetDataMap(IAssociationOption asset, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
+            return FirstSolarDatamapConverterUtil.DoGetDataMap(asset, batchData, warningIds, transientId, new Tuple<string, string>("assetnum", "asset_label"));
+        }
+
+     
 
 
         private class SelectedComparer : IComparer<DataMap> {
@@ -113,49 +122,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             }
         }
 
-        public class BatchData {
 
-            public string Summary {
-                get; set;
-            }
-            public string Details {
-                get; set;
-            }
-            public string SiteId {
-                get; set;
-            }
-
-            public string Classification {
-                get; set;
-            }
-
-
-        }
-
-        public class LocationBatchData : BatchData {
-            public List<AssociationOption> Locations {
-                get; set;
-            }
-        }
-
-        public class LocationBatchSubmissionData {
-
-            public BatchData SharedData {
-                get; set;
-            }
-
-            public IDictionary<string, BatchData> LocationSpecificData {
-                get; set;
-            }
-
-
-        }
-
-        public class AssetBatchData : BatchData {
-            public List<AssociationOption> Assets {
-                get; set;
-            }
-        }
 
     }
 }
