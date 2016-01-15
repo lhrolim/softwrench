@@ -1,23 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Entities.Sliced;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
     public class FirstSolarWoValidationHelper : ISingletonComponent {
