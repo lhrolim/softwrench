@@ -14,7 +14,11 @@ namespace softwrench.sW4.test.Metadata {
 
         [TestMethod]
         public void TestWebMenuParsing() {
-            foreach (var clientName in TestUtil.ClientNames()){
+            foreach (var clientName in TestUtil.ClientNames()) {
+                if (clientName == "pae") {
+                    //maximo 7.1
+                    continue;
+                }
                 Debug.WriteLine(clientName);
                 ApplicationConfiguration.TestclientName = clientName;
                 MetadataProvider.StubReset();
@@ -22,7 +26,7 @@ namespace softwrench.sW4.test.Metadata {
                 var menu = InMemoryUser.TestInstance("test").Menu(ClientPlatform.Web, out fromCache);
                 Assert.IsNotNull(menu);
             }
-            
+
         }
     }
 }
