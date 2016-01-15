@@ -1,5 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="locationspec" idAttribute="locationspecid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="assetattrid" type="varchar" required="true" />
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="inheritedfromitem" type="smallint" required="true" />
+        <attribute name="itemspecvalchanged" type="smallint" required="true" />
+        <attribute name="displaysequence" type="smallint" required="true" />
+        <attribute name="numvalue" type="decimal" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="alnvalue" type="varchar" required="false" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="ls01" type="varchar" required="false" />
+        <attribute name="ls02" type="varchar" required="false" />
+        <attribute name="ls03" type="varchar" required="false" />
+        <attribute name="ls04" type="datetime" required="false" />
+        <attribute name="ls05" type="decimal" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="section" type="varchar" required="false" />
+        <attribute name="locationspecid" type="bigint" required="true" />
+        <attribute name="mandatory" type="smallint" required="true" />
+        <attribute name="tablevalue" type="varchar" required="false" />
+        <attribute name="linkedtoattribute" type="varchar" required="false" />
+        <attribute name="linkedtosection" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="assetattribute">
+          <relationshipAttribute from="assetattrid" to="assetattrid" primary="true"/>
+        </relationship>
+        <relationship to="classspec">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute from="assetattrid" to="assetattrid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locationspec" />
+      </connectorParameters>
+    </entity>
+  </entities>
+  
   <applications>
     <application name="locationspec" title="Location Specification" entity="locationspec" id="00000000-0000-0000-0000-000108056902">
       <schemas>
