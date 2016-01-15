@@ -26,11 +26,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         }
 
 
-        [NotNull]
-        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForLocation(ICollection<AssociationOption> items, string classification) {
-
+        public IDictionary<string, List<string>> DoValidateIdsThatHaveWorkorders(string baseQuery, string itemid, ICollection<AssociationOption> items, string classification) {
             var sb = new StringBuilder();
-            sb.AppendFormat(BaseLocationQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
+            sb.AppendFormat(baseQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
             if (classification != null) {
                 sb.AppendFormat(" and classstructureid = '{0}'", classification);
             }
@@ -39,42 +37,27 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             var result = new Dictionary<string, List<string>>();
 
             foreach (var row in queryResult) {
-                var location = row["location"];
+                var itemId = row[itemid];
                 var wonum = row["wonum"];
                 var summary = row["description"];
-                if (!result.ContainsKey(location)) {
-                    result.Add(location, new List<string> { wonum });
+                if (!result.ContainsKey(itemId)) {
+                    result.Add(itemId, new List<string> { wonum });
                 } else {
-                    result[location].Add(wonum);
+                    result[itemId].Add(wonum);
                 }
             }
             return result;
+        }
 
+
+        [NotNull]
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForLocation(ICollection<AssociationOption> items, string classification) {
+            return DoValidateIdsThatHaveWorkorders(BaseLocationQuery, "location", items, classification);
         }
 
         [NotNull]
-        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForAsset(ICollection<AssociationOption> items, string classification)
-        {
-            var sb = new StringBuilder();
-            sb.AppendFormat(BaseAssetQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
-            if (classification != null) {
-                sb.AppendFormat("and classstructureid = {0}", classification);
-            }
-            var queryResult = _dao.FindByNativeQuery(sb.ToString());
-
-            var result = new Dictionary<string, List<string>>();
-
-            foreach (var row in queryResult) {
-                var asset = row["assetnum"];
-                var wonum = row["wonum"];
-                if (!result.ContainsKey(asset)) {
-                    result.Add(asset, new List<string> { wonum });
-                }
-                else {
-                    result[asset].Add(wonum);
-                }
-            }
-            return result;
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForAsset(ICollection<AssociationOption> items, string classification) {
+            return DoValidateIdsThatHaveWorkorders(BaseAssetQuery, "assetnum", items, classification);
         }
 
     }
