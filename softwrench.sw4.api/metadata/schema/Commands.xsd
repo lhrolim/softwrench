@@ -159,6 +159,15 @@
         <documentation>
           Expression to decide the initial state of the toggle button. 
           A result of "true" for on state, anything else for off state.
+          It could be a java script expression or "$scope:aFunction" to ref a function of 
+          the toolbar parent controller.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="autotoggle" type="boolean">
+      <annotation>
+        <documentation>
+          If the toggle button changes it states automatically. Default true.
         </documentation>
       </annotation>
     </attribute>

@@ -112,11 +112,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             if (xElement.IsNamed(cnst.ToggleCommandElement)) {
                 var initialStateExpression = xElement.AttributeValue(XmlBaseSchemaConstants.ToggleButtonInitialStateExpressionAttribute);
+                var autoToggle = xElement.AttributeValue(XmlBaseSchemaConstants.ToggleButtonAutoToggleAttribute);
                 var onCommandEl = xElement.Elements().First(el => cnst.OnCommandElement.Equals(el.Name.LocalName));
                 var offCommandEl = xElement.Elements().First(el => cnst.OffCommandElement.Equals(el.Name.LocalName));
                 var onCommand = (ToggleChildCommand)GetCommandDisplayable(onCommandEl);
                 var offCommand = (ToggleChildCommand)GetCommandDisplayable(offCommandEl);
-                return new ToggleCommand(id, position, initialStateExpression, onCommand, offCommand);
+                return new ToggleCommand(id, position, initialStateExpression, autoToggle, onCommand, offCommand);
             }
 
             throw new InvalidOperationException("Invalid command option");

@@ -561,6 +561,13 @@
                     });
                     //#endregion
 
+                    $scope.$watch("selectionModel.selectionMode", function(newValue) {
+                        var toggleCommand = crudContextHolderService.getToggleCommand("toggleselectionmode", $scope.panelid);
+                        if (toggleCommand) {
+                            toggleCommand.state = newValue;
+                        }
+                    });
+
                     function initController() {
 
                         var log = $log.getInstance("crudlist#init", ["grid"]);
