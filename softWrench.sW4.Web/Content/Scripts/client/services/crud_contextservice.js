@@ -86,6 +86,9 @@
                 showOnlySelected: false,
                 selectionMode:false
             },
+            commandsModel: {
+                toggleCommands: {}
+            },
             // pagination data before the toggle selected
             originalPaginationData: null,
             gridModel: {
@@ -453,6 +456,21 @@
 
         //#endregion
 
+        //#region commandsServices
+
+        function getCommandsModels(panelid) {
+            return getContext(panelid).commandsModel;
+        }
+
+        function getToggleCommand(commandId, panelid) {
+            return getCommandsModels(panelid).toggleCommands[commandId];
+        }
+
+        function addToggleCommand(command, panelid) {
+            return getCommandsModels(panelid).toggleCommands[command.id] = command;
+        }
+
+        //#endregion
 
         //#region Service Instance
 
@@ -518,7 +536,13 @@
             toggleShowOnlySelected: toggleShowOnlySelected,
         }
 
-        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService, gridServices);
+        var commandsService = {
+            getCommandsModel: getCommandsModels,
+            getToggleCommand: getToggleCommand,
+            addToggleCommand: addToggleCommand
+        }
+
+        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService, gridServices, commandsService);
 
 
         //#endregion
