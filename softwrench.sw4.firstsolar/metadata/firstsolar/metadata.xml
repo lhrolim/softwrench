@@ -38,7 +38,7 @@
 
         <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal">
           <field attribute="summary" label="Summary:" requiredexpression="true"/>
-          <field attribute="details" label="Details:" requiredexpression="true">
+          <field attribute="details" label="Details:">
             <renderer type="textarea"/>
           </field>
           <reference id="siteid"/>
