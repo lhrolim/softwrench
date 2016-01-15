@@ -60,7 +60,7 @@ angular.module('sw_layout')
             }
             var result = [];
             //converting to array before sending to the server
-            for (item in checkPointItem) {
+            for (var item in checkPointItem) {
                 if (!checkPointItem.hasOwnProperty(item)) {
                     continue;
                 }
