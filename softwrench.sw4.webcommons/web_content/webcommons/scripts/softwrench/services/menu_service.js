@@ -1,7 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-
-(function () {
+﻿(function (angular) {
     'use strict';
 
     angular.module('sw_layout').factory('menuService', ['$rootScope', 'redirectService', 'contextService', 'i18NService', 'securityService', 'checkpointService', '$log','userService', menuService]);
@@ -234,7 +231,7 @@
         }
 
     }
-})();
+})(angular);
 
 
 

@@ -102,11 +102,11 @@
       <arg value="/c"></arg>
       <arg value="npm install"></arg>
     </exec>
-    <!-- compile sass -->
+    <!-- grunt toolchain -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value='grunt sass:prod --path="${deploypath}" --verbose'></arg>
+      <arg value='grunt --path="${deploypath}" --customer="${client}"'></arg>
     </exec>
   </target>
 
@@ -176,13 +176,13 @@
         <arg line="/resultsfile:TestResults.trx" />
       </exec>
     </ifnot>
-
-    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
+    
+    <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
+    <!--<exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
-      <arg value="--browsers=PhantomJS"/>
-      <arg value="--single-run"/>
-      <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
-    </exec>
+      <arg value="- -browsers=PhantomJS"/>
+      <arg value="- -single-run"/>
+    </exec>-->
 
   </target>
 

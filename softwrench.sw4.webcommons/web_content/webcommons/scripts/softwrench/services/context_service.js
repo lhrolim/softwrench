@@ -1,7 +1,7 @@
-﻿(function (modules) {
+﻿!(function (modules) {
     "use strict";
 
-    modules.webcommons.factory('contextService', ["$rootScope", function ($rootScope) {
+    modules.webcommons.factory("contextService", ["$rootScope", function ($rootScope) {
 
         return {
             //using sessionstorage instead of rootscope, as the later would be lost upon F5.

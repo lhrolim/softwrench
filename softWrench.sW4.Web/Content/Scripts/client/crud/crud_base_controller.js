@@ -2,7 +2,8 @@
     "use strict";
 
 angular.module("sw_layout").controller("BaseController", BaseController);
-//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
+    //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
+BaseController.$inject = ["$scope", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService"];
 function BaseController($scope, i18NService, fieldService, commandService, formatService, layoutservice,expressionService) {
 
     /* i18N functions */
