@@ -4,7 +4,7 @@
             <br />
             <div class="form-group" ng-repeat="data in aboutData">
                 <label class="control-label" ng-class="getLabelClass()">
-                    {{data.key}}
+                    {{data.key}}:
                 </label>
                 <div ng-class="getFormClass(data.key)">
                     <label class="form-control" ng-if="keyDisabled(data.key)">
@@ -27,7 +27,7 @@
                 </legend>
                 <div class="form-group">
                     <label class="control-label" ng-class="getLabelClass()">
-                        User Agent
+                        User Agent:
                     </label>
                     <div ng-class="getFormClass(data.key)">
                         <label class="form-control">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" ng-class="getLabelClass()">
-                        Detected OS
+                        Detected OS:
                     </label>
                     <div ng-class="getFormClass(data.key)">
                         <label class="form-control">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" ng-class="getLabelClass()">
-                        Detected Browser
+                        Detected Browser:
                     </label>
                     <div ng-class="getFormClass(data.key)">
                         <label class="form-control">

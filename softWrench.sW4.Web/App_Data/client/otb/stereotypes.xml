@@ -8,19 +8,34 @@
     <property key="list.paginationsize" value="30"/>
   </stereotype>
 
+  <stereotype id="list.modal">
+    <!--Reducing the number of options by default-->
+    <property key="list.paginationsize" value="10"/>
+    <property key="list.paginationoptions" value="10,30"/>
+  </stereotype>
 
   <stereotype id="list.selection">
     <property key="list.selectionstyle" value="multiple"/>
     <property key="commandbar.top" value="gridtop.selection"/>
   </stereotype>
 
-  <stereotype id="list.readonly">
+  <stereotype id="list.modal.readonly">
     <property key="list.disablefilter" value="true"/>
     <property key="list.disabledetails" value="true"/>
     <property key="list.sortmode" value="none"/>
     <property key="commandbar.bottom" value="bottom.cancelonly"/>
     <property key="commandbar.top" value="none"/>
   </stereotype>
+
+
+  <stereotype id="list.modal.confirm">
+    <property key="list.disablefilter" value="true"/>
+    <property key="list.disabledetails" value="true"/>
+    <property key="list.sortmode" value="none"/>
+    <property key="commandbar.bottom" value="bottom.confirmation"/>
+    <property key="commandbar.top" value="none"/>
+  </stereotype>
+
 
   <stereotype id="list.selection.spreadsheet">
     <property key="commandbar.top" value="spreadsheet"/>

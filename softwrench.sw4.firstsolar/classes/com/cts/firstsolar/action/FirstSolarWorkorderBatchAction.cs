@@ -14,6 +14,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -41,6 +42,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return null;
         }
 
+
+        [HttpGet]
+        public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
+            var listResult = _validationHelper.GetRelatedLocationWorkorders(location, classification);
+            if (!listResult.ResultObject.Any()) {
+                return new BlankApplicationResponse();
+            }
+            return listResult;
+        }
 
         [HttpPost]
         public IApplicationResponse InitLocationBatch(LocationBatchData batchData) {

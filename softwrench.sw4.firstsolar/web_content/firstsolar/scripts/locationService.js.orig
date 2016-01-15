@@ -1,4 +1,4 @@
-(function (angular) {
+﻿(function (angular) {
     'use strict';
 
 
@@ -114,8 +114,11 @@
         var service = {
             initBatchWorkorder: initBatchWorkorder,
             loadRelatedWorkorders: loadRelatedWorkorders,
-            dispatchWO: dispatchWO,
+<<<<<<< HEAD
+            dispatchWO: dispatchWO
+=======
             submitBatch:submitBatch
+>>>>>>> develop
         };
 
         return service;
