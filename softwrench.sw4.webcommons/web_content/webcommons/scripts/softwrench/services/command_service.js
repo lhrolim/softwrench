@@ -189,8 +189,7 @@ angular.module('sw_layout')
             return commands;
         },
 
-        getInitialToggleState: function (datamap, command) {
-            var expression = command.initialStateExpression;
+        evalToggleExpression: function (datamap, expression) {
             if (expression == undefined || expression === "") {
                 return false;
             }

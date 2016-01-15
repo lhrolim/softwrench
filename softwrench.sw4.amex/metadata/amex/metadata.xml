@@ -19,7 +19,7 @@
         <attribute name="RECDATE" type="datetime"/>
       </attributes>
       <relationships>
-        <relationship to="asset" qualifier="rfaparasset2">
+        <relationship to="asset" qualifier="rfaparasset">
           <relationshipAttribute primary="true" from ="parent" to ="assetnum"/>
           <!--TODO discover what exactly to put here-->
           <relationshipAttribute query="!@itemnum like 'a%'"/>
@@ -113,7 +113,7 @@
           <field attribute="#serialnum" label="SN#" requiredexpression="true" attributeToServer="serialnum"/>
           
           <association label="Main Unit" requiredexpression="true" target="parent" 
-                       labelfield="rfaparasset2_.description" 
+                       labelfield="rfaparasset_.description" 
                        showexpression="@itemnum == @item_.itemnum &amp;&amp; @item_.requiresparent =='1'">
             <renderer type="lookup"/>
           </association>

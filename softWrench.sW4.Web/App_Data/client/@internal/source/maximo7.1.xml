@@ -49,6 +49,43 @@
       </connectorParameters>
     </entity>
 
+    <entity name="lochierarchy" idAttribute="lochierarchyid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="systemid" type="varchar" required="true" />
+        <attribute name="children" type="smallint" required="true" />
+        <attribute name="gisparam1" type="varchar" required="false" />
+        <attribute name="gisparam2" type="varchar" required="false" />
+        <attribute name="gisparam3" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lochierarchyid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="location" qualifier="childlocation">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="location" qualifier="parentlocation">
+          <relationshipAttribute from="parent" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="locoper" qualifier="childlocoper">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="locoper" qualifier="parentlocoper">
+          <relationshipAttribute from="parent" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="lochierarchy" />
+      </connectorParameters>
+    </entity>
+
     <entity name="DOCINFO" idAttribute="docinfoid">
       <attributes>
         <attribute name="document" type="varchar" required="true" />
@@ -888,6 +925,84 @@
       </connectorParameters>
     </entity>
 
+    <entity name="MULTIASSETLOCCI" idAttribute="multiid">
+      <attributes>
+        <attribute name="multiid" type="bigint" required="true" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="cinum" type="varchar" required="false" />
+        <attribute name="sequence" type="int" required="false" />
+        <attribute name="progress" type="smallint" required="true" />
+        <attribute name="progress2" type="smallint" query="!@progress" />
+        <attribute name="isprimary" type="smallint" required="true" />
+        <attribute name="workorgid" type="varchar" required="false" />
+        <attribute name="worksiteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="comments" type="varchar" required="false" />
+        <attribute name="route" type="varchar" required="false" />
+        <attribute name="routestop" type="int" required="false" />
+        <attribute name="movetoparent" type="varchar" required="false" />
+        <attribute name="movetolocation" type="varchar" required="false" />
+        <attribute name="movetobin" type="varchar" required="false" />
+        <attribute name="performmoveto" type="smallint" required="true" />
+        <attribute name="targetdesc" type="varchar" required="false" />
+        <attribute name="recordkey" type="varchar" required="false" />
+        <attribute name="recordclass" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="assetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="movetosite" type="varchar" required="false" />
+        <attribute name="newassetnum" type="varchar" required="false" />
+        <attribute name="replacementsite" type="varchar" required="false" />
+        <attribute name="replaceassetnum" type="varchar" required="false" />
+        <attribute name="newreplaceassetnum" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="feature" type="varchar" required="false" />
+        <attribute name="featurelabel" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+
+      <relationships>
+        <relationship to="assetmeter">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="MULTIASSETLOCCI" />
+      </connectorParameters>
+    </entity>
+
     <entity name="location" idAttribute="locationsid">
       <attributes>
         <attribute name="location" type="varchar" required="true" />
@@ -946,6 +1061,34 @@
         <relationship to="address" qualifier="serv">
           <relationshipAttribute from="serviceaddresscode" to="addresscode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="lochierarchy" qualifier="parentlocation" collection="true">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="lochierarchy" qualifier="childlocation" collection="true">
+          <relationshipAttribute from="location" to="parent" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="asset" collection="true">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="workorder" collection="true">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="locationmeter" collection="true">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="locationspec" collection="true">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="assettrans" collection="true" ignoreprimary="true">
+          <!--Required to have a relationshipAttribute on relationship declaration, real query build in prefilterfunction-->
+          <relationshipAttribute query=""/>
         </relationship>
       </relationships>
       <connectorParameters>

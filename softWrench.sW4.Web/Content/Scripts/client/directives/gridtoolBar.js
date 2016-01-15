@@ -1,8 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout",
-        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "crudContextHolderService",
+        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, crudContextHolderService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -103,16 +103,26 @@
         return !commandService.isCommandHidden($scope.datamap, $scope.schema, command);
     }
 
-    $scope.calcToggleInitialState = function (command) {
-        if ("ToggleCommand" !== command.type || !command.initialStateExpression) {
+    function calcToggleExpression(expression) {
+        if (expression && expression.startsWith("$scope:")) {
+            return true === $scope.invokeOuterScopeFn(expression);
+        } else {
+            return true === commandService.evalToggleExpression($scope.datamap, expression);
+        }
+    }
+
+    function calcToggleInitialState(command) {
+        if (command.initialStateExpression) {
+            command.state = calcToggleExpression(command.initialStateExpression);
+        }
+    }
+
+    $scope.initIfToggleCommand = function(command) {
+        if ("ToggleCommand" !== command.type) {
             return;
         }
-        var initialStateExpression = command.initialStateExpression;
-        if (initialStateExpression && initialStateExpression.startsWith("$scope:")) {
-            command.state = true === $scope.invokeOuterScopeFn(initialStateExpression);
-        } else {
-            command.state = true === commandService.getInitialToggleState($scope.datamap, command);
-        }
+        calcToggleInitialState(command);
+        crudContextHolderService.addToggleCommand(command, $scope.panelid);
     }
 
     $scope.isCommandEnabled = function (command) {

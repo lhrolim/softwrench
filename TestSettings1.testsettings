@@ -2,9 +2,20 @@
 <TestSettings name="SW" id="f0dbb167-77f5-4991-a445-2387d694f5ca" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="softwrench.sw4.gric\" />
     <DeploymentItem filename="softwrench.sW4.test\App_data\" />
-    <DeploymentItem filename="softWrench.sW4.Web\App_Data\" />
+    <DeploymentItem filename="softwrench.sw4.gric\" />
+
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\otb" outputDirectory="Client\otb\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\@internal" outputDirectory="Client\@internal\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\firstsolar" outputDirectory="Client\firstsolar\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\pae" outputDirectory="Client\pae\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\deltadental" outputDirectory="Client\deltadental\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\manchester" outputDirectory="Client\manchester\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\kongsberg" outputDirectory="Client\kongsberg\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\hapag" outputDirectory="Client\hapag\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\amex" outputDirectory="Client\amex" />
+    
+    
     <DeploymentItem filename="softwrench.sw4.api\metadata\" />
   </Deployment>
   <NamingScheme baseName="testresults" appendTimeStamp="false" useDefault="false" />

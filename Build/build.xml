@@ -109,6 +109,23 @@
       <arg value='grunt --path="${deploypath}"'></arg>
     </exec>
   </target>
+  
+  <!-- TODO: extract similar tasks. Copying just for the sake of trial-and-error testing -->
+  <target name="webtest" description="Runs karma tests" depends="generatelinks">
+    <!-- install npm dependencies -->
+    <echo message="installing npm dependencies"></echo>
+    <exec program="cmd" workingdir="." failonerror="true">
+      <arg value="/c"></arg>
+      <arg value="npm install"></arg>
+    </exec>
+    <!-- grunt toolchain -->
+    <echo message="running grunt"></echo>
+    <exec program="cmd" workingdir="." failonerror="true">
+      <arg value="/c"></arg>
+      <arg value='grunt'></arg>
+    </exec>
+  </target>
+  
 
   <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
     <echo message="deleting 'softWrench.sW4.Web/node_modules' directory"></echo>
@@ -183,7 +200,8 @@
       <arg value="- -browsers=PhantomJS"/>
       <arg value="- -single-run"/>
     </exec>-->
-
+    <call target="webtest"/>  
+  
   </target>
 
   <target name="mkdir">

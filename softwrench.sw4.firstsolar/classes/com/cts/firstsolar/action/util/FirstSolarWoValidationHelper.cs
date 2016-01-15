@@ -45,7 +45,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             foreach (var row in queryResult) {
                 var itemId = row[itemid];
                 var wonum = row["wonum"];
-                var summary = row["description"];
                 if (!result.ContainsKey(itemId)) {
                     result.Add(itemId, new List<string> { wonum });
                 } else {
