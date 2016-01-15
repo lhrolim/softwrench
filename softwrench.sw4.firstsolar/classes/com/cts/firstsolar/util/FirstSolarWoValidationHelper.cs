@@ -23,7 +23,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
     public class FirstSolarWoValidationHelper : ISingletonComponent {
 
         private readonly MaximoHibernateDAO _dao;
-            ;
 
         private const string BaseBatchLocationQuery = "select location,wonum from workorder where status not in('CLOSED','COMPLETED') and location in ({0})";
 
