@@ -336,26 +336,26 @@
                         schemaToSave = parameters.schema;
                     }
 
-                    if ($rootScope.showingModal && $scope.$parent.$parent.$name === "crudbodymodal") {
-                        //workaround to invoke the original method that was passed to the modal, instead of the default save.
-                        //TODO: use angular's & support
-                        if ($scope.$parent.$parent.originalsavefn) {
-                            var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap.fields, $scope.crudform.$error);
-                            if (validationErrors.length > 0) {
-                                //interrupting here, can´t be done inside service
-                                return;
-                            }
-                            var result = $scope.$parent.$parent.originalsavefn($scope.datamap.fields, schemaToSave);
-                            if (result && result.then) {
-                                result.then(function () {
-                                    modalService.hide();
-                                });
-                            }
 
+                    var modalSavefn = modalService.getSaveFn();
+                    //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
+                    if (modalSavefn) {
+                        var errorForm = $scope.crudform ? $scope.crudform.$error : {};
+                        var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap.fields, errorForm);
+                        if (validationErrors.length > 0) {
+                            //interrupting here, can´t be done inside service
                             return;
                         }
+                        var result = modalSavefn($scope.datamap.fields, schemaToSave);
+                        if (result && result.then) {
+                            result.then(function () {
+                                modalService.hide();
+                            });
+                        }
 
+                        return;
                     }
+
                     var selecteditem = parameters.selecteditem;
                     //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
                     //Otherwise, fetching from the $scope.datamap

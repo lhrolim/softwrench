@@ -1,22 +1,11 @@
-(function (angular) {
+﻿(function (angular) {
     'use strict';
 
 
     function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService,contextService, modalService, $rootScope) {
 
-        function submitBatch(datamap) {
-            var locations = datamap.map(function (datamap) {
-                return datamap.fields["location"];
-            });
-            var LocationBatchData = {
-                Summary: datamap[0].fields["summary"],
-                Details: datamap[0].fields["details"],
-                SiteId: datamap[0].fields["siteid"],
-                Classification: datamap[0].fields["classification"],
-                Locations: locations
-            }
-
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(LocationBatchData));
+        function submitBatch() {
+            
         }
 
         function proceedToBatchSelection(httpResponse) {
@@ -125,8 +114,11 @@
         var service = {
             initBatchWorkorder: initBatchWorkorder,
             loadRelatedWorkorders: loadRelatedWorkorders,
+<<<<<<< HEAD
             dispatchWO: dispatchWO
+=======
             submitBatch:submitBatch
+>>>>>>> develop
         };
 
         return service;
