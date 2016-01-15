@@ -111,7 +111,7 @@
   </target>
   
   <!-- TODO: extract similar tasks. Copying just for the sake of trial-and-error testing -->
-  <target name="webtest" description="Runs karma tests">
+  <target name="webtest" description="Runs karma tests" depends="generatelinks">
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
