@@ -9,6 +9,8 @@ using cts.commons.web.Attributes;
 using JetBrains.Annotations;
 using log4net;
 using log4net.Core;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
@@ -20,6 +22,7 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 
@@ -45,6 +48,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [HttpPost]
         public IApplicationResponse SubmitLocationBatch(LocationBatchData batchData) {
 
+            var datamapList = new List<DataMap>();
+            batchData.Locations.ForEach(l => LocationBatchDataToWorkorderDataMep(l, batchData, datamapList));
+            var jsonArray = JsonConvert.SerializeObject(datamapList);
+
+            var userId = SecurityFacade.CurrentUser().DBId;
+            var batch = new MultiItemBatch {
+                Application = "workorder",
+                Schema = "batchLocationSpreadSheet",
+                UserId = userId,
+                Status = BatchStatus.INPROG,
+                CreationDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                DataMapJsonAsString = jsonArray
+            };
+            _submissionService.Submit(batch);
             return null;
         }
 
@@ -123,7 +141,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return new DataMap("workorder", fields);
         }
 
-      
+        private void LocationBatchDataToWorkorderDataMep(AssociationOption location, LocationBatchData batchData,
+            List<DataMap> datamapList) {
+            var fields = new Dictionary<string, object>();
+            fields["summary"] = batchData.Summary;
+            fields["siteid"] = batchData.SiteId;
+            fields["details"] = batchData.Details;
+            fields["location"] = location.Value;
+            var datamap = new DataMap("workorder", fields);
+            datamapList.Add(datamap);
+        }
 
         private class SelectedComparer : IComparer<DataMap> {
             public int Compare(DataMap x, DataMap y) {

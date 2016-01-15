@@ -6,7 +6,9 @@
 
         function submitBatch(datamap) {
             var locations = datamap.map(function (datamap) {
-                return datamap.fields["location"];
+                var value = datamap.fields["location"];
+                var label = datamap.fields["location_label"];
+                return { label: label, value: value };
             });
             var LocationBatchData = {
                 Summary: datamap[0].fields["summary"],
