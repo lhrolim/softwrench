@@ -44,7 +44,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         [HttpPost]
         public IApplicationResponse SubmitLocationBatch(LocationBatchData batchData) {
-            
+
             return null;
         }
 
@@ -75,13 +75,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Locations.Count } }
             };
 
-
-
         }
 
         [HttpPost]
-        public IApplicationResponse InitAssetBatch(AssetBatchData batchData)
-        {
+        public IApplicationResponse InitAssetBatch(AssetBatchData batchData) {
             Log.Debug("receiving batch data");
             var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForAsset(batchData.Assets, batchData.Classification);
 
@@ -92,18 +89,25 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
             var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchAssetSpreadSheet")).Schema;
 
-            return new ApplicationListResult(batchData.Assets.Count, null, resultData, schema, null)
-            {
+            return new ApplicationListResult(batchData.Assets.Count, null, resultData, schema, null) {
                 ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Assets.Count } }
             };
         }
 
         private DataMap GetDataMap(IAssociationOption location, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
-            var selected = !warningIds.ContainsKey(location.Value);
+            return DoGetDataMap(location, batchData, warningIds, transientId, new Tuple<string, string>("location", "location_label"));
+        }
+
+        private DataMap GetAssetDataMap(IAssociationOption asset, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
+            return DoGetDataMap(asset, batchData, warningIds, transientId, new Tuple<string, string>("assetnum", "asset_label"));
+        }
+
+        private DataMap DoGetDataMap(IAssociationOption item, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId, Tuple<string, string> fieldNames) {
+            var selected = !warningIds.ContainsKey(item.Value);
             var fields = new Dictionary<string, object>();
             fields["_#selected"] = selected;
             if (!selected) {
-                fields["#wonums"] = string.Join(",", warningIds[location.Value]);
+                fields["#wonums"] = string.Join(",", warningIds[item.Value]);
             }
             //if not selected, let´s put a warning for the user
             fields["#warning"] = !selected;
@@ -114,33 +118,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             fields["summary"] = batchData.Summary;
             fields["siteid"] = batchData.SiteId;
             fields["details"] = batchData.Details;
-            fields["location_label"] = location.Label;
-            fields["location"] = location.Value;
+            fields[fieldNames.Item1] = item.Value;
+            fields[fieldNames.Item2] = item.Label;
             return new DataMap("workorder", fields);
         }
 
-        private DataMap GetAssetDataMap(IAssociationOption asset, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId)
-        {
-            var selected = !warningIds.ContainsKey(asset.Value);
-            var fields = new Dictionary<string, object>();
-            fields["_#selected"] = selected;
-            if (!selected)
-            {
-                fields["#wonums"] = string.Join(",", warningIds[asset.Value]);
-            }
-            //if not selected, let´s put a warning for the user
-            fields["#warning"] = !selected;
-
-            //this id is needed in order for the buffer to work properly
-            fields["workorderid"] = transientId;
-
-            fields["summary"] = batchData.Summary;
-            fields["siteid"] = batchData.SiteId;
-            fields["details"] = batchData.Details;
-            fields["asset_label"] = asset.Label;
-            fields["assetnum"] = asset.Value;
-            return new DataMap("workorder", fields);
-        }
+      
 
         private class SelectedComparer : IComparer<DataMap> {
             public int Compare(DataMap x, DataMap y) {
@@ -191,16 +174,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             }
         }
 
-        public class AssetBatchSubmissionData
-        {
+        public class AssetBatchSubmissionData {
 
-            public BatchData SharedData
-            {
+            public BatchData SharedData {
                 get; set;
             }
 
-            public IDictionary<string, BatchData> LocationSpecificData
-            {
+            public IDictionary<string, BatchData> LocationSpecificData {
                 get; set;
             }
         }
