@@ -183,7 +183,6 @@
       <arg value="- -browsers=PhantomJS"/>
       <arg value="- -single-run"/>
     </exec>-->
-    <call target="webcompile" />
 
   </target>
 
