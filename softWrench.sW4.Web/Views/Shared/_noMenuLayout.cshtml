@@ -1,4 +1,6 @@
-﻿@using softWrench.sW4.Web.Util
+﻿@using softWrench.sW4.Util
+@using softWrench.sW4.Web.Util
+@using softWrench.sW4.Web.Util.StaticFileLoad
 <!DOCTYPE html>
 <html ng-app="sw_layout">
 <head>
@@ -9,27 +11,19 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    @RowStampScriptHelper.RenderCss("~/Content/bootstrap/css/twitter-bootstrap")
-    @RowStampScriptHelper.RenderCss("~/Content/themes/base/font-awesome")
-    @RowStampScriptHelper.RenderCss("~/Content/themes/base/fonts")
-    @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")
-    @RowStampScriptHelper.RenderCss("~/Content/styles/shared")
-
-    <!--[if IE 9]>
-    @RowStampScriptHelper.RenderCss("~/Content/themes/base/ie9")
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- styles -->
+    @foreach (var tag in StaticFileTagRenderer.RenderStyles()) {
+        @tag;
+    }
     @*<base href="@Request.ApplicationPath" />*@
 </head>
 <body>
-    @model softWrench.sW4.Web.Models.IBaseLayoutModel
-    @RowStampScriptHelper.Render("~/Content/Scripts/modernizr")
-    @RowStampScriptHelper.Render("~/Content/Scripts/jquery/jquery")
-    @RowStampScriptHelper.Render("~/Content/Scripts/twitter-bootstrap")
-    @RowStampScriptHelper.Render("~/Content/Scripts/angular/angular")
-    @RowStampScriptHelper.Render("~/Content/Scripts/client/application")
-    @RowStampScriptHelper.Render("~/Content/Scripts/client/application/shared")
-    @RowStampScriptHelper.Render("~/Content/Scripts/client/client-js")
-    @RowStampScriptHelper.Render("~/Content/Scripts/thirdparty")
+    @*@model softWrench.sW4.Web.Models.IBaseLayoutModel*@
+    <!-- scripts-->
+    @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
+        @tag;
+    }
     
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />

@@ -2,8 +2,6 @@
 (function (angular) {
     'use strict';
 
-    angular.module('sw_prelogin', []);
-
     angular.module('sw_prelogin').controller('SignInController', ['$scope', "$http", SignInController]);
 
     function SignInController($scope, $http) {

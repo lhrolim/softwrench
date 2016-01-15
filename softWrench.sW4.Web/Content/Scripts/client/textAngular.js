@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.config(['$provide', function ($provide) {
+angular.module('sw_layout')
+.config(['$provide', function ($provide) {
     // this demonstrates how to register a new tool and add it to the default toolbar
     $provide.decorator('taOptions', ['$delegate', function (taOptions) {
         // $delegate is the taOptions we are decorating
@@ -24,3 +26,5 @@ app.config(['$provide', function ($provide) {
         return taOptions; // whatever you return will be the taOptions
     }]);
 }]);
+
+})(angular);

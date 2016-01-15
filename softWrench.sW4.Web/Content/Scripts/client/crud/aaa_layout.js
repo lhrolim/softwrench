@@ -1,22 +1,24 @@
 ﻿(function (angular) {
     "use strict";
 
-    var app = window.app = angular.module('sw_layout',
-        ['pasvaz.bindonce',
-         'angularTreeview',
-         'ngSanitize',
-         'textAngular',
-         'angularFileUpload',
-         'angular-clipboard',
-         "xeditable",
-         'sw_lookup',
-         'sw_typeahead',
-         "sw_scan",
-         'webcommons_services',
-         'maximo_applications',
-         'selectize',
-         'ngAnimate',
-         'omr.angularFileDnD']);
+var app = window.app = angular.module('sw_layout',
+    ['pasvaz.bindonce',
+     'angularTreeview',
+     'ngSanitize',
+     'textAngular',
+     'angularFileUpload',
+     'angular-clipboard',
+     "xeditable",
+     'sw_lookup',
+     'sw_typeahead',
+     "sw_scan",
+     'webcommons_services',
+     'maximo_applications',
+     'selectize',
+     'ngAnimate',
+     'omr.angularFileDnD']);
+
+angular.module('sw_prelogin', []);
 
     //angular 1.3 migration reference
     //app.config(['$controllerProvider', function ($controllerProvider) {

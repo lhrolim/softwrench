@@ -1,9 +1,12 @@
-﻿(function (angular) {
+(function (angular) {
     'use strict';
 
 
     function firstSolarLocationService(redirectService, crudContextHolderService, alertService, restService,contextService, modalService, $rootScope) {
 
+        function submitBatch() {
+            
+        }
 
         function proceedToBatchSelection(httpResponse) {
             var resultObject = httpResponse.data;
@@ -112,6 +115,7 @@
             initBatchWorkorder: initBatchWorkorder,
             loadRelatedWorkorders: loadRelatedWorkorders,
             dispatchWO: dispatchWO
+            submitBatch:submitBatch
         };
 
         return service;

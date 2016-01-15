@@ -100,10 +100,6 @@
                         return "multiple" === $scope.schema.properties["list.selectionstyle"];
                     }
 
-                    this.toggleSelectedIcon = function () {
-                        return $scope.selectionModel.showOnlySelected ? "fa-toggle-on" : "fa-toggle-off";
-                    }
-
                     this.save = function () {
                         var saveFn = modalService.getSaveFn();
                         if (saveFn) {
@@ -122,6 +118,11 @@
                         modalService.hide();
                     }
 
+                    // Initial state of selection mode toggle button
+                    // depends on "list.selectionmodebydefault" schema property
+                    this.selectionModeToggleInitState = function() {
+                        return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
+                    }
 
                     $scope.gridRefreshed = function (data, panelId) {
                         if (!!$scope.panelid && $scope.panelid !== panelId) {
@@ -445,7 +446,7 @@
 
                     //#region eventlisteners
 
-
+                 
 
                     $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                         if ($scope.datamap && $scope.datamap.length <= 0) {

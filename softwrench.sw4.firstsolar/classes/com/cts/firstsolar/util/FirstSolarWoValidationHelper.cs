@@ -45,7 +45,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             var sb = new StringBuilder();
             sb.AppendFormat(BaseBatchLocationQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
             if (classification != null) {
-                sb.AppendFormat("and classstructureid = {0}", classification);
+                sb.AppendFormat(" and classstructureid = '{0}'", classification);
             }
             var queryResult = _dao.FindByNativeQuery(sb.ToString());
 

@@ -71,6 +71,7 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
+              <command id="save" service="locationService" method="submitBatch" parameters=""/>
             </commandgroup>
           </commandbars>
 
@@ -90,9 +91,6 @@
           <field attribute="siteid" label="Site"/>
         </schema>
         <schema id="list"  redeclaring="false" stereotype="list.selection">
-          <properties>
-            <property key="list.selectionmodebydefault" value="true" />
-          </properties>
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">

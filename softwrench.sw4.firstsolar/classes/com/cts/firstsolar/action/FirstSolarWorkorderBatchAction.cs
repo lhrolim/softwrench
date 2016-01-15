@@ -37,6 +37,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             Log.Debug("init log...");
         }
 
+        [HttpPost]
+        public IApplicationResponse SubmitBatch(LocationBatchSubmissionData batchData) {
+            return null;
+        }
+
 
         [HttpGet]
         public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
@@ -131,6 +136,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             public List<AssociationOption> Locations {
                 get; set;
             }
+        }
+
+        public class LocationBatchSubmissionData {
+
+            public BatchData SharedData {
+                get; set;
+            }
+
+            public IDictionary<string, BatchData> LocationSpecificData {
+                get; set;
+            }
+
+
         }
 
         public class AssetBatchData : BatchData {
