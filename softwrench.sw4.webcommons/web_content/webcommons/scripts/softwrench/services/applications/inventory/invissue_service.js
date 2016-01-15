@@ -1,5 +1,5 @@
 ﻿
-(function () {
+(function (angular) {
     'use strict';
 
     angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", invissueService]);
@@ -317,5 +317,5 @@
             inventoryServiceCommons.updateInventoryCosttype({ fields: invParams }, 'storeloc');
         }
     }
-})();
 
+})(angular);

@@ -122,7 +122,7 @@ angular.module('sw_layout')
 
 
 
-    invIssue_maximo71_afterChangeItem = function (parameters) {
+    var invIssue_maximo71_afterChangeItem = function (parameters) {
         if (nullOrEmpty(parameters['fields']['itemnum']) || nullOrEmpty(parameters['fields']['storeloc'])) {
             return;
         }
