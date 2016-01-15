@@ -647,7 +647,7 @@ angular.module('sw_layout')
                         requestData: httpParameters
                     }
 
-                    jsonString = angular.toJson(jsonWrapper);
+                    var jsonString = angular.toJson(jsonWrapper);
                     var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"]);
 
 
