@@ -35,10 +35,6 @@
 .filter-label {
     display: inline-block;
 
-    &:hover {
-        background: $hover_background;
-    }
-
     .filter-label-wrapper {
         .filter-text {
             font-weight: bold;
@@ -115,6 +111,7 @@
 
                             li {
                                 padding-bottom: 10px;
+                                font-weight: normal;
 
                                 .removable {
                                     cursor: pointer;
@@ -301,16 +298,25 @@
 }
 
 #listgrid {
+    th {
+        &.select-all-header {
+            text-align: center;
+            padding-left: 15px;
+            padding-right: 3px;
+        }
+    }
     td {
-
         .input-group, .input-group .glyphicon {
             position: initial;
         }
 
         &.select-multiple {
             text-align: center;
-            padding-left: 1px;
+            padding-left: 15px;
             padding-right: 3px;
+        }
+        &.edit-detail {
+            padding-right: 15px;
         }
     }
 }

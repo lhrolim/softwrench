@@ -404,3 +404,16 @@ input[type="date"], input[type="time"] {
     max-width: 768px;
     margin: 0 auto;
 }
+
+.twitter-typeahead {
+    .form-control {
+        float: none;
+        border-bottom-left-radius: 4px !important;
+        border-top-left-radius: 4px !important;
+    }
+}
+
+/*TODO: remove whem moved to toolbar*/
+[data-class="commandbar"] {
+    padding: 20px 0;
+}
