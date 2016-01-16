@@ -7,6 +7,7 @@ using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.problem.classes;
+using softWrench.sW4.Data.Persistence.WS.API;
 
 namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
 
@@ -70,6 +71,8 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
         ///    
         /// </summary>
         public Iesi.Collections.Generic.ISet<string> SuccessItems = new HashedSet<string>();
+
+        public Iesi.Collections.Generic.ISet<TargetResult> TargetResults = new HashedSet<TargetResult>();
 
         /// <summary>
         /// 

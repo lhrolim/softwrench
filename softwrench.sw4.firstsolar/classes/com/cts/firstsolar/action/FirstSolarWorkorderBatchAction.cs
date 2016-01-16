@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using Iesi.Collections.Generic;
@@ -15,6 +16,9 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -43,8 +47,41 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         public IApplicationResponse SubmitLocationBatch(LocationBatchSubmissionData batchData) {
             var batch = Batch.TransientInstance("workorder", SecurityFacade.CurrentUser());
             batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(l => FirstSolarDatamapConverterUtil.BuildBatchItem(l, batchData)).ToList());
-            _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
-            return null;
+            var resultBatch = _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
+            var woDataSet = DataSetProvider.GetInstance().LookupDataSet("workorder", "list");
+            var dto = BuildDTO(resultBatch);
+            var applicationListResult = woDataSet.GetList(
+                MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list")),
+                dto);
+            if (resultBatch.TargetResults.Count > 1) {
+                applicationListResult.SuccessMessage = resultBatch.TargetResults.Count +
+                                                       " Workorders created successfully";
+            } else {
+                applicationListResult.SuccessMessage = "1 Workorder created successfully";
+            }
+
+
+            return applicationListResult;
+        }
+
+        private PaginatedSearchRequestDto BuildDTO(Batch resultBatch) {
+            var dto = new PaginatedSearchRequestDto();
+
+            var resultsBySiteId = new Dictionary<string, IList<string>>();
+            foreach (var result in resultBatch.TargetResults) {
+                if (!resultsBySiteId.ContainsKey(result.SiteId)) {
+                    resultsBySiteId[result.SiteId] = new List<string>();
+                }
+                resultsBySiteId[result.SiteId].Add(result.UserId);
+            }
+            var sb = new StringBuilder();
+            foreach (var siteIdWoNums in resultsBySiteId) {
+                sb.AppendFormat("(workorder.siteid = '{0}' and wonum in ({1}))", siteIdWoNums.Key,
+                    BaseQueryUtil.GenerateInString(siteIdWoNums.Value));
+                sb.Append(" or ");
+            }
+            dto.WhereClause = sb.ToString(0, sb.Length - 4);
+            return dto;
         }
 
         [HttpGet]

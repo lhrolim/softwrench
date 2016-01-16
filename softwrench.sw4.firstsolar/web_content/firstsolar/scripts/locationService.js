@@ -37,13 +37,17 @@
                 }
 
             });
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(submissionData));
+            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(submissionData)).then(function(httpResponse) {
+                var appResponse = httpResponse.data;
+                return $rootScope.$broadcast("sw_redirectapplicationsuccess", appResponse, "input", "workorder");
+            });
+
         }
 
         function proceedToBatchSelection(httpResponse) {
             var confirmMessage = "All the selected locations already have corresponding workorders. Do you want to proceed anyway?";
             return batchworkorderService.proceedToBatchSelection(httpResponse, confirmMessage);
-        }
+            }
 
         function initBatchWorkorder(schema, datamap) {
             var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
@@ -54,9 +58,8 @@
 
             var params = {
                 popupmode: "modal",
-                savefn: batchworkorderService.woBatchSharedSave("locations", "location", "description", selectionBuffer, "InitLocationBatch", proceedToBatchSelection)
             };
-            
+
             redirectService.goToApplication("workorder", "batchshared", params);
         };
 

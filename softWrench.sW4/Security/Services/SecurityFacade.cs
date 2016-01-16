@@ -67,11 +67,12 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
-            if (dbUser.UserName.ToLower() == "swadmin") {
-                return UserFound(dbUser, userTimezoneOffset);
-            }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             if (maximoUser == null) {
+                if (dbUser.UserName.ToLower() == "swadmin") {
+                    return UserFound(dbUser, userTimezoneOffset);
+                }
+
                 Log.WarnFormat("user {0} not found on maximo with maximopersonid {1}, login unauthorized",dbUser.UserName,dbUser.MaximoPersonId);
                 return null;
             }
