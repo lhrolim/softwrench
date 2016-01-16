@@ -272,14 +272,14 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 					};
 
 					$('.richtext').on('click', function () {
-					    console.log('click');
+					    //console.log('click');
 					    $timeout(function () {
 					        $(window).trigger('resize');
 					    }, 0, false);
 					});
 
 					$('.richtext').on('blur', function () {
-					    console.log('blur');
+					    //console.log('blur');
 					    $timeout(function () {
 					        $(window).trigger('resize');
 					    }, 250, false);
