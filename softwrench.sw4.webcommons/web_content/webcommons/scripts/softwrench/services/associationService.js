@@ -65,7 +65,7 @@
             // we only have the "value" on the datamap 
             var key = associationFieldMetadata.associationKey;
 
-            if (associationFieldMetadata.schema.isLazyLoaded) {
+            if (associationFieldMetadata.schema && associationFieldMetadata.schema.isLazyLoaded) {
                 return crudContextHolderService.fetchLazyAssociationOption(key, selectedValue);
             }
 

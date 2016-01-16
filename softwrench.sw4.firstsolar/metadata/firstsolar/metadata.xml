@@ -42,14 +42,19 @@
             <renderer type="textarea"/>
           </field>
           <reference id="siteid"/>
-          <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
+          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
+        
+          <properties>
+            <property key="addassociationlabels" value="true"/>
+          </properties>
         </schema>
 
         <schema id="batchLocationSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
           <field attribute="location" hidden="true"/>
           <field attribute="workorderid" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
           <field attribute="#warning" tooltip="There already one or more workorders associated to this location click here to view them">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
           </field>
@@ -61,10 +66,14 @@
             <renderer type="textarea" params="updatable=true"/>
           </field>
           <reference id="siteid"/>
-          <reference id="classification"/>
+          <field attribute="classification" label="Classification">
+            <renderer type="default" params="updatable=true"  />
+          </field>
 
           <properties>
-            <property key="list.click.service" value="locationService.loadRelatedWorkorders"/>
+            <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
+            <property key="list.click.schema" value="batchLocationInlineEdit"/>
+            <property key="list.click.popupmode" value="modal"/>
           </properties>
 
           <commandbars>
@@ -76,9 +85,35 @@
           </commandbars>
 
         </schema>
+
+        <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="location_label" label="Location" readonly="true"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <reference id="siteid"/>
+          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
         
+          <properties>
+            <property key="addassociationlabels" value="true"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="detailform_modal" platform="web">
+              <command id="save" icon="fa-check" service="batchWorkorderService" method="woInlineEditSave" parameters="datamap,schema" label="Save" primary="true"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
         <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
           <field attribute="workorderid" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
           <field attribute="#warning" tooltip="There already one or more workorders associated to this asset click here to view them">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
           </field>
@@ -91,10 +126,14 @@
             <renderer type="textarea" params="updatable=true"/>
           </field>
           <reference id="siteid"/>
-          <reference id="classification"/>
+          <field attribute="classification" label="Classification">
+            <renderer type="default" params="updatable=true"  />
+          </field>
 
           <properties>
-            <property key="list.click.service" value="assetService.loadRelatedWorkorders"/>
+            <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
+            <property key="list.click.schema" value="batchAssetInlineEdit"/>
+            <property key="list.click.popupmode" value="modal"/>
           </properties>
 
           <commandbars>
@@ -104,7 +143,31 @@
               <command id="save" service="assetService" method="submitBatch" parameters="datamap"/>
             </commandgroup>
           </commandbars>
+        </schema>
 
+        <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="asset_label" label="Asset" readonly="true"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <reference id="siteid"/>
+          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+
+          <properties>
+            <property key="addassociationlabels" value="true"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="detailform_modal" platform="web">
+              <command id="save" icon="fa-check" service="batchWorkorderService" method="woInlineEditSave" parameters="datamap,schema" label="Save" primary="true"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
       </schemas>

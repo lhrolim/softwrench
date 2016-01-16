@@ -4,8 +4,8 @@
 angular.module("sw_layout").controller("BaseList", BaseList);
 
 //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-BaseList.$inject = ["$scope", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService"];
-function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService) {
+BaseList.$inject = ["$scope", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "redirectService"];
+function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, redirectService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
@@ -140,16 +140,17 @@ function BaseList($scope, formatService, expressionService, searchService, field
         var schemaid = $scope.schema.properties['list.click.schema'];
         var fullServiceName = $scope.schema.properties['list.click.service'];
         var editDisabled = $scope.schema.properties['list.disabledetails'];
+        var commandResult = null;
 
         var selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
+        //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
         if (selectionModel.selectionMode && !forceEdition) {
-            var commandResult = null;
+            commandResult = null;
             if (fullServiceName != null) {
                 commandResult =commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
             };
             if (commandResult == undefined || commandResult !== false) {
-                //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
                 gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
             }
             return;
@@ -169,8 +170,10 @@ function BaseList($scope, formatService, expressionService, searchService, field
         }
 
         if (fullServiceName != null) {
-            commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
-            return;
+            commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
+            if (commandResult === false) {
+                return;
+            }
         };
 
         var id = rowdm.fields[$scope.schema.idFieldName];
@@ -185,6 +188,12 @@ function BaseList($scope, formatService, expressionService, searchService, field
         }
         if (schemaid == null) {
             schemaid = detailSchema();
+        }
+
+        // TODO: change both cases to redirectService.gotoApplicaiton 
+        if ("modal" === popupmode) {
+            redirectService.openAsModal(applicationname, schemaid, null, rowdm.fields);
+            return;
         }
         $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
             id: id, popupmode: popupmode, customParameters: $scope.getCustomParameters($scope.schema, rowdm)

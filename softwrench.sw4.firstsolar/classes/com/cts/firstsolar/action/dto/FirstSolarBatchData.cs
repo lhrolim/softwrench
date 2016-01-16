@@ -19,7 +19,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
             get; set;
         }
 
-        public string Classification {
+        public AssociationOption Classification {
             get; set;
         }
 
