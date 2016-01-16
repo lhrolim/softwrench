@@ -270,6 +270,21 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 							_element.on(event, _func);
 						}, 100);
 					};
+
+					$('.richtext').on('click', function () {
+					    console.log('click');
+					    $timeout(function () {
+					        $(window).trigger('resize');
+					    }, 0, false);
+					});
+
+					$('.richtext').on('blur', function () {
+					    console.log('blur');
+					    $timeout(function () {
+					        $(window).trigger('resize');
+					    }, 250, false);
+					});
+
 					_taExecCommand = taExecCommand(attrs.taDefaultWrap);
 					// get the settings from the defaults and add our specific functions that need to be on the scope
 					angular.extend(scope, angular.copy(taOptions), {
