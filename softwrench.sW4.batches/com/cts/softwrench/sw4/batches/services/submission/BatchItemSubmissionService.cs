@@ -61,9 +61,14 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 var originalItem = itemToSubmit.OriginalItem;
                 try {
                     var result = _maximoEngine.Execute(itemToSubmit.CrudData);
-                    batch.SuccessItems.Add(originalItem.RemoteId);
+                    batch.TargetResults.Add(result);
+                    if (originalItem.RemoteId != null) {
+                        batch.SuccessItems.Add(originalItem.RemoteId);
+                    }
+                    if (originalItem.AdditionalData != null) {
+                        auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result, originalItem.AdditionalData));
+                    }
 
-                    auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result, originalItem.AdditionalData));
 
                 } catch (Exception e) {
                     if (options.GenerateProblems) {

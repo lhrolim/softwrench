@@ -37,7 +37,11 @@
                 }
 
             });
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(submissionData));
+            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(submissionData)).then(function(httpResponse) {
+                var appResponse = httpResponse.data;
+                return $rootScope.$broadcast("sw_redirectapplicationsuccess", appResponse, "input", "workorder");
+            });
+
         }
 
         function proceedToBatchSelection(httpResponse) {
@@ -46,7 +50,7 @@
                 return alertService.confirm2("All the selected locations already have corresponding workorders.Do you want to proceed anyway?")
                     .then(function () {
                         //storing untouched first line to serve as shared data later
-                        contextService.set("batchshareddata", applicationResponse.resultObject[0].fields);
+                        contextService.set("batchshareddata", applicationResponse.resultObject[0].fields, true);
                         return $rootScope.$broadcast("sw_redirectapplicationsuccess", applicationResponse, "input", "workorder");
                     }).catch(function () {
                         //catching exception in order to close the modal on the outer promise handler
