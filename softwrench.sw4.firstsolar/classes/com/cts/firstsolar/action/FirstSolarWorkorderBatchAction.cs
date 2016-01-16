@@ -41,7 +41,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         [HttpPost]
         public IApplicationResponse SubmitLocationBatch(LocationBatchSubmissionData batchData) {
-
             var batch = Batch.TransientInstance("workorder", SecurityFacade.CurrentUser());
             batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(l => FirstSolarDatamapConverterUtil.BuildBatchItem(l, batchData)).ToList());
             _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
@@ -61,7 +60,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         public IApplicationResponse InitLocationBatch(LocationBatchData batchData) {
 
             Log.Debug("receiving batch data");
-            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForLocation(batchData.Locations, batchData.Classification);
+            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForLocation(batchData.Locations, batchData.Classification.Value);
 
             var i = 0;
             var resultData = batchData.Locations.Select(location => GetDataMap(location, batchData, warningIds, i++)).ToList();
@@ -79,7 +78,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [HttpPost]
         public IApplicationResponse InitAssetBatch(AssetBatchData batchData) {
             Log.Debug("receiving batch data");
-            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForAsset(batchData.Assets, batchData.Classification);
+            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForAsset(batchData.Assets, batchData.Classification.Value);
 
             var i = 0;
             var resultData = batchData.Assets.Select(asset => GetAssetDataMap(asset, batchData, warningIds, i++)).ToList();
@@ -101,7 +100,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return FirstSolarDatamapConverterUtil.DoGetDataMap(asset, batchData, warningIds, transientId, new Tuple<string, string>("assetnum", "asset_label"));
         }
 
-     
+
 
 
         private class SelectedComparer : IComparer<DataMap> {

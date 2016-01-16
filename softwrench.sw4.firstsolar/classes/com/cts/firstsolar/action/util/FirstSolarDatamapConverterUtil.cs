@@ -60,6 +60,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             fields["summary"] = batchData.Summary;
             fields["siteid"] = batchData.SiteId;
             fields["details"] = batchData.Details;
+            fields["classificationid"] = batchData.Classification.Value;
+            fields["classification"] = batchData.Classification.Label;
             fields[fieldNames.Item1] = item.Value;
             fields[fieldNames.Item2] = item.Label;
             return new DataMap("workorder", fields);
