@@ -51,6 +51,10 @@
 
                 > i.fa {
                     color: #767676;
+
+                    &:hover {
+                        color: #aaa;
+                    }
                 }
             }
 
