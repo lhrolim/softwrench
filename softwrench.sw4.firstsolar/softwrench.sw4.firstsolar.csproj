@@ -78,6 +78,7 @@
   <ItemGroup>
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
     <Content Include="web_content\firstsolar\scripts\assetService.js" />
+    <Content Include="web_content\firstsolar\scripts\batchWorkorderService.js" />
     <Content Include="web_content\firstsolar\scripts\locationService.js" />
     <Content Include="web_content\firstsolar\scripts\location_filter.js" />
     <EmbeddedResource Include="metadata\firstsolar\deploy.xml" />
