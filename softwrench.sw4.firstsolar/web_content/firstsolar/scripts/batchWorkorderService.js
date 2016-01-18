@@ -118,6 +118,9 @@
 
             log.debug("init batch submission process for {0}".format(batchType));
 
+            var keyName = batchType === "asset" ? "assetnum" : "location";
+
+
             var sharedData = contextService.get("batchshareddata", false, true);
             var specificData = {};
 
@@ -130,16 +133,18 @@
                 var fields = datamap.fields;
 
                 var customizedValues = Object.keys(fields).filter(function (prop) {
-                    return prop !== schema.userId && fields[prop] !== sharedData[prop];
+                    return prop !== keyName && fields[keyName] !== sharedData[keyName];
                 });
 
+                var key = fields[keyName];
+
                 if (customizedValues.length !== 0) {
-                    specificData[fields.location] = {};
+                    specificData[key] = {};
                     customizedValues.forEach(function (prop) {
-                        specificData[fields.location][prop] = fields[prop];
+                        specificData[key][prop] = fields[prop];
                     });
                 } else {
-                    specificData[fields.location] = null;
+                    specificData[key] = null;
                 }
 
             });
