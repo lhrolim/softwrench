@@ -286,7 +286,7 @@
 
 
 
-      <if test="${projectname == client or ( file::exists(customerplaceholder) and profile == 'dev')}">
+      <if test="${projectname == client or ( file::exists(customerplaceholder) and string::contains(profile, 'dev'))}">
 
         <copy todir="${deploypath}/Content/Customers/${projectname}">
           <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
