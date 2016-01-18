@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="angular_mock.js" />
+    <Content Include="karma.conf.dev.js" />
     <Content Include="karma.conf.js" />
     <Content Include="node_modules\jasmine-core\.bundle\config" />
     <Content Include="node_modules\jasmine-core\.idea\codeStyleSettings.xml" />

@@ -568,6 +568,10 @@
                         }
                     });
 
+                    this.toggleSelectionModeInitialValue = function() {
+                        return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
+                    }
+
                     function initController() {
 
                         var log = $log.getInstance("crudlist#init", ["grid"]);

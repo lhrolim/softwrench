@@ -10,44 +10,11 @@
         //        });
 
 
-        function submitBatch(datamap) {
-
-            var sharedData = contextService.get("batchshareddata", false, true);
-            var specificData = {};
-
-            var submissionData = {
-                sharedData: sharedData,
-                specificData: specificData
-            };
-
-            datamap.forEach(function (datamap) {
-                var fields = datamap.fields;
-
-                var customizedValues = Object.keys(fields).filter(function (prop) {
-                    return prop !== "location" && fields[prop] !== sharedData[prop];
-                });
-
-                if (customizedValues.length !== 0) {
-                    specificData[fields.location] = {};
-                    customizedValues.forEach(function (prop) {
-                        specificData[fields.location][prop] = fields[prop];
-                    });
-                } else {
-                    specificData[fields.location] = null;
-                }
-
-            });
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitLocationBatch", null, JSON.stringify(submissionData)).then(function(httpResponse) {
-                var appResponse = httpResponse.data;
-                return $rootScope.$broadcast("sw_redirectapplicationsuccess", appResponse, "input", "workorder");
-            });
-
-        }
 
         function proceedToBatchSelection(httpResponse) {
             var confirmMessage = "All the selected locations already have corresponding workorders. Do you want to proceed anyway?";
             return batchworkorderService.proceedToBatchSelection(httpResponse, confirmMessage);
-            }
+        }
 
         function initBatchWorkorder(schema, datamap) {
             var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
@@ -58,13 +25,16 @@
 
             var params = {
                 popupmode: "modal",
+                savefn: function (modaData, modalSchema) {
+                    return batchworkorderService.woBatchSharedSave(schema, modaData, modalSchema).then(proceedToBatchSelection);
+                }
             };
 
             redirectService.goToApplication("workorder", "batchshared", params);
         };
 
 
-        function dispatchWO(schema, datamap) {
+        function dispatchWo(schema, datamap) {
 
             var queryParams = {
                 location: datamap.fields["location"],
@@ -88,8 +58,7 @@
 
         var service = {
             initBatchWorkorder: initBatchWorkorder,
-            dispatchWO: dispatchWO,
-            submitBatch: submitBatch
+            dispatchWO: dispatchWo,
         };
 
         return service;

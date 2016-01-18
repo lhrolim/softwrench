@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using cts.commons.simpleinjector;
-using JetBrains.Annotations;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Response;
@@ -13,7 +13,7 @@ using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 
-namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
+namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
     public class FirstSolarWoValidationHelper : ISingletonComponent {
 
         private readonly MaximoHibernateDAO _dao;
@@ -32,9 +32,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         }
 
 
-        public IDictionary<string, List<string>> DoValidateIdsThatHaveWorkorders(string baseQuery, string itemid, ICollection<AssociationOption> items, string classification) {
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkorders(FirstSolarBatchType batchType, ICollection<MultiValueAssociationOption>items , string classification)
+        {
+            var userIdFieldName = batchType.GetUserIdName();
+
+            var baseQuery = batchType.Equals(FirstSolarBatchType.Asset)? BaseAssetQuery : BaseBatchLocationQuery;
+            var inQueryString = BaseQueryUtil.GenerateInString(items.Select(i => i.Value));
+
             var sb = new StringBuilder();
-            sb.AppendFormat(BaseBatchLocationQuery, BaseQueryUtil.GenerateInString(items.Select(i => i.Value)));
+            sb.AppendFormat(baseQuery, inQueryString);
             if (classification != null) {
                 sb.AppendFormat(" and classstructureid = '{0}'", classification);
             }
@@ -43,7 +49,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             var result = new Dictionary<string, List<string>>();
 
             foreach (var row in queryResult) {
-                var itemId = row[itemid];
+                var itemId = row[userIdFieldName];
                 var wonum = row["wonum"];
                 if (!result.ContainsKey(itemId)) {
                     result.Add(itemId, new List<string> { wonum });
@@ -55,27 +61,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         }
 
 
-        [NotNull]
-        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForLocation(ICollection<AssociationOption> items, string classification) {
-            return DoValidateIdsThatHaveWorkorders(BaseBatchLocationQuery, "location", items, classification);
-        }
-
-      
-        [NotNull]
-        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkordersForAsset(ICollection<AssociationOption> items, string classification) {
-            return DoValidateIdsThatHaveWorkorders(BaseAssetQuery, "assetnum", items, classification);
-        }
-
         public ApplicationListResult GetRelatedLocationWorkorders(string location, string classification) {
             var sb = new StringBuilder();
             sb.AppendFormat(BaseSingleLocationWhereQuery, location);
             if (classification != null) {
                 sb.AppendFormat("and classstructureid = {0}", classification);
             }
-            var queryResult = _dao.FindByNativeQuery(BaseSingleLocationProjectionQuery +sb);
+            var queryResult = _dao.FindByNativeQuery(BaseSingleLocationProjectionQuery + sb);
 
-            var dataSet =DataSetProvider.GetInstance().LookupDataSet("workorder", "relatedwoconfirmationlist");
-            var app =MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("relatedwoconfirmationlist"));
+            var dataSet = DataSetProvider.GetInstance().LookupDataSet("workorder", "relatedwoconfirmationlist");
+            var app = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("relatedwoconfirmationlist"));
             PaginatedSearchRequestDto dto = PaginatedSearchRequestDto.DefaultInstance(app.Schema);
             dto.PageSize = 10;
             dto.FilterFixedWhereClause = sb.ToString();

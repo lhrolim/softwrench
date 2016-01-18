@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using Iesi.Collections.Generic;
 using log4net;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util;
-using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -37,6 +31,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         private readonly FirstSolarWoValidationHelper _validationHelper;
         private readonly BatchItemSubmissionService _submissionService;
 
+
         public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper, BatchItemSubmissionService submissionService) {
             _validationHelper = validationHelper;
             _submissionService = submissionService;
@@ -44,45 +39,39 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
         [HttpPost]
-        public IApplicationResponse SubmitLocationBatch(LocationBatchSubmissionData batchData) {
+        public IApplicationResponse SubmitBatch(BatchSubmissionData batchData,[FromUri] FirstSolarBatchType batchType) {
             var batch = Batch.TransientInstance("workorder", SecurityFacade.CurrentUser());
-            batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(l => FirstSolarDatamapConverterUtil.BuildBatchItem(l, batchData)).ToList());
+            batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(s => FirstSolarDatamapConverterUtil.BuildBatchItem(s, batchData,batchType)).ToList());
             var resultBatch = _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
             var woDataSet = DataSetProvider.GetInstance().LookupDataSet("workorder", "list");
-            var dto = BuildDTO(resultBatch);
+            var dto = BatchRedirectionHelper.BuildDTO(resultBatch);
             var applicationListResult = woDataSet.GetList(
                 MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list")),
                 dto);
-            if (resultBatch.TargetResults.Count > 1) {
-                applicationListResult.SuccessMessage = resultBatch.TargetResults.Count +
-                                                       " Workorders created successfully";
-            } else {
-                applicationListResult.SuccessMessage = "1 Workorder created successfully";
-            }
-
-
+            applicationListResult.SuccessMessage = batchType.GetSuccessMessage(resultBatch.TargetResults.Count);
             return applicationListResult;
         }
 
-        private PaginatedSearchRequestDto BuildDTO(Batch resultBatch) {
-            var dto = new PaginatedSearchRequestDto();
+        [HttpPost]
+        public IApplicationResponse InitBatch(BatchStartingData batchSharedData, [FromUri]FirstSolarBatchType batchType) {
+            Log.DebugFormat("receiving batch data for {0}", batchType);
+            var warningIds = _validationHelper.ValidateIdsThatHaveWorkorders(batchType, batchSharedData.Items, batchSharedData.Classification.Value);
 
-            var resultsBySiteId = new Dictionary<string, IList<string>>();
-            foreach (var result in resultBatch.TargetResults) {
-                if (!resultsBySiteId.ContainsKey(result.SiteId)) {
-                    resultsBySiteId[result.SiteId] = new List<string>();
-                }
-                resultsBySiteId[result.SiteId].Add(result.UserId);
-            }
-            var sb = new StringBuilder();
-            foreach (var siteIdWoNums in resultsBySiteId) {
-                sb.AppendFormat("(workorder.siteid = '{0}' and wonum in ({1}))", siteIdWoNums.Key,
-                    BaseQueryUtil.GenerateInString(siteIdWoNums.Value));
-                sb.Append(" or ");
-            }
-            dto.WhereClause = sb.ToString(0, sb.Length - 4);
-            return dto;
+            var i = 0;
+            var resultData = batchSharedData.Items.Select(item => FirstSolarDatamapConverterUtil.DoGetDataMap(item, batchSharedData, warningIds, i++, batchType.GetUserIdName())).ToList();
+            //assuring selected come first
+            resultData.Sort(new SelectedComparer());
+
+            var resultSchemaId = batchType.GetSpreadhSheetSchema();
+
+            var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey(resultSchemaId)).Schema;
+
+            return new ApplicationListResult(batchSharedData.Items.Count, null, resultData, schema, null) {
+                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchSharedData.Items.Count } }
+            };
         }
+
+
 
         [HttpGet]
         public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
@@ -93,49 +82,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return listResult;
         }
 
-        [HttpPost]
-        public IApplicationResponse InitLocationBatch(LocationBatchData batchData) {
-
-            Log.Debug("receiving batch data");
-            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForLocation(batchData.Locations, batchData.Classification.Value);
-
-            var i = 0;
-            var resultData = batchData.Locations.Select(location => GetDataMap(location, batchData, warningIds, i++)).ToList();
-            //assuring selected come first
-            resultData.Sort(new SelectedComparer());
-
-            var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchLocationSpreadSheet")).Schema;
-
-            return new ApplicationListResult(batchData.Locations.Count, null, resultData, schema, null) {
-                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Locations.Count } }
-            };
-
-        }
-
-        [HttpPost]
-        public IApplicationResponse InitAssetBatch(AssetBatchData batchData) {
-            Log.Debug("receiving batch data");
-            var warningIds = _validationHelper.ValidateIdsThatHaveWorkordersForAsset(batchData.Assets, batchData.Classification.Value);
-
-            var i = 0;
-            var resultData = batchData.Assets.Select(asset => GetAssetDataMap(asset, batchData, warningIds, i++)).ToList();
-            //assuring selected come first
-            resultData.Sort(new SelectedComparer());
-
-            var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchAssetSpreadSheet")).Schema;
-
-            return new ApplicationListResult(batchData.Assets.Count, null, resultData, schema, null) {
-                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchData.Assets.Count } }
-            };
-        }
-
-        private DataMap GetDataMap(IAssociationOption location, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
-            return FirstSolarDatamapConverterUtil.DoGetDataMap(location, batchData, warningIds, transientId, new Tuple<string, string>("location", "location_label"));
-        }
-
-        private DataMap GetAssetDataMap(IAssociationOption asset, BatchData batchData, IDictionary<string, List<string>> warningIds, int transientId) {
-            return FirstSolarDatamapConverterUtil.DoGetDataMap(asset, batchData, warningIds, transientId, new Tuple<string, string>("assetnum", "asset_label"));
-        }
+//        [HttpPost]
+//        public IApplicationResponse InitLocationBatch(BatchStartingData batchSharedData) {
+//
+//            Log.Debug("receiving batch data");
+//            var warningIds = _validationHelper.ValidateIdsThatHaveWorkorders(batchSharedData.Items, batchSharedData.Classification.Value);
+//
+//            var i = 0;
+//            var resultData = batchSharedData.Items.Select(location => FirstSolarDatamapConverterUtil.DoGetDataMap(location, batchSharedData, warningIds, i++, "location")).ToList();
+//            //assuring selected come first
+//            resultData.Sort(new SelectedComparer());
+//
+//            var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchLocationSpreadSheet")).Schema;
+//
+//            return new ApplicationListResult(batchSharedData.Items.Count, null, resultData, schema, null) {
+//                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchSharedData.Items.Count } }
+//            };
+//
+//        }
 
 
 

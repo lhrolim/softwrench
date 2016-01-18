@@ -121,8 +121,8 @@
         if ("ToggleCommand" !== command.type) {
             return;
         }
-        calcToggleInitialState(command);
         crudContextHolderService.addToggleCommand(command, $scope.panelid);
+        calcToggleInitialState(command);
     }
 
     $scope.isCommandEnabled = function (command) {
