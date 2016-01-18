@@ -19,6 +19,7 @@
         "summary": "s"
     }
 
+
     beforeEach(inject(function ($injector, _alertService_, _$rootScope_, _restService_, _$httpBackend_, _contextService_, _redirectService_) {
         batchWorkorderService = $injector.getInstance("firstsolar.batchWorkorderService");
         alertService = _alertService_;
