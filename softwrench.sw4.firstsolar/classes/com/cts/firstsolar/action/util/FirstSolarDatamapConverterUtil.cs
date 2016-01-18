@@ -28,7 +28,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             fields["classstructureid"] = sharedData.Classification;
             fields["ld_.ldtext"] = sharedData.Details;
 
-            var keyFieldName = BT.Asset.Equals(batchType) ? "assetnum" : "location";
+            var keyFieldName = batchType.GetUserIdName();
 
             fields[keyFieldName] = specificDataEntry.Key;
 
@@ -72,7 +72,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             fields["classificationid"] = batchSharedData.Classification.Value;
             fields["classification"] = batchSharedData.Classification.Label;
             fields[userIdFieldName] = item.Value;
-            fields["label"] = item.Label;
+            fields["specificLabel"] = item.Label;
             var multiValueOption = item as MultiValueAssociationOption;
             if (multiValueOption.Extrafields != null && multiValueOption.Extrafields.ContainsKey("location")) {
                 fields["location"] = multiValueOption.Extrafields["location"];

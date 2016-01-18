@@ -58,15 +58,19 @@
           <field attribute="#warning" tooltip="There already one or more workorders associated to this location click here to view them">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
           </field>
-          <field attribute="location_label" label="Location"/>
+          <field attribute="specificLabel" label="Location"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true"/>
           </field>
-          <field attribute="siteid" label="SiteId"/>
-          <field attribute="classification" label="Classification"/>
+          <field attribute="siteid" label="SiteId">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+          <field attribute="classification" label="Classification">
+            <renderer type="default" params="updatable=true"/>
+          </field>
 
           <properties>
             <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
@@ -78,7 +82,7 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="datamap,schema,location"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="datamap,schema,location" primary="true"/>
             </commandgroup>
           </commandbars>
 
@@ -92,7 +96,7 @@
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
           </field>
           <field attribute="assetnum" label="Asset" readonly="true"/>
-          <field attribute="label" label="Asset"/>
+          <field attribute="specificLabel" label="Asset"/>
           <!--Location field come from the selected asset-->
           <field attribute="location" label="Location"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
@@ -101,8 +105,12 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true"/>
           </field>
-          <field attribute="siteid" label="SiteId"/>
-          <field attribute="classification" label="Classification"/>
+          <field attribute="siteid" label="SiteId">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+          <field attribute="classification" label="Classification">
+            <renderer type="default" params="updatable=true"/>
+          </field>
           
 
           <properties>
@@ -115,7 +123,7 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="datamap,schema,asset"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="datamap,schema,asset" primary="true"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -124,7 +132,7 @@
 
         <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal">
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="location_label" label="Location" readonly="true"/>
+          <field attribute="specificLabel" label="Location" readonly="true"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
@@ -150,7 +158,8 @@
     
         <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal">
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="label" label="Asset" readonly="true"/>
+          <field attribute="specificLabel" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>

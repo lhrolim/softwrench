@@ -87,9 +87,8 @@
         }
 
         function loadRelatedWorkorders(rowDm, column) {
-            if (column.attribute === "#warning") {
-                var wonums = rowDm["#wonums"];
-
+            var wonums = rowDm["#wonums"];
+            if (column.attribute === "#warning" && wonums) {
                 var commaSeparattedQuotedIds =
                     wonums.split(',')
                     .map(function (item) {
@@ -101,7 +100,8 @@
                 var params = {
                     searchDTO: {
                         filterFixedWhereClause: fixedWhereClause
-                    }
+                    },
+                    title: "Work Orders of " + rowDm["specificLabel"]
                 }
 
                 redirectService.openAsModal("workorder", "readonlyfixedlist", params).then(function () {
