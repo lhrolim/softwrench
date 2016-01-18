@@ -36,8 +36,6 @@
   </if>
 
 
-  
-
   <if test="${environment::variable-exists('deployclientsw4')}">
     <property name="deployclientsw4" value="${environment::get-variable('deployclientsw4')}" />
   </if>
