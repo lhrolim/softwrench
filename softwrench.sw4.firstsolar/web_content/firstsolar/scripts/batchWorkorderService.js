@@ -112,10 +112,9 @@
             return true;
         }
 
-        function submitBatch(datamap, schema) {
+        function submitBatch(datamap, schema,batchType) {
 
             var log = $log.get("batchWorkorderService#submitBatch", ["workorder"]);
-            var batchType = schema.applicationName === "location" ? "location" : "asset";
 
             log.debug("init batch submission process for {0}".format(batchType));
 
