@@ -56,7 +56,7 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
           <field attribute="#warning" tooltip="There already one or more workorders associated to this location click here to view them">
-            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true" />
           </field>
           <field attribute="specificLabel" label="Location"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
@@ -93,7 +93,7 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
           <field attribute="#warning" tooltip="There already one or more workorders associated to this asset click here to view them">
-            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%"/>
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true"/>
           </field>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="specificLabel" label="Asset"/>
@@ -132,6 +132,7 @@
 
         <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal">
           <field attribute="workorderid" hidden="true"/>
+          <field attribute="userIdFieldName" hidden="true"/>
           <field attribute="specificLabel" label="Location" readonly="true"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
@@ -158,6 +159,7 @@
     
         <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal">
           <field attribute="workorderid" hidden="true"/>
+          <field attribute="userIdFieldName" hidden="true"/>
           <field attribute="specificLabel" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">

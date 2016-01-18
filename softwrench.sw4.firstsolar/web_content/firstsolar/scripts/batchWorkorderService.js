@@ -14,27 +14,48 @@
                 return;
             }
 
-            associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
-            var gridDatamap = crudContextHolderService.rootDataMap();
-            gridDatamap.forEach(function (row) {
-                if (row.fields[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
-                    row.fields.summary = saveDataMap.summary;
-                    row.fields.details = saveDataMap.details;
-                    row.fields.siteid = saveDataMap.siteid;
-                    row.fields.classification = saveDataMap["#classificationid_label"] || "";
-                    row.fields.classificationid = saveDataMap.classificationid;
-                }
+            var params = {
+                batchType: saveDataMap.userIdFieldName === "location" ? "location" : "asset"
+            }
+
+            var specificAppName = saveDataMap.userIdFieldName === "location" ? "location" : "asset";
+            var batchData = toBatchData(saveDataMap, null, saveDataMap.userIdFieldName, specificAppName);
+            var applicationResponseDataMap;
+
+            restService.postPromise("FirstSolarWorkorderBatch", "InitBatch", params, batchData).then(function (httpResponse) {
+                applicationResponseDataMap = httpResponse.data.resultObject[0].fields;
+                associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
+                var gridDatamap = crudContextHolderService.rootDataMap();
+                gridDatamap.forEach(function (row) {
+                    if (row.fields[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
+                        row.fields.summary = saveDataMap.summary;
+                        row.fields.details = saveDataMap.details;
+                        row.fields.siteid = saveDataMap.siteid;
+                        row.fields.classification = saveDataMap["#classificationid_label"] || "";
+                        row.fields.classificationid = saveDataMap.classificationid;
+                        row.fields["#warning"] = applicationResponseDataMap["#warning"];
+                        row.fields["#wonums"] = applicationResponseDataMap["#wonums"];
+                    }
+                });
+                modalService.hide();
             });
-            modalService.hide();
         }
 
-        // save method of pre wo batch creation
-        function woBatchSharedSave(schema, modalData,modalSchema) {
+        function innerToBatchData(value, specificIdColumn, specificAppName) {
+            var associationOption = {
+                value: value[specificIdColumn],
+                label: value["description"]
+            };
+            if (specificAppName === "asset") {
+                associationOption.extraFields = {
+                    //passing location of the asset as an extra projection field
+                    "location": value["location"]
+                }
+            }
+            return associationOption;
+        }
 
-
-            associationService.insertAssocationLabelsIfNeeded(modalSchema, modalData);
-            var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
-
+        function toBatchData(modalData, selectionBuffer, specificIdColumn, specificAppName) {
             var batchData = {
                 summary: modalData["summary"],
                 details: modalData["details"],
@@ -45,21 +66,26 @@
                 }
             }
 
+            if (selectionBuffer) {
+                batchData["items"] = Object.keys(selectionBuffer).map(function(key) {
+                    var value = selectionBuffer[key];
+                    return innerToBatchData(value.fields, specificIdColumn, specificAppName);
+                });
+            } else {
+                batchData["items"] = [innerToBatchData(modalData, specificIdColumn, specificAppName)];
+            }
 
-            batchData["items"] = Object.keys(selectionBuffer).map(function (key) {
-                var value = selectionBuffer[key];
-                var associationOption = {
-                    value: value.fields[schema.userIdFieldName],
-                    label: value.fields["description"]
-                };
-                if (schema.applicationName === "asset") {
-                    associationOption.extraFields = {
-                        //passing location of the asset as an extra projection field
-                        "location": value.fields["location"]
-                    }
-                }
-                return associationOption;
-            });
+            return batchData;
+        }
+
+        // save method of pre wo batch creation
+        function woBatchSharedSave(schema, modalData, modalSchema) {
+
+
+            associationService.insertAssocationLabelsIfNeeded(modalSchema, modalData);
+            var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
+
+            var batchData = toBatchData(modalData, selectionBuffer, schema.userIdFieldName, schema.applicationName);
 
             var params = {
                 batchType: schema.applicationName === "asset" ? "asset" : "location"
