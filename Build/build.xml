@@ -36,8 +36,6 @@
   </if>
 
 
-  
-
   <if test="${environment::variable-exists('deployclientsw4')}">
     <property name="deployclientsw4" value="${environment::get-variable('deployclientsw4')}" />
   </if>
@@ -286,7 +284,7 @@
 
 
 
-      <if test="${projectname == client or ( file::exists(customerplaceholder) and profile == 'dev')}">
+      <if test="${projectname == client or ( file::exists(customerplaceholder) and string::contains(profile, 'dev'))}">
 
         <copy todir="${deploypath}/Content/Customers/${projectname}">
           <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
