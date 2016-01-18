@@ -29,7 +29,7 @@
         }
 
         // save method of pre wo batch creation
-        function woBatchSharedSave(schema, modalData,modalSchema) {
+        function woBatchSharedSave(schema, modalData, modalSchema) {
 
 
             associationService.insertAssocationLabelsIfNeeded(modalSchema, modalData);
@@ -112,7 +112,7 @@
             return true;
         }
 
-        function submitBatch(datamap, schema,batchType) {
+        function submitBatch(itemsToSubmit, batchType) {
 
             var log = $log.get("batchWorkorderService#submitBatch", ["workorder"]);
 
@@ -129,11 +129,15 @@
                 specificData: specificData
             };
 
-            datamap.forEach(function (datamap) {
-                var fields = datamap.fields;
+            if (itemsToSubmit.length === 0) {
+                alertService.alert("Please, select at least one entry to confirm the batch");
+                return $q.reject();
+            }
 
+            itemsToSubmit.forEach(function (datamap) {
+                var fields = datamap.fields;
                 var customizedValues = Object.keys(fields).filter(function (prop) {
-                    return prop !== keyName && fields[keyName] !== sharedData[keyName];
+                    return prop !== keyName && fields[prop] !== sharedData[prop];
                 });
 
                 var key = fields[keyName];
@@ -151,10 +155,10 @@
             var params = { batchType: batchType };
 
 
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitBatch", params, JSON.stringify(submissionData))
+            return restService.postPromise("FirstSolarWorkorderBatch", "SubmitBatch", params, JSON.stringify(submissionData))
                 .then(function (httpResponse) {
                     var appResponse = httpResponse.data;
-                    redirectService.redirectFromServerResponse(appResponse, "workorder");
+                    return redirectService.redirectFromServerResponse(appResponse, "workorder");
                 });
 
         }
