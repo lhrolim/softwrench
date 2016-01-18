@@ -70,7 +70,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchData.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchType.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchTypeExtensions.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarWorkorderBatchAction.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\util\BatchRedirectionHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarDatamapConverterUtil.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

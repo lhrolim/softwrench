@@ -7,7 +7,7 @@ using softwrench.sw4.Shared2.Data.Association;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
 
-    public class BatchData {
+    public class BatchSharedData {
 
         public string Summary {
             get; set;
@@ -22,40 +22,37 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
         public AssociationOption Classification {
             get; set;
         }
+    }
 
+    public class BatchStartingData :BatchSharedData {
+
+        public List<MultiValueAssociationOption> Items {
+            get; set;
+        }
 
     }
 
-    public class LocationBatchData : BatchData {
-        public List<AssociationOption> Locations {
-            get; set;
-        }
+
+    public class BatchSpecificData : BatchSharedData {
+        
     }
 
-    public class AssetBatchData : BatchData {
-        public List<AssociationOption> Assets {
+    public class AssetBatchSpecificData : BatchSpecificData {
+
+        //for asset batches, the Location might be passed as the asset´s location
+        public string Location {
             get; set;
         }
+
     }
 
-    public class AssetBatchSubmissionData {
+    public class BatchSubmissionData {
 
-        public BatchData SharedData {
+        public BatchSharedData SharedData {
             get; set;
         }
 
-        public IDictionary<string, BatchData> LocationSpecificData {
-            get; set;
-        }
-    }
-
-    public class LocationBatchSubmissionData {
-
-        public BatchData SharedData {
-            get; set;
-        }
-
-        public IDictionary<string, BatchData> SpecificData {
+        public IDictionary<string, BatchSpecificData> SpecificData {
             get; set;
         }
     }

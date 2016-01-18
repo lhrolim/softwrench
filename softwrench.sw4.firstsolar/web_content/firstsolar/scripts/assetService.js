@@ -19,7 +19,9 @@
 
             var params = {
                 popupmode: "modal",
-                savefn: batchworkorderService.woBatchSharedSave("assets", "assetnum", "description", selectionBuffer, "InitAssetBatch", proceedToBatchSelection)
+                savefn: function (modaData, modalSchema) {
+                    return batchworkorderService.woBatchSharedSave(schema, modaData, modalSchema).then(proceedToBatchSelection);
+                }
             };
 
             redirectService.goToApplication("workorder", "batchshared", params);
