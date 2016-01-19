@@ -121,7 +121,7 @@
     <echo message="running grunt"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value='grunt'></arg>
+      <arg value='grunt test'></arg>
     </exec>
   </target>
   

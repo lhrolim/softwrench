@@ -291,11 +291,7 @@ module.exports = function (grunt) {
                 browserDisconnectTimeout: 5000,
                 reporters: ["progress", "dots", "junit"],
                 junitReporter: {
-                    // don't know why but using:
-                    // - <%= app.tests %>/jenkinstest-results.xml: creates softwrench.sw4.jstest/softwrench.sw4.jstest/jenkinstest-results.xml
-                    // - jenkinstest-results.xml: creates the 'PhantomJS' folder with the report in it
-                    // - <%= app.tests %>/../jenkinstest-results.xml: [WORKS] creates softwrench.sw4.jstest/jenkinstest-results.xml
-                    outputFile: "<%= app.tests %>/../jenkinstest-results.xml"
+                    outputFile: "../../softwrench.sw4.jstest/jenkinstest-results.xml"
                 },
                 // preprocess matching files before serving them to the browser
                 // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
