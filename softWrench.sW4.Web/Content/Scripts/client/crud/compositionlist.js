@@ -136,7 +136,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 
                 //display the list composition by default
                 if (scope.compositionschemadefinition.schemas.list.properties.masterdetail == 'true') {
-                    element.append("<composition-master-details data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' />");
+                    element.append("<composition-master-details data-cancelfn='cancel(data,schema)' data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' data-parentdata='parentdata' parentschema='parentschema' data-relationship='{{relationship}}' data-title='{{tabLabel}}' />");
                 } else {
                     element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
                         "compositionschemadefinition='compositionschemadefinition' " +

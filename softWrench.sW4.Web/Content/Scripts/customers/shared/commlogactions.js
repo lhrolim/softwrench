@@ -97,7 +97,6 @@
             return detailItem;
         }
 
-
         // Forward message
         // Send to: User entered
         // Send from: Default address, if none then current user email
@@ -105,6 +104,7 @@
         // Subject: "Fw:" + Original subject
         $scope.forward = function (commlogitem) {
 
+            //TODO: open new message in modal
             return getServerData(commlogitem)
                 .then(transformForward)
                 .then(dispatchEvent);
@@ -116,11 +116,12 @@
         // CC: Same CC as the original communication
         // Subject: "Re:" + Original subject
         $scope.reply = function (commlogitem) {
+
+            //TODO: open new message in modal
             return getServerData(commlogitem)
                 .then(transformReply)
                .then(dispatchEvent);
         };
-
 
         // Reply to all
         // Send to: Original sendfrom, all send to's, removing the new sendfrom from the list if it is present
@@ -128,13 +129,12 @@
         // CC: Same CC as the original communication
         // Subject: "Re:" + Original subject
         $scope.replyAll = function (commlogitem) {
+
+            //TODO: open new message in modal
             return getServerData(commlogitem)
                .then(transformReplyAll)
                .then(dispatchEvent);
         };
-
-
-
     }
 
     module.controller('CommLogActionsController', ['$rootScope', '$scope', 'contextService', 'fieldService', 'applicationService', 'commlog_messagheader', commLogActionsController]);

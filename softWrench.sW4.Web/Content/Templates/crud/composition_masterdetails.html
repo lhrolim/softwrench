@@ -25,17 +25,16 @@
         <!--TODO: add scroll pane-->
         <div class="details col-xs-8">
             <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
-                <div class="field" ng-repeat="fieldMetadata in getDetailSchema().displayables" ng-show="showDetailField(fieldMetadata)">
+                <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                     <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
                     <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                 </div>
             </div>
             <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="commands">
-                <div class="buttons">
-                    <!--TODO: make buttons function-->
-                    <button class="btn btn-default fa fa-mail-reply" title="Reply"></button>
-                    <button class="btn btn-default fa fa-mail-reply-all" title="Reply all"></button>
-                    <button class="btn btn-default fa fa-mail-forward" title="Forward"></button>
+                <div ng-controller="CommLogActionsController" class="buttons">
+                    <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
+                    <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
+                    <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
                 </div>
             </div>
             <div ng-if="compositiondata.length && !(compositiondata | filter:searchText).length" class="no-records">
@@ -46,5 +45,23 @@
     <div ng-hide="hasRecords()" class="no-records col-xs-12">
         <i class="fa fa-info-circle"></i>&ensp;No records to display.
     </div>
-    <!--TODO: add command buttons-->
+    <div class="form-actions hidden-phone form-group hiddenonprint commandbar" data-class="commandbar">
+        <div class="spinner" data-class="spinner" id="detailspinner" ng-if="!inline"></div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
+                    <masterdetailtoolbar position="compositionbottom"
+                                         schema="compositionlistschema"
+                                         parentschema="parentschema"
+                                         datamap="compositiondata"
+                                         parentdatamap="parentdata"
+                                         pagination-data="paginationData"
+                                         search-data="searchData"
+                                         search-sort="searchSort"
+                                         search-operator="searchOperator"
+                                         mode="{{mode}}" />
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
