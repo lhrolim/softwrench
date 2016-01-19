@@ -491,8 +491,8 @@
 
   <target name="generatelinks">
 
-    <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content" 
-          unless="${directory::exists('../softwrench.sw4.WebMobile/www/Content/Customers')}">
+    <exec program="cmd" workingdir="../softwrench.sW4.Web/Content" 
+          unless="${directory::exists('../softwrench.sW4.Web/Content/Customers')}">
       <arg value="/c"/>
       <arg value="mkdir Customers"/>
     </exec>
@@ -517,18 +517,18 @@
 
 
 
-        <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+        <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
-        <exec program="cmd" workingdir="../softwrench.sw4.web/APP_Data/Client" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+        <exec program="cmd" workingdir="../softwrench.sW4.Web/APP_Data/Client" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /J ${clientname} "${foldername}\metadata\${clientname}"'/>
         </exec>
 
         <if test="${directory::exists(onlinefolder)}">
-          <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
             <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
           </exec>
@@ -546,13 +546,13 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-        <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+        <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${directory::exists(onlinefolder)}">
-          <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
             <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
           </exec>
