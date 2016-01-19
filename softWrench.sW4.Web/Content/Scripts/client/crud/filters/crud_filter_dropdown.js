@@ -303,11 +303,32 @@
 
                     var prepareUi = function () {
                         // don't let dropdowns close automatically when clicked inside
-                        var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));
+                        var dropdowns = angular.element(element[0].querySelectorAll('.js_filter .dropdown .dropdown-menu'));
                         dropdowns.click(function (event) {
                             event.stopPropagation();
                         });
-                        // autofocus the search input when the dropdown opens
+
+                        //if the filter is on the right side of the screen, reposition if needed
+                        var windowWidth = $(window).width();
+                        var dropdown = angular.element(element[0].querySelectorAll('.crud-grid-modal .js_filter .dropdown'));
+
+                        //if the dropdown is inside a modal
+                        if (dropdown.length > 0) {
+                            windowWidth = $('.crud-grid-modal').width();
+                        } else {
+                            dropdown = angular.element(element[0].querySelectorAll('.js_filter .dropdown'));
+                        }
+
+                        //when the dropdown open check position and widths
+                        dropdown.on('shown.bs.dropdown', function () {
+                            var dropdownMenu = dropdown.children('.dropdown-menu');
+                            if (dropdown.position().left + dropdownMenu.width() > windowWidth) {
+                                var widthOffset = dropdownMenu.width() - dropdown.width();
+                                dropdownMenu.css({ left: '-' + widthOffset + 'px' });;
+                            }
+                        });
+
+                        //autofocus the search input when the dropdown opens
                         $(".js_filter .dropdown").on("show.bs.dropdown", function (event) {
                             $timeout(function () {
                                 $(event.target).find("input[type=search]").focus();

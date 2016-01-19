@@ -21,6 +21,7 @@
   <tstamp property="build.date" pattern="yyyy_MM_dd_hh_mm_ss" verbose="true" />
 
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"/>
+  <property name="client" value="otb"/>
 
 
   <if test="${property::exists('ignoretstamp')==true}">
@@ -35,8 +36,6 @@
     <property name="deployclientsw4" value="${client}" />
   </if>
 
-
-  
 
   <if test="${environment::variable-exists('deployclientsw4')}">
     <property name="deployclientsw4" value="${environment::get-variable('deployclientsw4')}" />
@@ -286,7 +285,7 @@
 
 
 
-      <if test="${projectname == client or ( file::exists(customerplaceholder) and profile == 'dev')}">
+      <if test="${(file::exists(customerplaceholder) and string::contains(profile, 'dev')) or (projectname == client)}">
 
         <copy todir="${deploypath}/Content/Customers/${projectname}">
           <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">

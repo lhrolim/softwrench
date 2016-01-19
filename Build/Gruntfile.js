@@ -278,16 +278,18 @@ module.exports = function (grunt) {
         //#region karma
         karma: {
             options: {
-                configFile: "<%= app.tests %>/karma.conf.js",
-                logLevel: "WARN",
-                browsers: ["PhantomJS"],
+                //configFile: "<%= app.tests %>/karma.conf.prod.js",
                 singleRun: true,
                 basePath: "",
-                // test results reporter to use
-                // possible values: "dots", "progress"
-                // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+                frameworks: ["jasmine"],
+                port: 9876,
+                colors: true,
+                logLevel: "WARN",
+                browsers: ["PhantomJS"],
+                browserNoActivityTimeout: 10000,
+                browserDisconnectTolerance: 10,
+                browserDisconnectTimeout: 5000,
                 reporters: ["progress", "dots", "junit"],
-
                 junitReporter: {
                     // don't know why but using:
                     // - <%= app.tests %>/jenkinstest-results.xml: creates softwrench.sw4.jstest/softwrench.sw4.jstest/jenkinstest-results.xml
@@ -344,10 +346,21 @@ module.exports = function (grunt) {
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
-        "concat:appScripts", // concat app's customized from vendor's + ng-annotated + customer's)
+        "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
         "karma:target", // run tests on minified scripts
         "clean:vendor", "clean:tmp" // clean temporary folders
+    ]);
+    grunt.registerTask("test", [
+        "cleanAll", // clean folders: preparing for copy
+        "bowercopy:scripts", // copying bower js files
+        "uglify:rawVendors", // minifies unminified vendors
+        "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
+        "ngAnnotate:app", // ng-annotates app's scripts
+        "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
+        "uglify:app", // minify app script and distribute as 'scripts/app.js'
+        "karma:target", // run tests on minified scripts
+        "clean:vendor", "clean:tmp" // clean temporary folders 
     ]);
     //#endregion
 

@@ -313,6 +313,10 @@
 
         function fetchEagerAssociationOptions(associationKey, contextData, panelid) {
             var context = getContext(panelid);
+            if (context.showingModal) {
+                contextData = { schemaId: "#modal" };
+            }
+
             if (contextData == null) {
                 return context._eagerassociationOptions["#global"][associationKey];
             }

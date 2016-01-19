@@ -1,17 +1,12 @@
 ﻿
-(function () {
+(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", workorderService]);
+
 
     function workorderService($log, redirectService) {
 
-        var service = {
-            goToDetail: goToDetail,
-            openNewDetailModal: openNewDetailModal
-        };
 
-        return service;
 
         function goToDetail(parameters) {
             var params = {
@@ -23,13 +18,29 @@
         function openNewDetailModal(parentdatamap) {
             var params = {
                 popupmode: "modal",
-                title: "Work Order"
+//                title: "Work Order"
             };
+
+            var assetData = parentdatamap.fields;
+
             var jsondata = {
-                assetnum: parentdatamap.fields["assetnum"],
-                location: parentdatamap.fields["location"]
+                assetnum: assetData["assetnum"],
+                location: assetData["location"],
+                classstructureid: assetData["classstructureid"]
             };
-            redirectService.goToApplication("workorder", "assetdetail", params, jsondata);
+            return redirectService.goToApplication("workorder", "workordercreationmodal", params, jsondata);
         }
+
+        var service = {
+            goToDetail: goToDetail,
+            openNewDetailModal: openNewDetailModal
+        };
+
+        return service;
     }
-})();
+
+
+
+    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", workorderService]);
+}
+)(angular);

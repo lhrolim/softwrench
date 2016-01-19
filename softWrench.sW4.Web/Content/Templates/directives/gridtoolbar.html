@@ -6,7 +6,7 @@
                 ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
                 ng-enabled="isCommandEnabled(getCommand(command))"
                 data-original-title="{{commandtooltip(getCommand(command))}}" rel="tooltip" data-container="body" class="applicationcommand">
-            <i class="fa" ng-class="commandIcon(getCommand(command))"></i><span>{{commandLabel(getCommand(command))}}</span>
+            <i class="fa" ng-class="commandIcon(getCommand(command))"></i><span ng-show="commandLabel(getCommand(command))">&ensp;{{commandLabel(getCommand(command))}}</span>
         </button>
 
         <span ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">

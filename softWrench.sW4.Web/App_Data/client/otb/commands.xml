@@ -11,7 +11,7 @@
   </commandgroup>
 
   <commandgroup position="gridtop.selection" platform="web">
-    <togglecommand id="toggleselectionmode" position="+profiles">
+    <togglecommand id="toggleselectionmode" position="+profiles" initialstateexpression="$scope:toggleSelectionModeInitialValue">
       <oncommand id="ontoggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" tooltip="To Details on Line Click" parameters="sw.crud.list.toggleselectionmode,panelid"/>
       <offcommand id="ontoggleselectionmode" icon="fa-edit" service="dispatcherService" method="dispatchevent" tooltip="To Selection on Line Click" parameters="sw.crud.list.toggleselectionmode,panelid"/>
     </togglecommand>

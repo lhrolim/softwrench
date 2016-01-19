@@ -121,8 +121,8 @@
         if ("ToggleCommand" !== command.type) {
             return;
         }
-        calcToggleInitialState(command);
         crudContextHolderService.addToggleCommand(command, $scope.panelid);
+        calcToggleInitialState(command);
     }
 
     $scope.isCommandEnabled = function (command) {
@@ -147,7 +147,7 @@
         if (command.primary || $scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
             return classes + "btn-primary commandButton navbar-btn" + command.cssClasses;
         }
-        return classes + "btn-default btn-sm" + command.cssClasses;
+        return classes + "btn-default btn-sm " + command.cssClasses;
     }
 
     // verifies if it is a toggle command and returns the correct child command

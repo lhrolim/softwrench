@@ -830,6 +830,7 @@
       <enumeration value="detailnew"></enumeration>
       <enumeration value="compositionlist"></enumeration>
       <enumeration value="compositiondetail"></enumeration>
+      <enumeration value="detail.modal"></enumeration>
     </restriction>
   </simpleType>
 
@@ -894,6 +895,7 @@
 			default="data successfully saved">
     </attribute>
     <attribute name="cssclasses" type="string"></attribute>
+    <attribute name="primary" type="boolean"></attribute>
     <attribute name="nextSchemaId" type="string"></attribute>
 
 

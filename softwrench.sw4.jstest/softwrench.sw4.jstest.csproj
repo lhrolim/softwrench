@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="angular_mock.js" />
-    <Content Include="karma.conf.js" />
+    <Content Include="karma.conf.prod.js" />
     <Content Include="node_modules\jasmine-core\.bundle\config" />
     <Content Include="node_modules\jasmine-core\.idea\codeStyleSettings.xml" />
     <Content Include="node_modules\jasmine-core\.idea\encodings.xml" />
@@ -1441,6 +1441,7 @@
     <Content Include="tests\controllers\crud_list_test.js" />
     <Content Include="tests\controllers\commlogaction_test.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
+    <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
     <Content Include="tests\services\crud_contextservice_test.js" />
     <Content Include="tests\services\gridSelection_service_test.js" />

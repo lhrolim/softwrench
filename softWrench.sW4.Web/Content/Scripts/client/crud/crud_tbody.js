@@ -153,6 +153,12 @@
                     return iconService.loadIcon(value, metadata);
                 };
 
+                scope.innerLoadIcon = function(rowIndex, columnIndex) {
+                    var column = scope.schema.displayables[columnIndex];
+                    var row = scope.datamap[rowIndex];
+                    return scope.loadIcon(row.fields[column.attribute], column);
+                }
+
                 scope.refreshGrid = function (datamap, schema) {
                     scope.datamap = datamap;
                     scope.schema = schema;
@@ -244,9 +250,9 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
+                                var classtoLoad = "'fa ' + innerLoadIcon({0}, {1})".format(i, j);
                                 html += "<div>";
-                                html += " <i class=\"{0}\"".format(classtoLoad);
+                                html += " <i class=\"{{{0}}}\"".format(classtoLoad);
                                 html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
                             }
 
@@ -300,7 +306,7 @@
 
                         }
                         if (hasMultipleSelector && !disableddetails) {
-                            html += "<td ng-show=\"selectionModel.selectionMode\">";
+                            html += "<td ng-show=\"selectionModel.selectionMode\" class=\"edit-detail\">";
                             html += "<i class=\"fa fa-edit\" onclick='griditemclick({0},null,this,true)' rel=\"tooltip\" data-original-title=\"View Details\" ></i>".format(i, j);
                             html += "</td>";
                         }
