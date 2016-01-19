@@ -172,7 +172,7 @@
 
   </target>
 
-  <target name="test" depends="copylinkedfolders">
+  <target name="test">
     <delete dir="${OutputDir}/testresults" failonerror="false"/>
     <delete file="TestResults.trx"/>
 
