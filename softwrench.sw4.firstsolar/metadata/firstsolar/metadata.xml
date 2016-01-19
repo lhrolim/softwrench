@@ -82,7 +82,7 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="datamap,location" primary="true"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true"/>
             </commandgroup>
           </commandbars>
 
@@ -123,7 +123,7 @@
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
               <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="datamap,asset" primary="true"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true"/>
             </commandgroup>
           </commandbars>
         </schema>

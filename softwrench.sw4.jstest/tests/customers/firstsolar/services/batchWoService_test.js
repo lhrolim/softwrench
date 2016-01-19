@@ -9,6 +9,7 @@
     var $httpBackend;
     var contextService;
     var redirectService;
+    var crudContextHolderService;
 
     beforeEach(module("sw_layout"));
     beforeEach(module("firstsolar"));
@@ -20,7 +21,7 @@
     }
 
 
-    beforeEach(inject(function ($injector, _alertService_, _$rootScope_, _restService_, _$httpBackend_, _contextService_, _redirectService_) {
+    beforeEach(inject(function ($injector, _alertService_, _$rootScope_, _restService_, _$httpBackend_, _contextService_, _redirectService_,_crudContextHolderService_) {
         batchWorkorderService = $injector.getInstance("firstsolar.batchWorkorderService");
         alertService = _alertService_;
         $rootScope = _$rootScope_;
@@ -28,6 +29,7 @@
         $httpBackend = _$httpBackend_;
         contextService = _contextService_;
         redirectService = _redirectService_;
+        crudContextHolderService= _crudContextHolderService_;
     }));
 
     it("Test Submission for Location Zero entries", function () {
@@ -43,21 +45,23 @@
 
         contextService.set("batchshareddata", sharedItem, true);
 
-        var items = [
-        {
-            fields: {
-                "location": 10,
-                "description": "loc",
-                "summary": "s"
+        var bufferSelectedItems = {
+            0: {
+                fields: {
+                    "location": 10,
+                    "description": "loc",
+                    "summary": "s"
+                }
+            },
+            1: {
+                fields: {
+                    "location": 11,
+                    "description": "loc",
+                    "summary": "s"
+                }
             }
-        },
-        {
-            fields: {
-                "location": 11,
-                "description": "loc",
-                "summary": "s"
-            }
-        }];
+        }
+
 
         var submissionData = {
             sharedData: sharedItem,
@@ -69,12 +73,17 @@
 
         var appResponse = { "applicationName": "workorder" };
 
-        spyOn(redirectService, "redirectFromServerResponse")
+        spyOn(redirectService, "redirectFromServerResponse");
+
+        crudContextHolderService.addSelectionToBuffer(0, bufferSelectedItems[0]);
+        crudContextHolderService.addSelectionToBuffer(1, bufferSelectedItems[1]);
+
+
 
         $httpBackend.expectPOST("/api/generic/FirstSolarWorkorderBatch/SubmitBatch?batchType=location", JSON.stringify(submissionData)).respond(appResponse);
 
         //real call
-        batchWorkorderService.submitBatch(items, "location").then(function (result) {
+        batchWorkorderService.submitBatch("location").then(function (result) {
             expect(redirectService.redirectFromServerResponse).toHaveBeenCalledWith(appResponse, "workorder");
         }).finally(done);
 
@@ -88,25 +97,33 @@
     }));
 
 
-    it("Test Submission for Location 2 entries one changed", (function (done) {
+    it("Test Submission for Location 2 entries one changed", (function(done) {
 
         contextService.set("batchshareddata", sharedItem, true);
 
-        var items = [
-        {
-            fields: {
-                "location": 10,
-                "description": "loc",
-                "summary": "s"
+        var bufferSelectedItems = {
+            0: {
+                fields: {
+                    "location": 10,
+                    "description": "loc",
+                    "summary": "s"
+                }
+            },
+            1: {
+                fields: {
+                    "location": 11,
+                    "description": "loc2",
+                    "summary": "s"
+                }
             }
-        },
-        {
-            fields: {
-                "location": 11,
-                "description": "loc2",
-                "summary": "s"
-            }
-        }];
+        }
+
+
+
+
+        crudContextHolderService.addSelectionToBuffer(0, bufferSelectedItems[0]);
+        crudContextHolderService.addSelectionToBuffer(1, bufferSelectedItems[1]);
+
 
         var submissionData = {
             sharedData: sharedItem,
@@ -123,7 +140,7 @@
         $httpBackend.expectPOST("/api/generic/FirstSolarWorkorderBatch/SubmitBatch?batchType=location", JSON.stringify(submissionData)).respond(appResponse);
 
         //real call
-        batchWorkorderService.submitBatch(items, "location").then(function (result) {
+        batchWorkorderService.submitBatch("location").then(function (result) {
             expect(redirectService.redirectFromServerResponse).toHaveBeenCalledWith(appResponse, "workorder");
         }).finally(done);
 

@@ -125,7 +125,7 @@
             return true;
         }
 
-        function submitBatch(itemsToSubmit, batchType) {
+        function submitBatch(batchType) {
 
             var log = $log.get("batchWorkorderService#submitBatch", ["workorder"]);
 
@@ -133,6 +133,8 @@
 
             var keyName = batchType === "asset" ? "assetnum" : "location";
 
+            var itemsToSubmit = crudContextHolderService.getSelectionModel().selectionBuffer;
+            var itemsToSubmitKeys = Object.keys(itemsToSubmit);
 
             var sharedData = contextService.get("batchshareddata", false, true);
             var specificData = {};
@@ -142,12 +144,13 @@
                 specificData: specificData
             };
 
-            if (itemsToSubmit.length === 0) {
+            if (itemsToSubmitKeys.length === 0) {
                 alertService.alert("Please, select at least one entry to confirm the batch");
                 return $q.reject();
             }
 
-            itemsToSubmit.forEach(function (datamap) {
+            itemsToSubmitKeys.forEach(function (bufferKey) {
+                var datamap = itemsToSubmit[bufferKey];
                 var fields = datamap.fields;
                 var customizedValues = Object.keys(fields).filter(function (prop) {
                     return prop !== keyName && fields[prop] !== sharedData[prop];
