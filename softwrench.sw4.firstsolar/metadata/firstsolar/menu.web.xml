@@ -2,9 +2,8 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="workorder">
 
   <reference id="asset"/>
-  <reference id="workorder"/>
   <reference id="location"/>
-  
+  <reference id="workorder"/>
 
 </Menu>
 
