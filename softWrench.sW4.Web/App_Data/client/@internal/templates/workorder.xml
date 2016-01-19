@@ -106,6 +106,9 @@
           <!--we need to exclde primary entries to keep consistency with maximo behaviour-->
           <relationshipAttribute to="ISPRIMARY" literal="0"/>
         </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
 
       </relationships>
       <connectorParameters>

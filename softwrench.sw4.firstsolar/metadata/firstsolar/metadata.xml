@@ -16,6 +16,12 @@
           <filters>
             <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
+          
+          
+          <customization position="+description">
+            <field attribute="classstructure_.description" label="Classification"></field>
+          </customization>
+          
         </list>
 
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
