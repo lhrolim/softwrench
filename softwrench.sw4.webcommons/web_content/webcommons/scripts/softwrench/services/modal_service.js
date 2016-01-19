@@ -7,6 +7,8 @@
             return {
 
                 hide: function (modalId) {
+                    //adding this call to solve a mistereous bug on minified environments where the modal-backdrop element would remain
+                    $('.modal-backdrop').remove();
                     if ($rootScope.showingModal) {
                         $rootScope.$broadcast('sw.modal.hide');
                     }
