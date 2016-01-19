@@ -25,7 +25,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             var fields = new Dictionary<string, object>();
             fields["DESCRIPTION"] = sharedData.Summary;
             fields["siteid"] = sharedData.SiteId;
-            fields["classstructureid"] = sharedData.Classification;
+            if (sharedData.Classification != null) {
+                fields["classstructureid"] = sharedData.Classification.Value;
+            }
             fields["ld_.ldtext"] = sharedData.Details;
 
             var keyFieldName = batchType.GetUserIdName();
@@ -40,7 +42,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
                 fields["DESCRIPTION"] = specificData.Summary ?? sharedData.Summary;
                 fields["siteid"] = specificData.SiteId ?? sharedData.SiteId;
                 fields["DESCRIPTION_LONGDESCRIPTION"] = specificData.Details ?? sharedData.Details;
-                fields["classstructureid"] = specificData.Classification ?? sharedData.Classification;
+                if (specificData.Classification != null) {
+                    fields["classstructureid"] = specificData.Classification.Value;
+                }
                 //asset batches will also specify the location of the item (which should be the same location as the asset itself)
                 var assetBatchSpecificData = specificData as AssetBatchSpecificData;
                 if (assetBatchSpecificData != null) {
