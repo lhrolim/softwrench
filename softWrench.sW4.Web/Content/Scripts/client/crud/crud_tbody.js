@@ -20,7 +20,7 @@
     function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
         var st = "";
         if (updatable) {
-            st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
+            st += "<div swcontenteditable ng-model=\"limitTextIfNeeded({0}.fields['{1}'], {2})\">".format(rowst, column.attribute, column.limit);
         } else {
             st += '<div class="cell-wrapper"';
 
@@ -159,6 +159,14 @@
                     return scope.loadIcon(row.fields[column.attribute], column);
                 }
 
+                scope.limitTextIfNeeded = function (text, limit) {
+                    var innerText = text;
+                    if (typeof limit != "undefined" && limit >= 0 && limit < (text.length + 3)) {
+                        innerText = innerText.substring(0, limit) + "...";
+                    }
+                    return innerText;
+                }
+
                 scope.refreshGrid = function (datamap, schema) {
                     scope.datamap = datamap;
                     scope.schema = schema;
@@ -209,6 +217,7 @@
                             column = schema.displayables[j];
                             var attribute = column.attribute;
                             var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap[i]);
+                            formattedText = scope.limitTextIfNeeded(formattedText, column.limit);
 
                             if (!column.rendererParameters) {
                                 column.rendererParameters = {};
@@ -258,9 +267,6 @@
 
                             else if (column.type === 'ApplicationFieldDefinition') {
                                 if (!editable) {
-
-                                    var text = defaultAppending(formattedText, updatable, rowst, column, null, null);
-
                                     if (column.rendererType === 'statuscolor') {
                                         var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
                                         var foreground = statuscolorService.foregroundColor(background);

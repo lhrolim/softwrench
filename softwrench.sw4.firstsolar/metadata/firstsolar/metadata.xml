@@ -67,7 +67,7 @@
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
-          <field attribute="details" label="Details:" requiredexpression="true">
+          <field attribute="details" label="Details:" requiredexpression="true" limit="20">
             <renderer type="textarea" params="updatable=true"/>
           </field>
           <field attribute="siteid" label="SiteId">
@@ -107,7 +107,7 @@
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
-          <field attribute="details" label="Details:" requiredexpression="true">
+          <field attribute="details" label="Details:" requiredexpression="true" limit="20">
             <renderer type="textarea" params="updatable=true"/>
           </field>
           <field attribute="siteid" label="SiteId">

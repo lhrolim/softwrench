@@ -208,6 +208,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string FieldAttributeHidden = "hidden";
         public const string FieldAttributeQualifier = "qualifier";
         public const string FieldAttributeAttributeToServer = "attributeToServer";
+        public const string FieldAttributeLimit = "limit";
 
         public const string CustomizationElement = "customization";
         public const string CustomizationPositionAttribute = "position";

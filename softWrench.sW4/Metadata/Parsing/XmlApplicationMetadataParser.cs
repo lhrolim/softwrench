@@ -131,6 +131,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var enableExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
             var enableDefault = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableDefaultAttribute).ValueOrDefault("true");
             var evalExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEvalExpressionAttribute).ValueOrDefault((string)null);
+            var limit = field.Attribute(XmlMetadataSchema.FieldAttributeLimit).ValueOrDefault(-1);
             // Flag for fields coming from attributes that use subqueries
             var fieldAttributeMetadata = entityMetadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(attribute));
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
@@ -140,7 +141,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
             return new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, declaredAsQueryOnEntity);
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, declaredAsQueryOnEntity, limit);
         }
 
         private static string ParseDataType(EntityMetadata entityMetadata, string attribute) {

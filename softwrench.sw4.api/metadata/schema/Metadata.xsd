@@ -509,6 +509,13 @@
     <attribute name="default" type="string"></attribute>
     <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="limit" type="integer">
+      <annotation>
+        <documentation>
+          The size limit of a field. Extra characters will not be displayed on some render types.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Renderer">

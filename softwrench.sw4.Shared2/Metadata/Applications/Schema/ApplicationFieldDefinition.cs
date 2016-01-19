@@ -41,8 +41,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ApplicationFieldDefinition(string applicationName, string attributeName, string datatype, String label, string requiredExpression, Boolean isReadOnly, bool isHidden, FieldRenderer renderer
-            , IWidgetDefinition widget, string defaultValue, string tooltip, bool fromSubquery)
-            : this(applicationName, attributeName, datatype, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null, fromSubquery) {
+            , IWidgetDefinition widget, string defaultValue, string tooltip, bool fromSubquery, int limit)
+            : this(applicationName, attributeName, datatype, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null, fromSubquery, limit) {
         }
 
         public ApplicationFieldDefinition(string applicationName, string attributeName, String label) {
@@ -53,7 +53,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string datatype, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
-             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool declaredAsQueryOnEntity)
+             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool declaredAsQueryOnEntity, int limit)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression, declaredAsQueryOnEntity) {
             if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
             _widgetDefinition = widgetDefinition;
@@ -71,6 +71,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             EvalExpression = evalExpression;
             EnableDefault = enableDefault;
             DefaultExpression = defaultExpression;
+            Limit = limit;
         }
         //TODO: choose one of the modes?
         private FieldRenderer BuildFromWidget() {
@@ -111,7 +112,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 _filter = value;
             }
         }
-        
+
         [Obsolete("Only used by unsupported Xamarin client code")]
         [JsonIgnore]
         public IWidgetDefinition WidgetDefinition {
@@ -147,6 +148,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
+        public int Limit {
+            get; set;
+        }
+
         protected bool Equals(ApplicationFieldDefinition other) {
             return string.Equals(Attribute, other.Attribute);
         }
@@ -168,17 +173,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             return new ApplicationFieldDefinition(ApplicationName, Attribute, DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity);
+                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity, Limit);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
             return new ApplicationFieldDefinition(applicationName, attributeName, null, "", "false", false, true,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, false);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, false, -1);
         }
 
         public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName, string label) {
             return new ApplicationFieldDefinition(applicationName, attributeName, null, label, "false", false, false,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, false);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, false, -1);
         }
 
         public bool IsTransient() {
