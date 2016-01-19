@@ -830,6 +830,7 @@
       <enumeration value="detailnew"></enumeration>
       <enumeration value="compositionlist"></enumeration>
       <enumeration value="compositiondetail"></enumeration>
+      <enumeration value="detail.modal"></enumeration>
     </restriction>
   </simpleType>
 
