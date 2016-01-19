@@ -14,7 +14,8 @@ Thumbs.db
 /.vs
 softwrench.sw4.jstest/jenkinstest-results.xml
 softwrench.sw4.jstest/test-results.testxml
-softWrench.sW4.Web/Content/Customers/
+!softWrench.sW4.Web/Content/Customers/
+softWrench.sW4.Web/Content/Customers/*
 softWrench.sW4.Web/App_Data/client/amex/
 softWrench.sW4.Web/App_Data/client/apachegold/
 softWrench.sW4.Web/App_Data/client/bering/

@@ -490,6 +490,13 @@
   </target>
 
   <target name="generatelinks">
+
+    <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content" 
+          unless="${directory::exists('../softwrench.sw4.WebMobile/www/Content/Customers')}">
+      <arg value="/c"/>
+      <arg value="mkdir Customers"/>
+    </exec>
+
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
