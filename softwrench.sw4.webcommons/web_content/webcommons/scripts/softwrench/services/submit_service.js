@@ -170,7 +170,7 @@
             for (var i = 0, len = displayableFields.length; i < len; i++) {
                 var key = displayableFields[i].target == null ? displayableFields[i].attribute : displayableFields[i].target;
 
-                if ((datamap[key] == null || datamap[key] == undefined) && datamap[key] != originalDatamap[key]) {
+                if (originalDatamap && (datamap[key] == null || datamap[key] == undefined) && datamap[key] !== originalDatamap[key]) {
                     datamap[key] = " ";
                 }
             }

@@ -18,13 +18,17 @@
         function openNewDetailModal(parentdatamap) {
             var params = {
                 popupmode: "modal",
-                title: "Work Order"
+//                title: "Work Order"
             };
+
+            var assetData = parentdatamap.fields;
+
             var jsondata = {
-                assetnum: parentdatamap.fields["assetnum"],
-                location: parentdatamap.fields["location"]
+                assetnum: assetData["assetnum"],
+                location: assetData["location"],
+                classstructureid: assetData["classstructureid"]
             };
-            redirectService.goToApplication("workorder", "assetdetail", params, jsondata);
+            return redirectService.goToApplication("workorder", "workordercreationmodal", params, jsondata);
         }
 
         var service = {

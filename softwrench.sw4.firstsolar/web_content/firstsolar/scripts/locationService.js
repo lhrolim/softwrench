@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function firstSolarLocationService($rootScope, redirectService, crudContextHolderService, alertService, restService, contextService, modalService, batchworkorderService) {
+    function firstSolarLocationService($rootScope, redirectService, crudContextHolderService, alertService, restService, contextService, modalService, batchworkorderService, workorderservice) {
 
         //        $rootScope.$on("sw.crud.applicationchanged", function() {
         //            //playing safe here
@@ -44,13 +44,14 @@
             return restService.getPromise("FirstSolarWorkorderBatch", "GetListOfRelatedWorkorders", queryParams).then(function (httpResponse) {
                 var appResponse = httpResponse.data;
                 if (appResponse.type === "BlankApplicationResponse") {
-                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
+                    return workorderservice.openNewDetailModal(datamap);
+//                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
                 }
 
                 contextService.insertIntoContext("grid_refreshdata", { data: appResponse, panelid: "#modal" }, true);
                 crudContextHolderService.setFixedWhereClause("#modal", appResponse.pageResultDto.filterFixedWhereClause);
                 return modalService.show(appResponse.schema, appResponse.resultObject, { title: "There are already related workorders. Proceed?" }, function () {
-                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
+                    workorderservice.openNewDetailModal(datamap);
                 });
 
             });
@@ -58,7 +59,7 @@
 
         var service = {
             initBatchWorkorder: initBatchWorkorder,
-            dispatchWO: dispatchWo,
+            dispatchWO: dispatchWo
         };
 
         return service;
@@ -66,7 +67,7 @@
 
     angular
     .module('firstsolar')
-    .clientfactory('locationService', ['$rootScope', 'redirectService', 'crudContextHolderService', 'alertService', 'restService', 'contextService', 'modalService', 'firstsolar.batchWorkorderService', firstSolarLocationService]);
+    .clientfactory('locationService', ['$rootScope', 'redirectService', 'crudContextHolderService', 'alertService', 'restService', 'contextService', 'modalService', 'firstsolar.batchWorkorderService', 'workorderService', firstSolarLocationService]);
 
 
 })(angular);
