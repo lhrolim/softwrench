@@ -65,11 +65,14 @@
                     value: value.fields[schema.userIdFieldName],
                     label: value.fields["description"]
                 };
+
+                associationOption.extraFields = {
+                    "siteid": value.fields["siteid"]
+                }
+
                 if (schema.applicationName === "asset") {
-                    associationOption.extraFields = {
-                        //passing location of the asset as an extra projection field
-                        "location": value.fields["location"]
-                    }
+                    //passing location of the asset as an extra projection field
+                    associationOption.extraFields["location"] = value.fields["location"];
                 }
                 return associationOption;
             });

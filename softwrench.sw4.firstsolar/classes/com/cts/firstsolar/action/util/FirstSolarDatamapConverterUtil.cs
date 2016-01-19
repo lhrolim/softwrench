@@ -74,9 +74,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             fields[userIdFieldName] = item.Value;
             fields["userIdFieldName"] = userIdFieldName;
             fields["specificLabel"] = item.Label;
-            var multiValueOption = item as MultiValueAssociationOption;
-            if (multiValueOption.Extrafields != null && multiValueOption.Extrafields.ContainsKey("location")) {
-                fields["location"] = multiValueOption.Extrafields["location"];
+            var multiValueOption = item;
+
+            if (multiValueOption.Extrafields != null) {
+                if (multiValueOption.Extrafields.ContainsKey("siteid")) {
+                    fields["siteid"] = multiValueOption.Extrafields["siteid"];
+                }
+                if (multiValueOption.Extrafields.ContainsKey("location")) {
+                    fields["location"] = multiValueOption.Extrafields["location"];
+                }
             }
             return new DataMap("workorder", fields);
         }

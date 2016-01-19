@@ -41,7 +41,6 @@
           <field attribute="details" label="Details:">
             <renderer type="textarea"/>
           </field>
-          <reference id="siteid"/>
           <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
@@ -134,13 +133,14 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
           <field attribute="specificLabel" label="Location" readonly="true"/>
+          <field attribute="siteid" label ="Site" readonly="true"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:">
             <renderer type="textarea" params="updatable=true"/>
           </field>
-          <reference id="siteid"/>
+          
           <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
@@ -162,13 +162,13 @@
           <field attribute="userIdFieldName" hidden="true"/>
           <field attribute="specificLabel" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="siteid" label ="Site" readonly="true"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:">
             <renderer type="textarea" params="updatable=true"/>
           </field>
-          <reference id="siteid"/>
           <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
