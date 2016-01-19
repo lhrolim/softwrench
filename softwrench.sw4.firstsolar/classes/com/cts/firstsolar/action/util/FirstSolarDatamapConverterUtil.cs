@@ -4,7 +4,7 @@ using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data;
-
+using softWrench.sW4.Security.Services;
 using BT = softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto.FirstSolarBatchType;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
@@ -25,6 +25,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             var fields = new Dictionary<string, object>();
             fields["DESCRIPTION"] = sharedData.Summary;
             fields["siteid"] = sharedData.SiteId;
+            fields["reportedby"] = SecurityFacade.CurrentUser().MaximoPersonId;
 
             fields["classstructureid"] = sharedData.Classificationid;
             fields["ld_.ldtext"] = sharedData.Details;
