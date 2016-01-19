@@ -19,7 +19,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
 
 
             if (count > 1) {
-                return count + "Workorders created successfully";
+                return count + " Workorders created successfully";
             }
             return "Workorder created successfully";
         }
