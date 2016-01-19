@@ -9,6 +9,8 @@ using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util;
+using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
@@ -39,9 +41,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
         [HttpPost]
-        public IApplicationResponse SubmitBatch(BatchSubmissionData batchData,[FromUri] FirstSolarBatchType batchType) {
+        public IApplicationResponse SubmitBatch(BatchSubmissionData batchData, [FromUri] FirstSolarBatchType batchType) {
             var batch = Batch.TransientInstance("workorder", SecurityFacade.CurrentUser());
-            batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(s => FirstSolarDatamapConverterUtil.BuildBatchItem(s, batchData,batchType)).ToList());
+            batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(s => FirstSolarDatamapConverterUtil.BuildBatchItem(s, batchData, batchType)).ToList());
             var resultBatch = _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
             var woDataSet = DataSetProvider.GetInstance().LookupDataSet("workorder", "list");
             var dto = BatchRedirectionHelper.BuildDTO(resultBatch);
@@ -71,7 +73,27 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             };
         }
 
+        [HttpPost]
+        public IGenericResponseResult ValidateExistingWorkorders([FromUri]string specificValue, [FromUri]string classificationId, [FromUri]FirstSolarBatchType batchType) {
+            Log.DebugFormat("validating existing workorders for {0}", batchType);
 
+            var itens = new List<MultiValueAssociationOption> {
+                new MultiValueAssociationOption {
+                    Value = specificValue,
+                    Label = ""
+                }
+            };
+
+            var result = new Dictionary<string, object>();
+            var warningIds = _validationHelper.ValidateIdsThatHaveWorkorders(batchType, itens, classificationId);
+            var hasWarning = warningIds.ContainsKey(specificValue);
+            result["#warning"] = hasWarning;
+            if (hasWarning) {
+                result["#wonums"] = string.Join(",", warningIds[specificValue]);
+            }
+            
+            return new GenericResponseResult<Dictionary<string, object>>(result);
+        }
 
         [HttpGet]
         public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
@@ -81,28 +103,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             }
             return listResult;
         }
-
-//        [HttpPost]
-//        public IApplicationResponse InitLocationBatch(BatchStartingData batchSharedData) {
-//
-//            Log.Debug("receiving batch data");
-//            var warningIds = _validationHelper.ValidateIdsThatHaveWorkorders(batchSharedData.Items, batchSharedData.Classification.Value);
-//
-//            var i = 0;
-//            var resultData = batchSharedData.Items.Select(location => FirstSolarDatamapConverterUtil.DoGetDataMap(location, batchSharedData, warningIds, i++, "location")).ToList();
-//            //assuring selected come first
-//            resultData.Sort(new SelectedComparer());
-//
-//            var schema = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("batchLocationSpreadSheet")).Schema;
-//
-//            return new ApplicationListResult(batchSharedData.Items.Count, null, resultData, schema, null) {
-//                ExtraParameters = new Dictionary<string, object>() { { "allworkorders", warningIds.Count == batchSharedData.Items.Count } }
-//            };
-//
-//        }
-
-
-
 
         private class SelectedComparer : IComparer<DataMap> {
             public int Compare(DataMap x, DataMap y) {
@@ -121,8 +121,5 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 return 0;
             }
         }
-
-
-
     }
 }

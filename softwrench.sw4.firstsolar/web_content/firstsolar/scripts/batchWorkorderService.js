@@ -15,15 +15,15 @@
             }
 
             var params = {
-                batchType: saveDataMap.userIdFieldName === "location" ? "location" : "asset"
+                batchType: saveDataMap.userIdFieldName === "location" ? "location" : "asset",
+                specificValue: saveDataMap[saveDataMap.userIdFieldName],
+                classificationId: saveDataMap["classificationid"]
             }
 
-            var specificAppName = saveDataMap.userIdFieldName === "location" ? "location" : "asset";
-            var batchData = toBatchData(saveDataMap, null, saveDataMap.userIdFieldName, specificAppName);
-            var applicationResponseDataMap;
+            var resultObject;
 
-            restService.postPromise("FirstSolarWorkorderBatch", "InitBatch", params, batchData).then(function (httpResponse) {
-                applicationResponseDataMap = httpResponse.data.resultObject[0].fields;
+            restService.postPromise("FirstSolarWorkorderBatch", "ValidateExistingWorkorders", params).then(function (httpResponse) {
+                resultObject = httpResponse.data.resultObject;
                 associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
                 var gridDatamap = crudContextHolderService.rootDataMap();
                 gridDatamap.forEach(function (row) {
@@ -33,29 +33,21 @@
                         row.fields.siteid = saveDataMap.siteid;
                         row.fields.classification = saveDataMap["#classificationid_label"] || "";
                         row.fields.classificationid = saveDataMap.classificationid;
-                        row.fields["#warning"] = applicationResponseDataMap["#warning"];
-                        row.fields["#wonums"] = applicationResponseDataMap["#wonums"];
+                        row.fields["#warning"] = resultObject["#warning"];
+                        row.fields["#wonums"] = resultObject["#wonums"];
                     }
                 });
                 modalService.hide();
             });
         }
 
-        function innerToBatchData(value, specificIdColumn, specificAppName) {
-            var associationOption = {
-                value: value[specificIdColumn],
-                label: value["description"]
-            };
-            if (specificAppName === "asset") {
-                associationOption.extraFields = {
-                    //passing location of the asset as an extra projection field
-                    "location": value["location"]
-                }
-            }
-            return associationOption;
-        }
+        // save method of pre wo batch creation
+        function woBatchSharedSave(schema, modalData, modalSchema) {
 
-        function toBatchData(modalData, selectionBuffer, specificIdColumn, specificAppName) {
+
+            associationService.insertAssocationLabelsIfNeeded(modalSchema, modalData);
+            var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
+
             var batchData = {
                 summary: modalData["summary"],
                 details: modalData["details"],
@@ -66,26 +58,21 @@
                 }
             }
 
-            if (selectionBuffer) {
-                batchData["items"] = Object.keys(selectionBuffer).map(function(key) {
-                    var value = selectionBuffer[key];
-                    return innerToBatchData(value.fields, specificIdColumn, specificAppName);
-                });
-            } else {
-                batchData["items"] = [innerToBatchData(modalData, specificIdColumn, specificAppName)];
-            }
 
-            return batchData;
-        }
-
-        // save method of pre wo batch creation
-        function woBatchSharedSave(schema, modalData, modalSchema) {
-
-
-            associationService.insertAssocationLabelsIfNeeded(modalSchema, modalData);
-            var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
-
-            var batchData = toBatchData(modalData, selectionBuffer, schema.userIdFieldName, schema.applicationName);
+            batchData["items"] = Object.keys(selectionBuffer).map(function (key) {
+                var value = selectionBuffer[key];
+                var associationOption = {
+                    value: value.fields[schema.userIdFieldName],
+                    label: value.fields["description"]
+                };
+                if (schema.applicationName === "asset") {
+                    associationOption.extraFields = {
+                        //passing location of the asset as an extra projection field
+                        "location": value.fields["location"]
+                    }
+                }
+                return associationOption;
+            });
 
             var params = {
                 batchType: schema.applicationName === "asset" ? "asset" : "location"
@@ -138,7 +125,7 @@
             return true;
         }
 
-        function submitBatch(datamap, schema,batchType) {
+        function submitBatch(itemsToSubmit, batchType) {
 
             var log = $log.get("batchWorkorderService#submitBatch", ["workorder"]);
 
@@ -155,11 +142,15 @@
                 specificData: specificData
             };
 
-            datamap.forEach(function (datamap) {
-                var fields = datamap.fields;
+            if (itemsToSubmit.length === 0) {
+                alertService.alert("Please, select at least one entry to confirm the batch");
+                return $q.reject();
+            }
 
+            itemsToSubmit.forEach(function (datamap) {
+                var fields = datamap.fields;
                 var customizedValues = Object.keys(fields).filter(function (prop) {
-                    return prop !== keyName && fields[keyName] !== sharedData[keyName];
+                    return prop !== keyName && fields[prop] !== sharedData[prop];
                 });
 
                 var key = fields[keyName];
@@ -177,10 +168,10 @@
             var params = { batchType: batchType };
 
 
-            restService.postPromise("FirstSolarWorkorderBatch", "SubmitBatch", params, JSON.stringify(submissionData))
+            return restService.postPromise("FirstSolarWorkorderBatch", "SubmitBatch", params, JSON.stringify(submissionData))
                 .then(function (httpResponse) {
                     var appResponse = httpResponse.data;
-                    redirectService.redirectFromServerResponse(appResponse, "workorder");
+                    return redirectService.redirectFromServerResponse(appResponse, "workorder");
                 });
 
         }
