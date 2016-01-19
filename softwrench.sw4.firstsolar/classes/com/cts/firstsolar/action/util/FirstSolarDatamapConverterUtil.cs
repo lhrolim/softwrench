@@ -73,7 +73,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             fields["classification"] = batchSharedData.Classification.Label;
             fields[userIdFieldName] = item.Value;
             fields["userIdFieldName"] = userIdFieldName;
-            fields["specificLabel"] = item.Label;
+            fields["specificLabel"] = string.IsNullOrEmpty(item.Label) ? item.Value : item.Label;
             var multiValueOption = item;
 
             if (multiValueOption.Extrafields != null) {
