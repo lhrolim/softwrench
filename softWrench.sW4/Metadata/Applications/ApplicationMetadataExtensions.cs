@@ -26,6 +26,9 @@ namespace softWrench.sW4.Metadata.Applications {
 
         public static ApplicationMetadata ApplyPoliciesWeb([NotNull] this CompleteApplicationMetadataDefinition application,
             ApplicationMetadataSchemaKey schemaKey) {
+            if (schemaKey != null) {
+                schemaKey.Platform = ClientPlatform.Web;
+            }
             return new ApplicationMetadataPolicyApplier(application, schemaKey, SecurityFacade.CurrentUser(), ClientPlatform.Web, null).Apply();
         }
 
