@@ -603,9 +603,11 @@
           </field>
         </detail>
 
-        <schema id="assetdetail" title="Work Order" stereotype="detail">
+        <schema id="assetdetail" title="Work Order" stereotype="detail.modal">
           <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field attribute="ld_.ldtext" label="Details:" requiredexpression="false"/>
+          <field attribute="ld_.ldtext" label="Details:" requiredexpression="false">
+            <renderer type="textarea"/>
+          </field>
           <field attribute="assetnum" label="Asset" readonly="true" hidden="true"/>
           <field attribute="location" label="Location" readonly="true" hidden="true"/>
           <field attribute="reportedby" label="Reported by" default="@username" readonly="true" hidden="true"/>

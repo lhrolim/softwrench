@@ -1,17 +1,12 @@
 ﻿
-(function () {
+(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", workorderService]);
+
 
     function workorderService($log, redirectService) {
 
-        var service = {
-            goToDetail: goToDetail,
-            openNewDetailModal: openNewDetailModal
-        };
 
-        return service;
 
         function goToDetail(parameters) {
             var params = {
@@ -31,5 +26,17 @@
             };
             redirectService.goToApplication("workorder", "assetdetail", params, jsondata);
         }
+
+        var service = {
+            goToDetail: goToDetail,
+            openNewDetailModal: openNewDetailModal
+        };
+
+        return service;
     }
-})();
+
+
+
+    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", workorderService]);
+}
+)(angular);
