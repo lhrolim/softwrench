@@ -20,7 +20,12 @@
     function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
         var st = "";
         if (updatable) {
-            st += "<div swcontenteditable ng-model=\"limitTextIfNeeded({0}.fields['{1}'], {2})\">".format(rowst, column.attribute, column.limit);
+            var limit = column.rendererParameters["limit"] || null;
+            if (limit) {
+                st += "<div swcontenteditable >{{limitTextIfNeeded({0}.fields['{1}'], '{2}')}}".format(rowst, column.attribute, limit);
+            } else {
+                st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
+            }
         } else {
             st += '<div class="cell-wrapper"';
 
@@ -153,18 +158,21 @@
                     return iconService.loadIcon(value, metadata);
                 };
 
-                scope.innerLoadIcon = function(rowIndex, columnIndex) {
+                scope.innerLoadIcon = function (rowIndex, columnIndex) {
                     var column = scope.schema.displayables[columnIndex];
                     var row = scope.datamap[rowIndex];
                     return scope.loadIcon(row.fields[column.attribute], column);
                 }
 
                 scope.limitTextIfNeeded = function (text, limit) {
-                    var innerText = text;
-                    if (typeof limit != "undefined" && limit >= 0 && limit < (text.length + 3)) {
-                        innerText = innerText.substring(0, limit) + "...";
+                    if (!limit || !text) {
+                        return text;
                     }
-                    return innerText;
+                    var limitNumber = Number.parseInt(limit);
+                    if (Number.isNaN(limitNumber) || limitNumber < 0 || limitNumber >= (text.length + 3)) {
+                        return text;
+                    }
+                    return text.substring(0, limitNumber) + "...";
                 }
 
                 scope.refreshGrid = function (datamap, schema) {
@@ -217,7 +225,7 @@
                             column = schema.displayables[j];
                             var attribute = column.attribute;
                             var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap[i]);
-                            formattedText = scope.limitTextIfNeeded(formattedText, column.limit);
+                            formattedText = scope.limitTextIfNeeded(formattedText, column.rendererParameters["limit"]);
 
                             if (!column.rendererParameters) {
                                 column.rendererParameters = {};

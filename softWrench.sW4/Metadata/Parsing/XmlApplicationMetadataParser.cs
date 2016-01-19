@@ -61,19 +61,19 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (renderer == null) {
                 switch (ftype) {
                     case FieldRendererType.ASSOCIATION:
-                    return new AssociationFieldRenderer();
+                        return new AssociationFieldRenderer();
                     case FieldRendererType.COMPOSITION:
-                    return new CompositionFieldRenderer();
+                        return new CompositionFieldRenderer();
                     case FieldRendererType.OPTION:
-                    return new OptionFieldRenderer();
+                        return new OptionFieldRenderer();
                     default:
-                    if (entity != null) {
-                        var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
-                        if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
-                            return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
+                        if (entity != null) {
+                            var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
+                            if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
+                                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
+                            }
                         }
-                    }
-                    return new FieldRenderer();
+                        return new FieldRenderer();
                 }
             }
             var type = renderer.Attribute(XmlMetadataSchema.RendererAttributeType).Value;
@@ -81,13 +81,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             var stereotype = renderer.Attribute(XmlMetadataSchema.RendererAttributeStereotype).ValueOrDefault((string)null);
             switch (ftype) {
                 case FieldRendererType.ASSOCIATION:
-                return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
+                    return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
                 case FieldRendererType.COMPOSITION:
-                return new CompositionFieldRenderer(type, parameters, targetName);
+                    return new CompositionFieldRenderer(type, parameters, targetName);
                 case FieldRendererType.OPTION:
-                return new OptionFieldRenderer(type, parameters, targetName);
+                    return new OptionFieldRenderer(type, parameters, targetName);
                 default:
-                return new FieldRenderer(type, parameters, targetName, stereotype);
+                    return new FieldRenderer(type, parameters, targetName, stereotype);
             }
         }
 
@@ -131,7 +131,6 @@ namespace softWrench.sW4.Metadata.Parsing {
             var enableExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
             var enableDefault = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableDefaultAttribute).ValueOrDefault("true");
             var evalExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEvalExpressionAttribute).ValueOrDefault((string)null);
-            var limit = field.Attribute(XmlMetadataSchema.FieldAttributeLimit).ValueOrDefault(-1);
             // Flag for fields coming from attributes that use subqueries
             var fieldAttributeMetadata = entityMetadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(attribute));
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
@@ -141,7 +140,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
             return new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, declaredAsQueryOnEntity, limit);
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, declaredAsQueryOnEntity);
         }
 
         private static string ParseDataType(EntityMetadata entityMetadata, string attribute) {

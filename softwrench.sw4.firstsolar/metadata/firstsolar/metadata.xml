@@ -67,8 +67,8 @@
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
-          <field attribute="details" label="Details:" requiredexpression="true" limit="20">
-            <renderer type="textarea" params="updatable=true"/>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
           <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>
@@ -107,8 +107,8 @@
           <field attribute="summary" label="Summary:" requiredexpression="true">
             <renderer type="default" params="updatable=true"  />
           </field>
-          <field attribute="details" label="Details:" requiredexpression="true" limit="20">
-            <renderer type="textarea" params="updatable=true"/>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
           <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>

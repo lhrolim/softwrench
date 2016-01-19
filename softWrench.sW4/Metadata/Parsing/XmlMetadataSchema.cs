@@ -6,12 +6,12 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     constants related to the metadata file
     ///     (e.g. elements names, attributes names).
     /// </summary>
-    internal class XmlMetadataSchema :XmlBaseSchemaConstants {
+    internal class XmlMetadataSchema : XmlBaseSchemaConstants {
         public static readonly char[] ItemDelimeter = { ',' };
 
 
 
-    
+
 
 
         public const string EventsElement = "event";
@@ -31,9 +31,9 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
 
-        public const string TemplatesElement= "templates";
-        public const string TemplateElement= "template";
-        public const string TemplatePathAttribute= "path";
+        public const string TemplatesElement = "templates";
+        public const string TemplateElement = "template";
+        public const string TemplatePathAttribute = "path";
 
         public const string EntitiesElement = "entities";
         public const string EntityElement = "entity";
@@ -201,14 +201,13 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string DetailElement = "detail";
         public const string ListElement = "list";
         public const string FieldElement = "field";
-        
+
         public const string FieldAttributeAttribute = "attribute";
         public const string FieldAttributeLabel = "label";
         public const string FieldAttributeReadOnly = "readonly";
         public const string FieldAttributeHidden = "hidden";
         public const string FieldAttributeQualifier = "qualifier";
         public const string FieldAttributeAttributeToServer = "attributeToServer";
-        public const string FieldAttributeLimit = "limit";
 
         public const string CustomizationElement = "customization";
         public const string CustomizationPositionAttribute = "position";
