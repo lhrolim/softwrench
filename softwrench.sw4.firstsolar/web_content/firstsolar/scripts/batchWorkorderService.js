@@ -14,18 +14,31 @@
                 return;
             }
 
-            associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
-            var gridDatamap = crudContextHolderService.rootDataMap();
-            gridDatamap.forEach(function (row) {
-                if (row.fields[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
-                    row.fields.summary = saveDataMap.summary;
-                    row.fields.details = saveDataMap.details;
-                    row.fields.siteid = saveDataMap.siteid;
-                    row.fields.classification = saveDataMap["#classificationid_label"] || "";
-                    row.fields.classificationid = saveDataMap.classificationid;
-                }
+            var params = {
+                batchType: saveDataMap.userIdFieldName === "location" ? "location" : "asset",
+                specificValue: saveDataMap[saveDataMap.userIdFieldName],
+                classificationId: saveDataMap["classificationid"]
+            }
+
+            var resultObject;
+
+            restService.postPromise("FirstSolarWorkorderBatch", "ValidateExistingWorkorders", params).then(function (httpResponse) {
+                resultObject = httpResponse.data.resultObject;
+                associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
+                var gridDatamap = crudContextHolderService.rootDataMap();
+                gridDatamap.forEach(function (row) {
+                    if (row.fields[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
+                        row.fields.summary = saveDataMap.summary;
+                        row.fields.details = saveDataMap.details;
+                        row.fields.siteid = saveDataMap.siteid;
+                        row.fields.classification = saveDataMap["#classificationid_label"] || "";
+                        row.fields.classificationid = saveDataMap.classificationid;
+                        row.fields["#warning"] = resultObject["#warning"];
+                        row.fields["#wonums"] = resultObject["#wonums"];
+                    }
+                });
+                modalService.hide();
             });
-            modalService.hide();
         }
 
         // save method of pre wo batch creation
