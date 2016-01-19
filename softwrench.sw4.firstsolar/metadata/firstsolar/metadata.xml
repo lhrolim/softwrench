@@ -68,7 +68,7 @@
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:" requiredexpression="true">
-            <renderer type="textarea" params="updatable=true"/>
+            <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
           <field attribute="classification" label="Classification">
             <renderer type="default" params="updatable=true"/>
@@ -109,7 +109,7 @@
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:" requiredexpression="true">
-            <renderer type="textarea" params="updatable=true"/>
+            <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
        
           <field attribute="classification" label="Classification">

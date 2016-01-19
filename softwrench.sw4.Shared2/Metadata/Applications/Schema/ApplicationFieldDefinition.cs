@@ -111,7 +111,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 _filter = value;
             }
         }
-        
+
         [Obsolete("Only used by unsupported Xamarin client code")]
         [JsonIgnore]
         public IWidgetDefinition WidgetDefinition {
