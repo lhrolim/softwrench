@@ -4,7 +4,11 @@ module.exports = function (grunt) {
         //#region global app config 
         app: {
             content: "Content",
-            vendor:  "Content/vendor"
+            customVendor: "Content/customVendor",
+            webcommons: "Content/Shared/webcommons",
+            vendor: "Content/vendor",
+            customers: "Content/Customers",
+            tests: "../softwrench.sw4.jstest"
         },
         //#endregion
 
@@ -40,7 +44,7 @@ module.exports = function (grunt) {
                 "<%= app.vendor %>/css/*",
                 "<%= app.vendor %>/scripts/*",
                 "<%= app.vendor %>/fonts/*"
-            ],
+            ]
         },
         //#endregion
 
@@ -105,6 +109,84 @@ module.exports = function (grunt) {
                     "utils/lz-string.js": "lz-string/libs/lz-string.js",
                 }
             }
+        },
+        //#endregion
+
+        //#region karma
+        karma: {
+            options: {
+                basePath: "",
+                frameworks: ["jasmine"],
+                port: 9876,
+                colors: true,
+                browserNoActivityTimeout: 10000,
+                browserDisconnectTolerance: 10,
+                browserDisconnectTimeout: 5000,
+                reporters: ["progress", "dots"],
+                logLevel: "INFO",
+                preprocessors: {
+                    'Content/Templates/**/*.html': ["ng-html2js"]
+                },
+                ngHtml2JsPreprocessor: {
+                    // If your build process changes the path to your TEMPLATES,
+                    // use stripPrefix and prependPrefix to adjust it.
+                    prependPrefix: "/",
+                    // the name of the Angular module to create
+                    moduleName: "sw.templates"
+                },
+                files: [
+                    // vendors
+                    "<%= app.vendor %>/scripts/jquery/jquery.js",
+                    "<%= app.vendor %>/scripts/jquery/jquery-ui.js",
+                    "<%= app.vendor %>/scripts/jquery/*!(jquery).js",
+                    "<%= app.vendor %>/scripts/angular/angular.js",
+                    "<%= app.vendor %>/scripts/angular/*!(angular).js",
+                    "<%= app.vendor %>/scripts/utils/**/*.js",
+                    "<%= app.vendor %>/scripts/bootstrap/**/*.js",
+
+                    // custom vendors
+                    "<%= app.customVendor %>/scripts/**/*.js",
+
+                    // app 
+                    // modules
+                    "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
+                    "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
+                    // webcommons
+                    "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
+                    // sw
+                    "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
+                    "<%= app.content %>/Scripts/client/services/*.js",
+                    "<%= app.content %>/Scripts/client/*.js",
+                    "<%= app.content %>/Scripts/client/adminresources/*.js",
+                    "<%= app.content %>/Scripts/client/directives/*.js",
+                    "<%= app.content %>/Scripts/client/directives/menu/*.js",
+                    "<%= app.content %>/Templates/commands/**/*.js",
+                    "<%= app.content %>/modules/**/*.js",
+                    // Shared
+                    "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
+                    // base otb
+                    "<%= app.content %>/Scripts/customers/otb/*.js",
+                    // customers shared
+                    "<%= app.content %>/Scripts/customers/shared/*.js",
+                    // customers: outer build process guarantees there's only the selected customer in the path
+                    "<%= app.customers %>/**/scripts/**/*.js",
+                    // templates
+                    "<%= app.content %>/Templates/**/*.html",
+
+                    // tests
+                    "<%= app.tests %>/angular_mock.js",
+                    "<%= app.tests %>/tests/**/*.js"
+                ]
+            },
+            dev: {
+                browsers: ["PhantomJS"],
+                singleRun: true
+            },
+            tdd: {
+                browsers: ["Chrome"],
+                autowatch: true,
+                singleRun: false
+            }
         }
         //#endregion
     });
@@ -114,6 +196,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-bowercopy");
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-karma");
     //#endregion
 
     //#region cutom tasks
