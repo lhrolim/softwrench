@@ -278,7 +278,7 @@ module.exports = function (grunt) {
         //#region karma
         karma: {
             options: {
-                configFile: "<%= app.tests %>/karma.conf.js",
+                configFile: "<%= app.tests %>/karma.conf.prod.js",
                 logLevel: "WARN",
                 browsers: ["PhantomJS"],
                 singleRun: true,
