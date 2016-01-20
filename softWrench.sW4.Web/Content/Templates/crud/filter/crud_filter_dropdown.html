@@ -68,7 +68,7 @@
                                 {{ getOperatorIcon(filter.attribute) }}
                             </span>
                             <!-- have to use if/else to set the input type: angular does not evaluate interpolated expression for input.type due to browser compatibility -->
-                            <input ng-if="filter.type === 'MetadataNumberFilter'"
+                            <input ng-if="filter.type === 'MetadataNumberFilter'" string-to-number
                                    type="number" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
                                    ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
                             <input ng-if="filter.type !== 'MetadataNumberFilter'" 
