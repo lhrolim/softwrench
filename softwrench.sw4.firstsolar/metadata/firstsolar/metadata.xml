@@ -68,14 +68,15 @@
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:" requiredexpression="true">
-            <renderer type="textarea" params="updatable=true"/>
-          </field>
-          <field attribute="siteid" label="SiteId">
-            <renderer type="default" params="updatable=true"/>
+            <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
           <field attribute="classification" label="Classification">
             <renderer type="default" params="updatable=true"/>
           </field>
+          <field attribute="siteid" label="SiteId">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+       
 
           <properties>
             <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
@@ -108,12 +109,14 @@
             <renderer type="default" params="updatable=true"  />
           </field>
           <field attribute="details" label="Details:" requiredexpression="true">
-            <renderer type="textarea" params="updatable=true"/>
+            <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-          <field attribute="siteid" label="SiteId">
+       
+          <field attribute="classification" label="Classification">
             <renderer type="default" params="updatable=true"/>
           </field>
-          <field attribute="classification" label="Classification">
+
+          <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>
           </field>
           

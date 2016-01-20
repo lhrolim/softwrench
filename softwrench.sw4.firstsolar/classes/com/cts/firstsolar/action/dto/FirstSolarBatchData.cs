@@ -19,6 +19,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
             get; set;
         }
 
+        //used for batch submission only
+        public string Classificationid {
+            get; set;
+        }
+
         public AssociationOption Classification {
             get; set;
         }
@@ -51,6 +56,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
         public BatchSharedData SharedData {
             get; set;
         }
+
 
         public IDictionary<string, BatchSpecificData> SpecificData {
             get; set;

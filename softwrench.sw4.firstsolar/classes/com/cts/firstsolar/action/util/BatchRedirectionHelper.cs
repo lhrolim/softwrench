@@ -1,15 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using cts.commons.simpleinjector;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
-    class BatchRedirectionHelper {
+    public class BatchRedirectionHelper : ISingletonComponent {
 
-        public static PaginatedSearchRequestDto BuildDTO(Batch resultBatch) {
+        private readonly IContextLookuper _contextLookuper;
+        private readonly MaximoHibernateDAO _dao;
+
+        private const string MockQuery = "select top 10 workorderid from workorder";
+
+        public BatchRedirectionHelper(IContextLookuper contextLookuper, MaximoHibernateDAO dao) {
+            _contextLookuper = contextLookuper;
+            _dao = dao;
+        }
+
+        public PaginatedSearchRequestDto BuildDTO(Batch resultBatch) {
+            if (_contextLookuper.LookupContext().MockMaximo) {
+                return MockDTO();
+            }
+
             var dto = new PaginatedSearchRequestDto();
-
             var resultsBySiteId = new Dictionary<string, IList<string>>();
             foreach (var result in resultBatch.TargetResults) {
                 if (!resultsBySiteId.ContainsKey(result.SiteId)) {
@@ -25,6 +43,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             }
             dto.WhereClause = sb.ToString(0, sb.Length - 4);
             return dto;
+        }
+
+        private PaginatedSearchRequestDto MockDTO() {
+            var queryResult = _dao.FindByNativeQuery(MockQuery);
+
+            var whereClause = new StringBuilder();
+            whereClause.Append("workorderid in (");
+            var idList = queryResult.Select(row => row["workorderid"]).ToList();
+            whereClause.Append(string.Join(", ", idList));
+            whereClause.Append(")");
+
+            return new PaginatedSearchRequestDto { PageSize = 10, FilterFixedWhereClause = whereClause.ToString() }; ;
         }
 
     }
