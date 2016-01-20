@@ -191,10 +191,11 @@ function BaseList($scope, formatService, expressionService, searchService, field
         }
 
         // TODO: change both cases to redirectService.gotoApplicaiton 
-        if ("modal" === popupmode) {
-            redirectService.openAsModal(applicationname, schemaid, null, rowdm.fields);
-            return;
-        }
+        //if ("modal" === popupmode) {
+        //    // TODO: pass id to search data from instead of datamap 
+        //    redirectService.openAsModal(applicationname, schemaid, null, rowdm.fields);
+        //    return;
+        //}
         $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
             id: id, popupmode: popupmode, customParameters: $scope.getCustomParameters($scope.schema, rowdm)
         });
