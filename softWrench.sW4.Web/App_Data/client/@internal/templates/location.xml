@@ -42,7 +42,11 @@
       <filters>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" />
         <optionfilter attribute="type" provider="syntype_.description" displaycode="true"/>
+        <optionfilter attribute="parentlocation_.parent" provider="parentlocation_.parent" displaycode="true" allowblank="true" />
+        <optionfilter attribute="parentlocation_.systemid" provider="parentlocation_.systemid" displaycode="true" allowblank="true" />
         <optionfilter attribute="siteid" provider="site_.siteid" />
+        <numericfilter attribute="children" label="Child Locations" position="children" />
+        <numericfilter attribute="assets" label="Assets" position="assets" />
       </filters>
       
       <schemas>
