@@ -885,6 +885,10 @@
           <relationshipAttribute from="assetnum" to="parent" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
+        <relationship to="asset" qualifier="subassembly" collection="true">
+          <relationshipAttribute from="assetnum" to="ancestor" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
         <relationship to="assetloccomm">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />

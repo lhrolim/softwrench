@@ -116,6 +116,22 @@
           <composition relationship="workorder" label="Work Order History" detailschema="">
             <collectionproperties listschema="assetwolist" allowcreation="false" allowupdate="false" allowremoval="false" printenabled="false"/>
           </composition>
+          <tab id="Spare Parts" label="Spare Parts">
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="desription" label="Description" readonly="true"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="parentasset_.assetnum" label="Parent" readonly="true"/>
+            <field attribute="parentasset_.description" label="Description" readonly="true"/>
+            <composition relationship="subassembly" inline="true" detailschema="" label="Subassemblies" >
+              <collectionproperties listschema="subassemblies" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+          </tab>
+        </schema>
+        <schema id="subassemblies" stereotype="compositionlist">
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="location_.description" label="Description" readonly="true"/>
         </schema>
         <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
