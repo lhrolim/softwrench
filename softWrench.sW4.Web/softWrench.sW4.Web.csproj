@@ -902,6 +902,10 @@
       <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
       <Name>cts.commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.liggett\softwrench.sw4.liggett.csproj">
+      <Project>{dafd4db9-7f56-46ed-91d7-96c95685362a}</Project>
+      <Name>softwrench.sw4.liggett</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
       <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
       <Name>softwrench.sw4.acs</Name>

@@ -1,0 +1,120 @@
+﻿$background_color: #fff;
+$form_background: rgba($background_color, 0.6);
+$asset_path: "../images";
+$brand_color: #0263a8;
+
+.page-signin {
+    background: $background_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
+
+    .form-signin {
+        a {
+            color: $brand_color;
+
+            &:hover {
+                color: rgba($brand_color, 0.7);
+            }
+        }
+
+        button[type="submit"] {
+            border: $brand_color 2px solid;
+            color: $brand_color;
+
+            &:hover {
+                background: rgba($brand_color, 0.1);
+            }
+        }
+
+        .logo.main {
+            img {
+                height: 80px;
+                width: auto;
+            }
+        }
+    }
+}
+
+.container {
+    header {
+        background: $background_color url(#{$asset_path}/header.jpg) no-repeat center left;
+
+        .admin-area {
+            background-color: rgba($brand_color, 0.7);
+        }
+
+        .branding {
+            min-height: 110px;
+
+            .logo img {
+                height: 70px;
+                width: auto;
+            }
+        }
+    }
+
+    footer {
+        background: $background_color url(#{$asset_path}/footer.jpg) no-repeat bottom left;
+
+        .page-overlay {
+            background-color: rgba($brand_color, 0.7);
+        }
+    }
+}
+
+/* Extra Small Devices, Phones */
+@media all and (min-width: 1px) and (max-width: 479px) {
+    .page-signin {
+        background: $background_color url(#{$asset_path}/signin-xxs.jpg) no-repeat center center fixed;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .page-signin {
+        background: $background_color url(#{$asset_path}/signin-xs.jpg) no-repeat center center fixed;
+    }
+}
+
+@media all and (min-width: 1px) and (max-width: 849px) {
+    .page-signin {
+        .form-signin {
+            margin: 0 15px;
+
+            .row.form {
+                padding: 0 15px;
+            }
+        }
+
+        .page-overlay {
+            background-color: $form_background;
+        }
+
+        .form-signin {
+            background-color: none;
+        }
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .page-signin {
+        background: $background_color url(#{$asset_path}/signin-sm.jpg) no-repeat center center fixed;
+    }
+}
+
+@media all and (min-width: 850px) {
+    .page-signin {
+        .form-signin {
+            background-color: $form_background;
+        }
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .page-signin {
+        background: $background_color url(#{$asset_path}/signin-md.jpg) no-repeat center center fixed;
+    }
+}
+
+.page-signin, .container header, .container footer {
+    background-size: cover;
+}
