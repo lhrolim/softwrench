@@ -55,31 +55,39 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             var user = SecurityFacade.CurrentUser();
             _contextLookuper.SetMemoryContext(batch.RemoteId, batch, true);
 
-            var auditPostBatchHandler = _auditPostBatchHandlerProvider.LookupItem(batch.Application, "detail", ApplicationConfiguration.ClientName);
+            var mockMaximo = _contextLookuper.LookupContext().MockMaximo;
 
-            foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
-                var originalItem = itemToSubmit.OriginalItem;
-                try {
-                    var result = _maximoEngine.Execute(itemToSubmit.CrudData);
-                    batch.TargetResults.Add(result);
-                    if (originalItem.RemoteId != null) {
-                        batch.SuccessItems.Add(originalItem.RemoteId);
-                    }
-                    if (originalItem.AdditionalData != null) {
-                        auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result, originalItem.AdditionalData));
-                    }
+            if (!mockMaximo) {
+                var auditPostBatchHandler = _auditPostBatchHandlerProvider.LookupItem(batch.Application, "detail",
+                    ApplicationConfiguration.ClientName);
+
+                foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
+                    var originalItem = itemToSubmit.OriginalItem;
+                    try {
+                        var result = _maximoEngine.Execute(itemToSubmit.CrudData);
+                        batch.TargetResults.Add(result);
+                        if (originalItem.RemoteId != null) {
+                            batch.SuccessItems.Add(originalItem.RemoteId);
+                        }
+                        if (originalItem.AdditionalData != null) {
+                            auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result,
+                                originalItem.AdditionalData));
+                        }
 
 
-                } catch (Exception e) {
-                    if (options.GenerateProblems) {
-                        var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
-                        var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id, problemDataMap, user.DBId, e.StackTrace, e.Message);
-                        batch.Problems.Add(originalItem.RemoteId, problem);
-                    } else {
-                        throw;
+                    } catch (Exception e) {
+                        if (options.GenerateProblems) {
+                            var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
+                            var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id,
+                                problemDataMap, user.DBId, e.StackTrace, e.Message);
+                            batch.Problems.Add(originalItem.RemoteId, problem);
+                        } else {
+                            throw;
+                        }
                     }
                 }
             }
+
             batch.Status = BatchStatus.COMPLETE;
             if (options.Synchronous) {
                 //if asynchronous then the removal should be performed by the polling service

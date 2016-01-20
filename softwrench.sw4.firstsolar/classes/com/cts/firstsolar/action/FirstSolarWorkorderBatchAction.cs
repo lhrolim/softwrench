@@ -14,9 +14,12 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 
@@ -32,11 +35,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         private readonly FirstSolarWoValidationHelper _validationHelper;
         private readonly BatchItemSubmissionService _submissionService;
+        private readonly BatchRedirectionHelper _redirectionHelper;
 
 
-        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper, BatchItemSubmissionService submissionService) {
+        public FirstSolarWorkorderBatchController(FirstSolarWoValidationHelper validationHelper, BatchItemSubmissionService submissionService, BatchRedirectionHelper redirectionHelper) {
             _validationHelper = validationHelper;
             _submissionService = submissionService;
+            _redirectionHelper = redirectionHelper;
             Log.Debug("init log...");
         }
 
@@ -46,7 +51,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(s => FirstSolarDatamapConverterUtil.BuildBatchItem(s, batchData, batchType)).ToList());
             var resultBatch = _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
             var woDataSet = DataSetProvider.GetInstance().LookupDataSet("workorder", "list");
-            var dto = BatchRedirectionHelper.BuildDTO(resultBatch);
+            var dto = _redirectionHelper.BuildDTO(resultBatch);
             var applicationListResult = woDataSet.GetList(
                 MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list")),
                 dto);
@@ -91,7 +96,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             if (hasWarning) {
                 result["#wonums"] = string.Join(",", warningIds[specificValue]);
             }
-            
+
             return new GenericResponseResult<Dictionary<string, object>>(result);
         }
 
