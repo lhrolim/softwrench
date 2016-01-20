@@ -79,7 +79,7 @@
        
 
           <properties>
-            <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
+            <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchLocationInlineEdit"/>
             <property key="list.click.popupmode" value="modal"/>
           </properties>
@@ -122,7 +122,7 @@
           
 
           <properties>
-            <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
+            <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchAssetInlineEdit"/>
             <property key="list.click.popupmode" value="modal"/>
           </properties>
