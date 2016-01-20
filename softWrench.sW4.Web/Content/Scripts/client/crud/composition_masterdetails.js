@@ -88,6 +88,7 @@
                         var string = entry[field.attribute];
                         var qualifier = field.qualifier;
 
+                        //format fields
                         switch (qualifier) {
                             case 'message':
                                 //remove html tags
@@ -98,6 +99,15 @@
                                     string = string.substring(0, 200) + '...';
                                 }
                                 break;
+                            default:
+                                //reduce string length
+                                if (string.length > 80) {
+                                    string = string.substring(0, 80) + '...';
+                                }
+                        }
+
+                        //remap fields
+                        switch (qualifier) {
                             case 'personTo':
                                 //for comm logs, use if outbound
                                 if (!entry.inbound) {

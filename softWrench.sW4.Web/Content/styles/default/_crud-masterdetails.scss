@@ -1,6 +1,5 @@
 .composition {
     &.master-details {
-        /*.entries {*/
         .master {
             margin: 21px 0 40px;
 
@@ -18,32 +17,51 @@
                     cursor: pointer;
                     word-wrap: break-word;
 
-                    .read {
-                        width: 20px;
-                        color: #428bca;
-                        font-size: 8px;
-                        margin-top: 3px;
-                    }
-
-                    .author, .date, .title {
-                        margin-bottom: 5px;
-                    }
-
-                    .date {
-                        float: right;
-                    }
-
-                    .author {
+                    .icons {
                         float: left;
-                        font-weight: bold;
+                        text-align: center;
+
+                        .icon {
+                            .read {
+                                color: #428bca;
+                                font-size: 8px;
+                                margin-top: 3px;
+                            }
+                        }
                     }
 
-                    .title {
-                        clear: both;
-                    }
+                    .info {
+                        float: right;
+                        width: -moz-calc(100% - 30px);
+                        width: -webkit-calc(100% - 30px);
+                        width: calc(100% - 30px);
+                        display: flex;
+                        flex-wrap: wrap;
 
-                    .message {
-                        color: #999;
+                        .author, .date, .title {
+                            margin-bottom: 5px;
+                        }
+
+                        .date {
+                            display: flex;
+                        }
+
+                        .author {
+                            display: flex;
+                            font-weight: bold;
+                            width: -moz-calc(100% - 80px);
+                            width: -webkit-calc(100% - 80px);
+                            width: calc(100% - 80px);
+                        }
+
+                        .title {
+                            clear: both;
+                            width: 100%;
+                        }
+
+                        .message {
+                            color: #999;
+                        }
                     }
 
                     &.odd {
@@ -85,4 +103,3 @@
         padding-right: 15px;
     }
 }
-/*}*/
