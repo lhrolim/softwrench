@@ -1,8 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOCASSETSTATUS" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+  
   <applications>
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
+      <filters>
+        <optionfilter attribute="location" provider="location_.description" displaycode="true" allowblank="true"/>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+        <optionfilter attribute="siteid" provider="site_.siteid"/>
+      </filters>
+
       <properties>
         <property key="mobile.fetchlimit" value="30"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
