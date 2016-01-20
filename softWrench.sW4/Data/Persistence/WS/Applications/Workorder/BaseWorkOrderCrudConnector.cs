@@ -98,6 +98,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         }
 
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var svcaddressExists = ((CrudOperationData)maximoTemplateData.OperationData).GetAttribute("WOSERVICEADDRESS") != null;
+            if (!svcaddressExists) {
+                return;
+            }
+
             base.AfterUpdate(maximoTemplateData);
 
             ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
