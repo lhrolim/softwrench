@@ -161,6 +161,9 @@
                 scope.innerLoadIcon = function (rowIndex, columnIndex) {
                     var column = scope.schema.displayables[columnIndex];
                     var row = scope.datamap[rowIndex];
+                    if (!row.fields) {
+                        return "";
+                    }
                     return scope.loadIcon(row.fields[column.attribute], column);
                 }
 
