@@ -95,6 +95,7 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
   <complexType name="FilterOptionType">
     <attribute name="label" type="string"></attribute>
     <attribute name="value" type="string"></attribute>
+    <attribute name="preselected" type="boolean"></attribute>
   </complexType>
 
 </schema>

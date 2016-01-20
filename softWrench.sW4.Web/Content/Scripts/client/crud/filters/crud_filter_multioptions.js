@@ -59,6 +59,10 @@
                         //these won´t go to currently used
                         item.nonstoreable = true;
                         scope.suggestedoptions.push(item);
+                        var searchValue = scope.searchData[scope.filter.attribute];
+                        if (item.preSelected && searchValue && $.inArray(item.value, searchValue.split(",")) >= 0) {
+                            scope.selectedOptions[item.value] = 1;
+                        }
                     });
 
                   

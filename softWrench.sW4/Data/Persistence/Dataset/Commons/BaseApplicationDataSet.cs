@@ -40,6 +40,7 @@ using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
@@ -293,6 +294,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var tasks = new Task[1];
             var ctx = ContextLookuper.LookupContext();
 
+            // add pre selected filter if originally it had not a searchDTO
+            // so is a menu/breadcrumb navigation
+            if (searchDto.IsDefaultInstance) {
+                SchemaFilterBuilder.AddPreSelectedFilters(application.Schema.DeclaredFilters, searchDto);
+            }
+
             //count query
             tasks[0] = Task.Factory.NewThread(c => {
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
@@ -447,7 +454,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-        
+
 
 
 
@@ -463,7 +470,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             result.PreFetchLazyOptions = lazyOptions;
 
             if (schema.HasInlineComposition && dataMap is CrudOperationData) {
-                var innerCompositions =GenerateInlineCompositionResult(dataMap, schema, request);
+                var innerCompositions = GenerateInlineCompositionResult(dataMap, schema, request);
                 result.MergeWithOtherSchemas(innerCompositions);
             }
 
@@ -492,7 +499,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
                     if (compositionData != null) {
                         var compositeDataMap = new CompositeDatamap(compositionData);
-                        var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request,composition.AssociationKey);
+                        var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request, composition.AssociationKey);
                         var task = Task<AssociationMainSchemaLoadResult>.Factory.StartNew(() => BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest));
                         inlineCompositionTasks.Add(task);
                     }

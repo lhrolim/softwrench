@@ -78,7 +78,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             foreach (var el in xElements) {
                 var label = el.AttributeValue(XmlBaseSchemaConstants.LabelAttribute, true);
                 var value = el.AttributeValue(XmlBaseSchemaConstants.ValueAttribute, true);
-                options.Add(new MetadataFilterOption(label, value));
+                var preSelected = el.AttributeValue(XmlBaseSchemaConstants.PreSelectedAttribute) == "true";
+                options.Add(new MetadataFilterOption(label, value, preSelected));
             }
             return options;
         }
