@@ -447,7 +447,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-        
+
 
 
 
@@ -463,7 +463,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             result.PreFetchLazyOptions = lazyOptions;
 
             if (schema.HasInlineComposition && dataMap is CrudOperationData) {
-                var innerCompositions =GenerateInlineCompositionResult(dataMap, schema, request);
+                var innerCompositions = GenerateInlineCompositionResult(dataMap, schema, request);
                 result.MergeWithOtherSchemas(innerCompositions);
             }
 
@@ -492,7 +492,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);
                     if (compositionData != null) {
                         var compositeDataMap = new CompositeDatamap(compositionData);
-                        var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request,composition.AssociationKey);
+                        var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request, composition.AssociationKey);
                         var task = Task<AssociationMainSchemaLoadResult>.Factory.StartNew(() => BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest));
                         inlineCompositionTasks.Add(task);
                     }
@@ -515,9 +515,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
 
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
+            if (userIdSite != null) {
+                operationWrapper.UserId = userIdSite.Item1;
+                operationWrapper.SiteId = userIdSite.Item2;
+            }
+
             if (isBatch) {
                 return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
             }

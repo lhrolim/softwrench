@@ -5,13 +5,7 @@
 
     function userService(contextService) {
 
-        var service = {
-            HasRole: hasRole,
-            InGroup: inGroup,
-            readProperty: readProperty
-        };
 
-        return service;
 
         function readProperty(propertyExpression) {
             if (propertyExpression == null) {
@@ -40,6 +34,11 @@
             return propertyExpression;
 
         };
+
+        function getPersonId() {
+            var user = contextService.getUserData();
+            return user.maximoPersonId;
+        }
 
         function hasRole(roleArray) {
             if (roleArray == null) {
@@ -75,6 +74,15 @@
             }
             return false;
         };
+
+        var service = {
+            getPersonId: getPersonId,
+            HasRole: hasRole,
+            InGroup: inGroup,
+            readProperty: readProperty
+        };
+
+        return service;
 
     }
 })(angular);

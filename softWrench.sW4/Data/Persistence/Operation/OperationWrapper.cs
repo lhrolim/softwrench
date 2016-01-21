@@ -16,6 +16,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         public JObject JSON { get; set; }
 
         public string UserId { get; set; }
+        public string SiteId { get; set; }
 
         private IOperationData _operationData;
 
@@ -53,8 +54,12 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             }
 
             var isCrud = OperationConstants.IsCrud(_operationName) || typeof(CrudOperationData) == type;
-            if (isCrud) {
-                return EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
+            if (isCrud)
+            {
+                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
+                crudOperationData.UserId = UserId;
+                crudOperationData.SiteId = SiteId;
+                return crudOperationData;
             }
             var data = (OperationData)JSON.ToObject(type);
             data.EntityMetadata = EntityMetadata;
