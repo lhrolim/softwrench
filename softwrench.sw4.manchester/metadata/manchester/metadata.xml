@@ -482,7 +482,7 @@
           <!--Reported By On Behalf of  Owner  -->
           <section orientation="horizontal">
 
-            <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>S
+            <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
 
 
 
