@@ -1,7 +1,7 @@
 <div class="composition master-details clearfix">
     <div ng-show="hasRecords()" class="clearfix">
         <!--TODO: add scroll pane-->
-        <div class="master col-xs-4">
+        <div class="master col-xs-12 col-sm-4">
             <div class="quick-search">
                 <search-box ng-model="searchText" />
             </div>
@@ -12,18 +12,33 @@
                             <i class="fa {{icon}}"></i>
                         </div>
                     </div>
-                    <div class="info">
+                    <div class="info clearfix">
                         <div class="author">{{entry.master.person}}</div>
                         <div class="date">{{entry.master.date}}</div>
                         <div class="title">{{entry.master.title}}</div>
                         <div class="message">{{entry.master.message}}</div>
+                    </div>
+                    <div class="details" ng-class={open:entry.open}>
+                        <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
+                            <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
+                                <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
+                                <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+                            </div>
+                        </div>
+                        <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="commands">
+                            <div ng-controller="CommLogActionsController" class="buttons">
+                                <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
+                                <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
+                                <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <!--TODO: Pagination-->
         </div>
         <!--TODO: add scroll pane-->
-        <div class="details col-xs-8">
+        <div class="details col-xs-12 col-sm-8 hidden-xs visible-sm-block">
             <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
                 <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                     <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>

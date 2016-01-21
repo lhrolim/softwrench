@@ -25,8 +25,12 @@
             };
             
             $scope.displayDetails = function (entry) {
+                //close the current record
+                $scope.getDetailDatamap.open = false;
+
                 //display the selected details
                 $scope.getDetailDatamap = entry;
+                entry.open = true;
 
                 if (!entry.read) {
                     //remove the read icon
@@ -46,6 +50,7 @@
 
                     entry.read = true;
                 }
+                log.debug('$scope.displayDetails', entry);
             };
 
             $scope.getDetailDisplayables = function () {
@@ -171,20 +176,13 @@
             }
 
             //init directive
-            //init();
-            //$injector.invoke(BaseList, this, {
-            //    $scope: $scope,
-            //    i18NService: i18NService,
-            //    fieldService: fieldService,
-            //    commandService: commandService,
-            //    formatService: formatService
-            //});
 
             //add master info to the record data
             $scope.mapMaster($scope.compositiondata, $scope.getListSchema());
 
             //display the first record
             $scope.getDetailDatamap = $scope.compositiondata[0];
+            $scope.getDetailDatamap.open = true;
 
             log.debug($scope, $scope.compositiondata);
         }
