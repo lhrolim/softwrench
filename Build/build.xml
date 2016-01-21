@@ -89,7 +89,7 @@
       <arg line='"${SolutionFile}"' />
       <arg line="/property:Configuration=Debug" />
       <arg value="/target:Rebuild" />
-      <arg value="/verbosity:normal" />
+      <arg value="/verbosity:quiet" />
       <arg value="/nologo" />
     </exec>
   </target>

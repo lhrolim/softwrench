@@ -122,6 +122,7 @@ angular.module('sw_layout')
             event.fields["woserviceaddress_.formattedaddress"] = event.fields["woaddress_.formattedaddress"];
             event.fields["#formattedaddr"] = event.fields["woserviceaddress_.formattedaddress"];
             event.fields["#woaddress_"] = event.fields["woaddress_"];
+            event.fields["#haswoaddresschange"] = true;
         }, 
 
         validateCloseStatus: function (schema, datamap, originalDatamap, parameters) {

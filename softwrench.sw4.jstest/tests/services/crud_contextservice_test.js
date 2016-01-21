@@ -3,7 +3,7 @@
     var mockCompositionResult = {
         "attachment_": {
             "paginationData": {
-                "totalCount" : 5
+                "totalCount": 5
             },
             "list": [{}, {}, {}, {}, {}]
         },
@@ -21,6 +21,29 @@
         }
     };
 
+    var mockedSchemaWithReverseAssociation = {
+        displayables: [
+            {
+                displayables: [
+                    {
+                        associationKey: "reverse_",
+                        target: "reversetarget",
+                        reverse: true,
+                        type: "ApplicationAssociationDefinition"
+                    }
+                ],
+                type: "ApplicationSection"
+
+            },
+            {
+                associationKey: "other_",
+                target: "_othertarget",
+                reverse: true,
+                type: "ApplicationAssociationDefinition"
+            }
+        ]
+    };
+
     var attachmentTab = { "tabId": "attachment_" };
     var commlogTab = { "tabId": "commlog_" };
     var worklogTab = { "tabId": "worklog_" };
@@ -30,7 +53,7 @@
     beforeEach(inject(function (crudContextHolderService) {
         crudContextService = crudContextHolderService;
     }));
-    beforeEach(function() { crudContextService.compositionsLoaded(mockCompositionResult); });
+    beforeEach(function () { crudContextService.compositionsLoaded(mockCompositionResult); });
 
     it('composition record counts added', function () {
         // Get the record counts for the compositions
@@ -56,7 +79,7 @@
         expect(worklogLength).toBe(0);
     });
 
-    it('should remove record counts on gridLoaded', function() {
+    it('should remove record counts on gridLoaded', function () {
         // Call the gridLoaded function
         crudContextService.gridLoaded({});
         // Get the record counts for the compositions
@@ -143,5 +166,23 @@
         expect(buffer["2"].fields.a).toBe("2");
         buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
         expect(Object.keys(buffer).length).toBe(0);
+    });
+
+    it("update lazy options, fill datamap when reverse, FIX for SWWEB-2013", function () {
+
+        var dm = {
+            fields:{}
+        }
+        crudContextService.updateCrudContext(mockedSchemaWithReverseAssociation, dm);
+        dm = crudContextService.rootDataMap();
+        expect(dm.fields["reversetarget"]).toBe(undefined);
+        crudContextService.updateLazyAssociationOption("reverse_", { value: "xxx", label: "yyy" }, true);
+        dm = crudContextService.rootDataMap();
+        expect(dm.fields["reversetarget"]).toBe("xxx");
+        var result = crudContextService.fetchLazyAssociationOption("reverse_", "xxx");
+        expect(result).toEqual({ value: "xxx", label: "yyy" });
+
+
+
     });
 });
