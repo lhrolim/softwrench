@@ -120,7 +120,6 @@ module.exports = function (grunt) {
                     "angular-file-upload.js": "angular-file-upload/angular-file-upload.min.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
-                    "bootstrap-datetimepicker.js": "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
                     // utils
                     "moment.js": "moment/min/moment.min.js",
                     "spin.js": "spin.js/spin.min.js",
