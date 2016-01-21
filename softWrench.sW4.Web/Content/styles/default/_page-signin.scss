@@ -1,6 +1,4 @@
-﻿
-
-input:focus, select:focus, textarea:focus {
+﻿input:focus, select:focus, textarea:focus {
     outline: none;
 }
 
@@ -135,6 +133,7 @@ input:focus, select:focus, textarea:focus {
     .page-signin {
         .container {
             padding-top: 50px;
+            padding-bottom: 50px;
         }
 
         
@@ -154,6 +153,7 @@ input:focus, select:focus, textarea:focus {
     .page-signin {
         .container {
             padding-top: 60px;
+            padding-bottom: 60px;
         }
     }
 }
