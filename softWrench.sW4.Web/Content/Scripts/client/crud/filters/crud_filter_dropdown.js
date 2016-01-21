@@ -125,6 +125,7 @@
 
                         $scope.getFilterText = function (filter) {
                             var filterText = filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
+                            // adding some spaces on filter text to enable the tooltip break lines and do not overflow in width
                             if (filterText) {
                                 filterText = filterText.split(",").join(", ");
                             }

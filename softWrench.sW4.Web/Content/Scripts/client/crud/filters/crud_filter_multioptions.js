@@ -2,8 +2,8 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", "modalFilterService", "modalService", "crudContextHolderService", 
-            function (contextService, restService, filterModelService,
+        .directive("filterMultipleOption", ["$log", "contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", "modalFilterService", "modalService", "crudContextHolderService", 
+            function ($log, contextService, restService, filterModelService,
             cmpAutocompleteServer, $timeout, searchService, schemaService, modalFilterService, modalService, crudContextHolderService) {
 
             var directive = {
@@ -20,6 +20,8 @@
 
                 link: function (scope, element, attrs) {
                     scope.vm = {};
+
+                    var linkLog = $log.getInstance("filterMultipleOption", ["link"]);
 
                     //let´s avoid some null pointers
                     scope.filter.options = scope.filter.options || [];
@@ -55,21 +57,21 @@
                     }
 
                     //initing any metadata declared option first
+                    linkLog.debug("Initing metadata options from filter of attribute (" + filter.attribute + ").");
                     scope.filter.options.forEach(function (item) {
-                        if (!scope.filter.lazy && !!filter.provider) {
+                        if (!filter.lazy && filter.provider) {
+                            linkLog.debug("Initing non lazy option (" + item.value + ") " + item.label);
                             scope.filteroptions.push(item);
                         } else {
+                            linkLog.debug("Initing lazy option (" + item.value + ") " + item.label);
                             //these won´t go to currently used
                             item.nonstoreable = true;
                             scope.suggestedoptions.push(item);
                         }
-                        var searchValue = scope.searchData[scope.filter.attribute];
-                        if (item.preSelected && searchValue && searchValue.indexOf(item.value) >= 0) {
-                            scope.selectedOptions[item.value] = 1;
-                        }
+                        scope.preSelectOptionIfNeeded(item, linkLog);
                     });
 
-                    if (!scope.filter.lazy && !!filter.provider) {
+                    if (!filter.lazy && filter.provider) {
                         //let´s get the whole list from the server 
                         //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
                         var parameters = {
@@ -82,7 +84,7 @@
 
                         restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                             scope.filteroptions = scope.filteroptions.concat(result.data);
-                            scope.filteroptions = scope.removeDuplicatesOnArray(scope.filteroptions);
+                            scope.filteroptions = removeDuplicatesOnArray(scope.filteroptions);
                         });
                     } else {
                         scope.vm.notSearching = true;
@@ -188,7 +190,7 @@
 
                     $scope.getAllAvailableOptions = function () {
                         var allOptions = $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
-                        return $scope.removeDuplicatesOnArray(allOptions);
+                        return removeDuplicatesOnArray(allOptions);
                     }
 
                     // updates the lookup modal grid buffer
@@ -273,22 +275,6 @@
 
                     }
 
-                    $scope.removeDuplicatesOnArray = function(arrayOfOptions) {
-                        if (!arrayOfOptions) {
-                            return arrayOfOptions;
-                        }
-                        var values = [];
-                        var withoutDuplicates = [];
-                        arrayOfOptions.forEach(function (option) {
-                            if (values.indexOf(option.value) >= 0) {
-                                return;
-                            }
-                            values.push(option.value);
-                            withoutDuplicates.push(option);
-                        });
-                        return withoutDuplicates;
-                    }
-
                     $scope.lookup = function () {
                         // sets the modal grid buffer from the local buffer
                         var selectionModel = crudContextHolderService.getSelectionModel(modalService.panelid);
@@ -297,6 +283,14 @@
                         // sets the id column to use on buffer in case the filter value is not the id column
                         if ($scope.filter.advancedFilterAttribute) {
                             selectionModel.selectionBufferIdCollumn = $scope.filter.advancedFilterAttribute;
+                        }
+                    }
+
+                    $scope.preSelectOptionIfNeeded = function(option, log) {
+                        var searchValue = $scope.searchData[filter.attribute];
+                        if (option.preSelected && searchValue && searchValue.indexOf(option.value) >= 0) {
+                            log.debug("Option pre selected: (" + option.value + ") " + option.label);
+                            $scope.selectedOptions[option.value] = 1;
                         }
                     }
 
@@ -395,12 +389,11 @@
 
                     // When changing grids the selection should be restarted
                     $scope.$on("sw_gridchanged", function () {
+                        var log = $log.getInstance("filterMultipleOption#sw_gridchanged", ["grid"]);
+                        log.debug("grid change, reset of selected options of filter: " + filter.attribute);
                         $scope.selectedOptions = [];
                         filter.options.forEach(function (item) {
-                            var searchValue = $scope.searchData[filter.attribute];
-                            if (item.preSelected && searchValue && searchValue.indexOf(item.value) >= 0) {
-                                $scope.selectedOptions[item.value] = 1;
-                            }
+                            $scope.preSelectOptionIfNeeded(item, log);
                         });
                     });
                 }]
