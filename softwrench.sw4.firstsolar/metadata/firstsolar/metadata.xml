@@ -15,6 +15,7 @@
         <list redeclaring="false">
           <filters>
             <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
+            <optionfilter attribute="classstructure_.description" provider="@GetWOClassStructureType" displaycode="true" allowblank="true"/>
           </filters>
           
           

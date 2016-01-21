@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
@@ -75,8 +77,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return list;
         }
 
-        public IEnumerable<IAssociationOption> GetWOClassStructureType(OptionFieldProviderParameters parameters) {
-            return GetClassStructureType(parameters, "WORKORDER");
+        public IEnumerable<IAssociationOption> GetWOClassStructureType(FilterProviderParameters parameters) {
+            var optionParameters = new OptionFieldProviderParameters() {
+                OriginalEntity  = Entity.GetInstance(MetadataProvider.EntityByApplication(parameters.SchemaKey.ApplicationName))
+            };
+            return GetClassStructureType(optionParameters, "WORKORDER", parameters.InputSearch);
         }
 
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
