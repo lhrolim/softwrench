@@ -8,15 +8,23 @@ namespace softWrench.sW4.Data.Persistence.Operation {
     public class OperationWrapper {
         private const string CrudFieldNotFound = "crud field expected on json of operation {0} of entity {1}";
         private String _operationName;
-        
+
         private readonly EntityMetadata _entityMetadata;
-        
-        public ApplicationMetadata ApplicationMetadata { get; set; }
 
-        public JObject JSON { get; set; }
+        public ApplicationMetadata ApplicationMetadata {
+            get; set;
+        }
 
-        public string UserId { get; set; }
-        public string SiteId { get; set; }
+        public JObject JSON {
+            get; set;
+        }
+
+        public string UserId {
+            get; set;
+        }
+        public string SiteId {
+            get; set;
+        }
 
         private IOperationData _operationData;
 
@@ -38,26 +46,35 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         }
 
         public string OperationName {
-            get { return _operationName; }
-            set { _operationName = value; }
+            get {
+                return _operationName;
+            }
+            set {
+                _operationName = value;
+            }
         }
 
         public EntityMetadata EntityMetadata {
-            get { return _entityMetadata; }
+            get {
+                return _entityMetadata;
+            }
         }
 
-        public string Id { get; private set; }
+        public string Id {
+            get; private set;
+        }
 
-        public IOperationData OperationData(Type type=null) {
+        public IOperationData OperationData(Type type = null) {
             if (_operationData != null) {
                 return _operationData;
             }
 
             var isCrud = OperationConstants.IsCrud(_operationName) || typeof(CrudOperationData) == type;
-            if (isCrud)
-            {
+            if (isCrud) {
                 var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
-                crudOperationData.UserId = UserId;
+                if (UserId != null && crudOperationData.UserId == null) {
+                    crudOperationData.UserId = UserId;
+                }
                 crudOperationData.SiteId = SiteId;
                 return crudOperationData;
             }

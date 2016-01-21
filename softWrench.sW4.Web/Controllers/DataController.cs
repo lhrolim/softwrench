@@ -94,7 +94,7 @@ namespace softWrench.sW4.Web.Controllers {
             var response = DoExecute(operationDataRequest, new JObject());
             var application = operationDataRequest.ApplicationName;
             var id = operationDataRequest.Id;
-            var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
+            var defaultMsg = String.Format("{0} {1} deleted successfully", application, operationDataRequest.UserId);
             response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
                 application, id});
             return response;
