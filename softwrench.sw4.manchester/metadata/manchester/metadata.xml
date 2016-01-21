@@ -442,6 +442,12 @@
           <section orientation="horizontal">
             <!--COMSW-2-->
 
+            <association label="Service Address" target="addresscode" labelfield="woaddress_.description"  
+                         extraprojectionvalues="addresscode, serviceaddressid, orgid, siteid, description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
+              <event type="beforechange" service="genericTicketService" method="beforeChangeWOServiceAddress" />
+              <renderer type="lookup" />
+              <event type="afterchange" service="genericTicketService" method="afterChangeWOServiceAddress" />
+            </association>
 
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
