@@ -293,11 +293,9 @@
                           parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
                 <command id="dispatchincident" icon="fa-tachometer" label="Create Incident"
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
+                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                    showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" icon="fa-remove"/>
               </container>
-            </commandgroup>
-            <commandgroup position="detailform">
-              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
             </commandgroup>
           </commandbars>
         </schema>

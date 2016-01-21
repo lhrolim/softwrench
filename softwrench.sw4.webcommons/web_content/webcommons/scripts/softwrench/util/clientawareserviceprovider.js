@@ -11,12 +11,13 @@
             var client = contextService.client();
             var clientServiceName = client + "." + serviceName;
             // has client specif implementation
+            var log = $log.get("clientawareserviceprovider", ["services"]);
             if ($injector.has(clientServiceName)) {
-                $log.debug("Client specific service", clientServiceName, "found.");
+                log.debug("Client specific service", clientServiceName, "found.");
                 var clientService = $injector.get(clientServiceName);
                 // delegate 'super' methods to the base implementation
                 if ($injector.has(serviceName)) {
-                    $log.debug(serviceName, "base implementation found. Applying base property bindings to", clientServiceName);
+                    log.debug(serviceName, "base implementation found. Applying base property bindings to", clientServiceName);
                     var baseService = $injector.get(serviceName);
                     angular.forEach(baseService, function (property, name) {
                         // skip useless (prototypically inherited from JS runtime) properties and overriden properties
@@ -27,11 +28,13 @@
                 }
                 return clientService;
             }
-            $log.debug("Client specific service", clientServiceName, "not found. Attempting to instantiate base service", serviceName);
+            if (client !== "otb") {
+                log.debug("Client specific service", clientServiceName, "not found. Attempting to instantiate base service", serviceName);
+            }
             // if there's no base implementation let the error go up
             return $injector.get(serviceName);
         };
-    
+
     };
 
 })(angular, modules);
