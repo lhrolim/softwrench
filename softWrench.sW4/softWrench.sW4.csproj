@@ -210,6 +210,7 @@
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\ServiceAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
     <Compile Include="Data\Search\QuickSearchHelper.cs" />

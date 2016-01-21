@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function crudContextHolderService($rootScope, $log, $timeout, contextService, schemaCacheService) {
+    function crudContextHolderService($rootScope, $log,$injector, $timeout, contextService,schemaCacheService) {
 
         //#region private variables
 
@@ -300,6 +300,20 @@
                 log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey, length));
                 _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
+            //to avoid circular dependency, cannot inject it
+            var fieldService = $injector.get("fieldService");
+            var displayables = fieldService.getDisplayablesByAssociationKey(_crudContext.currentSchema, associationKey);
+            if (displayables && displayables.length === 1 && options) {
+                //when we have a reverse relationship, let´s add it to the parentdatamap, to make "life" easier for the outer components, such as the angulartypeahead, 
+                //and/or expressions
+                var displayable = displayables[0];
+                if (displayable.reverse) {
+                    //Object.keys(options)[0] --> this would be the key of the association
+                    _crudContext.rootDataMap.fields[displayable.target] = Object.keys(options)[0].toLowerCase();
+                }
+            }
+
+
         }
 
         function fetchLazyAssociationOption(associationKey, key, panelid) {
@@ -553,7 +567,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log","$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 
