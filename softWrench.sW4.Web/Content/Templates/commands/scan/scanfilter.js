@@ -1,4 +1,11 @@
-﻿function ScanFilterController($http, $scope, $rootScope, restService, searchService, contextService) {
+﻿(function (angular) {
+    "use strict";
+
+angular
+    .module("sw_layout")
+    .controller("ScanFilterController", ["$http", "$scope", "$rootScope", "restService", "searchService", "contextService", ScanFilterController]);
+
+function ScanFilterController($http, $scope, $rootScope, restService, searchService, contextService) {
     $scope.scanOrder = [];
     $scope.filterFields = [];
     initScanFilter();
@@ -62,7 +69,8 @@
     $scope.saveScanList = function () {
         // Convert the list of field labels for scan order to a list of the attributes
         var scanListAttributes = [];
-        for (attribute in $scope.scanOrder) {
+        for (var attribute in $scope.scanOrder) {
+            if (!$scope.scanOrder.hasOwnProperty(attribute)) continue;
             scanListAttributes.push($scope.scanOrder[attribute]);
         }
         var scanAttributesString = scanListAttributes.toString();
@@ -80,7 +88,8 @@
     });
 
     $scope.getLabelByAttribute = function(searchAttribute) {
-        for (item in $scope.filterFields) {
+        for (var item in $scope.filterFields) {
+            if (!$scope.filterFields.hasOwnProperty(item)) continue;
             if ($scope.filterFields[item].attribute === searchAttribute) {
                 return $scope.filterFields[item].label;
             }
@@ -89,7 +98,8 @@
     };
 
     $scope.getAttributeByLabel = function (searchLabel) {
-        for (item in $scope.filterFields) {
+        for (var item in $scope.filterFields) {
+            if (!$scope.filterFields.hasOwnProperty(item)) continue;
             if ($scope.filterFields[item].label === searchLabel) {
                 return $scope.filterFields[item].attribute;
             }
@@ -99,7 +109,8 @@
 
     $scope.remainingFilterFields = function() {
         var remainingFilterFields = [];
-        for (item in $scope.filterFields) {
+        for (var item in $scope.filterFields) {
+            if (!$scope.filterFields.hasOwnProperty(item)) continue;
             if ($scope.scanOrder.indexOf($scope.filterFields[item].attribute) === -1) {
                 remainingFilterFields.push($scope.filterFields[item]);
             }
@@ -111,3 +122,5 @@
         return $scope.schema.stereotype;
     };
 }
+
+})(angular);

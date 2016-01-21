@@ -1,10 +1,10 @@
 ﻿
-(function () {
+(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", invissueService]);
+    angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", 'alertService', invissueService]);
 
-    function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService) {
+    function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService) {
 
         var service = {
             afterChangeBin: afterChangeBin,
@@ -227,12 +227,6 @@
                 fields['#curbal'] = fields['binbalances_.curbal'];
                 fields['curbal'] = fields['binbalances_.curbal'];
                 fields['quantity'] = 1;
-                //to enable composition details on batch mode
-                if (fields['#datamaptype'] == "compositionitem") {
-                    fields['matusetransid'] = -1 * (fields["#datamapidx"] - 1);
-                }
-
-
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
@@ -258,11 +252,6 @@
                     fields['binbalances_.lotnum'] = lotnum;
                     fields['binbalances_.curbal'] = curbal == null ? 0 : curbal;
                     fields['quantity'] = 1;
-                    //to enable composition details on batch mode
-                    if (fields['#datamaptype'] == "compositionitem") {
-                        //let´s put a negative id so that it gets ignored on maximo side
-                        fields['matusetransid'] = -1 * (fields["#datamapidx"] - 1);
-                    }
                 });
             }
             else {
@@ -314,8 +303,49 @@
                 orgid: parentdata['orgid'],
                 itemsetid: fields['itemsetid']
             };
-            inventoryServiceCommons.updateInventoryCosttype({ fields: invParams }, 'storeloc');
+            updateInventoryCosttype(parameters, 'storeloc');
         }
-    }
-})();
 
+        function doUpdateUnitCostFromInventoryCost(parameters, unitCostFieldName, locationFieldName) {
+            var fields = parameters['fields'];
+            var searchData = {
+                itemnum: parameters['parentdata']['itemnum'],
+                location: fields[locationFieldName],
+                siteid: parameters['parentdata']['siteid']
+            };
+            searchService.searchWithData("invcost", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var resultFields = resultObject[0].fields;
+                var costtype = fields['inventory_.costtype'];
+                if (costtype === 'STANDARD') {
+                    parameters.fields[unitCostFieldName] = resultFields.stdcost;
+                } else if (costtype === 'AVERAGE') {
+                    parameters.fields[unitCostFieldName] = resultFields.avgcost;
+                }
+            });
+        };
+
+        function updateInventoryCosttype(parameters, storelocation) {
+            var searchData = {
+                itemnum: parameters['parentdata']['itemnum'],
+                location: parameters['fields'][storelocation],
+                siteid: parameters['parentdata']['siteid'],
+                orgid: parameters['parentdata']['orgid'],
+                itemsetid: parameters['fields']['itemsetid']
+            };
+            searchService.searchWithData("inventory", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = fields['costtype'];
+                if (costtype.equalIc("fifo") || costtype.equalIc("lifo")) {
+                    // TODO: Add support for FIFO / LIFO cost types
+                    alertService.error("FIFO and LIFO cost types are not supported at this time");
+                    return;
+                }
+                parameters['fields']['inventory_.costtype'] = costtype;
+                doUpdateUnitCostFromInventoryCost(parameters, "unitcost", storelocation);
+            });
+        };
+    }
+
+})(angular);
