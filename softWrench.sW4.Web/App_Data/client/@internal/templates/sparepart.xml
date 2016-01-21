@@ -16,6 +16,11 @@
         <attribute name="sparepartid" type="bigint" required="false"/>
         <attribute name="description" type="varchar" required="false"/>
       </attributes>
+      <relationships>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="SPAREPART" />
       </connectorParameters>
@@ -31,6 +36,13 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="itemnum" label="Item"/>
           <field attribute="description" label="Description"/>
+        </schema>
+        <schema id="assetsparepartlist" stereotype="compositionlist">
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="quantity" label="Quantity" readonly="true"/>
+          <field attribute="issuedqty" label="Issued Qty" readonly="true"/>
+          <field attribute="description" label="Remarks" readonly="true"/>
         </schema>
       </schemas>
     </application>

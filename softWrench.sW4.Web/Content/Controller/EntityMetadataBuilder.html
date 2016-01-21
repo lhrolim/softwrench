@@ -1,36 +1,4 @@
-﻿<script type="text/javascript" id="teste.js">
-
-    function EntityBuilderController($scope, $http, i18NService) {
-
-        $scope.generateData = function () {
-
-            $scope.hasdata = false;
-            $scope.HasError = false;
-
-            $http.get(url("/api/generic/EntityMetadata/Build?tablename=" + $scope.table))
-                .success(function (data) {
-                    $scope.hasdata = true;
-                    $scope.metadata = data.metadata;
-                    //                    var editor = ace.edit("editor");
-                    //                    editor.getSession().setMode("ace/mode/xml");
-                    //                    editor.setValue(data);
-                    //                    $scope.$digest();
-                })
-                .error(function (data) {
-                    $scope.error = data.error;
-                    $scope.hasdata = true;
-                    //                    $scope.$digest();
-                });
-        };
-
-        $scope.i18N = function (key, defaultValue, paramArray) {
-            return i18NService.get18nValue(key, defaultValue, paramArray);
-        };
-    }
-
-</script>
-
-<article class="container page" ng-controller="EntityBuilderController">
+﻿<article class="container page" ng-controller="EntityBuilderController">
     <form class="form-horizontal">
         <div class="form-group">
             <label class="control-label col-lg-2">{{i18N('_utilities.metadatabuilder.tablename','Table Name')}}:</label>
@@ -55,6 +23,3 @@
         </div>
     </form>
 </article>
-
-
-
