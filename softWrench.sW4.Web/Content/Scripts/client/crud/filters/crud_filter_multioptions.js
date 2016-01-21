@@ -56,17 +56,18 @@
 
                     //initing any metadata declared option first
                     scope.filter.options.forEach(function (item) {
-                        //these won´t go to currently used
-                        item.nonstoreable = true;
-                        scope.suggestedoptions.push(item);
+                        if (!scope.filter.lazy && !!filter.provider) {
+                            scope.filteroptions.push(item);
+                        } else {
+                            //these won´t go to currently used
+                            item.nonstoreable = true;
+                            scope.suggestedoptions.push(item);
+                        }
                         var searchValue = scope.searchData[scope.filter.attribute];
-                        if (item.preSelected && searchValue && $.inArray(item.value, searchValue.split(",")) >= 0) {
+                        if (item.preSelected && searchValue && searchValue.indexOf(item.value) >= 0) {
                             scope.selectedOptions[item.value] = 1;
                         }
                     });
-
-                  
-
 
                     if (!scope.filter.lazy && !!filter.provider) {
                         //let´s get the whole list from the server 
@@ -81,6 +82,7 @@
 
                         restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                             scope.filteroptions = scope.filteroptions.concat(result.data);
+                            scope.filteroptions = $scope.removeDuplicatesOnArray(scope.filteroptions);
                         });
                     } else {
                         scope.vm.notSearching = true;
@@ -184,8 +186,9 @@
                         }
                     });
 
-                    $scope.getAllAvailableOptions = function() {
-                        return $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                    $scope.getAllAvailableOptions = function () {
+                        var allOptions = $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                        return $scope.removeDuplicatesOnArray(allOptions);
                     }
 
                     // updates the lookup modal grid buffer
@@ -268,6 +271,22 @@
                             filterModelService.deleteFromRecentlyUsed($scope.schema, $scope.filter.attribute, item);
                         }
 
+                    }
+
+                    $scope.removeDuplicatesOnArray = function(arrayOfOptions) {
+                        if (!arrayOfOptions) {
+                            return arrayOfOptions;
+                        }
+                        var values = [];
+                        var withoutDuplicates = [];
+                        arrayOfOptions.forEach(function (option) {
+                            if (values.indexOf(option.value) >= 0) {
+                                return;
+                            }
+                            values.push(option.value);
+                            withoutDuplicates.push(option);
+                        });
+                        return withoutDuplicates;
                     }
 
                     $scope.lookup = function () {

@@ -14,15 +14,8 @@
       <schemas>
         <list redeclaring="false">
           <filters>
-            <optionfilter attribute="status" displaycode="true" style="width:300px">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="In Progress" value="INPRG"/>
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Approved" value="APPR"/>
-              <!--TODO define label-->
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Waiting on [TODO]" value="WOEN" preselected="true"/>
-              <!--TODO define label-->
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="[TODO]" value="ENRV"/>
-              <!--TODO define label-->
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="[TODO]" value="HOLD"/>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="[TODO]" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true"/>
             </optionfilter>
             <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
