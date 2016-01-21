@@ -1,6 +1,10 @@
 ﻿(function (angular) {
     "use strict";
 
+    /**
+     * Directive used to parse number inputs into Strings for the model value 
+     * and format model value Strings into numbers for the view value.
+     */
     angular.module("sw_layout")
     .directive("stringToNumber", function () {
         return {

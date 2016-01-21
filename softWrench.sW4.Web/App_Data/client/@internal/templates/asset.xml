@@ -21,6 +21,7 @@
       <filters>
         <optionfilter attribute="location" provider="location_.description" displaycode="true" allowblank="true"/>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+        <optionfilter attribute="parent" provider="parentasset_.description" displaycode="true"/>
         <optionfilter attribute="siteid" provider="site_.siteid"/>
       </filters>
 
