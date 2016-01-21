@@ -14,11 +14,15 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         public bool PreSelected {
             get; set;
         }
+        public string Tooltip {
+            get; set;
+        }
 
-        public MetadataFilterOption(string label, string value, bool preSelected) {
+        public MetadataFilterOption(string label, string value, bool preSelected, string tooltip) {
             Label = label;
             Value = value;
             PreSelected = preSelected;
+            Tooltip = tooltip;
         }
     }
 }

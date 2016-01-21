@@ -82,7 +82,7 @@
 
                         restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                             scope.filteroptions = scope.filteroptions.concat(result.data);
-                            scope.filteroptions = $scope.removeDuplicatesOnArray(scope.filteroptions);
+                            scope.filteroptions = scope.removeDuplicatesOnArray(scope.filteroptions);
                         });
                     } else {
                         scope.vm.notSearching = true;
@@ -390,6 +390,17 @@
                                 return;
                             }
                             applyModal(modalSchema);
+                        });
+                    });
+
+                    // When changing grids the selection should be restarted
+                    $scope.$on("sw_gridchanged", function () {
+                        $scope.selectedOptions = [];
+                        filter.options.forEach(function (item) {
+                            var searchValue = $scope.searchData[filter.attribute];
+                            if (item.preSelected && searchValue && searchValue.indexOf(item.value) >= 0) {
+                                $scope.selectedOptions[item.value] = 1;
+                            }
                         });
                     });
                 }]

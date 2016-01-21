@@ -124,7 +124,11 @@
                         };
 
                         $scope.getFilterText = function (filter) {
-                            return filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
+                            var filterText = filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
+                            if (filterText) {
+                                filterText = filterText.split(",").join(", ");
+                            }
+                            return filterText;
                         }
 
                         function collapseOperatorList($event, mode) {

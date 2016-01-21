@@ -15,7 +15,7 @@
         <list redeclaring="false">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="[TODO]" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot; or &quot;HOLD&quot; status."/>
             </optionfilter>
             <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
