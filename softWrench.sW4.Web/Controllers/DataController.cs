@@ -182,7 +182,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch);
+                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch,new Tuple<string, string>(operationDataRequest.UserId,operationDataRequest.SiteId));
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

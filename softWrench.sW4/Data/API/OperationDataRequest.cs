@@ -22,6 +22,10 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
+        public string UserId {get; set;}
+
+        public string SiteId {get; set;}
+
         public ClientPlatform Platform {
             get; set;
         }

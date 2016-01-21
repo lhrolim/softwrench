@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('genericTicketService', ["alertService", "searchService", function (alertService, searchService) {
+    .factory('genericTicketService', ["alertService", "searchService","userService", function (alertService, searchService,userService) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -164,6 +164,10 @@ angular.module('sw_layout')
             });
         },
 
+
+        isDeleteAllowed: function (datamap, schema) {
+            return datamap.fields['status'] === 'NEW' && datamap.fields['reportedby'] === userService.getPersonId();
+        }
     };
 
 }]);

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace softWrench.sW4.Data.Persistence.Operation {
     public sealed class CrudOperationData : Entity, IOperationData {
 
-        private string _userIdAttributeName;
+        private readonly string _userIdAttributeName;
 
         public CrudOperationData([CanBeNull] string id, [NotNull] IDictionary<string, object> attributes,
             [NotNull] IDictionary<string, object> associationAttributes, EntityMetadata metadata, ApplicationMetadata applicationMetadata)
@@ -22,6 +22,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public new string Id { get; set; }
 
+        public string SiteId {get; set;}
 
 
         public string UserId {
