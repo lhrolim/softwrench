@@ -157,7 +157,11 @@
                         if ((displaycodeOptionDefined && !option.displayCode) || (!displaycodeOptionDefined && filter.displayCode === false)) {
                             return option.label;
                         }
-                        return "(" + option.value + ")" + " - " + option.label;
+                        var label = "(" + option.value + ")";
+                        if (!!option.label) {
+                            label += " - " + option.label;
+                        }
+                        return label;
                     }
 
 

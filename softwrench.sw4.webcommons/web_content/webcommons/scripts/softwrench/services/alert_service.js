@@ -28,8 +28,15 @@
                     bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
                     var defaultDeleteMsg = i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]);
                     bootbox.confirm({
+                        templates: {
+                            header:
+                              "<div class='modal-header'>" +
+                                "<i class='fa fa-question-circle'></i>" +
+                                "<h4 class='modal-title'></h4>" +
+                              "</div>"
+                        },
                         message: msg == null ? defaultDeleteMsg : msg,
-                        title: i18NService.get18nValue('general.defaultcommands._confirmationtitle', 'Confirmation'),
+                        title: i18NService.get18nValue('general.defaultcommands._confirmationtitle', 'Confirm...'),
                         className: 'smallmodal',
                         callback: function (result) {
                             if (result === false) {
@@ -53,8 +60,15 @@
                     bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
                     var defaultDeleteMsg = i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]);
                     bootbox.cancelDialog({
+                        templates: {
+                            header:
+                              "<div class='modal-header'>" +
+                                "<i class='fa fa-question-circle'></i>" +
+                                "<h4 class='modal-title'></h4>" +
+                              "</div>"
+                        },
                         message: msg == null ? defaultDeleteMsg : msg,
-                        title: i18NService.get18nValue('general.defaultcommands._confirmationtitle', 'Confirmation'),
+                        title: i18NService.get18nValue('general.defaultcommands._confirmationtitle', 'Confirm...'),
                         className: 'smallmodal',
                         callback: function (result) {
 

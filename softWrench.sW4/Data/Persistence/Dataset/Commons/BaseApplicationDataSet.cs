@@ -522,9 +522,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
 
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
+            if (userIdSite != null) {
+                operationWrapper.UserId = userIdSite.Item1;
+                operationWrapper.SiteId = userIdSite.Item2;
+            }
+
             if (isBatch) {
                 return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
             }

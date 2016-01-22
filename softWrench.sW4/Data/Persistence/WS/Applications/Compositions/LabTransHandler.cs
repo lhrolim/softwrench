@@ -37,7 +37,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
                 WsUtil.SetValue(integrationObject, "TRANSTYPE", "WORK");
 
-                FillSiteId(crudData, user, integrationObject);
+
+                WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
+                WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
+
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.FromServerToRightKind(), true);
@@ -58,29 +61,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
         private static void FillSiteId(CrudOperationData crudData, InMemoryUser user, object integrationObject) {
-            var laborRel = ((Entity)crudData.GetRelationship("labor_"));
+//            var laborRel = ((Entity)crudData.GetRelationship("labor_"));
+//
+//            if (laborRel == null) {
+//                //this is only null in the scenario where the labor was selected based upon the default user selection, and no change was made.
+//                //in that case, let´s just use the user´s default values.
+//                //SWWEB-1965 item 8
+//                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
+//                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
+//                return;
+//            }
+//            //logic is we need to use the same siteId/Orgid from the labor, falling back to the currentUser
+//            var woSite = laborRel.GetAttribute("worksite");
+//            var orgId = laborRel.GetAttribute("orgid");
+//            if (woSite == null) {
+//                woSite = user.SiteId;
+//            }
+//            if (orgId == null) {
+//                orgId = user.OrgId;
+//            }
 
-            if (laborRel == null) {
-                //this is only null in the scenario where the labor was selected based upon the default user selection, and no change was made.
-                //in that case, let´s just use the user´s default values.
-                //SWWEB-1965 item 8
-                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
-                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
-                return;
-            }
-            //logic is we need to use the same siteId/Orgid from the labor, falling back to the currentUser
-            var woSite = laborRel.GetAttribute("worksite");
-            var orgId = laborRel.GetAttribute("orgid");
-            if (woSite == null) {
-                woSite = user.SiteId;
-            }
-            if (orgId == null) {
-                orgId = user.OrgId;
-            }
 
-
-            WsUtil.SetValue(integrationObject, "ORGID", orgId);
-            WsUtil.SetValue(integrationObject, "SITEID", woSite);
+            WsUtil.SetValue(integrationObject, "ORGID", crudData.GetAttribute("orgid"));
+            WsUtil.SetValue(integrationObject, "SITEID", crudData.GetAttribute("siteid"));
         }
 
         private static object GetPayRate(CrudOperationData crudData) {
