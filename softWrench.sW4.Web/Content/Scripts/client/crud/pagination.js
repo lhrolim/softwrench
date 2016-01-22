@@ -118,31 +118,35 @@ app.directive('paginationPages', ['contextService', function (contextService) {
         scope: {
             renderfn: "&",
             paginationData: '=',
-            //searchData: '=',
-            //searchOperator: '=',
-            //schema: '=',
-            //applicationName: '@',
-            //mode: '@',
-            //disablePrint: '@',
-            //disableExport: '@',
-            //panelid: '='
         },
 
         controller: ['$scope', '$log', function ($scope, $log) {
             var log = $log.getInstance('sw4.pagination.pages');
             log.debug($scope.paginationData);
 
+
+            $scope.changePage = function (page) {
+                $scope.$parent.selectPage(page);
+            };
+
+            $scope.getLastPage = function () {
+                return $scope.paginationData.pageCount
+            }
+
             $scope.getPageArray = function () {
-                return new Array($scope.paginationData.pageCount);
+                var pageArray = new Array($scope.paginationData.pageCount)
+                pageArray = pageArray.slice(0, -2);
+
+                return pageArray;
             }
 
             $scope.getPageClass = function (index) {
-                if (index + 1 == $scope.paginationData.pageNumber) {
+                if (index + 2 == $scope.paginationData.pageNumber) {
                     return 'current';
                 }
             }
 
-            $scope.getPageRange = function (pageNumber, currentPage) {
+            $scope.getPageRange = function (currentPage) {
                 var pageRange = {
                     min: 1,
                     max: $scope.paginationData.pageCount
@@ -169,10 +173,29 @@ app.directive('paginationPages', ['contextService', function (contextService) {
                 return pageRange;
             }
 
-            $scope.showPage = function (index) {
-                var pageNumber = index + 1;
-                var pageRange = $scope.getPageRange(pageNumber, $scope.paginationData.pageNumber);
+            $scope.showEllipsis = function (location) {
+                var currentPage = $scope.paginationData.pageNumber;
+                var pageRange = $scope.getPageRange(currentPage);
 
+                switch (location) {
+                    case 'start':
+                        if (1 >= pageRange.min) {
+                            return false;
+                        }
+                        break;
+                    case 'end':
+                        if ($scope.paginationData.pageCount <= pageRange.max) {
+                            return false;
+                        }
+                        break;
+                }
+
+                return true;
+            }
+
+            $scope.showPage = function (index) {
+                var pageNumber = index + 2;
+                var pageRange = $scope.getPageRange($scope.paginationData.pageNumber);
 
                 if (pageNumber >= pageRange.min && pageNumber <= pageRange.max) {
                     return true;
