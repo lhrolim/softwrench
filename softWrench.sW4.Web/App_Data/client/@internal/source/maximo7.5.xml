@@ -945,6 +945,29 @@
       </connectorParameters>
     </entity>
     
+    <entity name="safetylexicon" idAttribute="safetylexiconid">
+      <attributes>
+        <attribute name="safetylexiconid" type="bigint" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="hazardid" type="varchar" required="false" />
+        <attribute name="tagoutid" type="varchar" required="false" />
+        <attribute name="applyseq" type="smallint" required="false" />
+        <attribute name="removeseq" type="smallint" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="sl01" type="varchar" required="false" />
+        <attribute name="sl02" type="varchar" required="false" />
+        <attribute name="sl03" type="datetime" required="false" />
+        <attribute name="sl04" type="decimal" required="false" />
+        <attribute name="sl05" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="safetylexicon" />
+      </connectorParameters>
+    </entity>
+    
     <entity name="assetstatus" idAttribute="assetnum">
       <attributes>
         <attribute name="assetnum" type="varchar" required="true" />

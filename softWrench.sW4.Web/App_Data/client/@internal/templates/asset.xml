@@ -134,12 +134,12 @@
               <collectionproperties listschema="assetsparepartlist" allowcreation="flase" allowremoval="false" allowupdate="false"/>
             </composition>
           </tab>
-          <tab id="safety" label="Safety">
+          <!--<tab id="safety" label="Safety">
             <field attribute="assetnum" label="Asset" readonly="true"/>
             <field attribute="description" label="Description" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="location_.description" label="Description" readonly="true"/>
-          </tab>
+          </tab>-->
           <tab id="meters" label="Meters">
             <section orientation="horizontal">
               <field attribute="assetnum" label="Asset" readonly="true"/>
