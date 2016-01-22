@@ -6,20 +6,50 @@
     <template path="@locationspec.xml"/>
     <template path="@assettrans.xml"/>
   </templates>
+
   <entities>
+
     <entity name="location" idAttribute="locationsid">
       <attributes>
         <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
         <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
       </attributes>
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOCASSETSTATUS" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="syntype" cacheable="true">
+          <relationshipAttribute from="type" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOCTYPE" quoteLiteral="true" />
+        </relationship>
+      </relationships>
     </entity>
+
   </entities>
+  
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
         <property key="mobile.fetchlimit" value="1000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
+
+      <filters>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" />
+        <optionfilter attribute="type" provider="syntype_.description" displaycode="true"/>
+        <optionfilter attribute="parentlocation_.parent" provider="parentlocation_.parent" displaycode="true" allowblank="true" />
+        <optionfilter attribute="parentlocation_.systemid" provider="parentlocation_.systemid" displaycode="true" allowblank="true" />
+        <optionfilter attribute="siteid" provider="site_.siteid" />
+        <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true"/>
+        <numericfilter attribute="children" label="Child Locations" position="children" />
+        <numericfilter attribute="assets" label="Assets" position="assets" />
+      </filters>
+      
       <schemas>
         <schema id="locationlookup" title="Location List">
           <field attribute="location" label="Location" qualifier="title"/>

@@ -2,8 +2,8 @@
     "use strict";
 
     angular.module("sw_layout")
-        .directive("filterMultipleOption", ["contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", "modalFilterService", "modalService", "crudContextHolderService", 
-            function (contextService, restService, filterModelService,
+        .directive("filterMultipleOption", ["$log", "contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", "modalFilterService", "modalService", "crudContextHolderService", 
+            function ($log, contextService, restService, filterModelService,
             cmpAutocompleteServer, $timeout, searchService, schemaService, modalFilterService, modalService, crudContextHolderService) {
 
             var directive = {
@@ -20,6 +20,8 @@
 
                 link: function (scope, element, attrs) {
                     scope.vm = {};
+
+                    var linkLog = $log.getInstance("filterMultipleOption", ["link"]);
 
                     //let´s avoid some null pointers
                     scope.filter.options = scope.filter.options || [];
@@ -55,16 +57,16 @@
                     }
 
                     //initing any metadata declared option first
+                    linkLog.debug("Initing metadata options from filter of attribute (" + filter.attribute + ").");
                     scope.filter.options.forEach(function (item) {
+                        linkLog.debug("Initing metadata option (" + item.value + ") " + item.label);
                         //these won´t go to currently used
                         item.nonstoreable = true;
                         scope.suggestedoptions.push(item);
+                        scope.preSelectOptionIfNeeded(item, linkLog);
                     });
 
-                  
-
-
-                    if (!scope.filter.lazy && !!filter.provider) {
+                    if (!filter.lazy && filter.provider) {
                         //let´s get the whole list from the server 
                         //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
                         var parameters = {
@@ -77,6 +79,7 @@
 
                         restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                             scope.filteroptions = scope.filteroptions.concat(result.data);
+                            scope.filteroptions = removeDuplicatesOnArray(scope.filteroptions);
                         });
                     } else {
                         scope.vm.notSearching = true;
@@ -146,10 +149,19 @@
                     var filter = $scope.filter;
 
                     $scope.labelValue = function (option) {
-                        if (filter.displayCode === false || option.value === "nullor:") {
+                        if (option.value === "nullor:") {
                             return option.label;
                         }
-                        return "(" + option.value + ")" + " - " + option.label;
+                        // verifies if the display code is set on option, if not verifies on filter
+                        var displaycodeOptionDefined = typeof (option.displayCode) != "undefined";
+                        if ((displaycodeOptionDefined && !option.displayCode) || (!displaycodeOptionDefined && filter.displayCode === false)) {
+                            return option.label;
+                        }
+                        var label = "(" + option.value + ")";
+                        if (!!option.label) {
+                            label += " - " + option.label;
+                        }
+                        return label;
                     }
 
 
@@ -180,8 +192,9 @@
                         }
                     });
 
-                    $scope.getAllAvailableOptions = function() {
-                        return $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                    $scope.getAllAvailableOptions = function () {
+                        var allOptions = $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                        return removeDuplicatesOnArray(allOptions);
                     }
 
                     // updates the lookup modal grid buffer
@@ -277,6 +290,14 @@
                         }
                     }
 
+                    $scope.preSelectOptionIfNeeded = function(option, log) {
+                        var searchValue = $scope.searchData[filter.attribute];
+                        if (option.preSelected && searchValue && searchValue.indexOf(option.value) >= 0) {
+                            log.debug("Option pre selected: (" + option.value + ") " + option.label);
+                            $scope.selectedOptions[option.value] = 1;
+                        }
+                    }
+
                     //return call from the autocomplete server invocation
                     $scope.$on("sw_autocompleteselected", function (event, jqueryEvent, item, filterAttribute) {
                         if (filterAttribute !== $scope.filter.attribute) {
@@ -367,6 +388,16 @@
                                 return;
                             }
                             applyModal(modalSchema);
+                        });
+                    });
+
+                    // When changing grids the selection should be restarted
+                    $scope.$on("sw_gridchanged", function () {
+                        var log = $log.getInstance("filterMultipleOption#sw_gridchanged", ["grid"]);
+                        log.debug("grid change, reset of selected options of filter: " + filter.attribute);
+                        $scope.selectedOptions = [];
+                        filter.options.forEach(function (item) {
+                            $scope.preSelectOptionIfNeeded(item, log);
                         });
                     });
                 }]

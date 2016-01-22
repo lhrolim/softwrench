@@ -134,7 +134,7 @@ namespace softWrench.sW4.Data.Pagination {
                     }
                 }
             }
-            return new PaginatedSearchRequestDto(defaultSize, paginationOptions);
+            return new PaginatedSearchRequestDto(defaultSize, paginationOptions) { IsDefaultInstance = true };
         }
 
         public override SearchRequestDto ShallowCopy() {

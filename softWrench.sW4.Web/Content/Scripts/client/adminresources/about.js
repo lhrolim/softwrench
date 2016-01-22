@@ -30,7 +30,7 @@ function AboutController($scope, $http, $templateCache, i18NService, restService
             return;
         }
 
-        alertService.confirmMsg('Are you sure you want to change client to {0}'.format(newclient.toUpperCase()), function () {
+        alertService.confirmMsg('Are you sure you want to change client to {0}?'.format(newclient.toUpperCase()), function () {
             restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
                 window.location.href = window.location.href;
             });
@@ -45,7 +45,7 @@ function AboutController($scope, $http, $templateCache, i18NService, restService
             return;
         }
 
-        alertService.confirmMsg('Are you sure you want to restore to default client', function () {
+        alertService.confirmMsg('Are you sure you want to restore to default client?', function () {
             restService.invokePost("Configuration", "Restore", null, null, function (s) {
                 window.location.href = window.location.href;
             });
