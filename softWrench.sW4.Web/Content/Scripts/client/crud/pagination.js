@@ -88,6 +88,45 @@ app.directive('pagination', ["contextService", function (contextService) {
                 return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
             }
 
+            $scope.getDirectionClass = function (direction) {
+                var currentPage = $scope.paginationData.pageNumber;
+                var pageCount = $scope.paginationData.pageCount;
+
+                switch (direction) {
+                    case 'prev':
+                        if (currentPage == 1) {
+                            return 'disable';
+                        }
+
+                        break;
+                    case 'next':
+                        if (currentPage == pageCount) {
+                            return 'disable';
+                        }
+                        break;
+                }
+            }
+
+            $scope.getTooltip = function (direction) {
+                var currentPage = $scope.paginationData.pageNumber;
+                var pageCount = $scope.paginationData.pageCount;
+                var tooltip = 'Go to {0} of ' + pageCount;
+
+                switch (direction) {
+                    case 'prev':
+                        if (currentPage > 1) {
+                            return tooltip.format(currentPage - 1);
+                        }
+
+                        break;
+                    case 'next':
+                        if (currentPage < pageCount) {
+                            return tooltip.format(currentPage + 1);
+                        }
+                        break;
+                }
+            }
+
             //$scope.$on("sw_redirectapplicationsuccess", function (event) {
             //    // $scope.searchData = {};
             //});

@@ -1,19 +1,7 @@
 <div class="pages">
-    <ul>
-        <li ng-class="getPageClass(-1)" ng-click="changePage(1)">
-            1
-        </li>
-        <li ng-show="showEllipsis('start')">
-            ...
-        </li>
-        <li ng-repeat="i in getPageArray() track by $index" ng-class="getPageClass($index)" ng-show="showPage($index)" ng-click="changePage($index+2)">
-            <span>{{$index+2}}</span>
-        </li>
-        <li ng-show="showEllipsis('end')">
-            ...
-        </li>
-        <li ng-class="getPageClass(getLastPage() - 2)" ng-click="changePage(getLastPage())">
-            {{getLastPage()}}
-        </li>
-    </ul>
+    <div ng-class="getPageClass(-1)" ng-click="changePage(1)" class="page">1</div><div ng-if="showEllipsis('start')" class="ellipsis">...</div><div ng-repeat="i in getPageArray() track by $index" ng-class="getPageClass($index)" ng-if="showPage($index)" ng-click="changePage($index+2)" class="page">
+        <span>{{$index+2}}</span>
+    </div><div ng-if="showEllipsis('end')" class="ellipsis">...</div><div ng-class="getPageClass(getLastPage() - 2)" ng-click="changePage(getLastPage())" class="page">
+        {{getLastPage()}}
+    </div>
 </div>

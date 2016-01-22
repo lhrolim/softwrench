@@ -40,28 +40,6 @@
         padding: 8px 6px;
     }
 
-    pagination {
-        .pagination {
-            a {
-                color: #555;
-                font-size: 16px;
-
-                &:hover, &:active, &:focus {
-                    color: #999;
-                    text-decoration: none;
-                }
-            }
-
-            .pages {
-                /*background: #f00;*/
-                .current {
-                    font-weight: bold;
-                    /*background: #0f0;*/
-                }
-            }
-        }
-    }
-
     #affixpagination1 {
         padding-top: 0px;
         padding-bottom: 8px;
