@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using Quartz.Util;
@@ -23,8 +24,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest
 
         public DispatchOperationHandler()
         {
-            _woEntity = MetadataProvider.Entity("WORKORDER", false);
-            _woApplication = MetadataProvider.Application("WORKORDER").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
+            var instantiateWoVars = MetadataProvider.Applications().Any(a => a.ApplicationName == "WORKORDER");
+            if (instantiateWoVars) {
+                _woEntity = MetadataProvider.Entity("WORKORDER", false);
+                _woApplication = MetadataProvider.Application("WORKORDER").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
+            }
             _incidentEntity = MetadataProvider.Entity("INCIDENT", false);
             _incidentApplication = MetadataProvider.Application("INCIDENT").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
         }
@@ -99,6 +103,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest
             incidentCrudData.SetAttribute("origrecordid", srCrudData.UserId);
             incidentCrudData.SetAttribute("origrecordclass", "SR");
             incidentCrudData.SetAttribute("relatetype", "followup");
+            incidentCrudData.SetAttribute("status", "NEW");
 
             var result = (TargetResult)Maximoengine.Create(incidentCrudData);
             var id = result.Id ?? result.UserId;

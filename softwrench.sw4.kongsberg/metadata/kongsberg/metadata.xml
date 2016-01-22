@@ -274,6 +274,7 @@
         <connectorParameter key="dbtable" value="sr" />
         <connectorParameter key="integration_interface" value="SWSR" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergServiceRequestCrudConnector" />
+        <connectorParameter key="dispatchincident_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
 
@@ -1538,7 +1539,18 @@
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
+                          parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
+                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident"
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
+                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                    showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" icon="fa-remove"/>
+              </container>
+            </commandgroup>
+          </commandbars>
           <commands>
             <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
