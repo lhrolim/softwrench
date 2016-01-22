@@ -64,18 +64,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
-            if (!result.Any()) {
-                return new List<AssociationOption>(); ;
-            }
-           
-            return result.Select(record => new AssociationOption(record["ID"],
-                                                         string.Format("{0}{1}{2}{3}{4}",
-                                                                        record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
-                                                                        record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
-                                                                        record["CLASS_3"] == null ? "" : record["CLASS_3"] + "/",
-                                                                        record["CLASS_2"] == null ? "" : record["CLASS_2"] + "/",
-                                                                        record["CLASS_1"] ?? ""
-                                                                        )));
+            return result.Select(record => {
+                    var label = string.Format("{0}{1}{2}{3}{4}",
+                        record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
+                        record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
+                        record["CLASS_3"] == null ? "" : record["CLASS_3"] + "/",
+                        record["CLASS_2"] == null ? "" : record["CLASS_2"] + "/",
+                        record["CLASS_1"] ?? "");
+                    return new AssociationOption(record["ID"], label);
+                });
         }
 
         protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
@@ -105,11 +102,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                     ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as"
                                     );
             if (searchString != null) {
-                classStructureQuery += string.Format(@" and ( UPPER(COALESCE(p3.classificationid,'')) like '%{0}%' or 
-                                                            UPPER(COALESCE(p2.classificationid,'')) like '%{0}%' or  
-                                                            UPPER(COALESCE(p1.classificationid,'')) like '%{0}%' or
-                                                            UPPER(COALESCE(p.classificationid,''))  like '%{0}%' or 
-                                                            UPPER(COALESCE(c.classificationid,''))  like '%{0}%')", 
+                classStructureQuery += string.Format(@" and ( UPPER(COALESCE(p3.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p3.description,'')) like '%{0}%' or
+                                                              UPPER(COALESCE(p2.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p2.description,'')) like '%{0}%' or
+                                                              UPPER(COALESCE(p1.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p1.description,'')) like '%{0}%' or
+                                                              UPPER(COALESCE(p.classificationid,''))  like '%{0}%' or UPPER(COALESCE(p.description,''))  like '%{0}%' or
+                                                              UPPER(COALESCE(c.classificationid,''))  like '%{0}%' or UPPER(COALESCE(c.description,''))  like '%{0}%' )", 
                                                             searchString.ToUpper());
             }
             return classStructureQuery;

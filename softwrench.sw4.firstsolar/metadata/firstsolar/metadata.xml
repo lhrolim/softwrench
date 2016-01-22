@@ -15,7 +15,8 @@
         <list redeclaring="false">
           <filters>
             <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
-            <optionfilter attribute="classstructure_.description" provider="@GetWOClassStructureType" displaycode="true" allowblank="true"/>
+            <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true" whereclause="classstructure_.classstructureid in (!@#value)"/>
+            <!--<optionfilter attribute="classstructure_.classificationid" provider="@GetWOClassStructureType" allowblank="true"/>-->
           </filters>
           
           
