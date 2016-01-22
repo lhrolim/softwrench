@@ -45,7 +45,7 @@
         <optionfilter attribute="parentlocation_.parent" provider="parentlocation_.parent" displaycode="true" allowblank="true" />
         <optionfilter attribute="parentlocation_.systemid" provider="parentlocation_.systemid" displaycode="true" allowblank="true" />
         <optionfilter attribute="siteid" provider="site_.siteid" />
-        <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true"/>
+        <optionfilter attribute="classstructure_.description" provider="classstructure_.description" whereclause="classstructure_.classstructureid in (!@#value)" allowblank="true"/>
         <numericfilter attribute="children" label="Child Locations" position="children" />
         <numericfilter attribute="assets" label="Assets" position="assets" />
       </filters>
