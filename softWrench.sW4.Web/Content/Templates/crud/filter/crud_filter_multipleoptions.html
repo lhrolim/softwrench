@@ -24,7 +24,7 @@
             <div class="divider"></div>
         </div>
 
-        <div ng-show="vm.notSearching && suggestedoptions.length > 0">
+        <div ng-show="(!filter.lazy || vm.notSearching) && suggestedoptions.length > 0">
             <h5>Suggested Filters</h5>
             <div class="divider"></div>
             <ul class="filter-options">

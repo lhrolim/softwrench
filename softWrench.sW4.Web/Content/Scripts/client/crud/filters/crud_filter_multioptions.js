@@ -59,15 +59,10 @@
                     //initing any metadata declared option first
                     linkLog.debug("Initing metadata options from filter of attribute (" + filter.attribute + ").");
                     scope.filter.options.forEach(function (item) {
-                        if (!filter.lazy && filter.provider) {
-                            linkLog.debug("Initing non lazy option (" + item.value + ") " + item.label);
-                            scope.filteroptions.push(item);
-                        } else {
-                            linkLog.debug("Initing lazy option (" + item.value + ") " + item.label);
-                            //these won´t go to currently used
-                            item.nonstoreable = true;
-                            scope.suggestedoptions.push(item);
-                        }
+                        linkLog.debug("Initing metadata option (" + item.value + ") " + item.label);
+                        //these won´t go to currently used
+                        item.nonstoreable = true;
+                        scope.suggestedoptions.push(item);
                         scope.preSelectOptionIfNeeded(item, linkLog);
                     });
 
@@ -154,7 +149,12 @@
                     var filter = $scope.filter;
 
                     $scope.labelValue = function (option) {
-                        if (filter.displayCode === false || option.value === "nullor:") {
+                        if (option.value === "nullor:") {
+                            return option.label;
+                        }
+                        // verifies if the display code is set on option, if not verifies on filter
+                        var displaycodeOptionDefined = typeof (option.displayCode) != "undefined";
+                        if ((displaycodeOptionDefined && !option.displayCode) || (!displaycodeOptionDefined && filter.displayCode === false)) {
                             return option.label;
                         }
                         return "(" + option.value + ")" + " - " + option.label;
