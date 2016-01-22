@@ -12,6 +12,7 @@
             afterChangeFromBin: afterChangeFromBin,
             afterChangeFromStoreLoc: afterChangeFromStoreLoc,
             afterChangeTransferQuantity: afterChangeTransferQuantity,
+            afterChangeToStoreLoc: afterChangeToStoreLoc,
             cancel: cancel
         };
 
@@ -22,6 +23,11 @@
         function afterChangeFromStoreLoc(parameters) {
             var fields = parameters['fields'];
             fields['invuseline_.fromstoreloc'] = fields['fromstoreloc'];
+        };
+
+        function afterChangeToStoreLoc(parameters) {
+            var fields = parameters['fields'];
+            fields['invuseline_.tostoreloc'] = fields['tostoreloc'];
         };
 
         function afterChangeSite(parameters) {

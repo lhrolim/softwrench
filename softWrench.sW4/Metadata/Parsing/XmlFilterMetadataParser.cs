@@ -39,8 +39,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var style = el.AttributeValue(XmlFilterSchema.StyleAttribute);
                 var whereclause = el.AttributeValue(XmlFilterSchema.WhereClauseAttribute);
 
-                if (el.IsNamed(XmlFilterSchema.ModalFilterElement))
-                {
+                if (el.IsNamed(XmlFilterSchema.ModalFilterElement)) {
                     var targetSchema = el.AttributeValue(XmlFilterSchema.TargetSchemaAttribute);
                     var service = el.AttributeValue(XmlFilterSchema.ServiceAttribute);
                     filters.AddLast(new MetadataModalFilter(attribute, label, icon, position, tooltip, whereclause, targetSchema, service));
@@ -59,6 +58,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                 } else if (el.IsNamed(XmlFilterSchema.BooleanFilterElement)) {
                     var defaultValue = el.Attribute(XmlFilterSchema.DefaultSelectionAttribute).ValueOrDefault(true);
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));
+                } else if (el.IsNamed(XmlFilterSchema.NumericFilterElement)) { 
+                    var numberFilter = new MetadataNumberFilter(attribute, label, icon, position, tooltip, whereclause);
+                    filters.AddLast(numberFilter);
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
                     var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(true);
                     filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));
@@ -78,7 +80,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             foreach (var el in xElements) {
                 var label = el.AttributeValue(XmlBaseSchemaConstants.LabelAttribute, true);
                 var value = el.AttributeValue(XmlBaseSchemaConstants.ValueAttribute, true);
-                options.Add(new MetadataFilterOption(label, value));
+                var preSelected = el.AttributeValue(XmlBaseSchemaConstants.PreSelectedAttribute) == "true";
+                var tooltip = el.AttributeValue(XmlBaseSchemaConstants.TooltipAttribute);
+                var displaycodeString = el.AttributeValue(XmlBaseSchemaConstants.DisplayCodeAttribute);
+                var displaycode = displaycodeString == null ? (bool?)null : "true".Equals(displaycodeString);
+                options.Add(new MetadataFilterOption(label, value, preSelected, tooltip, displaycode));
             }
             return options;
         }

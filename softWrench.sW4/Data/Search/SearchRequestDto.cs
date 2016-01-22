@@ -89,6 +89,10 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public bool IsDefaultInstance {
+            get; set;
+        }
+
         [CanBeNull]
         public List<string> UnionWhereClauses {
             get; set;

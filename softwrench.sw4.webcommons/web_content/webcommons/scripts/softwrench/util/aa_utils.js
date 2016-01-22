@@ -612,6 +612,32 @@ function isEmpty(obj) {
     return true;
 }
 
+/**
+* Removes duplicates in object arrays. 
+* ex.: var arr = [{id:1}, {id:2}, {id:1}, {id:3}];
+* removeDuplicatesOnArray(arr, "id");  -----> [{id:1}, {id:2}, {id:3}]
+* 
+* @param {Object[]} array 
+* @param {string} the name of unique key of the object to verify dulicates
+* @returns {Object[]} Array without duplicates
+*/
+function removeDuplicatesOnArray(array, keyProp) {
+    if (!array || !keyProp) {
+        return array;
+    }
+    var indexes = [];
+    var withoutDuplicates = [];
+    array.forEach(function (option) {
+        var index = option[keyProp];
+        if (indexes.indexOf(index) >= 0) {
+            return;
+        }
+        indexes.push(index);
+        withoutDuplicates.push(option);
+    });
+    return withoutDuplicates;
+}
+
 /* Base64 encode / decode http://www.webtoolkit.info/ */
 var Base64 = {
     // private property

@@ -14,6 +14,9 @@
       <schemas>
         <list redeclaring="false">
           <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot; or &quot;HOLD&quot; status."/>
+            </optionfilter>
             <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
           </filters>
           
@@ -79,7 +82,7 @@
        
 
           <properties>
-            <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
+            <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchLocationInlineEdit"/>
             <property key="list.click.popupmode" value="modal"/>
           </properties>
@@ -122,7 +125,7 @@
           
 
           <properties>
-            <property key="list.click.service" value="batchWorkorderService.loadRelatedWorkorders"/>
+            <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchAssetInlineEdit"/>
             <property key="list.click.popupmode" value="modal"/>
           </properties>

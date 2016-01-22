@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -114,7 +115,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return detail;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch) {
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string,string>userIdSite ) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
 

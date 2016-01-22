@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="workorder">
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="WO">
 
-  <reference id="workorder"/>
+ 
   <reference id="asset"/>
   <reference id="location"/>
+  <reference id="workorder"/>
  
 
 </Menu>

@@ -86,46 +86,51 @@
 
         function proceedToBatchSelection(httpResponse, confirmMessage) {
             var applicationResponse = httpResponse.data;
-//            if (applicationResponse.extraParameters && true === applicationResponse.extraParameters["allworkorders"]) {
-//                return alertService.confirm2(confirmMessage)
-//                    .then(function () {
-//                        //storing untouched first line to serve as shared data later
-//                        contextService.set("batchshareddata", applicationResponse.resultObject[0].fields, true);
-//                        return redirectService.redirectFromServerResponse(applicationResponse);
-//
-//                    }).catch(function () {
-//                        //catching exception in order to close the modal on the outer promise handler
-//                        return;
-//                    });
-//            }
+            //            if (applicationResponse.extraParameters && true === applicationResponse.extraParameters["allworkorders"]) {
+            //                return alertService.confirm2(confirmMessage)
+            //                    .then(function () {
+            //                        //storing untouched first line to serve as shared data later
+            //                        contextService.set("batchshareddata", applicationResponse.resultObject[0].fields, true);
+            //                        return redirectService.redirectFromServerResponse(applicationResponse);
+            //
+            //                    }).catch(function () {
+            //                        //catching exception in order to close the modal on the outer promise handler
+            //                        return;
+            //                    });
+            //            }
             contextService.set("batchshareddata", applicationResponse.resultObject[0].fields, true);
             return redirectService.redirectFromServerResponse(applicationResponse);
         }
 
-        function loadRelatedWorkorders(rowDm, column) {
+        function spreadSheetLineClick(rowDm, column, schema) {
             var wonums = rowDm["#wonums"];
             if (column.attribute === "#warning" && wonums) {
-                var commaSeparattedQuotedIds =
-                    wonums.split(',')
-                    .map(function (item) {
-                        return "'" + item + "'";
-                    }).join(",");
-
-                var fixedWhereClause = "wonum in ({0})".format(commaSeparattedQuotedIds);
-
-                var params = {
-                    searchDTO: {
-                        filterFixedWhereClause: fixedWhereClause
-                    },
-                    title: "Work Orders of " + rowDm["specificLabel"]
-                }
-
-                redirectService.openAsModal("workorder", "readonlyfixedlist", params).then(function () {
-                    crudContextHolderService.setFixedWhereClause("#modal", fixedWhereClause);
-                });
+                loadRelatedWorkorders(rowDm, wonums);
                 return false;
             }
-            return true;
+
+            var nextSchemaId = schema.properties["list.click.schema"];
+            redirectService.openAsModal("workorder", nextSchemaId, null, rowDm);
+            return false;
+        }
+
+        function loadRelatedWorkorders(rowDm, wonums) {
+            var commaSeparattedQuotedIds = wonums.split(',').map(function (item) {
+                return "'" + item + "'";
+            }).join(",");
+
+            var fixedWhereClause = "wonum in ({0})".format(commaSeparattedQuotedIds);
+
+            var params = {
+                searchDTO: {
+                    filterFixedWhereClause: fixedWhereClause
+                },
+                title: "Work Orders of " + rowDm["specificLabel"]
+            }
+
+            redirectService.openAsModal("workorder", "readonlyfixedlist", params).then(function () {
+                crudContextHolderService.setFixedWhereClause("#modal", fixedWhereClause);
+            });
         }
 
         function submitBatch(batchType) {
@@ -187,7 +192,7 @@
             woInlineEditSave: woInlineEditSave,
             woBatchSharedSave: woBatchSharedSave,
             proceedToBatchSelection: proceedToBatchSelection,
-            loadRelatedWorkorders: loadRelatedWorkorders,
+            spreadSheetLineClick: spreadSheetLineClick,
             submitBatch: submitBatch
         };
 

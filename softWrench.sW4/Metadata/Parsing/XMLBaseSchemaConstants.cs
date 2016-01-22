@@ -26,6 +26,9 @@
 
         public const string LabelAttribute = "label";
         public const string ValueAttribute = "value";
+        public const string PreSelectedAttribute = "preselected";
+        public const string TooltipAttribute = "tooltip";
+        public const string DisplayCodeAttribute = "displaycode";
         public const string RoleAttribute = "role";
 
         public const string ToggleButtonInitialStateExpressionAttribute = "initialstateexpression";

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using Quartz.Util;
@@ -12,30 +13,32 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest
-{
-    class DispatchOperationHandler : BaseMaximoCustomConnector
-    {
+namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest {
+    class DispatchOperationHandler : BaseMaximoCustomConnector {
         private readonly EntityMetadata _woEntity;
         private readonly ApplicationMetadata _woApplication;
         private readonly EntityMetadata _incidentEntity;
         private readonly ApplicationMetadata _incidentApplication;
 
-        public DispatchOperationHandler()
-        {
-            _woEntity = MetadataProvider.Entity("WORKORDER", false);
-            _woApplication = MetadataProvider.Application("WORKORDER").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
-            _incidentEntity = MetadataProvider.Entity("INCIDENT", false);
-            _incidentApplication = MetadataProvider.Application("INCIDENT").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
+        public DispatchOperationHandler() {
+            var woApplication = MetadataProvider.Application("workorder", false);
+            var incidentApp = MetadataProvider.Application("incident", false);
+
+            if (woApplication != null) {
+                _woEntity = MetadataProvider.Entity("WORKORDER", false);
+                _woApplication = woApplication.ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
+            }
+            if (incidentApp != null) {
+                _incidentEntity = MetadataProvider.Entity("INCIDENT", false);
+                _incidentApplication = incidentApp.ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
+            }
         }
 
-        public class DispatchOperationData : CrudOperationDataContainer
-        {
+        public class DispatchOperationData : CrudOperationDataContainer {
 
         }
 
-        public object DispatchWO(DispatchOperationData srData)
-        {
+        public object DispatchWO(DispatchOperationData srData) {
             var srCrudData = srData.CrudData;
 
             var woCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _woEntity, _woApplication, new JObject(), null);
@@ -71,8 +74,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest
             return result;
         }
 
-        public object DispatchIncident(DispatchOperationData srData)
-        {
+        public object DispatchIncident(DispatchOperationData srData) {
             var srCrudData = srData.CrudData;
             var incidentCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _incidentEntity, _incidentApplication, new JObject(), null);
             incidentCrudData.SetAttribute("affectedemail", srCrudData.GetStringAttribute("affectedemail"));
@@ -99,6 +101,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest
             incidentCrudData.SetAttribute("origrecordid", srCrudData.UserId);
             incidentCrudData.SetAttribute("origrecordclass", "SR");
             incidentCrudData.SetAttribute("relatetype", "followup");
+            incidentCrudData.SetAttribute("status", "NEW");
 
             var result = (TargetResult)Maximoengine.Create(incidentCrudData);
             var id = result.Id ?? result.UserId;

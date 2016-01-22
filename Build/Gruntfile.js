@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     var path = grunt.option("path") || "";
     var fullPath = !!path ? path + "/" : webProjectRelPath;
     var customer = grunt.option("customer");
+    var skipTest = grunt.option("skiptest");
 
     grunt.initConfig({
         //#region global app config
@@ -120,7 +121,6 @@ module.exports = function (grunt) {
                     "angular-file-upload.js": "angular-file-upload/angular-file-upload.min.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
-                    "bootstrap-datetimepicker.js": "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
                     // utils
                     "moment.js": "moment/min/moment.min.js",
                     "spin.js": "spin.js/spin.min.js",
@@ -333,7 +333,8 @@ module.exports = function (grunt) {
     //#region customTasks
     grunt.registerTask("cleanAll", ["clean:vendor", "clean:tmp", "clean:dist"]);
     grunt.registerTask("copyAll", ["bowercopy:css", "bowercopy:fonts", "bowercopy:scripts"]);
-    grunt.registerTask("default", [
+
+    var defaultTasks = [
         "sass:prod", // compile scss sources
         "cleanAll", // clean folders: preparing for copy
         "copyAll", // copying bower files
@@ -343,10 +344,15 @@ module.exports = function (grunt) {
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
-        "uglify:app", // minify app script and distribute as 'scripts/app.js'
-        "karma:target", // run tests on minified scripts
-        "clean:vendor", "clean:tmp" // clean temporary folders
-    ]);
+        "uglify:app" // minify app script and distribute as 'scripts/app.js'
+    ];
+    if (!skipTest) {
+        defaultTasks.push("karma:target");  // run tests on minified scripts
+    }
+    defaultTasks.push("clean:vendor"); // clean temporary folders
+    defaultTasks.push("clean:tmp");
+
+    grunt.registerTask("default", defaultTasks);
     grunt.registerTask("test", [
         "cleanAll", // clean folders: preparing for copy
         "bowercopy:scripts", // copying bower js files
