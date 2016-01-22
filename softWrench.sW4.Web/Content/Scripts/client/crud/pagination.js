@@ -110,4 +110,83 @@ app.directive('pagination', ["contextService", function (contextService) {
     };
 }]);
 
+app.directive('paginationPages', ['contextService', function (contextService) {
+    return {
+        restrict: 'E',
+        replace: false,
+        templateUrl: contextService.getResourceUrl('/Content/Templates/pagination-pages.html'),
+        scope: {
+            renderfn: "&",
+            paginationData: '=',
+            //searchData: '=',
+            //searchOperator: '=',
+            //schema: '=',
+            //applicationName: '@',
+            //mode: '@',
+            //disablePrint: '@',
+            //disableExport: '@',
+            //panelid: '='
+        },
+
+        controller: ['$scope', '$log', function ($scope, $log) {
+            var log = $log.getInstance('sw4.pagination.pages');
+            log.debug($scope.paginationData);
+
+            $scope.getPageArray = function () {
+                return new Array($scope.paginationData.pageCount);
+            }
+
+            $scope.getPageClass = function (index) {
+                if (index + 1 == $scope.paginationData.pageNumber) {
+                    return 'current';
+                }
+            }
+
+            $scope.getPageRange = function (pageNumber, currentPage) {
+                var pageRange = {
+                    min: 1,
+                    max: $scope.paginationData.pageCount
+                }
+
+                var rangeMargin = $scope.pagesToShow / 2;
+
+                //the current page is first or near the begining 
+                if (currentPage == 1 || currentPage - rangeMargin <= 2) {
+                    pageRange.max = 1 + $scope.pagesToShow;
+                    return pageRange;
+                }
+
+                //the current page is last or near the end
+                if (currentPage == $scope.paginationData.pageCount || $scope.paginationData.pageCount - currentPage - rangeMargin < 2) {
+                    pageRange.min = $scope.paginationData.pageCount - $scope.pagesToShow;
+                    return pageRange;
+                }
+
+                //set the page range
+                pageRange.min = currentPage - rangeMargin;
+                pageRange.max = currentPage + rangeMargin;
+
+                return pageRange;
+            }
+
+            $scope.showPage = function (index) {
+                var pageNumber = index + 1;
+                var pageRange = $scope.getPageRange(pageNumber, $scope.paginationData.pageNumber);
+
+
+                if (pageNumber >= pageRange.min && pageNumber <= pageRange.max) {
+                    return true;
+                }
+            }
+
+            //init directive
+            $scope.pagesToShow = 4;
+        }]
+
+        //link: function (scope, element, attrs) {
+        //    scope.setSimpleLayout(attrs.hasOwnProperty("paginationSimpleLayout"));
+        //}
+    };
+}]);
+
 })(app);

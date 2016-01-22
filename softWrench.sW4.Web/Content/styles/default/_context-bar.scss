@@ -51,6 +51,14 @@
                     text-decoration: none;
                 }
             }
+
+            .pages {
+                /*background: #f00;*/
+                .current {
+                    font-weight: bold;
+                    /*background: #0f0;*/
+                }
+            }
         }
     }
 

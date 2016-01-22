@@ -761,6 +761,7 @@
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
     <Content Include="Content\Templates\otb\receiving.html" />
+    <Content Include="Content\Templates\pagination-pages.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />

@@ -7,26 +7,31 @@
     </div>
 
     <div class="group pagination" ng-show="shouldShowPagination()">
-        <span ng-if="!layout.simple">
+        <!--<span ng-if="!layout.simple">
             <a ng-click="selectPage(1)" href="#">
                 <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>
             </a>&ensp;
-        </span>
+        </span>-->
+
         <a ng-click="previousPage()" href="#">
             <i class="fa fa-chevron-left"></i>
         </a>&ensp;
-        <label>{{i18N('_grid.pagination.page','Page')}}{{ !layout.simple ? ':' : ''}} </label>
+
+        <pagination-pages pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"></pagination-pages>
+        <!--<label>{{i18N('_grid.pagination.page','Page')}}{{ !layout.simple ? ':' : ''}} </label>
         <input ng-if="!layout.simple" type="text" ng-model="paginationData.pageNumber" ng-change="selectPage(paginationData.pageNumber)" style="width: 25px !important; text-align: center" />
         <span ng-show="layout.simple">{{paginationData.pageNumber}}</span>
-        <label ng-show="!layout.simple">{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>
+        <label ng-show="!layout.simple">{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>-->
+
         &ensp;<a ng-click="nextPage()" href="#">
             <i class="fa fa-chevron-right"></i>
         </a>
-        <span ng-if="!layout.simple">
+
+        <!--<span ng-if="!layout.simple">
             &ensp;<a ng-click="selectPage(paginationData.pageCount)" href="#">
                 <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
             </a>
-        </span>
+        </span>-->
     </div>
 
     <div class="group pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">

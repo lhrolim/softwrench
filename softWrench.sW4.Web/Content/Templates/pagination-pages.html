@@ -1,0 +1,7 @@
+<div class="pages">
+    <ul>
+        <li ng-repeat="i in getPageArray() track by $index" ng-class="getPageClass($index)" ng-show="showPage($index)">
+            <span>{{$index+1}}</span>
+        </li>
+    </ul>
+</div>
