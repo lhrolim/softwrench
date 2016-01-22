@@ -15,7 +15,7 @@ namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
         public DeltaDentalWorkOrderDataSet(SWDBHibernateDAO swdb) : base(swdb) {}
         
         private readonly string[] _sites = { "PA", "ALN", "SF", "RNCHO" };
-        protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass) {
+        protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
             string siteid = parameters.OriginalEntity.GetAttribute("siteid").ToString();
             var query = base.BuildQuery(parameters, ticketclass);
 
