@@ -97,10 +97,12 @@ angular.module('sw_layout')
     var specialCharactersHandler = function (searchData, searchOperator) {
         var specialcharacter = "*";
         for (var data in searchData) {
+            if(!searchData.hasOwnProperty(data)) continue;
             if (searchData[data] == null || searchData[data] == '' || data == "lastSearchedValues") {
                 continue;
             }
             var search = searchData[data];
+            if (!angular.isString(search)) return; // -> numeric inputs
             if (search.indexOf(specialcharacter) > -1) {
                 var indexSearchOperator = null;
                 var searchreplaced = search.replace(/\*/g, '');

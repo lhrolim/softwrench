@@ -149,7 +149,11 @@
                         if (filter.displayCode === false || option.value === "nullor:") {
                             return option.label;
                         }
-                        return "(" + option.value + ")" + " - " + option.label;
+                        var label = "(" + option.value + ")";
+                        if (!!option.label) {
+                            label += " - " + option.label;
+                        }
+                        return label;
                     }
 
 

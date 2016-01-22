@@ -59,6 +59,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                 } else if (el.IsNamed(XmlFilterSchema.BooleanFilterElement)) {
                     var defaultValue = el.Attribute(XmlFilterSchema.DefaultSelectionAttribute).ValueOrDefault(true);
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));
+                } else if (el.IsNamed(XmlFilterSchema.NumericFilterElement)) { 
+                    var numberFilter = new MetadataNumberFilter(attribute, label, icon, position, tooltip, whereclause);
+                    filters.AddLast(numberFilter);
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
                     var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(true);
                     filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));
