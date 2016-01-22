@@ -208,6 +208,7 @@
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\Compositions\ToolsHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\ServiceAddressHandler.cs" />
