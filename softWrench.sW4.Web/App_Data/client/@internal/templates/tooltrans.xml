@@ -87,6 +87,7 @@
             <field attribute="toolrate" hidden="true" />
 
             <association label="Tool" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
+              <dataprovider prefilterfunction="FilterRotating"/>
               <renderer type="lookup"/>
               <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
             </association>
