@@ -1,0 +1,59 @@
+﻿.bootbox {
+    &.modal {
+        .modal-dialog {
+            .modal-content {
+                border: 2px solid $cts_blue;
+                text-align: center;
+
+                .modal-header {
+                    //padding-top: 40px;
+                    padding-bottom: 0;
+                    border: none;
+
+                    i {
+                        font-size: 60px;
+                        color: $cts_blue;
+                        margin: 25px 0 30px;
+                    }
+
+                    h4 {
+                        font-size: 24px;
+                        color: #4d4d4d;
+                        padding: 0 25px;
+                    }
+                }
+
+                .modal-body {
+                    padding: 0 40px;
+                    color: #999;
+                    font-size: 15px;
+                }
+
+                .modal-footer {
+                    border: none;
+                    padding: 40px;
+
+                    .btn {
+                        text-transform: uppercase;
+                        text-shadow: none;
+                        color: #fff;
+                        border-color: none !important;
+                        padding-top: 8px;
+                        width: calc(50% - 5px);
+
+                        &.btn-default {
+                            background: #999;
+                            border-color: #999;
+                        }
+
+                        &.btn-primary {
+                            background: $cts_blue;
+                            border-color: $cts_blue;
+                            margin-left: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

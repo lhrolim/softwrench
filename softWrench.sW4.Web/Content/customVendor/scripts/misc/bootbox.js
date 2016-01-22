@@ -129,6 +129,11 @@
         });
     }
 
+    function overrideTemplates(templates, options) {
+        $.extend(templates, options.templates);
+        return templates;
+    }
+
     function sanitize(options) {
         var buttons;
         var total;
@@ -594,6 +599,7 @@
 
     exports.dialog = function (options) {
         options = sanitize(options);
+        templates = overrideTemplates(templates, options);
 
         var dialog = $(templates.dialog);
         var body = dialog.find(".modal-body");
