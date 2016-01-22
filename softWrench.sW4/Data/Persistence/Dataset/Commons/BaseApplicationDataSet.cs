@@ -40,6 +40,7 @@ using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
@@ -292,6 +293,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var tasks = new Task[1];
             var ctx = ContextLookuper.LookupContext();
+
+            // add pre selected filter if originally it had not a searchDTO
+            // so is a menu/breadcrumb navigation
+            if (searchDto.IsDefaultInstance) {
+                SchemaFilterBuilder.AddPreSelectedFilters(application.Schema.DeclaredFilters, searchDto);
+            }
 
             //count query
             tasks[0] = Task.Factory.NewThread(c => {

@@ -24,11 +24,11 @@
             <div class="divider"></div>
         </div>
 
-        <div ng-show="vm.notSearching && suggestedoptions.length > 0">
+        <div ng-show="(!filter.lazy || vm.notSearching) && suggestedoptions.length > 0">
             <h5>Suggested Filters</h5>
             <div class="divider"></div>
             <ul class="filter-options">
-                <li ng-repeat="option in suggestedoptions" class="">
+                <li ng-repeat="option in suggestedoptions" class="" rel="tooltip" data-original-title="{{option.tooltip}}">
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
@@ -51,7 +51,7 @@
                 <span class="text">Select All</span>
             </div>
             <ul>
-                <li ng-repeat="option in vm.recentlyOptions" class="filter-row">
+                <li ng-repeat="option in vm.recentlyOptions" class="filter-row" rel="tooltip" data-original-title="{{option.tooltip}}">
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"
@@ -66,7 +66,7 @@
 
         <div ng-if="filteroptions.length > 0">
             <ul class="filter-options">
-                <li ng-repeat="option in filteroptions" class="">
+                <li ng-repeat="option in filteroptions" class="" rel="tooltip" data-original-title="{{option.tooltip}}">
                     <input type="checkbox"
                            value="{{option.value}}"
                            ng-model="selectedOptions[option.value]"

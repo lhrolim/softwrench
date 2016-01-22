@@ -95,6 +95,13 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
   <complexType name="FilterOptionType">
     <attribute name="label" type="string"></attribute>
     <attribute name="value" type="string"></attribute>
+    <attribute name="preselected" type="boolean"></attribute>
+    <attribute name="tooltip" type="string"></attribute>
+    <attribute name="displaycode" type="boolean">
+      <annotation>
+        <documentation>Same as parent attribute. Overides parent and inherit if not present.</documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
 </schema>

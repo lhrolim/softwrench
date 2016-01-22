@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
+using NHibernate.Linq;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
@@ -269,6 +270,29 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return;
             }
             optionsFilter.AdvancedFilterAttribute = attribute.To;
+        }
+
+        public static void AddPreSelectedFilters(SchemaFilters schemaFilters, SearchRequestDto dto) {
+            schemaFilters.Filters.ForEach(f => AddPreSelectedFilter(f, dto));
+        }
+
+        private static void AddPreSelectedFilter(BaseMetadataFilter filter, SearchRequestDto dto) {
+            if (!(filter is MetadataOptionFilter)) {
+                return;
+            }
+            var optionFilter = (MetadataOptionFilter)filter;
+            var options = optionFilter.Options;
+            if (options == null) {
+                return;
+            }
+
+            var metadataFilterOptions = options as IList<MetadataFilterOption> ?? options.ToList();
+            var optionValues = metadataFilterOptions.Where(o => o.PreSelected).Select(o => o.Value);
+            var values = string.Join(",", optionValues);
+
+            if (string.IsNullOrEmpty(values)) { return; }
+            dto.AppendSearchParam(filter.Attribute);
+            dto.AppendSearchValue("=" + values);
         }
     }
 }
