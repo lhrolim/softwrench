@@ -23,14 +23,18 @@
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
             <event type="afterchange" service="invtransferService" method="afterChangeFromStoreLoc"/>
           </association>
-          <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+          <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" dependantfields="itemnum" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;inputsize=small"/>
             <event type="afterchange" service="invtransferService" method="afterChangeFromBin"/>
             <dataprovider prefilterfunction="FilterFromBin"/>
           </association>
-          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">
+          <field attribute="#curbal" label="Current Balance" readonly="true">
+            <renderer type="default"  params="inputsize=small" />
+          </field>
+          <association target="tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true" extraprojectionvalues="tostoreloc">
             <dataprovider prefilterfunction="FilterToStoreLoc"/>
             <renderer type="lookup" params="inputsize=small" />
+            <event type="afterchange" service="invtransferService" method="afterChangeToStoreLoc"/>
           </association>
         
           <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" forcedistinctoptions="false" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
@@ -42,10 +46,6 @@
                                     extraprojectionvalues="binnum,lotnum" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" >
             <renderer type="lookup" />
           </association>
-
-          <field attribute="#curbal" label="Current Balance" readonly="true">
-            <renderer type="default"  params="inputsize=small" />
-          </field>
           <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true" default="1">
             <event type="afterchange" service="invtransferService" method="afterChangeTransferQuantity"/>
             <renderer type="numericinput" params="min=1;max=@curbal;inputsize=small"/>
