@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="assetlocrelation" title="Asset Location Relation" entity="assetlocrelation" id="00000000-0000-0000-0000-000003957204" >
+      <schemas>
+        <schema id="assetlocrelationlist" stereotype="compositionlist">
+          <field attribute="relsequencenum" label="Sequence Number" readonly="true"/>
+          <field attribute="sourceassetnum" label="Source Asset" readonly="true"/>
+          <field attribute="assetrelationnum" label="Relationship" readonly="true"/>
+          <field attribute="targetassetnum" label="Target Asset" readonly="true"/>
+        </schema>
+        <schema id="assetlocrelationdetail" stereotype="compositiondetail">
+          <section orientation="horizontal">
+            <field attribute="relsequencenum" label="Sequence Number" readonly="true"/>
+            <field attribute="sourceassetnum" label="Source Asset" readonly="true"/>
+            <field attribute="sourceasset_.description" label="description" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="assetrelationnum" label="Relationship" readonly="true"/>
+            <field attribute="targetassetnum" label="Target Asset" readonly="true"/>
+            <field attribute="targetasset_.description" label="Description" readonly="true"/>
+            <field attribute="islinearref" label="Use as Reference" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="sourcelocation" label="Source Location" readonly="true"/>
+            <field attribute="sourcelocation_.decription" label="Description" readonly="true"/>
+            <field attribute="targetlocation" label="Target Location" readonly="true"/>
+            <field attribute="targetlocation_.description" label="Description" readonly="true"/>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

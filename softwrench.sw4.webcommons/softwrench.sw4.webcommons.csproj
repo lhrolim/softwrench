@@ -102,6 +102,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\user_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\sharedservices_module.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\metadata_builder.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\object_util.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_stringutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_utils.js" />
