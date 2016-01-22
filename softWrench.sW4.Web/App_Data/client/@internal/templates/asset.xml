@@ -145,7 +145,7 @@
               <collectionproperties listschema="subassemblies" allowcreation="false" allowremoval="false" allowupdate="false"/>
             </composition>
             <composition relationship="sparepart" inline="true" label="Spare Parts" detailschema="" printschema="">
-              <collectionproperties listschema="assetsparepartlist" allowcreation="flase" allowremoval="false" allowupdate="false"/>
+              <collectionproperties listschema="assetsparepartlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
             </composition>
           </tab>
           <!--<tab id="safety" label="Safety">
