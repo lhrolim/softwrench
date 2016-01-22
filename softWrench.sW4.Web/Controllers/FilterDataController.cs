@@ -63,7 +63,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var methodName = filterProvider.Substring(1);
                 var dataSet = _dataSetProvider.LookupDataSet(application, key.SchemaId);
                 var mi = ReflectionUtil.GetMethodNamed(dataSet, methodName);
-                var filterParam = new FilterProviderParameters(labelSearchString, filterAttribute, key.SchemaId);
+                var filterParam = new FilterProviderParameters(labelSearchString, filterAttribute, key);
                 return (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { filterParam });
             }
             //this is the main application, such as sr

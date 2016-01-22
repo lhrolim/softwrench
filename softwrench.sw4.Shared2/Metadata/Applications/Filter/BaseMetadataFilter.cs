@@ -69,6 +69,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         /// 2. a @xxx.yyy string that will be evaluated to either a SimpleInjector(online) or a service method (mobile)
         /// 
         /// Note: There´s no way to validate whereclauses of type 2 on server side unless the schema is marked as web
+        /// Note: to get the value submited by the client use !@#value placeholder
         /// 
         /// </summary>
         public string WhereClause {
