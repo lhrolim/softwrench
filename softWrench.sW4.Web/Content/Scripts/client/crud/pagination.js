@@ -163,7 +163,6 @@ app.directive('paginationPages', ['contextService', function (contextService) {
             var log = $log.getInstance('sw4.pagination.pages');
             log.debug($scope.paginationData);
 
-
             $scope.changePage = function (page) {
                 $scope.$parent.selectPage(page);
             };
@@ -218,36 +217,30 @@ app.directive('paginationPages', ['contextService', function (contextService) {
 
                 switch (location) {
                     case 'start':
-                        if (1 >= pageRange.min) {
-                            return false;
-                        }
+                        return !(1 >= pageRange.min);
                         break;
                     case 'end':
-                        if ($scope.paginationData.pageCount <= pageRange.max) {
-                            return false;
-                        }
+                        return !($scope.paginationData.pageCount <= pageRange.max);
                         break;
                 }
 
                 return true;
             }
 
+            $scope.showLastPage = function () {
+                return $scope.paginationData.pageCount > 1;
+            }
+
             $scope.showPage = function (index) {
                 var pageNumber = index + 2;
                 var pageRange = $scope.getPageRange($scope.paginationData.pageNumber);
 
-                if (pageNumber >= pageRange.min && pageNumber <= pageRange.max) {
-                    return true;
-                }
+                return pageNumber >= pageRange.min && pageNumber <= pageRange.max;
             }
 
             //init directive
             $scope.pagesToShow = 4;
         }]
-
-        //link: function (scope, element, attrs) {
-        //    scope.setSimpleLayout(attrs.hasOwnProperty("paginationSimpleLayout"));
-        //}
     };
 }]);
 
