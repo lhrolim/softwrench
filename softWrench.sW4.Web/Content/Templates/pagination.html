@@ -1,5 +1,5 @@
-<div class="right" ng-show="isPaginationEnabled()">
-        <div class="group pagination" ng-show="shouldShowPagination()">
+<div class="" ng-show="isPaginationEnabled()">
+    <div class="part pagination" ng-show="shouldShowPagination()">
         <a ng-click="previousPage()" ng-class="getDirectionClass('prev')" href="#" class="direction prev" rel="tooltip" data-original-title="{{getTooltip('prev')}}">
             <i class="fa fa-chevron-left"></i>
         </a>
@@ -8,16 +8,15 @@
             <i class="fa fa-chevron-right"></i>
         </a>
     </div>
-    <div class="group total">
+    <div class="part total" ng-if="layout.simple">
         <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
-        <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
+        <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
     </div>
-    <div class="group pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
+    <div class="part pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
         <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
         <select id="pagesize"
-            ng-model="paginationData.pageSize"
-            ng-options="option as option for option in paginationData.paginationOptions"
-            ng-change="selectPage(1)">
-        </select>
+                ng-model="paginationData.pageSize"
+                ng-options="option as option for option in paginationData.paginationOptions"
+                ng-change="selectPage(1)"></select>
     </div>
 </div>

@@ -89,41 +89,46 @@ app.directive('pagination', ["contextService", function (contextService) {
             }
 
             $scope.getDirectionClass = function (direction) {
-                var currentPage = $scope.paginationData.pageNumber;
-                var pageCount = $scope.paginationData.pageCount;
+                if ($scope.paginationData) {
+                    var currentPage = $scope.paginationData.pageNumber;
+                    var pageCount = $scope.paginationData.pageCount;
+                    var classString = 'disable';
 
-                switch (direction) {
-                    case 'prev':
-                        if (currentPage == 1) {
-                            return 'disable';
-                        }
+                    switch (direction) {
+                        case 'prev':
+                            if (currentPage == 1) {
+                                return classString;
+                            }
 
-                        break;
-                    case 'next':
-                        if (currentPage == pageCount) {
-                            return 'disable';
-                        }
-                        break;
+                            break;
+                        case 'next':
+                            if (currentPage == pageCount) {
+                                return classString;
+                            }
+                            break;
+                    }
                 }
             }
 
             $scope.getTooltip = function (direction) {
-                var currentPage = $scope.paginationData.pageNumber;
-                var pageCount = $scope.paginationData.pageCount;
-                var tooltip = 'Go to {0} of ' + pageCount;
+                if ($scope.paginationData) {
+                    var currentPage = $scope.paginationData.pageNumber;
+                    var pageCount = $scope.paginationData.pageCount;
+                    var tooltip = 'Go to {0} of ' + pageCount;
 
-                switch (direction) {
-                    case 'prev':
-                        if (currentPage > 1) {
-                            return tooltip.format(currentPage - 1);
-                        }
+                    switch (direction) {
+                        case 'prev':
+                            if (currentPage > 1) {
+                                return tooltip.format(currentPage - 1);
+                            }
 
-                        break;
-                    case 'next':
-                        if (currentPage < pageCount) {
-                            return tooltip.format(currentPage + 1);
-                        }
-                        break;
+                            break;
+                        case 'next':
+                            if (currentPage < pageCount) {
+                                return tooltip.format(currentPage + 1);
+                            }
+                            break;
+                    }
                 }
             }
 
@@ -149,7 +154,10 @@ app.directive('pagination', ["contextService", function (contextService) {
     };
 }]);
 
-app.directive('paginationPages', ['contextService', function (contextService) {
+app.directive('paginationPages', ['contextService', '$log', function (contextService, $log) {
+
+    var log = $log.getInstance('sw4.pagination.pages');
+
     return {
         restrict: 'E',
         replace: false,
@@ -159,11 +167,11 @@ app.directive('paginationPages', ['contextService', function (contextService) {
             paginationData: '=',
         },
 
-        controller: ['$scope', '$log', function ($scope, $log) {
-            var log = $log.getInstance('sw4.pagination.pages');
+        controller: ['$scope', function ($scope) {
             log.debug($scope.paginationData);
 
             $scope.changePage = function (page) {
+                log.debug($scope.paginationData);
                 $scope.$parent.selectPage(page);
             };
 
@@ -172,15 +180,19 @@ app.directive('paginationPages', ['contextService', function (contextService) {
             }
 
             $scope.getPageArray = function () {
-                var pageArray = new Array($scope.paginationData.pageCount)
-                pageArray = pageArray.slice(0, -2);
+                if ($scope.paginationData) {
+                    var pageArray = new Array($scope.paginationData.pageCount)
+                    pageArray = pageArray.slice(0, -2);
 
-                return pageArray;
+                    return pageArray;
+                }
             }
 
             $scope.getPageClass = function (index) {
-                if (index + 2 == $scope.paginationData.pageNumber) {
-                    return 'current';
+                if ($scope.paginationData) {
+                    if (index + 2 == $scope.paginationData.pageNumber) {
+                        return 'current';
+                    }
                 }
             }
 
@@ -212,23 +224,27 @@ app.directive('paginationPages', ['contextService', function (contextService) {
             }
 
             $scope.showEllipsis = function (location) {
-                var currentPage = $scope.paginationData.pageNumber;
-                var pageRange = $scope.getPageRange(currentPage);
+                if ($scope.paginationData) {
+                    var currentPage = $scope.paginationData.pageNumber;
+                    var pageRange = $scope.getPageRange(currentPage);
 
-                switch (location) {
-                    case 'start':
-                        return !(1 >= pageRange.min);
-                        break;
-                    case 'end':
-                        return !($scope.paginationData.pageCount <= pageRange.max);
-                        break;
+                    switch (location) {
+                        case 'start':
+                            return !(1 >= pageRange.min);
+                            break;
+                        case 'end':
+                            return !($scope.paginationData.pageCount <= pageRange.max);
+                            break;
+                    }
+
+                    return true;
                 }
-
-                return true;
             }
 
             $scope.showLastPage = function () {
-                return $scope.paginationData.pageCount > 1;
+                if ($scope.paginationData) {
+                    return $scope.paginationData.pageCount > 1;
+                }
             }
 
             $scope.showPage = function (index) {
