@@ -1,7 +1,9 @@
 ﻿(function (app) {
     "use strict";
 
-app.directive('pagination', ["contextService", function (contextService) {
+app.directive('pagination', ['contextService', '$log', function (contextService, $log) {
+    var log = $log.getInstance('sw4.pagination');
+
     return {
         restrict: 'E',
         replace: false,
@@ -20,6 +22,8 @@ app.directive('pagination', ["contextService", function (contextService) {
         },
 
         controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", "crudContextHolderService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService, crudContextHolderService) {
+            log.debug($scope.paginationData);
+
             $scope.showPagination = true;
 
             $scope.layout = {
@@ -155,7 +159,6 @@ app.directive('pagination', ["contextService", function (contextService) {
 }]);
 
 app.directive('paginationPages', ['contextService', '$log', function (contextService, $log) {
-
     var log = $log.getInstance('sw4.pagination.pages');
 
     return {
@@ -163,12 +166,11 @@ app.directive('paginationPages', ['contextService', '$log', function (contextSer
         replace: false,
         templateUrl: contextService.getResourceUrl('/Content/Templates/pagination-pages.html'),
         scope: {
-            renderfn: "&",
             paginationData: '=',
         },
 
         controller: ['$scope', function ($scope) {
-            log.debug($scope.paginationData);
+            log.debug($scope, $scope.paginationData);
 
             $scope.changePage = function (page) {
                 log.debug($scope.paginationData);
