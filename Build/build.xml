@@ -82,11 +82,16 @@
   <if test="${platform == 'mobile'}">
     <property name="platformtoexclude" value="web" />
   </if>
-
+  
+  <!-- the property logtime if true turns on the log of targets time duration -->
+  <if test="${environment::variable-exists('logtime')}">
+    <property name="logtime" value="${environment::get-variable('logtime')}" />
+  </if>
 
   <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,webcompile,deploy"/>
 
   <target name="fullmultideploy">
+    <logtimestart/>
     <echo message="Multiple Full Deploy Task" />
 
     <property name="basedeploy" value="${deploypath}"></property>
@@ -94,7 +99,7 @@
 
     <echo message="Common compile task." />
     <call target="compile" />
-    
+
     <property name="failure" value="false"/>
     <property name="failureclients" value=""/>
 
@@ -119,7 +124,7 @@
           <if test="${failureclients == ''}">
             <property name="failureclients" value="${client}"/>
           </if>
-          
+
           <echo message="Failure in client ${client}!!!!!!!!!!!!!!!!!!!!!!"/>
           <echo message="${environment::newline()}"/>
           <echo message="${failuremsg}"/>
@@ -135,6 +140,7 @@
     <if test="${failure == 'true'}">
       <fail message="Failure in clients: ${failureclients}!!!!!!!!!!!!!!!!!!!!!!" />
     </if>
+    <logtimeend/>
   </target>
 
   <target name="generatedeploynocompile" depends="copydlls,copylinkedfolders,webcompile"/>
@@ -142,6 +148,7 @@
   <target name="fullbuildlocal" depends="compile,zip"/>
 
   <target name="compile">
+    <logtimestart/>
     <exec program="${MSBuildPath}">
       <arg line='"${SolutionFile}"' />
       <arg line="/property:Configuration=Debug" />
@@ -149,9 +156,11 @@
       <arg value="/verbosity:quiet" />
       <arg value="/nologo" />
     </exec>
+    <logtimeend/>
   </target>
 
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
+    <logtimestart/>
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
@@ -171,10 +180,12 @@
       <arg value="/c"></arg>
       <arg value='grunt --path="${deploypath}" --skiptest="${skiptest}"'></arg>
     </exec>
+    <logtimeend/>
   </target>
 
   <!-- TODO: extract similar tasks. Copying just for the sake of trial-and-error testing -->
   <target name="webtest" description="Runs karma tests" depends="generatelinks">
+    <logtimestart/>
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
@@ -187,10 +198,12 @@
       <arg value="/c"></arg>
       <arg value='grunt test'></arg>
     </exec>
+    <logtimeend/>
   </target>
 
 
   <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
+    <logtimestart/>
     <echo message="deleting 'softWrench.sW4.Web/node_modules' directory"></echo>
     <!-- Nant's <delete> task solution-->
     <!-- <delete dir="../softWrench.sW4.Web/node_modules" 
@@ -233,10 +246,11 @@
         <arg value="rmdir node_modules /S /Q"></arg>
       </exec>
     </if>
-
+    <logtimeend/>
   </target>
 
   <target name="test">
+    <logtimestart/>
     <delete dir="${OutputDir}/testresults" failonerror="false"/>
     <delete file="TestResults.trx"/>
 
@@ -264,10 +278,11 @@
       <arg value="- -single-run"/>
     </exec>-->
     <call target="webtest"/>
-
+    <logtimeend/>
   </target>
 
   <target name="mkdir">
+    <logtimestart/>
     <!--    <delete includeemptydirs="true">-->
     <!--      <fileset basedir="${OutputDir}/deploy">-->
     <!--        <include name="**\*" />-->
@@ -276,10 +291,11 @@
 
     <mkdir dir="${deploypath}"/>
     <mkdir dir="${deploypath}/bin"/>
-
+    <logtimeend/>
   </target>
 
   <target name="copydlls" depends="mkdir">
+    <logtimestart/>
     <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />
@@ -326,10 +342,11 @@
         <include name="**"/>
       </fileset>
     </attrib>
+    <logtimeend/>
   </target>
 
   <target name="copylinkedfolders" depends="mkdir">
-
+    <logtimestart/>
     <echo message="Excluding ${platformtoexclude} files" />
 
 
@@ -393,11 +410,12 @@
         <echo message="Copied files for ${projectname}" />
       </if>
     </foreach>
+    <logtimeend/>
   </target>
 
 
   <target name="releaseprepare" >
-
+    <logtimestart/>
     <xmlpoke file="../softWrench.sW4.Web/Web.config"
                xpath="/configuration/appSettings/add[@key = 'version']/@value"
                value="${version}" failonerror="true"/>
@@ -410,11 +428,12 @@
         <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
       </namespaces>
     </xmlpoke>
-
+    <logtimeend/>
   </target>
 
 
   <target name="readofflineversion">
+    <logtimestart/>
     <xmlpeek property="currentofflineversion" file="../softWrench.sW4.WebMobile/config.xml"
            xpath="//x:widget/@version">
       <namespaces>
@@ -427,11 +446,11 @@
     <property name="off_versiontest" value="${environment::get-variable('OFF_VERSION')}" />
 
     <echo message="${off_versiontest}" file="tmp_offversion.txt"/>
-
+    <logtimeend/>
   </target>
 
   <target name="appendofflinecommit" >
-
+    <logtimestart/>
     <xmlpeek property="currentofflineversion" file="../softWrench.sW4.WebMobile/config.xml"
             xpath="//x:widget/@version">
       <namespaces>
@@ -449,34 +468,34 @@
         </namespaces>
       </xmlpoke>
     </if>
-
+    <logtimeend/>
   </target>
 
 
   <target name="setclient">
-
+    <logtimestart/>
     <xmlpoke file="${deploypath}/Web.config"
                xpath="/configuration/appSettings/add[@key = 'clientkey']/@value"
                value="${client}" failonerror="true"/>
-
+    <logtimeend/>
   </target>
 
   <target name="setenv">
-
+    <logtimestart/>
     <xmlpoke file="${deploypath}/Web.config"
                xpath="/configuration/appSettings/add[@key = 'profile']/@value"
                value="${profile}" failonerror="true"/>
+    <logtimeend/>
   </target>
 
   <target name="zip" depends="copydlls,copylinkedfolders,webcompile,setclient,setenv">
-
-
-
+    <logtimestart/>
     <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${platform}_${client}_${profile}_${build.date}.zip">
       <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
     </zip>
+    <logtimeend/>
   </target>
 
 
@@ -492,7 +511,7 @@
   <!--  </target>-->
 
   <target name="deploypeek" depends="setenv,setclient">
-
+    <logtimestart/>
 
     <property name="clientfile1" value="${deploypath}/App_Data/Client/${deployclientsw4}/deploy.xml" />
     <property name="clientfile2" value="../softwrench.sW4.${deployclientsw4}/metadata/${deployclientsw4}/deploy.xml" />
@@ -540,9 +559,11 @@
 
     <echo message="urlPath: + ${msdeploy_url}"/>
     <echo message="iisPath:  + ${iispath}"/>
+    <logtimeend/>
   </target>
 
   <target name="deploy" depends="setenv,setclient,deploypeek">
+    <logtimestart/>
     <exec program="${MSDeployPath}">
       <arg line="-verb:sync" />
       <arg line="-source:iisApp=${deploypath},includeAcls=true" />
@@ -551,9 +572,11 @@
       <arg line="-enableRule:AppOffline" />
       <arg line="-verbose" />
     </exec>
+    <logtimeend/>
   </target>
 
   <target name="generatelinks">
+    <logtimestart/>
 
     <exec program="cmd" workingdir="../softwrench.sW4.Web/Content"
           unless="${directory::exists('../softwrench.sW4.Web/Content/Customers')}">
@@ -626,17 +649,13 @@
           <echo message="created symbolic link for ${clientname}" />
         </if>
       </if>
-
-
-
-
-
     </foreach>
-
+    <logtimeend/>
   </target>
 
 
   <target name="generatelinksMobile">
+    <logtimestart/>
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="customerlinkcreated" value="1" />
@@ -715,8 +734,64 @@
       </if>
 
     </foreach>
-
+    <logtimeend/>
   </target>
 
-
+  <script language="C#">
+    <imports>
+      <import namespace="System.Collections.Generic" />
+    </imports>
+    <code>
+      <![CDATA[      
+          public class LogTimeCommons {
+            public static Dictionary<string, long> StartTimes = new Dictionary<string, long>();
+            
+            public static bool SkipLog(Project project){
+              if(!project.Properties.Contains("logtime")){
+                return true;
+              }
+              var logTime = project.Properties["logtime"];
+              return logTime != "true";
+            }
+          }
+        
+          [TaskName("logtimestart")]
+          public class LogTimeStartTask : Task {          
+            protected override void ExecuteTask() {
+              Target target = Project.CurrentTarget;              
+              if (target == null || LogTimeCommons.SkipLog(Project)) {
+                return;
+              }
+            
+              // gets the start time and logs
+              var now = DateTime.Now;
+              LogTimeCommons.StartTimes.Add(target.Name, now.Ticks);
+              var sb = new StringBuilder();
+              sb.Append("\n\n\n==== Start of ").Append(target.Name).Append(" at ");
+              sb.Append(now).Append(" =======================================\n\n\n");
+              Log(Level.Info, sb.ToString());
+            }
+          }
+          
+          [TaskName("logtimeend")]
+          public class LogTimeEndTask : Task {            
+            protected override void ExecuteTask() {
+                Target target = Project.CurrentTarget;
+                if (target == null || LogTimeCommons.SkipLog(Project) || !LogTimeCommons.StartTimes.ContainsKey(target.Name)) {
+                  return;
+                }               
+            
+                // calcs the time delta and logs
+                var start = LogTimeCommons.StartTimes[target.Name];
+                var now = DateTime.Now;
+                var delta = (now.Ticks - start) / 10000;
+                var sb = new StringBuilder();
+                sb.Append("\n\n\n==== End of ").Append(target.Name).Append(" at ");
+                sb.Append(now).Append(" ==== Task ran in ").Append(delta).Append("ms =================\n\n\n");
+                Log(Level.Info, sb.ToString());
+            }
+          }
+        ]]>
+    </code>
+  </script>
 </project>
