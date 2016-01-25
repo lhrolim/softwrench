@@ -1,4 +1,9 @@
-﻿app.directive('crudInputWrapper', function (contextService, $compile, $rootScope) {
+﻿(function (app) {
+    "use strict";
+
+app.directive('crudInputWrapper', function (contextService, $compile) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -37,7 +42,7 @@
                 scope.loaded = true;
             }
 
-            if (scope.schema.mode.equalsAny("input","none") && ("true" === scope.isMainTab)) {
+            if (scope.schema.mode.equalsAny("input", "none") && ("true" === scope.isMainTab)) {
                 doLoad();
             }
 
@@ -51,7 +56,7 @@
                 scope.savefn();
             };
 
-            scope.cancel = function (data,schema) {
+            scope.cancel = function (data, schema) {
                 scope.cancelfn({ data: data, schema: schema });
                 scope.$emit('sw_cancelclicked');
             };
@@ -60,6 +65,8 @@
 });
 
 app.directive('crudInput', function (contextService, associationService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -83,7 +90,6 @@ app.directive('crudInput', function (contextService, associationService) {
             ismodal: '@'
         },
 
-
         controller: function ($scope, $http, $injector, $element, alertService, printService, compositionService, commandService, fieldService, i18NService, formatService) {
 
             $scope.$name = 'crudinput';
@@ -96,6 +102,7 @@ app.directive('crudInput', function (contextService, associationService) {
             this.save = function () {
                 $scope.savefn();
             };
+
 
             this.shouldshowprint = function () {
                 return $scope.composition != "true";
@@ -111,6 +118,12 @@ app.directive('crudInput', function (contextService, associationService) {
                 associationService.loadSchemaAssociations($scope.datamap, $scope.schema, { avoidspin: true });
             }
 
+            $scope.getPosition = function (schema) {
+                if (!schema.properties || !schema.properties["commandbar.bottom"]) {
+                    return "detailform";
+                }
+                return schema.properties["commandbar.bottom"];
+            }
 
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
@@ -119,8 +132,8 @@ app.directive('crudInput', function (contextService, associationService) {
                 commandService: commandService,
                 formatService: formatService
             });
-
-
         }
     };
 });
+
+})(app);

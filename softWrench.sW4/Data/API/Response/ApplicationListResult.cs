@@ -16,6 +16,9 @@ namespace softWrench.sW4.Data.API.Response {
             IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, AssociationMainSchemaLoadResult associationOptions)
             : base(dataMap, null) {
             Schema = schema;
+            if (searchDTO == null) {
+                searchDTO = PaginatedSearchRequestDto.DefaultInstance(schema);
+            }
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions) {
                 SearchParams = searchDTO.SearchParams,
                 FilterFixedWhereClause = searchDTO.FilterFixedWhereClause,
@@ -25,45 +28,99 @@ namespace softWrench.sW4.Data.API.Response {
             AssociationOptions = associationOptions;
         }
 
-        public ApplicationSchemaDefinition Schema { get; set; }
-        public string CachedSchemaId { get; set; }
-
-        public IEnumerable<UserProfile.UserProfileDTO> AffectedProfiles {get; set;}
-
-        public int? CurrentSelectedProfile {get; set;}
-
-        public AssociationMainSchemaLoadResult AssociationOptions { get; set; }
-
-        public string Mode {
-            get { return Schema.Mode.ToString().ToLower(); }
-            set { _mode = value; }
+        public ApplicationSchemaDefinition Schema {
+            get; set;
+        }
+        public string CachedSchemaId {
+            get; set;
         }
 
-        public string ApplicationName { get { return Schema.ApplicationName; } }
-        public string Id { get; private set; }
+        public IEnumerable<UserProfile.UserProfileDTO> AffectedProfiles {
+            get; set;
+        }
+
+        public int? CurrentSelectedProfile {
+            get; set;
+        }
+
+        public AssociationMainSchemaLoadResult AssociationOptions {
+            get; set;
+        }
+
+        public string Mode {
+            get {
+                return Schema.Mode.ToString().ToLower();
+            }
+            set {
+                _mode = value;
+            }
+        }
+
+        public string ApplicationName {
+            get {
+                return Schema.ApplicationName;
+            }
+        }
+        public string Id {
+            get; private set;
+        }
 
         public string Type {
-            get { return GetType().Name; }
+            get {
+                return GetType().Name;
+            }
         }
 
         #region PagingDelegateMethods
 
-        public int TotalCount { get { return PageResultDto.TotalCount; } }
+        public int TotalCount {
+            get {
+                return PageResultDto.TotalCount;
+            }
+        }
 
-        public int PageNumber { get { return PageResultDto.PageNumber; } }
+        public int PageNumber {
+            get {
+                return PageResultDto.PageNumber;
+            }
+        }
 
-        public int PageSize { get { return PageResultDto.PageSize; } }
+        public int PageSize {
+            get {
+                return PageResultDto.PageSize;
+            }
+        }
 
-        public List<int> PaginationOptions { get { return PageResultDto.PaginationOptions; } }
+        public List<int> PaginationOptions {
+            get {
+                return PageResultDto.PaginationOptions;
+            }
+        }
 
-        public string SearchValues { get { return PageResultDto.SearchValues; } }
+        public string SearchValues {
+            get {
+                return PageResultDto.SearchValues;
+            }
+        }
 
-        public int PageCount { get { return PageResultDto.PageCount; } }
+        public int PageCount {
+            get {
+                return PageResultDto.PageCount;
+            }
+        }
 
-        public string FilterFixedWhereClause { get { return PageResultDto.FilterFixedWhereClause; } }
+        public string FilterFixedWhereClause {
+            get {
+                return PageResultDto.FilterFixedWhereClause;
+            }
+        }
 
 
-        public IEnumerable<PageToShow> PagesToShow { get { return PageResultDto.PagesToShow; } }
+        public IEnumerable<PageToShow> PagesToShow {
+            get {
+                return PageResultDto.PagesToShow;
+            }
+        }
 
         #endregion
     }

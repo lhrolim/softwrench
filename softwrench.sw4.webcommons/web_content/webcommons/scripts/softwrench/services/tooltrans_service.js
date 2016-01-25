@@ -1,6 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('tooltranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService, validationService) {
+angular.module('sw_layout')
+    .factory('tooltranService', function (contextService, searchService) {
+    "ngInject";
+
     var doUpdateToolRateCost = function (parameters, unitCostFieldName) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
@@ -24,5 +28,7 @@ app.factory('tooltranService', function ($http, contextService, redirectService,
             
             doUpdateToolRateCost(event, "toolrate");
         }
-    }
+    };
 });
+
+})(angular);

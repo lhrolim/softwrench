@@ -92,6 +92,7 @@
     <Compile Include="Data\Persistence\Relational\DataConstraintWhereBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySelectBuilderTest.cs" />
+    <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryWhereBuilderTest.cs" />
     <Compile Include="Data\Persistence\WS\Applications\InvIssueBatchConverterTest.cs" />
     <Compile Include="Data\Persistence\WS\Ism\ImacDescriptionHandlerTest.cs" />
     <Compile Include="Data\Relationship\CompositionExpanderHelperTest.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
     <Compile Include="Metadata\CustomizationTest.cs" />
+    <Compile Include="Metadata\Parsing\XmlStereotypeMetadataParserTest.cs" />
+    <Compile Include="Metadata\Parsing\XmlMCommandBarMetadataParserTest.cs" />
     <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
@@ -152,6 +155,14 @@
     </Content>
     <Content Include="App_data\Client\test2\metadata.xml" />
     <Content Include="App_data\Client\test2\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\Client\test_only\stereotypes_test.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\Client\test_only\commands_test.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

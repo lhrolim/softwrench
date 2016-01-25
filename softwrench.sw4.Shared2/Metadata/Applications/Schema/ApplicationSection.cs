@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Util;
 using System.Xml.Serialization;
 using System;
+using System.ComponentModel;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
@@ -22,7 +23,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Label { get; set; }
         public string Attribute { get; set; }
         public IDictionary<string, object> Parameters { get; set; }
-        public string ShowExpression { get; set; }
+        [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
         public bool? ReadOnly {
             get { return false; }

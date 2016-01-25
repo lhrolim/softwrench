@@ -1,14 +1,9 @@
 ﻿(function (angular) {
     "use strict";
 
-
-    detailService.$inject = ["$log", "$q", "$timeout", "$rootScope", "associationService", "compositionService", "fieldService", "schemaService", "contextService"];
-
-    angular.module("sw_layout").factory("detailService", detailService);
+    
 
     function detailService($log, $q, $timeout, $rootScope, associationService, compositionService, fieldService, schemaService, contextService) {
-
-       
 
         function isEditDetail(schema, datamap) {
             return fieldService.getId(datamap, schema) != undefined;
@@ -79,16 +74,10 @@
         };
 
         return api;
-
-      
-
     };
 
-
-
-
+    angular.module("sw_layout")
+        .factory("detailService",
+            ["$log", "$q", "$timeout", "$rootScope", "associationService", "compositionService", "fieldService", "schemaService", "contextService", detailService]);
 
 })(angular);
-
-
-

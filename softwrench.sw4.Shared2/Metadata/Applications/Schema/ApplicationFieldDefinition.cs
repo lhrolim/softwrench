@@ -4,10 +4,12 @@ using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
-    public class ApplicationFieldDefinition : BaseApplicationFieldDefinition, IDefinition, IPCLCloneable {
+    public class ApplicationFieldDefinition : BaseApplicationFieldDefinition, IPCLCloneable {
 
         public const string AttributeQualifierSeparator = ".";
 
@@ -15,12 +17,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private FieldFilter _filter;
 
         //TODO: remove this, since it´s Xamarin legacy code
+        [Obsolete("Only used by unsupported Xamarin client code")]
         private IWidgetDefinition _widgetDefinition;
 
         private readonly ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression {
             get; set;
         }
+        [DefaultValue("true")]
         public string EnableDefault {
             get; set;
         }
@@ -37,8 +41,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ApplicationFieldDefinition(string applicationName, string attributeName, string datatype, String label, string requiredExpression, Boolean isReadOnly, bool isHidden, FieldRenderer renderer
-            , IWidgetDefinition widget, string defaultValue, string tooltip)
-            : this(applicationName, attributeName, datatype, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null) {
+            , IWidgetDefinition widget, string defaultValue, string tooltip, bool fromSubquery)
+            : this(applicationName, attributeName, datatype, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null, fromSubquery) {
         }
 
         public ApplicationFieldDefinition(string applicationName, string attributeName, String label) {
@@ -49,8 +53,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string datatype, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
-             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression)
-            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression) {
+             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool declaredAsQueryOnEntity)
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression, declaredAsQueryOnEntity) {
             if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
             _widgetDefinition = widgetDefinition;
             _renderer = renderer;
@@ -108,6 +112,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
+        [Obsolete("Only used by unsupported Xamarin client code")]
+        [JsonIgnore]
         public IWidgetDefinition WidgetDefinition {
             get {
                 return _widgetDefinition;
@@ -162,17 +168,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             return new ApplicationFieldDefinition(ApplicationName, Attribute, DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression);
+                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
             return new ApplicationFieldDefinition(applicationName, attributeName, null, "", "false", false, true,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, false);
         }
 
         public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName, string label) {
             return new ApplicationFieldDefinition(applicationName, attributeName, null, label, "false", false, false,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, false);
         }
 
         public bool IsTransient() {

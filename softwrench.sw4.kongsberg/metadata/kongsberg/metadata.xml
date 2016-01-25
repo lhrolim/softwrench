@@ -274,6 +274,7 @@
         <connectorParameter key="dbtable" value="sr" />
         <connectorParameter key="integration_interface" value="SWSR" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergServiceRequestCrudConnector" />
+        <connectorParameter key="dispatchincident_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
 
@@ -1160,6 +1161,25 @@
         <property key="mobile.disabled" value="true"/>
       </properties>
 
+      <components>
+        <componentdisplayable id="srhiddens">
+          <field attribute="ticketid" label="Reference ID:" readonly="true" hidden="true"/>
+          <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
+          <field attribute="class" label="" hidden="true"/>
+          <field attribute="actlabcost" hidden="true" />
+          <field attribute="actlabhrs" hidden="true"/>
+          <field attribute="siteid" hidden="true" />
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="createby" hidden="true"/>
+          <field attribute="changeby" default="@username" hidden="true"/>
+          <!-- hiddens for communication template -->
+          <field attribute="changedate" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="reportedemail" hidden="true"/>
+          <field attribute="affectedemail" hidden="true"/>
+        </componentdisplayable>
+      </components>
+      
       <filters>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
         <!--            <optionfilter attribute="classificationid" provider="@FilterClassifications" displaycode="true"/>-->
@@ -1312,24 +1332,11 @@
           <properties>
             <property key="detail.showtitle" value="true"/>
           </properties>
-          
-          <field attribute="ticketid" label="Reference ID:" readonly="true" hidden="true"/>
-          <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
-          <field attribute="class" label="" hidden="true"/>
-          <field attribute="actlabcost" hidden="true" />
-          <field attribute="actlabhrs" hidden="true"/>
-          <field attribute="siteid" hidden="true" />
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="createby" hidden="true"/>
-          <field attribute="changeby" default="@username" hidden="true"/>
-          <!-- hiddens for communication template -->
-          <field attribute="changedate" hidden="true"/>
-          <field attribute="classificationid" hidden="true"/>
-          <field attribute="reportedemail" hidden="true"/>
-          <field attribute="affectedemail" hidden="true"/>
 
+          <reference id="srhiddens"/>
+      
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default"/>
             <section id="srsection" />
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
               <renderer type="lookup" />
@@ -1520,7 +1527,7 @@
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
             </composition>
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="attachment" label="Attachments">
@@ -1532,11 +1539,16 @@
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-
-          <commands>
-            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident"
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
+                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
-          </commands>
+              </container>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
@@ -1895,7 +1907,7 @@
               <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" allowupdate="true" />
             </composition>
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag" />
             </composition>
             <composition relationship="attachment" label="Attachments">

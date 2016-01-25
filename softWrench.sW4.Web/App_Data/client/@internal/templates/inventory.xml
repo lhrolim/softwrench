@@ -233,8 +233,6 @@
           <field attribute="costtype"/>
           <field attribute="itemtype"/>
           <field attribute="issueunit"/>
-          <field attribute="costtype"/>
-          <field attribute="binnum"/>
         </list>
 
         <schema id="inventoryLookupList" stereotype="list" mode="output">
@@ -509,7 +507,7 @@
       </schemas>
     </application>
 
-    <application name="invbalances" title="Inventory" entity="invbalances">
+    <application entity="invbalances" name="invbalances" title="Inventory">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
@@ -554,14 +552,12 @@
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>
-            <property key="list.click.schema" value="invbalancesDetail"/>
+            <property key="list.click.schema" value="invbalancesdetail"/>
             <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>
           </properties>
         </schema>
 
-        <schema id="invbalancesDetail" stereotype="detail" title="Inventory Balance Details">
-          
-          
+        <schema id="invbalancesdetail" stereotype="detail" title="Inventory Balance Details">
           <properties>
             <property key="nextschema.schemaid" value="invbalancesList"/>
           </properties>

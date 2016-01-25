@@ -8,7 +8,6 @@
     <template path="@workorder.xml"/>
     
     <template path="@person.xml"/>
-
     <template path="@inventory.xml"/>
     <template path="@invissue.xml"/>
     <template path="@invtransfer.xml"/>
@@ -321,6 +320,12 @@
             </field>
           </customization>
         </schema>
+        <schema id="quickeditdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
+        </schema>
+        
       </schemas>
     </application>
     <!--Request complete custom layout for service request.  Please review before making customization-->
@@ -361,7 +366,9 @@
         </list>
         
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
           <section orientation="vertical">
             <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
             <section orientation="horizontal">
@@ -549,7 +556,7 @@
             </composition>
 
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
@@ -566,7 +573,7 @@
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id ="dispatchwo" icon="fa-tachometer" label="Dispatch Work Order"
-                          parameters="schema,datamap" service="dispatchService" method="dispatch"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
               </container>
             </commandgroup>
             <commandgroup position="detailform">
@@ -603,6 +610,9 @@
         </list>
         
         <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>
           <customization position="matusetrans"/>
           <customization position="labtrans"/>
           <customization position="tooltrans"/>

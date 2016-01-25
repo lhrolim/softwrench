@@ -1,14 +1,7 @@
 (function (angular) {
     'use strict';
 
-
-
-
-
     function service($rootScope, $timeout, $log, associationService, crudContextHolderService, schemaService) {
-
-
-
 
         function showModal(target, element) {
             var modals = $('[data-attribute="{0}"]'.format(target), element);
@@ -144,6 +137,3 @@
     angular.module("sw_lookup").factory('cmplookup', service);
 
 })(angular);
-
-
-

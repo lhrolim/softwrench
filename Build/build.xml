@@ -21,6 +21,7 @@
   <tstamp property="build.date" pattern="yyyy_MM_dd_hh_mm_ss" verbose="true" />
 
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"/>
+  <property name="client" value="otb"/>
 
 
   <if test="${property::exists('ignoretstamp')==true}">
@@ -34,14 +35,18 @@
     <property name="client" value="${environment::get-variable('clientsw4')}" />
     <property name="deployclientsw4" value="${client}" />
   </if>
+  <if test="${environment::variable-exists('multiclientsw4')}">
+    <property name="multiclient" value="${environment::get-variable('multiclientsw4')}" />
+    <foreach item="String" in="${multiclient}" delim="," property="singleclient">
+      <echo message="Client ${singleclient} received from jenkins parameter." />
+    </foreach>
+  </if>
 
-
-  
 
   <if test="${environment::variable-exists('deployclientsw4')}">
     <property name="deployclientsw4" value="${environment::get-variable('deployclientsw4')}" />
   </if>
-  
+
   <if test="${environment::variable-exists('environmentsw4')}">
     <property name="profile" value="${environment::get-variable('environmentsw4')}" />
   </if>
@@ -49,7 +54,7 @@
   <if test="${environment::variable-exists('image')}">
     <property name="profile" value="${environment::get-variable('image')}" />
   </if>
-  
+
   <if test="${environment::variable-exists('tag')}">
     <property name="version" value="${environment::get-variable('tag')}" />
   </if>
@@ -80,7 +85,58 @@
 
 
   <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,webcompile,deploy"/>
-  
+
+  <target name="fullmultideploy">
+    <echo message="Multiple Full Deploy Task" />
+
+    <property name="basedeploy" value="${deploypath}"></property>
+    <echo message="Root path of deploy to all clients: ${basedeploy}" />
+
+    <echo message="Common compile task." />
+    <call target="compile" />
+    
+    <property name="failure" value="false"/>
+    <property name="failureclients" value=""/>
+
+    <foreach item="String" in="${multiclient}" delim="," property="client">
+      <echo message="Full deploy of client ${client}" />
+      <property name="deployclientsw4" value="${client}" />
+      <property name="deploypath" value="${basedeploy}/${client}"/>
+
+      <trycatch>
+        <try>
+          <call target="copydlls" />
+          <call target="copylinkedfolders" />
+          <call target="webcompile" />
+          <call target="deploy" />
+        </try>
+        <catch property="failuremsg">
+          <property name="failure" value="true"/>
+
+          <if test="${failureclients != ''}">
+            <property name="failureclients" value="${failureclients}, ${client}"/>
+          </if>
+          <if test="${failureclients == ''}">
+            <property name="failureclients" value="${client}"/>
+          </if>
+          
+          <echo message="Failure in client ${client}!!!!!!!!!!!!!!!!!!!!!!"/>
+          <echo message="${environment::newline()}"/>
+          <echo message="${failuremsg}"/>
+        </catch>
+      </trycatch>
+      <echo message="${environment::newline()}"/>
+      <echo message="${environment::newline()}"/>
+      <echo message="${environment::newline()}"/>
+      <echo message="${environment::newline()}"/>
+      <echo message="${environment::newline()}"/>
+    </foreach>
+
+    <if test="${failure == 'true'}">
+      <fail message="Failure in clients: ${failureclients}!!!!!!!!!!!!!!!!!!!!!!" />
+    </if>
+  </target>
+
   <target name="generatedeploynocompile" depends="copydlls,copylinkedfolders,webcompile"/>
 
   <target name="fullbuildlocal" depends="compile,zip"/>
@@ -90,11 +146,11 @@
       <arg line='"${SolutionFile}"' />
       <arg line="/property:Configuration=Debug" />
       <arg value="/target:Rebuild" />
-      <arg value="/verbosity:normal" />
+      <arg value="/verbosity:quiet" />
       <arg value="/nologo" />
     </exec>
   </target>
-  
+
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
@@ -102,13 +158,37 @@
       <arg value="/c"></arg>
       <arg value="npm install"></arg>
     </exec>
-    <!-- compile sass -->
+    <!-- grunt toolchain -->
+    <echo message="running grunt"></echo>
+
+    <property name="skiptest" value="true" />
+    <if test="${string::contains(profile, 'dev')}">
+      <property name="skiptest" value="false" />
+    </if>
+
+    <echo message="grunt --path=&quot;${deploypath}&quot; --skiptest=&quot;${skiptest}&quot;"></echo>
+    <exec program="cmd" workingdir="." failonerror="true">
+      <arg value="/c"></arg>
+      <arg value='grunt --path="${deploypath}" --skiptest="${skiptest}"'></arg>
+    </exec>
+  </target>
+
+  <!-- TODO: extract similar tasks. Copying just for the sake of trial-and-error testing -->
+  <target name="webtest" description="Runs karma tests" depends="generatelinks">
+    <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value='grunt sass:prod --path="${deploypath}" --verbose'></arg>
+      <arg value="npm install"></arg>
+    </exec>
+    <!-- grunt toolchain -->
+    <echo message="running grunt"></echo>
+    <exec program="cmd" workingdir="." failonerror="true">
+      <arg value="/c"></arg>
+      <arg value='grunt test'></arg>
     </exec>
   </target>
+
 
   <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
     <echo message="deleting 'softWrench.sW4.Web/node_modules' directory"></echo>
@@ -132,10 +212,10 @@
       rmdir the_dir_to_delete
     -->
     <if test="${directory::exists('../softWrench.sW4.Web/node_modules')}">
-      
-      <mkdir dir="../softWrench.sW4.Web/temp_empty" 
+
+      <mkdir dir="../softWrench.sW4.Web/temp_empty"
         unless="${directory::exists('../softWrench.sW4.Web/temp_empty')}" />
-      
+
       <echo message="using robocopy trick to delete longpaths"></echo>
       <exec program="robocopy" workingdir="../softWrench.sW4.Web" failonerror="false">
         <arg line="temp_empty node_modules /s /mir /purge /njh /njs /ndl /nc /ns /nfl"></arg>
@@ -177,12 +257,13 @@
       </exec>
     </ifnot>
 
-    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
+    <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
+    <!--<exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
-      <arg value="--browsers=PhantomJS"/>
-      <arg value="--single-run"/>
-      <!-- http://karma-runner.github.io/0.12/config/configuration-file.html -->
-    </exec>
+      <arg value="- -browsers=PhantomJS"/>
+      <arg value="- -single-run"/>
+    </exec>-->
+    <call target="webtest"/>
 
   </target>
 
@@ -268,7 +349,7 @@
 
 
 
-      <if test="${projectname == client or ( file::exists(customerplaceholder) and profile == 'dev')}">
+      <if test="${(file::exists(customerplaceholder) and string::contains(profile, 'dev')) or (projectname == client)}">
 
         <copy todir="${deploypath}/Content/Customers/${projectname}">
           <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
@@ -473,6 +554,13 @@
   </target>
 
   <target name="generatelinks">
+
+    <exec program="cmd" workingdir="../softwrench.sW4.Web/Content"
+          unless="${directory::exists('../softwrench.sW4.Web/Content/Customers')}">
+      <arg value="/c"/>
+      <arg value="mkdir Customers"/>
+    </exec>
+
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
@@ -493,13 +581,18 @@
 
 
 
-        <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+        <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
+        <exec program="cmd" workingdir="../softwrench.sW4.Web/APP_Data/Client" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line='mklink /J ${clientname} "${foldername}\metadata\${clientname}"'/>
+        </exec>
+
         <if test="${directory::exists(onlinefolder)}">
-          <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
             <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
           </exec>
@@ -517,13 +610,13 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-        <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+        <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
           <arg value="/c"/>
           <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
         </exec>
 
         <if test="${directory::exists(onlinefolder)}">
-          <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
             <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
           </exec>

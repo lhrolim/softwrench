@@ -29,6 +29,19 @@
     top: 50px;
 }
 
+// lookup modals that have crud content inside (input fields)
+.crud-lookup-modal {
+    width: 500px !important;
+
+    @media (max-width: 500px) {
+        width: 350px !important;
+    }
+}
+
+.crud-grid-modal {
+    width: 800px !important;
+}
+
 .conditionModal {
     position: absolute;
     top: 25%;

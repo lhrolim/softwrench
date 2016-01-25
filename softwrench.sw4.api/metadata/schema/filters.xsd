@@ -47,6 +47,11 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
             <documentation>if true the value will be displayed on screen --> the result form will be (code) - label </documentation>
           </annotation>  
         </attribute>
+        <attribute name="advancedfilterschema" type="string">
+          <annotation>
+            <documentation>schema of the lookup modal</documentation>
+          </annotation>
+        </attribute>
         
       </extension>
     </complexContent>
@@ -78,13 +83,25 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
     </complexContent>
   </complexType>
 
-
-
-
-
+  <complexType name="ModalFilterType">
+    <complexContent>
+      <extension base="f:BaseFilterType">
+        <attribute name="targetschema" type="string"></attribute>
+        <attribute name="service" type="string"></attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  
   <complexType name="FilterOptionType">
     <attribute name="label" type="string"></attribute>
     <attribute name="value" type="string"></attribute>
+    <attribute name="preselected" type="boolean"></attribute>
+    <attribute name="tooltip" type="string"></attribute>
+    <attribute name="displaycode" type="boolean">
+      <annotation>
+        <documentation>Same as parent attribute. Overides parent and inherit if not present.</documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
 </schema>

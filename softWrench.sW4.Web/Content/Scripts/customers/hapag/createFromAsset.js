@@ -1,13 +1,14 @@
-﻿function CreateFromAssetController($scope, $http, i18NService, fieldService, redirectService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("CreateFromAssetController", CreateFromAssetController);
+function CreateFromAssetController($scope, $http, i18NService, fieldService, redirectService) {
+    "ngInject";
 
     var OPERATING = "OPERATING";
     var ACTIVE = "120 Active";
     var IDLE = "150 Idle";
     var ORDERED = "010 Ordered";
-
-    function init() {
-
-    }
 
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -50,9 +51,8 @@
         var title = schemaid == 'general' ? capitaliseFirstLetter('new {0} service request') : capitaliseFirstLetter('new ' + typeofimac + ' imac service');
         redirectService.goToApplicationView(typeofticket, schemaid, 'input', title, parameters, initialData);
     };
-
-
-
-    init();
-
 }
+
+window.AboutController = CreateFromAssetController;
+
+})(angular);

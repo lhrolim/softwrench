@@ -1,6 +1,9 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.directive('dateTime', function ($timeout, formatService, expressionService) {
+angular.module('sw_layout')
+    .directive('dateTime', function ($timeout, formatService, expressionService) {
+    "ngInject";
 
     function parseBooleanValue(attrValue) {
         return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() === "true";
@@ -110,3 +113,5 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
         }
     };
 });
+
+})(angular);

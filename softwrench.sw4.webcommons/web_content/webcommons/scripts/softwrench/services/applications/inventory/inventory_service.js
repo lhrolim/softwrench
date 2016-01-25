@@ -1,6 +1,11 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('inventoryService', function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService, inventoryServiceCommons, $rootScope, applicationService) {
+angular.module('sw_layout')
+    .factory('inventoryService', [
+        "$http", "$timeout", "contextService", "redirectService", "modalService", "searchService", "restService", "alertService", "inventoryServiceCommons", "$rootScope", "applicationService", 
+        function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService, inventoryServiceCommons, $rootScope, applicationService) {
+
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -117,7 +122,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
 
 
 
-    invIssue_maximo71_afterChangeItem = function (parameters) {
+    var invIssue_maximo71_afterChangeItem = function (parameters) {
         if (nullOrEmpty(parameters['fields']['itemnum']) || nullOrEmpty(parameters['fields']['storeloc'])) {
             return;
         }
@@ -642,7 +647,7 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                         requestData: httpParameters
                     }
 
-                    jsonString = angular.toJson(jsonWrapper);
+                    var jsonString = angular.toJson(jsonWrapper);
                     var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"]);
 
 
@@ -689,9 +694,8 @@ app.factory('inventoryService', function ($http, $timeout, contextService, redir
                 parameters['fields']['invbalances_.binnum'] = parameters['fields']['asset_.binnum'];
             }
         },
-
-
-
-
     };
-});
+
+}]);
+
+})(angular);

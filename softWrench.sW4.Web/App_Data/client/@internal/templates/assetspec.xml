@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application name="assetspec" title="Asset Specification" entity="assetspec" id="00000000-0000-0000-0000-040079045007" >
+      <schemas>
+        <schema id="compositionlist" title="Asset Specification List" stereotype="compositionlist">
+          <field attribute="classstructure_.hierarchypath" label="Classification"/>
+          <field attribute="classstructure_.description" label="Class Description"/>
+          <field attribute="classstructure_.classificationid" hidden="true"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+        <schema id="compositiondetail" title="Aset Specification Detail" stereotype="compositiondetail">
+          <section orientation="horizontal">
+            <field attribute="assetattrid" label="Attribute" readonly="true"/>
+            <field attribute="assetattribute_.description" label="Description" readonly="true"/>
+            <field attribute="assetattribute_.datatype" label="Data Type" readonly="true"/>
+            <field attribute="measureunitid" label="Unit of Measure" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="section" label="Section" readonly="true"/>
+            <field attribute="alnvalue" label="Alphanumeric Value" readonly="true"/>
+            <field attribute="numvalue" label="Numeric Value" readonly="true"/>
+            <field attribute="tablevalue" label="Table Value" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="classspec_.inheritedfrom" label="Inherited From" readonly="true"/>
+            <field attribute="classspec.applydownhier" label="Apply Down Hierarchy" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+
+
+
+
+</metadata>

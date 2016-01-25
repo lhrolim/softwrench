@@ -1,4 +1,33 @@
+(function (angular) {
+    "use strict";
+
+function handleResize() {
+    var activityWidth = 0;
+
+    //if pane is open get width
+    if ($('#activitystream').hasClass('open')) {
+        activityWidth = $('#activitystream').width();
+    }
+
+    //var gridOffset = activityWidth + gridPadding;
+    //var headerOffset = activityWidth;
+
+    //update widths
+    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+
+    if ($('.site-header').css('position') == 'fixed') {
+        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+    } else {
+        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
+    }
+
+    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+    $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+}
+
 angular.module('sw_layout').directive('activitystream', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
 
@@ -19,6 +48,12 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
         link: function (scope) {
             scope.$name = 'crudbody';
+
+            var handler = window.debounce(handleResize, 300);
+            angular.element(window).on("resize", handler);
+            scope.$on("$destroy", function () {
+                angular.element(window).off("resize", handler);
+            });
         },
 
         controller: function ($scope, $http, $log, $interval, $timeout, redirectService,
@@ -38,19 +73,26 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
             if ($scope.activityStreamEnabled()) {
                 $('html').addClass('activitystream');
-            }
+            };
 
 
             $scope.hasmultipleprofiles = function () {
                 return this.getMultiplesProfiles().length > 1;
-            }
+            };
 
             $scope.getMultiplesProfiles = function () {
-                return $scope.availableProfiles;
-            }
+                return $scope.availableProfiles || [];
+            };
 
             $scope.changeCurrentProfile = function () {
                 this.refreshStream();
+            };
+
+            $scope.clearFilter = function () {
+                log.debug('clearFilter');
+
+                $scope.filterText = '';
+                $(window).trigger('resize');
             }
 
             $scope.displayHidden = function (activity) {
@@ -60,11 +102,11 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 }
 
                 return $scope.hiddenToggle;
-            }
+            };
 
             $scope.deciveType = function () {
                 return DeviceDetect.catagory.toLowerCase();
-            }
+            };
 
             $scope.formatDate = function (notificationDate) {
                 var currentDate = new Date();
@@ -87,7 +129,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 } else {
                     return false;
                 }
-            }
+            };
 
             $scope.markAllRead = function () {
                 log.debug('markAllRead');
@@ -105,7 +147,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $scope.refreshStream();
                     });
                 }, confirmationMessage);
-            }
+            };
 
             $scope.markRead = function (activity) {
                 log.debug('markRead', activity);
@@ -134,7 +176,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
                         alertService.notifyexception(errordata);
                     });
-            }
+            };
 
             $scope.buildActivityNotificationParam = function (activity, parent) {
                 var param = {
@@ -146,7 +188,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     param.applicationName = activity.parentApplication;
                 }
                 return param;
-            }
+            };
 
             $scope.disposeActivityStream = function (activity, parent) {
                 //if the header is not fixed (mobile), hide the actity pane
@@ -160,8 +202,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                     }, 0, false);
                 }
                 $scope.refreshStream();
-            }
-
+            };
 
             $scope.openLink = function (activity, parent) {
                 log.debug('openLink');
@@ -181,7 +222,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         $scope.disposeActivityStream(activity, parent);
                     });
 
-            }
+            };
 
             $scope.refreshStream = function (silent) {
                 log.debug('refreshStream');
@@ -213,7 +254,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         }
                         log.debug($scope.activities);
                     });
-            }
+            };
 
             $scope.setPaneHeight = function () {
                 log.debug('setPaneHeight');
@@ -223,7 +264,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 var panePaddingBottom = parseInt($('#activitystream .pane').css('padding-bottom'));
 
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
-            }
+            };
 
             $scope.toggleFilter = function () {
                 log.debug('toggleFilter');
@@ -231,7 +272,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 $scope.enableFilter = !$scope.enableFilter;
                 $scope.filterText = '';
                 $(window).trigger('resize');
-            }
+            };
 
             $scope.toggleHidden = function () {
                 log.debug('toggleHidden');
@@ -244,7 +285,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         jScrollPaneAPI.reinitialise();
                     }, 0);
                 }
-            }
+            };
 
             $scope.toggleActivityStream = function () {
                 //open and close activity pane
@@ -259,7 +300,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             };
 
             //set window height and reinitialize scroll pane if windows is resized
-            $(window).bind('resize', function () {
+            $(window).bind('resize', window.debounce(function () {
                 // IE fires multiple resize events while you are dragging the browser window which
                 // causes it to crash if you try to update the scrollpane on every one. So we need
                 // to throttle it to fire a maximum of once every 50 milliseconds...
@@ -273,7 +314,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         }, 50);
                     }
                 }
-            });
+            }, 300));
 
             //prevent window scrolling after reaching end of navigation pane 
             $(document).on('mousewheel', '#activitystream .scroll', function (e) {
@@ -339,26 +380,4 @@ angular.module('sw_layout').directive('activitystream', function (contextService
     }
 });
 
-$(window).resize(function () {
-    var activityWidth = 0;
-
-    //if pane is open get width
-    if ($('#activitystream').hasClass('open')) {
-        activityWidth = $('#activitystream').width();
-    }
-
-    //var gridOffset = activityWidth + gridPadding;
-    //var headerOffset = activityWidth;
-
-    //update widths
-    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-
-    if ($('.site-header').css('position') == 'fixed') {
-        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-    } else {
-        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
-    }
-
-    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-    $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-});
+})(angular);

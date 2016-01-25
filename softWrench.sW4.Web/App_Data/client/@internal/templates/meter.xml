@@ -59,6 +59,58 @@
             </commandgroup>
           </commandbars>
         </schema>
+        <schema id="assetmeterlist" stereotype="compositionlist">
+          <field attribute="sequence" label="Sequence"/>
+          <field attribute="metername" label="Meter"/>
+          <field attribute="meter_.description" label="Description"/>
+          <field attribute="meter_.metertype" label="Meter Type"/>
+          <field attribute="measureunitid" label="Unit of Measure"/>
+          <field attribute="active" label="Active">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+        </schema>
+        <schema id="assetmeterdetail" stereotype="compositiondetail">
+          <section id="meterdetails" orientation="vertical">
+            <section orientation="horizontal">
+              <section orientation="vertical">
+                <field attribute="sequence" label="Sequence" readonly="true"/>
+                <field attribute="active" label="Active" readonly="true">
+                  <renderer type="default" params="formatter=numberToBoolean"/>
+                </field>
+              </section>
+              <section orientation="vertical">
+                <field attribute="metername" label="Meter" readonly="true"/>
+                <field attribute="pointnum" label="Point" readonly="true"/>
+              </section>
+              <section orientation="vertical">
+                <field attribute="meter_.description" label="Description" readonly="true"/>
+              </section>
+              <section orientation="vertical">
+                <field attribute="meter_.metertype" label="Meter Type" readonly="true"/>
+                <field attribute="measureunitid" label="Unit of Measure" readonly="true"/>
+              </section>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="lastreading" label="Last Reading" readonly="true"/>
+              <field attribute="lastreadingdate" label="Last Reading Date" readonly="true"/>
+              <field attribute="lastreadinginspctr" label="Last Reading Inspector" readonly="true"/>
+              <field attribute="remarks" label="Remarks" readonly="true"/>
+            </section>
+          </section>
+          <section id="continuousmeterdetails" orientation="vertical">
+            <section orientation="horizontal">
+              <field attribute="avgcalcmethod" label="Average Calculation Method" readonly="true"/>
+              <field attribute="synonymdomain_.description" label="Description" readonly="true"/>
+              <field attribute="rollover" label="Rollover" readonly="true"/>
+              <field attribute="readingtype" label="Reading Type" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="slidingwindowsize" label="Sliding Window Size" readonly="true"/>
+              <field attribute="average" label="Average" readonly="true"/>
+              <field attribute="lisetodate" label="Life to Date for Location" readonly="true"/>
+            </section>
+          </section>
+        </schema>
       </schemas>
     </application>
 
@@ -67,6 +119,61 @@
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>
+        <schema id="locationcomposition" stereotype="compositionlist" title="Meters">
+          <field attribute="sequence" label="Sequence"/>
+          <field attribute="metername" label="Meter"/>
+          <field attribute="meter_.description" label="Description"/>
+          <field attribute="meter_.metertype" label="Meter Type"/>
+          <field attribute="measureunitid" label="Unit of Measure"/>
+          <field attribute="active" label="Active">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+        <schema id="locationdetail" stereotype="compositiondetail" title="Meter" mode="output">
+          <section orientation="horizontal">
+            <section orientation="vertical">
+              <field attribute="sequence" label="Sequence"/>
+              <field attribute="active" label="Active">
+                <renderer type="default" params="formatter=numberToBoolean"/>
+              </field>
+            </section>
+            <section orientation="vertical">
+              <field attribute="metername" label="Meter"/>
+              <field attribute="pointnum" label="Point"/>
+            </section>
+            <section orientation="vertical">
+              <field attribute="meter_.description" label="Description"/>
+            </section>
+            <section orientation="vertical">
+              <field attribute="meter_.metertype" label="Meter Type"/>
+              <field attribute="measureunitid" label="Unit of Measure"/>
+            </section>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="lastreading" label="Last Reading"/>
+            <field attribute="lastreadingdate" label="Last Reading Date"/>
+            <field attribute="lastreadinginspctr" label="Last Reading Inspector"/>
+            <field attribute="remarks" label="Remarks"/>
+          </section>
+          <section id="continuousmeterdetails" showexpression="@meter_.metertype == 'CONTINUOUS'">
+            <section orientation="horizontal">
+              <field attribute="avgcalcmethod" label="Average Calculation Method"/>
+              <field attribute="averagemethod_.description" label="Average Method Description"/>
+              <field attribute="rollover" label="Rollover"/>
+              <field attribute="readingtype" label="Reading Type"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="slidingwindowsize" label="Sliding Window Size"/>
+              <field attribute="average" label="Average"/>
+              <field attribute="lifetodate" label="Life to Date for Location"/>
+            </section>
+          </section>
+        </schema>
         <schema id="composition" stereotype="compositionlist" title="Location Meter Readings">
           <field attribute="locationmeterid" hidden="true"/>
           <field attribute="metername" hidden="true"/>

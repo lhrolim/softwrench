@@ -8,6 +8,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
+using softWrench.sW4.Data.Persistence.WS.Commons.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
@@ -73,7 +74,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             MultiAssetLocciHandler.HandleMultiAssetLoccis(crudData, wo);
             HandleMaterials(crudData, wo);
             LabTransHandler.HandleLabors(crudData, wo);
-            HandleTools(crudData, wo);
+            ToolsHandler.HandleWoTools(crudData, wo);
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
@@ -98,6 +99,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         }
 
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var svcaddressExists = ((CrudOperationData)maximoTemplateData.OperationData).GetAttribute("#haswoaddresschange") != null;
+            if (!svcaddressExists) {
+                //if no service address is passed we don´t need to perform any update afterwards
+                return;
+            }
+
             base.AfterUpdate(maximoTemplateData);
 
             ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
@@ -143,7 +150,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             WsUtil.SetValueIfNull(wo, "OUTSERVCOST", 0);
 
             LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData);
-            HandleServiceAddress((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            ServiceAddressHandler.HandleServiceAddressForWo((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
         }
 
 
@@ -211,90 +218,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             });
         }
 
-        protected virtual void HandleTools(CrudOperationData entity, object wo) {
-            // Use to obtain security information from current user
-            var user = SecurityFacade.CurrentUser();
+     
 
-            // Workorder id used for data association
-            var recordKey = entity.UserId;
-
-            // Filter work order materials for any new entries where matusetransid is null
-            var Tools = (IEnumerable<CrudOperationData>)entity.GetRelationship("tooltrans");
-            var newTools = Tools.Where(r => r.GetAttribute("tooltransid") == null);
-
-            // Convert collection into array, if any are available
-            var crudOperationData = newTools as CrudOperationData[] ?? newTools.ToArray();
-
-            if (crudOperationData.Length > 1) {
-                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
-            }
-
-
-            WsUtil.CloneArray(crudOperationData, wo, "TOOLTRANS", delegate (object integrationObject, CrudOperationData crudData) {
-                WsUtil.SetValueIfNull(integrationObject, "TOOLRATE", 0.00);
-                WsUtil.SetValueIfNull(integrationObject, "TOOLQTY", 0);
-                WsUtil.SetValueIfNull(integrationObject, "TOOLHRS", 0);
-
-                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
-                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
-                WsUtil.SetValue(integrationObject, "REFWO", recordKey);
-
-                WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
-                WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.FromServerToRightKind(), true);
-
-                WsUtil.SetValue(integrationObject, "TOOLTRANSID", -1);
-                WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
-
-                ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
-            });
-        }
-
-        protected virtual void HandleServiceAddress(CrudOperationData entity, object wo) {
-            var svcaddressExists = entity.GetAttribute("WOSERVICEADDRESS") != null;
-
-            if (svcaddressExists) {
-                // Use to obtain security information from current user
-                var user = SecurityFacade.CurrentUser();
-
-                // Create a new WOSERVICEADDRESS instance created
-                var woserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(wo, "WOSERVICEADDRESS");
-
-                // Extract data from unmapped attribute
-                var json = entity.GetUnMappedAttribute("#woaddress_");
-
-                // If empty, we assume there's no selected data.  
-                if (json != null) {
-                    dynamic woaddress = JsonConvert.DeserializeObject(json);
-
-                    String addresscode = woaddress.addresscode;
-                    String desc = woaddress.description;
-                    String straddrnumber = woaddress.staddrnumber;
-                    String straddrstreet = woaddress.staddrstreet;
-                    String straddrtype = woaddress.staddrtype;
-
-                    WsUtil.SetValue(woserviceaddress, "SADDRESSCODE", addresscode);
-                    WsUtil.SetValue(woserviceaddress, "DESCRIPTION", desc);
-                    WsUtil.SetValue(woserviceaddress, "STADDRNUMBER", straddrnumber);
-                    WsUtil.SetValue(woserviceaddress, "STADDRSTREET", straddrstreet);
-                    WsUtil.SetValue(woserviceaddress, "STADDRSTTYPE", straddrtype);
-                } else {
-                    WsUtil.SetValueIfNull(woserviceaddress, "STADDRNUMBER", "");
-                    WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTREET", "");
-                    WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTTYPE", "");
-                }
-
-                var prevWOServiceAddress = entity.GetRelationship("woserviceaddress");
-
-                if (prevWOServiceAddress != null) {
-                    WsUtil.SetValue(woserviceaddress, "FORMATTEDADDRESS", ((CrudOperationData)prevWOServiceAddress).GetAttribute("formattedaddress") ?? "");
-                }
-
-                //WsUtil.SetValueIfNull(woserviceaddress, "WOSERVICEADDRESSID", -1);          
-                WsUtil.SetValue(woserviceaddress, "ORGID", user.OrgId);
-                WsUtil.SetValue(woserviceaddress, "SITEID", user.SiteId);
-
-                ReflectionUtil.SetProperty(woserviceaddress, "action", OperationType.AddChange.ToString());
-            }
-        }
+      
     }
 }

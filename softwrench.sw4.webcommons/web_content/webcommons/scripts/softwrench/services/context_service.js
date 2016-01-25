@@ -1,7 +1,7 @@
-﻿(function (modules) {
+﻿!(function (modules) {
     "use strict";
 
-    modules.webcommons.factory('contextService', ["$rootScope", function ($rootScope) {
+    modules.webcommons.factory("contextService", ["$rootScope", function ($rootScope) {
 
         return {
             //using sessionstorage instead of rootscope, as the later would be lost upon F5.
@@ -119,6 +119,11 @@
                 return false;
             },
             getUserData: function () {
+                if (angular.mock) {
+                    //for unit tests let´s return a mocked user
+                    return { login: "testuser" };
+                }
+
                 if ($rootScope.user != null) {
                     //caching
                     return $rootScope.user;

@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-
+  
+  <templates>
+    <template path="@assetlocrelation.xml"/>
+    <template path="@assetspec.xml"/>
+  </templates>
+  <entities>
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOCASSETSTATUS" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
   <applications>
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
       <properties>
@@ -9,11 +27,14 @@
       </properties>
       <schemas>
         <list>
+          <properties>
+            <property key="list.click.schema" value="assetdetail"/>
+          </properties>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
-        <detail>
+        <!--<schema id="detail" stereotype="detail">
           <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
           <field attribute="location" label="Location"  requiredexpression="true" />
@@ -22,8 +43,145 @@
           <field attribute="failurecode" label="Failure Class"  />
           <field attribute="priority" label="Priority"  />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-        </detail>
-        <schema id="assetLookupList" stereotype="list" >
+        </schema>-->
+        <schema id="assetlist" title="Asset Grid" stereotype="list"  platform="web">
+          <properties>
+            <property key="routing.nextapplication" value="asset"/>
+            <property key="nextschema.schemaid" value="assetdetail"/>
+          </properties>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="parent" label="Parent"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="siteid" label="Site ID"/>
+        </schema>
+        <schema id="detail" title="Asset Detail" stereotype="detail" platform="web">
+          <commandbars>
+            <commandgroup position="actions">
+              <container id="actioncontainer" icon="fa-bolt" label="Actions">
+                <command id="createWO" service="workorderService" method="openNewDetailModal" parameters="datamap" label="Create Work Order" icon="fa-tachometer"/>
+              </container>
+            </commandgroup>
+          </commandbars>
+          
+          <field attribute="assetid" label="Asset#" readonly="true" hidden="true"/>
+          
+          <section orientation="horizontal">
+            <field attribute="assetnum" label="Asset" readonly="true"/>  
+            <field attribute="description" label="Description" readonly="true"/>
+            <field attribute="status" label="Status" readonly="true"/>
+            <field attribute="siteid" readonly="true" hidden="true"/>
+          </section>
+          
+          <section orientation="horizontal">
+            <field attribute="parent" label="Parent" readonly="true"/>
+            <field attribute="parentasset_.description" label="Parent Description" readonly="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="location_.description" label="Location Description" readonly="true"/>
+          </section>
+          
+          <section orientation="horizontal">
+            <field attribute="assettype" label="Asset Type" readonly="true"/>
+            <field attribute="itemnum" label="Rotating Item" readonly="true"/>
+            <field attribute="item_.description" label="Item Description" readonly="true"/>
+            <field attribute="priority" label="Priority" readonly="true"/>
+          </section>
+          
+          <section orientation="horizontal">
+            <field attribute="conditioncode" label="Condition Code" readonly="true"/>
+            <field attribute="condition_.description" label="Condition Description" readonly="true"/>
+            <field attribute="failurecode" label="Failure Class" readonly="true"/>
+            <field attribute="serialnum" label="Serial #" readonly="true"/>
+          </section>
+          
+          <section orientation="horizontal">
+            <field attribute="groupname" label="Meter Group" readonly="true"/>
+            <field attribute="metergroup_.description" label="Meter Group Description" readonly="true"/>
+            <field attribute="usage" label="Usage" readonly="true"/>
+          </section>
+          
+          <!-- Show more section -->
+          <section secondarycontent="true">
+            <section orientation="horizontal">
+              <field attribute="vendor" label="Vendor" readonly="true"/>
+              <field attribute="vendor_.name" label="Vendor Description" readonly="true"/>
+              <field attribute="manufacturer" label="Manufacturer" readonly="true"/>
+              <field attribute="monufacturer" label="Manufacturer Description" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="installdate" label="Installation Date" readonly="true"/>
+              <field attribute="purchaseprice" label="Purchase Price" readonly="true"/>
+              <field attribute="replacecost" label="Replacement Cost" readonly="true"/>
+              <field attribute="assettrans_.ponum" label="PO" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="totalcost" label="Total Cost" readonly="true"/>
+              <field attribute="ytdcost" label="YTD Cost" readonly="true"/>
+              <field attribute="budgetcost" label="Budget Cost" readonly="true"/>
+              <field attribute="invcost" label="Inventory" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="isrunning" label="Asset Up?" readonly="true"/>
+              <field attribute="assetstatus_.changedate" label="Status Date" readonly="true"/>
+              <field attribute="totdowntime" label="Total Downtime" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="changeby" label="Change By" readonly="true"/>
+              <field attribute="changedate" label="Change Date" readonly="true"/>
+            </section>
+          </section>
+          <tab id="spareparts" label="Spare Parts">
+            <section orientation="horizontal">
+              <field attribute="assetnum" label="Asset" readonly="true"/>
+              <field attribute="desription" label="Description" readonly="true"/>
+              <field attribute="siteid" label="Site" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="parentasset_.assetnum" label="Parent" readonly="true"/>
+              <field attribute="parentasset_.description" label="Description" readonly="true"/>
+            </section>
+            <composition relationship="subassembly" inline="true" label="Subassemblies" detailschema="" printschema="">
+              <collectionproperties listschema="subassemblies" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+            <composition relationship="sparepart" inline="true" label="Spare Parts" detailschema="" printschema="">
+              <collectionproperties listschema="assetsparepartlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+          </tab>
+          <!--<tab id="safety" label="Safety">
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="description" label="Description" readonly="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="location_.description" label="Description" readonly="true"/>
+          </tab>-->
+          <tab id="meters" label="Meters">
+            <section orientation="horizontal">
+              <field attribute="assetnum" label="Asset" readonly="true"/>
+              <field attribute="description" label="Description" readonly="true"/>
+              <field attribute="groupname" label="Meter Group" readonly="true"/>
+              <field attribute="metergroup_.description" label="Description" readonly="true"/>
+            </section>
+            <composition relationship="assetmeter" inline="true" label="Meters List" detailschema="assetmeterdetail" printschema="">
+              <collectionproperties listschema="assetmeterlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+          </tab>
+          <composition relationship="assetspec" label="Specifications" detailschema="compositiondetail" printschema="">
+            <collectionproperties listschema="compositionlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+          </composition>
+          <composition relationship="assetlocrelation" label="Relationships" detailschema="assetlocrelationdetail">
+            <collectionproperties listschema="assetlocrelationlist" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="BuildAssetlocrelationWhereClause"/>
+          </composition>
+          <composition relationship="workorder" label="Work Order History" detailschema="">
+            <collectionproperties listschema="assetwolist" allowcreation="false" allowupdate="false" allowremoval="false" printenabled="false"/>
+          </composition>
+        </schema>
+        <schema id="subassemblies" stereotype="compositionlist" platform="web">
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="location_.description" label="Description" readonly="true"/>
+        </schema>
+        <schema id="assetLookupList" stereotype="list" platform="web">
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
             <renderer type="default" params="minwidth=300px" />
@@ -31,6 +189,26 @@
           <field attribute="location" label="Location"/>
           <field attribute="siteid"  label="Site"/>
           <field attribute="status" label="Status"/>
+        </schema>
+        <schema id="locationassets" title="Assets" stereotype="compositionlist" platform="web">
+          <properties>
+            <property key="list.click.event" value="assetService.goToDetail"/>
+          </properties>
+          <field attribute="assetid" hidden="true"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="parentasset_.assetnum" label="Parent"/>
+          <field attribute="parentasset_.description" label="Parent Description"/>
+          <field attribute="itemnum" label="Rotating Item"/>
+          <field attribute="isrunning" label="Asset Up?">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <field attribute="calnum" label="Calendar"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
 

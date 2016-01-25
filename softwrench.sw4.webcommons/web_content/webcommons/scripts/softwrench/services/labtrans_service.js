@@ -1,6 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('labtranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService, validationService) {
+angular.module('sw_layout')
+    .factory('labtranService', ["$http", "contextService", "redirectService", "modalService", "restService", "searchService", "alertService", 
+        function ($http, contextService, redirectService, modalService, restService, searchService, alertService) {
+    
     return {
         afterlaborchange: function (event) {
             if (event.fields['laborcode'] == ' ') {
@@ -22,4 +26,6 @@ app.factory('labtranService', function ($http, contextService, redirectService, 
             }
         }
     };
-});
+}]);
+
+})(angular);

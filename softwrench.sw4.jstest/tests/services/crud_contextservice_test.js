@@ -3,7 +3,7 @@
     var mockCompositionResult = {
         "attachment_": {
             "paginationData": {
-                "totalCount" : 5
+                "totalCount": 5
             },
             "list": [{}, {}, {}, {}, {}]
         },
@@ -21,6 +21,29 @@
         }
     };
 
+    var mockedSchemaWithReverseAssociation = {
+        displayables: [
+            {
+                displayables: [
+                    {
+                        associationKey: "reverse_",
+                        target: "reversetarget",
+                        reverse: true,
+                        type: "ApplicationAssociationDefinition"
+                    }
+                ],
+                type: "ApplicationSection"
+
+            },
+            {
+                associationKey: "other_",
+                target: "_othertarget",
+                reverse: true,
+                type: "ApplicationAssociationDefinition"
+            }
+        ]
+    };
+
     var attachmentTab = { "tabId": "attachment_" };
     var commlogTab = { "tabId": "commlog_" };
     var worklogTab = { "tabId": "worklog_" };
@@ -30,7 +53,7 @@
     beforeEach(inject(function (crudContextHolderService) {
         crudContextService = crudContextHolderService;
     }));
-    beforeEach(function() { crudContextService.compositionsLoaded(mockCompositionResult); });
+    beforeEach(function () { crudContextService.compositionsLoaded(mockCompositionResult); });
 
     it('composition record counts added', function () {
         // Get the record counts for the compositions
@@ -56,7 +79,7 @@
         expect(worklogLength).toBe(0);
     });
 
-    it('should remove record counts on gridLoaded', function() {
+    it('should remove record counts on gridLoaded', function () {
         // Call the gridLoaded function
         crudContextService.gridLoaded({});
         // Get the record counts for the compositions
@@ -71,7 +94,7 @@
 
     it('should remove record counts on detailLoaded', function () {
         // Call the detailLoaded function
-        crudContextService.detailLoaded({});
+        crudContextService.detailLoaded();
         // Get the record counts for the compositions
         var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
         var commlogLength = crudContextService.getTabRecordCount(commlogTab);
@@ -82,4 +105,84 @@
         expect(worklogLength).toBe(0);
     });
 
+    it("clears selected buffer on app change", function () {
+        var row1 = { fields: { a: "1" } };
+        var row2 = { fields: { a: "2" } };
+
+        // add rows
+        crudContextService.addSelectionToBuffer("1", row1);
+        crudContextService.addSelectionToBuffer("2", row2);
+
+        // verify buffer
+        var buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+
+        // updates context
+        crudContextService.updateCrudContext({}, {});
+
+        // verify buffer
+
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+
+        // chage application
+        crudContextService.applicationChanged({}, {});
+
+        // verify buffer
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(0);
+    });
+
+    it("independent selected buffer from different panels", function () {
+        var row1 = { fields: { a: "1" } };
+        var row2 = { fields: { a: "2" } };
+        var row3 = { fields: { a: "3" } };
+
+        // add rows
+        crudContextService.addSelectionToBuffer("1", row1);
+        crudContextService.addSelectionToBuffer("2", row2);
+        crudContextService.addSelectionToBuffer("3", row3, "#modal");
+
+        // verify buffers
+        var buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+        buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(1);
+        expect(buffer["3"].fields.a).toBe("3");
+
+        // clear modal context
+        crudContextService.clearCrudContext("#modal");
+
+        // verify buffers
+        buffer = crudContextService.getSelectionModel().selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(2);
+        expect(buffer["1"].fields.a).toBe("1");
+        expect(buffer["2"].fields.a).toBe("2");
+        buffer = crudContextService.getSelectionModel("#modal").selectionBuffer;
+        expect(Object.keys(buffer).length).toBe(0);
+    });
+
+    it("update lazy options, fill datamap when reverse, FIX for SWWEB-2013", function () {
+
+        var dm = {
+            fields:{}
+        }
+        crudContextService.updateCrudContext(mockedSchemaWithReverseAssociation, dm);
+        dm = crudContextService.rootDataMap();
+        expect(dm.fields["reversetarget"]).toBe(undefined);
+        crudContextService.updateLazyAssociationOption("reverse_", { value: "xxx", label: "yyy" }, true);
+        dm = crudContextService.rootDataMap();
+        expect(dm.fields["reversetarget"]).toBe("xxx");
+        var result = crudContextService.fetchLazyAssociationOption("reverse_", "xxx");
+        expect(result).toEqual({ value: "xxx", label: "yyy" });
+
+
+
+    });
 });

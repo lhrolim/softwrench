@@ -1,6 +1,6 @@
 ﻿$hover_background: #ddd;
 
-.advanced-filter-toogle {
+.advanced-filter-toggle {
     cursor: pointer;
     text-align: center;
 }
@@ -35,10 +35,6 @@
 .filter-label {
     display: inline-block;
 
-    &:hover {
-        background: $hover_background;
-    }
-
     .filter-label-wrapper {
         .filter-text {
             font-weight: bold;
@@ -55,6 +51,10 @@
 
                 > i.fa {
                     color: #767676;
+
+                    &:hover {
+                        color: #aaa;
+                    }
                 }
             }
 
@@ -88,6 +88,11 @@
                             margin-top: 0;
                         }
 
+                        .lookup {
+                            margin-left: 3px;
+                            margin-bottom: 10px;
+                        }
+
                         .select-all {
                             padding-left: 5px;
                             margin-bottom: 10px;
@@ -110,6 +115,7 @@
 
                             li {
                                 padding-bottom: 10px;
+                                font-weight: normal;
 
                                 .removable {
                                     cursor: pointer;
@@ -285,19 +291,36 @@
     }
 }
 
-#listgrid th {
-    word-break: break-word;
+#listgrid {
+    th {
+        word-break: break-word;
+    }
+
+    th.select-all-header {
+        padding-right: 3px;
+    }
 }
 
 #listgrid {
+    th {
+        &.select-all-header {
+            text-align: center;
+            padding-left: 15px;
+            padding-right: 3px;
+        }
+    }
     td {
-
         .input-group, .input-group .glyphicon {
             position: initial;
         }
 
         &.select-multiple {
             text-align: center;
+            padding-left: 15px;
+            padding-right: 3px;
+        }
+        &.edit-detail {
+            padding-right: 15px;
         }
     }
 }
@@ -328,6 +351,12 @@
     .progress {
         background: none;
         box-shadow: none;
+    }
+
+    .radio, .checkbox {
+        display: table-cell;
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 
@@ -446,11 +475,12 @@ table .detaildata {
                     background-color: #d6d6d6;
                 }
 
-                td {
+                td, td.radio, td.checkbox {
                     position: relative;
                     padding: 4px 4px 4px 50%;
                     white-space: normal;
                     text-align: left;
+                    display: block;
 
                     &.no-data {
                         display: none;

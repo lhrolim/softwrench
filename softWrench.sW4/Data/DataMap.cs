@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Metadata.Applications;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
@@ -13,6 +14,8 @@ namespace softWrench.sW4.Data {
             return new DataMap(application, new Dictionary<string, object>(), null, true);
         }
 
+
+        
 
         public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType = null, bool rowstampsHandled = false)
             : base(application, fields) {
@@ -70,7 +73,9 @@ namespace softWrench.sW4.Data {
             };
         }
 
-
+        public static DataMap GetInstanceFromStringDictionary(string application, IDictionary<string,string> fields) {
+            return new DataMap(application,fields.ToDictionary(f=> f.Key, f=> (object)f.Value));
+        }
 
     }
 }

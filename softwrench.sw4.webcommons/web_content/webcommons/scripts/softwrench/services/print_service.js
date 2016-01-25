@@ -1,8 +1,12 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
-app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService, redirectService, searchService) {
+angular.module('sw_layout')
+    .factory('printService', [
+        "$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService", "redirectService", "searchService", 
+        function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService, redirectService, searchService) {
 
     var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
@@ -218,6 +222,6 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
 
     };
 
-});
+}]);
 
-
+})(angular);

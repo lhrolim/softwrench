@@ -6,6 +6,7 @@
     <template path="@attachments.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@commlogs.xml"/>
+    <template path="@failurecode.xml"/>
   </templates>
 
   <entities>
@@ -51,6 +52,7 @@
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
         <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
+        <connectorParameter key="dispatchincident_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
   </entities>
@@ -97,6 +99,9 @@
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <!--<properties>
+            <property key="detail.showtitle" value="true"/>
+          </properties>-->
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketid" label="SR#:" hidden="true"/>
@@ -108,7 +113,7 @@
           </section>
 
           <section>
-            <field label="Details:" attribute="ld_.ldtext" requiredexpression="true">
+            <field label="Details:" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
 
@@ -166,30 +171,30 @@
 
 
 
-           
+
 
             <section orientation="horizontal">
 
               <section>
-              <section orientation="horizontal">
-                <header displacement="ontop" label="Work Details" params="fieldset=true" />
-                <renderer type="default" params="childinputsize=large" />
-                <!--<section id ="siteidsection"/>-->
-                <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-                  <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-                </association>
-                <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-                  <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-                  <dataprovider prefilterfunction="FilterAssets"/>
-                  <event type="afterchange" service="srService" method="afterChangeAsset"/>
-                </association>
-                <!--<section id="statussection"/>-->
-                <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
-                  <renderer type="autocompleteclient" />
-                </optionfield>
-                <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
-                  <renderer type="lookup" params="columnlabel=Name"/>
-                </association>
+                <section orientation="horizontal">
+                  <header displacement="ontop" label="Work Details" params="fieldset=true" />
+                  <renderer type="default" params="childinputsize=large" />
+                  <!--<section id ="siteidsection"/>-->
+                  <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+                    <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+                  </association>
+                  <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                    <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                    <dataprovider prefilterfunction="FilterAssets"/>
+                    <event type="afterchange" service="srService" method="afterChangeAsset"/>
+                  </association>
+                  <!--<section id="statussection"/>-->
+                  <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+                    <renderer type="autocompleteclient" />
+                  </optionfield>
+                  <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
+                    <renderer type="lookup" params="columnlabel=Name"/>
+                  </association>
                   <section id="attachmentsection" />
 
                   <!--COMSW 24 required field for population purposes-->
@@ -206,7 +211,7 @@
               </section>
               <section orientation="horizontal">
                 <header displacement="ontop" label="Scheduling" params="fieldset=true" />
-  
+
                 <renderer type="default" params="childinputsize=large" />
                 <field attribute="targetstart" label="Target Start Date:">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
@@ -229,10 +234,10 @@
               </section>
 
             </section>
-            
-       
 
-           
+
+
+
             <section id="compositions"/>
 
           </section>
@@ -268,7 +273,7 @@
             </composition>
 
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
@@ -285,12 +290,12 @@
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
-                          parameters="schema,datamap" service="dispatchService" method="dispatch"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
+                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident"
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
+                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                    showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" icon="fa-remove"/>
               </container>
-            </commandgroup>
-            <commandgroup position="detailform">
-              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
             </commandgroup>
           </commandbars>
         </schema>

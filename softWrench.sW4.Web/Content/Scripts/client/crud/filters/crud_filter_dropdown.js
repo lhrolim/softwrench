@@ -17,8 +17,8 @@
                     filterApplied: "&" // callback executed when the filters are applied
                 },
                 //#region controller
-                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService",
-                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService) {
+                controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService", "crudContextHolderService", "gridSelectionService",
+                    function ($scope, $injector, i18NService, fieldService, commandService, formatService, expressionService, searchService, filterModelService, modalService, schemaCacheService, restService, dispatcherService, $q, modalFilterService, crudContextHolderService, gridSelectionService) {
 
                         $scope.layout = {
                             standalone: false
@@ -124,7 +124,12 @@
                         };
 
                         $scope.getFilterText = function (filter) {
-                            return filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
+                            var filterText = filterModelService.getFilterText(filter, $scope.searchData, $scope.getOperator(filter.attribute));
+                            // adding some spaces on filter text to enable the tooltip break lines and do not overflow in width
+                            if (filterText) {
+                                filterText = filterText.split(",").join(", ");
+                            }
+                            return filterText;
                         }
 
                         function collapseOperatorList($event, mode) {
@@ -195,6 +200,89 @@
                             $scope.layout.standalone = value;
                         };
 
+                        $scope.isModal = function(filter) {
+                            return !filter || "MetadataModalFilter" === filter.type;
+                        }
+
+                        $scope.initModal = function () {
+                            $scope.modalDatamap = {};
+                            modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                        }
+
+                        $scope.showModal = function(filter) {
+                            if (!$scope.isModal(filter)) {
+                                return;
+                            }
+                            $scope.innerShowModal(filter);
+                        }
+
+                        $scope.innerShowModal = function(filter) {
+                            var datamap = $scope.hasFilter(filter) && $scope.modalDatamap ? $scope.modalDatamap[filter.attribute] : {};
+                            datamap = datamap ? datamap : {};
+                            var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
+                            var properties = {
+                                title: filter.label + " " + filterI18N,
+                                cssclass: "crud-grid-modal"
+                            };
+
+                            modalFilterService.getModalFilterSchema(filter, $scope.schema).then(function (modalSchema) {
+                                modalService.show(modalSchema, datamap, properties, $scope.appyModal);
+                            });
+                        }
+
+                        $scope.appyModal = function (datamap, modalSchema) {
+                            var att = $scope.filter.attribute;
+                            $scope.modalDatamap[att] = datamap;
+                            $scope.filterIsActive = true;
+                            modalService.hide();
+                           
+                            var serviceParams = [datamap, modalSchema, $scope.filter];
+                            var searchData = dispatcherService.invokeServiceByString($scope.filter.service, serviceParams);
+                            $scope.searchData[att] = searchData;
+                            var searchOperator = searchService.getSearchOperator(searchData);
+                            $scope.selectOperator(att, searchOperator);
+                        }
+
+                        $scope.$on("sw.crud.list.filter.modal.clear", function (event, args) {
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
+                                if (modalSchema !== args[0]) {
+                                    return;
+                                }
+
+                                // if the modal is a grid clears the selection and refreshs the grid
+                                if (modalSchema.stereotype.toLocaleLowerCase().startsWith("list")) {
+                                    gridSelectionService.clearSelection(null, null, modalService.panelid);
+                                    dispatcherService.dispatchevent("sw.crud.list.clearQuickSearch", modalService.panelid);
+                                    searchService.refreshGrid({}, { panelid: modalService.panelid });
+                                }
+
+                                $scope.clearFilter($scope.filter.attribute);
+                                
+                                // only hides the modal if the filter is a modalFilter
+                                if ($scope.isModal($scope.filter)) {
+                                    modalService.hide();
+                                }
+                            });
+                        });
+
+                        $scope.$on("sw.crud.list.filter.modal.cancel", function (event, args) {
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
+                                if (modalSchema !== args[0]) {
+                                    return;
+                                }
+                                modalService.hide();
+                            });
+                        });
+
+                        $scope.$on("sw.crud.list.filter.modal.show", function (event, filter) {
+                            if (filter !== $scope.filter) {
+                                return;
+                            }
+                            $scope.innerShowModal(filter);
+                        });
+
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,
                             i18NService: i18NService,
@@ -220,11 +308,32 @@
 
                     var prepareUi = function () {
                         // don't let dropdowns close automatically when clicked inside
-                        var dropdowns = angular.element(element[0].querySelectorAll(".js_filter .dropdown .dropdown-menu"));
+                        var dropdowns = angular.element(element[0].querySelectorAll('.js_filter .dropdown .dropdown-menu'));
                         dropdowns.click(function (event) {
                             event.stopPropagation();
                         });
-                        // autofocus the search input when the dropdown opens
+
+                        //if the filter is on the right side of the screen, reposition if needed
+                        var windowWidth = $(window).width();
+                        var dropdown = angular.element(element[0].querySelectorAll('.crud-grid-modal .js_filter .dropdown'));
+
+                        //if the dropdown is inside a modal
+                        if (dropdown.length > 0) {
+                            windowWidth = $('.crud-grid-modal').width();
+                        } else {
+                            dropdown = angular.element(element[0].querySelectorAll('.js_filter .dropdown'));
+                        }
+
+                        //when the dropdown open check position and widths
+                        dropdown.on('shown.bs.dropdown', function () {
+                            var dropdownMenu = dropdown.children('.dropdown-menu');
+                            if (dropdown.position().left + dropdownMenu.width() > windowWidth) {
+                                var widthOffset = dropdownMenu.width() - dropdown.width();
+                                dropdownMenu.css({ left: '-' + widthOffset + 'px' });;
+                            }
+                        });
+
+                        //autofocus the search input when the dropdown opens
                         $(".js_filter .dropdown").on("show.bs.dropdown", function (event) {
                             $timeout(function () {
                                 $(event.target).find("input[type=search]").focus();

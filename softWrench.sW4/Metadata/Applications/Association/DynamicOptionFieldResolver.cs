@@ -24,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
 
             var methodName = GetMethodName(attribute);
-            var dataSet = FindDataSet(schema.ApplicationName,schema.SchemaId, methodName);
+            var dataSet = FindDataSet(schema.ApplicationName, schema.SchemaId, methodName);
             var mi = dataSet.GetType().GetMethod(methodName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, methodName, dataSet.GetType().Name));
@@ -41,8 +41,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
         private static string GetMethodName(string attribute) {
-            if (Char.IsNumber(attribute[0])) {
+            if (char.IsNumber(attribute[0])) {
+                //deprecated: using on the final of string to avoid angular errors
                 return "Get" + StringUtil.FirstLetterToUpper(attribute.Substring(1));
+            }
+            if (char.IsNumber(attribute[attribute.Length - 1])) {
+                return "Get" + StringUtil.FirstLetterToUpper(attribute.Substring(0, attribute.Length - 1));
             }
             return "Get" + StringUtil.FirstLetterToUpper(attribute);
         }

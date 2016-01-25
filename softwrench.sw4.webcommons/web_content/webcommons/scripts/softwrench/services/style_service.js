@@ -1,9 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('styleService', function ($rootScope, $timeout, i18NService) {
+angular.module('sw_layout')
+    .factory('styleService', function () {
 
     return {
-
         getLabelStyle: function (fieldMetadata,key) {
             var parameters = fieldMetadata.rendererParameters;
             if (fieldMetadata.header != null) {
@@ -13,12 +14,9 @@ app.factory('styleService', function ($rootScope, $timeout, i18NService) {
                 return null;
             }
             return parameters[key];
-
-        },
-
-      
+        }
     };
 
 });
 
-
+})(angular);

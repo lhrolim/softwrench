@@ -16,6 +16,11 @@ namespace softWrench.sW4.Data.API {
 
         public string Title { get; set; }
 
+        /// <summary>
+        /// When passing a dictionary from the front end, the object should be structured like a C# Dictinary.
+        /// dictionary[n].key = key;
+        /// dictionary[n]value = value
+        /// </summary>
         public IDictionary<string, string> CustomParameters { get; set; }
         public string CommandId { get; set; }
 

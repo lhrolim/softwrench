@@ -1,4 +1,6 @@
 ﻿app.directive('expandedItemOutput', function ($compile) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -24,6 +26,8 @@
 });
 
 app.directive('expandedItemInput', function ($compile) {
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -50,7 +54,8 @@ app.directive('expandedItemInput', function ($compile) {
     }
 });
 
-app.directive('newItemInput', function ($compile, fieldService, associationService) {
+app.directive('newItemInput', function ($compile, fieldService) {
+    "ngInject";
 
     return {
         restrict: "E",
@@ -94,6 +99,8 @@ app.directive('newItemInput', function ($compile, fieldService, associationServi
 });
 
 app.directive('compositionListWrapper', function ($compile, i18NService, $log, compositionService, spinService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -186,6 +193,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, c
 });
 
 app.directive('compositionList', function (contextService, formatService, schemaService) {
+    "ngInject";
 
     return {
         restrict: 'E',
@@ -209,7 +217,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
         controller: function ($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
-            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService) {
+            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService) {
 
             $scope.lookupObj = {};
 
@@ -278,7 +286,8 @@ app.directive('compositionList', function (contextService, formatService, schema
                     i18NService: i18NService,
                     fieldService: fieldService,
                     commandService: commandService,
-                    formatService: formatService
+                    formatService: formatService,
+                    gridSelectionService: gridSelectionService
                 });
 
 
@@ -553,12 +562,18 @@ app.directive('compositionList', function (contextService, formatService, schema
     /// <param name="column">the specific column clicked,might be used by different implementations</param>
     $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
+        // if there is a custom list click action, do it
+        var customAction = $scope.compositionlistschema.properties["list.click.event"];
+        if (customAction) {
+            dispatcherService.invokeServiceByString(customAction, [item]);
+            return;
+        }
+
         if (columnMode === "arrow" || columnMode === "singleselection") {
             //to avoid second call
             $event.stopImmediatePropagation();
         }
         this.handleSingleSelectionClick(item, rowIndex);
-
 
         var log = $log.get("compositionlist#toggleDetails");
 
@@ -573,12 +588,8 @@ app.directive('compositionList', function (contextService, formatService, schema
             return;
         }
 
-
         var compositionId = item[$scope.compositionlistschema.idFieldName];
-
         var updating = $scope.collectionproperties.allowUpdate;
-
-
         var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
         if (fullServiceName != null) {
             var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
@@ -598,6 +609,10 @@ app.directive('compositionList', function (contextService, formatService, schema
         // Need to disable all other rich text box for viewable real estate
         //                $scope.collapseAll();
 
+        //update header/footer layout
+        $timeout(function () {
+            $(window).trigger('resize');
+        }, false);
 
         var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
         if (!needServerFetching || this.isBatch()) {
@@ -634,7 +649,6 @@ app.directive('compositionList', function (contextService, formatService, schema
                     $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                 }, 0, false);
             });
-
     };
 
 

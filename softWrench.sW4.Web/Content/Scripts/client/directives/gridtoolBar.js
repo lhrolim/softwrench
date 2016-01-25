@@ -1,8 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService",
-        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "crudContextHolderService",
+        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, crudContextHolderService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -62,19 +62,31 @@
         securityService.validateRoleWithErrorMessage(command.role);
     }
 
-    $scope.executeService = function (command) {
+    $scope.executeService = function (command, toggleParentCommand) {
         var log = $log.get("gridtoolBar#executeService");
+
+        // if toggle parent command is passed toggles it state
+        if (toggleParentCommand) {
+            toggleParentCommand.state = !toggleParentCommand.state;
+        }
 
         $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
         $('.no-touch [rel=tooltip]').tooltip('hide');
+
+        //update header/footer layout
+        $timeout(function () {
+            $(window).trigger('resize');
+        }, false);
 
         if (command.service === "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {
                 fn();
             }
+
             return;
         }
+
         commandService.doCommand($scope, command);
     }
 
@@ -88,6 +100,28 @@
             return result;
         } 
         return !commandService.isCommandHidden($scope.datamap, $scope.schema, command);
+    }
+
+    function calcToggleExpression(expression) {
+        if (expression && expression.startsWith("$scope:")) {
+            return true === $scope.invokeOuterScopeFn(expression);
+        } else {
+            return true === commandService.evalToggleExpression($scope.datamap, expression);
+        }
+    }
+
+    function calcToggleInitialState(command) {
+        if (command.initialStateExpression) {
+            command.state = calcToggleExpression(command.initialStateExpression);
+        }
+    }
+
+    $scope.initIfToggleCommand = function(command) {
+        if ("ToggleCommand" !== command.type) {
+            return;
+        }
+        crudContextHolderService.addToggleCommand(command, $scope.panelid);
+        calcToggleInitialState(command);
     }
 
     $scope.isCommandEnabled = function (command) {
@@ -104,11 +138,28 @@
         return eval(expressionToEval);
     }
 
-    $scope.buttonClasses = function () {
-        if ($scope.position.equalsAny('detailform', 'compositionbottom')) {
-            return "btn btn-primary commandButton navbar-btn";
+    $scope.buttonClasses = function (command) {
+        var classes = "btn ";
+        if (command.pressed) {
+            classes += "active ";
         }
-        return "btn btn-default btn-sm";
+        if (command.primary || $scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
+            return classes + "btn-primary commandButton navbar-btn" + command.cssClasses;
+        }
+        return classes + "btn-default btn-sm " + command.cssClasses;
+    }
+
+    // verifies if it is a toggle command and returns the correct child command
+    $scope.getCommand = function(command) {
+        if ("ToggleCommand" === command.type) {
+            // it's a toggle command
+            return command.state ? command.onCommand : command.offCommand;
+        }
+        return command;
+    }
+
+    $scope.toggleCommandOrNull = function(command) {
+        return "ToggleCommand" === command.type ? command : null;
     }
 
 }];
@@ -130,6 +181,7 @@ app.directive('gridtoolbar', ["contextService", function (contextService) {
             mode: '@',
             position: '@',
             datamap: '=',
+            panelid: '='
         },
 
         link: function (scope, element, attrs, ctrl) {

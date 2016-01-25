@@ -1,17 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <templates>
+    <!--Location-->
+    <template path="@lochierarchy.xml"/>
+    <template path="@locationspec.xml"/>
+    <template path="@assettrans.xml"/>
+  </templates>
 
+  <entities>
+
+    <entity name="location" idAttribute="locationsid">
+      <attributes>
+        <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
+        <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
+      </attributes>
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOCASSETSTATUS" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="syntype" cacheable="true">
+          <relationshipAttribute from="type" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOCTYPE" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+    </entity>
+
+  </entities>
+  
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
         <property key="mobile.fetchlimit" value="1000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
+
+      <filters>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" />
+        <optionfilter attribute="type" provider="syntype_.description" displaycode="true"/>
+        <optionfilter attribute="parentlocation_.parent" provider="parentlocation_.parent" displaycode="true" allowblank="true" />
+        <optionfilter attribute="parentlocation_.systemid" provider="parentlocation_.systemid" displaycode="true" allowblank="true" />
+        <optionfilter attribute="siteid" provider="site_.siteid" />
+        <optionfilter attribute="classstructure_.description" provider="classstructure_.description" whereclause="classstructure_.classstructureid in (!@#value)" allowblank="true"/>
+        <numericfilter attribute="children" label="Child Locations" position="children" />
+        <numericfilter attribute="assets" label="Assets" position="assets" />
+      </filters>
+      
       <schemas>
-        <list >
+        <schema id="locationlookup" title="Location List">
           <field attribute="location" label="Location" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
-        </list>
+        </schema>
         <detail>
           <field attribute="locationsid" label="ID"  requiredexpression="true" />
           <field attribute="location" label="Location"  requiredexpression="true" />
@@ -19,6 +62,86 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
+        <list>
+          <properties>
+            <property key="list.click.schema" value="locationdetail"/>
+            <property key="list.click.customparams" value="parentlocation_.systemid"/>
+          </properties>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="classstructure_.description" label="Class Structure"/>
+          <field attribute="parentlocation_.parent" label="Parent Location"/>
+          <field attribute="parentlocation_.systemid" label="System"/>
+          <field attribute="children" label="Child Locations"/>
+          <field attribute="assets" label="Assets"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="siteid" label="Site"/>
+          <field attribute="orgid" hidden="true"/>
+          <!--Child Locations-->
+          <!--Open Work Orders-->
+        </list>
+        <schema id="locationdetail" title="Location Detail" stereotype="detail">
+          <field attribute="orgid" showexpression="false"/>
+          <section orientation="horizontal">
+            <field attribute="location" label="Location:" readonly="true"/>
+            <field attribute="description" label="Description:" readonly="true"/>
+            <field attribute="status" label="Status" readonly="true"/>
+            <field attribute="siteid" label="Site:" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="type" label="Type:" readonly="true"/>
+            <field attribute="locoper_.locpriority" label="Priority:" readonly="true"/>
+            <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
+            <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="locoper_.calnum" label="Calendar:" readonly="true"/>
+            <field attribute="locoper_.shiftnum" label="Shift:" readonly="true"/>
+            <field attribute="glaccount" label="GL Account:" readonly="true"/>
+            <field attribute="intlabrec" label="Internal Labor Account" readonly="true"/>
+          </section>
+          
+          <section id="systems" orientation="horizontal">
+            <!-- need to add some type of selectable association for systems -->
+          </section>
+          
+          <composition relationship="parentlocation" label="Parent" detailschema="" inline="true">
+            <collectionproperties listschema="locationparentlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
+          </composition>
+          <composition relationship="childlocation" label="Children" detailschema="" inline="true">
+            <collectionproperties listschema="locationchildlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
+          </composition>
+          <composition relationship="asset" label="Assets" detailschema="" rendermode="output">
+            <collectionproperties listschema="locationassets" allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          <composition relationship="workorder" label="Work Order History" detailschema="" rendermode="output">
+            <collectionproperties listschema="locationwolist" allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          <composition relationship="assettrans" label="History" detailschema="" rendermode="output">
+            <collectionproperties listschema="compositionlist" allowcreation="false" allowupdate="false" allowremoval="false" prefilterfunction="BuildAssettransWhereClause"/>
+          </composition>
+          <composition relationship="locationmeter" label="Meters" detailschema="locationdetail" rendermode="output">
+            <collectionproperties listschema="locationcomposition" allowcreation="false" allowupdate="false" allowremoval="false" orderbyfield="sequence"/>
+          </composition>
+          <composition relationship="locationspec" label="Specifications" detailschema="compositiondetail" rendermode="output">
+            <collectionproperties listschema="compositionlist"  allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
+                          parameters="schema,datamap" service="locationService" method="dispatchWO"/>
+              </container>
+            </commandgroup>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
       </schemas>
     </application>
   </applications>

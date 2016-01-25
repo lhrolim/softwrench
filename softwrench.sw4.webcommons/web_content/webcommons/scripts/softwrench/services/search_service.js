@@ -1,9 +1,11 @@
-var app = angular.module('sw_layout');
+(function (angular) {
+    "use strict";
 
-app.factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
+angular.module('sw_layout')
+    .factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
+    "ngInject";
 
     var objCache = {};
-
 
     function getSearchValue(value) {
         value = replaceAll(value, '%', '');
@@ -32,6 +34,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         filtertype.lt = i18NService.get18nValue(filterkeyaux + 'lt', 'Less Than');
         filtertype.gte = i18NService.get18nValue(filterkeyaux + 'gte', 'Greater Than Or Equal To');
         filtertype.lte = i18NService.get18nValue(filterkeyaux + 'lte', 'Less Than Or Equal To');
+        filtertype.custom = i18NService.get18nValue(filterkeyaux + 'custom', 'Custom');
 
         var searchOperations = [
         { id: "", symbol: "", title: filtertype.nofilter, tooltip: filtertype.filter, begin: "", end: "", renderType: ["combo", "default", "datetime"], },
@@ -42,16 +45,15 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         { id: "ENDWITH", symbol: "END", title: filtertype.endwith, tooltip: filtertype.endwith, begin: "%", end: "", renderType: ["default"], datatype: ['varchar'] },
 //        { id: "BTW", symbol: "-", title: filtertype.btw, tooltip: filtertype.btw, begin: ">=", end: "<=", renderType: [] },
         { id: "NOTEQ", symbol: "!=", title: filtertype.noteq, tooltip: filtertype.noteq, begin: "!=", end: "", renderType: ["default", "datetime"] },
-        { id: "BLANK", symbol: "BLANK", title: filtertype.blank, tooltip: filtertype.blank, begin: "", end: "", renderType: ["default", "datetime","combo"] },
+        { id: "BLANK", symbol: "BLANK", title: filtertype.blank, tooltip: filtertype.blank, begin: "", end: "", renderType: ["default", "datetime", "combo"] },
         { id: "GT", symbol: ">", title: filtertype.gt, tooltip: filtertype.gt, begin: ">", end: "", renderType: ["default", "datetime"] },
         { id: "LT", symbol: "<", title: filtertype.lt, lt: filtertype.lt, begin: "<", end: "", renderType: ["default", "datetime"] },
         { id: "GTE", symbol: ">=", title: filtertype.gte, tooltip: filtertype.gte, begin: ">=", end: "", renderType: ["default", "datetime"] },
-        { id: "LTE", symbol: "<=", title: filtertype.lte, tooltip: filtertype.lte, begin: "<=", end: "", renderType: ["default", "datetime"] }
+        { id: "LTE", symbol: "<=", title: filtertype.lte, tooltip: filtertype.lte, begin: "<=", end: "", renderType: ["default", "datetime"] },
+        { id: "CUSTOM", symbol: "??", title: filtertype.custom, tooltip: filtertype.custom, begin: "", end: "" }
         ];
         return searchOperations;
     };
-
-
 
     var buildSearchParamsString = function (searchData, searchOperator, useOrOperator) {
         var operatorToUse = useOrOperator ? "||" : "&&";
@@ -95,10 +97,12 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
     var specialCharactersHandler = function (searchData, searchOperator) {
         var specialcharacter = "*";
         for (var data in searchData) {
+            if(!searchData.hasOwnProperty(data)) continue;
             if (searchData[data] == null || searchData[data] == '' || data == "lastSearchedValues") {
                 continue;
             }
             var search = searchData[data];
+            if (!angular.isString(search)) return; // -> numeric inputs
             if (search.indexOf(specialcharacter) > -1) {
                 var indexSearchOperator = null;
                 var searchreplaced = search.replace(/\*/g, '');
@@ -118,7 +122,6 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
     };
 
     return {
-
         //TODO: dictionary?
         getSearchOperator: function (value) {
             if (value.startsWith('>')) {
@@ -158,7 +161,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                 return this.getSearchOperationById('BLANK');
             }
 
-            return value;
+            return this.getSearchOperationById('CUSTOM');
         },
 
 
@@ -235,7 +238,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             //searchDto.searchTemplate = searchTemplate;
             searchDto.searchTemplate = searchTemplate;
             searchData.lastSearchedValues = searchDto.searchValues;
-            
+
             if (paginationData) {
                 searchDto.pageNumber = paginationData.pageNumber;
                 searchDto.pageSize = paginationData.pageSize;
@@ -363,9 +366,9 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
-        quickSearch: function (quickSearchData) {
+        quickSearch: function (quickSearchData, panelId) {
             if (!quickSearchData) return;
-            this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false });
+            this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false, panelid: panelId });
         },
 
         /// <summary>
@@ -393,15 +396,15 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             }
             extraParameters = extraParameters || {};
             searchData = searchData || {};
-            
+
             var log = $log.getInstance('searchService#searchWithData');
             var searchDTO = extraParameters.searchDTO;
             if (!searchDTO) {
                 searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
-            searchDTO.searchTemplate = extraParameters.searchTemplate;
-            searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+                searchDTO.searchTemplate = extraParameters.searchTemplate;
+                searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
+                searchDTO.totalCount = 0;
+                searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
             }
 
             var restParameters = {
@@ -424,7 +427,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                     }
                 });
             } else {
-                return $http.get(urlToUse); 
+                return $http.get(urlToUse);
             }
         },
 
@@ -432,9 +435,8 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             $rootScope.$broadcast("sw_togglefiltermode", setToBasicMode);
         },
 
-
-
     };
 
-
 });
+
+})(angular);

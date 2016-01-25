@@ -68,7 +68,7 @@
         <property key ="icon.composition.tab" value="fa fa-wrench"/>
       </properties>
         <schemas>
-          <list>
+          <list stereotype="compositionlist">
             <field attribute="tooltransid" hidden="true"/>
             <field attribute="itemnum" label="Item#" qualifier="title"/>
             <field attribute="tool_.description" label="Description" qualifier="subtitle"/>
@@ -87,6 +87,7 @@
             <field attribute="toolrate" hidden="true" />
 
             <association label="Tool" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
+              <dataprovider prefilterfunction="FilterRotating"/>
               <renderer type="lookup"/>
               <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
             </association>

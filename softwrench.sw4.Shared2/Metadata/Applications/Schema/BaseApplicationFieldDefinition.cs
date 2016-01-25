@@ -3,21 +3,24 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public abstract class BaseApplicationFieldDefinition : BaseDefinition, IApplicationAttributeDisplayable, IDefaultValueApplicationDisplayable {
 
         public string ApplicationName { get; set; }
-        public string Label { get; set; }
+        [DefaultValue("")] public string Label { get; set; }
         public string Attribute { get; set; }
-        public string RequiredExpression { get; set; }
+        [DefaultValue("false" )] public string RequiredExpression { get; set; }
         public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
-
-        public string ShowExpression { get; set; }
-        public string EnableExpression { get; set; }
+        [JsonIgnore]
+        public bool DeclaredAsQueryOnEntity { get; set; }
+        [DefaultValue("true")] public string ShowExpression { get; set; }
+        [DefaultValue("true")] public string EnableExpression { get; set; }
 
         public string ToolTip { get; set; }
         public bool? ReadOnly { get; set; }
@@ -40,7 +43,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             string attribute, string requiredExpression, bool isReadOnly,
             string defaultValue, string qualifier, string showExpression, string toolTip,
             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression,
-            string defaultExpression) {
+            string defaultExpression, bool declaredAsQueryOnEntity) {
             if (attribute == null) {
                 throw new ArgumentNullException("attribute", String.Format("check {0} metadata config", applicationName));
             }
@@ -60,8 +63,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 _events = events.ToDictionary(f => f.Type, f => f);
             }
             EnableExpression = enableExpression;
-
-        }
+            DeclaredAsQueryOnEntity = declaredAsQueryOnEntity;
+            }
 
         public IDictionary<String, ApplicationEvent> Events {
             get { return _events; }

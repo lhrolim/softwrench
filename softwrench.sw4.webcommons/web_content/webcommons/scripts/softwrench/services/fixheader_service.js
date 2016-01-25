@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
+angular.module('sw_layout')
+    .factory('fixHeaderService', ["$rootScope", "$log", "$timeout", "contextService", function ($rootScope, $log, $timeout, contextService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         var affixpaginationid = $("#affixpagination");
@@ -43,13 +45,13 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         $('html, body').animate({ scrollTop: 0 }, 'fast');
     };
 
-    var buildTheadArray = function (log, table, emptyGrid) {
+    var buildTheadArray = function(log, table, emptyGrid) {
         if ($rootScope.clientName == 'hapag') {
             var thead = [];
             // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
             var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
-            $(classToUse, table).each(function (i, firstrow) {
+            $(classToUse, table).each(function(i, firstrow) {
                 var width = $(firstrow).width();
                 thead.push(width);
             });
@@ -61,7 +63,9 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             log.trace('total ' + total);
             return thead;
         }
-    }
+    };
+
+    var scrollHandlerRegistered = false;
 
     return {
 
@@ -172,17 +176,18 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             this.callWindowResize();
         },
 
-        callWindowResize: function () {
+        callWindowResize: window.debounce(function () { // debouncing so it doesn't trigger resize all the time 
             var log = $log.getInstance('sw4.fixheader_service');
 
             //trigger resize to postition fixed header elements
             $timeout(function () {
                 $(window).trigger('resize');
-            });
-        },
+            }, 0, false);
+
+        }, 300),
 
         activateResizeHandler: function () {
-            if ($rootScope.clientName == 'hapag') {
+            if ($rootScope.clientName === 'hapag') {
                 var resolutionBarrier = 1200;
                 var width = $(window).width();
                 var highResolution = width >= resolutionBarrier;
@@ -204,16 +209,22 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         FixHeader: function () {
+            if (scrollHandlerRegistered) return;
+
             var table;
             var originalOffset;
-            $(window).scroll(function () {
+            var scrollHandler = window.throttle(function () {
                 if (table == null) {
                     table = $("#listgrid");
                     originalOffset = $("thead", table).top;
                 }
                 var windowTop = $(window).scrollTop();
-                $("thead", table).css("top", windowTop + originalOffset);
-            });
+                $("thead", table).css({ "top" : (windowTop + originalOffset) + "px" });
+            }, 300, { leading: false });
+
+            $(window).scroll(scrollHandler);
+
+            scrollHandlerRegistered = true;
         },
 
         unfix: function () {
@@ -259,5 +270,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         }
     };
 
-});
+}]);
 
+})(angular);

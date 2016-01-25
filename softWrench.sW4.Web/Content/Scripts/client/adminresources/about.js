@@ -1,4 +1,9 @@
-﻿function AboutController($scope, $http, $templateCache, i18NService, restService, contextService, alertService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").controller("AboutController", AboutController);
+function AboutController($scope, $http, $templateCache, i18NService, restService, contextService, alertService) {
+    "ngInject";
 
     var data = $scope.resultData;
     if (data != null) {
@@ -25,7 +30,7 @@
             return;
         }
 
-        alertService.confirmMsg('Are you sure you want to change client to {0}'.format(newclient.toUpperCase()), function () {
+        alertService.confirmMsg('Are you sure you want to change client to {0}?'.format(newclient.toUpperCase()), function () {
             restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
                 window.location.href = window.location.href;
             });
@@ -40,7 +45,7 @@
             return;
         }
 
-        alertService.confirmMsg('Are you sure you want to restore to default client', function () {
+        alertService.confirmMsg('Are you sure you want to restore to default client?', function () {
             restService.invokePost("Configuration", "Restore", null, null, function (s) {
                 window.location.href = window.location.href;
             });
@@ -79,3 +84,7 @@
         return DeviceDetect.os + ' (' + DeviceDetect.catagory + ')';
     }
 }
+
+window.AboutController = AboutController;
+
+})(angular);

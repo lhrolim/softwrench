@@ -4,44 +4,49 @@
     function localStorageService() {
 
         //#region Utils
-
         var buildEntry = function(data, options) {
             var ttl = options && options.ttl ? options.ttl : null;
+            var compress = options && options.compress ? options.compress : false;
             var entry = { data: data };
             if (!!ttl) {
                 entry.expires = new Date().getTime() + ttl;
+            }
+            if (compress) {
+                entry.compressed = true;
+                entry.parse = !angular.isString(data);
+                // data as a compressed string
+                var dataString = entry.parse ? JSON.stringify(data) : data;
+                entry.data = window.LZString.compressToUTF16(dataString);
             }
             return JSON.stringify(entry);
         }
 
         var validateParam = function(name, value) {
-            if (!value) {
-                throw new Error("{0} cannot be null nor undefined".format(name));
-            }
+            if (!value) throw new Error("{0} cannot be null nor undefined".format(name));
         };
 
         var doGet = function(key) {
             var now = new Date().getTime();
-            var entry = localStorage.getItem(key);
+            var entryString = localStorage.getItem(key);
             // no entry found for key
-            if (!entry) {
-                return null;
-            }
-            var obj = JSON.parse(entry);
-            var expires = obj["expires"];
-            // no ttl established
-            if (!expires) {
-                return obj["data"];
-            }
+            if (!entryString) return null;
+
+            var entry = JSON.parse(entryString);
+            var expires = entry["expires"];
+
             // entry expired it's ttl
-            if (expires <= now) {
+            if (!!expires && expires <= now) {
                 localStorage.removeItem(key);
                 return null;
             }
-            // entry still within it's ttl
-            return obj["data"];
+            // entry still within it's ttl or no ttl stablished
+            var raw = entry["data"];
+            if (entry.compressed) {
+                var decompressed = window.LZString.decompressFromUTF16(raw);
+                return !!entry.parse ? JSON.parse(decompressed) : decompressed;
+            }
+            return raw;
         };
-
         //#endregion
 
         //#region Public Methods
@@ -49,13 +54,15 @@
         /**
          * Puts key-data pair in the localStorage.
          * The entry can be configured with the options parameter.
-         * Currently the only supported option is the entry's TTL (time to live) in milliseconds. 
          * See {@link localStorageService#get} to better understand the TTL feature.
          * 
          * @param String key 
          * @param {} data 
-         * @param Object options 
-         *                  dictionary of options e.g. { ttl: 24 * 60 * 60 * 1000 } gives the entry a TTL of one day
+         * @param {} options dictionary of options: 
+         *          {
+         *              ttl: Number //entry's time-to-live in the cache in milliseconds, defaults to null (infinite TTL)
+         *              compress: Boolean // indicates whether or not the data should be compressed, defaults to false (don't compress)
+         *          } 
          */
         var put = function (key, data, options) {
             validateParam("key", key);
@@ -89,21 +96,16 @@
             localStorage.removeItem(key);
             return data;
         };
-
         //#endregion
 
         //#region Service Instance
-
         var service = {
             put: put,
             get: get,
             remove:remove
         };
-
         return service;
-
         //#endregion
-
     }
 
     //#region Service registration

@@ -62,26 +62,27 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         },
 
         /// <summary>
-        /// convert hex color string #rrggbb or #rgb into RGB parts
+        /// convert named color or #rgb into #rrggbb format
         /// </summary>
-        /// <param name="hex">color value</param>
-        /// <returns type="object">
-        /// r: int
-        /// g: int
-        /// b: int
+        /// <param name="color">color value or named color</param>
+        /// <returns type="tring">
+        /// #rrggbb hex color
         /// </returns>
-        hexToRgb: function (hex) {
-            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-                return r + r + g + g + b + b;
+        colorToHex: function (color) {
+            //create a test element
+            var a = document.createElement('div');
+            a.style.color = color;
+
+            //get the color parts
+            var colors = window.getComputedStyle(document.body.appendChild(a)).color.match(/\d+/g).map(function (a) {
+                return parseInt(a, 10);
             });
 
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
+            //remove the test element
+            document.body.removeChild(a);
+
+            //make sure the hex color is in #RRGGBB format
+            return (colors.length >= 3) ? '#' + (((1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2]).toString(16).substr(1)) : null;
         },
 
         /// <summary>
@@ -92,15 +93,15 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         /// <returns type="string">
         /// hex color value
         /// </returns>
-        foregroundColor: function (hex) {
-            var backgroundRGB = this.hexToRgb(hex);
+        foregroundColor: function (color) {
+            var backgroundRGB = this.colorToHex(color);
 
+            //default to black foreground color
             if (!backgroundRGB) {
-                //default to black foreground color
                 return '#000';
             }
 
-            return parseInt(hex.substring(1), 16) > 0xffffff / 2 ? '#000' : '#fff';
+            return parseInt(backgroundRGB.substring(1), 16) > 0xffffff / 2 ? '#000' : '#fff';
         }
     };
 }]);

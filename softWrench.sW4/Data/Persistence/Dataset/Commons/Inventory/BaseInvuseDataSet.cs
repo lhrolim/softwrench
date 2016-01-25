@@ -25,6 +25,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
         public SearchRequestDto FilterFromStoreLoc(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
+            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            filter.AppendSearchEntry("location.siteid", siteid.ToString().ToUpper());
             filter.SearchSort = "location.location asc";
 
             filter.AppendWhereClauseFormat("(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = '{0}' " +
@@ -42,11 +44,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
         public SearchRequestDto FilterFromBin(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
+            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
             var location = parameters.OriginalEntity.GetAttribute("fromstoreloc");
+            
             if (siteid == null || location == null) {
                 return filter;
             }
+            filter.AppendSearchEntry("invbalances.itemnum", itemnum.ToString().ToUpper());
             filter.AppendSearchEntry("invbalances.siteid", siteid.ToString().ToUpper());
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
@@ -62,11 +67,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
         public SearchRequestDto FilterToBin(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
+            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
-            var location = parameters.OriginalEntity.GetAttribute("invuseline_.tostoreloc");
+            var location = parameters.OriginalEntity.GetAttribute("tostoreloc");
             if (siteid == null || location == null) {
                 return filter;
             }
+            filter.AppendSearchEntry("invbalances.itemnum", itemnum.ToString().ToUpper());
             filter.AppendSearchEntry("invbalances.siteid", siteid.ToString().ToUpper());
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");

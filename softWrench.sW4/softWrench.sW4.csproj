@@ -189,6 +189,8 @@
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseAssetDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseLocationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseMultiassetlocciDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
@@ -196,6 +198,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\ProgressMultiAssetHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderToolTransDataSet.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
@@ -204,11 +207,13 @@
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\MultiAssetLocciHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Compositions\ToolsHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\ServiceAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
     <Compile Include="Data\Search\QuickSearchHelper.cs" />
@@ -376,8 +381,7 @@
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />
     <Compile Include="Metadata\Stereotypes\Component\EmailComponentStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\DetailNewSchemaStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
+    <Compile Include="Metadata\Stereotypes\MetadataStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\CommandsXMLSourceInitializer.cs" />
@@ -388,7 +392,9 @@
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
     <Compile Include="Metadata\Merger\SchemaMerger.cs" />
+    <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
+    <Compile Include="Metadata\Validator\XmlStereotypeMetadataParser.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
     <Compile Include="Preferences\GridFilterController.cs" />
@@ -570,11 +576,7 @@
     <Compile Include="Data\Persistence\WS\Mif\MifMethodNameUtils.cs" />
     <Compile Include="Data\Persistence\WS\Mif\MifUtils.cs" />
     <Compile Include="Metadata\Stereotypes\ASchemaStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\CompositionDetailStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\CompositionListStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\DetailSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\IStereotype.cs" />
-    <Compile Include="Metadata\Stereotypes\Schema\ListSchemaStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\StereotypeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -877,11 +879,9 @@
     <Folder Include="Data\Persistence\WS\Manchester\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
-    <Folder Include="Metadata\API\" />
     <Folder Include="Metadata\Applications\DataSet\Compositions\" />
     <Folder Include="Metadata\Applications\Notification\" />
     <Folder Include="Metadata\Applications\Relationship\Composition\" />
-    <Folder Include="Metadata\Offline\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\mif_workorder2\configuration91.svcinfo" />

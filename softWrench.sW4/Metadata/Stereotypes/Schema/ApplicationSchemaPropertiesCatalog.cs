@@ -20,6 +20,11 @@
         public const string ListSelectionStyle = "list.selectionstyle";
 
         /// <summary>
+        /// if true the selection mode will be enabled when the grid is rendered by default
+        /// </summary>
+        public const string ListSelectionModeByDefault = "list.selectionmodebydefault";
+
+        /// <summary>
         /// property to specify what´s the next schema that should be routed from the current schema
         /// </summary>
         public const string RoutingNextSchemaId = "nextschema.schemaid";
@@ -38,6 +43,11 @@
         /// controls whether to open details in input or output mode
         /// </summary>
         public const string ListClickMode = "list.click.mode";
+
+        /// <summary>
+        /// Property to specify the schema navigated to on list click
+        /// </summary>
+        public const string ListClickSchema = "list.click.schema";
 
         /// <summary>
         /// Specify a different order by field to be applied by default to the grid, instead of the entity id
@@ -90,6 +100,8 @@
         ///  property for specifying the options of the pagination
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";
+
+
 
         /// <summary>
         ///  Comma seppareted list of associations to be prefetched,on the same request to the server to get the details itself, regardless of their oringal lazyness nature.
@@ -158,16 +170,9 @@
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
 
-        #region composition
-
         /// <summary>
-        /// Whether the inline composition starts with an initial row on screen
+        /// Type of the bottom command bar. For now only works for the detail stereotype.
         /// </summary>
-        public static string InlineCompositionStartWithData = "composition.inline.startwithentry";
-
-        #endregion
-
-
-
+        public static string CommandBarBottom = "commandbar.bottom";
     }
 }

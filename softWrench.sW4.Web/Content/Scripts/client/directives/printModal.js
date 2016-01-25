@@ -1,6 +1,11 @@
-﻿var PRINTMODAL_$_KEY = '[data-class="printModal"]';
+﻿(function (app) {
+    "use strict";
+
+var PRINTMODAL_$_KEY = window.PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
 app.directive('printModal', function ($log, contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -85,3 +90,5 @@ app.directive('printModal', function ($log, contextService) {
         }
     };
 });
+
+})(app);

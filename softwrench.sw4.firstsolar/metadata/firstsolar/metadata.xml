@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@person.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@location.xml"/>
+  </templates>
+
+
+
+  <applications>
+    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+      <schemas>
+        <list redeclaring="false">
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot; or &quot;HOLD&quot; status."/>
+            </optionfilter>
+            <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
+            <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true" whereclause="classstructure_.classstructureid in (!@#value)"/>
+            <!--<optionfilter attribute="classstructure_.classificationid" provider="@GetWOClassStructureType" allowblank="true"/>-->
+          </filters>
+          
+          
+          <customization position="+description">
+            <field attribute="classstructure_.description" label="Classification"></field>
+          </customization>
+          
+        </list>
+
+        <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
+          <field attribute="wonum" label="WO#" >
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
+          </field>
+        </schema>
+
+        <schema id="relatedwoconfirmationlist" parentschema="readonlyfixedlist" stereotype="list.modal.confirm">
+          <properties>
+            <property key="commandbar.bottom" value="bottom.confirmation"/>
+          </properties>
+        </schema>
+
+        <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal">
+          <field attribute="summary" label="Summary:" requiredexpression="true"/>
+          <field attribute="details" label="Details:">
+            <renderer type="textarea"/>
+          </field>
+          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+        
+          <properties>
+            <property key="addassociationlabels" value="true"/>
+          </properties>
+        </schema>
+
+        <schema id="batchLocationSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+          <field attribute="location" hidden="true"/>
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="#warning" tooltip="There already one or more workorders associated to this location click here to view them">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true" />
+          </field>
+          <field attribute="specificLabel" label="Location"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true;limit=20"/>
+          </field>
+          <field attribute="classification" label="Classification">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+          <field attribute="siteid" label="SiteId">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+       
+
+          <properties>
+            <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
+            <property key="list.click.schema" value="batchLocationInlineEdit"/>
+            <property key="list.click.popupmode" value="modal"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup id="#spreadsheet">
+              <!--TODO: review framework to eventually avoid the need for these commands later-->
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true"/>
+            </commandgroup>
+          </commandbars>
+
+        </schema>
+
+
+        <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="#warning" tooltip="There already one or more workorders associated to this asset click here to view them">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true"/>
+          </field>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="specificLabel" label="Asset"/>
+          <!--Location field come from the selected asset-->
+          <field attribute="location" label="Location"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:" requiredexpression="true">
+            <renderer type="textarea" params="updatable=true;limit=20"/>
+          </field>
+       
+          <field attribute="classification" label="Classification">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+
+          <field attribute="siteid" label="SiteId">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+          
+
+          <properties>
+            <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
+            <property key="list.click.schema" value="batchAssetInlineEdit"/>
+            <property key="list.click.popupmode" value="modal"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup id="#spreadsheet">
+              <!--TODO: review framework to eventually avoid the need for these commands later-->
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+
+
+        <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="userIdFieldName" hidden="true"/>
+          <field attribute="specificLabel" label="Location" readonly="true"/>
+          <field attribute="siteid" label ="Site" readonly="true"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          
+          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+        
+          <properties>
+            <property key="addassociationlabels" value="true"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="detailform_modal" platform="web">
+              <command id="save" icon="fa-check" service="batchWorkorderService" method="woInlineEditSave" parameters="datamap,schema" label="Save" primary="true"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+    
+        <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="userIdFieldName" hidden="true"/>
+          <field attribute="specificLabel" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="siteid" label ="Site" readonly="true"/>
+          <field attribute="summary" label="Summary:" requiredexpression="true">
+            <renderer type="default" params="updatable=true"  />
+          </field>
+          <field attribute="details" label="Details:">
+            <renderer type="textarea" params="updatable=true"/>
+          </field>
+          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+
+          <properties>
+            <property key="addassociationlabels" value="true"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="detailform_modal" platform="web">
+              <command id="save" icon="fa-check" service="batchWorkorderService" method="woInlineEditSave" parameters="datamap,schema" label="Save" primary="true"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+      </schemas>
+    </application>
+
+    <application name="location" title="Location" entity="location" >
+      <schemas>
+        <schema id="locationfilter" stereotype="list.selection.modal.filter">
+          <field attribute="location" label="Location"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="classstructure_.description" label="Class Structure"/>
+          <field attribute="parentlocation_.parent" label="Parent Location"/>
+          <field attribute="siteid" label="Site"/>
+        </schema>
+        <schema id="list"  redeclaring="false" stereotype="list.selection">
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                         service="locationService" method="initBatchWorkorder"
+                         parameters="schema,datamap" />
+              </container>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+
+    <application name="asset" title="Asset" entity="asset" >
+      <schemas>
+        <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                         service="assetService" method="initBatchWorkorder"
+                         parameters="schema,datamap" />
+              </container>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+
+</metadata>

@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('solutionService', function (redirectService, alertService) {
+angular.module('sw_layout')
+    .factory('solutionService', ["redirectService", "alertService", function (redirectService, alertService) {
 
     return {
 
@@ -40,4 +42,6 @@ app.factory('solutionService', function (redirectService, alertService) {
         },
     };
 
-});
+}]);
+
+})(angular);

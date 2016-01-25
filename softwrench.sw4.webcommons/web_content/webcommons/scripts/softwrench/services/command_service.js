@@ -1,8 +1,10 @@
-﻿var app = angular.module('sw_layout');
+(function (angular) {
+    "use strict";
 
-app.factory('commandService', function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService) {
-
-
+angular.module('sw_layout')
+    .factory('commandService', [
+        "$q", "i18NService", "$injector", "expressionService", "contextService", "schemaService", "modalService", "applicationService", "$log", "alertService", 
+        function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService) {
 
     return {
         commandLabel: function (schema, id, defaultValue) {
@@ -33,16 +35,15 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                 return true;
             }
             var expression = command.showExpression;
-            if (expression == undefined || expression == "") {
+            if (expression == undefined || expression === "") {
                 return false;
             }
-            var expressionToEval = expressionService.getExpression(expression, datamap);
-            return !eval(expressionToEval);
+            return !expressionService.evaluate(expression, datamap, { schema: schema }, null);
         },
 
         isCommandEnabled: function (datamap, schema, command, tabId) {
             var expression = command.showExpression;
-            if (expression == undefined || expression == "") {
+            if (expression == undefined || expression === "") {
                 return false;
             }
             var expressionToEval = expressionService.getExpression(expression, datamap);
@@ -50,7 +51,7 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
         },
 
         doExecuteService: function (scope, clientFunction, command,overridenDatamap) {
-            var service = $injector.get(command.service);
+            var service = $injector.getInstance(command.service);
             if (service == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return $q.when();
@@ -58,7 +59,7 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
 
             var method = service[clientFunction];
             if (method == null) {
-                log.warn('method {0} not found on service {1}'.format(clientFunction, command.service));
+                $log.get("commandService#doExecuteService").warn('method {0} not found on service {1}'.format(clientFunction, command.service));
                 return $q.when();
             }
 
@@ -69,7 +70,7 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                     if (parameterName == "datamap" && overridenDatamap) {
                         arg = overridenDatamap;
                     }
-                    if (arg) {
+                    if (arg || parameterName in scope) {
                         args.push(arg);
                     } else {
                         args.push(parameterName);
@@ -78,9 +79,8 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                 });
             }
 
-            return $q.when(method.apply(this, args));
+            return $q.when(method.apply(service, args));
         },
-
 
         doCommand: function (scope, command) {
             var log = $log.getInstance("commandService#doCommand");
@@ -132,11 +132,8 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
                 return;
             }
 
-
             this.doExecuteService(scope, clientFunction, command);
         },
-
-
 
         //TODO: make it generic
         executeClickCustomCommand: function (fullServiceName, rowdm, column, schema) {
@@ -144,7 +141,7 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
             var serviceName = fullServiceName.substring(0, idx);
             var methodName = fullServiceName.substring(idx + 1);
 
-            var service = $injector.get(serviceName);
+            var service = $injector.getInstance(serviceName);
             if (service == undefined) {
                 var errost = "missing clicking service".format(serviceName);
                 throw new Error(errost);
@@ -157,9 +154,7 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
             args.push(column);
             args.push(schema);
 
-            method.apply(this, args);
-            return;
-
+            return method.apply(service, args);
         },
 
         getBarCommands: function (schema, position) {
@@ -192,11 +187,18 @@ app.factory('commandService', function ($q, i18NService, $injector, expressionSe
             schema.jscache.commandbars[position] = commands;
 
             return commands;
-        }
+        },
 
+        evalToggleExpression: function (datamap, expression) {
+            if (expression == undefined || expression === "") {
+                return false;
+            }
+            var expressionToEval = expressionService.getExpression(expression, datamap);
+            return eval(expressionToEval);
+        }
 
     };
 
-});
+}]);
 
-
+})(angular);

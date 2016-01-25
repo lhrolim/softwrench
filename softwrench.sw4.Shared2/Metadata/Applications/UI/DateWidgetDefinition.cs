@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
     public class DateWidgetDefinition : IWidgetDefinition {
@@ -48,6 +49,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
             Max = max;
         }
 
+        [DefaultValue(ShortFormat)]
         public string Format { get; set; }
 
         public bool Time { get; set; }
@@ -55,6 +57,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
         public DateTime Min { get; set; }
 
         public DateTime Max { get; set; }
+
+        // manually specifying serialization rules for the dates since the desired default values are not constants 
+        // (cant be passed as attribute/annotation arguments)
+        // source: http://www.newtonsoft.com/json/help/html/conditionalproperties.htm
+        public bool ShouldSerializeMin() { return Min != DateTime.MinValue; }
+        public bool ShouldSerializeMax() { return Max != DateTime.MaxValue; }
 
         public string Type {
             get { return GetType().Name; }

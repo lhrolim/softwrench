@@ -19,6 +19,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string PrintMode = "printmode";
         private const string ScanMode = "scanmode";
         private const string OfflineMode = "offlinemode";
+        private const string MockMaximo = "mockmaximo";
         private const string CurrentMetadataParameterKey = "currentmetadataparameter";
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
@@ -29,6 +30,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
             var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
             var scanMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, ScanMode));
             var offlineMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, OfflineMode));
+            var mockMaximo = "true".Equals(RequestUtil.GetValue(actionContext.Request, MockMaximo));
             var currentMetadataParameter = RequestUtil.GetValue(actionContext.Request, CurrentMetadataParameterKey);
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
@@ -41,6 +43,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 PrintMode = printMode,
                 ScanMode = scanMode,
                 OfflineMode = offlineMode,
+                MockMaximo = mockMaximo,
                 CurrentSelectedProfile = profileAsString == null ? (int?) null : int.Parse(profileAsString),
                 MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter)
             }, true);

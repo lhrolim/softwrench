@@ -14,7 +14,7 @@
 
         section: {
             // 'actual' detail section template
-            detail: "<div class='secondary-content-section' ng-class=\"{ 'hidden' : !config.expanded  }\">" +
+            detail: "<div class='secondary-content-section' ng-show='config.expanded'>" +
                         "<section-element-input extraparameters='extraparameters'" +
                         "schema='schema'" +
                         "datamap='datamap'" +
@@ -84,9 +84,10 @@
                         }, 0, false);
                     }
 
+                    //update header/footer layout
                     $timeout(function () {
-                        $(window).trigger("resize");
-                    }, 0, false);
+                        $(window).trigger('resize');
+                    }, false);
                 };
 
                 var showTemplateLoading = function() {

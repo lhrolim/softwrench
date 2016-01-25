@@ -126,12 +126,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         /// <summary>
-        /// To create a dashboard, the user has to have the dashboard roles and at least one application should be visible to him
+        /// To create a dashboard, the user has to have the dashboard roles
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
         private static bool CanCreateDashBoards(ISWUser user) {
-            return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user).Any() && (user.IsInRole(DashboardConstants.RoleManager) || user.IsInRole(DashboardConstants.RoleAdmin));
+            return  (user.IsInRole(DashboardConstants.RoleManager) || user.IsInRole(DashboardConstants.RoleAdmin));
         }
 
         private static bool AllPanelsInvisible(Dashboard[] enumerable) {

@@ -55,26 +55,39 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             var user = SecurityFacade.CurrentUser();
             _contextLookuper.SetMemoryContext(batch.RemoteId, batch, true);
 
-            var auditPostBatchHandler = _auditPostBatchHandlerProvider.LookupItem(batch.Application, "detail", ApplicationConfiguration.ClientName);
+            var mockMaximo = _contextLookuper.LookupContext().MockMaximo;
 
-            foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
-                var originalItem = itemToSubmit.OriginalItem;
-                try {
-                    var result = _maximoEngine.Execute(itemToSubmit.CrudData);
-                    batch.SuccessItems.Add(originalItem.RemoteId);
+            if (!mockMaximo) {
+                var auditPostBatchHandler = _auditPostBatchHandlerProvider.LookupItem(batch.Application, "detail",
+                    ApplicationConfiguration.ClientName);
 
-                    auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result, originalItem.AdditionalData));
-                
-                } catch (Exception e) {
-                    if (options.GenerateProblems) {
-                        var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
-                        var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id, problemDataMap, user.DBId, e.StackTrace, e.Message);
-                        batch.Problems.Add(originalItem.RemoteId, problem);
-                    } else {
-                        throw;
+                foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
+                    var originalItem = itemToSubmit.OriginalItem;
+                    try {
+                        var result = _maximoEngine.Execute(itemToSubmit.CrudData);
+                        batch.TargetResults.Add(result);
+                        if (originalItem.RemoteId != null) {
+                            batch.SuccessItems.Add(originalItem.RemoteId);
+                        }
+                        if (originalItem.AdditionalData != null) {
+                            auditPostBatchHandler.HandlePostBatchAuditData(new AuditPostBatchData(result,
+                                originalItem.AdditionalData));
+                        }
+
+
+                    } catch (Exception e) {
+                        if (options.GenerateProblems) {
+                            var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
+                            var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id,
+                                problemDataMap, user.DBId, e.StackTrace, e.Message);
+                            batch.Problems.Add(originalItem.RemoteId, problem);
+                        } else {
+                            throw;
+                        }
                     }
                 }
             }
+
             batch.Status = BatchStatus.COMPLETE;
             if (options.Synchronous) {
                 //if asynchronous then the removal should be performed by the polling service
@@ -96,7 +109,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 var applicationMetadata = user.CachedSchema(item.Application, new ApplicationMetadataSchemaKey(item.Schema, SchemaMode.None, ClientPlatform.Mobile));
                 var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
 
-                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, item.ItemId);
+                CrudOperationData crudOperationData;
+
+                if (item.Fields != null) {
+                    crudOperationData = new CrudOperationData(item.ItemId, item.Fields, new Dictionary<string, object>(), entityMetadata, applicationMetadata);
+                } else {
+                    crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, item.ItemId);
+                }
+
+
                 var wrapper = new OperationWrapper(crudOperationData, item.Operation);
 
                 submissionData.AddItem(new BatchSubmissionItem {

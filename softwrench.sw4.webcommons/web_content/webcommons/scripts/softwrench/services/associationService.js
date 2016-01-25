@@ -65,7 +65,7 @@
             // we only have the "value" on the datamap 
             var key = associationFieldMetadata.associationKey;
 
-            if (associationFieldMetadata.schema.isLazyLoaded) {
+            if (associationFieldMetadata.schema && associationFieldMetadata.schema.isLazyLoaded) {
                 return crudContextHolderService.fetchLazyAssociationOption(key, selectedValue);
             }
 
@@ -220,6 +220,8 @@
 
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
+
+                crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData);
 
                 var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
                 if (associationFieldMetadatas == null) {
@@ -416,7 +418,7 @@
         function updateAssociations(association, scope, options) {
             options = options || {};
 
-            var log = $log.getInstance('sw4.associationservice#updateAssociations');
+            var log = $log.getInstance('sw4.associationservice#updateAssociations',['association']);
 
             var triggerFieldName = association.attribute;
             var schema = scope.schema;

@@ -1,43 +1,44 @@
 <div class="group">
     <span ng-repeat="command in getGridToolbar()">
-        <ng-switch on="command.type">
-            <button ng-switch-when="ApplicationCommand" type="button" ng-class="buttonClasses()"
-                    ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
-                    ng-enabled="isCommandEnabled(command)"
-                    data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body" class="applicationcommand">
-                <i class="fa" ng-class="commandIcon(command)"></i><span ng-show="schema.stereotype !== 'List'">&ensp;{{commandLabel(command)}}</span>
-            </button>
-            <span ng-switch-when="ResourceCommand" ng-click="validateRole(command)">
-                <ng-include src="url(command.path)" />
-            </span>
+        <button type="button" ng-class="buttonClasses(getCommand(command))"
+                ng-init="initIfToggleCommand(command)"
+                ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href="#" 
+                ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
+                ng-enabled="isCommandEnabled(getCommand(command))"
+                data-original-title="{{commandtooltip(getCommand(command))}}" rel="tooltip" data-container="body" class="applicationcommand">
+            <i class="fa" ng-class="commandIcon(getCommand(command))"></i><span ng-show="commandLabel(getCommand(command))">&ensp;{{commandLabel(getCommand(command))}}</span>
+        </button>
 
-            <span ng-switch-when="ContainerCommand" ng-click="validateRole(command)">
-                <div class="btn-group">
-                    <button ng-if="command.service != null"
-                            type="button" class="btn btn-default btn-sm hidden-xs"
-                            ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
-                            ng-enabled="command.service!=null"
-                            data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body">
-                        <i class="fa" ng-class="command.icon"></i><span ng-show="schema.stereotype !== 'List'">&ensp;{{command.label}}</span>
-                    </button>
+        <span ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">
+            <ng-include src="url(command.path)" />
+        </span>
 
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
-                        <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i><span ng-show="schema.stereotype !== 'List'">&ensp;{{command.label}}</span>
-                        <span class="caret"></span>
-                    </button>
+        <span ng-if="command.type == 'ContainerCommand'" ng-click="validateRole(command)">
+            <div class="btn-group">
+                <button ng-if="command.service != null"
+                        type="button" class="btn btn-default btn-sm hidden-xs"
+                        ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
+                        ng-enabled="command.service!=null"
+                        data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body">
+                    <i class="fa" ng-class="command.icon"></i><span>&ensp;{{command.label}}</span>
+                </button>
+
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
+                    <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i><span>&ensp;{{command.label}}</span>
+                    <span class="caret"></span>
+                </button>
 
 
-                    <ul class="dropdown-menu" role="menu">
-                        <!--TODO: Make recursive...-->
-                        <li ng-repeat="innercommand in command.displayables">
-                            <a ng-click="executeService(innercommand)" href="#" ng-if="shouldShowCommand(innercommand)"
-                               data-original-title="{{commandtooltip(innercommand)}}" rel="tooltip" data-container="body">
-                                <i class="fa" ng-class="innercommand.icon"></i>&ensp;{{innercommand.label}}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </span>
-        </ng-switch>
+                <ul class="dropdown-menu" role="menu">
+                    <!--TODO: Make recursive...-->
+                    <li ng-repeat="innercommand in command.displayables">
+                        <a ng-click="executeService(innercommand)" href="#" ng-if="shouldShowCommand(innercommand)"
+                            data-original-title="{{commandtooltip(innercommand)}}" rel="tooltip" data-container="body">
+                            <i class="fa" ng-class="innercommand.icon"></i>&ensp;{{innercommand.label}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </span>
     </span>
 </div>

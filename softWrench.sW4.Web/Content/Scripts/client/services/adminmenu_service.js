@@ -1,6 +1,10 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('adminMenuService', function (menuService, redirectService, contextService, logoutService, crudContextHolderService) {
+angular.module('sw_layout')
+    .factory('adminMenuService', ["menuService", "redirectService", "contextService", "logoutService", "crudContextHolderService",
+        function (menuService, redirectService, contextService, logoutService, crudContextHolderService) {
+
     return {
         doAction: function (title, controller, action, parameters, target) {
             menuService.setActiveLeaf(target);
@@ -30,4 +34,6 @@ app.factory('adminMenuService', function (menuService, redirectService, contextS
             logoutService.logout();
         }
     };
-});
+}]);
+
+})(angular);

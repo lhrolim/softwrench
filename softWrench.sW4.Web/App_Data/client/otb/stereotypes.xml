@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stereotypes xmlns="http://www.controltechnologysolutions.com/stereotypes" >
+  
+  <stereotype id="list">
+    <property key="list.click.mode" value="input"/>
+    <property key="list.click.popup" value="none"/>
+    <property key="list.paginationoptions" value="10,30,100"/>
+    <property key="list.paginationsize" value="30"/>
+  </stereotype>
+
+  <stereotype id="list.modal">
+    <!--Reducing the number of options by default-->
+    <property key="list.paginationsize" value="10"/>
+    <property key="list.paginationoptions" value="10,30"/>
+  </stereotype>
+
+  <stereotype id="list.selection">
+    <property key="list.selectionstyle" value="multiple"/>
+    <property key="commandbar.top" value="gridtop.selection"/>
+  </stereotype>
+
+  <stereotype id="list.modal.readonly">
+    <property key="list.disablefilter" value="true"/>
+    <property key="list.disabledetails" value="true"/>
+    <property key="list.sortmode" value="none"/>
+    <property key="commandbar.bottom" value="bottom.cancelonly"/>
+    <property key="commandbar.top" value="none"/>
+  </stereotype>
+
+
+  <stereotype id="list.modal.confirm">
+    <property key="list.disablefilter" value="true"/>
+    <property key="list.disabledetails" value="true"/>
+    <property key="list.sortmode" value="none"/>
+    <property key="commandbar.bottom" value="bottom.confirmation"/>
+    <property key="commandbar.top" value="none"/>
+  </stereotype>
+
+
+  <stereotype id="list.selection.spreadsheet">
+    <property key="commandbar.top" value="spreadsheet"/>
+    <property key="list.disablepagination" value="true"/>
+    <property key="list.disablefilter" value="true"/>
+    <property key="list.sortmode" value="none"/>
+    <property key="list.loadwithselection" value="true" />
+  </stereotype>
+
+  <stereotype id="list.selection.modal">
+    <property key="list.disabledetails" value="true"/>
+    <property key="list.selectionmodebydefault" value="true" />
+    <property key="list.paginationsize" value="10"/>
+  </stereotype>
+
+  <stereotype id="list.selection.modal.filter">
+    <property key="commandbar.bottom" value="gridfilterbottom"/>
+    <property key="commandbar.top" value="gridfiltertop"/>
+  </stereotype>
+
+  <stereotype id="detail">
+    <property key="popup.window.titlestrategy" value="nameandid"/>
+    <property key="show.printcommand" value="editonly"/>
+  </stereotype>
+
+  <stereotype id="detail.modal">
+    <property key="show.printcommand" value="editonly"/>
+    <property key="commandbar.bottom" value="detailform_modal"/>
+  </stereotype>
+
+
+  <!---TODO: refactor to the new namespace form-->
+  <stereotype id="compositionlist">
+    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
+  </stereotype>
+
+  <stereotype id="compositiondetail">
+    
+  </stereotype>
+
+  <stereotype id="detailnew">
+
+  </stereotype>
+
+  <stereotype id="detailoutput">
+    <property key="popup.window.titlestrategy" value="nameandid"/>
+    <property key="show.printcommand" value="editonly"/>
+  </stereotype>
+
+  <!---END TODO-->
+
+  
+  <stereotype id="list.composition">
+    <property key="composition.mainbuttonstoshow" value="save;print;cancel"/>
+  </stereotype>
+ 
+
+  <stereotype id="detail.new"/>
+
+  <stereotype id="detail.output"/>
+
+  <stereotype id="detail.composition"/>
+
+
+  <stereotype id="filter">
+    
+  </stereotype>
+  
+  
+  
+</stereotypes>

@@ -61,11 +61,12 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
          * @param Object queryParameters dictionary of parameters to be passed as query string
          * @param Object json request's payload
          * @param Object config request's config
+         * 
          * @returns HttpPromise
          */
         postPromise: function (controller, action, queryParameters, json, config) {
             var url = this.getActionUrl(controller, action, queryParameters);
-            var log = $log.getInstance("restService#invokePost");
+            var log = $log.getInstance("restService#invokePost",["post","network"]);
             log.info("invoking post on url {0}".format(url));
             return $http.post(url, json, config);
         },

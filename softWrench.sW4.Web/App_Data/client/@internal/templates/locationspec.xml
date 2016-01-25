@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="locationspec" idAttribute="locationspecid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="assetattrid" type="varchar" required="true" />
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="inheritedfromitem" type="smallint" required="true" />
+        <attribute name="itemspecvalchanged" type="smallint" required="true" />
+        <attribute name="displaysequence" type="smallint" required="true" />
+        <attribute name="numvalue" type="decimal" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="alnvalue" type="varchar" required="false" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="ls01" type="varchar" required="false" />
+        <attribute name="ls02" type="varchar" required="false" />
+        <attribute name="ls03" type="varchar" required="false" />
+        <attribute name="ls04" type="datetime" required="false" />
+        <attribute name="ls05" type="decimal" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="section" type="varchar" required="false" />
+        <attribute name="locationspecid" type="bigint" required="true" />
+        <attribute name="mandatory" type="smallint" required="true" />
+        <attribute name="tablevalue" type="varchar" required="false" />
+        <attribute name="linkedtoattribute" type="varchar" required="false" />
+        <attribute name="linkedtosection" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="assetattribute">
+          <relationshipAttribute from="assetattrid" to="assetattrid" primary="true"/>
+        </relationship>
+        <relationship to="classspec">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute from="assetattrid" to="assetattrid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locationspec" />
+      </connectorParameters>
+    </entity>
+  </entities>
+  
+  <applications>
+    <application name="locationspec" title="Location Specification" entity="locationspec" id="00000000-0000-0000-0000-000108056902">
+      <schemas>
+        <schema id="compositionlist" title="Location Specification List" stereotype="compositionlist">
+          <field attribute="classstructure_.hierarchypath" label="Classification"/>
+          <field attribute="classstructure_.description" label="Class Description"/>
+          <field attribute="classstructure_.classificationid" hidden="true"/>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+        <schema id="compositiondetail" title="Location Specification Detail" stereotype="compositiondetail">
+          <section orientation="horizontal">
+            <field attribute="assetattrid" label="Attribute:"/>
+            <field attribute="assetattribute_.description" label="Asset Attribute Description:"/>
+            <field attribute="assetattribute_.datatype" label="Data Type:"/>
+            <field attribute="measureunitid" label="Unit of Measure:"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="section" label="Section:"/>
+            <field attribute="alnvalue" label="Alphanumeric Value:"/>
+            <field attribute="numvalue" label="Numeric Value:"/>
+            <field attribute="tablevalue" label="Table Value:"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="classspec_.inheritedfrom" label="Inherited From:"/>
+            <field attribute="classspec_.applydownhier" label="Apply Down Hierarchy:">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

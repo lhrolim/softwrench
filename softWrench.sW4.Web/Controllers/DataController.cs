@@ -94,7 +94,7 @@ namespace softWrench.sW4.Web.Controllers {
             var response = DoExecute(operationDataRequest, new JObject());
             var application = operationDataRequest.ApplicationName;
             var id = operationDataRequest.Id;
-            var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
+            var defaultMsg = String.Format("{0} {1} deleted successfully", application, operationDataRequest.UserId);
             response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
                 application, id});
             return response;
@@ -182,7 +182,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch);
+                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch,new Tuple<string, string>(operationDataRequest.UserId,operationDataRequest.SiteId));
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

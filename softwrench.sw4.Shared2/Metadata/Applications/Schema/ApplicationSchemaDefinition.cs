@@ -10,7 +10,9 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
@@ -67,6 +69,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
+        [DefaultValue(SchemaStereotype.None)]
         public virtual SchemaStereotype Stereotype {
             get; set;
         }
@@ -151,7 +154,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private SchemaFilters _schemaFilters;
 
-
+        [DefaultValue(true)]
         public bool RedeclaringSchema {
             get {
                 return _redeclaringSchema;
@@ -167,7 +170,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ApplicationSchemaDefinition(string entityName,
-            string applicationName, string title, string schemaId, bool redeclaringSchema, SchemaStereotype stereotype,
+            string applicationName, string title, string schemaId, bool redeclaringSchema,string streotypeAttr, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, SchemaFilters declaredFilters, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
@@ -183,6 +186,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             PrintSchema = printSchema;
             SchemaId = schemaId;
             Stereotype = stereotype;
+            StereotypeAttr = streotypeAttr;
             Abstract = @abstract;
             Mode = mode;
             CommandSchema = commandSchema;
@@ -203,7 +207,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             DeclaredFilters = declaredFilters ?? SchemaFilters.BlankInstance();
         }
 
-
+        public string StereotypeAttr { get; set; }
 
 
         [JsonIgnore]
@@ -236,7 +240,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
 
 
-
+        [CanBeNull]
         public SchemaFilters SchemaFilters {
             get {
                 if (Stereotype != SchemaStereotype.List) {

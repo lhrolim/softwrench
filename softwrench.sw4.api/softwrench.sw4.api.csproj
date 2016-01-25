@@ -67,6 +67,9 @@
     <None Include="metadata\schema\Menu.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="metadata\schema\stereotypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="metadata\schema\Metadata.xsd">
       <SubType>Designer</SubType>
     </None>

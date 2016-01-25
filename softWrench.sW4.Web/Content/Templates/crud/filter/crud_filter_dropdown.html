@@ -1,8 +1,10 @@
 ﻿<div class="filter-label-wrapper js_filter" ng-if="!!filter">
+
     <div class="dropdown" ng-init="markDefaultOperator(filter)">
         <div class="wrap" ng-class="{'slim': layout.standalone}"
              rel="tooltip" data-original-title="{{getFilterText(filter)}}" 
-             ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}">
+             ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
+             ng-click="showModal(filter)">
             <span ng-hide="layout.standalone">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}:</span> 
             <span ng-hide="layout.standalone" class="filter-text">{{getFilterText(filter)}}</span>
             <i class="fa grid-filter-button"
@@ -13,7 +15,10 @@
                }">
             </i>
         </div>
+        <div ng-if="isModal(filter)" ng-init="initModal()">
+        </div>
         <div class="dropdown-menu js_filter_content {{filter.type}}"
+             ng-if="!isModal(filter)"
              style="{{filter.style}}"
              data-id="filter_{{schema.applicationName}}_{{schema.schemaId}}_{{filter.attribute}}">
 
@@ -62,7 +67,12 @@
                                   data-original-title="{{ getOperatorTooltip(filter.attribute) }}">
                                 {{ getOperatorIcon(filter.attribute) }}
                             </span>
-                            <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
+                            <!-- have to use if/else to set the input type: angular does not evaluate interpolated expression for input.type due to browser compatibility -->
+                            <input ng-if="filter.type === 'MetadataNumberFilter'" string-to-number
+                                   type="number" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
+                                   ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
+                            <input ng-if="filter.type !== 'MetadataNumberFilter'" 
+                                   type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
                                    ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
                             <span ng-click="filterBarApplied()"
                                   class="input-group-addon">
@@ -99,7 +109,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>

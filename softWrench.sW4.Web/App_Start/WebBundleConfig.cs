@@ -1,116 +1,127 @@
 ﻿using System.Web.Optimization;
 using cts.commons.web;
+using softWrench.sW4.Util;
+using softWrench.sW4.Web.Util.StaticFileLoad;
 
 namespace softWrench.sW4.Web {
-    public class WebBundleConfig :IBundleConfigProvider{
+    public class WebBundleConfig : IBundleConfigProvider {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
 
         public void PopulateStyleBundles(BundleCollection bundles) {
-            bundles.Add(new StyleBundle("~/Content/bootstrap/css/twitter-bootstrap").Include(
-               "~/Content/bootstrap/css/bootstrap-min.css",
-               "~/Content/bootstrap/css/bootstrap-theme-min.css",
-               "~/Content/bootstrap/css/bootstrap-combobox.css",
-               "~/Content/bootstrap/css/bootstrap-select.css",
-               "~/Content/bootstrap/css/bootstrap-datetimepicker.css",
-               "~/Content/bootstrap/css/submenu.css",
-               "~/Content/bootstrap/css/typeahead.js-bootstrap.css",
-               "~/Content/bootstrap/css/bootstrap-multiselect.css",
-               "~/Content/bootstrap/css/textAngular-min.css"
-               ));
+            if (ApplicationConfiguration.IsLocal()) {
+                PopulateLocalStyleBundles(bundles);
+            } else {
+                PopulateDistributionStyleBundles(bundles);
+            }
 
-            bundles.Add(new StyleBundle("~/Content/styles/thirdparty").Include(
-                "~/Content/font-awesome/css/font-awesome.css",
-                "~/Content/angular-ui-select/angular-ui-select.css",
-                "~/Content/angular-ui-select/selectize.css"
-                ));
+            // from bower fonts
+            bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
+                .Include("~/Content/fonts/font.css")
+                );
+        }
 
-            bundles.Add(new StyleBundle("~/Content/fonts").Include(
-                "~/Content/fonts/font.css"
-                ));
+        private void PopulateLocalStyleBundles(BundleCollection bundles) {
+            // from bower styles
+            var vendorBundle = new StyleBundle(Bundles.Local.VendorStyles)
+                // bootstrap
+                .Include("~/Content/vendor/css/bootstrap/bootstrap.css")
+                .Include("~/Content/vendor/css/bootstrap/bootstrap-theme.css")
+                .Include("~/Content/vendor/css/bootstrap/bootstrap-datetimepicker.css")
+                .Include("~/Content/vendor/css/bootstrap/selectize.css")
+                // font-awesome
+                .IncludeDirectory("~/Content/vendor/css/font-awesome/", "*.css")
+                // angular
+                .IncludeDirectory("~/Content/vendor/css/angular/", "*.css")
+                .Include("~/Content/vendor/css/angular/angular-ui-select.css")
+                .Include("~/Content/vendor/css/angular/textAngular.css");
+            vendorBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(vendorBundle);
 
-            bundles.Add(new StyleBundle("~/Content/ie9").Include(
-                "~/Content/ie/ie9.css"
-                ));
+            // customized vendor styles
+            bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
+                .IncludeDirectory("~/Content/customVendor/css/", "*.css")
+                );
+        }
+
+        private void PopulateDistributionStyleBundles(BundleCollection bundles) {
+            // sass compiled and fonts already being distributed
+            bundles.Add(new StyleBundle(Bundles.Distribution.VendorStyles)
+                .IncludeDirectory("~/Content/dist/css", "*.css"));
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
-            bundles.Add(new ScriptBundle("~/Content/Scripts/jquery/jquery").Include(
-                 "~/Content/Scripts/vendor/jquery/jquery-2.0.3-max.js",
-                 "~/Content/Scripts/vendor/jquery/jquery-ui-1.10.3.js",
-                 "~/Content/Scripts/vendor/jquery/jquery-file-style.js",
-                 "~/Content/Scripts/vendor/jquery/jquery-filedownload-1.2.0.js",
-                 "~/Content/Scripts/vendor/jquery/zjquery-fileupload-5.40.1.js",
-                 "~/Content/Scripts/vendor/other/spin-min.js"
-                 ));
+            if (ApplicationConfiguration.IsLocal()) {
+                PopulateLocalScriptBundles(bundles);
+            } else {
+                PopulateDistributionScriptBundles(bundles);
+            }
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
-                "~/Content/Scripts/vendor/other/textAngular-sanitize.js",
-                "~/Content/Scripts/vendor/other/textAngular-min.js",
-                "~/Content/Scripts/vendor/other/textAngular-setup.js",
-                "~/Content/Scripts/vendor/other/jquery.scannerdetection.js",
-                "~/Content/Scripts/vendor/other/angular-fileUpload.js",
-                "~/Content/Scripts/vendor/other/selectize/selectize.js",
-                "~/Content/Scripts/vendor/other/selectize/angular-selectize.js",
-                "~/Content/Scripts/vendor/other/angular-file-dnd.js")
-//                "~/Content/Scripts/vendor/other/angular-ui-select.js")
+            // login script
+            bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin")
+                .Include("~/Content/Scripts/client/signin/signin.js"));
+        }
+
+        private void PopulateLocalScriptBundles(BundleCollection bundles) {
+            // from bower scripts
+            var vendorBundle = new ScriptBundle(Bundles.Local.VendorScripts)
+                // utils
+                .IncludeDirectory("~/Content/vendor/scripts/utils/", "*.js")
+                // jquery
+                .Include(
+                    "~/Content/vendor/scripts/jquery/jquery.js",
+                    "~/Content/vendor/scripts/jquery/jquery-ui.js",
+                    "~/Content/vendor/scripts//jquery-file-style.js",
+                    "~/Content/vendor/scripts/jquery/jquery-file-download.js",
+                    "~/Content/vendor/scripts/jquery/jquery-file-upload.js"
+                )
+                // bootstrap
+                .Include(
+                    "~/Content/vendor/scripts/bootstrap/bootstrap.js",
+                    "~/Content/vendor/scripts/bootstrap/bootstrap-multiselect.js",
+                    "~/Content/vendor/scripts/bootstrap/bootbox.js"
+                )
+                // angular
+                .Include(
+                    "~/Content/vendor/scripts/angular/angular.js",
+                    "~/Content/vendor/scripts/angular/angular-bindonce.js",
+                    "~/Content/vendor/scripts/angular/angular-sanitize.js",
+                    "~/Content/vendor/scripts/angular/angular-strap.js",
+                    "~/Content/vendor/scripts/angular/angular-animate.js",
+                    "~/Content/vendor/scripts/angular/angular-xeditable.js",
+                    "~/Content/vendor/scripts/angular/angular-file-upload.js"
+                );
+            vendorBundle.Orderer = new PassthroughBundleOrderer(); // enforcing import order
+            bundles.Add(vendorBundle);
+
+            // customized vendor scripts
+            bundles.Add(new ScriptBundle(Bundles.Local.CustomVendorScripts)
+                .IncludeDirectory("~/Content/customVendor/scripts/", "*.js", true)
                 );
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
-                "~/Content/Scripts/vendor/jquery/jquery-ui-{version}.js"));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryval").Include(
-                "~/Content/Scripts/vendor/jquery/jquery.unobtrusive*",
-                "~/Content/Scripts/vendor/jquery/query.validate*"));
-
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/Content/Scripts/modernizr").Include(
-                "~/Content/Scripts/vendor/other/modernizr-*"));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
-                "~/Content/Scripts/vendor/angular/angular.js",
-                "~/Content/Scripts/vendor/angular/angular-strap.js",
-                "~/Content/Scripts/vendor/angular/angular-sanitize.js",
-                "~/Content/Scripts/vendor/angular/bindonce.js",
-                "~/Content/Scripts/vendor/angular/components/*.js"
-                ));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/twitter-bootstrap").Include(
-                "~/Content/Scripts/vendor/other/moment.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap.max.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-datepicker.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-combobox.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-datetimepicker.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-collapse.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-richtext.js",
-                "~/Content/Scripts/vendor/other/bootbox.js",
-                "~/Content/Scripts/vendor/other/typeahead.js",
-                "~/Content/Scripts/vendor/moment/locales/de.js",
-                "~/Content/Scripts/vendor/moment/locales/es.js",
-                "~/Content/Scripts/vendor/bootstrap/modal.js",
-                "~/Content/Scripts/vendor/bootstrap/bootstrap-multiselect.js"
-                ));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/ace/ace").Include(
-                "~/Content/Scripts/vendor/ace/ace.js"));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin").Include(
-                "~/Content/Scripts/client/signin/signin.js"
-                ));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/application")
+            // app scripts
+            var appBundle = new ScriptBundle(Bundles.Local.AppScripts)
+                .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
+                .Include("~/Content/Scripts/client/crud/aaa_layout.js")
+                .IncludeDirectory("~/Content/Shared/webcommons/scripts/softwrench/util", "*.js")
+                .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
-                .Include(
-                "~/Content/Scripts/client/services/*.js",
-                "~/Content/Scripts/client/*.js",
-                "~/Content/Scripts/client/adminresources/*.js",
-                "~/Content/Scripts/client/directives/*.js",
-                "~/Content/Scripts/client/directives/menu/*.js")
+                .IncludeDirectory("~/Content/Scripts/client/services/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/adminresources/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/directives/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/directives/menu/", "*.js")
                 .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
-                .IncludeDirectory("~/Content/modules", "*.js", true));
+                .IncludeDirectory("~/Content/modules", "*.js", true);
+            appBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(appBundle);
+        }
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty/graphics").Include(
-                "~/Content/Scripts/vendor/other/tableau/tableau-2.0.0-min.js"));
+        private void PopulateDistributionScriptBundles(BundleCollection bundles) {
+            var scriptBundle = new ScriptBundle(Bundles.Distribution.AllScripts)
+                .Include("~/Content/dist/scripts/vendor.js")
+                .Include("~/Content/dist/scripts/app.js");
+            scriptBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(scriptBundle);
         }
 
         public static void ClearBundles() {

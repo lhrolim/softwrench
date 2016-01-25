@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('genericTicketService', function (alertService, searchService) {
+angular.module('sw_layout')
+    .factory('genericTicketService', ["alertService", "searchService","userService", function (alertService, searchService,userService) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -120,6 +122,7 @@ app.factory('genericTicketService', function (alertService, searchService) {
             event.fields["woserviceaddress_.formattedaddress"] = event.fields["woaddress_.formattedaddress"];
             event.fields["#formattedaddr"] = event.fields["woserviceaddress_.formattedaddress"];
             event.fields["#woaddress_"] = event.fields["woaddress_"];
+            event.fields["#haswoaddresschange"] = true;
         }, 
 
         validateCloseStatus: function (schema, datamap, originalDatamap, parameters) {
@@ -161,6 +164,12 @@ app.factory('genericTicketService', function (alertService, searchService) {
             });
         },
 
+
+        isDeleteAllowed: function (datamap, schema) {
+            return datamap.fields['status'] === 'NEW' && datamap.fields['reportedby'] === userService.getPersonId();
+        }
     };
 
-});
+}]);
+
+})(angular);

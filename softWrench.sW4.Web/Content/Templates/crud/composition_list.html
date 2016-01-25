@@ -33,7 +33,7 @@
                 <th class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
-                    <span ng-show="isFieldRequired(compositionitem,column.requiredExpression)" class="requiredfieldmark">* </span>
+                    <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
                 <th ng-if="isBatch()">
@@ -60,7 +60,7 @@
                            name="compositionlistschema.properties['list.selectionstyle']"
                            value="{{option.value}}"
                            ng-checked="isCheckboxSelected(option,column.associationKey)"
-                           ng-click="toogleCheckboxSelection(option,column.associationKey)"
+                           ng-click="toggleCheckboxSelection(option,column.associationKey)"
                            ng-true-value="1" ng-false-value="0">
                 </td>
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
@@ -187,7 +187,9 @@
         <tbody ng-show="isNoRecords">
             <tr>
                 <td colspan="100%">
-                    {{i18N('general.norecords','No records to display')}}
+                    <p class="no-results">
+                        <i class="fa fa-info-circle"></i>&ensp;{{i18N('general.norecords','No records to display.')}}
+                    </p>
                 </td>
             </tr>
         </tbody>

@@ -1,6 +1,8 @@
-﻿var app = angular.module('sw_layout');
+﻿(function (angular) {
+    "use strict";
 
-app.factory('checkpointService', function (contextService, searchService, schemaService) {
+angular.module('sw_layout')
+    .factory('checkpointService', ["contextService", "searchService", function (contextService, searchService) {
 
     return {
 
@@ -58,7 +60,7 @@ app.factory('checkpointService', function (contextService, searchService, schema
             }
             var result = [];
             //converting to array before sending to the server
-            for (item in checkPointItem) {
+            for (var item in checkPointItem) {
                 if (!checkPointItem.hasOwnProperty(item)) {
                     continue;
                 }
@@ -71,9 +73,8 @@ app.factory('checkpointService', function (contextService, searchService, schema
             //just removing from the context here
             contextService.deleteFromContext('checkpointdata');
         }
+    };
 
-    }
+}]);
 
-});
-
-
+})(angular);

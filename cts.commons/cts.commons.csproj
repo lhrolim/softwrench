@@ -55,6 +55,7 @@
     <Compile Include="Util\DictionaryUtil.cs" />
     <Compile Include="Util\LoggingUtil.cs" />
     <Compile Include="Util\ParsingUtil.cs" />
+    <Compile Include="Util\PredicateUtil.cs" />
     <Compile Include="Util\PropertyUtil.cs" />
     <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\StringUtil.cs" />

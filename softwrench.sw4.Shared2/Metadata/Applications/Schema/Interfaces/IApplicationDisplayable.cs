@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
     /// <summary>
@@ -11,17 +12,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
         string RendererType { get; }
 
         string Type { get; }
+
         string Role { get; }
 
+        [DefaultValue("true")]
         string ShowExpression { get; set; }
 
         string ToolTip { get; }
 
+        [DefaultValue("")]
         string Label { get; }
 
         bool? ReadOnly { get; set; }
-
-
-
     }
 }
