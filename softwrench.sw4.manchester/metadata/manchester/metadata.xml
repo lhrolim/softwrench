@@ -330,7 +330,7 @@
 
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" orderbyfield="modifydate desc"  />
             </composition>
 
             <composition relationship="commlog" label="Communications">
@@ -592,7 +592,7 @@
           </section>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" orderbyfield="modifydate desc" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
