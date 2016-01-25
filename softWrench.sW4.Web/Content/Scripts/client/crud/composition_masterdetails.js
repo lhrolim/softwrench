@@ -182,7 +182,10 @@
 
             //display the first record
             $scope.getDetailDatamap = $scope.compositiondata[0];
-            $scope.getDetailDatamap.open = true;
+
+            if ($scope.getDetailDatamap) {
+                $scope.getDetailDatamap.open = true;
+            }
 
             log.debug($scope, $scope.compositiondata);
         }

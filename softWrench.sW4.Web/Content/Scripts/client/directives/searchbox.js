@@ -17,11 +17,6 @@ app.directive('searchBox', function (contextService, $log) {
                 //trigger resize to resize scroll panes
                 $(window).trigger('resize');
             };
-
-            //set the default input placeholder
-            if (!$scope.placeholder) {
-                $scope.placeholder = 'Search';
-            }
         }
     }
 });

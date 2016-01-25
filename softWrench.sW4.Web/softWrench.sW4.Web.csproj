@@ -442,11 +442,11 @@
     </Content>
     <Content Include="App_Data\Client\otb\deploy.xml" />
     <Content Include="App_Data\Client\otb\menu.mobile.xml" />
-    <Content Include="App_Data\Client\otb\commands.xml">
     <Content Include="App_Data\Client\otb\stereotypes.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\otb\commands.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

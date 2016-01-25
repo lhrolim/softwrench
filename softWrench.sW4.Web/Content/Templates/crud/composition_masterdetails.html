@@ -1,9 +1,8 @@
 <div class="composition master-details clearfix">
     <div ng-show="hasRecords()" class="clearfix">
-        <!--TODO: add scroll pane-->
         <div class="master col-xs-12 col-sm-4">
             <div class="quick-search">
-                <search-box ng-model="searchText" />
+                <search-box ng-model="searchText" data-placeholder="'Search'" />
             </div>
             <div class="entries">
                 <div ng-repeat="entry in compositiondata | filter:searchText" ng-class="$odd ? 'odd' : 'even'" ng-click="displayDetails(entry)" class="entry clearfix">
@@ -37,8 +36,7 @@
             </div>
             <!--TODO: Pagination-->
         </div>
-        <!--TODO: add scroll pane-->
-        <div class="details col-xs-12 col-sm-8 hidden-xs visible-sm-block">
+        <div class="details col-xs-12 col-sm-8 hidden-xs">
             <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
                 <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                     <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
