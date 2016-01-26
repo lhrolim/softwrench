@@ -32,11 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,12 +59,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
-      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
-      <Name>softwrench.sw4.api</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />

@@ -6,7 +6,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Util;
-using System.Xml.Serialization;
 using System;
 using System.ComponentModel;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
