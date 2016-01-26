@@ -221,7 +221,7 @@ app.directive('compositionList', function (contextService, formatService, schema
             };
 
             $scope.showTableHover = function () {
-                return $scope.compositionlistschema.properties['list.click.event'] != undefined || $scope.compositiondetailschema != undefined;
+                return ($scope.compositionlistschema.properties['list.click.event'] != undefined || $scope.compositiondetailschema != undefined) && $scope.compositiondata.length > 0;
             };
 
             $scope.compositionData = function () {

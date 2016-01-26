@@ -289,22 +289,6 @@
     }
 }
 
-#listgrid, #compositionlistgrid {
-    [ng-show="isNoRecords"] tr {
-        cursor: default;
-
-        &:hover {
-            background: transparent;
-        }
-    }
-}
-
-.table-hover > [ng-show="isNoRecords"] > tr:hover {
-    & > td, & > th {
-        background-color: transparent;
-    }
-}
-
 #listgrid {
     th {
         word-break: break-word;
@@ -546,5 +530,24 @@ table .detaildata {
         input {
             background-color: white !important;
         }
+    }
+}
+
+#listgrid, #compositionlistgrid {
+    [ng-show="isNoRecords"] {
+        /*background: #f00;*/
+    tr {
+        cursor: default;
+
+        &:hover {
+            background: transparent;
+        }
+    }
+}
+    }
+
+.table-hover > [ng-show="isNoRecords"] > tr:hover {
+    & > td, & > th {
+        background-color: transparent;
     }
 }
