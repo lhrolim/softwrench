@@ -309,6 +309,7 @@
         <exclude name=".nuget/**"/>
         <exclude name="Dependencies/**"/>
         <exclude name="bin/Dependencies/**"/>
+        <exclude name="bower_components/**"/>
         <exclude name="obj/**"/>
       </fileset>
     </copy>
