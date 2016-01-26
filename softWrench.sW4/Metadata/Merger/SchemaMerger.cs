@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
-using DocumentFormat.OpenXml.Drawing;
 using log4net;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;

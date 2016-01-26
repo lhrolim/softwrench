@@ -32,11 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,20 +66,6 @@
     <Folder Include="web_content\classic\images\" />
     <Folder Include="web_content\classic\scripts\" />
     <Folder Include="web_content\classic\styles\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
-      <Project>{A6A14991-81DD-45B5-B5C8-154E44D84975}</Project>
-      <Name>cts.commons.persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
-      <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
-      <Name>cts.commons.simpleinjector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
-      <Project>{CE228C26-938D-4D6F-95FA-12CC5241AFB5}</Project>
-      <Name>softWrench.sW4</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
