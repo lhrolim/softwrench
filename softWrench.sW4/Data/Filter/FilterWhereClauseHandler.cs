@@ -62,7 +62,11 @@ namespace softWrench.sW4.Data.Filter {
                     if (values != null) {
                         whereClause = whereClause.Replace("!@#value", BaseQueryUtil.GenerateInString(values));
                     } else if (paramValue.Value is string) {
+                        whereClause = whereClause.Replace("%!@#value%", "'%" + paramValue.Value + "%'");
+                        whereClause = whereClause.Replace("%!@#value", "'%" + paramValue.Value + "'");
+                        whereClause = whereClause.Replace("!@#value%", "'" + paramValue.Value + "%'");
                         whereClause = whereClause.Replace("!@#value", "'" + paramValue.Value + "'");
+                        whereClause = whereClause.Replace("!@", MetadataProvider.Entity(schema.EntityName).GetTableName()+".");
                     }
                     whereClause = whereClause.Replace("!@#value", paramValue.Value as string);
                     whereClause = whereClause.Replace("!@", entity.Name + ".");

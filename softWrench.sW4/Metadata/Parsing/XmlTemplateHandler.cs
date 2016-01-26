@@ -55,7 +55,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         [NotNull]
         public static List<EntityMetadata> HandleTemplatesForEntities(XContainer templates, bool isSWDB, ISet<string> alreadyParsedTemplates) {
             return DoHandleTemplates<EntityMetadata, Tuple<IEnumerable<EntityMetadata>, EntityQueries>>(templates, alreadyParsedTemplates,
-                new XmlEntitySourceMetadataParser(isSWDB));
+                new XmlEntitySourceMetadataParser(isSWDB,true));
         }
 
         [NotNull]

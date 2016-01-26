@@ -7,6 +7,14 @@
     <template path="@location.xml"/>
   </templates>
 
+  <entities>
+    <entity name="location" idAttribute="locationsid" useridAttribute="location"> 
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="OMLocations" />
+      </connectorParameters>
+    </entity>
+  </entities>
+
 
 
   <applications>
@@ -17,7 +25,7 @@
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot; or &quot;HOLD&quot; status."/>
             </optionfilter>
-            <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
+            <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true" whereclause="!@location like !@#value%  "/>
             <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true" whereclause="classstructure_.classstructureid in (!@#value)"/>
             <!--<optionfilter attribute="classstructure_.classificationid" provider="@GetWOClassStructureType" allowblank="true"/>-->
           </filters>

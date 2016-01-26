@@ -17,7 +17,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
         protected override IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
             using (var stream = MetadataParsingUtils.GetInternalStreamImpl(true)) {
-                return new XmlEntitySourceMetadataParser(false).Parse(stream).Item1;
+                return new XmlEntitySourceMetadataParser(false,false).Parse(stream).Item1;
             }
         }
 
