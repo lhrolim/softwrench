@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentMigrator;
-using FluentMigrator.Runner.Extensions;
 using System.Configuration;
 
 

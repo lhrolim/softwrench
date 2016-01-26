@@ -32,11 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\gric\dataset\GricServiceRequestDataSet.cs" />
@@ -56,10 +51,6 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
-      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
-      <Name>cts.commons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using DotLiquid.Tags;
 using log4net;
 using cnst = softWrench.sW4.Metadata.Parsing.XmlCommandSchema;
 

@@ -77,11 +77,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return list;
         }
 
-        public IEnumerable<IAssociationOption> GetWOClassStructureType(FilterProviderParameters parameters) {
-            var optionParameters = new OptionFieldProviderParameters() {
-                OriginalEntity  = Entity.GetInstance(MetadataProvider.EntityByApplication(parameters.SchemaKey.ApplicationName))
-            };
-            return GetClassStructureType(optionParameters, "WORKORDER", parameters.InputSearch);
+        public IEnumerable<IAssociationOption> GetWOClassStructureType(OptionFieldProviderParameters parameters) {
+            return GetClassStructureType(parameters, "WORKORDER");
         }
 
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
