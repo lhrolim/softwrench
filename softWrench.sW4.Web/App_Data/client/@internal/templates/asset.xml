@@ -21,6 +21,12 @@
   </entities>
   <applications>
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
+      <filters>
+        <optionfilter attribute="location" provider="location_.description" displaycode="true" allowblank="true"/>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+        <optionfilter attribute="parent" provider="parentasset_.description" displaycode="true"/>
+        <optionfilter attribute="siteid" provider="site_.siteid"/>
+      </filters>
       <properties>
         <property key="mobile.fetchlimit" value="30"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
