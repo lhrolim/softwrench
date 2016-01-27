@@ -31,6 +31,16 @@ angular.module('sw_layout')
                 (event.fields['starttime'] && !event.fields['starttime'].nullOrEmpty()) &&
                 (event.fields['finishdate'] && !event.fields['finishdate'].nullOrEmpty()) &&
                 (event.fields['finishtime'] && !event.fields['finishtime'].nullOrEmpty())) {
+
+                var startDate = event.fields['startdate'];
+                var startTime = event.fields['starttime'];
+                var startDatetime = startDate.setTime(startTime);
+
+                var finishDate = event.fields['finishdate'];
+                var finishTime = event.fields['finishtime'];
+                var finishDatetime = finishDate.setTime(finishTime);
+
+
                 // calculate the hours
                 var hours = "";
                 // set the labor hours
