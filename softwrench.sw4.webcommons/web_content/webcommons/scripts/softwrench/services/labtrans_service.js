@@ -24,6 +24,18 @@ angular.module('sw_layout')
                 event.fields['payrate'] = 0.0;
                 event.fields['linecost'] = 0.0;
             }
+        },
+        afterDateTimeChange: function (event) {
+            // If all of the datetime fields are filed
+            if ((event.fields['startdate'] && !event.fields['startdate'].nullOrEmpty()) &&
+                (event.fields['starttime'] && !event.fields['starttime'].nullOrEmpty()) &&
+                (event.fields['finishdate'] && !event.fields['finishdate'].nullOrEmpty()) &&
+                (event.fields['finishtime'] && !event.fields['finishtime'].nullOrEmpty())) {
+                // calculate the hours
+                var hours = "";
+                // set the labor hours
+                event.fields['regularhrs'] = hours;
+            }
         }
     };
 }]);
