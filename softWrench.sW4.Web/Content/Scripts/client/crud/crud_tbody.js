@@ -279,7 +279,8 @@
                             else if (column.type === 'ApplicationFieldDefinition') {
                                 if (!editable) {
                                     if (column.rendererType === 'statuscolor') {
-                                        var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                        
+                                        var background = scope.statusColor(dm.fields[column.attribute], schema.applicationName);
                                         var foreground = statuscolorService.foregroundColor(background);
 
                                         html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);
