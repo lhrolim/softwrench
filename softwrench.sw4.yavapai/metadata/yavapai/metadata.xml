@@ -79,6 +79,22 @@
           </customization>
         </schema>
       </schemas>
-    </application>    
+    </application>
+
+    <application entity="invbalances" name="invbalances" title="Inventory">
+      <schemas>
+        <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web" redeclaring="false">
+          <customization position="+lotnum">
+            <field attribute="item_.commoditygroup" label="Commodity Group"/>
+          </customization>
+        </schema>
+
+        <schema id="invbalancesdetail" stereotype="detail" title="Inventory Balance Details" redeclaring="false">
+          <customization position="-item_.issueunit">
+            <field attribute="item_.commoditygroup" label="Commodity Group" readonly="true" />
+          </customization>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>
