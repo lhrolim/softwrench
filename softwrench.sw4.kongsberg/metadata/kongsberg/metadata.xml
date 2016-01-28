@@ -1524,7 +1524,7 @@
               </field>
             </tab>
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" orderbyfield="modifydate desc"/>
             </composition>
             <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
@@ -1904,7 +1904,7 @@
               </field>
             </tab>
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" allowupdate="true" />
+              <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" allowupdate="true" orderbyfield="modifydate desc"/>
             </composition>
             <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
