@@ -6,9 +6,13 @@ namespace softWrench.sW4.Data.Search {
     public class SearchParameter {
 
         public SearchParameter(string rawValue) {
+            Refresh(rawValue);
+        }
+
+        public void Refresh(string newValue) {
             object value;
             bool searchFilter = false;
-            SearchOperator = ParseSearchOperator(rawValue, out value, out searchFilter);
+            SearchOperator = ParseSearchOperator(newValue, out value, out searchFilter);
             Value = value;
             FilterSearch = searchFilter;
         }
@@ -32,7 +36,7 @@ namespace softWrench.sW4.Data.Search {
             } else if (rawValue.StartsWith("!%")) {
                 searchOperator = SearchOperator.NCONTAINS;
             } else if (rawValue.Contains(",")) {
-                searchOperator = rawValue.StartsWith("%") && rawValue.EndsWith("%") ? SearchOperator.ORCONTAINS : SearchOperator.OR;
+                searchOperator = rawValue.StartsWith("%") || rawValue.EndsWith("%") ? SearchOperator.ORCONTAINS : SearchOperator.OR;
             } else if (rawValue.StartsWith("%")) {
                 searchOperator = rawValue.EndsWith("%") ? SearchOperator.CONTAINS : SearchOperator.ENDWITH;
             } else if (rawValue.EndsWith("%")) {
@@ -79,7 +83,7 @@ namespace softWrench.sW4.Data.Search {
         }
 
         public object Value {
-            get; private set;
+            get; set;
         }
         public bool IsList {
             get {

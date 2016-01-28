@@ -36,5 +36,9 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
                 }
             }
         }
+
+        public override string ToString() {
+            return string.Format("HasOverridenFilter: {0} | isEmpty {1}", HasOverridenFilter, IsEmpty());
+        }
     }
 }

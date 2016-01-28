@@ -39,6 +39,15 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return sb.ToString(0, sb.Length - 1);
         }
 
+        public static string GenerateOrLikeString(IEnumerable<string> items) {
+            var sb = new StringBuilder();
+            foreach (var item in items) {
+                sb.Append("'").Append(item).Append("'");
+                sb.Append(",");
+            }
+            return sb.ToString(0, sb.Length - 1);
+        }
+
         public static string GenerateInString(IEnumerable<DataMap> items,string columnName = null) {
             var dataMaps = items as DataMap[] ?? items.ToArray();
             if (items== null || !dataMaps.Any()) {

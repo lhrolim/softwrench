@@ -61,7 +61,9 @@
     <Compile Include="classes\com\cts\firstsolar\action\util\BatchRedirectionHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarDatamapConverterUtil.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
-    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarLocationDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -39,7 +39,16 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             };
 
 
-        public static ApplicationSchemaDefinition.LazySchemaFilterResolver LazyFilterResolver = definition =>SchemaFilterBuilder.BuildSchemaFilters(definition);
+        public static ApplicationSchemaDefinition.LazySchemaFilterResolver LazyFilterResolver =
+            delegate (ApplicationSchemaDefinition definition) {
+
+//                if (!MetadataProvider.FinishedParsing) {
+//                    return null;
+//                }
+
+                return SchemaFilterBuilder.BuildSchemaFilters(definition);
+            };
+
 
         public static ApplicationSchemaDefinition.LazyFkResolverDelegate LazyFkResolverDelegate = delegate (ApplicationSchemaDefinition definition) {
             var watch = Stopwatch.StartNew();

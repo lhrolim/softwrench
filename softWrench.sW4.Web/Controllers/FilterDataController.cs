@@ -59,15 +59,18 @@ namespace softWrench.sW4.Web.Controllers {
 
             var application = key.ApplicationName;
 
-            if (filterProvider.StartsWith("@")) {
-                var methodName = filterProvider.Substring(1);
-                var dataSet = _dataSetProvider.LookupDataSet(application, key.SchemaId);
-                var mi = ReflectionUtil.GetMethodNamed(dataSet, methodName);
-                var filterParam = new FilterProviderParameters(labelSearchString, filterAttribute, key);
-                return (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { filterParam });
-            }
             //this is the main application, such as sr
             var app = MetadataProvider.Application(application).ApplyPoliciesWeb(key);
+
+            
+
+            if (filterProvider.StartsWith("@")) {
+                var schema = app.Schema;
+                var filterParam = new FilterProviderParameters(labelSearchString, filterAttribute, schema);
+                return GenericSwMethodInvoker.Invoke<IEnumerable<IAssociationOption>>(schema, filterProvider, filterParam);
+            }
+
+
             var association = BuildAssociation(app, filterProvider, filterAttribute);
 
             var filter = new PaginatedSearchRequestDto();
